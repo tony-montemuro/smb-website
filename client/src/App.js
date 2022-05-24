@@ -1,9 +1,10 @@
 import Navbar from "./components/Navbar/Navbar";
-import Home from "./components/Home/Home";
-import Games from "./components/Games/Games";
-import Support from "./components/Support/Support";
+import Home from "./pages/Home/Home";
+import GameSelect from "./pages/GameSelect/GameSelect";
+import Game from "./pages/Game/Game";
+import Support from "./pages/Support/Support";
 import { Route, Routes } from "react-router-dom";
-import Resources from "./components/Resources/Resources";
+import Resources from "./pages/Resources/Resources";
 
 
 function App() {
@@ -13,7 +14,8 @@ function App() {
       <div className="app-container">
         <Routes>
           <Route path="/" element={<Home />}/>
-          <Route path="/games" element={<Games />}/>
+          <Route path="/games" element={<GameSelect />}/>
+          <Route path="games/:game" element={<Game />}/>
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/support" element={<Support />}/>
         </Routes>
