@@ -1,14 +1,21 @@
 import {useState} from 'react';
 import Axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import {Link} from "react-router-dom";
 import axios from 'axios';
 
 const GameInit = () => {
+
+    // states
+    const [levelModes, setLevelModes] = useState({modes: []});
     
-    const [modeList, setModeList] = useState([]);
+    // path variables
     const navigate = useNavigate();
     const path = window.location.pathname;
     const abb = path.split("/")[2];
+
+    // level id varaibles
+    let currentLevelId = 0;
 
     const checkPath = () => {
         let approved = false;
@@ -30,37 +37,84 @@ const GameInit = () => {
             }
         });
 
-    }
+    };
+    
+    // function that converts a normal string to one in snake case
+    const toSnake = (str) => {
+        str = str.toLowerCase();
+        str = str.replace(' ', '_');
+        return str;
+    };
 
     // function that makes a call to the backend server to get the list of levels
     const getLevels = (modes) => {
-        // create endpoints for each mode
+        // init variables
+        let i = 0;
         let endpoints = [];
+        let levelModesObj = {modes: []};
+
+        // create endpoints for each mode
         modes.forEach((mode) => {
             endpoints.push(`http://localhost:3001/games/${abb}/${mode}`);
+            levelModesObj["modes"].push(mode);
         });
-        
-        Promise.all(endpoints.map((endpoint) => axios.get(endpoint))).then(
-            axios.spread((...response) => {
+
+        // now, query each endpoint to get the lists of levels for each mode. each of
+        // these lists will then be added to the 'levelModesObj'.
+        Promise.all(endpoints.map((endpoint) => axios.get(endpoint)))
+        .then(axios.spread((...response) => {
                 response.forEach((response) => {
-                    console.log(response.data);
-                })
+                    levelModesObj[toSnake(modes[i])] = response.data;
+                    i++;
+                });
+                setLevelModes(levelModes => ({
+                    ...levelModes,
+                    ...levelModesObj
+                }));
+                console.log(levelModesObj);
             })
-        );
+        )
+        .catch(err => console.log(err));
     };
 
     // function that makes a call to the backend server to get the list of modes
     const getModesLevels = async () => {
-        console.log("before");
         Axios.get(`http://localhost:3001/games/${abb}/modes`)
         .then((response) => {
-            setModeList(response.data);
+            // now, get the list of levels
             getLevels(response.data);
         })
         .catch(err => console.log(err));
     };
 
-    return { modeList, checkPath, getModesLevels };
+    // component used to render the level, with a time and score link component
+    const Level = ({val}) => {
+        currentLevelId++;
+
+        return (
+            <div className="lvl-time-score">
+                <p>{val}</p>
+                <Link to={{pathname: `time/${currentLevelId}`}}>Time </Link>
+                <Link to={{pathname: `score/${currentLevelId}`}}>Score</Link>
+            </div>
+        )
+    }
+
+    // component used to render the mode, as well as it's levels
+    const ModeLevel = ({child}) => {
+        const snake_mode = toSnake(child);
+
+        return (
+            <div className="mode-level">
+                <h3>{child}</h3>
+                {levelModes[snake_mode].map((val) => {
+                    return <Level val={val.name} />
+                })}
+            </div>
+        );
+    }
+
+    return { levelModes, checkPath, getModesLevels, ModeLevel };
 }
 
 export default GameInit;

@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 
 const smb1_modes = ["Beginner", "Beginner Extra", "Advanced", "Advanced Extra", "Expert", "Expert Extra", "Master"];
-const smb2_modes = ["Beginner", "Beginner Extra", "Advanced", "Advanced Extra", "Expert", "Expert Extra", "Master", "Master Extra", "Story Mode - World 10"];
+const smb2_modes = ["Beginner", "Beginner Extra", "Advanced", "Advanced Extra", "Expert", "Expert Extra", "Master", "Master Extra", "World 10"];
 const smb2_like = ['smb2', 'smb2pal', 'smbdx'];
 
 const smbDB = mysql.createConnection({
@@ -46,8 +46,11 @@ app.get("/games/:game/modes", (req, res) => {
 
 app.get("/games/:game/:mode", (req, res) => {
     // first, establish the games and mode to query levels from
-    const game = req.params.game;
+    let game = req.params.game;
     const mode = req.params.mode;
+    if (game === "smb2pal") {
+        game = "smb2";
+    }
 
     // then, perform the query
     smbDB.query(

@@ -3,7 +3,7 @@ import GameInit from "./GameInit";
 import { useEffect } from "react";
 
 function Game() {
-  const { modeList, checkPath, getModesLevels } = GameInit();
+  const { levelModes, checkPath, getModesLevels, ModeLevel } = GameInit();
 
   useEffect(() => {
     checkPath();
@@ -13,8 +13,8 @@ function Game() {
 
   return (
     <div className="game">
-      {modeList.map((val) => {
-        return <p>{val}</p>
+      {levelModes['modes'].map((val) => {
+        return <ModeLevel child={val} />
       })}
     </div>
   )
