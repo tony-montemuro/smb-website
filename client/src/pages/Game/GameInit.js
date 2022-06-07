@@ -1,3 +1,5 @@
+import "./game.css";
+
 import {useState} from 'react';
 import Axios from 'axios';
 import {useNavigate, Link} from 'react-router-dom';
@@ -93,8 +95,8 @@ const GameInit = () => {
         return (
             <div className="lvl-time-score">
                 <p>{val}</p>
-                <Link to={{pathname: `time/${currentLevelId}`}}>Time </Link>
-                <Link to={{pathname: `score/${currentLevelId}`}}>Score</Link>
+                <Link to={{pathname: `time/${currentLevelId}`}}><button>Time</button></Link>
+                <Link to={{pathname: `score/${currentLevelId}`}}><button>Score</button></Link>
             </div>
         )
     }
