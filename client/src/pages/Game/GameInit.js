@@ -1,16 +1,15 @@
 import {useState} from 'react';
 import Axios from 'axios';
-import {useNavigate} from 'react-router-dom';
-import {Link} from "react-router-dom";
-import axios from 'axios';
+import {useNavigate, Link} from 'react-router-dom';
 
 const GameInit = () => {
+    
+    const navigate = useNavigate();
 
     // states
     const [levelModes, setLevelModes] = useState({modes: []});
     
     // path variables
-    const navigate = useNavigate();
     const path = window.location.pathname;
     const abb = path.split("/")[2];
 
@@ -61,8 +60,8 @@ const GameInit = () => {
 
         // now, query each endpoint to get the lists of levels for each mode. each of
         // these lists will then be added to the 'levelModesObj'.
-        Promise.all(endpoints.map((endpoint) => axios.get(endpoint)))
-        .then(axios.spread((...response) => {
+        Promise.all(endpoints.map((endpoint) => Axios.get(endpoint)))
+        .then(Axios.spread((...response) => {
                 response.forEach((response) => {
                     levelModesObj[toSnake(modes[i])] = response.data;
                     i++;

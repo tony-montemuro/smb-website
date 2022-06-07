@@ -6,9 +6,9 @@ const app = express();
 
 app.use(cors());
 
-const smb1_modes = ["Beginner", "Beginner Extra", "Advanced", "Advanced Extra", "Expert", "Expert Extra", "Master"];
-const smb2_modes = ["Beginner", "Beginner Extra", "Advanced", "Advanced Extra", "Expert", "Expert Extra", "Master", "Master Extra", "World 10"];
-const smb2_like = ['smb2', 'smb2pal', 'smbdx'];
+const smb1Modes = ["Beginner", "Beginner Extra", "Advanced", "Advanced Extra", "Expert", "Expert Extra", "Master"];
+const smb2Modes = ["Beginner", "Beginner Extra", "Advanced", "Advanced Extra", "Expert", "Expert Extra", "Master", "Master Extra", "World 10"];
+const smb2Like = ['smb2', 'smb2pal', 'smbdx'];
 
 const smbDB = mysql.createConnection({
     user: "root",
@@ -34,10 +34,10 @@ app.get("/games/:game/modes", (req, res) => {
     const game = req.params.game;
 
     if (game === "smb1") {
-        res.send(smb1_modes);
+        res.send(smb1Modes);
     } 
-    else if (smb2_like.includes(game)) {
-        res.send(smb2_modes);
+    else if (smb2Like.includes(game)) {
+        res.send(smb2Modes);
     } 
     else {
         res.send([]);
@@ -63,6 +63,39 @@ app.get("/games/:game/:mode", (req, res) => {
             }
         }
     );
+});
+
+app.get("/games/:game/:mode/:levelId", (req, res) => {
+    // variables used to query
+    const game = req.params.game;
+    const mode = req.params.mode;
+    const levelId = req.params.levelId;
+
+    // query for level records
+    smbDB.query(
+        `SELECT Name, ${mode}, Day, Month, Year, Monkey, Proof from ${game}_${levelId}`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                // variables used to determine position of each submission
+                let trueCount = 1;
+                let posCount = trueCount;
+
+                // now, iterate through each record, and calculate the position.
+                for (let i = 0; i < result.length; i++) {
+                    result[i]["Position"] = posCount;
+                    trueCount++;
+                    if (i < result.length-1 && result[i+1][mode] != result[i][mode]) {
+                        posCount = trueCount;
+                    }
+                }
+
+                // finally, send the result
+                res.send(result);
+            }
+        }
+    )
 });
 
 app.listen(3001, () => {
