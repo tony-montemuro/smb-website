@@ -1,9 +1,12 @@
+import "./game.css"
+
 import React from "react";
 import GameInit from "./GameInit";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function Game() {
-  const { levelModes, checkPath, getModesLevels, ModeLevel } = GameInit();
+  const { loading, checkPath, getModesLevels, getGameTitle, ModeLevelTable } = GameInit();
 
   useEffect(() => {
     checkPath();
@@ -13,9 +16,21 @@ function Game() {
 
   return (
     <div className="game">
-      {levelModes['modes'].map((val) => {
-        return <ModeLevel child={val} />
-      })}
+      <div className="game-header">
+        <Link to={`/games`}>
+          <button>Back to Game Select</button>
+        </Link>
+        <h1>{getGameTitle()}</h1>
+      </div>
+      {loading ? 
+        <p>Loading...</p>
+        :
+        <div className="level-select">
+          <table>
+            <ModeLevelTable />
+          </table>
+        </div>
+      }
     </div>
   )
 }

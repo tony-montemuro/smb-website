@@ -14,8 +14,8 @@ function Games() {
   return (
     <div>
       <div className="card-container">
-        {gameList.map((val, key) => {
-          return <GameCard name={val.name} abb={val.abb} />
+        {gameList.map((val) => {
+          return <GameCard name={val.name} abb={val.abb} key={val.abb} />
         })}
       </div>
     </div>

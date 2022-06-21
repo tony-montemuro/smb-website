@@ -1,9 +1,28 @@
+.game-header button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.level-select table {
+    table-layout: auto;
+    width: 50%;
+    border-collapse: collapse;
+}
+
 .lvl-time-score {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    background-color: aqua;
 }
 
 .lvl-time-score button {
-    margin-left: 10px;
+    margin: 0px 10px;
+}
+
+.mode-name {
+    background-color: blue;
+    cursor: pointer;
+    width: 100%;
+}
+
+.mode-name td {
+    width: 100%;
 }
