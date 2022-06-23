@@ -13,6 +13,9 @@ function Games() {
 
   return (
     <div>
+      <div className="game-select-title">
+        <h1>Select a Game</h1>
+      </div>
       <div className="card-container">
         {gameList.map((val) => {
           return <GameCard name={val.name} abb={val.abb} key={val.abb} />
