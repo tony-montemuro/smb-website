@@ -2,9 +2,11 @@ import { useState } from "react";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 const LoginInit = () => {
+    const [loggingIn, setLoggingIn] = useState(false);
     const [email, setEmail] = useState("");
-    const [emailError, setEmailError] = useState("error");
+    const [emailError, setEmailError] = useState("initState");
     const [isSubmit, setIsSubmit] = useState(false);
+    const [hasLoggedIn, setHasLoggedIn] = useState(false);
 
     const handleChange = (e) => {
         const { value } = e.target;
@@ -19,10 +21,15 @@ const LoginInit = () => {
 
     const handleLogin = async (e) => {
         try {
+            setLoggingIn(true);
+
             const { error } = await supabase.auth.signIn({ email });
             if (error) {
                 throw error;
             } 
+
+            setHasLoggedIn(true);
+            setLoggingIn(false);
         } catch (error) {
             alert(error.error_description || error.message);
         }
@@ -37,16 +44,24 @@ const LoginInit = () => {
         // RULES: required, and must satisfy an email password. (the email input
         // type should handle some of this, but these rules are more strict.)
         if (!email) {
-            error = "Email is required!"
+            error = "Error: Email is required."
         } 
         else if (!emailRegex.test(email)) {
-            error = "Invalid email format.";
+            error = "Error: Invalid email format.";
         }
 
         return error;
     }
 
-    return { email, emailError, isSubmit, handleChange, handleSubmit, handleLogin };
+    return { loggingIn,
+             email, 
+             emailError, 
+             isSubmit, 
+             hasLoggedIn, 
+             handleChange, 
+             handleSubmit, 
+             handleLogin 
+    };
 }
 
 export default LoginInit;

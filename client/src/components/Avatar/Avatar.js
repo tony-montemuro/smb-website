@@ -47,7 +47,9 @@ function Avatar({ url, size, onUpload }) {
             throw new Error ("File size too big! Please ensure avatar is less than 1MB.");
         }
 
-        let { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, file);
+        let { error: uploadError } = await supabase.storage
+            .from("avatars")
+            .upload(filePath, file);
 
         if (uploadError) {
             throw uploadError;

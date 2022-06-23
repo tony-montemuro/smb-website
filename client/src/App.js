@@ -11,6 +11,7 @@ import Support from "./pages/Support/Support";
 import Resources from "./pages/Resources/Resources";
 import Login from "./pages/Login/Login";
 import Profile from "./pages/Profile/Profile";
+import User from "./pages/User/User";
 
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
 
   return (
     <>
-      <Navbar />
+      <Navbar session={session} />
       <div className="app-container">
         <Routes>
           <Route path="/" element={<Home />}/>
@@ -36,6 +37,7 @@ function App() {
           <Route path="/support" element={<Support />}/>
           <Route path="/login" element={<Login />}/>
           <Route path="/profile" element={<Profile session={session}/>}/>
+          <Route path="/user/:userId" element={<User />}/>
         </Routes>
       </div>
     </>

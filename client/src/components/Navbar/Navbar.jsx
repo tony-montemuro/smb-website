@@ -1,8 +1,8 @@
-import React from "react";
+import { React } from "react";
 import './navbar.css';
 import { Link } from "react-router-dom";
 
-export default function Navbar() {
+function Navbar({ session }) {
   return (
     <nav className="nav">
       <Link to="/" className="site-title">Home</Link>
@@ -16,13 +16,18 @@ export default function Navbar() {
         <li>
           <Link to="/support">Support</Link>
         </li>
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
-        <li>
-          <Link to="/profile">Edit Profile</Link>
-        </li>
+        {session ? 
+          <li>
+            <Link to="/profile">Edit Profile</Link>
+          </li>
+        : 
+          <li>
+            <Link to="/login">Login</Link>
+          </li>
+        }
       </ul>
     </nav>
   );
 };
+
+export default Navbar;

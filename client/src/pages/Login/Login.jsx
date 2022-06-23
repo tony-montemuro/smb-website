@@ -3,7 +3,15 @@ import LoginInit from "./LoginInit";
 import "./login.css";
 
 function Login() {
-  const { email, emailError, isSubmit, handleChange, handleSubmit, handleLogin } = LoginInit();
+  const { loggingIn,
+          email, 
+          emailError, 
+          isSubmit, 
+          hasLoggedIn, 
+          handleChange, 
+          handleSubmit, 
+          handleLogin 
+  } = LoginInit();
   
   useEffect(() => {
     if (emailError.length === 0 && isSubmit) {
@@ -31,7 +39,9 @@ function Login() {
               onChange={ handleChange } 
             /><br />
           </div>
-          <button>Log In</button>
+          <p>{ emailError !== "initState" ? emailError : ""}</p>
+          <button disabled={loggingIn}>Log In</button>
+          {hasLoggedIn ? <p>Success! Please check your email to continue.</p> : ""}
         </form>
       </div>
     </div>
