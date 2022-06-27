@@ -32,7 +32,7 @@ function App() {
           <Route path="/" element={<Home />}/>
           <Route path="/games" element={<GameSelect />}/>
           <Route path="games/:game" element={<Game />}/>
-          <Route path="games/:game/:mode/:levelid" element={<Levelboard />}/>
+          <Route path="games/:game/:mode/:levelid" element={<Levelboard session={session}/>}/>
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/support" element={<Support />}/>
           <Route path="/login" element={<Login />}/>

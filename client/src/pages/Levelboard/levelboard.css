@@ -42,3 +42,7 @@
 .levelboard-container tr:nth-child(even) {
     background-color: #d3d3d3;
 }
+
+.levelboard-submit {
+    text-align: center;
+}

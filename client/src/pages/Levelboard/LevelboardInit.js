@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 const LevelboardInit = () => {
-
+    // variables
+    const initialValues = { record: "", monkeyId: 0, proof: "", comment: ""};
+    
+    // function used to capitalize an input string called str
     const capitalize = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
@@ -15,7 +18,11 @@ const LevelboardInit = () => {
     const [records, setRecords] = useState([]);
     const [title, setTitle] = useState("");
     const [levelList, setLevelList] = useState([]);
+    const [monkeyList, setMonkeyList] = useState([]);
+    const [formValues, setFormValues] = useState(initialValues);
+    const [formErrors, setFormErrors] = useState({});
     const [loading, setLoading] = useState(true);
+    const [isSubmit, setIsSubmit] = useState(false);
     
     // path variables
     const path = window.location.pathname;
@@ -77,15 +84,32 @@ const LevelboardInit = () => {
             if (abb === "smb1") {
                 levelId += smb1TotalLevels;
             }
-            if (abb === "smb2") {
+            if (abb === "smb2" || abb === "smb2pal") {
                 levelId += smb2TotalLevels
             }
         }
 
         try {
+            // let { data: records, error, status } = await supabase
+            //     .from(`${abb}_${levelId}`)
+            //     .select("*");
+
+            // if (error && status !== 406) {
+            //     throw error;
+            // }
+
             let { data: records, error, status } = await supabase
                 .from(`${abb}_${levelId}`)
-                .select("*");
+                .select(`
+                    profiles:user_id ( username ),
+                    ${mode},
+                    monkey:monkey_id ( monkey_name ),
+                    Day,
+                    Month,
+                    Year,
+                    Proof,
+                    Comment
+                `);
 
             if (error && status !== 406) {
                 throw error;
@@ -104,12 +128,17 @@ const LevelboardInit = () => {
             let posCount = trueCount;
 
             // now, iterate through each record, and calculate the position.
+            // also, simplify each object
             for (let i = 0; i < records.length; i++) {
                 records[i]["Position"] = posCount;
                 trueCount++;
                 if (i < records.length-1 && records[i+1][mode] !== records[i][mode]) {
                     posCount = trueCount;
                 }
+                records[i]["Monkey"] = records[i].monkey.monkey_name;
+                records[i]["Name"] = records[i].profiles.username;
+                delete records[i].monkey;
+                delete records[i].profiles;
             }
 
             console.log(records);
@@ -187,11 +216,77 @@ const LevelboardInit = () => {
         generateLevelList(modes);
     }
 
+    const getMonkeys = async () => {
+        try {
+            let { data: monkeyObj, error, status } = await supabase
+                .from("monkey")
+                .select("*");
+
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            setMonkeyList(monkeyObj);
+            console.log(monkeyObj);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setFormValues({...formValues, [id]: value});
+        console.log(formValues);
+    }
+
     const swapLevels = (id) => {
         navigate(`/games/${abb}/${getMode(true)}/${id}`);
         window.location.reload();
     }
-    
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setFormErrors(validate(formValues));
+        setIsSubmit(true);
+    }
+
+    const validate = (values) => {
+        const errors = {};
+
+        // first, validate the record. extra validation for time submissions as well.
+        const record = values.record;
+        if (!record) {
+            errors.record = `${mode} is required.`;
+        }
+        else if (record <= 0) {
+            errors.record = `${mode} must be a positive value.`;
+        }
+
+        // make sure scores are integers
+        if (!Object.hasOwn(errors, 'record') && mode === 'Score') {
+            if (!Number.isInteger(+record)) {
+                errors.record = "Score must be an integer value.";
+            }
+        }
+
+        // make sure times are NOT integeres
+        if (!Object.hasOwn(errors, 'record') && mode === 'Time') {
+            if (Number.isInteger(+record)) {
+                errors.record = "Invalid time format. Example of correct format: 45.51.";
+            } 
+        }
+
+        if (!values.proof) {
+            errors.proof = "Proof is required.";
+        }
+
+        if (values.comment.length > 100) {
+            errors.comment = "Comment must be 100 characters or less.";
+        }
+
+        return errors;
+    }
+
     const getGame = () => {
         return abb;
     }
@@ -201,7 +296,7 @@ const LevelboardInit = () => {
         return lower ? pathArr[3] : mode;
     }
 
-    const getLevelId = (increment) => {
+    const setLevelId = (increment) => {
         // if increment is zero, decrement mode. otherwise, increment mode.
 
         // now, we need to ensure user cannot navigate to an unexisting level (id < 0
@@ -217,48 +312,64 @@ const LevelboardInit = () => {
 
     const Board = () => {
         return (
-          <>
-              <div className="levelboard-header">
-                  <div className="levelboard-title">
-                  <button onClick={() => swapLevels(getLevelId(0))}>←Prev</button>
-                  <h1>{title}</h1>
-                  <button onClick={() => swapLevels(getLevelId(1))}>Next→</button>
-                  </div>
-                  <div className="levelboard-back">
-                  <Link to={`/games/${getGame()}`}>
-                      <button>Back to Level Select</button>
-                  </Link>
-                  </div>
-              </div>
-              <div className="levelboard-container">
-                  <table>
-                  <tbody>
-                      <tr>
-                          <th>Position</th>
-                          <th>Name</th>
-                          <th>{getMode()}</th>
-                          <th>Date</th>
-                          <th>Monkey</th>
-                          <th>Proof</th>
-                      </tr>
-                      {records.map((val) => {
-                          return <tr>
-                          <td>{val.Position}</td>
-                          <td>{val.Name}</td>
-                          <td>{getMode() === "Score" ? val.Score : val.Time}</td>
-                          <td>{val.Month}/{val.Day}/{val.Year}</td>
-                          <td>{val.Monkey}</td>
-                          <td>{val.Proof !== "none" ? <a href={val.Proof} target="_blank" rel="noopener noreferrer">☑️</a> : ''}</td>
-                          </tr>  
-                      })}
-                  </tbody>
-                  </table>
-              </div>
-          </>
+            <div className="levelboard-container">
+                <table>
+                <tbody>
+                    <tr>
+                        <th>Position</th>
+                        <th>Name</th>
+                        <th>{getMode()}</th>
+                        <th>Date</th>
+                        <th>Monkey</th>
+                        <th>Proof</th>
+                    </tr>
+                    {records.map((val) => {
+                        return <tr>
+                        <td>{val.Position}</td>
+                        <td>{val.Name}</td>
+                        <td>{getMode() === "Score" ? val.Score : val.Time}</td>
+                        <td>{val.Month}/{val.Day}/{val.Year}</td>
+                        <td>{val.Monkey}</td>
+                        <td>{val.Proof !== "none" ? <a href={val.Proof} target="_blank" rel="noopener noreferrer">☑️</a> : ''}</td>
+                        </tr>  
+                    })}
+                </tbody>
+                </table>
+            </div>
         )
       }
 
-    return { loading, checkPath, getTitleAndRecords, Board };
+      const MonkeySelect = () => {
+        return (
+            <select 
+                id="monkeyId"
+                value={formValues.monkeyId}
+                onChange={handleChange}
+            >
+                {monkeyList.map((monkey) => (
+                    <option key={monkey.id} value={monkey.id}>{monkey.monkey_name}</option>
+                ))}
+            </select>
+        )
+      }
+
+    return { loading,
+             title, 
+             formValues,
+             formErrors,
+             isSubmit,
+             checkPath, 
+             getTitleAndRecords, 
+             handleChange,
+             getMonkeys,
+             swapLevels, 
+             handleSubmit,
+             getGame, 
+             getMode, 
+             setLevelId,
+             Board,
+             MonkeySelect
+    };
 }
 
 export default LevelboardInit;
