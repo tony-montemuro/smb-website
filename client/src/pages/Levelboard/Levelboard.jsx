@@ -16,6 +16,7 @@ function Levelboard({ session }) {
           checkPath, 
           getTitleAndRecords, 
           getMonkeys,
+          submitValues,
           handleChange,
           swapLevels, 
           handleSubmit,
@@ -34,9 +35,10 @@ function Levelboard({ session }) {
   }, []);
 
   useEffect(() => {
-    console.log(formErrors);
+    // if there are no errors, and isSubmit is set to true, then submit the form values
+    // to database
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      console.log(formValues);
+      submitValues();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formErrors]);
