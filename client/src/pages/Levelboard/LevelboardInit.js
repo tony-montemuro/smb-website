@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 const LevelboardInit = () => {
@@ -62,18 +63,12 @@ const LevelboardInit = () => {
         const id = correctLevelId(levelId);
 
         try {
-            // let { data: records, error, status } = await supabase
-            //     .from(`${abb}_${levelId}`)
-            //     .select("*");
-
-            // if (error && status !== 406) {
-            //     throw error;
-            // }
 
             let { data: records, error, status } = await supabase
                 .from(`${abb}_${id}`)
                 .select(`
-                    profiles:user_id ( username ),
+                    user_id,
+                    profiles:user_id ( username, avatar_url ),
                     ${mode},
                     monkey:monkey_id ( monkey_name ),
                     Day,
@@ -85,7 +80,7 @@ const LevelboardInit = () => {
                 .order(`${mode}`, { ascending: false })
                 .order("Year", { ascending: true })
                 .order("Month", { ascending: true })
-                .order("Day", { ascending: true});
+                .order("Day", { ascending: true });
                 
 
             if (error && status !== 406) {
@@ -116,10 +111,12 @@ const LevelboardInit = () => {
                 // simplify
                 records[i]["Monkey"] = records[i].monkey.monkey_name;
                 records[i]["Name"] = records[i].profiles.username;
+                records[i]["Avatar_URL"] = records[i].profiles.avatar_url;
                 delete records[i].monkey;
                 delete records[i].profiles;
             }
 
+            console.log(records);
             setRecords(records);
             setLoading(false);
 
@@ -322,7 +319,11 @@ const LevelboardInit = () => {
             window.location.reload();
 
         } catch (error) {
-            alert(error.message);
+            if (error.code === "23503") {
+                alert("Error! You have not set up your profile yet. Please go to the top right of the page, and set up your profile to begin submissions.");
+            } else {
+                alert(error.message);
+            }
         }
     }
 
@@ -420,15 +421,20 @@ const LevelboardInit = () => {
                         <th>Date</th>
                         <th>Monkey</th>
                         <th>Proof</th>
+                        <th>Comment</th>
                     </tr>
                     {records.map((val) => {
                         return <tr>
                         <td>{val.Position}</td>
-                        <td>{val.Name}</td>
+                        <td className="user-info">
+                            <div><SimpleAvatar url={val.Avatar_URL} size={50}/></div>
+                            <div><Link to={`/user/${val.user_id}`}>{val.Name}</Link></div>
+                        </td>
                         <td>{getMode() === "Score" ? val.Score : val.Time}</td>
                         <td>{val.Month}/{val.Day}/{val.Year}</td>
                         <td>{val.Monkey}</td>
                         <td>{val.Proof !== "none" ? <a href={val.Proof} target="_blank" rel="noopener noreferrer">☑️</a> : ''}</td>
+                        <td>{val.Comment}</td>
                         </tr>  
                     })}
                 </tbody>

@@ -3,6 +3,7 @@ import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import { useNavigate } from "react-router-dom";
 
 const ProfileInit = () => {
+    // states
     const [loading, setLoading] = useState(true);
     const [updating, setUpdating] = useState(false);
     const [username, setUsername] = useState(null);
@@ -13,14 +14,17 @@ const ProfileInit = () => {
     const [isSubmit, setIsSubmit] = useState(false);
     const [isUpdated, setIsUpdated] = useState(false);
 
+    // navigate used for redirecting
     const navigate = useNavigate();
 
+    // function that checks for an active session. if none is found, redirct to home.
     const checkForUser = (session) => {
         if (!session) {
             navigate("/");
         }
     }
 
+    // function that grabs user data from the database
     const getProfile = async () => {
         try {
             const user = supabase.auth.user();
@@ -48,15 +52,26 @@ const ProfileInit = () => {
         }
     }
 
+    // function that activates when user tries to submit profile changes. will move on to
+    // updateProfile function if inputs are validated.
     const handleSubmit = (e) => {
         e.preventDefault();
         setUsernameError(validate(username));
         setIsSubmit(true);
     }
 
+    // function that will push new user data into the profiles table
     const updateProfile = async (e) => {
         try {
             setUpdating(true);
+            let avatarUrl = avatar_url;
+
+            console.log(avatar_url);
+            if (!avatar_url) {
+                setAvatarUrl("default.png");
+                avatarUrl = "default.png";
+            }
+
             const user = supabase.auth.user();
 
             const updates = {
@@ -64,7 +79,7 @@ const ProfileInit = () => {
                 username,
                 youtube_url,
                 twitch_url,
-                avatar_url
+                avatar_url: avatarUrl
             }
 
             let { error } = await supabase.from('profiles').upsert(updates, {
@@ -85,6 +100,8 @@ const ProfileInit = () => {
         }
     }
 
+
+    // function used to check for valid inputs
     const validate = (username) => {
         let error = "";
         const regex = new RegExp('^[A-Za-z0-9_]*$');
@@ -104,11 +121,14 @@ const ProfileInit = () => {
         return error;
     }
 
+    // function that will navigate to the 'user' page, which is similar to the profile page,
+    // but is view only. this page is viewable to all users.
     const navToProfile = () => {
         const userId = supabase.auth.user().id;
         navigate(`/user/${userId}`);
     }
 
+    // function that will sign the user out, and navigate them back to the home screen.
     const signOut = async (e) => {
         supabase.auth.signOut();
         navigate("/");

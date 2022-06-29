@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../SupabaseClient/SupabaseClient";
 
 function SimpleAvatar( { url, size } ) {
@@ -19,15 +19,15 @@ function SimpleAvatar( { url, size } ) {
             const url = URL.createObjectURL(data);
             setAvatarUrl(url);
         } catch (error) {
-            console.log("Error downloading image: ", error.message);
+            alert("Error downloading image: ", error.message);
         }
       }
 
     return (
         <div className="simple-avatar">
             <img
-            src={avatarUrl ? avatarUrl : `https://place-hold.it/${size}x${size}`}
-            alt={avatarUrl ? 'Avatar' : 'No image'}
+            src={avatarUrl}
+            alt={avatarUrl}
             style={{ height: size, width: size }}
             />
         </div>

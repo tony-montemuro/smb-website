@@ -110,4 +110,4 @@ function Levelboard({ session }) {
   )
 }
 
-export default Levelboard
+export default Levelboard;

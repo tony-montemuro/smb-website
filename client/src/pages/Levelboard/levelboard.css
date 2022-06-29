@@ -46,3 +46,10 @@
 .levelboard-submit {
     text-align: center;
 }
+
+.user-info {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    border-collapse: collapse;
+}
