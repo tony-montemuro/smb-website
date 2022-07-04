@@ -5,6 +5,7 @@ import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
 function User() {
   const { username,
+         country,
          youtube_url, 
          twitch_url, 
          avatar_url, 
@@ -24,6 +25,14 @@ function User() {
         : 
             <div className="view-profile">
                 <p>{username}</p>
+                <div className="country">
+                  <p>{country.name}</p>
+                  <img
+                    alt={country.iso2}
+                    src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${country.iso2}.svg`}
+                    style={{width: 30}}>
+                  </img>
+                </div>
                 <SimpleAvatar url={avatar_url} size={200} />
                 {youtube_url ? <a 
                     href={youtube_url} 

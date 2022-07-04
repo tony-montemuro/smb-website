@@ -4,11 +4,13 @@ import "./levelboard.css";
 // js imports
 import React from "react";
 import LevelboardInit from "./LevelboardInit";
+import Board from "./Board";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function Levelboard({ session }) {
   const { loading,
+          records,
           title, 
           formValues, 
           formErrors,
@@ -23,7 +25,6 @@ function Levelboard({ session }) {
           getGame, 
           getMode, 
           setLevelId, 
-          Board,
           MonkeySelect
   } = LevelboardInit();
 
@@ -62,7 +63,7 @@ function Levelboard({ session }) {
           </div>
           <div className="levelboard-container">
             <div className="levelboard-board">
-              <Board />
+              <Board mode={getMode()} records={records}/>
             </div>
             {session ? 
                <div className="levelboard-submit">

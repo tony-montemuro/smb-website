@@ -22,7 +22,8 @@ function Profile({ session }) {
             handleSubmit,
             updateProfile,
             navToProfile, 
-            signOut
+            signOut,
+            CountrySelect
     } = ProfileInit();
 
     useEffect(() => {
@@ -55,6 +56,8 @@ function Profile({ session }) {
                     onChange={(e) => setUsername(e.target.value)}
                 />
             </div>
+            <label htmlFor="countryId">Country (optional): </label>
+            <CountrySelect />
             <p>{usernameError !== "initState" ? usernameError : ""}</p>
             <div>
                 <label htmlFor="youtube-url">YouTube URL (optional): </label>

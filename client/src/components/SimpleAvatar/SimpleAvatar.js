@@ -5,10 +5,9 @@ function SimpleAvatar( { url, size } ) {
     const [avatarUrl, setAvatarUrl] = useState(null);
 
     useEffect(() => {
-        if (url) {
-            downloadImage(url);
-        }
-      }, [url]);
+        downloadImage(url);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
     
       const downloadImage = async (path) => {
         try {
@@ -24,12 +23,12 @@ function SimpleAvatar( { url, size } ) {
       }
 
     return (
-        <div className="simple-avatar">
+        <div className="simple-avatar" style={{ width: size }}>
             <img
-            src={avatarUrl}
-            alt={avatarUrl}
-            style={{ height: size, width: size }}
-            />
+                src={avatarUrl ? avatarUrl : `https://place-hold.it/${size}x${size}`}
+                alt={avatarUrl ? 'Avatar' : 'No image'}
+                style={{ height: size, width: size }}> 
+            </img>
         </div>
     )
 }

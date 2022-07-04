@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
+import { useNavigate } from "react-router-dom";
+import React from "react";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 const LevelboardInit = () => {
@@ -63,12 +63,11 @@ const LevelboardInit = () => {
         const id = correctLevelId(levelId);
 
         try {
-
             let { data: records, error, status } = await supabase
                 .from(`${abb}_${id}`)
                 .select(`
                     user_id,
-                    profiles:user_id ( username, avatar_url ),
+                    profiles:user_id ( username, country, avatar_url ),
                     ${mode},
                     monkey:monkey_id ( monkey_name ),
                     Day,
@@ -112,6 +111,7 @@ const LevelboardInit = () => {
                 records[i]["Monkey"] = records[i].monkey.monkey_name;
                 records[i]["Name"] = records[i].profiles.username;
                 records[i]["Avatar_URL"] = records[i].profiles.avatar_url;
+                records[i]["Country"] = records[i].profiles.country;
                 delete records[i].monkey;
                 delete records[i].profiles;
             }
@@ -408,41 +408,6 @@ const LevelboardInit = () => {
         return levelId;
     }
 
-    // Board component
-    const Board = () => {
-        return (
-            <div className="levelboard-container">
-                <table>
-                <tbody>
-                    <tr>
-                        <th>Position</th>
-                        <th>Name</th>
-                        <th>{getMode()}</th>
-                        <th>Date</th>
-                        <th>Monkey</th>
-                        <th>Proof</th>
-                        <th>Comment</th>
-                    </tr>
-                    {records.map((val) => {
-                        return <tr>
-                        <td>{val.Position}</td>
-                        <td className="user-info">
-                            <div><SimpleAvatar url={val.Avatar_URL} size={50}/></div>
-                            <div><Link to={`/user/${val.user_id}`}>{val.Name}</Link></div>
-                        </td>
-                        <td>{getMode() === "Score" ? val.Score : val.Time}</td>
-                        <td>{val.Month}/{val.Day}/{val.Year}</td>
-                        <td>{val.Monkey}</td>
-                        <td>{val.Proof !== "none" ? <a href={val.Proof} target="_blank" rel="noopener noreferrer">☑️</a> : ''}</td>
-                        <td>{val.Comment}</td>
-                        </tr>  
-                    })}
-                </tbody>
-                </table>
-            </div>
-        )
-      }
-
       // MonkeySelect component
       const MonkeySelect = () => {
         return (
@@ -459,6 +424,7 @@ const LevelboardInit = () => {
       }
 
     return { loading,
+             records,
              title, 
              formValues,
              formErrors,
@@ -473,7 +439,6 @@ const LevelboardInit = () => {
              getGame, 
              getMode, 
              setLevelId,
-             Board,
              MonkeySelect
     };
 }

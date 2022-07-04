@@ -6,7 +6,9 @@ const ProfileInit = () => {
     // states
     const [loading, setLoading] = useState(true);
     const [updating, setUpdating] = useState(false);
+    const [countryList, setCountryList] = useState([]);
     const [username, setUsername] = useState(null);
+    const [country, setCountry] = useState(0);
     const [youtube_url, setYoutubeUrl] = useState(null);
     const [twitch_url, setTwitchUrl] = useState(null);
     const [avatar_url, setAvatarUrl] = useState(null);
@@ -24,6 +26,27 @@ const ProfileInit = () => {
         }
     }
 
+    // function that grabs data from the country database
+    const getCountries = async () => {
+        try {
+            let { data: countries, error, status } = await supabase
+                .from("countries")
+                .select("*")
+                .order("name");
+
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            setCountryList(countries);
+
+        } catch (error) {
+            alert(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     // function that grabs user data from the database
     const getProfile = async () => {
         try {
@@ -31,7 +54,7 @@ const ProfileInit = () => {
 
             let { data, error, status } = await supabase
                 .from("profiles")
-                .select("username, youtube_url, twitch_url, avatar_url")
+                .select("username, country, youtube_url, twitch_url, avatar_url")
                 .eq("id", user.id)
                 .single()
 
@@ -41,14 +64,15 @@ const ProfileInit = () => {
 
             if (data) {
                 setUsername(data.username);
+                setCountry(data.country);
                 setYoutubeUrl(data.youtube_url);
                 setTwitchUrl(data.twitch_url)
                 setAvatarUrl(data.avatar_url);
             }
+
+            getCountries();
         } catch(error) {
             alert(error.message);
-        } finally {
-            setLoading(false);
         }
     }
 
@@ -62,6 +86,15 @@ const ProfileInit = () => {
 
     // function that will push new user data into the profiles table
     const updateProfile = async (e) => {
+        let countryId;
+
+        if (country === "null") {
+            countryId = null;
+        } else {
+            countryId = country;
+        }
+        console.log("Country ID: " + countryId);
+
         try {
             setUpdating(true);
             let avatarUrl = avatar_url;
@@ -77,6 +110,7 @@ const ProfileInit = () => {
             const updates = {
                 id: user.id,
                 username,
+                country: countryId,
                 youtube_url,
                 twitch_url,
                 avatar_url: avatarUrl
@@ -94,6 +128,8 @@ const ProfileInit = () => {
         } catch(error) {
             if (error.code === "23505") {
                 setUsernameError("Error: Username already taken.");
+            } else {
+                console.log(error);
             }
         } finally {
             setUpdating(false);
@@ -134,6 +170,22 @@ const ProfileInit = () => {
         navigate("/");
     }
 
+    // CountrySelect component
+    const CountrySelect = () => {
+        return (
+            <select 
+                id="countryId"
+                value={country}
+                onChange={(e) => {setCountry(e.target.value); console.log(e.target.value);}}
+            >
+                <option key={"null"} value={"null"}>--</option>
+                {countryList.map((country) => (
+                    <option key={country.iso2} value={country.iso2}>{country.name}</option>
+                ))}
+            </select>
+        )
+      }
+
     return { loading,
             updating,
             username, 
@@ -152,7 +204,8 @@ const ProfileInit = () => {
             handleSubmit,
             updateProfile,
             navToProfile,
-            signOut
+            signOut,
+            CountrySelect
     };
 }
 
