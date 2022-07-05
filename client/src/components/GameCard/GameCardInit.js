@@ -1,30 +1,25 @@
-import SMB1 from "../../img/smb1.png";
-import SMB2 from "../../img/smb2.png";
-import SMB2PAL from "../../img/smb2pal.jpg";
-import SMBDX from "../../img/smbdx.jpg";
+import { useState } from "react";
+import { supabase } from "../SupabaseClient/SupabaseClient";
 
 const GameCardInit = () => {
+    // states
+    const [img, setImg] = useState(null);
     
     // function that will return an image from an abbreviation (abb)
-    const mapImg = (abb) => {
-        if (abb === 'smb1') {
-            return SMB1;
+    const mapImg = async (abb) => {
+        try {
+            const { data, error } = await supabase.storage.from('games').download(`${abb}.png`);
+            if (error) {
+                throw error;
+            }
+            const url = URL.createObjectURL(data);
+            setImg(url);
+        } catch (error) {
+            alert("Error downloading image: ", error.message);
         }
-        else if (abb === 'smb2') {
-            return SMB2;
-        }
-        else if (abb === 'smb2pal') {
-            return SMB2PAL;
-        }
-        else if (abb === 'smbdx') {
-            return SMBDX;
-        }
-        else {
-            return "";
-        }
-    };
+    }
 
-    return { mapImg };
+    return { img, mapImg };
 };
 
 export default GameCardInit;

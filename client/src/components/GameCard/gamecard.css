@@ -1,19 +1,21 @@
+.card-container {
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 400px));
+}
+
 .game-card {
-    flex: 1;
-    margin: 10px;
+    display: flex;
     flex-direction: column;
-    text-align: center;
-    margin-left: 10.5%;
-    margin-right: 10.5%;
-}
-
-.game-card img {
-    width: 100%;
     max-width: 200px;
-    height: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
-.game-card p {
-    padding-bottom: 5px;
-    display: block;
+.card-link img {
+    max-width: 200px;
+}
+
+.card-link p {
+    text-align: center;
 }
