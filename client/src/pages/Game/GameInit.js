@@ -11,6 +11,7 @@ const GameInit = () => {
     // states
     const [levelModes, setLevelModes] = useState({modes: []});
     const [loading, setLoading] = useState(true);
+    const [title, setTitle] = useState("");
     
     // path variables
     const path = window.location.pathname;
@@ -34,8 +35,10 @@ const GameInit = () => {
             // now, iterate through game list, and compare with the current abb variable
             games.forEach(game => {
                 const gameAbb = game.abb;
+                const gameTitle = game.name;
                 if (abb === gameAbb) {
                     approved = true;
+                    setTitle(gameTitle);
                 }
             });
 
@@ -128,16 +131,16 @@ const GameInit = () => {
         let modes = [];
 
         try {
-            // if abb is smb1, query the monkey ball 1 modes
-            if (abb === "smb1") {
-                modes = await queryNames("smb1_modes");
-            }
-
-            // if not, check if it's 'smb2like'. if so, query the monkey ball 2 table
+            // first, check if game is 'smb2like'. if so, query the monkey ball 2 table.
             let smb2Like = await queryNames("smb2_like");
             if (smb2Like.includes(abb)) {
                 modes = await queryNames("smb2_modes");
+            } else {
+                //otherwise, query abb's mode table
+                modes = await queryNames(`${abb}_modes`);
             }
+
+            console.log(modes);
 
             getLevels(modes);
         } catch(error) {
@@ -150,8 +153,8 @@ const GameInit = () => {
         return (
             <tr className="lvl-time-score">
                 <td><p>{val}</p></td>
-                <td><Link to={{pathname: `time/${id}`}}><button>Time</button></Link></td>
                 <td><Link to={{pathname: `score/${id}`}}><button>Score</button></Link></td>
+                <td><Link to={{pathname: `time/${id}`}}><button>Time</button></Link></td>
             </tr>
         )
     }
@@ -213,22 +216,7 @@ const GameInit = () => {
         );
     }
 
-    const getGameTitle = () => {
-        switch(abb) {
-            case "smb1":
-                return "Super Monkey Ball 1";
-            case "smb2":
-                return "Super Monkey Ball 2";
-            case "smb2pal":
-                return "Super Monkey Ball 2 (PAL)";
-            case "smbdx":
-                return "Super Monkey Ball Deluxe";
-            default:
-                return "";
-        }
-    }
-
-    return { loading, checkPath, getModesLevels, getGameTitle, ModeLevel, ModeLevelTable };
+    return { loading, title, checkPath, getModesLevels, ModeLevel, ModeLevelTable };
 }
 
 export default GameInit;

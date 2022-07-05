@@ -12,11 +12,6 @@ function GameCard({ name, abb }) {
     }, []);
 
     return (
-        // <div className='game-card'>
-        //     <img src={img} alt='Box art'></img>
-        //     <Link to={{pathname: `/games/${abb}`}}> {name} </Link>
-        // </div>
-
         <Link className="card-link" to={{pathname: `/games/${abb}`}}>
             <img src={img} alt='Box art'></img>
             <p>{name} </p>

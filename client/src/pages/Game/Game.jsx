@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function Game() {
-  const { loading, checkPath, getModesLevels, getGameTitle, ModeLevelTable } = GameInit();
+  const { loading, title, checkPath, getModesLevels, ModeLevelTable } = GameInit();
 
   useEffect(() => {
     checkPath();
@@ -20,7 +20,7 @@ function Game() {
         <Link to={`/games`}>
           <button>Back to Game Select</button>
         </Link>
-        <h1>{getGameTitle()}</h1>
+        <h1>{title}</h1>
       </div>
       {loading ? 
         <p>Loading...</p>

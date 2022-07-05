@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import React from "react";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
+// global variables
+let correctedId = null;
+
 const LevelboardInit = () => {
-    // variables
+    // variable
     const initialValues = { record: "", monkeyId: 1, proof: "", comment: ""};
     
     // helper function used to capitalize an input string called str
@@ -15,6 +18,13 @@ const LevelboardInit = () => {
     // navigate used for redirecting
     const navigate = useNavigate();
 
+    // path variables
+    const path = window.location.pathname;
+    const pathArr = path.split("/");
+    const abb = pathArr[2];
+    const mode = capitalize(pathArr[3]);
+    const levelId = parseInt(pathArr[4]);
+
     // states
     const [records, setRecords] = useState([]);
     const [title, setTitle] = useState("");
@@ -24,17 +34,6 @@ const LevelboardInit = () => {
     const [formErrors, setFormErrors] = useState({});
     const [loading, setLoading] = useState(true);
     const [isSubmit, setIsSubmit] = useState(false);
-    
-    // path variables
-    const path = window.location.pathname;
-    const pathArr = path.split("/");
-    const abb = pathArr[2];
-    const mode = capitalize(pathArr[3]);
-    let levelId = parseInt(pathArr[4]);
-
-    // offset variables
-    const smb1TotalLevels = 9;
-    const smb2TotalLevels = 11;
 
     // HELPER FUNCTIONS
 
@@ -45,23 +44,10 @@ const LevelboardInit = () => {
         return str;
     };
 
-    // helper function that corrects the level id for time charts
-    const correctLevelId = (id) => {
-        if (mode === "Time") {
-            if (abb === "smb1") {
-                return id + smb1TotalLevels;
-            }
-            if (abb === "smb2" || abb === "smb2pal") {
-                return id + smb2TotalLevels;
-            }
-        }
-        return id;
-    }
-
     // helper function used to query all of the records for levelboard
     const getRecords = async () => {
-        const id = correctLevelId(levelId);
-
+        console.log(correctedId);
+        const id = correctedId === null ? levelId : correctedId;
         try {
             let { data: records, error, status } = await supabase
                 .from(`${abb}_${id}`)
@@ -223,7 +209,7 @@ const LevelboardInit = () => {
         try {
             let {data: games, error, status} = await supabase
                 .from("games")
-                .select("abb");
+                .select("abb, num_levels");
 
             if (error && status !== 406) {
                 throw error;
@@ -231,8 +217,14 @@ const LevelboardInit = () => {
 
             games.forEach(game => {
                 const gameAbb = game.abb;
+                const numLevels = game.num_levels;
                 if (abb === gameAbb) {
                     approvedGame = true;
+                    if (mode === "Time") {
+                        correctedId = levelId + numLevels;
+                    } else {
+                        correctedId = null;
+                    }
                 }
             });
 
@@ -292,7 +284,8 @@ const LevelboardInit = () => {
     const submitValues = async () => {
         const userId = supabase.auth.user().id;
         const date = new Date();
-        const id = correctLevelId(levelId);
+        console.log(correctedId);
+        const id = correctedId === null ? levelId : correctedId;
 
         try {
             const { error } = await supabase
