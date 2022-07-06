@@ -17,6 +17,7 @@ function Levelboard({ session }) {
           isSubmit,
           checkPath, 
           getTitleAndRecords, 
+          getSpecialIds,
           getMonkeys,
           submitValues,
           handleChange,
@@ -31,6 +32,7 @@ function Levelboard({ session }) {
   useEffect(() => {
     checkPath();
     getTitleAndRecords();
+    getSpecialIds();
     getMonkeys();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

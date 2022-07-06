@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function Game() {
-  const { loading, title, checkPath, getModesLevels, ModeLevelTable } = GameInit();
+  const { loading, title, checkPath, getModesLevels, isRadioSelected, handleModeChange, ModeLevelTable } = GameInit();
 
   useEffect(() => {
     checkPath();
@@ -21,6 +21,28 @@ function Game() {
           <button>Back to Game Select</button>
         </Link>
         <h1>{title}</h1>
+      </div>
+      <div className="game-middle">
+        <label htmlFor="main">Main Charts:</label>
+        <input 
+          id="main"
+          type="radio" 
+          name="mode"
+          value="main"
+          checked={isRadioSelected("main")}
+          onChange={handleModeChange}
+          disabled={loading}>
+        </input>
+        <label htmlFor="main">Miscellaneous Charts:</label>
+        <input 
+          id="misc"
+          type="radio" 
+          name="mode"
+          value="misc"
+          checked={isRadioSelected("misc")}
+          onChange={handleModeChange}
+          disabled={loading}>
+        </input>
       </div>
       {loading ? 
         <p>Loading...</p>

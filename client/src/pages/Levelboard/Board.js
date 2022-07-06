@@ -17,7 +17,7 @@ function Board({ mode, records }) {
                     <th>Comment</th>
                 </tr>
                 {records.map((val) => {
-                    return <tr>
+                    return <tr key={`${val.Name}-row`}>
                     <td>{val.Position}</td>
                     <td className="user-info">
                         <div><SimpleAvatar url={val.Avatar_URL} size={50}/></div>

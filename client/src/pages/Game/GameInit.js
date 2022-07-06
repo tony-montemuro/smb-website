@@ -10,8 +10,10 @@ const GameInit = () => {
 
     // states
     const [levelModes, setLevelModes] = useState({modes: []});
+    const [levelModesMisc, setLevelModesMisc] = useState({modes: []});
     const [loading, setLoading] = useState(true);
     const [title, setTitle] = useState("");
+    const [selectedRadioBtn, setSelectedRadioBtn] = useState("main");
     
     // path variables
     const path = window.location.pathname;
@@ -59,15 +61,21 @@ const GameInit = () => {
         return str;
     };
 
-    const queryMode = async (mode, obj) => {
+    // function that queries a mode to gather all 
+    const queryMode = async (mode, obj, isMisc) => {
         let gameAbb = abb;
         if (gameAbb === "smb2pal") {
             gameAbb = "smb2";
         }
 
+        let path = `${gameAbb}_${mode}`;
+        if (isMisc) {
+            path = `${gameAbb}_misc_${mode}`;
+        }
+
         try {
             let {data, error, status} = await supabase
-                .from(`${gameAbb}_${mode}`)
+                .from(path)
                 .select("*");
 
             if (error && status !== 406) {
@@ -81,30 +89,35 @@ const GameInit = () => {
     }
 
     // function that makes a call to the backend server to get the list of levels
-    const getLevels = async (modes) => {
+    const getLevels = async (modes, isMisc) => {
         // init variables
         let levelModesObj = {modes: []};
-
-        // begin setting up the levelModeObj
-        modes.forEach(mode => {
-            levelModesObj["modes"].push(mode);
-        });
+        levelModesObj["modes"] = modes;
 
         // now, query each mode to get the list of levels
         for (let mode of modes) {
-            await queryMode(toSnake(mode), levelModesObj);
+            mode = toSnake(mode);
+            await queryMode(mode, levelModesObj, isMisc);
         }
 
-        setLevelModes(levelModes => ({
-            ...levelModes,
-            ...levelModesObj
-        }));
+        if (isMisc) {
+            setLevelModesMisc(levelModes => ({
+                ...levelModes,
+                ...levelModesObj
+            }));
+        } else {
+            setLevelModes(levelModes => ({
+                ...levelModes,
+                ...levelModesObj
+            }));
+            setLoading(false);
+        }
+        
+        console.log(levelModesObj);
 
-        setLoading(false);
-
-        console.log(levelModesObj["advanced"]);
     }
 
+    // function that queries the names column for table 'tableName'
     const queryNames = async (tableName) => {
         try {
             let {data, error, status} = await supabase
@@ -131,37 +144,26 @@ const GameInit = () => {
         let modes = [];
 
         try {
-            // first, check if game is 'smb2like'. if so, query the monkey ball 2 table.
-            let smb2Like = await queryNames("smb2_like");
-            if (smb2Like.includes(abb)) {
-                modes = await queryNames("smb2_modes");
-            } else {
-                //otherwise, query abb's mode table
-                modes = await queryNames(`${abb}_modes`);
-            }
+            //query abb's mode table
+            modes = await queryNames(`${abb}_modes`);
+            
+            // then, we can begin gathering the levels for each mode
+            getLevels(modes, false);
 
-            console.log(modes);
+            // once this has finished, we must then collect miscellaneous chart information
+            modes = await queryNames(`${abb}_misc_modes`);
+            
+            // finally, we can begin gathering the misc. levels for each mode
+            getLevels(modes, true);
 
-            getLevels(modes);
         } catch(error) {
             alert(error.message);
         }
     }
 
-    // component used to render the level, with a time and score link component
-    const Level = ({val, id}) => {
-        return (
-            <tr className="lvl-time-score">
-                <td><p>{val}</p></td>
-                <td><Link to={{pathname: `score/${id}`}}><button>Score</button></Link></td>
-                <td><Link to={{pathname: `time/${id}`}}><button>Time</button></Link></td>
-            </tr>
-        )
-    }
-
-    const getLevelIdByMode = (mode) => {
+    const getLevelIdByMode = (mode, isMisc) => {
         // first, make a hard copy of the modes array from the levelModes obj
-        const modeArr = [...levelModes["modes"]];
+        const modeArr = isMisc ? [...levelModesMisc["modes"]] : [...levelModes["modes"]];
 
         // then, 'snakeify' each element
         for (let i = 0; i < modeArr.length; i++) {
@@ -176,7 +178,7 @@ const GameInit = () => {
         // finally, loop through the lengths of modes until you have reached the
         // current mode. sum these lengths to get the level id
         while (currMode !== mode) {
-            id += levelModes[currMode].length;
+            id += isMisc ? levelModesMisc[currMode].length : levelModes[currMode].length;
             i++;
             currMode = modeArr[i];
         }
@@ -184,12 +186,65 @@ const GameInit = () => {
         return id;
     }
 
+    const isRadioSelected = (val) => {
+        return selectedRadioBtn === val;
+    }
+
+    const handleModeChange = (e) => {
+        setSelectedRadioBtn(e.target.value);
+        console.log(e.target.value);
+    }
+
+    // component used to render the level, with a time and score link component
+    const Level = ({val, mode, isMisc, id}) => {
+        // first, initalize path variables. this will depend on the isMisc variable.
+        let scorePath;
+        let timePath;
+        if (isMisc) {
+            scorePath = `/games/${abb}misc/score/${id}`;
+            timePath = `/games/${abb}misc/time/${id}`;
+        } else {
+            scorePath = `/games/${abb}/score/${id}`;
+            timePath = `/games/${abb}/time/${id}`;
+        }
+
+        // Level components depend on the mode variable, which can take on 3 different states:
+        // true: only the score button should be rendered (if)
+        // false: only the time button should be rendered (else if)
+        // null: both time and score buttons should be rendered (else)
+        if (mode === true) {
+            return (
+                <tr className="lvl-time-score">
+                    <td><p>{val}</p></td>
+                    <td className="blank"></td>
+                    <td><Link to={{pathname: scorePath}}><button>Score</button></Link></td>
+                </tr>
+            )
+        } else if (mode === false) {
+            return (
+                <tr className="lvl-time-score">
+                    <td><p>{val}</p></td>
+                    <td className="blank"></td>
+                    <td><Link to={{pathname: timePath}}><button>Time</button></Link></td>
+                </tr>
+            )
+        } else {
+            return (
+                <tr className="lvl-time-score">
+                    <td><p>{val}</p></td>
+                    <td><Link to={{pathname: scorePath}}><button>Score</button></Link></td>
+                    <td><Link to={{pathname: timePath}}><button>Time</button></Link></td>
+                </tr>
+            )
+        }
+    }
+
     // component used to render the mode, as well as it's levels
-    const ModeLevel = ({child}) => {
+    const ModeLevel = ({child, isMisc}) => {
         const snake_mode = toSnake(child);
         const [show, setShow] = useState(false);
         
-        let id = getLevelIdByMode(toSnake(child));
+        let id = getLevelIdByMode(toSnake(child), isMisc);
 
         return (
             <tbody className="mode-level">
@@ -198,9 +253,15 @@ const GameInit = () => {
                     <td className="blank"></td>
                     <td className="blank"></td>
                 </tr>
-                {levelModes[snake_mode].map((val) => {
-                    return show ? <Level val={val.name} id={++id} /> : null
-                })}
+                {isMisc ? 
+                    levelModesMisc[snake_mode].map((val) => {
+                        return show ? <Level key={val.name} val={val.name} mode={val.mode} isMisc={true} id={++id} /> : null
+                    })
+                    :
+                    levelModes[snake_mode].map((val) => {
+                        return show ? <Level key={val.name} val={val.name} mode={val.mode} isMisc={false} id={++id} /> : null
+                    })
+                }
             </tbody>
         );
     }
@@ -209,14 +270,20 @@ const GameInit = () => {
     const ModeLevelTable = () => {
         return (
             <>
-                {levelModes["modes"].map((val) => {
-                    return <ModeLevel child={val} />
-                })}
+                {selectedRadioBtn === "main" ? 
+                    levelModes["modes"].map((val) => {
+                        return <ModeLevel key={val} child={val} isMisc={false} />
+                    })
+                    :
+                    levelModesMisc["modes"].map((val) => {
+                        return <ModeLevel key={val} child={val} isMisc={true} />
+                    })
+                }
             </>
         );
     }
 
-    return { loading, title, checkPath, getModesLevels, ModeLevel, ModeLevelTable };
+    return { loading, title, checkPath, getModesLevels, isRadioSelected, handleModeChange, ModeLevelTable };
 }
 
 export default GameInit;

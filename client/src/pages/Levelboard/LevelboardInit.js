@@ -29,6 +29,7 @@ const LevelboardInit = () => {
     const [records, setRecords] = useState([]);
     const [title, setTitle] = useState("");
     const [levelList, setLevelList] = useState([]);
+    const [specialIdList, setSpecialIdList] = useState([]);
     const [monkeyList, setMonkeyList] = useState([]);
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
@@ -44,13 +45,33 @@ const LevelboardInit = () => {
         return str;
     };
 
+    // helper function that will check if game name ends with 'misc'. if so, it will return the string
+    // with the misc sliced off. otherwise, str is simply returned.
+    const miscCheckAndUpdate = (str, returnMode) => {
+        if (str.slice(-4) === "misc") {
+            if (returnMode === "normalize") {
+                return str.slice(0, -4);
+            }
+            else if (returnMode === "underline") {
+                return str.slice(0, -4) + "_" + str.slice(-4);
+            }
+            else {
+                // just in-case
+                return str.slice(0, -4);
+            }
+        } else {
+            return str;
+        }
+    }
+
     // helper function used to query all of the records for levelboard
     const getRecords = async () => {
-        console.log(correctedId);
         const id = correctedId === null ? levelId : correctedId;
+        const gameAbb = miscCheckAndUpdate(abb, "underline");
+
         try {
             let { data: records, error, status } = await supabase
-                .from(`${abb}_${id}`)
+                .from(`${gameAbb}_${id}`)
                 .select(`
                     user_id,
                     profiles:user_id ( username, country, avatar_url ),
@@ -107,17 +128,18 @@ const LevelboardInit = () => {
             setLoading(false);
 
         } catch (error) {
-            alert(error.message);
+            if (error.code === "PGRST200") {
+                navigate("/");
+            } else {
+                alert(error.message);
+            }
         }
     }
 
     // helper function used to query the modes
     const queryModes = async () => {
         let modeList = [];
-        let gameAbb = abb;
-        if (gameAbb === "smb2pal") {
-            gameAbb = "smb2";
-        }
+        const gameAbb = miscCheckAndUpdate(abb, "underline");
 
         try {
             let {data: modes, error, status} = await supabase
@@ -140,10 +162,7 @@ const LevelboardInit = () => {
 
     // helper function that adds levels to levelList parameter from the mode parameter
     const addLevels = async (mode, levelList) => {
-        let gameAbb = abb;
-        if (gameAbb === "smb2pal") {
-            gameAbb = "smb2";
-        }
+        const gameAbb = miscCheckAndUpdate(abb, "underline");
 
         try {
             let {data: levels, error, status} = await supabase
@@ -187,7 +206,7 @@ const LevelboardInit = () => {
 
     // helper function that simply returns the game's abbreviation (used in front-end)
     const getGame = () => {
-        return abb;
+        return miscCheckAndUpdate(abb, "normalize");
     }
 
     // helper function that simply returns the mode. takes a boolean parameter to decide whether
@@ -209,16 +228,22 @@ const LevelboardInit = () => {
         try {
             let {data: games, error, status} = await supabase
                 .from("games")
-                .select("abb, num_levels");
+                .select("abb, num_levels, num_levels_misc");
 
             if (error && status !== 406) {
                 throw error;
             }
 
+            const correctedAbb = miscCheckAndUpdate(abb, "normalize");
+            let n = "num_levels";
+            if (correctedAbb !== abb) {
+                n = "num_levels_misc";
+            }
+
             games.forEach(game => {
                 const gameAbb = game.abb;
-                const numLevels = game.num_levels;
-                if (abb === gameAbb) {
+                const numLevels = game[n];
+                if (correctedAbb === gameAbb) {
                     approvedGame = true;
                     if (mode === "Time") {
                         correctedId = levelId + numLevels;
@@ -262,6 +287,26 @@ const LevelboardInit = () => {
         generateLevelList(modes);
     }
 
+    // function used to get the list of special ids from the database
+    const getSpecialIds = async () => {
+        const gameAbb = miscCheckAndUpdate(abb, "underline");
+
+        try {
+            let { data: ids, error, status } = await supabase
+                .from(`${gameAbb}_special`)     
+                .select("*");
+                
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            console.log(ids);
+            setSpecialIdList(ids);
+        } catch (error) {
+
+        }
+    }
+
     // function used to get the list of monkeys from the database
     const getMonkeys = async () => {
         try {
@@ -274,7 +319,6 @@ const LevelboardInit = () => {
             }
 
             setMonkeyList(monkeyObj);
-            console.log(monkeyObj);
         } catch (error) {
             alert(error.message);
         }
@@ -284,12 +328,12 @@ const LevelboardInit = () => {
     const submitValues = async () => {
         const userId = supabase.auth.user().id;
         const date = new Date();
-        console.log(correctedId);
         const id = correctedId === null ? levelId : correctedId;
+        const gameAbb = miscCheckAndUpdate(abb, "underline");
 
         try {
             const { error } = await supabase
-                .from(`${abb}_${id}`)
+                .from(`${gameAbb}_${id}`)
                 .upsert({ 
                     user_id: userId,
                     [mode]: formValues.record,
@@ -385,20 +429,95 @@ const LevelboardInit = () => {
         return errors;
     }
 
+    const isValid = (id, specialIds, modes) => {
+        if (specialIds.includes(id)) {
+            let index = specialIds.indexOf(id);
+            if (modes[index] === mode) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
     // function that will increment/decrement the level id depending on the
     // increment parameter
     const setLevelId = (increment) => {
         // if increment is zero, decrement mode. otherwise, increment mode.
 
-        // now, we need to ensure user cannot navigate to an unexisting level (id < 0
-        // or id > levelList.length). this function will prevent user from doing this
-        if (!increment && levelId > 1) {
-            return levelId-1;
+        // now, we need to ensure user cannot navigate to an unexisting level (id < 0,
+        // id > levelList.length, or id is special). this function will prevent user from doing this
+
+        // first, let us handle the edge cases (first two scenarios listed in the comment above)
+        if ((!increment && levelId === 1) || (increment && levelId === levelList.length)) {
+            return levelId;
         }
-        if (increment && levelId < levelList.length) {
+
+        // next, let us break down the specialIdList array into two separate arrays
+        let specialIds = [];
+        let modes = [];
+        for (let element of specialIdList) {
+            specialIds.push(element.special_id);
+            modes.push(element.is_score ? "Score" : "Time");
+        }
+        
+        // now, we can position ourselves in the array based on whether we are incrementing or decrementing
+        // by default, pos will be null. this will change if a special id is detected
+        let pos = null;
+        if (increment && specialIds.includes(levelId+1)) {
+            const index = specialIds.indexOf(levelId+1);
+            if (modes[index] === mode) {
+                pos = specialIds.indexOf(levelId+1);
+            }
+        }
+        if (!increment && specialIds.includes(levelId-1)) {
+            const index = specialIds.indexOf(levelId-1);
+            if (modes[index] === mode) {
+                pos = specialIds.indexOf(levelId-1);
+            }
+        }
+
+        // if pos is still null at this point, everything is normal. let's handle that.
+        if (pos === null && increment) {
             return levelId+1;
         }
-        return levelId;
+        if (pos === null && !increment) {
+            return levelId-1;
+        }
+
+        // finally, we have the special case where an adjacent special id is detected
+        // in the direction of motion. return the first id that is not mapped to the
+        // current mode
+        if (increment) {
+            let id = levelId+1;
+            while (id <= levelList.length && !isValid(id, specialIds, modes)) {
+                id++;
+            }
+            
+            // finally, need to check if id is within the valid range. if it has exceeded the length
+            // of levelList, this means we are already on the final level of this mode, so return
+            // levelId
+            if (id <= levelList.length) {
+                return id;
+            } else {
+                return levelId;
+            }
+        } else {
+            let id = levelId-1;
+            while (id > 0 && !isValid(id, specialIds, modes)) {
+                id--;
+            }
+
+            // finally, need to check if id is within the valid range. if it 0 or less,
+            // this means we are on the first level of this mode, so return levelId
+            if (id > 0) {
+                return id;
+            } else {
+                return levelId;
+            }
+        }
     }
 
       // MonkeySelect component
@@ -424,6 +543,7 @@ const LevelboardInit = () => {
              isSubmit,
              checkPath, 
              getTitleAndRecords, 
+             getSpecialIds,
              getMonkeys,
              submitValues,
              handleChange,
