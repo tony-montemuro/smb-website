@@ -1,0 +1,33 @@
+.totalizer-body {
+    display: flex;
+}
+
+.totalizer-container {
+    flex: 1;
+}
+
+.totalizer-container h2 {
+    text-align: center;
+}
+
+.totalizer-container table {
+    margin-left: auto;
+    margin-right: auto;
+    table-layout: auto;
+    width: 80%;
+    border-collapse: collapse;
+}
+
+.totalizer-container th {
+    text-align: left;
+    padding: 4px 8px;
+}
+
+.totalizer-container td {
+    border: 1px solid black;
+    padding: 4px 8px;
+}
+
+.totalizer-container tr:nth-child(even) {
+    background-color: #d3d3d3;
+}

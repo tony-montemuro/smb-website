@@ -19,7 +19,8 @@ function Levelboard({ session }) {
           getTitleAndRecords, 
           getSpecialIds,
           getMonkeys,
-          submitValues,
+          getTotal,
+          submit,
           handleChange,
           swapLevels, 
           handleSubmit,
@@ -34,6 +35,7 @@ function Levelboard({ session }) {
     getTitleAndRecords();
     getSpecialIds();
     getMonkeys();
+    getTotal();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -41,7 +43,7 @@ function Levelboard({ session }) {
     // if there are no errors, and isSubmit is set to true, then submit the form values
     // to database
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      submitValues();
+      submit();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formErrors]);

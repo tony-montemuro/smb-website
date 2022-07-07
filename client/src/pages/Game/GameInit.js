@@ -285,6 +285,23 @@ const GameInit = () => {
         );
     }
 
+    // component used to render links to the totalizer boards
+    const TotalizerBoards = () => {
+        const gameAbb = selectedRadioBtn === "main" ? abb : abb + "misc";
+
+        return (
+            <div>
+                <Link to={{pathname: `/games/${gameAbb}/totalizer`}}>
+                    {selectedRadioBtn === "main" ? 
+                        <p>Score & Time Totalizers</p>
+                        :    
+                        <p>Misc. Score & Time Totalizers</p>
+                    }
+                </Link>
+            </div>
+        );
+    }
+
     return { loading,
             loadingMisc,
             title, 
@@ -292,7 +309,8 @@ const GameInit = () => {
             getModesLevels, 
             isRadioSelected, 
             handleModeChange, 
-            ModeLevelTable 
+            ModeLevelTable,
+            TotalizerBoards
         };
 }
 

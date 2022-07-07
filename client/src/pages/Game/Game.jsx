@@ -13,7 +13,8 @@ function Game() {
           getModesLevels, 
           isRadioSelected, 
           handleModeChange, 
-          ModeLevelTable 
+          ModeLevelTable,
+          TotalizerBoards
         } = GameInit();
 
   useEffect(() => {
@@ -55,10 +56,16 @@ function Game() {
       {loading ? 
         <p>Loading...</p>
         :
-        <div className="level-select">
-          <table>
-            <ModeLevelTable />
-          </table>
+        <div className="game-body">
+          <div className="level-select">
+            <table>
+              <ModeLevelTable />
+            </table>
+          </div>
+          <div className="game-boards">
+            <h2>Totalizer</h2>
+            <TotalizerBoards />
+          </div>
         </div>
       }
     </div>

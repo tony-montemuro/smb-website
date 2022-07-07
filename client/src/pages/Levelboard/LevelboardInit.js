@@ -33,6 +33,8 @@ const LevelboardInit = () => {
     const [monkeyList, setMonkeyList] = useState([]);
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
+    const [currentRecord, setCurrentRecord] = useState(null);
+    const [total, setTotal] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isSubmit, setIsSubmit] = useState(false);
 
@@ -68,6 +70,10 @@ const LevelboardInit = () => {
     const getRecords = async () => {
         const id = correctedId === null ? levelId : correctedId;
         const gameAbb = miscCheckAndUpdate(abb, "underline");
+        let userId = null;
+        if (supabase.auth.user()) {
+            userId = supabase.auth.user().id;
+        }
 
         try {
             let { data: records, error, status } = await supabase
@@ -76,7 +82,7 @@ const LevelboardInit = () => {
                     user_id,
                     profiles:user_id ( username, country, avatar_url ),
                     ${mode},
-                    monkey:monkey_id ( monkey_name ),
+                    monkey:monkey_id ( id, monkey_name ),
                     Day,
                     Month,
                     Year,
@@ -106,21 +112,35 @@ const LevelboardInit = () => {
             let posCount = trueCount;
 
             // now, iterate through each record, and calculate the position.
-            // also, simplify each object
+            // simplify each object. also, if the current user has a submission,
+            // set the form values equal to the submission
             for (let i = 0; i < records.length; i++) {
-                records[i]["Position"] = posCount;
+                const record = records[i];
+                record["Position"] = posCount;
                 trueCount++;
-                if (i < records.length-1 && records[i+1][mode] !== records[i][mode]) {
+                if (i < records.length-1 && records[i+1][mode] !== record[mode]) {
                     posCount = trueCount;
                 }
 
                 // simplify
-                records[i]["Monkey"] = records[i].monkey.monkey_name;
-                records[i]["Name"] = records[i].profiles.username;
-                records[i]["Avatar_URL"] = records[i].profiles.avatar_url;
-                records[i]["Country"] = records[i].profiles.country;
-                delete records[i].monkey;
+                record["Monkey"] = record.monkey.monkey_name;
+                record["Name"] = record.profiles.username;
+                record["Avatar_URL"] = record.profiles.avatar_url;
+                record["Country"] = record.profiles.country;
                 delete records[i].profiles;
+
+                if (userId && record["user_id"] === userId) {
+                    setFormValues({
+                        ...formValues,
+                        record: record[`${mode}`], 
+                        monkeyId: record.monkey.id, 
+                        proof: record["Proof"], 
+                        comment: record["Comment"]
+                    });
+                    setCurrentRecord(record[`${mode}`]);
+                }
+
+                delete records[i].monkey;
             }
 
             console.log(records);
@@ -182,6 +202,70 @@ const LevelboardInit = () => {
         }
     }
 
+    // function that will submit user's record to the levelboard
+    const submitRecord = async (userId, gameAbb) => {
+        const date = new Date();
+        const id = correctedId === null ? levelId : correctedId;
+
+        try {
+            const { error } = await supabase
+                .from(`${gameAbb}_${id}`)
+                .upsert({ 
+                    user_id: userId,
+                    [mode]: formValues.record,
+                    monkey_id: formValues.monkeyId,
+                    Day: date.getDate(),
+                    Month: date.getMonth()+1,
+                    Year: date.getFullYear(),
+                    Proof: formValues.proof,
+                    Comment: formValues.comment
+                }, {
+                    returning: "minimal", // Don't return the value after inserting
+                }, { 
+                    onConflict: "user_id"
+                });
+
+            if (error) {
+                throw error;
+            }
+
+            window.location.reload();
+
+        } catch (error) {
+            if (error.code === "23503") {
+                alert("Error! You have not set up your profile yet. Please go to the top right of the page, and set up your profile to begin submissions.");
+            } else {
+                alert(error.message);
+            }
+        }
+    }
+
+    // function that will update the totalizer table based on the user's submission
+    const updateTotalizer = async (userId, gameAbb) => {
+        const oldRecord = currentRecord === null ? 0 : currentRecord;
+        const newRecord = formValues.record;
+        const difference = newRecord - oldRecord;
+
+        try {
+            const { error } = await supabase
+                .from(`${gameAbb}_${mode.toLowerCase()}_total`)
+                .upsert({
+                    user_id: userId,
+                    total: total + difference
+                }, {
+                    returning: "minimal", // Don't return the value after inserting
+                }, { 
+                    onConflict: "user_id"
+                });
+
+            if (error) {
+                throw error;
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
     // helper function used by the validate function used to count number of
     // digits past the decimal point
     const decimalCount = (num) => {
@@ -214,6 +298,20 @@ const LevelboardInit = () => {
     const getMode = (lower) => {
         // if lower is true, return the mode in lowercase. otherwise, simply return mode.
         return lower ? pathArr[3] : mode;
+    }
+
+    // function that will verfiy whether or not an id is valid based off the specialIds and modes arrays
+    const isValid = (id, specialIds, modes) => {
+        if (specialIds.includes(id)) {
+            let index = specialIds.indexOf(id);
+            if (modes[index] === mode) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 
     // MAIN FUNCTIONS
@@ -324,44 +422,68 @@ const LevelboardInit = () => {
         }
     }
 
-    // function that will submit form values to database
-    const submitValues = async () => {
-        const userId = supabase.auth.user().id;
-        const date = new Date();
-        const id = correctedId === null ? levelId : correctedId;
-        const gameAbb = miscCheckAndUpdate(abb, "underline");
+    // function used to get the user's total from the database
+    const getTotal = async () => {
+        const user = supabase.auth.user();
 
-        try {
-            const { error } = await supabase
-                .from(`${gameAbb}_${id}`)
-                .upsert({ 
-                    user_id: userId,
-                    [mode]: formValues.record,
-                    monkey_id: formValues.monkeyId,
-                    Day: date.getDate(),
-                    Month: date.getMonth()+1,
-                    Year: date.getFullYear(),
-                    Proof: formValues.proof,
-                    Comment: formValues.comment
-                }, {
-                    returning: "minimal", // Don't return the value after inserting
-                }, { 
-                    onConflict: "user_id"
-                });
+        if (user) {
+            const gameAbb = miscCheckAndUpdate(abb, "underline");
+            const userId = user.id;
 
-            if (error) {
-                throw error;
-            }
+            try {
+                let { data, error, status } = await supabase
+                    .from(`${gameAbb}_${mode.toLowerCase()}_total`)
+                    .select("total")
+                    .eq("user_id", userId)
+                    .single();
 
-            window.location.reload();
+                if (error && status !== 406) {
+                    throw error;
+                }
 
-        } catch (error) {
-            if (error.code === "23503") {
-                alert("Error! You have not set up your profile yet. Please go to the top right of the page, and set up your profile to begin submissions.");
-            } else {
+                // special case that occurs if user has never submitted to a category. create a new
+                // entry in the table for them
+                if (status === 406 && data === null) {
+                    const defaultVal = 0;
+                    try {
+                        const { error } = await supabase
+                            .from(`${gameAbb}_${mode.toLowerCase()}_total`)
+                            .insert({ 
+                                user_id: userId,
+                                total: defaultVal
+                            });
+
+                        if (error) {
+                            throw error;
+                        }
+
+                        setTotal(defaultVal);
+
+                    } catch (error) {
+                        alert(error.message);
+                    }
+                    
+                } else {
+                    setTotal(data.total);
+                }
+            } catch (error) {
                 alert(error.message);
             }
         }
+    }
+
+
+    // function that will submit form values to database, as well as updating both the medal and score/time totalzier tables
+    const submit = async () => {
+        // initialize variables that will be used in each function call
+        const userId = supabase.auth.user().id;
+        const gameAbb = miscCheckAndUpdate(abb, "underline");
+
+        // call to function to submit record to learderboard
+        submitRecord(userId, gameAbb);
+
+        // call to function to update the totalizer table
+        updateTotalizer(userId, gameAbb);
     }
 
     // function that runs each time a form value is changed. keeps the formValues
@@ -427,19 +549,6 @@ const LevelboardInit = () => {
         }
 
         return errors;
-    }
-
-    const isValid = (id, specialIds, modes) => {
-        if (specialIds.includes(id)) {
-            let index = specialIds.indexOf(id);
-            if (modes[index] === mode) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
     }
 
     // function that will increment/decrement the level id depending on the
@@ -547,7 +656,8 @@ const LevelboardInit = () => {
              getTitleAndRecords, 
              getSpecialIds,
              getMonkeys,
-             submitValues,
+             getTotal,
+             submit,
              handleChange,
              swapLevels, 
              handleSubmit,

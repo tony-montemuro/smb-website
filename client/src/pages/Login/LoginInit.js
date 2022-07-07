@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 const LoginInit = () => {
+    // states
     const [loggingIn, setLoggingIn] = useState(false);
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState("initState");

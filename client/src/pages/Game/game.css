@@ -3,9 +3,17 @@
     margin-bottom: 20px;
 }
 
+.game-body {
+    display: flex;
+}
+
+.level-select {
+    flex: 1;
+}
+
 .level-select table {
     table-layout: auto;
-    width: 50%;
+    width: 100%;
     border-collapse: collapse;
 }
 
@@ -25,4 +33,9 @@
 
 .mode-name td {
     width: 100%;
+}
+
+.game-boards {
+    flex: 1;
+    text-align: center;
 }
