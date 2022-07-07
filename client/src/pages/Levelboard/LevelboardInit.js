@@ -433,9 +433,9 @@ const LevelboardInit = () => {
         if (specialIds.includes(id)) {
             let index = specialIds.indexOf(id);
             if (modes[index] === mode) {
-                return false;
-            } else {
                 return true;
+            } else {
+                return false;
             }
         } else {
             return true;
@@ -462,19 +462,21 @@ const LevelboardInit = () => {
             specialIds.push(element.special_id);
             modes.push(element.is_score ? "Score" : "Time");
         }
+        console.log(modes);
         
         // now, we can position ourselves in the array based on whether we are incrementing or decrementing
         // by default, pos will be null. this will change if a special id is detected
         let pos = null;
         if (increment && specialIds.includes(levelId+1)) {
             const index = specialIds.indexOf(levelId+1);
-            if (modes[index] === mode) {
+            if (modes[index] !== mode) {
                 pos = specialIds.indexOf(levelId+1);
             }
         }
         if (!increment && specialIds.includes(levelId-1)) {
             const index = specialIds.indexOf(levelId-1);
-            if (modes[index] === mode) {
+            console.log(modes[index]);
+            if (modes[index] !== mode) {
                 pos = specialIds.indexOf(levelId-1);
             }
         }

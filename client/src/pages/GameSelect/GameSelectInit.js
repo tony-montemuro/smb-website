@@ -15,7 +15,8 @@ const GameSelectInit = () => {
         try {
             let {data: games, error, status} = await supabase
                 .from("games")
-                .select("*");
+                .select("*")
+                .order("id");
             
             if (error && status !== 406) {
                 throw error;

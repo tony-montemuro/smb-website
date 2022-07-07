@@ -12,6 +12,7 @@ const GameInit = () => {
     const [levelModes, setLevelModes] = useState({modes: []});
     const [levelModesMisc, setLevelModesMisc] = useState({modes: []});
     const [loading, setLoading] = useState(true);
+    const [loadingMisc, setLoadingMisc] = useState(true);
     const [title, setTitle] = useState("");
     const [selectedRadioBtn, setSelectedRadioBtn] = useState("main");
     
@@ -105,6 +106,7 @@ const GameInit = () => {
                 ...levelModes,
                 ...levelModesObj
             }));
+            setLoadingMisc(false);
         } else {
             setLevelModes(levelModes => ({
                 ...levelModes,
@@ -283,7 +285,15 @@ const GameInit = () => {
         );
     }
 
-    return { loading, title, checkPath, getModesLevels, isRadioSelected, handleModeChange, ModeLevelTable };
+    return { loading,
+            loadingMisc,
+            title, 
+            checkPath, 
+            getModesLevels, 
+            isRadioSelected, 
+            handleModeChange, 
+            ModeLevelTable 
+        };
 }
 
 export default GameInit;
