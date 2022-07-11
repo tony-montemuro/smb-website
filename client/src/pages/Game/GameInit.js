@@ -302,6 +302,24 @@ const GameInit = () => {
         );
     }
 
+    // component used to render links to the medal table boards
+    const MedalTableBoards = () => {
+        const gameAbb = selectedRadioBtn === "main" ? abb : abb + "misc";
+
+        return (
+            <div>
+                <Link to={{pathname: `/games/${gameAbb}/medals`}}>
+                    {selectedRadioBtn === "main" ?
+                        <p>Score & Time Medal Tables</p>
+                        :
+                        <p>Misc. Score & Time Medal Tables</p>
+                    }
+                </Link>
+            </div>
+        )
+    }
+    
+
     return { loading,
             loadingMisc,
             title, 
@@ -310,7 +328,8 @@ const GameInit = () => {
             isRadioSelected, 
             handleModeChange, 
             ModeLevelTable,
-            TotalizerBoards
+            TotalizerBoards,
+            MedalTableBoards
         };
 }
 

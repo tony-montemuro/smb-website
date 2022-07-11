@@ -2,14 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
-function Board({ isScore, data }) {
+function Board({ data }) {
     return (
         <table>
             <tbody>
             <tr>
                 <th>Position</th>
                 <th>Name</th>
-                <th>{isScore ? "Total Score" : "Total Time"}</th>
+                <th>Platinum</th>
+                <th>Gold</th>
+                <th>Silver</th>
+                <th>Bronze</th>
             </tr>
                 {data.map((val) => {
                     return <tr key={`${val.Name}-row`}>
@@ -29,7 +32,10 @@ function Board({ isScore, data }) {
                             }
                             <div><Link to={`/user/${val.user_id}`}>{val.Name}</Link></div>
                         </td>
-                        <td>{isScore ? val.total : val.total.toFixed(2)}</td>
+                        <td>{val.platinum}</td>
+                        <td>{val.gold}</td>
+                        <td>{val.silver}</td>
+                        <td>{val.bronze}</td>
                     </tr>  
                 })}
             </tbody>

@@ -13,6 +13,7 @@ import Login from "./pages/Login/Login";
 import Profile from "./pages/Profile/Profile";
 import User from "./pages/User/User";
 import Totalizer from "./pages/Totalizer/Totalizer";
+import Medals from "./pages/Medals/Medals";
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path="/games" element={<GameSelect />}/>
           <Route path="games/:game" element={<Game />}/>
           <Route path="games/:game/totalizer" element={<Totalizer />} />
+          <Route path="games/:game/medals" element={<Medals />} />
           <Route path="games/:game/:mode/:levelid" element={<Levelboard session={session}/>}/>
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/support" element={<Support />}/>

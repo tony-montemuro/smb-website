@@ -1,0 +1,33 @@
+.medals-body {
+    display: flex;
+}
+
+.medals-container {
+    flex: 1;
+}
+
+.medals-container h2 {
+    text-align: center;
+}
+
+.medals-container table {
+    margin-left: auto;
+    margin-right: auto;
+    table-layout: auto;
+    width: 80%;
+    border-collapse: collapse;
+}
+
+.medals-container th {
+    text-align: left;
+    padding: 4px 8px;
+}
+
+.medals-container td {
+    border: 1px solid black;
+    padding: 4px 8px;
+}
+
+.medals-container tr:nth-child(even) {
+    background-color: #d3d3d3;
+}

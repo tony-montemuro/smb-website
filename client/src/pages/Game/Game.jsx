@@ -14,7 +14,8 @@ function Game() {
           isRadioSelected, 
           handleModeChange, 
           ModeLevelTable,
-          TotalizerBoards
+          TotalizerBoards,
+          MedalTableBoards
         } = GameInit();
 
   useEffect(() => {
@@ -53,7 +54,7 @@ function Game() {
           disabled={loading || loadingMisc}>
         </input>
       </div>
-      {loading ? 
+      {loading || loadingMisc ? 
         <p>Loading...</p>
         :
         <div className="game-body">
@@ -65,6 +66,8 @@ function Game() {
           <div className="game-boards">
             <h2>Totalizer</h2>
             <TotalizerBoards />
+            <h2>Medal Tables</h2>
+            <MedalTableBoards />
           </div>
         </div>
       }

@@ -56,9 +56,9 @@ function Profile({ session }) {
                     onChange={(e) => setUsername(e.target.value)}
                 />
             </div>
+            <p>{usernameError !== "initState" ? usernameError : ""}</p>
             <label htmlFor="countryId">Country (optional): </label>
             <CountrySelect />
-            <p>{usernameError !== "initState" ? usernameError : ""}</p>
             <div>
                 <label htmlFor="youtube-url">YouTube URL (optional): </label>
                 <input

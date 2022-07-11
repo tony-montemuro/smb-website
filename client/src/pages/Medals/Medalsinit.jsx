@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import Board from "./Board";
 
-const TotalizerInit = () => {
+const MedalsInit = () => {
     // states
     const [title, setTitle] = useState("");
-    const [scoreTotals, setScoreTotals] = useState([]);
-    const [timeTotals, setTimeTotals] = useState([]);
+    const [scoreMedals, setScoreMedals] = useState([]);
+    const [timeMedals, setTimeMedals] = useState([]);
 
     // path variables
     const path = window.location.pathname;
@@ -33,6 +33,11 @@ const TotalizerInit = () => {
         } else {
             return str;
         }
+    }
+
+    // helper function which simply checks for equality of medal sets. this will almost always return false
+    const equalityCheck = (currSet, nextSet) => {
+        return currSet.platinum === nextSet.platinum && currSet.gold === nextSet.gold && currSet.silver === nextSet.silver && currSet.bronze === nextSet.bronze;
     }
 
     // function that ensures user has navigated to a valid path. also used to grab the title of the game.
@@ -69,24 +74,31 @@ const TotalizerInit = () => {
             }
 
         } catch(error) {
+            console.log("ERROR 1");
             alert(error.message);
         }
     }
 
-    const getTotalizer = async (isScore) => {
+    const getMedalTable = async (isScore) => {
         const gameAbb = miscCheckAndUpdate(abb, "underline");
 
         try {
-            // query the score totalizer table for the particular game
+            // query the medal table for the particular game
             const mode = isScore ? "score" : "time";
-            let { data: totals, status, error } = await supabase
-                .from(`${gameAbb}_${mode}_total`)
+            let { data: medalsList, status, error } = await supabase
+                .from(`${gameAbb}_${mode}_medal_table`)
                 .select(`
                     user_id,
                     profiles:user_id ( id, username, country, avatar_url ),
-                    total
+                    platinum,
+                    gold,
+                    silver,
+                    bronze
                 `)
-                .order("total", { ascending: false });
+                .order("platinum", { ascending: false })
+                .order("gold", { ascending: false })
+                .order("silver", { ascending: false })
+                .order("bronze", { ascending: false });
 
             if (error && status !== 406) {
                 throw error;
@@ -99,25 +111,27 @@ const TotalizerInit = () => {
             // now, iterate through each record, and calculate the position.
             // simplify each object. also, if the current user has a submission,
             // set the form values equal to the submission
-            for (let i = 0; i < totals.length; i++) {
-                const total = totals[i];
-                total["Position"] = posCount;
+            for (let i = 0; i < medalsList.length; i++) {
+                const medalSet = medalsList[i];
+                medalSet["Position"] = posCount;
                 trueCount++;
-                if (i < totals.length-1 && totals[i+1]["total"] !== total["total"]) {
+                if (i < medalSet.length-1 && equalityCheck(medalSet, medalsList[i+1])) {
                     posCount = trueCount;
                 }
 
                 // simplify
-                total["Name"] = total.profiles.username;
-                total["Country"] = total.profiles.country;
-                total["Avatar_URL"] = total.profiles.avatar_url;
-                delete totals[i].profiles;
+                medalSet["Name"] = medalSet.profiles.username;
+                medalSet["Country"] = medalSet.profiles.country;
+                medalSet["Avatar_URL"] = medalSet.profiles.avatar_url;
+                delete medalSet.profiles;
             }
 
-            isScore ? setScoreTotals(totals) : setTimeTotals(totals);
+            isScore ? setScoreMedals(medalsList) : setTimeMedals(medalsList);
 
-            console.log(totals);
+            console.log(medalsList);
         } catch (error) {
+            console.log(`${isScore ? "score" : "time"}`);
+            console.log(error);
             alert(error.message);
         }
     }
@@ -126,25 +140,25 @@ const TotalizerInit = () => {
         return `/games/${miscCheckAndUpdate(abb, "normalize")}`;
     }
 
-    const TotalizerBoard = ({ isScore }) => {
+    const MedalsBoard = ({ isScore }) => {
         return (
             <>
                 {isScore ? 
-                    <div className="totalizer-container">
-                        <h2>Score Totals</h2>
-                        <Board isScore={isScore} data={scoreTotals} />
+                    <div className="medals-container">
+                        <h2>Score Medal Table</h2>
+                        <Board data={scoreMedals} />
                     </div>
                     : 
-                    <div className="totalizer-container">
-                        <h2>Time Totals</h2>
-                        <Board isScore={isScore} data={timeTotals} />
+                    <div className="medals-container">
+                        <h2>Time Medal Table</h2>
+                        <Board data={timeMedals} />
                     </div>
                 }
             </>
         );
     }
 
-    return { title, checkPath, getTotalizer, getLinkBack, TotalizerBoard };
+    return { title, checkPath, getMedalTable, getLinkBack, MedalsBoard };
 }
 
-export default TotalizerInit;
+export default MedalsInit;

@@ -15,11 +15,12 @@ function Levelboard({ session }) {
           formValues, 
           formErrors,
           isSubmit,
+          submitting,
           checkPath, 
           getTitleAndRecords, 
           getSpecialIds,
           getMonkeys,
-          getTotal,
+          getTotalAndMedals,
           submit,
           handleChange,
           swapLevels, 
@@ -35,7 +36,7 @@ function Levelboard({ session }) {
     getTitleAndRecords();
     getSpecialIds();
     getMonkeys();
-    getTotal();
+    getTotalAndMedals();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -99,7 +100,7 @@ function Levelboard({ session }) {
                    onChange={handleChange}
                  />
                  <p>{ formErrors.comment }</p>
-                 <button>Submit</button>
+                 <button disabled={submitting}>Submit</button>
                </form>
              </div>
              :
