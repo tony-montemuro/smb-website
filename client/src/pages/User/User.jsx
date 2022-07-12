@@ -1,6 +1,7 @@
 import "./user.css";
 import UserInit from "./UserInit";
 import { React, useEffect } from "react";
+import { Link } from "react-router-dom";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
 function User() {
@@ -9,22 +10,28 @@ function User() {
          youtube_url, 
          twitch_url, 
          avatar_url, 
-         loading, 
-         loadUser, 
+         loadingUser,
+         loadingGameList, 
+         gameList,
+         customGameList,
+         loadUser,
+         queryGameList
     } = UserInit();
 
   useEffect(() => {
     loadUser();
+    queryGameList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className="user">
-        {loading ?
+        {loadingUser || loadingGameList ?
             <p>Loading...</p>
         : 
-            <div className="view-profile">
-                <p>{username}</p>
+          <div className="view-profile">
+            <div className="user-profile">
+              <p>{username}</p>
                 {country ? 
                   <div className="country">
                     <p>{country.name}</p>
@@ -51,7 +58,18 @@ function User() {
                 : 
                 ""}
             </div>
-            
+              <div className="user-stats">
+                <h1>View Player Stats</h1>
+                <h2>Main Games</h2>
+                {gameList.map(val => {
+                  return <Link key={val.abb} to={{ pathname: val.abb}}><p>{val.name}</p></Link>
+                })}
+                <h2>Custom Games</h2>
+                {customGameList.map(val => {
+                  return <Link key={val.abb} to={{ pathname: val.abb}}><p>{val.name}</p></Link>
+                })}
+              </div> 
+          </div>
         }
     </div>
   );

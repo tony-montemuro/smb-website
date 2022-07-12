@@ -64,10 +64,10 @@ function Game() {
             </table>
           </div>
           <div className="game-boards">
-            <h2>Totalizer</h2>
-            <TotalizerBoards />
             <h2>Medal Tables</h2>
             <MedalTableBoards />
+            <h2>Totalizer</h2>
+            <TotalizerBoards />
           </div>
         </div>
       }

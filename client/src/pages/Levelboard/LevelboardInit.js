@@ -68,15 +68,14 @@ const LevelboardInit = () => {
         }
     }
 
-    // helper function used to query all of the records for levelboard
-    const getRecords = async () => {
+    // helper function that will query a levelboard for records, and clean up the data.
+    const queryRecordsAndClean = async () => {
+        // declare variables
+        let r = [];
         const id = correctedId === null ? levelId : correctedId;
         const gameAbb = miscCheckAndUpdate(abb, "underline");
-        let userId = null;
-        if (supabase.auth.user()) {
-            userId = supabase.auth.user().id;
-        }
-
+        
+        // now, perform query
         try {
             let { data: records, error, status } = await supabase
                 .from(`${gameAbb}_${id}`)
@@ -114,8 +113,7 @@ const LevelboardInit = () => {
             let posCount = trueCount;
 
             // now, iterate through each record, and calculate the position.
-            // simplify each object. also, if the current user has a submission,
-            // set the form values equal to the submission
+            // simplify each object.
             for (let i = 0; i < records.length; i++) {
                 const record = records[i];
                 record["Position"] = posCount;
@@ -130,24 +128,9 @@ const LevelboardInit = () => {
                 record["Avatar_URL"] = record.profiles.avatar_url;
                 record["Country"] = record.profiles.country;
                 delete records[i].profiles;
-
-                if (userId && record["user_id"] === userId) {
-                    setFormValues({
-                        ...formValues,
-                        record: record[`${mode}`], 
-                        monkeyId: record.monkey.id, 
-                        proof: record["Proof"], 
-                        comment: record["Comment"]
-                    });
-                    setCurrentRecord(record[`${mode}`]);
-                }
-
-                delete records[i].monkey;
             }
 
-            console.log(records);
-            setRecords(records);
-            setLoading(false);
+            r = records;
 
         } catch (error) {
             if (error.code === "PGRST200") {
@@ -155,7 +138,41 @@ const LevelboardInit = () => {
             } else {
                 alert(error.message);
             }
+        } finally {
+            return r;
         }
+    }
+
+    // helper function used to query all of the records for levelboard
+    const getRecords = async () => {
+        // declare variables
+        const user = supabase.auth.user();
+        const userId = user ? user.id : null;
+        const records = await queryRecordsAndClean();
+
+        // if the current user has a submission, set the form values equal to the submission
+        // also, delete the records[i].monkey from each record
+        for (let i = 0; i < records.length; i++) {
+            const record = records[i];
+
+            if (userId && record["user_id"] === userId) {
+                setFormValues({
+                    ...formValues,
+                    record: record[`${mode}`], 
+                    monkeyId: record.monkey.id, 
+                    proof: record["Proof"], 
+                    comment: record["Comment"]
+                });
+                setCurrentRecord(record[`${mode}`]);
+            }
+
+            delete records[i].monkey;
+        }
+
+        console.log("Records: ");
+        console.log(records);
+        setRecords(records);
+        setLoading(false);
     }
 
     // helper function used to query the modes
@@ -231,40 +248,7 @@ const LevelboardInit = () => {
                 throw error;
             }
 
-            if (records.length > 0) {
-                console.log("HIT WRONG PATH");
-                updateMedalTable(userId, gameAbb);
-            } else {
-                // special case: the chart is empty. if this is the case, award player with a platinum medal
-                try {
-                    const userMedals = medalTable.find(item => item.user_id === userId);
-                    console.log(userMedals);
-                    console.log("^ USER MEDALS");
-                    const { error } = await supabase
-                        .from(`${gameAbb}_${mode.toLowerCase()}_medal_table`)
-                        .upsert({
-                            user_id: userId,
-                            platinum: userMedals.platinum+1,
-                            gold: userMedals.gold,
-                            silver: userMedals.silver,
-                            bronze: userMedals.bronze
-                        }, {
-                            returning: "minimal", // Don't return the value after inserting
-                        })
-                        .eq("user_id", userId);
-
-                    if (error) {
-                        throw(error);
-                    }
-
-                    console.log("Medal table updated");
-                } catch (error) {
-                    alert(error.message);
-                } finally {
-                    window.location.reload();
-                }
-            }
-
+            updateMedalTable(userId, gameAbb);
         } catch (error) {
             if (error.code === "23503") {
                 alert("Error! You have not set up your profile yet. Please go to the top right of the page, and set up your profile to begin submitting.");
@@ -305,43 +289,184 @@ const LevelboardInit = () => {
         }
     }
 
+    // helper function that will generate an object based on the position
+    // of a submission on the levelboard. NOTE: isNew will determine
+    // whether to set newMedal to medalType or oldMedal to medalType
+    const generateObj = (medalType, medals, isNew) => {
+        return {
+            user_id: medals.user_id,
+            oldMedal: isNew ? null : medalType,
+            newMedal: isNew ? medalType : null,
+            platinum: medals.platinum,
+            gold: medals.gold,
+            silver: medals.silver,
+            bronze: medals.bronze
+        }
+    }
+
     // function that will update the medal table based on the user's submission
     const updateMedalTable = async (user_id, gameAbb) => {
-        const newRecord = formValues.record;
+        // first, requery the level now that a new record has been submitted
+        const updatedRecords = await queryRecordsAndClean();
 
-        // now, traverse the object, and figure out where the new record should go
+        // now, clean the data
+        for (let i = 0; i < updatedRecords.length; i++) {
+            delete updatedRecords[i].monkey;
+        }
+
+        // now, we need to generate an array of objects. the objects will store information about
+        // the top 4 of the levelboard BEFORE a new submission has been added (records).
+        // each object will have the following properties:
+        // userId, oldMedal, newMedal, platinums, golds, silvers, bronzes
+        
+        // PART 1: Gather userIds of previous top 4, old medals, and plat/gold/silver/bronze
+        let userInfo = [];
         let i = 0;
-        while (newRecord < records[i][mode]) {
+        while (i < records.length && records[i]["Position"] <= 4) {
+            // local variables
+            const record = records[i];
+            const pos = record["Position"];
+            const medals = medalTable.find(item => item.user_id === record.user_id);
+
+            // Special case: i = 0. This is the only possible position where a platinum can occur,
+            // we need to check for that.
+            if (i === 0) {
+                if (records.length > 1 && records[i+1]["Position"] === 1) {
+                    userInfo.push(generateObj("gold", medals, false));
+                } else {
+                    userInfo.push(generateObj("platinum", medals, false));
+                }
+            } 
+
+            // General case: simply translate position to medal
+            else {
+                if (pos === 1) {
+                    userInfo.push(generateObj("gold", medals, false));
+                }
+                else if (pos === 2) {
+                    userInfo.push(generateObj("silver", medals, false));
+                }
+                else if (pos === 3) {
+                    userInfo.push(generateObj("bronze", medals, false));
+                }
+                else {
+                    userInfo.push(generateObj(null, medals, false));
+                }
+             }
             i++;
         }
 
-        // once we have figured out where, there are two general cases:
-        // ties and unties. the medal table must be changed differently depending on if the user
-        // tied or untied a 1st, 2nd, or 3rd place score/time
+        i = 0;
+        // PART 2: Gather userIds of new top 3, and new medals. NOTE: if the user was
+        // not previously in the top 4, we will need to create a new object for them,
+        // and push them into the userInfo array. we must check this at every level
+        while (i < updatedRecords.length && updatedRecords[i]["Position"] <= 3) {
+            // local variables
+            const record = updatedRecords[i];
+            const pos = record["Position"];
+            const info = userInfo.find(item => item.user_id === record.user_id);
+            const medals = medalTable.find(item => item.user_id === record.user_id);
 
-        // TIES
-        if (newRecord === records[i][mode]) {
-            // now, there are three positions we need to worry about: 1st, 2nd/3rd, and 4th+
-            if (records[i]["Position"] === 1) {
-                // when a user ties a first place score/time, we must check whether or not 1st place was previously tied
-                // or not
-                if (i < records.length-1 && records[i][mode] === records[i+1][mode]) {
-                    alert(`${user_id} recieves a gold medal.`);
+            // Special case: i = 0. This is the only possible position where a platinum can occur,
+            // we need to check for that.
+            if (i === 0) {
+                if (updatedRecords.length > 1 && updatedRecords[i+1]["Position"] === 1) {
+                    if (typeof info === "undefined") {
+                        userInfo.push(generateObj("gold", medals, true));
+                    } else {
+                        info.newMedal = "gold";
+                    }
                 } else {
-                    alert(`${user_id} recieves a gold medal. ${records[i].user_id} loses a platinum medal, but gains a gold medal.`);
+                    if (typeof info === "undefined") {
+                        userInfo.push(generateObj("platinum", medals, true));
+                    } else {
+                        info.newMedal = "platinum";
+                    }
+                }
+
+            // General case: translate new position into new medal.
+            } else {
+                if (pos === 1) {
+                    if (typeof info === "undefined") {
+                        userInfo.push(generateObj("gold", medals, true));
+                    } else {
+                        info.newMedal = "gold";
+                    }
+                }
+                else if (pos === 2) {
+                    if (typeof info === "undefined") {
+                        userInfo.push(generateObj("silver", medals, true));
+                    } else {
+                        info.newMedal = "silver";
+                    }
+                }
+                else {
+                    if (typeof info === "undefined") {
+                        userInfo.push(generateObj("bronze", medals, true));
+                    } else {
+                        info.newMedal = "bronze";
+                    }
                 }
             }
-            else if (records[i]["Position"] >= 2 && records[i]["Position"] <= 3) {
-                alert(`${user_id} recieves a silver/bronze medal.`);
-            }
-            if (records[i]["Position"] > 3) {
-                alert(`${user_id} recieves no medals for this submission.`);
-            }
-        } 
-        // UNTIES
-        else {
-
+            i++;
         }
+
+        // Now that we have this information in userInfo, we need to drop any
+        // entries where the oldMedal and newMedal are the same, since these entries
+        // do not require an update
+        const tempArr = [];
+        userInfo.forEach(info => {
+            if (info.oldMedal !== info.newMedal) {
+                tempArr.push(info);
+            }
+        });
+        userInfo = tempArr;
+
+        // This will be the list of users that we need to update. Finally,
+        // with that data we have, we can calculate the new medal values for
+        // each player.
+        for (let i = 0; i < userInfo.length; i++) {
+            const user = userInfo[i];
+            const oldMedal = user.oldMedal;
+            const newMedal = user.newMedal;
+            if (user.oldMedal) {
+                user[oldMedal] = user[oldMedal]-1;
+            }
+            if (user.newMedal) {
+                user[newMedal] = user[newMedal]+1;
+            }
+        }
+
+        console.log("userInfo");
+        console.log(userInfo);
+
+        // Finally, with this list, we can update the medal table database.
+        for (let info of userInfo) {
+            try {
+                const { error } = await supabase
+                    .from(`${gameAbb}_${mode.toLowerCase()}_medal_table`)
+                    .upsert({
+                        user_id: info.user_id,
+                        platinum: info.platinum,
+                        gold: info.gold,
+                        silver: info.silver,
+                        bronze: info.bronze
+                    }, {
+                        returning: "minimal", // Don't return the value after inserting
+                    }, { 
+                        onConflict: "user_id"
+                    });
+
+                if (error) {
+                    throw error;
+                }
+            } catch (error) {
+                console.log(error);
+                alert(error.message);
+            }
+        }
+
+        window.location.reload(); 
     }
 
     // helper function used by the validate function used to count number of
@@ -476,6 +601,7 @@ const LevelboardInit = () => {
                 throw error;
             }
 
+            console.log("Special Ids: ");
             console.log(ids);
             setSpecialIdList(ids);
         } catch (error) {
@@ -502,62 +628,70 @@ const LevelboardInit = () => {
 
     // function used to get the user's total from the database
     const getTotalAndMedals = async () => {
+        // declare variables
         const user = supabase.auth.user();
-        const userId = user.id;
+        const userId = user ? user.id : null;
         const prefix = `${miscCheckAndUpdate(abb, "underline")}_${mode.toLowerCase()}`;
         const defaultVal = 0;
 
-         // first, query the medal table for the respective game and mode
-         try {
-            let { data, error, status } = await supabase
-                .from(`${prefix}_medal_table`)
-                .select("*");
-
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            const userRow = data.find(item => item.user_id === userId);
-            console.log(`Medal Tabel:`);
-            if (typeof userRow === "undefined") {
-                try {
-                    const { data, error } = await supabase
-                        .from(`${prefix}_medal_table`)
-                        .insert({
-                             user_id: userId,
-                             platinum: defaultVal,
-                             gold: defaultVal,
-                             silver: defaultVal,
-                             bronze: defaultVal
+        // these queries are only necessary to run if their is a user logged in, since this information
+        // is used in the submission process, and only users are able to submit
+        if (user) {
+            // first, query the medal table for the respective game and mode
+            try {
+                let { data: table, error, status } = await supabase
+                    .from(`${prefix}_medal_table`)
+                    .select("*");
+    
+                if (error && status !== 406) {
+                    throw error;
+                }
+    
+                // if the user does not have a row, we need to do an extra query to add them to the medal table
+                const userRow = table.find(item => item.user_id === userId);
+                console.log(`Medal Tabel:`);
+                if (typeof userRow === "undefined") {
+                    try {
+                        const { error } = await supabase
+                            .from(`${prefix}_medal_table`)
+                            .insert({
+                                user_id: userId,
+                                platinum: defaultVal,
+                                gold: defaultVal,
+                                silver: defaultVal,
+                                bronze: defaultVal
+                            });
+    
+                        if (error) {
+                            throw error;
+                        }
+    
+                        table.push({
+                            user_id: userId,
+                            platinum: defaultVal,
+                            gold: defaultVal,
+                            silver: defaultVal,
+                            bronze: defaultVal
                         });
-
-                    if (error) {
-                        throw error;
-                    }
-
-                    console.log(data);
-                    setMedalTable(data);
-
-                } catch (error) {
-                    if (error.code === '23503') {
-                        console.log("Failed to create new entry into table because user has not created their profile.");
-                    } else {
-                        alert(error.message);
+    
+                    } catch (error) {
+                        // Error code 23503 occurs when the user has signed up to the website, but has not yet created a profile
+                        if (error.code === '23503') {
+                            console.log("Failed to create new entry into table because user has not created their profile.");
+                        } else {
+                            alert(error.message);
+                        }
                     }
                 }
-            } else {
-                console.log(data);
-                setMedalTable(data);
+
+                console.log(table);
+                setMedalTable(table);
+                
+            } catch (error) {
+                alert(error.message);
             }
-            
-        } catch (error) {
-            alert(error.message);
-        }
 
-        // then, query the totals table for the respective game and mode to query the user's total
-        if (user) {
-            const userId = user.id;
-
+            // then, query the totals table for the respective game and mode to query the user's total
             try {
                 let { data, error, status } = await supabase
                     .from(`${prefix}_total`)
@@ -571,6 +705,7 @@ const LevelboardInit = () => {
 
                 // special case that occurs if user has never submitted to a category. create a new
                 // entry in the table for them. do this for the medal table as well.
+                console.log(`Total:`);
                 if (status === 406 && data === null) {
                     try {
                         const { error } = await supabase
@@ -584,9 +719,11 @@ const LevelboardInit = () => {
                             throw error;
                         }
 
+                        console.log(defaultVal);
                         setTotal(defaultVal);
 
                     } catch (error) {
+                        // Error code 23503 occurs when the user has signed up to the website, but has not yet created a profile
                         if (error.code === '23503') {
                             console.log("Failed to create new entry into table because user has not created their profile.");
                         } else {
@@ -595,6 +732,7 @@ const LevelboardInit = () => {
                     }
                     
                 } else {
+                    console.log(data.total);
                     setTotal(data.total);
                 }
             } catch (error) {
@@ -625,7 +763,6 @@ const LevelboardInit = () => {
         const { id, value } = e.target;
         setFormValues({...formValues, [id]: value});
         console.log(formValues);
-        console.log(records);
     }
 
     // function used to swap to a different level

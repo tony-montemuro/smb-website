@@ -15,7 +15,10 @@ const UserInit = () => {
     const [youtube_url, setYoutubeUrl] = useState(null);
     const [twitch_url, setTwitchUrl] = useState(null);
     const [avatar_url, setAvatarUrl] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loadingUser, setLoadingUser] = useState(true);
+    const [loadingGameList, setLoadingGameList] = useState(true);
+    const [gameList, setGameList] = useState([]);
+    const [customGameList, setCustomGameList] = useState([]);
 
     // function used to make sure a valid user is being viewed
     const checkForUser = async () => {
@@ -64,10 +67,11 @@ const UserInit = () => {
             } else {
                 setCountry("");
             }
-    
-            setLoading(false);
+
         } catch (error) {
             alert(error.message);
+        } finally {
+            setLoadingUser(false);
         }
     }
 
@@ -85,6 +89,8 @@ const UserInit = () => {
                 throw error;
             }
 
+            console.log(userData.avatar_url);
+
             setUsername(userData.username);
             setYoutubeUrl(userData.youtube_url);
             setTwitchUrl(userData.twitch_url);
@@ -96,13 +102,55 @@ const UserInit = () => {
         }
     }
 
+    // function used to query the list of games
+    // function that queries the list of games from the database
+    const queryGameList = async () => {
+        try {
+            let { data, error, status } = await supabase
+                .from("games")
+                .select("name, abb, is_custom")
+
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            // now, separate the games into normal and custom levels
+            let games = [];
+            let customGames = [];
+            data.forEach(game => {
+                if (game.is_custom) {
+                    customGames.push(game);
+                } else {
+                    games.push(game);
+                }
+            });
+
+            // finally, update states
+            console.log("Game List");
+            console.log(games);
+            console.log("Custom List");
+            console.log(customGames);
+            setGameList(games);
+            setCustomGameList(customGames);
+    
+        } catch (error) {
+            alert(error.message);
+        } finally {
+            setLoadingGameList(false);
+        }
+    }
+
     return { username,
              country,
              youtube_url, 
              twitch_url, 
              avatar_url, 
-             loading, 
-             loadUser
+             loadingUser,
+             loadingGameList, 
+             gameList,
+             customGameList,
+             loadUser,
+             queryGameList
     }
 }
 

@@ -45,54 +45,54 @@ function Profile({ session }) {
             "Saving..."
          ) : 
             <form onSubmit={handleSubmit}>
-            <p>Email: {session.user.email}</p>
-            <div>
-                <label htmlFor="username">Username: </label>
-                <input 
-                    id="username"
-                    type="text"
-                    placeholder="username"
-                    value={username || ""}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-            </div>
-            <p>{usernameError !== "initState" ? usernameError : ""}</p>
-            <label htmlFor="countryId">Country (optional): </label>
-            <CountrySelect />
-            <div>
-                <label htmlFor="youtube-url">YouTube URL (optional): </label>
-                <input
-                    id="youtube-url"
-                    type="url"
-                    placeholder="https://www.youtube.com/yourChannelUrl"
-                    value={youtube_url || ""}
-                    onChange={(e) => setYoutubeUrl(e.target.value)}
-                />
-            </div>
-            <div>
-                <label htmlFor="twitch-url">Twitch URL (optional): </label>
-                <input 
-                    id="twitch-url"
-                    type="url"
-                    placeholder="https://www.twitch.tv/yourTwitch"
-                    value={twitch_url || ""}
-                    onChange={(e) => setTwitchUrl(e.target.value)}
-                />
-            </div>
-            <div>
-                <Avatar 
-                    url={avatar_url}
-                    size={150}
-                    onUpload={(url) => {
-                        setAvatarUrl(url);
-                    }}
-                />
-            </div>
-            <div>
-                <button disabled={updating}>Update Profile</button>
-                {isUpdated ? <p>Your profile has been updated.</p> : ""}
-            </div>
-        </form>
+                <p>Email: {session.user.email}</p>
+                <div>
+                    <label htmlFor="username">Username: </label>
+                    <input 
+                        id="username"
+                        type="text"
+                        placeholder="username"
+                        value={username || ""}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                </div>
+                <p>{usernameError !== "initState" ? usernameError : ""}</p>
+                <label htmlFor="countryId">Country (optional): </label>
+                <CountrySelect />
+                <div>
+                    <label htmlFor="youtube-url">YouTube URL (optional): </label>
+                    <input
+                        id="youtube-url"
+                        type="url"
+                        placeholder="https://www.youtube.com/yourChannelUrl"
+                        value={youtube_url || ""}
+                        onChange={(e) => setYoutubeUrl(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="twitch-url">Twitch URL (optional): </label>
+                    <input 
+                        id="twitch-url"
+                        type="url"
+                        placeholder="https://www.twitch.tv/yourTwitch"
+                        value={twitch_url || ""}
+                        onChange={(e) => setTwitchUrl(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <Avatar 
+                        url={avatar_url}
+                        size={150}
+                        onUpload={(url) => {
+                            setAvatarUrl(url);
+                        }}
+                    />
+                </div>
+                <div>
+                    <button disabled={updating}>Update Profile</button>
+                    {isUpdated ? <p>Your profile has been updated.</p> : ""}
+                </div>
+            </form>
         }
         <button onClick={navToProfile}>View Profile</button>
         <button onClick={signOut}> Sign Out</button>

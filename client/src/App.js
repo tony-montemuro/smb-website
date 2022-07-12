@@ -14,6 +14,7 @@ import Profile from "./pages/Profile/Profile";
 import User from "./pages/User/User";
 import Totalizer from "./pages/Totalizer/Totalizer";
 import Medals from "./pages/Medals/Medals";
+import UserStats from "./pages/UserStats/UserStats";
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
           <Route path="/login" element={<Login />}/>
           <Route path="/profile" element={<Profile session={session}/>}/>
           <Route path="/user/:userId" element={<User />}/>
+          <Route path="/user/:userId/:game" element={<UserStats />} />
         </Routes>
       </div>
     </>
