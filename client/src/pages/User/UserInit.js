@@ -109,6 +109,7 @@ const UserInit = () => {
             let { data, error, status } = await supabase
                 .from("games")
                 .select("name, abb, is_custom")
+                .order("name");
 
             if (error && status !== 406) {
                 throw error;
