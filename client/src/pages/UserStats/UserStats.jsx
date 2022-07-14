@@ -17,6 +17,7 @@ function UserStats() {
       checkPath, 
       queryMedalsAndTotals, 
       sortData,
+      checkForData,
       isRadioSelected,
       handleRadioClick } = UserStatsInit();
 
@@ -27,6 +28,7 @@ function UserStats() {
         sortData(true, false);
         sortData(false, true);
         sortData(false, false);
+        checkForData();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [medals, totals, medalsMisc, totalsMisc]);
@@ -44,9 +46,9 @@ function UserStats() {
       :
       <div className="user-stats">
         <div className="user-stats-header">
-          <h1>{user.username}'s {title} Page</h1>
+          <h1>{ user.username }'s { title } Page</h1>
           <Link to={`/user/${user.id}`}>
-            <button>Back to {user.username}'s Profile</button>
+            <button>Back to { user.username }'s Profile</button>
           </Link>
         </div>
         <div className="misc-select">
@@ -56,8 +58,8 @@ function UserStats() {
             type="radio"
             name="main"
             value="main"
-            checked={isRadioSelected("main")}
-            onChange={handleRadioClick} 
+            checked={ isRadioSelected("main") }
+            onChange={ handleRadioClick } 
           />
           <label htmlFor="misc">Miscellaneous Charts</label>
           <input 
@@ -65,19 +67,19 @@ function UserStats() {
             type="radio"
             name="misc"
             value="misc"
-            checked={isRadioSelected("misc")}
-            onChange={handleRadioClick} 
+            checked={ isRadioSelected("misc") }
+            onChange={ handleRadioClick } 
           />
         </div>
         {selectedRadioBtn === "main" ? 
         <div className="user-stats-info">
-          <StatsBoard total={totals[0]} medals={medals[0]} user={user} />
-          <StatsBoard total={totals[1]} medals={medals[1]} user={user} />
+          <StatsBoard total={ totals[0] } medals={ medals[0] } user={ user } />
+          <StatsBoard total={ totals[1] } medals={ medals[1] } user={ user } />
         </div>
         :
         <div className="user-stats-info">
-          <StatsBoard total={totalsMisc[0]} medals={medalsMisc[0]} user={user} />
-          <StatsBoard total={totalsMisc[1]} medals={medalsMisc[1]} user={user} />
+          <StatsBoard total={ totalsMisc[0] } medals={ medalsMisc[0] } user={ user } />
+          <StatsBoard total={ totalsMisc[1] } medals={ medalsMisc[1] } user={ user } />
         </div>
         }
       </div>

@@ -196,7 +196,7 @@ const UserStatsInit = () => {
             if (typeof userTotal === "undefined") {
                 userTotal = {hasData: false};
             } else {
-                userTotal.hasData = true;
+                userTotal.hasData = userTotal.total !== 0 ? true : false;
             }
             userTotal.game = game;
             userTotal.mode = mode;
@@ -222,6 +222,7 @@ const UserStatsInit = () => {
     // function that will correctly sort either the medals or totals states, depending on the boolean
     // parameter 'isMedals'
     const sortData = async (isMedals, isMisc) => {
+        // first, set up a temporary array based on the two boolean params
         let tempArr = new Array(2);
         let stateArr;
         if (isMisc) {
@@ -229,6 +230,8 @@ const UserStatsInit = () => {
         } else {
             stateArr = isMedals ? medals : totals;
         }
+
+        // now, each two element array should have the following order: score, time
         for (const obj of stateArr) {
             if (obj.mode === "score") {
                 tempArr[0] = obj
@@ -236,11 +239,22 @@ const UserStatsInit = () => {
                 tempArr[1] = obj;
             }
         }
+
+        // now, update the states based on the two boolean params
         if (isMisc) {
             isMedals ? setMedalsMisc(tempArr) : setTotalsMisc(tempArr);
         } else {
             isMedals ? setMedals(tempArr) : setTotals(tempArr);
         }
+    }
+
+    // function that will check the total for each category. if 0, set the hasData property of each
+    // medalTable object equal to false
+    const checkForData = () => {
+        console.log(medals);
+        console.log(medalsMisc);
+        console.log(totals);
+        console.log(totalsMisc);
     }
 
     // function used to check whether a radio button is selected or not
@@ -266,6 +280,7 @@ const UserStatsInit = () => {
             checkPath, 
             queryMedalsAndTotals, 
             sortData,
+            checkForData,
             isRadioSelected,
             handleRadioClick };
 }

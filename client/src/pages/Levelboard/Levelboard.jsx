@@ -61,19 +61,19 @@ function Levelboard({ session }) {
         <>
           <div className="levelboard-header">
             <div className="levelboard-title">
-              <button onClick={() => swapLevels(setLevelId(0))}>←Prev</button>
-              <h1>{title}</h1>
-              <button onClick={() => swapLevels(setLevelId(1))}>Next→</button>
+              <button onClick={ () => swapLevels(setLevelId(0)) }>←Prev</button>
+              <h1>{ title }</h1>
+              <button onClick={ () => swapLevels(setLevelId(1)) }>Next→</button>
               </div>
               <div className="levelboard-back">
-              <Link to={`/games/${getGame()}`}>
+              <Link to={ `/games/${getGame()}` }>
                   <button>Back to Level Select</button>
               </Link>
               </div>
           </div>
           <div className="levelboard-container">
             <div className="levelboard-board">
-              <Board mode={getMode()} records={records}/>
+              <Board mode={ getMode() } records={ records }/>
             </div>
             {session ? 
                <div className="levelboard-submit">
@@ -94,7 +94,7 @@ function Levelboard({ session }) {
                    id="proof"
                    type="url"
                    value={ formValues.proof }
-                   onChange={handleChange}
+                   onChange={ handleChange }
                  />
                  <p>{ formErrors.proof }</p>
                  <label htmlFor="comment">Comment (optional): </label>
@@ -102,16 +102,15 @@ function Levelboard({ session }) {
                    id="comment"
                    type="text"
                    value={ formValues.comment }
-                   onChange={handleChange}
+                   onChange={ handleChange }
                  />
                  <p>{ formErrors.comment }</p>
-                 <button disabled={submitting}>Submit</button>
+                 <button disabled={ submitting }>Submit</button>
                </form>
              </div>
              :
              ""
             }
-           
           </div>
         </>
         
