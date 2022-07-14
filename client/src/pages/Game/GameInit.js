@@ -5,14 +5,15 @@ import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import { useNavigate, Link } from 'react-router-dom';
 
 const GameInit = () => {
-    
+    // navigate variable used to navigate to home screen if error is detected
     const navigate = useNavigate();
 
     // states
     const [levelModes, setLevelModes] = useState({modes: []});
-    const [levelModesMisc, setLevelModesMisc] = useState({modes: []});
+    const [miscLevelModes, setMiscLevelModes] = useState({modes: []});
+    const [modesLength, setModesLength] = useState(null);
+    const [miscModesLength, setMiscModesLength] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [loadingMisc, setLoadingMisc] = useState(true);
     const [title, setTitle] = useState("");
     const [selectedRadioBtn, setSelectedRadioBtn] = useState("main");
     
@@ -20,6 +21,7 @@ const GameInit = () => {
     const path = window.location.pathname;
     const abb = path.split("/")[2];
 
+    // function that checks if user is on a valid path. only really need to check 'abb'
     const checkPath = async () => {
         try {
             let approved = false;
@@ -30,7 +32,6 @@ const GameInit = () => {
                 .from("games")
                 .select("*");
 
-            // if there was an error querying data, throw error
             if (error && status !== 406) {
                 throw error;
             }
@@ -62,17 +63,13 @@ const GameInit = () => {
         return str;
     };
 
-    // function that queries a mode to gather all 
-    const queryMode = async (mode, obj, isMisc) => {
-        let gameAbb = abb;
-        if (gameAbb === "smb2pal") {
-            gameAbb = "smb2";
-        }
+    // function that queries a mode to gather all it's levels
+    const queryMode = async (mode, isMisc) => {
+        // smb2 and smb2pal have the same modes, so just set gameAbb to 'smb2' if abb is 'smb2pal'
+        const gameAbb = abb === "smb2pal" ? "smb2" : abb;
 
-        let path = `${gameAbb}_${mode}`;
-        if (isMisc) {
-            path = `${gameAbb}_misc_${mode}`;
-        }
+        // now, set the path variable, which depends on the value of the isMisc boolean
+        const path = isMisc ? `${gameAbb}_misc_${mode}` : `${gameAbb}_${mode}`;
 
         try {
             let {data, error, status} = await supabase
@@ -83,40 +80,18 @@ const GameInit = () => {
                 throw error;
             }
 
-            obj[mode] = data;
+            // now, depending on the value of the isMisc boolean, update the levelMode object
+            isMisc ? setMiscLevelModes(miscLevelModes => ({ ...miscLevelModes, [mode]: data })) : setLevelModes(levelModes => ({ ...levelModes, [mode]: data }));
         } catch(error) {
             alert(error.message);
         }
     }
 
-    // function that makes a call to the backend server to get the list of levels
-    const getLevels = async (modes, isMisc) => {
-        // init variables
-        let levelModesObj = {modes: []};
-        levelModesObj["modes"] = modes;
-
-        // now, query each mode to get the list of levels
+    const getLevels = (modes, isMisc) => {
         for (let mode of modes) {
             mode = toSnake(mode);
-            await queryMode(mode, levelModesObj, isMisc);
+            queryMode(mode, isMisc);
         }
-
-        if (isMisc) {
-            setLevelModesMisc(levelModes => ({
-                ...levelModes,
-                ...levelModesObj
-            }));
-            setLoadingMisc(false);
-        } else {
-            setLevelModes(levelModes => ({
-                ...levelModes,
-                ...levelModesObj
-            }));
-            setLoading(false);
-        }
-        
-        console.log(levelModesObj);
-
     }
 
     // function that queries the names column for table 'tableName'
@@ -148,14 +123,18 @@ const GameInit = () => {
         try {
             //query abb's mode table
             modes = await queryNames(`${abb}_modes`);
+            setModesLength(modes.length);
+            setLevelModes({modes: modes});
             
-            // then, we can begin gathering the levels for each mode
+            // then, we can begin gathering the levels for each main mode
             getLevels(modes, false);
 
             // once this has finished, we must then collect miscellaneous chart information
             modes = await queryNames(`${abb}_misc_modes`);
+            setMiscModesLength(modes.length);
+            setMiscLevelModes({modes: modes});
             
-            // finally, we can begin gathering the misc. levels for each mode
+            // finally, we can begin gathering the levels for each misc mode
             getLevels(modes, true);
 
         } catch(error) {
@@ -165,7 +144,7 @@ const GameInit = () => {
 
     const getLevelIdByMode = (mode, isMisc) => {
         // first, make a hard copy of the modes array from the levelModes obj
-        const modeArr = isMisc ? [...levelModesMisc["modes"]] : [...levelModes["modes"]];
+        const modeArr = isMisc ? [...miscLevelModes["modes"]] : [...levelModes["modes"]];
 
         // then, 'snakeify' each element
         for (let i = 0; i < modeArr.length; i++) {
@@ -180,7 +159,7 @@ const GameInit = () => {
         // finally, loop through the lengths of modes until you have reached the
         // current mode. sum these lengths to get the level id
         while (currMode !== mode) {
-            id += isMisc ? levelModesMisc[currMode].length : levelModes[currMode].length;
+            id += isMisc ? miscLevelModes[currMode].length : levelModes[currMode].length;
             i++;
             currMode = modeArr[i];
         }
@@ -256,7 +235,7 @@ const GameInit = () => {
                     <td className="blank"></td>
                 </tr>
                 {isMisc ? 
-                    levelModesMisc[snake_mode].map((val) => {
+                    miscLevelModes[snake_mode].map((val) => {
                         return show ? <Level key={val.name} val={val.name} mode={val.mode} isMisc={true} id={++id} /> : null
                     })
                     :
@@ -277,7 +256,7 @@ const GameInit = () => {
                         return <ModeLevel key={val} child={val} isMisc={false} />
                     })
                     :
-                    levelModesMisc["modes"].map((val) => {
+                    miscLevelModes["modes"].map((val) => {
                         return <ModeLevel key={val} child={val} isMisc={true} />
                     })
                 }
@@ -321,8 +300,12 @@ const GameInit = () => {
     
 
     return { loading,
-            loadingMisc,
             title, 
+            levelModes,
+            miscLevelModes,
+            modesLength,
+            miscModesLength,
+            setLoading,
             checkPath, 
             getModesLevels, 
             isRadioSelected, 

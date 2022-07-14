@@ -7,8 +7,12 @@ import { Link } from "react-router-dom";
 
 function Game() {
   const { loading,
-          loadingMisc,
           title, 
+          levelModes,
+          miscLevelModes,
+          modesLength,
+          miscModesLength,
+          setLoading,
           checkPath, 
           getModesLevels, 
           isRadioSelected, 
@@ -17,6 +21,28 @@ function Game() {
           TotalizerBoards,
           MedalTableBoards
         } = GameInit();
+
+  useEffect(() => {
+    // lengths
+    // console.log("levelModes length:");
+    // console.log(Object.keys(levelModes).length);
+    // console.log("miscLevelModes legnth");
+    // console.log(Object.keys(miscLevelModes).length);
+    
+    // data
+    console.log("\n\n\n\n");
+    console.log("levelModes: ");
+    console.log(levelModes);
+    console.log("miscLevelModes: ");
+    console.log(miscLevelModes);
+
+    if ((modesLength && miscModesLength) && (Object.keys(levelModes).length === modesLength+1 && Object.keys(miscLevelModes).length === miscModesLength+1)) {
+      setLoading(false);
+      console.log(levelModes);
+      console.log(miscLevelModes);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [levelModes, miscLevelModes]);
 
   useEffect(() => {
     checkPath();
@@ -41,7 +67,7 @@ function Game() {
           value="main"
           checked={isRadioSelected("main")}
           onChange={handleModeChange}
-          disabled={loading || loadingMisc}>
+          disabled={loading}>
         </input>
         <label htmlFor="main">Miscellaneous Charts:</label>
         <input 
@@ -51,10 +77,10 @@ function Game() {
           value="misc"
           checked={isRadioSelected("misc")}
           onChange={handleModeChange}
-          disabled={loading || loadingMisc}>
+          disabled={loading}>
         </input>
       </div>
-      {loading || loadingMisc ? 
+      {loading ? 
         <p>Loading...</p>
         :
         <div className="game-body">

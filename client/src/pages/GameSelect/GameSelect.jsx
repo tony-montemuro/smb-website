@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import GameCard from "../../components/GameCard/GameCard";
 
 function Games() {
-  const { gameList, customGameList, getGames } = GameSelectInit();
+  const { loading, gameList, customGameList, getGames } = GameSelectInit();
   useEffect(() => {
     getGames();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -17,17 +17,25 @@ function Games() {
         <h1>Select a Game</h1>
       </div>
       <h2>Main Games</h2>
+      {loading ? 
+      <p>Loading...</p>
+      :
       <div className="card-container">
         {gameList.map((val) => {
           return <GameCard name={val.name} abb={val.abb} key={val.abb} />
         })}
       </div>
+      }
       <h2>Custom Levels</h2>
+      {loading ? 
+      <p>Loading</p>
+      :
       <div className="card-container">
         {customGameList.map((val) => {
           return <GameCard name={val.name} abb={val.abb} key={val.abb} />
         })}
       </div>
+      }
     </div>
     
     
