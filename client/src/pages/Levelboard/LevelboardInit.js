@@ -29,6 +29,8 @@ const LevelboardInit = () => {
     const [records, setRecords] = useState([]);
     const [title, setTitle] = useState("");
     const [levelList, setLevelList] = useState([]);
+    const [levelLength, setLevelLength] = useState(null);
+    const [modeList, setModeList] = useState([]);
     const [specialIdList, setSpecialIdList] = useState([]);
     const [monkeyList, setMonkeyList] = useState([]);
     const [formValues, setFormValues] = useState(initialValues);
@@ -51,6 +53,9 @@ const LevelboardInit = () => {
 
     // helper function that will check if game name ends with 'misc'. if so, it will return the string
     // with the misc sliced off. otherwise, str is simply returned.
+    // a bit of information about the returnMode param:
+    // normalize: this will simply return the game abb WITHOUT the misc, if abb includes "misc"
+    // underline: this will add an underline between the game abb and "misc"
     const miscCheckAndUpdate = (str, returnMode) => {
         if (str.slice(-4) === "misc") {
             if (returnMode === "normalize") {
@@ -172,12 +177,12 @@ const LevelboardInit = () => {
         console.log("Records: ");
         console.log(records);
         setRecords(records);
-        setLoading(false);
     }
 
     // helper function used to query the modes
     const queryModes = async () => {
-        let modeList = [];
+        // initialize variables
+        let list = [];
         const gameAbb = miscCheckAndUpdate(abb, "underline");
 
         try {
@@ -189,18 +194,22 @@ const LevelboardInit = () => {
                 throw error;
             }
 
+            // now, we can extract the data from the query into a list of modes
             for (let mode of modes) {
-                modeList.push(mode.name);
+                list.push(mode.name);
             }
-            return modeList;
+
+            setModeList(list);
+            return list;
 
         } catch(error) {
             alert(error.message);
         }
     }
 
-    // helper function that adds levels to levelList parameter from the mode parameter
-    const addLevels = async (mode, levelList) => {
+    // helper function that adds levels to levelList state from the mode parameter
+    const addLevels = async (mode) => {
+        // initalize variables
         const gameAbb = miscCheckAndUpdate(abb, "underline");
 
         try {
@@ -212,8 +221,10 @@ const LevelboardInit = () => {
                 throw error;
             }
 
+            // now, we can extract the name of each level from the data returned from the api call
+            // into the levelList state
             levels.forEach((level) => {
-                levelList.push(level.name);
+                setLevelList(levelList => [...levelList, level.name]);
             });
 
         } catch(error) {
@@ -223,6 +234,7 @@ const LevelboardInit = () => {
 
     // function that will submit user's record to the levelboard
     const submitRecord = async (userId, gameAbb) => {
+        // initalize variables
         const date = new Date();
         const id = correctedId === null ? levelId : correctedId;
 
@@ -251,6 +263,8 @@ const LevelboardInit = () => {
             updateMedalTable(userId, gameAbb);
         } catch (error) {
             if (error.code === "23503") {
+                // error code 23503 occurs when a user has authenticated themselves, but not created
+                // a profile
                 alert("Error! You have not set up your profile yet. Please go to the top right of the page, and set up your profile to begin submitting.");
             } else {
                 console.log(error);
@@ -261,6 +275,7 @@ const LevelboardInit = () => {
 
     // function that will update the totalizer table based on the user's submission
     const updateTotalizer = async (userId, gameAbb) => {
+        // initalize variabels
         const oldRecord = currentRecord === null ? 0 : currentRecord;
         const newRecord = formValues.record;
         const difference = newRecord - oldRecord;
@@ -281,6 +296,8 @@ const LevelboardInit = () => {
                 throw error;
             }
         } catch (error) {
+            // error code 23503 occurs when a user has authenticated themselves, but not created
+            // a profile
             if (error.code === "23503") {
                 console.log("Please create a profile before submitting!");
             } else {
@@ -371,41 +388,21 @@ const LevelboardInit = () => {
             // we need to check for that.
             if (i === 0) {
                 if (updatedRecords.length > 1 && updatedRecords[i+1]["Position"] === 1) {
-                    if (typeof info === "undefined") {
-                        userInfo.push(generateObj("gold", medals, true));
-                    } else {
-                        info.newMedal = "gold";
-                    }
+                    typeof info === "undefined" ? userInfo.push(generateObj("gold", medals, true)) : info.newMedal = "gold";
                 } else {
-                    if (typeof info === "undefined") {
-                        userInfo.push(generateObj("platinum", medals, true));
-                    } else {
-                        info.newMedal = "platinum";
-                    }
+                    typeof info === "undefined" ? userInfo.push(generateObj("platinum", medals, true)) : info.newMedal = "platinum";
                 }
 
             // General case: translate new position into new medal.
             } else {
                 if (pos === 1) {
-                    if (typeof info === "undefined") {
-                        userInfo.push(generateObj("gold", medals, true));
-                    } else {
-                        info.newMedal = "gold";
-                    }
+                    typeof info === "undefined" ? userInfo.push(generateObj("gold", medals, true)) : info.newMedal = "gold";
                 }
                 else if (pos === 2) {
-                    if (typeof info === "undefined") {
-                        userInfo.push(generateObj("silver", medals, true));
-                    } else {
-                        info.newMedal = "silver";
-                    }
+                    typeof info === "undefined" ? userInfo.push(generateObj("silver"), medals, true) : info.newMedal = "silver";
                 }
                 else {
-                    if (typeof info === "undefined") {
-                        userInfo.push(generateObj("bronze", medals, true));
-                    } else {
-                        info.newMedal = "bronze";
-                    }
+                    typeof info === "undefined" ? userInfo.push(generateObj("bronze", medals, true)) : info.newMedal = "bronze";
                 }
             }
             i++;
@@ -519,8 +516,21 @@ const LevelboardInit = () => {
 
     // MAIN FUNCTIONS
 
+    // function that runs when the page is loaded
+    const init = async () => {
+        const cont = await checkPath();
+        if (cont) {
+            getModesAndLevels();
+            getRecords();
+            getSpecialIds();
+            getMonkeys();
+            getTotalAndMedals();
+        }
+    }
+
     // function that checks whether or not the path is valid
     const checkPath = async () => {
+        // initialize approve variables
         let approvedGame = false;
         let approvedMode = false;
 
@@ -535,22 +545,25 @@ const LevelboardInit = () => {
                 throw error;
             }
 
+            // initialize variables used to check if game is valid
             const correctedAbb = miscCheckAndUpdate(abb, "normalize");
-            let n = "num_levels";
-            if (correctedAbb !== abb) {
-                n = "num_levels_misc";
-            }
+            const n = correctedAbb !== abb ? "num_levels_misc" : "num_levels";
 
+            // now, loop through each game. if the game in the url matches one of these, we need to also check if the id
+            // is less than or equal to the max number possible for that particular game.
             games.forEach(game => {
                 const gameAbb = game.abb;
                 const numLevels = game[n];
-                if (correctedAbb === gameAbb) {
+                if (correctedAbb === gameAbb && levelId <= numLevels) {
                     approvedGame = true;
                     if (mode === "Time") {
                         correctedId = levelId + numLevels;
                     } else {
                         correctedId = null;
                     }
+                    console.log(gameAbb);
+                    console.log(numLevels);
+                    setLevelLength(numLevels);
                 }
             });
 
@@ -562,30 +575,22 @@ const LevelboardInit = () => {
             // if not approved, navigate back to home. otherwise, proceed.
             if (!approvedGame || !approvedMode) {
                 navigate("/");
+                return false;
             }
+
+            return true;
 
         } catch(error) {
             alert(error.message);
         }
     }
 
-    // function that generates the list of levels from the set of modes defined in the
-    // modes parameter
-    const generateLevelList = async (modes) => {
-        let levelList = [];
-        for (let mode of modes ) {
-            await addLevels(mode, levelList);
-        };
-        setTitle(`${mode}: ${levelList[levelId-1]}`);
-        setLevelList(levelList);
-        getRecords();
-        
-    }
-
-    // function used to establish the modes 
-    const getTitleAndRecords = async () => {
+    // function used to establish the modes, as well as creating the levelList
+    const getModesAndLevels = async () => {
         const modes = await queryModes();
-        generateLevelList(modes);
+        for (let mode of modes ) {
+            addLevels(mode, levelList);
+        };
     }
 
     // function used to get the list of special ids from the database
@@ -605,7 +610,7 @@ const LevelboardInit = () => {
             console.log(ids);
             setSpecialIdList(ids);
         } catch (error) {
-
+            alert(error.message);
         }
     }
 
@@ -620,6 +625,8 @@ const LevelboardInit = () => {
                 throw error;
             }
 
+            console.log("Monkeys: ");
+            console.log(monkeyObj);
             setMonkeyList(monkeyObj);
         } catch (error) {
             alert(error.message);
@@ -665,7 +672,8 @@ const LevelboardInit = () => {
                         if (error) {
                             throw error;
                         }
-    
+                        
+                        // user must be manually added to the table (this was from the first query to the medal table)
                         table.push({
                             user_id: userId,
                             platinum: defaultVal,
@@ -739,6 +747,58 @@ const LevelboardInit = () => {
                 alert(error.message);
             }
         }
+    }
+
+    // function that will properly sort the list of levels
+    const sortLevels = () => {
+        // due to api calls not always completing in order, the order of levels is often not sorted properly
+        // HOWEVER, within each mode, the levels are sorted properly. thus, we essentially need to sort the levels
+        // by mode
+
+        // for each mode (this is ordered properly), sort through the list of levels, and if the level belongs to
+        // the mode, push it into arr, a temporary array
+        let arr = [];
+
+        for (const mode of modeList) {
+            // fairly complex substring logic, which is needed due to differences in level names between games
+            for (const level of levelList) {
+
+                // first, determine whether the level is a story mode level or not
+                const isWorld = level.includes("Story Mode") ? true : false;
+                let levelMode;
+
+                // define digitIndex, which will return the index of the first digit in the level string
+                const digitIndex = level.search(/\d/);
+
+                // if isWorld is true, we have to see if this is a single-digit or double digit world. to do this
+                // we can check the character following the first digit.
+                if (isWorld) {
+                    const testChar = level[digitIndex+1];
+                    if (testChar >= "0" && testChar <= "9") {
+                        levelMode = `World ${level[digitIndex]}${level[digitIndex+1]}`;
+                    } else {
+                        levelMode = `World ${level[digitIndex]}`;
+                    }
+
+                // otherise, simply slice the string on the whitespace before the first digit; this will give the mode
+                } else {
+                    levelMode = level.slice(0, level.search(/\d/)-1);
+                }
+
+                // finally, if we have determined that the mode of the level (levelMode) is equal to mode, push to back
+                // of arr
+                if (levelMode === mode) {
+                    arr.push(level);
+                }
+            }
+        }
+
+        // finally, update states
+        console.log("levelList: ");
+        console.log(arr);
+        setLevelList(arr);
+        setTitle(`${mode}: ${arr[levelId-1]}`);
+        setLoading(false);
     }
 
 
@@ -847,17 +907,17 @@ const LevelboardInit = () => {
         // now, we can position ourselves in the array based on whether we are incrementing or decrementing
         // by default, pos will be null. this will change if a special id is detected
         let pos = null;
+        const nextLevelId = specialIds.indexOf(levelId+1);
         if (increment && specialIds.includes(levelId+1)) {
-            const index = specialIds.indexOf(levelId+1);
-            if (modes[index] !== mode) {
-                pos = specialIds.indexOf(levelId+1);
+            if (modes[nextLevelId] !== mode) {
+                pos = nextLevelId;
             }
         }
+
+        const prevLevelId = specialIds.indexOf(levelId-1);
         if (!increment && specialIds.includes(levelId-1)) {
-            const index = specialIds.indexOf(levelId-1);
-            console.log(modes[index]);
-            if (modes[index] !== mode) {
-                pos = specialIds.indexOf(levelId-1);
+            if (modes[prevLevelId] !== mode) {
+                pos = prevLevelId;
             }
         }
 
@@ -873,6 +933,7 @@ const LevelboardInit = () => {
         // in the direction of motion. return the first id that is not mapped to the
         // current mode
         if (increment) {
+            // find first valid id by incrementing
             let id = levelId+1;
             while (id <= levelList.length && !isValid(id, specialIds, modes)) {
                 id++;
@@ -887,6 +948,7 @@ const LevelboardInit = () => {
                 return levelId;
             }
         } else {
+            // find first valid id by decrementing
             let id = levelId-1;
             while (id > 0 && !isValid(id, specialIds, modes)) {
                 id--;
@@ -917,18 +979,21 @@ const LevelboardInit = () => {
         )
       }
 
-    return { loading,
+    return { mode,
+             levelId,
+             loading,
              records,
              title, 
+             levelList,
+             levelLength,
              formValues,
              formErrors,
              isSubmit,
              submitting,
-             checkPath, 
-             getTitleAndRecords, 
-             getSpecialIds,
-             getMonkeys,
-             getTotalAndMedals,
+             setLoading,
+             setTitle,
+             init,
+             sortLevels,
              submit,
              handleChange,
              swapLevels, 

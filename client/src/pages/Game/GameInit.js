@@ -87,6 +87,7 @@ const GameInit = () => {
         }
     }
 
+    // function that will call query mode function for each mode
     const getLevels = (modes, isMisc) => {
         for (let mode of modes) {
             mode = toSnake(mode);
@@ -105,6 +106,9 @@ const GameInit = () => {
                 throw error;
             }
 
+            // since supabase returns an array of objects, we want to essentially extract the
+            // array of names by grabbing the name property from each element, and storing in a
+            // new array
             let arr = [];
             data.forEach(element => {
                 arr.push(element.name);
@@ -173,21 +177,13 @@ const GameInit = () => {
 
     const handleModeChange = (e) => {
         setSelectedRadioBtn(e.target.value);
-        console.log(e.target.value);
     }
 
     // component used to render the level, with a time and score link component
     const Level = ({val, mode, isMisc, id}) => {
         // first, initalize path variables. this will depend on the isMisc variable.
-        let scorePath;
-        let timePath;
-        if (isMisc) {
-            scorePath = `/games/${abb}misc/score/${id}`;
-            timePath = `/games/${abb}misc/time/${id}`;
-        } else {
-            scorePath = `/games/${abb}/score/${id}`;
-            timePath = `/games/${abb}/time/${id}`;
-        }
+        const scorePath = isMisc ? `/games/${abb}misc/score/${id}` : `/games/${abb}/score/${id}`;
+        const timePath = isMisc ? `/games/${abb}misc/time/${id}` : `/games/${abb}/time/${id}`;
 
         // Level components depend on the mode variable, which can take on 3 different states:
         // true: only the score button should be rendered (if)
@@ -221,25 +217,26 @@ const GameInit = () => {
     }
 
     // component used to render the mode, as well as it's levels
-    const ModeLevel = ({child, isMisc}) => {
-        const snake_mode = toSnake(child);
+    const ModeLevel = ({mode, isMisc}) => {
+        // initialize variables
+        const snakeMode = toSnake(mode);
         const [show, setShow] = useState(false);
         
-        let id = getLevelIdByMode(toSnake(child), isMisc);
+        let id = getLevelIdByMode(toSnake(mode), isMisc);
 
         return (
             <tbody className="mode-level">
                 <tr onClick={()=>setShow(!show)} className="mode-name">
-                    <td><h3>{child}</h3></td>
+                    <td><h3>{mode}</h3></td>
                     <td className="blank"></td>
                     <td className="blank"></td>
                 </tr>
                 {isMisc ? 
-                    miscLevelModes[snake_mode].map((val) => {
+                    miscLevelModes[snakeMode].map((val) => {
                         return show ? <Level key={val.name} val={val.name} mode={val.mode} isMisc={true} id={++id} /> : null
                     })
                     :
-                    levelModes[snake_mode].map((val) => {
+                    levelModes[snakeMode].map((val) => {
                         return show ? <Level key={val.name} val={val.name} mode={val.mode} isMisc={false} id={++id} /> : null
                     })
                 }
@@ -253,11 +250,11 @@ const GameInit = () => {
             <>
                 {selectedRadioBtn === "main" ? 
                     levelModes["modes"].map((val) => {
-                        return <ModeLevel key={val} child={val} isMisc={false} />
+                        return <ModeLevel key={val} mode={val} isMisc={false} />
                     })
                     :
                     miscLevelModes["modes"].map((val) => {
-                        return <ModeLevel key={val} child={val} isMisc={true} />
+                        return <ModeLevel key={val} mode={val} isMisc={true} />
                     })
                 }
             </>

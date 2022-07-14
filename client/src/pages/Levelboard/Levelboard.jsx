@@ -12,15 +12,14 @@ function Levelboard({ session }) {
   const { loading,
           records,
           title, 
+          levelList,
+          levelLength,
           formValues, 
           formErrors,
           isSubmit,
           submitting,
-          checkPath, 
-          getTitleAndRecords, 
-          getSpecialIds,
-          getMonkeys,
-          getTotalAndMedals,
+          init,
+          sortLevels,
           submit,
           handleChange,
           swapLevels, 
@@ -32,13 +31,19 @@ function Levelboard({ session }) {
   } = LevelboardInit();
 
   useEffect(() => {
-    checkPath();
-    getTitleAndRecords();
-    getSpecialIds();
-    getMonkeys();
-    getTotalAndMedals();
+    init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    // if the length of levelList has been filled, we can set the title, and set loading to false,
+    // since this is the largest api call
+    if (loading && levelLength && levelList.length === levelLength) {
+      sortLevels();
+      
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [levelList]);
 
   useEffect(() => {
     // if there are no errors, and isSubmit is set to true, then submit the form values

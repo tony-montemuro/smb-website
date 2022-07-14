@@ -23,19 +23,8 @@ function Game() {
         } = GameInit();
 
   useEffect(() => {
-    // lengths
-    // console.log("levelModes length:");
-    // console.log(Object.keys(levelModes).length);
-    // console.log("miscLevelModes legnth");
-    // console.log(Object.keys(miscLevelModes).length);
-    
-    // data
-    console.log("\n\n\n\n");
-    console.log("levelModes: ");
-    console.log(levelModes);
-    console.log("miscLevelModes: ");
-    console.log(miscLevelModes);
-
+    // now, if the number of properties for both levelModes and miscLevelModes has satisfied a particular property, it will mean that all the
+    // data has been loaded from the backend, so the setLoading state can be updated
     if ((modesLength && miscModesLength) && (Object.keys(levelModes).length === modesLength+1 && Object.keys(miscLevelModes).length === miscModesLength+1)) {
       setLoading(false);
       console.log(levelModes);
