@@ -9,7 +9,7 @@ import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-function Levelboard({ session }) {
+function Levelboard() {
   const { loading,
           records,
           title, 
@@ -78,7 +78,7 @@ function Levelboard({ session }) {
             <div className="levelboard-board">
               <Board mode={ getMode() } records={ records }/>
             </div>
-            {session ? 
+            {supabase.auth.user() ? 
                <div className="levelboard-submit">
                <h2>Submit a { getMode(false) }:</h2>
                <form onSubmit={ handleSubmit }>

@@ -19,9 +19,9 @@ const ProfileInit = () => {
     // navigate used for redirecting
     const navigate = useNavigate();
 
-    // function that checks for an active session. if none is found, redirct to home.
-    const checkForUser = (session) => {
-        if (!session) {
+    // function that checks if a user is signed in. if not, redirect to home.
+    const checkForUser = () => {
+        if (supabase.auth.user() === null) {
             navigate("/");
         }
     }

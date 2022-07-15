@@ -3,7 +3,7 @@ import ProfileInit from "./ProfileInit";
 import Avatar from "../../components/Avatar/Avatar";
 import "./profile.css";
 
-function Profile({ session }) {
+function Profile() {
     const { loading,
             updating,
             username,
@@ -27,7 +27,7 @@ function Profile({ session }) {
     } = ProfileInit();
 
     useEffect(() => {
-        checkForUser(session);
+        checkForUser();
         getProfile();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -45,7 +45,6 @@ function Profile({ session }) {
             "Saving..."
          ) : 
             <form onSubmit={handleSubmit}>
-                <p>Email: {session.user.email}</p>
                 <div>
                     <label htmlFor="username">Username: </label>
                     <input 

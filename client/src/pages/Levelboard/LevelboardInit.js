@@ -254,7 +254,6 @@ const LevelboardInit = () => {
                 .from(`${gameAbb}_recent_submissions`)
                 .insert([{
                     user_id: userId,
-                    game_abb: gameAbb,
                     level_name: title,
                     level_id: levelId,
                     record: parseFloat(formValues.record),
