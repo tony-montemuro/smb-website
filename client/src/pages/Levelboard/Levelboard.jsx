@@ -5,6 +5,7 @@ import "./levelboard.css";
 import React from "react";
 import LevelboardInit from "./LevelboardInit";
 import Board from "./Board";
+import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -16,11 +17,13 @@ function Levelboard({ session }) {
           levelLength,
           formValues, 
           formErrors,
+          hasUserSubmitted,
           isSubmit,
           submitting,
           init,
           sortLevels,
           submit,
+          remove,
           handleChange,
           swapLevels, 
           handleSubmit,
@@ -107,6 +110,11 @@ function Levelboard({ session }) {
                  <p>{ formErrors.comment }</p>
                  <button disabled={ submitting }>Submit</button>
                </form>
+               {hasUserSubmitted ?
+                <button disabled={ submitting } onClick={ () => remove(supabase.auth.user().id) }>Remove Run</button>
+                :
+                ""
+                }
              </div>
              :
              ""

@@ -79,6 +79,7 @@ const MedalsInit = () => {
         }
     }
 
+    // function that queries the medal table to get the list of medals
     const getMedalTable = async (isScore) => {
         const gameAbb = miscCheckAndUpdate(abb, "underline");
 
@@ -136,8 +137,14 @@ const MedalsInit = () => {
         }
     }
 
+    // function that simply returns the link back to the game's page
     const getLinkBack = () => {
         return `/games/${miscCheckAndUpdate(abb, "normalize")}`;
+    }
+
+    // function that allows user to navigate to the game's totalizer page
+    const getLinkToTotals = () => {
+        return `/games/${abb}/totalizer`;
     }
 
     const MedalsBoard = ({ isScore }) => {
@@ -158,7 +165,7 @@ const MedalsInit = () => {
         );
     }
 
-    return { title, checkPath, getMedalTable, getLinkBack, MedalsBoard };
+    return { title, checkPath, getMedalTable, getLinkBack, getLinkToTotals, MedalsBoard };
 }
 
 export default MedalsInit;

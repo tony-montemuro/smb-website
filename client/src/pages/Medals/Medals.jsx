@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import MedalsInit from './Medalsinit';
 
 function Medals() {
-    const { title, checkPath, getMedalTable, getLinkBack, MedalsBoard } = MedalsInit();
+    const { title, checkPath, getMedalTable, getLinkBack, getLinkToTotals, MedalsBoard } = MedalsInit();
 
     useEffect(() => {
         checkPath();
@@ -19,6 +19,9 @@ function Medals() {
         </div>
         <Link to={getLinkBack()}>
           <button>Back to {title}'s Page</button>
+        </Link>
+        <Link to={getLinkToTotals()}>
+          <button> { title }'s Totalizer Page</button>
         </Link>
         <div className="medals-body">
             <MedalsBoard isScore={true} />

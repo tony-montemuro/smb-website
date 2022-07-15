@@ -15,6 +15,7 @@ import User from "./pages/User/User";
 import Totalizer from "./pages/Totalizer/Totalizer";
 import Medals from "./pages/Medals/Medals";
 import UserStats from "./pages/UserStats/UserStats";
+import Submissions from "./pages/Submissions/Submissions";
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
       <div className="app-container">
         <Routes>
           <Route path="/" element={<Home />}/>
+          <Route path="/submissions" element={<Submissions />} />
           <Route path="/games" element={<GameSelect />}/>
           <Route path="games/:game" element={<Game />}/>
           <Route path="games/:game/totalizer" element={<Totalizer />} />

@@ -36,6 +36,7 @@ const LevelboardInit = () => {
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
     const [currentRecord, setCurrentRecord] = useState(null);
+    const [hasUserSubmitted, setHasUserSubmitted] = useState(false);
     const [total, setTotal] = useState(null);
     const [medalTable, setMedalTable] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -148,37 +149,6 @@ const LevelboardInit = () => {
         }
     }
 
-    // helper function used to query all of the records for levelboard
-    const getRecords = async () => {
-        // declare variables
-        const user = supabase.auth.user();
-        const userId = user ? user.id : null;
-        const records = await queryRecordsAndClean();
-
-        // if the current user has a submission, set the form values equal to the submission
-        // also, delete the records[i].monkey from each record
-        for (let i = 0; i < records.length; i++) {
-            const record = records[i];
-
-            if (userId && record["user_id"] === userId) {
-                setFormValues({
-                    ...formValues,
-                    record: record[`${mode}`], 
-                    monkeyId: record.monkey.id, 
-                    proof: record["Proof"], 
-                    comment: record["Comment"]
-                });
-                setCurrentRecord(record[`${mode}`]);
-            }
-
-            delete records[i].monkey;
-        }
-
-        console.log("Records: ");
-        console.log(records);
-        setRecords(records);
-    }
-
     // helper function used to query the modes
     const queryModes = async () => {
         // initialize variables
@@ -260,7 +230,7 @@ const LevelboardInit = () => {
                 throw error;
             }
 
-            updateMedalTable(userId, gameAbb);
+            updateMedalTable(gameAbb);
         } catch (error) {
             if (error.code === "23503") {
                 // error code 23503 occurs when a user has authenticated themselves, but not created
@@ -273,11 +243,64 @@ const LevelboardInit = () => {
         }
     }
 
+    // function that will submit a new record to the recent submissions table
+    const submitToRecent = async (userId) => {
+        // initalize variables used in query
+        const gameAbb = miscCheckAndUpdate(abb, "normalize");
+        const isMisc = abb.includes("misc") ? true : false;
+        
+        try {
+            const { error } = await supabase
+                .from(`${gameAbb}_recent_submissions`)
+                .insert([{
+                    user_id: userId,
+                    game_abb: gameAbb,
+                    level_name: title,
+                    level_id: levelId,
+                    record: parseFloat(formValues.record),
+                    proof: formValues.proof,
+                    comment: formValues.comment,
+                    isScore: mode === "Score" ? true : false,
+                    isMisc: isMisc
+                }], {
+                    returning: "minimal", // Don't return the value after inserting
+                });
+
+            if (error) {
+                throw error;
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    // function that will remove userId's record from the leaderboard
+    const removeRecord = async (userId, gameAbb) => {
+        // initialize variables
+        const id = correctedId === null ? levelId : correctedId;
+
+        console.log(userId);
+        try {
+            const { error } = await supabase
+                .from(`${gameAbb}_${id}`)
+                .delete()
+                .match({ user_id: userId });
+
+            if (error) {
+                throw (error);
+            }
+
+            updateMedalTable(gameAbb);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
     // function that will update the totalizer table based on the user's submission
-    const updateTotalizer = async (userId, gameAbb) => {
+    const updateTotalizer = async (userId, gameAbb, isSubmit) => {
         // initalize variabels
         const oldRecord = currentRecord === null ? 0 : currentRecord;
-        const newRecord = formValues.record;
+        const newRecord = isSubmit ? formValues.record : 0;
         const difference = newRecord - oldRecord;
 
         try {
@@ -322,7 +345,7 @@ const LevelboardInit = () => {
     }
 
     // function that will update the medal table based on the user's submission
-    const updateMedalTable = async (user_id, gameAbb) => {
+    const updateMedalTable = async (gameAbb) => {
         // first, requery the level now that a new record has been submitted
         const updatedRecords = await queryRecordsAndClean();
 
@@ -585,6 +608,38 @@ const LevelboardInit = () => {
         }
     }
 
+    //  function used to query all of the records for levelboard
+    const getRecords = async () => {
+        // declare variables
+        const user = supabase.auth.user();
+        const userId = user ? user.id : null;
+        const records = await queryRecordsAndClean();
+
+        // if the current user has a submission, set the form values equal to the submission
+        // also, delete the records[i].monkey from each record
+        for (let i = 0; i < records.length; i++) {
+            const record = records[i];
+
+            if (userId && record["user_id"] === userId) {
+                setFormValues({
+                    ...formValues,
+                    record: record[`${mode}`], 
+                    monkeyId: record.monkey.id, 
+                    proof: record["Proof"], 
+                    comment: record["Comment"]
+                });
+                setCurrentRecord(record[`${mode}`]);
+                setHasUserSubmitted(true);
+            }
+
+            delete records[i].monkey;
+        }
+
+        console.log("Records: ");
+        console.log(records);
+        setRecords(records);
+    }
+
     // function used to establish the modes, as well as creating the levelList
     const getModesAndLevels = async () => {
         const modes = await queryModes();
@@ -813,8 +868,26 @@ const LevelboardInit = () => {
         // call to function to submit record to learderboard. this function will also make the call to update the medal table
         submitRecord(userId, gameAbb);
 
+        // call to function to submit record to recent submissions table
+        submitToRecent(userId);
+
         // call to function to update the totalizer table
-        updateTotalizer(userId, gameAbb);
+        updateTotalizer(userId, gameAbb, true);
+    }
+
+    // function that will delete a user's run based on the id parameter. by default, id will equal the current user's id,
+    // but a moderator will also have easy access to this function, where they can delete any run
+    const remove = async (id) => {
+        setSubmitting(true);
+
+        // initialize variables that will be used in each function call
+        const gameAbb = miscCheckAndUpdate(abb, "underline");
+
+        // call to function to remove record from leaderboard. this function will also make the call to update the medal table
+        removeRecord(id, gameAbb);
+
+        // call to function to update the totalizer table
+        updateTotalizer(id, gameAbb, false);
     }
 
     // function that runs each time a form value is changed. keeps the formValues
@@ -988,6 +1061,7 @@ const LevelboardInit = () => {
              levelLength,
              formValues,
              formErrors,
+             hasUserSubmitted,
              isSubmit,
              submitting,
              setLoading,
@@ -995,6 +1069,7 @@ const LevelboardInit = () => {
              init,
              sortLevels,
              submit,
+             remove,
              handleChange,
              swapLevels, 
              handleSubmit,

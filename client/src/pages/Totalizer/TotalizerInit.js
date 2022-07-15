@@ -73,6 +73,7 @@ const TotalizerInit = () => {
         }
     }
 
+    // function that queries the game's totalizer page to get list of totals
     const getTotalizer = async (isScore) => {
         const gameAbb = miscCheckAndUpdate(abb, "underline");
 
@@ -122,10 +123,17 @@ const TotalizerInit = () => {
         }
     }
 
+    // function that simply returns user back to the game page
     const getLinkBack = () => {
         return `/games/${miscCheckAndUpdate(abb, "normalize")}`;
     }
 
+    // function that allows user to navigate to the game's medal table page
+    const getLinkToMedal = () => {
+        return `/games/${abb}/medals`;
+    }
+
+    // totalizer board element
     const TotalizerBoard = ({ isScore }) => {
         return (
             <>
@@ -144,7 +152,7 @@ const TotalizerInit = () => {
         );
     }
 
-    return { title, checkPath, getTotalizer, getLinkBack, TotalizerBoard };
+    return { title, checkPath, getTotalizer, getLinkBack, getLinkToMedal, TotalizerBoard };
 }
 
 export default TotalizerInit;

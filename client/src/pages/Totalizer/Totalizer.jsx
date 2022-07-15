@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import TotalizerInit from './TotalizerInit';
 
 function Totalizer() {
-    const { title, checkPath, getTotalizer, getLinkBack, TotalizerBoard } = TotalizerInit();
+    const { title, checkPath, getTotalizer, getLinkBack, getLinkToMedal, TotalizerBoard } = TotalizerInit();
 
     useEffect(() => {
         checkPath();
@@ -19,6 +19,9 @@ function Totalizer() {
         </div>
         <Link to={getLinkBack()}>
           <button>Back to {title}'s Page</button>
+        </Link>
+        <Link to={getLinkToMedal()}>
+          <button>{title}'s Medal Table Page</button>
         </Link>
         <div className="totalizer-body">
             <TotalizerBoard isScore={true} />
