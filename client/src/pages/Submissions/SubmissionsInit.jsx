@@ -4,6 +4,7 @@ import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 const SubmissionInit = () => {
     // states
+    const [isMod, setIsMod] = useState(false);
     const [loading, setLoading] = useState(true);
     const [gameList, setGameList] = useState([]);
     const [submissions, setSubmissions] = useState({});
@@ -17,7 +18,7 @@ const SubmissionInit = () => {
         try {
             // initalize variables
             const userId = supabase.auth.user() ? supabase.auth.user().id : null;
-            let isMod = false;
+            let isModVar = false;
 
             const { data: mods, error, status } = await supabase
                 .from("moderators")
@@ -30,12 +31,13 @@ const SubmissionInit = () => {
             // now, go through list of mods. if a match is detected with the current user, set state to true
             for (const mod of mods) {
                if (mod.user_id === userId) {
-                isMod = true;
+                isModVar = true;
+                setIsMod(true);
                } 
             }
 
-            // if isMod is true, proceed. otherwise, navigate back to home
-            isMod ? queryGames() : navHome();
+            // if isModVar is true, proceed. otherwise, navigate back to home
+            isModVar ? queryGames() : navHome();
 
         } catch (error) {
             alert(error.message);
@@ -79,7 +81,7 @@ const SubmissionInit = () => {
                     proof,
                     comment
                 `)
-                .order("created_at");
+                .order("created_at", { ascending: false});
 
             if (error && status !== 406) {
                 throw error;
@@ -98,7 +100,6 @@ const SubmissionInit = () => {
                 // integer type. otherwise, we need to fix the submission to two decimal places
                 const record = submission.record;
                 submission.record = submission.isScore ? parseInt(record) : Number.parseFloat(record).toFixed(2);
-                delete submission.isScore;
             }
 
             // finally, once the data has been cleaned, update the submissions state
@@ -154,7 +155,7 @@ const SubmissionInit = () => {
         }
     }
 
-    return { loading, gameList, submissions, currentGame, setLoading, checkForMod, changeGame, removeSubmission };
+    return { isMod, loading, gameList, submissions, currentGame, setLoading, checkForMod, changeGame, removeSubmission };
 }
 
 export default SubmissionInit;

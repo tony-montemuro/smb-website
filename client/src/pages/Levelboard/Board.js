@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
+import Popup from './Popup';
 
-function Board({ mode, records }) {
+function Board({ mode, records, isMod, removeFunc }) {
+  // states
+  const [popup, setPopup] = useState(false);
+  const [currentPlayer, setCurrentPlayer] = useState({});
+
+  // function that will update states when delete button is presesd
+  const updateStates = (info) => {
+    setCurrentPlayer(info);
+    setPopup(true);
+  }
+
   return (
     <div className="levelboard-container">
         <table>
@@ -15,6 +26,7 @@ function Board({ mode, records }) {
                     <th>Monkey</th>
                     <th>Proof</th>
                     <th>Comment</th>
+                    {isMod ? <th>Delete</th> : ""}
                 </tr>
                 {records.map((val) => {
                     return <tr key={`${val.Name}-row`}>
@@ -39,10 +51,12 @@ function Board({ mode, records }) {
                     <td>{val.Monkey}</td>
                     <td>{val.Proof !== "none" ? <a href={val.Proof} target="_blank" rel="noopener noreferrer">☑️</a> : ''}</td>
                     <td>{val.Comment}</td>
+                    {isMod ? <td><button onClick={ () => updateStates(val) }>❌</button></td> : ""}
                     </tr>  
                 })}
             </tbody>
         </table>
+        <Popup trigger={ popup } setTrigger={ setPopup } mode={ mode } playerInfo={ currentPlayer } removeFunc={ removeFunc } />
     </div>
   )
 }

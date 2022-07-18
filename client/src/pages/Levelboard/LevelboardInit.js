@@ -33,6 +33,7 @@ const LevelboardInit = () => {
     const [modeList, setModeList] = useState([]);
     const [specialIdList, setSpecialIdList] = useState([]);
     const [monkeyList, setMonkeyList] = useState([]);
+    const [isMod, setIsMod] = useState(false);
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
     const [currentRecord, setCurrentRecord] = useState(null);
@@ -41,6 +42,7 @@ const LevelboardInit = () => {
     const [medalTable, setMedalTable] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isSubmit, setIsSubmit] = useState(false);
+    const [popup, setPopup] = useState(false);
     const [submitting, setSubmitting] = useState(false);
 
     // HELPER FUNCTIONS
@@ -305,14 +307,13 @@ const LevelboardInit = () => {
         try {
             const { error } = await supabase
                 .from(`${gameAbb}_${mode.toLowerCase()}_total`)
-                .upsert({
+                .update({
                     user_id: userId,
                     total: total + difference
                 }, {
                     returning: "minimal", // Don't return the value after inserting
-                }, { 
-                    onConflict: "user_id"
-                });
+                })
+                .eq("user_id", userId);
 
             if (error) {
                 throw error;
@@ -323,6 +324,7 @@ const LevelboardInit = () => {
             if (error.code === "23503") {
                 console.log("Please create a profile before submitting!");
             } else {
+                console.log(error);
                 alert(error.message);
             }
         }
@@ -421,7 +423,7 @@ const LevelboardInit = () => {
                     typeof info === "undefined" ? userInfo.push(generateObj("gold", medals, true)) : info.newMedal = "gold";
                 }
                 else if (pos === 2) {
-                    typeof info === "undefined" ? userInfo.push(generateObj("silver"), medals, true) : info.newMedal = "silver";
+                    typeof info === "undefined" ? userInfo.push(generateObj("silver", medals, true)) : info.newMedal = "silver";
                 }
                 else {
                     typeof info === "undefined" ? userInfo.push(generateObj("bronze", medals, true)) : info.newMedal = "bronze";
@@ -511,8 +513,8 @@ const LevelboardInit = () => {
      }
 
     // helper function that simply returns the game's abbreviation (used in front-end)
-    const getGame = () => {
-        return miscCheckAndUpdate(abb, "normalize");
+    const getGame = (withMisc) => {
+        return withMisc ? abb : miscCheckAndUpdate(abb, "normalize");
     }
 
     // helper function that simply returns the mode. takes a boolean parameter to decide whether
@@ -547,6 +549,7 @@ const LevelboardInit = () => {
             getSpecialIds();
             getMonkeys();
             getTotalAndMedals();
+            checkForMod();
         }
     }
 
@@ -803,6 +806,41 @@ const LevelboardInit = () => {
         }
     }
 
+    // function that will query the table of mods, and check if current user is a mod
+    const checkForMod = async () => {
+        // initalize variables
+        const user = supabase.auth.user();
+        const userId = user ? user.id : null;
+
+        // this query is only necessary if a user is signed in, since only authenticated users
+        // could possibly be moderators
+        if (user) {
+            try {
+                const { data: mods, error, status } = await supabase
+                    .from("moderators")
+                    .select("user_id");
+    
+                if (error && status !== 406) {
+                    throw error;
+                }
+                
+                console.log("Mods: ");
+                console.log(mods);
+    
+                // now, loop through the list of moderators. if the current user has a matching id,
+                // this means they are a moderator, so update the isMod state
+                for (let mod of mods) {
+                    if (mod.user_id === userId) {
+                        setIsMod(true);
+                    }
+                }
+    
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+    }
+
     // function that will properly sort the list of levels
     const sortLevels = () => {
         // due to api calls not always completing in order, the order of levels is often not sorted properly
@@ -954,6 +992,11 @@ const LevelboardInit = () => {
         return errors;
     }
 
+    // function that will update states when delete button is presesd
+    const updateStates = () => {
+        setPopup(true);
+    }
+
     // function that will increment/decrement the level id depending on the
     // increment parameter
     const setLevelId = (increment) => {
@@ -1058,13 +1101,14 @@ const LevelboardInit = () => {
              title, 
              levelList,
              levelLength,
+             isMod,
              formValues,
              formErrors,
              hasUserSubmitted,
              isSubmit,
+             popup,
              submitting,
-             setLoading,
-             setTitle,
+             setPopup,
              init,
              sortLevels,
              submit,
@@ -1073,7 +1117,8 @@ const LevelboardInit = () => {
              swapLevels, 
              handleSubmit,
              getGame, 
-             getMode, 
+             getMode,
+             updateStates,
              setLevelId,
              MonkeySelect
     };

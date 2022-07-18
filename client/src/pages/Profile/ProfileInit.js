@@ -168,6 +168,7 @@ const ProfileInit = () => {
     const signOut = async (e) => {
         supabase.auth.signOut();
         navigate("/");
+        window.location.reload();
     }
 
     // CountrySelect component

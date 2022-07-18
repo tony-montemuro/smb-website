@@ -1,9 +1,10 @@
+import "./submissions.css"
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import SubmissionInit from "./SubmissionsInit";
 
 function Submissions() {
-  const { loading, gameList, submissions, currentGame, setLoading, checkForMod, changeGame, removeSubmission } = SubmissionInit();
+  const { isMod, loading, gameList, submissions, currentGame, setLoading, checkForMod, changeGame, removeSubmission } = SubmissionInit();
 
   useEffect(() => {
     checkForMod();
@@ -21,6 +22,7 @@ function Submissions() {
 
   return (
     <div className="submissions">
+      {isMod ? 
       <div className="submissions-header">
         <h1>Recent Submissions</h1>
         <p><i>Below is the list of recent submissions. Please go through and review each submission for each game.</i></p>
@@ -29,7 +31,9 @@ function Submissions() {
         submission by clicking on the <b>Level Name</b>. If you still are suspicious, remove the record
         by clicking the <b>Delete</b> button. Finally, navigate back to the <b>Recent Submissions</b> page, and
         click the <b>Reviewed</b> button for that submission.</p>
-      </div>
+      </div> 
+      : 
+      ""}
       {loading ?
         <p>Loading...</p>
         :
@@ -67,7 +71,7 @@ function Submissions() {
                     <Link to={`/games/${val.isMisc ? currentGame+"misc" : currentGame}/${val.isScore ? "score" : "time"}/${val.level_id}`}>
                       {val.isMisc ? val.level_name+" (Misc)" : val.level_name}
                     </Link></td>
-                  <td>
+                  <td className="user-info">
                   {val.country ?
                     <div className="country-icon">
                       <img

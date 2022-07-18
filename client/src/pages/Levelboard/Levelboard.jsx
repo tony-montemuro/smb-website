@@ -5,6 +5,7 @@ import "./levelboard.css";
 import React from "react";
 import LevelboardInit from "./LevelboardInit";
 import Board from "./Board";
+import Popup from "./Popup";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -15,11 +16,14 @@ function Levelboard() {
           title, 
           levelList,
           levelLength,
+          isMod,
           formValues, 
           formErrors,
           hasUserSubmitted,
           isSubmit,
+          popup,
           submitting,
+          setPopup,
           init,
           sortLevels,
           submit,
@@ -29,6 +33,7 @@ function Levelboard() {
           handleSubmit,
           getGame, 
           getMode, 
+          updateStates,
           setLevelId, 
           MonkeySelect
   } = LevelboardInit();
@@ -43,7 +48,6 @@ function Levelboard() {
     // since this is the largest api call
     if (loading && levelLength && levelList.length === levelLength) {
       sortLevels();
-      
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [levelList]);
@@ -68,15 +72,21 @@ function Levelboard() {
               <h1>{ title }</h1>
               <button onClick={ () => swapLevels(setLevelId(1)) }>Next→</button>
               </div>
-              <div className="levelboard-back">
-              <Link to={ `/games/${getGame()}` }>
-                  <button>Back to Level Select</button>
-              </Link>
+              <div className="levelboard-buttons">
+                <Link to={ `/games/${getGame(false)}` }>
+                    <button>Back to Level Select</button>
+                </Link>
+                <Link to={ `/games/${getGame(true)}/totalizer`}>
+                  <button>Totalizer Table</button>
+                </Link>
+                <Link to={ `/games/${getGame(true)}/medals`}>
+                  <button>Medal Table</button>
+                </Link>
               </div>
           </div>
           <div className="levelboard-container">
             <div className="levelboard-board">
-              <Board mode={ getMode() } records={ records }/>
+              <Board mode={ getMode() } records={ records } isMod={ isMod } removeFunc={ remove } />
             </div>
             {supabase.auth.user() ? 
                <div className="levelboard-submit">
@@ -111,10 +121,11 @@ function Levelboard() {
                  <button disabled={ submitting }>Submit</button>
                </form>
                {hasUserSubmitted ?
-                <button disabled={ submitting } onClick={ () => remove(supabase.auth.user().id) }>Remove Run</button>
+                <button disabled={ submitting } onClick={ () => updateStates(supabase.auth.user().id) }>Remove Run</button>
                 :
                 ""
                 }
+                <Popup trigger={ popup } setTrigger={ setPopup } mode={ getMode() } playerInfo={{ user_id: supabase.auth.user().id }} removeFunc={ remove } />
              </div>
              :
              ""

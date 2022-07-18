@@ -1,0 +1,26 @@
+.submissions-list table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.submissions-list th {
+    border: 1px solid black;
+    text-align: left;
+    padding: 4px 8px;
+}
+
+.submissions-list td {
+    border: 1px solid black;
+    padding: 4px 8px;
+}
+
+.submissions-list a {
+    text-decoration: none;
+    text-align: center;
+}
+
+.submissions-list tr:nth-child(even) {
+    background-color: #d3d3d3;
+}
