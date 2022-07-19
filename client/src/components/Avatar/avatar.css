@@ -1,3 +1,7 @@
+.avatar p {
+    margin-top: 0px;
+}
+
 .avatar-label {
     cursor: pointer;
 }

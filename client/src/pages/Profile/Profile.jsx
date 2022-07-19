@@ -1,7 +1,8 @@
-import { React, useEffect } from "react";
+import "./profile.css";
+import React, { useEffect } from "react";
 import ProfileInit from "./ProfileInit";
 import Avatar from "../../components/Avatar/Avatar";
-import "./profile.css";
+import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 function Profile() {
     const { loading,
@@ -41,11 +42,13 @@ function Profile() {
 
   return (
     <div className="profile">
+        <h1>Edit Your Profile</h1>
         {loading ? (
-            "Saving..."
+            "Loading..."
          ) : 
+         <div className="profile-body">
             <form onSubmit={handleSubmit}>
-                <div>
+                <div className="profile-entry">
                     <label htmlFor="username">Username: </label>
                     <input 
                         id="username"
@@ -55,10 +58,10 @@ function Profile() {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
-                <p>{usernameError !== "initState" ? usernameError : ""}</p>
+                {usernameError === "initState" || usernameError === "" ? "" : <p>{usernameError}</p>}
                 <label htmlFor="countryId">Country (optional): </label>
                 <CountrySelect />
-                <div>
+                <div className="profile-entry">
                     <label htmlFor="youtube-url">YouTube URL (optional): </label>
                     <input
                         id="youtube-url"
@@ -68,7 +71,7 @@ function Profile() {
                         onChange={(e) => setYoutubeUrl(e.target.value)}
                     />
                 </div>
-                <div>
+                <div className="profile-entry">
                     <label htmlFor="twitch-url">Twitch URL (optional): </label>
                     <input 
                         id="twitch-url"
@@ -78,23 +81,27 @@ function Profile() {
                         onChange={(e) => setTwitchUrl(e.target.value)}
                     />
                 </div>
-                <div>
+                <div className="profile-entry">
                     <Avatar 
-                        url={avatar_url}
-                        size={150}
-                        onUpload={(url) => {
+                        url={ avatar_url }
+                        size={ 150 }
+                        userId={ supabase.auth.user().id }
+                        onUpload={ (url) => {
                             setAvatarUrl(url);
-                        }}
+                        } }
                     />
                 </div>
                 <div>
                     <button disabled={updating}>Update Profile</button>
-                    {isUpdated ? <p>Your profile has been updated.</p> : ""}
+                    {isUpdated ? <p className="p-update">Your profile has been updated.</p> : ""}
                 </div>
             </form>
+            <div className="profile-btns">
+                <button className="profile-btn" onClick={navToProfile}>View Profile</button>
+                <button className="profile-btn" onClick={signOut}> Sign Out</button>
+            </div>   
+         </div>
         }
-        <button onClick={navToProfile}>View Profile</button>
-        <button onClick={signOut}> Sign Out</button>
     </div>
   )
 }

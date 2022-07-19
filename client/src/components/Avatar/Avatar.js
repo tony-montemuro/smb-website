@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../SupabaseClient/SupabaseClient"
 import { VisuallyHidden } from "@reach/visually-hidden";
 
-function Avatar({ url, size, onUpload }) {
+function Avatar({ url, size, userId, onUpload }) {
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
   
@@ -46,7 +46,7 @@ function Avatar({ url, size, onUpload }) {
         // now, define path variables
         const file = e.target.files[0];
         const fileExt = file.name.split(".").pop();
-        const filePath = `${Math.random()}.${fileExt}`;
+        const filePath = `${userId}.${fileExt}`;
         const fileSize = file.size;
 
         // if the file selected is not a valid type, throw an error
@@ -62,15 +62,18 @@ function Avatar({ url, size, onUpload }) {
         // upload the image to the supabase storage bucket
         let { error: uploadError } = await supabase.storage
             .from("avatars")
-            .upload(filePath, file);
+            .upload(filePath, file, {
+                upsert: true
+            });
 
         // if there was some error, throw it
         if (uploadError) {
             throw uploadError;
         }
 
-        // finally, call the onUpload function, which updates the avatar_url state back on the profile page
-        onUpload(filePath);
+        // finally, if the file path has not changed, simply download the new image
+        // otherwise, need to update the avatar_url state in the profile component first
+        filePath === url ? downloadImage(filePath) : onUpload(filePath);
     } catch (error) {
         alert(error.message);
     } finally {
@@ -80,9 +83,8 @@ function Avatar({ url, size, onUpload }) {
   }
 
   return (
-    <div className="avatar" style={{ width: size }}>
+    <div className="avatar">
         <p>Avatar (optional):</p>
-        <p><b>Note:</b> Avatars cannot be greater than 1 MB!</p>
         <img
             src={avatarUrl ? avatarUrl : `https://place-hold.it/${size}x${size}`}
             alt={avatarUrl ? 'Avatar' : 'No image'}
@@ -102,6 +104,7 @@ function Avatar({ url, size, onUpload }) {
                 </VisuallyHidden>
             </div>
         )}
+        <p><b>Note:</b> Must be JPEG or PNG, and cannot exceed 1 MB. If your avatar does not update immediately, give it some time.</p>
     </div>
   );
 }
