@@ -1,0 +1,58 @@
+.user-profile {
+    display: flex;
+    width: 500px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    flex: auto;
+    border: 2px solid #808080;
+    border-radius: 5px;
+    margin: 10px;
+    text-align: center;
+    /* background-color: red; */
+}
+
+.user-info h2 {
+    text-align: center;
+}
+
+.country {
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+}
+
+.country img {
+    padding-right: 5px;
+}
+
+.user-info a {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.social-media-logo {
+    width: 50px;
+    height: auto;
+    padding-top: 18px;
+}
+
+.user-image {
+    flex: auto;
+    border: 2px solid #808080;
+    border-radius: 5px;
+    margin: 10px;
+    /* background-color: blue; */
+}
+
+.user-stats { 
+    width: fit-content;
+    text-align: center;
+    padding-left: 5px;
+}
+
+.user-stats-link {
+    color: #0645AD;
+}

@@ -9,9 +9,9 @@ function StatsBoard({total, medals, user}) {
     }
 
   return (
-    <div>
+    <div className="stats-board-body">
         <h1>{ capitalize(total.mode) }</h1>
-        <div className="total">
+        <div className="stats-table-container">
             <h2>{ total.title } { capitalize(total.mode) } Total</h2>
             {total.hasData ?
                 <table>
@@ -25,7 +25,7 @@ function StatsBoard({total, medals, user}) {
                     <tbody>
                         <tr>
                             <td>{ total.Position }</td>
-                            <td className="user-info">
+                            <td className="user-stats-info">
                                 <div><SimpleAvatar url={ user.avatar_url } size={ 50 }/></div>
                                 {user.country ?
                                     <div className="country-icon">
@@ -48,7 +48,7 @@ function StatsBoard({total, medals, user}) {
                 <p><i>This user has not submitted to this category.</i></p>
             }
         </div>
-        <div className="medals">
+        <div className="stats-table-container">
             <h2>{medals.title} { capitalize(medals.mode) } Medals</h2>
             {medals.hasData && total.hasData ?
                 <table>
@@ -65,7 +65,7 @@ function StatsBoard({total, medals, user}) {
                     <tbody>
                         <tr>
                             <td>{ medals.Position }</td>
-                            <td className="user-info">
+                            <td className="user-stats-info">
                                 <div><SimpleAvatar url={ user.avatar_url } size={ 50 }/></div>
                                 {user.country ?
                                     <div className="country-icon">

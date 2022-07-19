@@ -31,7 +31,7 @@ function Board({ mode, records, isMod, removeFunc }) {
                 {records.map((val) => {
                     return <tr key={`${val.Name}-row`}>
                     <td>{val.Position}</td>
-                    <td className="user-info">
+                    <td className="levelboard-user-info">
                         <div><SimpleAvatar url={val.Avatar_URL} size={50}/></div>
                         {val.Country ?
                             <div className="country-icon">

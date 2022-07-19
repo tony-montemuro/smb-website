@@ -47,8 +47,7 @@
     text-align: center;
 }
 
-.user-info {
-    border: 1px solid black;
+.levelboard-user-info {
     display: flex;
     flex-direction: row;
     border-collapse: collapse;

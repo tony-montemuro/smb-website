@@ -55,8 +55,8 @@ function Avatar({ url, size, userId, onUpload }) {
         }
 
         // if the file selected is greater than 1mb, throw an error
-        if (fileSize > 1000000) {
-            throw new Error ("File size too big! Please ensure avatar is less than 1MB.");
+        if (fileSize > 5000000) {
+            throw new Error ("File size too big! Please ensure avatar is less than 5MB.");
         }
 
         // upload the image to the supabase storage bucket
@@ -104,7 +104,7 @@ function Avatar({ url, size, userId, onUpload }) {
                 </VisuallyHidden>
             </div>
         )}
-        <p><b>Note:</b> Must be JPEG or PNG, and cannot exceed 1 MB. If your avatar does not update immediately, give it some time.</p>
+        <p><b>Note:</b> Must be JPEG or PNG, and cannot exceed 5 MB. If your avatar does not update immediately, give it some time.</p>
     </div>
   );
 }

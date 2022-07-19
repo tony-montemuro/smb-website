@@ -1,0 +1,42 @@
+.stats-board {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.stats-board{
+    display: flex;
+}
+
+.stats-board-body {
+    text-align: center;
+    flex: 1;
+}
+
+.stats-table-container {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stats-board table {
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stats-board th {
+    border: 1px solid black;
+    text-align: left;
+    padding: 4px 8px;
+}
+
+.stats-board td {
+    border: 1px solid black;
+    padding: 4px 8px;
+}
+
+.user-stats-info {
+    display: flex;
+    flex-direction: row;
+    border-collapse: collapse;
+}
