@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import MedalsInit from './Medalsinit';
 
 function Medals() {
-    const { title, checkPath, getMedalTable, getLinkBack, getLinkToTotals, MedalsBoard } = MedalsInit();
+    const { title, isMisc, checkPath, getMedalTable, getLinkBack, getLinkToTotals, MedalsBoard } = MedalsInit();
 
     useEffect(() => {
         checkPath();
@@ -15,13 +15,13 @@ function Medals() {
   return (
     <div className="medals">
         <div className="medals-header">
-            <h1>{title} Medal Table</h1>
+            <h1>{ isMisc ? "Miscellaneous "+title : title } Medal Table</h1>
         </div>
         <Link to={getLinkBack()}>
-          <button>Back to {title}'s Page</button>
+          <button>Back to { title }'s Page</button>
         </Link>
         <Link to={getLinkToTotals()}>
-          <button> { title }'s Totalizer Page</button>
+          <button> { isMisc ? "Miscellaneous " + title : title }'s Totalizer Page</button>
         </Link>
         <div className="medals-body">
             <MedalsBoard isScore={true} />

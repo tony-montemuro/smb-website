@@ -31,3 +31,9 @@
 .totalizer-container tr:nth-child(even) {
     background-color: #d3d3d3;
 }
+
+.totals-user-info {
+    display: flex;
+    flex-direction: row;
+    border-collapse: collapse;
+}

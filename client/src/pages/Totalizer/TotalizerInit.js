@@ -6,6 +6,7 @@ import Board from "./Board";
 const TotalizerInit = () => {
     // states
     const [title, setTitle] = useState("");
+    const [isMisc, setIsMisc] = useState(false);
     const [scoreTotals, setScoreTotals] = useState([]);
     const [timeTotals, setTimeTotals] = useState([]);
 
@@ -38,7 +39,11 @@ const TotalizerInit = () => {
     // function that ensures user has navigated to a valid path. also used to grab the title of the game.
     const checkPath = async () => {
         try {
+            // initalize variables
             let approved = false;
+            if (abb.slice(-4) === "misc") {
+                setIsMisc(true);
+            }
 
             // now, query the list of games. if the current url matches any of these
             // it is an approved path
@@ -152,7 +157,7 @@ const TotalizerInit = () => {
         );
     }
 
-    return { title, checkPath, getTotalizer, getLinkBack, getLinkToMedal, TotalizerBoard };
+    return { title, isMisc, checkPath, getTotalizer, getLinkBack, getLinkToMedal, TotalizerBoard };
 }
 
 export default TotalizerInit;

@@ -14,7 +14,7 @@ function Board({ isScore, data }) {
                 {data.map((val) => {
                     return <tr key={`${val.Name}-row`}>
                         <td>{val.Position}</td>
-                        <td className="user-info">
+                        <td className="totals-user-info">
                             <div><SimpleAvatar url={val.Avatar_URL} size={50}/></div>
                             {val.Country ?
                                 <div className="country-icon">

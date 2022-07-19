@@ -6,6 +6,7 @@ import Board from "./Board";
 const MedalsInit = () => {
     // states
     const [title, setTitle] = useState("");
+    const [isMisc, setIsMisc] = useState(false);
     const [scoreMedals, setScoreMedals] = useState([]);
     const [timeMedals, setTimeMedals] = useState([]);
 
@@ -43,7 +44,11 @@ const MedalsInit = () => {
     // function that ensures user has navigated to a valid path. also used to grab the title of the game.
     const checkPath = async () => {
         try {
+            // initialize variables and states
             let approved = false;
+            if (abb.slice(-4) === "misc") {
+                setIsMisc(true);
+            }
 
             // now, query the list of games. if the current url matches any of these
             // it is an approved path
@@ -56,7 +61,7 @@ const MedalsInit = () => {
                 throw error;
             }
 
-            const correctedAbb = miscCheckAndUpdate(abb, "normalize")
+            const correctedAbb = miscCheckAndUpdate(abb, "normalize");
 
             // now, iterate through game list, and compare with the current abb variable
             games.forEach(game => {
@@ -165,7 +170,7 @@ const MedalsInit = () => {
         );
     }
 
-    return { title, checkPath, getMedalTable, getLinkBack, getLinkToTotals, MedalsBoard };
+    return { title, isMisc, checkPath, getMedalTable, getLinkBack, getLinkToTotals, MedalsBoard };
 }
 
 export default MedalsInit;
