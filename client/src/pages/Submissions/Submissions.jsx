@@ -71,7 +71,7 @@ function Submissions() {
                     <Link to={`/games/${val.isMisc ? currentGame+"misc" : currentGame}/${val.isScore ? "score" : "time"}/${val.level_id}`}>
                       {val.isMisc ? val.level_name+" (Misc)" : val.level_name}
                     </Link></td>
-                  <td className="user-info">
+                  <td className="submissions-user-info">
                   {val.country ?
                     <div className="country-icon">
                       <img

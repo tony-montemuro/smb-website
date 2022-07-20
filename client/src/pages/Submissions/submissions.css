@@ -24,3 +24,8 @@
 .submissions-list tr:nth-child(even) {
     background-color: #d3d3d3;
 }
+
+.submissions-user-info {
+    display: flex;
+    flex-direction: row;
+}

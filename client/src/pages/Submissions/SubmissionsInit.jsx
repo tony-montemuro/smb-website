@@ -72,6 +72,7 @@ const SubmissionInit = () => {
                 .from(`${game.abb}_recent_submissions`)
                 .select(`
                     created_at,
+                    user_id,
                     profiles:user_id ( username, country ),
                     level_name,
                     level_id,
