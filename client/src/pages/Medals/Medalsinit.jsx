@@ -121,7 +121,7 @@ const MedalsInit = () => {
                 const medalSet = medalsList[i];
                 medalSet["Position"] = posCount;
                 trueCount++;
-                if (i < medalSet.length-1 && equalityCheck(medalSet, medalsList[i+1])) {
+                if (i < medalsList.length-1 && !equalityCheck(medalSet, medalsList[i+1])) {
                     posCount = trueCount;
                 }
 
