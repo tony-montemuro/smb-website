@@ -38,7 +38,7 @@ const LevelboardInit = () => {
     const [formErrors, setFormErrors] = useState({});
     const [currentRecord, setCurrentRecord] = useState(null);
     const [hasUserSubmitted, setHasUserSubmitted] = useState(false);
-    const [total, setTotal] = useState(null);
+    const [totals, setTotals] = useState({});
     const [medalTable, setMedalTable] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isSubmit, setIsSubmit] = useState(false);
@@ -298,9 +298,10 @@ const LevelboardInit = () => {
     }
 
     // function that will update the totalizer table based on the user's submission
-    const updateTotalizer = async (userId, gameAbb, isSubmit) => {
+    const updateTotalizer = async (userId, gameAbb, currRecord, isSubmit) => {
         // initalize variabels
-        const oldRecord = currentRecord === null ? 0 : currentRecord;
+        const userTotal = totals[userId];
+        const oldRecord = currRecord === null ? 0 : currRecord;
         const newRecord = isSubmit ? formValues.record : 0;
         const difference = newRecord - oldRecord;
 
@@ -309,7 +310,7 @@ const LevelboardInit = () => {
                 .from(`${gameAbb}_${mode.toLowerCase()}_total`)
                 .update({
                     user_id: userId,
-                    total: total + difference
+                    total: userTotal + difference
                 }, {
                     returning: "minimal", // Don't return the value after inserting
                 })
@@ -756,22 +757,29 @@ const LevelboardInit = () => {
                 alert(error.message);
             }
 
-            // then, query the totals table for the respective game and mode to query the user's total
+            // then, query the totals table for the respective game and mode to query the users' totals
             try {
-                let { data, error, status } = await supabase
+                // query the entire total table for the particular game
+                let { data: totals, error, status } = await supabase
                     .from(`${prefix}_total`)
-                    .select("total")
-                    .eq("user_id", userId)
-                    .single();
+                    .select("*");
 
                 if (error && status !== 406) {
                     throw error;
                 }
 
+                // now, check to see if current user's id is found in the table
+                let found = false;
+                totals.forEach(totalRow => {
+                    if (totalRow.user_id === userId) {
+                        found = true;
+                    }
+                });
+
                 // special case that occurs if user has never submitted to a category. create a new
                 // entry in the table for them. do this for the medal table as well.
                 console.log(`Total:`);
-                if (status === 406 && data === null) {
+                if (!found) {
                     try {
                         const { error } = await supabase
                             .from(`${prefix}_total`)
@@ -784,8 +792,8 @@ const LevelboardInit = () => {
                             throw error;
                         }
 
-                        console.log(defaultVal);
-                        setTotal(defaultVal);
+                        // update the totals array with this new object
+                        totals.push({ user_id: userId, total: defaultVal });
 
                     } catch (error) {
                         // Error code 23503 occurs when the user has signed up to the website, but has not yet created a profile
@@ -796,10 +804,17 @@ const LevelboardInit = () => {
                         }
                     }
                     
-                } else {
-                    console.log(data.total);
-                    setTotal(data.total);
                 }
+
+                // finally, create a key -> value relationship between userId -> total. this will be useful when we update the totalizer upon
+                // user submission
+                let totalsObj = {};
+                totals.forEach(total => {
+                    totalsObj[total.user_id] = total.total;
+                });
+                console.log(totalsObj);
+                setTotals(totalsObj);
+
             } catch (error) {
                 alert(error.message);
             }
@@ -901,6 +916,7 @@ const LevelboardInit = () => {
         // initialize variables that will be used in each function call
         const userId = supabase.auth.user().id;
         const gameAbb = miscCheckAndUpdate(abb, "underline");
+        const submittedRecord = currentRecord;
 
         // call to function to submit record to learderboard. this function will also make the call to update the medal table
         submitRecord(userId, gameAbb);
@@ -909,22 +925,25 @@ const LevelboardInit = () => {
         submitToRecent(userId);
 
         // call to function to update the totalizer table
-        updateTotalizer(userId, gameAbb, true);
+        updateTotalizer(userId, gameAbb, submittedRecord, true);
     }
 
     // function that will delete a user's run based on the id parameter. by default, id will equal the current user's id,
     // but a moderator will also have easy access to this function, where they can delete any run
-    const remove = async (id) => {
+    const remove = async (id, recordToRemove) => {
         setSubmitting(true);
 
         // initialize variables that will be used in each function call
         const gameAbb = miscCheckAndUpdate(abb, "underline");
+        if (recordToRemove === null) {
+            recordToRemove = currentRecord;
+        }
 
         // call to function to remove record from leaderboard. this function will also make the call to update the medal table
         removeRecord(id, gameAbb);
 
         // call to function to update the totalizer table
-        updateTotalizer(id, gameAbb, false);
+        updateTotalizer(id, gameAbb, recordToRemove, false);
     }
 
     // function that runs each time a form value is changed. keeps the formValues
