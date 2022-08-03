@@ -8,7 +8,7 @@ let correctedId = null;
 
 const LevelboardInit = () => {
     // variable
-    const initialValues = { record: "", monkeyId: 1, proof: "", comment: ""};
+    const initialValues = { record: "", monkeyId: 1, isLive: true, proof: "", comment: "" };
     
     // helper function used to capitalize an input string called str
     const capitalize = (str) => {
@@ -27,6 +27,8 @@ const LevelboardInit = () => {
 
     // states
     const [records, setRecords] = useState([]);
+    const [allRecords, setAllRecords] = useState([]);
+    const [showAll, setShowAll] = useState(false);
     const [title, setTitle] = useState("");
     const [levelList, setLevelList] = useState([]);
     const [levelLength, setLevelLength] = useState(null);
@@ -36,9 +38,10 @@ const LevelboardInit = () => {
     const [isMod, setIsMod] = useState(false);
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
-    const [currentRecord, setCurrentRecord] = useState(null);
+    const [currentRecordData, setCurrentRecordData] = useState({});
     const [hasUserSubmitted, setHasUserSubmitted] = useState(false);
     const [totals, setTotals] = useState({});
+    const [allTotals, setAllTotals] = useState({});
     const [medalTable, setMedalTable] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isSubmit, setIsSubmit] = useState(false);
@@ -76,6 +79,95 @@ const LevelboardInit = () => {
         }
     }
 
+    // helper function which takes an array of records, and calculates the position of each record
+    const addPosCol = (r) => {
+        // variables used to determine position of each submission
+        let trueCount = 1;
+        let posCount = trueCount;
+
+        // now, iterate through each record, and calculate the position.
+        // simplify each object.
+        for (let i = 0; i < r.length; i++) {
+            let record = r[i];
+            record["Position"] = posCount;
+            trueCount++;
+            if (i < r.length-1 && r[i+1][mode] !== record[mode]) {
+                posCount = trueCount;
+            }
+        }
+
+        console.log(r);
+
+        return r;
+    }
+
+    // helper function that will query either the total or all total table for the particular game, based on the
+    // isAll flag
+    const queryTotals = async (isAll, prefix, userId, defaultVal) => {
+        try {
+            const tableName = isAll ? `${prefix}_total_all` : `${prefix}_total`;
+            // query the entire total table for the particular game
+            let { data: totals, error, status } = await supabase
+                .from(tableName)
+                .select("*");
+
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            // now, check to see if current user's id is found in the table
+            let found = false;
+            totals.forEach(totalRow => {
+                if (totalRow.user_id === userId) {
+                    found = true;
+                }
+            });
+
+            // special case that occurs if user has never submitted to a category. create a new
+            // entry in the table for them. do this for the medal table as well.
+            console.log(isAll ? "All Total: " : "Totals: ");
+            if (!found) {
+                try {
+                    const { error } = await supabase
+                        .from(tableName)
+                        .insert({ 
+                            user_id: userId,
+                            total: defaultVal
+                        });
+
+                    if (error) {
+                        throw error;
+                    }
+
+                    // update the totals array with this new object
+                    totals.push({ user_id: userId, total: defaultVal });
+
+                } catch (error) {
+                    // Error code 23503 occurs when the user has signed up to the website, but has not yet created a profile
+                    if (error.code === '23503') {
+                        console.log("Failed to create new entry into table because user has not created their profile.");
+                    } else {
+                        console.log(error);
+                        alert(error.message);
+                    }
+                }
+            }
+
+            // finally, create a key -> value relationship between userId -> total. this will be useful when we update the totalizer upon
+            // user submission
+            let totalsObj = {};
+            totals.forEach(total => {
+                totalsObj[total.user_id] = total.total;
+            });
+            console.log(totalsObj);
+            isAll ? setAllTotals(totalsObj) : setTotals(totalsObj);
+
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+    }
+
     // helper function that will query a levelboard for records, and clean up the data.
     const queryRecordsAndClean = async () => {
         // declare variables
@@ -96,6 +188,7 @@ const LevelboardInit = () => {
                     Month,
                     Year,
                     Proof,
+                    live,
                     Comment
                 `)
                 .order(`${mode}`, { ascending: false })
@@ -116,26 +209,13 @@ const LevelboardInit = () => {
                 }
             }
 
-            // variables used to determine position of each submission
-            let trueCount = 1;
-            let posCount = trueCount;
-
-            // now, iterate through each record, and calculate the position.
-            // simplify each object.
-            for (let i = 0; i < records.length; i++) {
-                const record = records[i];
-                record["Position"] = posCount;
-                trueCount++;
-                if (i < records.length-1 && records[i+1][mode] !== record[mode]) {
-                    posCount = trueCount;
-                }
-
-                // simplify
+            // simplify
+            for (let record of records) {
                 record["Monkey"] = record.monkey.monkey_name;
                 record["Name"] = record.profiles.username;
                 record["Avatar_URL"] = record.profiles.avatar_url;
                 record["Country"] = record.profiles.country;
-                delete records[i].profiles;
+                delete record.profiles;
             }
 
             r = records;
@@ -221,6 +301,7 @@ const LevelboardInit = () => {
                     Month: date.getMonth()+1,
                     Year: date.getFullYear(),
                     Proof: formValues.proof,
+                    live: formValues.isLive,
                     Comment: formValues.comment
                 }, {
                     returning: "minimal", // Don't return the value after inserting
@@ -233,6 +314,7 @@ const LevelboardInit = () => {
             }
 
             updateMedalTable(gameAbb);
+            
         } catch (error) {
             if (error.code === "23503") {
                 // error code 23503 occurs when a user has authenticated themselves, but not created
@@ -297,20 +379,14 @@ const LevelboardInit = () => {
         }
     }
 
-    // function that will update the totalizer table based on the user's submission
-    const updateTotalizer = async (userId, gameAbb, currRecord, isSubmit) => {
-        // initalize variabels
-        const userTotal = totals[userId];
-        const oldRecord = currRecord === null ? 0 : currRecord;
-        const newRecord = isSubmit ? formValues.record : 0;
-        const difference = newRecord - oldRecord;
-
+    // helper function that perform the query to update the totalizer table
+    const totalizerUpdateQuery = async (tableName, total, diff, userId) => {
         try {
             const { error } = await supabase
-                .from(`${gameAbb}_${mode.toLowerCase()}_total`)
+                .from(tableName)
                 .update({
                     user_id: userId,
-                    total: userTotal + difference
+                    total: total + diff
                 }, {
                     returning: "minimal", // Don't return the value after inserting
                 })
@@ -331,6 +407,60 @@ const LevelboardInit = () => {
         }
     }
 
+    // function that will update the totalizer table based on the user's submission
+    const updateTotalizer = async (userId, gameAbb, currRecord, isSubmit) => {
+        // initalize variables for the 'all' total table
+        const tableNameAll = `${gameAbb}_${mode.toLowerCase()}_total_all`;
+        const userTotalAll = allTotals[userId];
+        const oldRecordAll = Object.keys(currRecord).length === 0 ? 0 : currRecord.record;
+        const newRecordAll = isSubmit ? formValues.record : 0;
+        const differenceAll = newRecordAll - oldRecordAll;
+
+        //initalize varialbes for the normal total table
+        const tableName = `${gameAbb}_${mode.toLowerCase()}_total`;
+        const userTotal = totals[userId];
+
+        // 3 cases of oldRecord: 
+        // CASE 1: new submission: if currRecord is an empty object, this implies the user never submit to this chart before
+        // thus, set oldRecord to 0
+        // CASE 2: user has a current submission, and it was live. if this is the case, this means that the current record
+        // was accounted for in the totalizer, so set oldRecord equal to the record key
+        // CASE 3: user has a current submission, but it was NOT live. if this is the case, this means that the current record
+        // was NOT accounted for in the totalizer, so set oldRecord equal to 0.
+        let oldRecord;
+        if (Object.keys(currRecord).length === 0) {
+            oldRecord = 0;
+        } else {
+            if (currRecord.isLive) {
+                oldRecord = currRecord.record;
+            } else {
+                oldRecord = 0;
+            }
+        }
+
+        // 3 case of newRecord:
+        // CASE 1: isSubmit flag is true, and the record is live. this is a standard entry, so simply set newRecord equal to the record
+        // key of the formValues object
+        // CASE 2: isSubmit flag is true, but the record is non-live. because this is a non-live submission, this means it will not
+        // count toward this totalizer, so set newRecord equal to 0
+        // CASE 3: isSubmit flag is false. this implies a deletion, so set newRecord equal to 0, since there is no new record.
+        let newRecord;
+        if (isSubmit) {
+            if (formValues.isLive) {
+                newRecord = formValues.record;
+            } else {
+                newRecord = 0;
+            }
+        } else {
+            newRecord = 0;
+        }
+        const difference = newRecord - oldRecord;
+
+        // now, make the updates in the backend
+        totalizerUpdateQuery(tableNameAll, userTotalAll, differenceAll, userId);
+        totalizerUpdateQuery(tableName, userTotal, difference, userId);
+    }
+
     // helper function that will generate an object based on the position
     // of a submission on the levelboard. NOTE: isNew will determine
     // whether to set newMedal to medalType or oldMedal to medalType
@@ -346,15 +476,27 @@ const LevelboardInit = () => {
         }
     }
 
-    // function that will update the medal table based on the user's submission
+    // function that will update the medal table based on the user's submission [NOTE: this function will only be run
+    // for live submissions]
     const updateMedalTable = async (gameAbb) => {
         // first, requery the level now that a new record has been submitted
-        const updatedRecords = await queryRecordsAndClean();
+        const updatedRecordsFull = await queryRecordsAndClean();
+        let updatedRecords = [];
 
         // now, clean the data
-        for (let i = 0; i < updatedRecords.length; i++) {
-            delete updatedRecords[i].monkey;
+        for (let i = 0; i < updatedRecordsFull.length; i++) {
+            // first, delete the monkey property, as it is not useful
+            delete updatedRecordsFull[i].monkey;
+
+            // now, check if the record is live. if so, push to the updatedRecords array
+            const record = updatedRecordsFull[i];
+            if (record.live) {
+                updatedRecords.push(structuredClone(record));
+            }
         }
+
+        // add the position column to the updated records
+        addPosCol(updatedRecords);
 
         // now, we need to generate an array of objects. the objects will store information about
         // the top 4 of the levelboard BEFORE a new submission has been added (records).
@@ -616,31 +758,50 @@ const LevelboardInit = () => {
         // declare variables
         const user = supabase.auth.user();
         const userId = user ? user.id : null;
-        const records = await queryRecordsAndClean();
+        let recordsList = await queryRecordsAndClean();
+        let liveRecordsList = [];
 
         // if the current user has a submission, set the form values equal to the submission
-        // also, delete the records[i].monkey from each record
-        for (let i = 0; i < records.length; i++) {
-            const record = records[i];
+        // also, delete the recordsList[i].monkey from each record
+        for (let i = 0; i < recordsList.length; i++) {
+            const record = recordsList[i];
 
+            // if the current user has a submission, set the form values equal to this submission
+            // update states as well
             if (userId && record["user_id"] === userId) {
                 setFormValues({
                     ...formValues,
                     record: record[`${mode}`], 
                     monkeyId: record.monkey.id, 
+                    isLive: record["live"],
                     proof: record["Proof"], 
-                    comment: record["Comment"]
+                    comment: record["Comment"],
                 });
-                setCurrentRecord(record[`${mode}`]);
+                setCurrentRecordData({ record: record[`${mode}`], isLive: record.live });
                 setHasUserSubmitted(true);
             }
 
-            delete records[i].monkey;
+            // delete the records[i].monkey from each record
+            delete recordsList[i].monkey;
+
+            // finally, if the live flag is set to true for a record, this means it is a live record
+            // thus, push it to the liveRecordsList
+            if (record.live) {
+                liveRecordsList.push(structuredClone(recordsList[i]));
+            }
         }
 
-        console.log("Records: ");
-        console.log(records);
-        setRecords(records);
+        // now, add the position column to both lists
+        recordsList = addPosCol(recordsList);
+        liveRecordsList = addPosCol(liveRecordsList);
+
+        // finally, update react states for both the records and all records states
+        console.log("All Records: ");
+        console.log(recordsList);
+        console.log("Live-Only Records: ");
+        console.log(liveRecordsList);
+        setRecords(liveRecordsList);
+        setAllRecords(recordsList);
     }
 
     // function used to establish the modes, as well as creating the levelList
@@ -757,67 +918,11 @@ const LevelboardInit = () => {
                 alert(error.message);
             }
 
-            // then, query the totals table for the respective game and mode to query the users' totals
-            try {
-                // query the entire total table for the particular game
-                let { data: totals, error, status } = await supabase
-                    .from(`${prefix}_total`)
-                    .select("*");
+            // then, query both totals tables for the respective game and mode to query the users' totals for both
+            // live-only and live + non-live submissions
+            queryTotals(false, prefix, userId, defaultVal);
+            queryTotals(true, prefix, userId, defaultVal);
 
-                if (error && status !== 406) {
-                    throw error;
-                }
-
-                // now, check to see if current user's id is found in the table
-                let found = false;
-                totals.forEach(totalRow => {
-                    if (totalRow.user_id === userId) {
-                        found = true;
-                    }
-                });
-
-                // special case that occurs if user has never submitted to a category. create a new
-                // entry in the table for them. do this for the medal table as well.
-                console.log(`Total:`);
-                if (!found) {
-                    try {
-                        const { error } = await supabase
-                            .from(`${prefix}_total`)
-                            .insert({ 
-                                user_id: userId,
-                                total: defaultVal
-                            });
-
-                        if (error) {
-                            throw error;
-                        }
-
-                        // update the totals array with this new object
-                        totals.push({ user_id: userId, total: defaultVal });
-
-                    } catch (error) {
-                        // Error code 23503 occurs when the user has signed up to the website, but has not yet created a profile
-                        if (error.code === '23503') {
-                            console.log("Failed to create new entry into table because user has not created their profile.");
-                        } else {
-                            alert(error.message);
-                        }
-                    }
-                    
-                }
-
-                // finally, create a key -> value relationship between userId -> total. this will be useful when we update the totalizer upon
-                // user submission
-                let totalsObj = {};
-                totals.forEach(total => {
-                    totalsObj[total.user_id] = total.total;
-                });
-                console.log(totalsObj);
-                setTotals(totalsObj);
-
-            } catch (error) {
-                alert(error.message);
-            }
         }
     }
 
@@ -916,7 +1021,7 @@ const LevelboardInit = () => {
         // initialize variables that will be used in each function call
         const userId = supabase.auth.user().id;
         const gameAbb = miscCheckAndUpdate(abb, "underline");
-        const submittedRecord = currentRecord;
+        const submittedRecord = currentRecordData;
 
         // call to function to submit record to learderboard. this function will also make the call to update the medal table
         submitRecord(userId, gameAbb);
@@ -935,8 +1040,8 @@ const LevelboardInit = () => {
 
         // initialize variables that will be used in each function call
         const gameAbb = miscCheckAndUpdate(abb, "underline");
-        if (recordToRemove === null) {
-            recordToRemove = currentRecord;
+        if (Object.keys(recordToRemove).length === 0) {
+            recordToRemove = currentRecordData;
         }
 
         // call to function to remove record from leaderboard. this function will also make the call to update the medal table
@@ -949,8 +1054,8 @@ const LevelboardInit = () => {
     // function that runs each time a form value is changed. keeps the formValues
     // state updated
     const handleChange = (e) => {
-        const { id, value } = e.target;
-        setFormValues({...formValues, [id]: value});
+        const { id, value, checked } = e.target;
+        id === "isLive" ? setFormValues({ ...formValues, [id]: checked }) : setFormValues({...formValues, [id]: value });
         console.log(formValues);
     }
 
@@ -1113,20 +1218,21 @@ const LevelboardInit = () => {
         )
       }
 
-    return { mode,
-             levelId,
-             loading,
+    return { loading,
              records,
+             allRecords,
+             showAll,
              title, 
              levelList,
              levelLength,
              isMod,
-             formValues,
+             formValues, 
              formErrors,
              hasUserSubmitted,
              isSubmit,
              popup,
              submitting,
+             setShowAll,
              setPopup,
              init,
              sortLevels,
@@ -1136,9 +1242,9 @@ const LevelboardInit = () => {
              swapLevels, 
              handleSubmit,
              getGame, 
-             getMode,
+             getMode, 
              updateStates,
-             setLevelId,
+             setLevelId, 
              MonkeySelect
     };
 }

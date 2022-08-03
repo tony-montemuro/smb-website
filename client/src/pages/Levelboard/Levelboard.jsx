@@ -13,6 +13,8 @@ import { Link } from "react-router-dom";
 function Levelboard() {
   const { loading,
           records,
+          allRecords,
+          showAll,
           title, 
           levelList,
           levelLength,
@@ -23,6 +25,7 @@ function Levelboard() {
           isSubmit,
           popup,
           submitting,
+          setShowAll,
           setPopup,
           init,
           sortLevels,
@@ -82,11 +85,18 @@ function Levelboard() {
                 <Link to={ `/games/${getGame(true)}/medals`}>
                   <button>Medal Table</button>
                 </Link>
+                <label htmlFor="showLive">Show non-live runs: </label>
+                <input
+                  id="showLive"
+                  type="checkbox"
+                  checked={ showAll }
+                  onChange={ () => setShowAll(!showAll) }
+                />
               </div>
           </div>
           <div className="levelboard-container">
             <div className="levelboard-board">
-              <Board mode={ getMode() } records={ records } isMod={ isMod } removeFunc={ remove } />
+              <Board mode={ getMode() } allRecords={ allRecords } records={ records } showAll={ showAll } isMod={ isMod } removeFunc={ remove } />
             </div>
             {supabase.auth.user() ? 
                <div className="levelboard-submit">
@@ -110,6 +120,13 @@ function Levelboard() {
                    onChange={ handleChange }
                  />
                  <p>{ formErrors.proof }</p>
+                 <label htmlFor="isLive">Live Run: </label>
+                 <input
+                  id="isLive"
+                  type="checkbox"
+                  checked={ formValues.isLive }
+                  onChange={ handleChange }
+                 />
                  <label htmlFor="comment">Comment (optional): </label>
                  <input 
                    id="comment"
