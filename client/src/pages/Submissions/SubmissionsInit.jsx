@@ -79,10 +79,11 @@ const SubmissionInit = () => {
                     record,
                     isScore,
                     isMisc,
+                    live,
                     proof,
                     comment
                 `)
-                .order("created_at", { ascending: false});
+                .order("created_at", { ascending: true });
 
             if (error && status !== 406) {
                 throw error;

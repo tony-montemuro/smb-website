@@ -58,6 +58,7 @@ function Submissions() {
                   <th>Level Name</th>
                   <th>User</th>
                   <th>Record</th>
+                  <th>Live Status</th>
                   <th>Proof</th>
                   <th>Comment</th>
                   <th>Reviewed</th>
@@ -86,6 +87,7 @@ function Submissions() {
                   <div><Link to={`/user/${val.user_id}`}>{val.username}</Link></div>
                   </td>
                   <td>{val.record}</td>
+                  {val.live ? <td>Live</td> : <td>Non-live</td>}
                   <td>{val.proof !== "none" ? <a href={val.proof} target="_blank" rel="noopener noreferrer">☑️</a> : ''}</td>
                   <td>{val.comment}</td>
                   <td><button onClick={() => removeSubmission(val.created_at)}>☑️</button></td>

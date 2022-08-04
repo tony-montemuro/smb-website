@@ -1,10 +1,19 @@
 import "./medals.css";
 import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
+import Board from "./Board";
 import MedalsInit from './Medalsinit';
 
 function Medals() {
-    const { title, isMisc, checkPath, getMedalTable, getLinkBack, getLinkToTotals, MedalsBoard } = MedalsInit();
+    const { title,
+            isMisc, 
+            scoreMedals,
+            timeMedals,
+            checkPath, 
+            getMedalTable, 
+            getLinkBack, 
+            getLinkToTotals
+    } = MedalsInit();
 
     useEffect(() => {
         checkPath();
@@ -24,8 +33,14 @@ function Medals() {
           <button> { isMisc ? "Miscellaneous " + title : title }'s Totalizer Page</button>
         </Link>
         <div className="medals-body">
-            <MedalsBoard isScore={true} />
-            <MedalsBoard isScore={false} />
+          <div className="medals-container">
+            <h2>Score Medal Table</h2>
+            <Board data={scoreMedals} />
+          </div>
+          <div className="medals-container">
+            <h2>Time Medal Table</h2>
+            <Board data={timeMedals} />
+          </div>
         </div>
     </div>
   )

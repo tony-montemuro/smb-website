@@ -341,6 +341,7 @@ const LevelboardInit = () => {
                     level_name: title,
                     level_id: levelId,
                     record: parseFloat(formValues.record),
+                    live: formValues.isLive,
                     proof: formValues.proof,
                     comment: formValues.comment,
                     isScore: mode === "Score" ? true : false,
@@ -353,6 +354,7 @@ const LevelboardInit = () => {
                 throw error;
             }
         } catch (error) {
+            console.log(error);
             alert(error.message);
         }
     }

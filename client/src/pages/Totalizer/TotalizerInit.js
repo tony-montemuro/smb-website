@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
-import Board from "./Board";
 
 const TotalizerInit = () => {
     // states
     const [title, setTitle] = useState("");
     const [isMisc, setIsMisc] = useState(false);
+    const [showAllScore, setShowAllScore] = useState(false);
+    const [showAllTime, setShowAllTime] = useState(false);
     const [scoreTotals, setScoreTotals] = useState([]);
+    const [allScoreTotals, setAllScoreTotals] = useState([]);
     const [timeTotals, setTimeTotals] = useState([]);
+    const [allTimeTotals, setAllTimeTotals] = useState([]);
 
     // path variables
     const path = window.location.pathname;
@@ -79,14 +82,15 @@ const TotalizerInit = () => {
     }
 
     // function that queries the game's totalizer page to get list of totals
-    const getTotalizer = async (isScore) => {
+    const getTotalizer = async (isScore, isAll) => {
         const gameAbb = miscCheckAndUpdate(abb, "underline");
+        const mode = isScore ? "score" : "time";
+        const tableName = isAll ? `${gameAbb}_${mode}_total_all` : `${gameAbb}_${mode}_total`;
 
         try {
             // query the score totalizer table for the particular game
-            const mode = isScore ? "score" : "time";
             let { data: totals, status, error } = await supabase
-                .from(`${gameAbb}_${mode}_total`)
+                .from(tableName)
                 .select(`
                     user_id,
                     profiles:user_id ( id, username, country, avatar_url ),
@@ -120,7 +124,11 @@ const TotalizerInit = () => {
                 delete totals[i].profiles;
             }
 
-            isScore ? setScoreTotals(totals) : setTimeTotals(totals);
+            if (isAll) {
+                isScore ? setAllScoreTotals(totals) : setAllTimeTotals(totals);
+            } else {
+                isScore ? setScoreTotals(totals) : setTimeTotals(totals);
+            }
 
             console.log(totals);
         } catch (error) {
@@ -138,26 +146,21 @@ const TotalizerInit = () => {
         return `/games/${abb}/medals`;
     }
 
-    // totalizer board element
-    const TotalizerBoard = ({ isScore }) => {
-        return (
-            <>
-                {isScore ? 
-                    <div className="totalizer-container">
-                        <h2>Score Totals</h2>
-                        <Board isScore={isScore} data={scoreTotals} />
-                    </div>
-                    : 
-                    <div className="totalizer-container">
-                        <h2>Time Totals</h2>
-                        <Board isScore={isScore} data={timeTotals} />
-                    </div>
-                }
-            </>
-        );
-    }
-
-    return { title, isMisc, checkPath, getTotalizer, getLinkBack, getLinkToMedal, TotalizerBoard };
+    return { title,
+             isMisc, 
+             showAllScore,
+             showAllTime,
+             scoreTotals,
+             allScoreTotals,
+             timeTotals,
+             allTimeTotals,
+             setShowAllScore,
+             setShowAllTime,
+             checkPath, 
+             getTotalizer, 
+             getLinkBack, 
+             getLinkToMedal 
+    };
 }
 
 export default TotalizerInit;

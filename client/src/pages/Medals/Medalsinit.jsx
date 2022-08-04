@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
-import Board from "./Board";
 
 const MedalsInit = () => {
     // states
@@ -152,25 +151,15 @@ const MedalsInit = () => {
         return `/games/${abb}/totalizer`;
     }
 
-    const MedalsBoard = ({ isScore }) => {
-        return (
-            <>
-                {isScore ? 
-                    <div className="medals-container">
-                        <h2>Score Medal Table</h2>
-                        <Board data={scoreMedals} />
-                    </div>
-                    : 
-                    <div className="medals-container">
-                        <h2>Time Medal Table</h2>
-                        <Board data={timeMedals} />
-                    </div>
-                }
-            </>
-        );
-    }
-
-    return { title, isMisc, checkPath, getMedalTable, getLinkBack, getLinkToTotals, MedalsBoard };
+    return { title,
+             isMisc, 
+             scoreMedals,
+             timeMedals,
+             checkPath, 
+             getMedalTable, 
+             getLinkBack, 
+             getLinkToTotals 
+    };
 }
 
 export default MedalsInit;
