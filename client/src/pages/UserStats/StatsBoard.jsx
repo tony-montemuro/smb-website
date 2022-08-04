@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
-function StatsBoard({total, medals, user}) {
+function StatsBoard({ total, medals, user }) {
     // helper function used to capitalize an input string called str
     const capitalize = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -40,7 +40,12 @@ function StatsBoard({total, medals, user}) {
                                 }
                                 <div><Link to={ `/user/${user.user_id}` }>{ user.username }</Link></div>
                             </td>
-                            <td>{ total.total }</td>
+                            { total.mode === "score" ? 
+                                <td>{ total.total }</td>
+                            :
+                                <td>{total.Hours}:{total.Minutes}:{total.Seconds}.{total.Centiseconds}</td>
+                            }
+                            
                         </tr>
                     </tbody>
                 </table>

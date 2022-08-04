@@ -81,6 +81,37 @@ const TotalizerInit = () => {
         }
     }
 
+    // this function will take an input in seconds, and return the hours, minutes, seconds, and centiseconds
+    // NOTE: these will be STRING values, since leading zeros will be added
+    const secondsToHours = (timeInSec) => {
+        let hours = 0, minutes = 0, seconds = 0, centiseconds = 0;
+
+        // 3600 seconds in 1 hour
+        while (timeInSec >= 3600) {
+            timeInSec -= 3600;
+            hours++;
+        }
+
+        // 60 seconds in 1 minute
+        while (timeInSec >= 60) {
+            timeInSec -= 60;
+            minutes++;
+        }
+
+        // with the remaining time, we can calculate the number of seconds and centiseconds
+        seconds = Math.floor(timeInSec);
+        centiseconds = (timeInSec - seconds) * 100;
+
+        // finally, convert to a specialized string, which will automatically append a leading 0 to single
+        // digit units of time
+        hours = hours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+        minutes = minutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+        seconds = seconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+        centiseconds = centiseconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+
+        return [hours, minutes, seconds, centiseconds];
+    }
+
     // function that queries the game's totalizer page to get list of totals
     const getTotalizer = async (isScore, isAll) => {
         const gameAbb = miscCheckAndUpdate(abb, "underline");
@@ -96,7 +127,7 @@ const TotalizerInit = () => {
                     profiles:user_id ( id, username, country, avatar_url ),
                     total
                 `)
-                .order("total", { ascending: false });
+                .order("total", isScore ? { ascending: false } : { ascending: true });
 
             if (error && status !== 406) {
                 throw error;
@@ -122,6 +153,15 @@ const TotalizerInit = () => {
                 total["Country"] = total.profiles.country;
                 total["Avatar_URL"] = total.profiles.avatar_url;
                 delete totals[i].profiles;
+
+                // finally, perform special calculation in the case of time
+                if (!isScore) {
+                    const [hours, minutes, seconds, centiseconds] = secondsToHours(total.total);
+                    total["Hours"] = hours;
+                    total["Minutes"] = minutes;
+                    total["Seconds"] = seconds;
+                    total["Centiseconds"] = centiseconds;
+                }
             }
 
             if (isAll) {

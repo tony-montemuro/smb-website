@@ -28,6 +28,7 @@ const LevelboardInit = () => {
     // states
     const [records, setRecords] = useState([]);
     const [allRecords, setAllRecords] = useState([]);
+    const [timeDefaultVal, setTimeDefaultVal] = useState(null);
     const [showAll, setShowAll] = useState(false);
     const [title, setTitle] = useState("");
     const [levelList, setLevelList] = useState([]);
@@ -105,6 +106,7 @@ const LevelboardInit = () => {
     // isAll flag
     const queryTotals = async (isAll, prefix, userId, defaultVal) => {
         try {
+            console.log(defaultVal);
             const tableName = isAll ? `${prefix}_total_all` : `${prefix}_total`;
             // query the entire total table for the particular game
             let { data: totals, error, status } = await supabase
@@ -416,7 +418,7 @@ const LevelboardInit = () => {
         const userTotalAll = allTotals[userId];
         const oldRecordAll = Object.keys(currRecord).length === 0 ? 0 : currRecord.record;
         const newRecordAll = isSubmit ? formValues.record : 0;
-        const differenceAll = newRecordAll - oldRecordAll;
+        const differenceAll = mode === "Score" ? newRecordAll - oldRecordAll : oldRecordAll - newRecordAll;
 
         //initalize varialbes for the normal total table
         const tableName = `${gameAbb}_${mode.toLowerCase()}_total`;
@@ -456,7 +458,7 @@ const LevelboardInit = () => {
         } else {
             newRecord = 0;
         }
-        const difference = newRecord - oldRecord;
+        const difference = mode === "Score" ? newRecord - oldRecord : oldRecord - newRecord;
 
         // now, make the updates in the backend
         totalizerUpdateQuery(tableNameAll, userTotalAll, differenceAll, userId);
@@ -693,7 +695,6 @@ const LevelboardInit = () => {
             getRecords();
             getSpecialIds();
             getMonkeys();
-            getTotalAndMedals();
             checkForMod();
         }
     }
@@ -709,7 +710,7 @@ const LevelboardInit = () => {
         try {
             let {data: games, error, status} = await supabase
                 .from("games")
-                .select("abb, num_levels, num_levels_misc");
+                .select("abb, num_levels, num_levels_misc, time, time_misc");
 
             if (error && status !== 406) {
                 throw error;
@@ -726,11 +727,10 @@ const LevelboardInit = () => {
                 const numLevels = game[n];
                 if (correctedAbb === gameAbb && levelId <= numLevels) {
                     approvedGame = true;
-                    if (mode === "Time") {
-                        correctedId = levelId + numLevels;
-                    } else {
-                        correctedId = null;
-                    }
+                    correctedId = mode === "Time" ? levelId + numLevels : null;
+
+                    // if gameAbb and abb are the same, this implies that this is a non-misc chart
+                    gameAbb === abb ? setTimeDefaultVal(game.time) : setTimeDefaultVal(game.time_misc);
                     console.log(gameAbb);
                     console.log(numLevels);
                     setLevelLength(numLevels);
@@ -810,7 +810,7 @@ const LevelboardInit = () => {
     const getModesAndLevels = async () => {
         const modes = await queryModes();
         for (let mode of modes ) {
-            addLevels(mode, levelList);
+            addLevels(mode);
         };
     }
 
@@ -922,8 +922,11 @@ const LevelboardInit = () => {
 
             // then, query both totals tables for the respective game and mode to query the users' totals for both
             // live-only and live + non-live submissions
-            queryTotals(false, prefix, userId, defaultVal);
-            queryTotals(true, prefix, userId, defaultVal);
+            const totalDefault = mode === "Time" ? timeDefaultVal : 0;
+            console.log("TIME DEFAULT VAL:");
+            console.log(totalDefault);
+            queryTotals(false, prefix, userId, totalDefault);
+            queryTotals(true, prefix, userId, totalDefault);
 
         }
     }
@@ -1223,6 +1226,7 @@ const LevelboardInit = () => {
     return { loading,
              records,
              allRecords,
+             timeDefaultVal,
              showAll,
              title, 
              levelList,
@@ -1245,6 +1249,7 @@ const LevelboardInit = () => {
              handleSubmit,
              getGame, 
              getMode, 
+             getTotalAndMedals,
              updateStates,
              setLevelId, 
              MonkeySelect

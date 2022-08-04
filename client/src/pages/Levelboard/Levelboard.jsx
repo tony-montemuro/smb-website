@@ -14,6 +14,7 @@ function Levelboard() {
   const { loading,
           records,
           allRecords,
+          timeDefaultVal,
           showAll,
           title, 
           levelList,
@@ -36,6 +37,7 @@ function Levelboard() {
           handleSubmit,
           getGame, 
           getMode, 
+          getTotalAndMedals,
           updateStates,
           setLevelId, 
           MonkeySelect
@@ -45,6 +47,14 @@ function Levelboard() {
     init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    // once the timeDefaultVal is set, we can grab the medal and total tables
+    if (timeDefaultVal) {
+      getTotalAndMedals();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeDefaultVal]);
 
   useEffect(() => {
     // if the length of levelList has been filled, we can set the title, and set loading to false,

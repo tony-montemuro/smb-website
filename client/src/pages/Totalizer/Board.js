@@ -29,7 +29,11 @@ function Board({ isScore, data }) {
                             }
                             <div><Link to={`/user/${val.user_id}`}>{val.Name}</Link></div>
                         </td>
-                        <td>{isScore ? val.total : val.total.toFixed(2)}</td>
+                        {isScore ?
+                            <td>{val.total}</td>
+                        : 
+                            <td>{val.Hours}:{val.Minutes}:{val.Seconds}.{val.Centiseconds}</td>
+                        }
                     </tr>  
                 })}
             </tbody>
