@@ -18,14 +18,19 @@
     text-align: center;
 }
 
-.country {
+.user-country-name {
     display: flex;
     flex-direction: row;
-    padding: 5px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.country img {
-    padding-right: 5px;
+.user-country-name span {
+    margin-right: 2px;
+}
+
+.user-country-name p {
+    margin-left: 2px;
 }
 
 .user-info a {

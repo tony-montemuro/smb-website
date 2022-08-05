@@ -1,4 +1,5 @@
 import "./user.css";
+import "/node_modules/flag-icons/css/flag-icons.min.css";
 import UserInit from "./UserInit";
 import { React, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -36,12 +37,8 @@ function User() {
               <div className="user-info">
                 <h2>{username}</h2>
                 {country ? 
-                  <div className="country">
-                    <img
-                      alt={country.iso2}
-                      src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${country.iso2}.svg`}
-                      style={{width: 30}}>
-                    </img>
+                  <div className="user-country-name">
+                    <span className={`fi fi-${country.iso2.toLowerCase()}`}></span>
                     <p>{country.name}</p>
                   </div>
                 :

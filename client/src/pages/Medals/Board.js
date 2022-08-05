@@ -1,3 +1,4 @@
+import "/node_modules/flag-icons/css/flag-icons.min.css";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
@@ -17,20 +18,16 @@ function Board({ data }) {
                 {data.map((val) => {
                     return <tr key={`${val.Name}-row`}>
                         <td>{val.Position}</td>
-                        <td className="medals-user-info">
-                            <div><SimpleAvatar url={val.Avatar_URL} size={50}/></div>
-                            {val.Country ?
-                                <div className="country-icon">
-                                    <img
-                                        alt={val.Country}
-                                        src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${val.Country}.svg`}
-                                        style={{width: 30}}>
-                                    </img>
-                                </div>
-                                :
-                                ""
-                            }
-                            <div><Link to={`/user/${val.user_id}`}>{val.Name}</Link></div>
+                        <td>
+                            <div className="medals-user-info">
+                                <div><SimpleAvatar url={val.Avatar_URL} size={50}/></div>
+                                {val.Country ?
+                                    <div><span className={`fi fi-${val.Country.toLowerCase()}`}></span></div>
+                                    :
+                                    ""
+                                }
+                                <div><Link to={`/user/${val.user_id}`}>{val.Name}</Link></div>
+                            </div>
                         </td>
                         <td>{val.platinum}</td>
                         <td>{val.gold}</td>

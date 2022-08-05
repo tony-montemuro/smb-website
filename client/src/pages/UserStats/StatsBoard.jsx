@@ -1,3 +1,4 @@
+import "/node_modules/flag-icons/css/flag-icons.min.css";
 import React from "react";
 import { Link } from "react-router-dom";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
@@ -25,20 +26,16 @@ function StatsBoard({ total, medals, user }) {
                     <tbody>
                         <tr>
                             <td>{ total.Position }</td>
-                            <td className="user-stats-info">
-                                <div><SimpleAvatar url={ user.avatar_url } size={ 50 }/></div>
-                                {user.country ?
-                                    <div className="country-icon">
-                                        <img
-                                            alt={ user.country }
-                                            src={ `http://purecatamphetamine.github.io/country-flag-icons/3x2/${user.country}.svg` }
-                                            style={ {width: 30}} >
-                                        </img>
-                                    </div>
-                                    :
-                                    ""
-                                }
-                                <div><Link to={ `/user/${user.user_id}` }>{ user.username }</Link></div>
+                            <td>
+                                <div className="user-stats-info">
+                                    <div><SimpleAvatar url={ user.avatar_url } size={ 50 }/></div>
+                                    {user.country ?
+                                        <div><span className={`fi fi-${user.country.toLowerCase()}`}></span></div>
+                                        :
+                                        ""
+                                    }
+                                    <div><Link to={ `/user/${user.user_id}` }>{ user.username }</Link></div>
+                                </div>
                             </td>
                             { total.mode === "score" ? 
                                 <td>{ total.total }</td>
@@ -70,20 +67,16 @@ function StatsBoard({ total, medals, user }) {
                     <tbody>
                         <tr>
                             <td>{ medals.Position }</td>
-                            <td className="user-stats-info">
-                                <div><SimpleAvatar url={ user.avatar_url } size={ 50 }/></div>
-                                {user.country ?
-                                    <div className="country-icon">
-                                        <img
-                                            alt={ user.country }
-                                            src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${ user.country }.svg`}
-                                            style={ {width: 30}} >
-                                        </img>
-                                    </div>
-                                    :
-                                    ""
-                                }
-                                <div><Link to={ `/user/${user.user_id}` }>{ user.username }</Link></div>
+                            <td>
+                                <div className="user-stats-info">
+                                    <div><SimpleAvatar url={ user.avatar_url } size={ 50 }/></div>
+                                    {user.country ?
+                                        <div><span className={`fi fi-${user.country.toLowerCase()}`}></span></div>
+                                        :
+                                        ""
+                                    }
+                                    <div><Link to={ `/user/${user.user_id}` }>{ user.username }</Link></div>
+                                </div>
                             </td>
                             <td>{ medals.platinum }</td>
                             <td>{ medals.gold }</td>

@@ -1,4 +1,5 @@
-import "./submissions.css"
+import "./submissions.css";
+import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import SubmissionInit from "./SubmissionsInit";
@@ -72,19 +73,15 @@ function Submissions() {
                     <Link to={`/games/${val.isMisc ? currentGame+"misc" : currentGame}/${val.isScore ? "score" : "time"}/${val.level_id}`}>
                       {val.isMisc ? val.level_name+" (Misc)" : val.level_name}
                     </Link></td>
-                  <td className="submissions-user-info">
-                  {val.country ?
-                    <div className="country-icon">
-                      <img
-                          alt={val.country}
-                          src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${val.country}.svg`}
-                          style={{width: 30}}>
-                      </img>
+                  <td>
+                    <div className="submissions-user-info">
+                    {val.country ?
+                      <div><span className={`fi fi-${val.country.toLowerCase()}`}></span></div>
+                      :
+                      ""
+                    }
+                    <div><Link to={`/user/${val.user_id}`}>{val.username}</Link></div>
                     </div>
-                    :
-                    ""
-                  }
-                  <div><Link to={`/user/${val.user_id}`}>{val.username}</Link></div>
                   </td>
                   <td>{val.record}</td>
                   {val.live ? <td>Live</td> : <td>Non-live</td>}
