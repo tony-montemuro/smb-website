@@ -13,6 +13,8 @@ const UserStatsInit = () => {
     // states
     const [loading, setLoading] = useState(true);
     const [title, setTitle] = useState(null);
+    const [maxTime, setMaxTime] = useState(null);
+    const [maxTimeMisc, setMaxTimeMisc] = useState(null);
     const [user, setUser] = useState(null);
     const [medals, setMedals] = useState([]);
     const [medalsMisc, setMedalsMisc] = useState([]);
@@ -71,20 +73,27 @@ const UserStatsInit = () => {
             games.forEach(game => {
                 const gameAbb = game.abb;
                 const gameTitle = game.name;
+                const time = game.time;
+                const timeMisc = game.time_misc;
                 if (abb === gameAbb) {
                     approvedGame = true;
                     setTitle(gameTitle);
+                    console.log(time);
+                    setMaxTime(time);
+                    setMaxTimeMisc(timeMisc);
                 }
             });
 
-            // if not approved, navigate back to home. otherwise, proceed.
-            if (!approvedGame) {
-                navigate("/");
+            if (approvedGame) {
+                return true;
+            } else {
+                return false;
             }
 
         } catch(error) {
             alert(error.message);
         }
+        return false;
     }
 
     // helper function which simply checks for equality of medal sets. this will almost always return false
@@ -125,6 +134,9 @@ const UserStatsInit = () => {
 
     // function that will query the medal and totalizer tables based on the game and mode parameters
     const performQuery = async (game, mode) => {
+        // initalize variables
+        const isMisc = game.includes("misc");
+
         // First, query the medal table
         try {
             let { data: medalsList, error, status } = await supabase
@@ -234,9 +246,18 @@ const UserStatsInit = () => {
             // finally, add the user's particular total into the totals state
             let userTotal = totals.find(item => item.user_id === userId);
             if (typeof userTotal === "undefined") {
-                userTotal = {hasData: false};
+                userTotal = { hasData: false };
             } else {
-                userTotal.hasData = userTotal.total !== 0 ? true : false;
+                if (mode === "score") {
+                    userTotal.hasData = userTotal.total !== 0 ? true : false;
+                } else {
+                    if (isMisc) {
+                        userTotal.hasData = userTotal.total !== maxTimeMisc ? true : false;
+                    } else {
+                        userTotal.hasData = userTotal.total !== maxTime ? true : false;
+                    }
+                }
+                
             }
             userTotal.game = game;
             userTotal.mode = mode;
@@ -310,6 +331,8 @@ const UserStatsInit = () => {
 
     return { loading,
             title, 
+            maxTime,
+            maxTimeMisc,
             user, 
             medals, 
             totals, 
@@ -317,8 +340,8 @@ const UserStatsInit = () => {
             totalsMisc,
             selectedRadioBtn,
             setLoading, 
-            checkPath, 
-            queryMedalsAndTotals, 
+            checkPath,
+            queryMedalsAndTotals,
             sortData,
             checkForData,
             isRadioSelected,

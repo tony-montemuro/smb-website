@@ -7,6 +7,8 @@ import StatsBoard from "./StatsBoard";
 function UserStats() {
     const { loading,
       title, 
+      maxTime,
+      maxTimeMisc,
       user, 
       medals, 
       totals, 
@@ -14,12 +16,19 @@ function UserStats() {
       totalsMisc, 
       selectedRadioBtn,
       setLoading, 
-      checkPath, 
-      queryMedalsAndTotals, 
+      checkPath,
+      queryMedalsAndTotals,
       sortData,
       checkForData,
       isRadioSelected,
       handleRadioClick } = UserStatsInit();
+
+    useEffect(() => {
+      if (maxTime !== null && maxTimeMisc !== null) {
+        queryMedalsAndTotals();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [maxTime, maxTimeMisc]);
 
     useEffect(() => {
       if (loading && (medals.length === 2 && totals.length === 2 && medalsMisc.length === 2 && totalsMisc.length === 2)) {
@@ -35,7 +44,6 @@ function UserStats() {
 
     useEffect(() => {
         checkPath();
-        queryMedalsAndTotals();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
