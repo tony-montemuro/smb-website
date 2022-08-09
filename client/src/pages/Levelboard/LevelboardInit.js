@@ -269,7 +269,8 @@ const LevelboardInit = () => {
         try {
             let {data: levels, error, status} = await supabase
                 .from(`${gameAbb}_${toSnake(mode)}`)
-                .select("name");
+                .select("id, name")
+                .order("id");
 
             if (error && status !== 406) {
                 throw error;
@@ -821,7 +822,8 @@ const LevelboardInit = () => {
         try {
             let { data: ids, error, status } = await supabase
                 .from(`${gameAbb}_special`)     
-                .select("*");
+                .select("*")
+                .order("special_id");
                 
             if (error && status !== 406) {
                 throw error;
@@ -1089,6 +1091,9 @@ const LevelboardInit = () => {
         }
         else if (record <= 0) {
             errors.record = `${mode} must be a positive value.`;
+        }
+        else if (record > 2147483647) {
+            errors.record = `${mode} cannot exceed 2147483647.`;
         }
 
         // make sure scores are integers

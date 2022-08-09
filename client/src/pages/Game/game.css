@@ -19,6 +19,7 @@
 
 .lvl-time-score {
     background-color: aqua;
+    line-height: 1px;
 }
 
 .lvl-time-score button {
@@ -29,6 +30,7 @@
     background-color: blue;
     cursor: pointer;
     width: 100%;
+    line-height: 12px;
 }
 
 .mode-name td {

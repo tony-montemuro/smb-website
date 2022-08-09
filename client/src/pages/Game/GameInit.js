@@ -74,7 +74,8 @@ const GameInit = () => {
         try {
             let {data, error, status} = await supabase
                 .from(path)
-                .select("*");
+                .select("*")
+                .order("id");
 
             if (error && status !== 406) {
                 throw error;
