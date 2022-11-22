@@ -23,12 +23,15 @@ const ProfileInit = () => {
     const checkForUser = () => {
         if (supabase.auth.user() === null) {
             navigate("/");
+            return false;
         }
+        return true;
     }
 
     // function that grabs data from the country database
     const getCountries = async () => {
         try {
+            // read the entire countries table
             let { data: countries, error, status } = await supabase
                 .from("countries")
                 .select("*")
@@ -38,11 +41,13 @@ const ProfileInit = () => {
                 throw error;
             }
 
+            // update countryList hook
             setCountryList(countries);
 
         } catch (error) {
             alert(error.message);
         } finally {
+            // finally, we can update the loading hook, since we have finished api calls
             setLoading(false);
         }
     }
@@ -50,27 +55,34 @@ const ProfileInit = () => {
     // function that grabs user data from the database
     const getProfile = async () => {
         try {
-            const user = supabase.auth.user();
+            // first, ensure that the user is signed in. if not, page will redirect to home
+            if (await checkForUser()) {
+                // initalize variables
+                const user = supabase.auth.user();
 
-            let { data, error, status } = await supabase
-                .from("profiles")
-                .select("username, country, youtube_url, twitch_url, avatar_url")
-                .eq("id", user.id)
-                .single()
+                // now, query profiles table to get user profile information
+                let { data, error, status } = await supabase
+                    .from("profiles")
+                    .select("username, country, youtube_url, twitch_url, avatar_url")
+                    .eq("id", user.id)
+                    .single()
 
-            if (error && status !== 406) {
-                throw error;
+                if (error && status !== 406) {
+                    throw error;
+                }
+
+                // if query returned user data successfully, update hooks
+                if (data) {
+                    setUsername(data.username);
+                    setCountry(data.country);
+                    setYoutubeUrl(data.youtube_url);
+                    setTwitchUrl(data.twitch_url)
+                    setAvatarUrl(data.avatar_url);
+                }
+
+                // once we have finished, query the countries
+                getCountries();
             }
-
-            if (data) {
-                setUsername(data.username);
-                setCountry(data.country);
-                setYoutubeUrl(data.youtube_url);
-                setTwitchUrl(data.twitch_url)
-                setAvatarUrl(data.avatar_url);
-            }
-
-            getCountries();
         } catch(error) {
             alert(error.message);
         }
@@ -86,27 +98,24 @@ const ProfileInit = () => {
 
     // function that will push new user data into the profiles table
     const updateProfile = async (e) => {
-        let countryId;
-
-        if (country === "null") {
-            countryId = null;
-        } else {
-            countryId = country;
-        }
+        // initialize variables
+        const countryId = country === "null" ? null : country;
         console.log("Country ID: " + countryId);
 
         try {
+            // begin updating
             setUpdating(true);
-            let avatarUrl = avatar_url;
 
+            // initialize variables
+            const user = supabase.auth.user();
+            let avatarUrl = avatar_url;
             console.log(avatar_url);
             if (!avatar_url) {
                 setAvatarUrl("default.png");
                 avatarUrl = "default.png";
             }
 
-            const user = supabase.auth.user();
-
+            // create updates object
             const updates = {
                 id: user.id,
                 username,
@@ -116,6 +125,7 @@ const ProfileInit = () => {
                 avatar_url: avatarUrl
             }
 
+            // perform update on profiles table
             let { error } = await supabase.from('profiles').upsert(updates, {
                 returning: "minimal", // Don't return the value after inserting
             });
@@ -123,8 +133,9 @@ const ProfileInit = () => {
             if (error) {
                 throw error;
             }
-
+            // update isUpdated flag (this is for the front-end)
             setIsUpdated(true);
+
         } catch(error) {
             if (error.code === "23505") {
                 setUsernameError("Error: Username already taken.");
@@ -132,6 +143,7 @@ const ProfileInit = () => {
                 console.log(error);
             }
         } finally {
+            // end updating
             setUpdating(false);
         }
     }
@@ -139,9 +151,11 @@ const ProfileInit = () => {
 
     // function used to check for valid inputs
     const validate = (username) => {
+        // initialize variables
         let error = "";
         const regex = new RegExp('^[A-Za-z0-9_]*$');
 
+        // perform various tests on username input
         if (!username) {
             error = "Error: Username is required to create a profile!";
         }
@@ -154,6 +168,7 @@ const ProfileInit = () => {
             error = "Error: Username must consist only of letters, numbers, and/or underscores.";
         }
 
+        // return error
         return error;
     }
 
@@ -200,7 +215,6 @@ const ProfileInit = () => {
             setYoutubeUrl,
             setTwitchUrl,
             setAvatarUrl, 
-            checkForUser,
             getProfile, 
             handleSubmit,
             updateProfile,

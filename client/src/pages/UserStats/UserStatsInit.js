@@ -12,6 +12,8 @@ const UserStatsInit = () => {
 
     // states
     const [loading, setLoading] = useState(true);
+    const [validUser, setValidUser] = useState(false);
+    const [validGame, setValidGame] = useState(false);
     const [title, setTitle] = useState(null);
     const [maxTime, setMaxTime] = useState(null);
     const [maxTimeMisc, setMaxTimeMisc] = useState(null);
@@ -25,73 +27,64 @@ const UserStatsInit = () => {
     // function used to make sure a valid user is being viewed
     const checkForUser = async () => {
         try {
-            let { data: profiles, error } = await supabase
+            // query for the user in the profiles table
+            let { data: profile, error } = await supabase
                 .from('profiles')
-                .select('id, username, country, avatar_url');
+                .select('id, username, country, avatar_url')
+                .eq("id", userId)
+                .single();
 
+            // if user is invalid, error will be thrown
             if (error) {
                 throw error;
             }
-            
-            let validUser = false;
 
-            // now, go through the list of profiles, and ensure userId is found
-            for (let profile of profiles) {
-                if (userId === profile.id) {
-                    validUser = true;
-                    setUser(profile);
-                }
-            }
+            // if no error, update user and validUser hook
+            setUser(profile);
+            setValidUser(true);
 
-            // if it is not found, validUser will remain false, and page will navigate to home
-            if (!validUser) {
-                navigate("/");
-            }
         } catch (error) {
-            alert(error.message);
+            // error code 22P02: userId is not in the uuid format, so it must be invalid
+            // error code PGRST116: userId is not found in profiles table, so it must be invalid
+            if (error.code === "22P02" || error.code === "PGRST116") {
+                navigate("/");
+            } else {
+                console.log(error);
+                alert(error.message);
+            }
         }
     }
 
-    // function used to check for valid path. if invalid, user will be redirected to home page
-    const checkPath = async () => {
+    // function used to check for valid game. if invalid, user will be redirected to home page
+    const checkGame = async () => {
         try {
-            await checkForUser();
-            let approvedGame = false;
-
-            // now, query the list of games. if the current url matches any of these
-            // it is an approved path
-            let {data: games, error, status} = await supabase
+            // now, query the list of games, where we are searching for a match with the game abbreviation
+            // in the url
+            let { data: game, error } = await supabase
                 .from("games")
-                .select("*");
+                .select("*")
+                .eq("abb", abb)
+                .single();
 
-            // if there was an error querying data, throw error
-            if (error && status !== 406) {
+            // if game is invalid, error will be thrown
+            if (error) {
                 throw error;
             }
 
-            // now, iterate through game list, and compare with the current abb variable
-            games.forEach(game => {
-                const gameAbb = game.abb;
-                const gameTitle = game.name;
-                const time = game.time;
-                const timeMisc = game.time_misc;
-                if (abb === gameAbb) {
-                    approvedGame = true;
-                    setTitle(gameTitle);
-                    console.log(time);
-                    setMaxTime(time);
-                    setMaxTimeMisc(timeMisc);
-                }
-            });
-
-            if (approvedGame) {
-                return true;
-            } else {
-                return false;
-            }
+            // if no error, update title, maxTime, maxTimeMisc, and validGame hooks
+            setTitle(game.name);
+            setMaxTime(game.time);
+            setMaxTimeMisc(game.time_misc);
+            setValidGame(true);
 
         } catch(error) {
-            alert(error.message);
+            // error code PGRST116: abb is not found in games table, so it must be invalid
+            if (error.code === "PGRST116") {
+                navigate("/");
+            } else {
+                alert(error.message);
+                console.log(error);
+            } 
         }
         return false;
     }
@@ -330,9 +323,9 @@ const UserStatsInit = () => {
     }
 
     return { loading,
+            validUser,
+            validGame,
             title, 
-            maxTime,
-            maxTimeMisc,
             user, 
             medals, 
             totals, 
@@ -340,7 +333,8 @@ const UserStatsInit = () => {
             totalsMisc,
             selectedRadioBtn,
             setLoading, 
-            checkPath,
+            checkForUser,
+            checkGame,
             queryMedalsAndTotals,
             sortData,
             checkForData,

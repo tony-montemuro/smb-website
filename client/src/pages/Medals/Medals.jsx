@@ -6,6 +6,7 @@ import MedalsInit from './Medalsinit';
 
 function Medals() {
     const { title,
+            validPath,
             isMisc, 
             scoreMedals,
             timeMedals,
@@ -17,10 +18,17 @@ function Medals() {
 
     useEffect(() => {
         checkPath();
-        getMedalTable(true);
-        getMedalTable(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);  
+
+      useEffect(() => {
+        if (validPath) {
+          getMedalTable(true);
+          getMedalTable(false);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [validPath]);  
+      
   return (
     <div className="medals">
         <div className="medals-header">

@@ -18,7 +18,6 @@ function Profile() {
             setYoutubeUrl,
             setTwitchUrl,
             setAvatarUrl, 
-            checkForUser,
             getProfile, 
             handleSubmit,
             updateProfile,
@@ -28,7 +27,6 @@ function Profile() {
     } = ProfileInit();
 
     useEffect(() => {
-        checkForUser();
         getProfile();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

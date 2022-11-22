@@ -5,6 +5,7 @@ import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 const TotalizerInit = () => {
     // states
     const [title, setTitle] = useState("");
+    const [validPath, setValidPath] = useState(false);
     const [isMisc, setIsMisc] = useState(false);
     const [showAllScore, setShowAllScore] = useState(false);
     const [showAllTime, setShowAllTime] = useState(false);
@@ -42,42 +43,38 @@ const TotalizerInit = () => {
     // function that ensures user has navigated to a valid path. also used to grab the title of the game.
     const checkPath = async () => {
         try {
-            // initalize variables
-            let approved = false;
+            // initialize variables, and update isMisc hook if game is miscellaneous
+            const correctedAbb = miscCheckAndUpdate(abb, "normalize")
             if (abb.slice(-4) === "misc") {
                 setIsMisc(true);
             }
 
             // now, query the list of games. if the current url matches any of these
             // it is an approved path
-            let {data: games, error, status} = await supabase
+            let { data: game, error } = await supabase
                 .from("games")
-                .select("abb, name");
+                .select("abb, name")
+                .eq("abb", correctedAbb)
+                .single();
 
-            // if there was an error querying data, throw error
-            if (error && status !== 406) {
+            // if there was no match, an error will be thrown
+            if (error) {
                 throw error;
             }
 
-            const correctedAbb = miscCheckAndUpdate(abb, "normalize")
-
-            // now, iterate through game list, and compare with the current abb variable
-            games.forEach(game => {
-                const gameAbb = game.abb;
-                const gameTitle = game.name;
-                if (correctedAbb === gameAbb) {
-                    approved = true;
-                    setTitle(gameTitle);
-                }
-            });
-
-            // if not approved, navigate back to home. otherwise, proceed.
-            if (!approved) {
-                navigate("/");
-            }
+            // if no error, then path is valid. update the title hook and validPath hook
+            console.log(game.name);
+            setTitle(game.name);
+            setValidPath(true);
 
         } catch(error) {
-            alert(error.message);
+            // error code PGRST116: correctedAbb is not found in games table, so it must be invalid
+            if (error.code === "PGRST116") {
+                navigate("/");
+            } else {
+                console.log(error);
+                alert(error.message);
+            }
         }
     }
 
@@ -187,6 +184,7 @@ const TotalizerInit = () => {
     }
 
     return { title,
+             validPath,
              isMisc, 
              showAllScore,
              showAllTime,

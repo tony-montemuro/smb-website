@@ -6,6 +6,7 @@ import TotalizerInit from './TotalizerInit';
 
 function Totalizer() {
     const { title,
+            validPath,
             isMisc, 
             showAllScore,
             showAllTime,
@@ -23,12 +24,18 @@ function Totalizer() {
 
     useEffect(() => {
         checkPath();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);  
+
+    useEffect(() => {
+      if (validPath) {
         getTotalizer(false, false);
         getTotalizer(false, true);
         getTotalizer(true, false);
         getTotalizer(true, true);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []);  
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [validPath]);  
 
   return (
     <div className="totalizer">

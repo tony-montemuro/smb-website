@@ -43,8 +43,11 @@ const UserInit = () => {
             if (!validUser) {
                 navigate("/");
             }
+
+            return validUser;
         } catch (error) {
             alert(error.message);
+            return false;
         }
     }
 
@@ -52,7 +55,9 @@ const UserInit = () => {
     // the name will be set to an empty string
     const getCountry = async (id) => {
         try {
+            // only need to perform query if id exists. otherwise, we can set country to blank string
             if (id !== null) {
+                // get country information for country with iso2 of country
                 let {data, error, status} = await supabase
                     .from("countries")
                     .select("*")
@@ -63,14 +68,17 @@ const UserInit = () => {
                     throw error;
                 }
 
+                // update hook for country
                 setCountry(data);
             } else {
+                // update hook to blank string
                 setCountry("");
             }
 
         } catch (error) {
             alert(error.message);
         } finally {
+            // user is fully loaded, so update hook
             setLoadingUser(false);
         }
     }
@@ -78,25 +86,30 @@ const UserInit = () => {
     // function used to load a user from the database given the user id in the url
     const loadUser = async () => {
         try {
-            await checkForUser();
-            let { data: userData, error, status } = await supabase
-                .from("profiles")
-                .select("username, country, youtube_url, twitch_url, avatar_url")
-                .eq("id", userId)
-                .single()
+            // first, check if valid user in url. if not, redirect to home
+            if (await checkForUser()) {
+                // query profiles table for user information
+                let { data: userData, error, status } = await supabase
+                    .from("profiles")
+                    .select("username, country, youtube_url, twitch_url, avatar_url")
+                    .eq("id", userId)
+                    .single()
 
-            if (error && status !== 406) {
-                throw error;
+                if (error && status !== 406) {
+                    throw error;
+                }
+
+                console.log(userData.avatar_url);
+
+                // update hooks for each field of data
+                setUsername(userData.username);
+                setYoutubeUrl(userData.youtube_url);
+                setTwitchUrl(userData.twitch_url);
+                setAvatarUrl(userData.avatar_url);
+
+                // finally, we get the country information from the countries table
+                getCountry(userData.country);
             }
-
-            console.log(userData.avatar_url);
-
-            setUsername(userData.username);
-            setYoutubeUrl(userData.youtube_url);
-            setTwitchUrl(userData.twitch_url);
-            setAvatarUrl(userData.avatar_url);
-
-            getCountry(userData.country);
         } catch(error) { 
             console.log(error.message);
         }

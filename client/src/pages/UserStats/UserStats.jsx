@@ -6,9 +6,9 @@ import StatsBoard from "./StatsBoard";
 
 function UserStats() {
     const { loading,
+      validUser,
+      validGame,
       title, 
-      maxTime,
-      maxTimeMisc,
       user, 
       medals, 
       totals, 
@@ -16,7 +16,8 @@ function UserStats() {
       totalsMisc, 
       selectedRadioBtn,
       setLoading, 
-      checkPath,
+      checkForUser,
+      checkGame,
       queryMedalsAndTotals,
       sortData,
       checkForData,
@@ -24,11 +25,11 @@ function UserStats() {
       handleRadioClick } = UserStatsInit();
 
     useEffect(() => {
-      if (maxTime !== null && maxTimeMisc !== null) {
+      if (validUser && validGame) {
         queryMedalsAndTotals();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [maxTime, maxTimeMisc]);
+    }, [validUser, validGame]);
 
     useEffect(() => {
       if (loading && (medals.length === 2 && totals.length === 2 && medalsMisc.length === 2 && totalsMisc.length === 2)) {
@@ -43,7 +44,8 @@ function UserStats() {
     }, [medals, totals, medalsMisc, totalsMisc]);
 
     useEffect(() => {
-        checkPath();
+        checkForUser();
+        checkGame();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
