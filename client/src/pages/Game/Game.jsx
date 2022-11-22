@@ -13,7 +13,6 @@ function Game() {
           modesLength,
           miscModesLength,
           setLoading,
-          checkPath, 
           getModesLevels, 
           isRadioSelected, 
           handleModeChange, 
@@ -34,7 +33,6 @@ function Game() {
   }, [levelModes, miscLevelModes]);
 
   useEffect(() => {
-    checkPath();
     getModesLevels();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

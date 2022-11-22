@@ -46,13 +46,18 @@ const GameInit = () => {
                 }
             });
 
+            console.log(approved);
+
             // if not approved, navigate back to home. otherwise, proceed.
             if (!approved) {
                 navigate("/");
             }
 
+            return approved;
+
         } catch(error) {
             alert(error.message);
+            return false;
         }
     }
     
@@ -126,21 +131,24 @@ const GameInit = () => {
         let modes = [];
 
         try {
-            //query abb's mode table
-            modes = await queryNames(`${abb}_modes`);
-            setModesLength(modes.length);
-            setLevelModes({modes: modes});
-            
-            // then, we can begin gathering the levels for each main mode
-            getLevels(modes, false);
+            // first, check path. if not a valid path, do not run any of the code
+            if (await checkPath()) {
+                //query abb's mode table
+                modes = await queryNames(`${abb}_modes`);
+                setModesLength(modes.length);
+                setLevelModes({modes: modes});
+                
+                // then, we can begin gathering the levels for each main mode
+                getLevels(modes, false);
 
-            // once this has finished, we must then collect miscellaneous chart information
-            modes = await queryNames(`${abb}_misc_modes`);
-            setMiscModesLength(modes.length);
-            setMiscLevelModes({modes: modes});
-            
-            // finally, we can begin gathering the levels for each misc mode
-            getLevels(modes, true);
+                // once this has finished, we must then collect miscellaneous chart information
+                modes = await queryNames(`${abb}_misc_modes`);
+                setMiscModesLength(modes.length);
+                setMiscLevelModes({modes: modes});
+                
+                // finally, we can begin gathering the levels for each misc mode
+                getLevels(modes, true);
+            }      
 
         } catch(error) {
             alert(error.message);
@@ -304,7 +312,6 @@ const GameInit = () => {
             modesLength,
             miscModesLength,
             setLoading,
-            checkPath, 
             getModesLevels, 
             isRadioSelected, 
             handleModeChange, 
