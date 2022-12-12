@@ -16,17 +16,18 @@ const GameSelectInit = () => {
 
         try {
             let {data: games, error, status} = await supabase
-                .from("games")
+                .from("game")
                 .select("*")
                 .order("name");
             
             if (error && status !== 406) {
                 throw error;
             }
+            console.log(games);
 
             // separate the main games from custom games into their own lists
             games.forEach(game => {
-                game.is_custom ? custom.push(game) : main.push(game);
+                game.custom ? custom.push(game) : main.push(game);
             });
 
             console.log(main);

@@ -8,11 +8,6 @@ import { Link } from "react-router-dom";
 function Game() {
   const { loading,
           title, 
-          levelModes,
-          miscLevelModes,
-          modesLength,
-          miscModesLength,
-          setLoading,
           getModesLevels, 
           isRadioSelected, 
           handleModeChange, 
@@ -20,17 +15,6 @@ function Game() {
           TotalizerBoards,
           MedalTableBoards
         } = GameInit();
-
-  useEffect(() => {
-    // now, if the number of properties for both levelModes and miscLevelModes has satisfied a particular property, it will mean that all the
-    // data has been loaded from the backend, so the setLoading state can be updated
-    if ((modesLength && miscModesLength) && (Object.keys(levelModes).length === modesLength+1 && Object.keys(miscLevelModes).length === miscModesLength+1)) {
-      setLoading(false);
-      console.log(levelModes);
-      console.log(miscLevelModes);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [levelModes, miscLevelModes]);
 
   useEffect(() => {
     getModesLevels();
