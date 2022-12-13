@@ -17,6 +17,7 @@ function User() {
          loadingGameList, 
          gameList,
          customGameList,
+         setLoadingUser,
          loadUser,
          queryGameList
     } = UserInit();
@@ -26,6 +27,15 @@ function User() {
     queryGameList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    // this is a clever way of checking if both queries have completed. if both are true, queries complete,
+    // and we proceed to render front-end
+    if (country && customGameList.length > 0) {
+      setLoadingUser(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [country, customGameList]);
 
   return (
     <div className="user">

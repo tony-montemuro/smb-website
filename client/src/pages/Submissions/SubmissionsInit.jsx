@@ -21,7 +21,7 @@ const SubmissionInit = () => {
             let isModVar = false;
 
             const { data: mods, error, status } = await supabase
-                .from("moderators")
+                .from("moderator")
                 .select("user_id");
 
             if (error && status !== 406) {
