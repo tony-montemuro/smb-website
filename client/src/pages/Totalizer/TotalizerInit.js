@@ -5,7 +5,7 @@ import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 const TotalizerInit = () => {
     // states
     const [title, setTitle] = useState("");
-    const [validPath, setValidPath] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [isMisc, setIsMisc] = useState(false);
     const [showAllScore, setShowAllScore] = useState(false);
     const [showAllTime, setShowAllTime] = useState(false);
@@ -17,66 +17,10 @@ const TotalizerInit = () => {
     // path variables
     const path = window.location.pathname;
     const abb = path.split("/")[2];
+    const category = path.split("/")[3];
 
     // navigate used for redirecting
     const navigate = useNavigate();
-
-    // helper function that will check if game name ends with 'misc'. if so, it will return the string
-    // with the misc sliced off. otherwise, str is simply returned.
-    const miscCheckAndUpdate = (str, returnMode) => {
-        if (str.slice(-4) === "misc") {
-            if (returnMode === "normalize") {
-                return str.slice(0, -4);
-            }
-            else if (returnMode === "underline") {
-                return str.slice(0, -4) + "_" + str.slice(-4);
-            }
-            else {
-                // just in-case
-                return str.slice(0, -4);
-            }
-        } else {
-            return str;
-        }
-    }
-
-    // function that ensures user has navigated to a valid path. also used to grab the title of the game.
-    const checkPath = async () => {
-        try {
-            // initialize variables, and update isMisc hook if game is miscellaneous
-            const correctedAbb = miscCheckAndUpdate(abb, "normalize")
-            if (abb.slice(-4) === "misc") {
-                setIsMisc(true);
-            }
-
-            // now, query the list of games. if the current url matches any of these
-            // it is an approved path
-            let { data: game, error } = await supabase
-                .from("games")
-                .select("abb, name")
-                .eq("abb", correctedAbb)
-                .single();
-
-            // if there was no match, an error will be thrown
-            if (error) {
-                throw error;
-            }
-
-            // if no error, then path is valid. update the title hook and validPath hook
-            console.log(game.name);
-            setTitle(game.name);
-            setValidPath(true);
-
-        } catch(error) {
-            // error code PGRST116: correctedAbb is not found in games table, so it must be invalid
-            if (error.code === "PGRST116") {
-                navigate("/");
-            } else {
-                console.log(error);
-                alert(error.message);
-            }
-        }
-    }
 
     // this function will take an input in seconds, and return the hours, minutes, seconds, and centiseconds
     // NOTE: these will be STRING values, since leading zeros will be added
@@ -109,73 +53,169 @@ const TotalizerInit = () => {
         return [hours, minutes, seconds, centiseconds];
     }
 
-    // function that queries the game's totalizer page to get list of totals
-    const getTotalizer = async (isScore, isAll) => {
-        const gameAbb = miscCheckAndUpdate(abb, "underline");
-        const mode = isScore ? "score" : "time";
-        const tableName = isAll ? `${gameAbb}_${mode}_total_all` : `${gameAbb}_${mode}_total`;
+    // function that will add the position field to each total object in the totals array
+    const addPosition = (totals, isTime) => {
+        // variables used to determine position of each submission
+        let trueCount = 1;
+        let posCount = trueCount;
+
+        // now, iterate through each record, and calculate the position.
+        for (let i = 0; i < totals.length; i++) {
+            const total = totals[i];
+            total["position"] = posCount;
+            trueCount++;
+            if (i < totals.length-1 && totals[i+1]["total"] !== total["total"]) {
+                posCount = trueCount;
+            }
+
+            if (isTime) {
+                const [hours, minutes, seconds, centiseconds] = secondsToHours(total.total);
+                total["hours"] = hours;
+                total["minutes"] = minutes;
+                total["seconds"] = seconds;
+                total["centiseconds"] = centiseconds;
+            }
+        }
+    }
+
+    // this function is primarily used to get the total time for the game defined by abb. however, this function
+    // also makes sure that the path is valid, and updates the title state and isMisc state
+    const getTimeTotal = async () => {
+        try {
+            // query level table
+            let { data: timeArr, status, error } = await supabase
+                .from("level")
+                .select(`
+                    time, 
+                    misc,
+                    mode (game (name))
+                `)
+                .eq("game", abb)
+
+            // error checks
+            if ((error && status === 406) || timeArr.length === 0) {
+                throw error ? error : { code: 1, message: "Error: invalid game." };
+            }
+
+            const miscStatus = category === "misc" ? true : false;
+            if (category !== "main" && category !== "misc") {
+                const error = { code: 1, message: "Error: invalid category." }
+                throw error;
+            }
+
+            // update states
+            setTitle(timeArr[0].mode.game.name);
+            setIsMisc(miscStatus);
+
+            // now, calculate the total time
+            let timeTotal = 0;
+            timeArr.forEach(level => {
+                if (level.misc === miscStatus) {
+                    timeTotal += level.time;
+                }
+            });
+
+            // once we have this, we can query the submissions table
+            totalsQuery(timeTotal);
+
+        } catch (error) {
+            if (error.code === 1) {
+                console.log(error.message);
+                navigate("/");
+            } else {
+                console.log(error);
+                alert(error.message);
+            }
+        }
+    }
+
+    // this is the primary query done for this page. it queries all submissions for the game defined in abb
+    // and determines the total time or score for each player based on the information recieved from the query
+    // NOTE: this function is ran twice per page load: once for score totals, and once for time totals
+    const totalsQuery = async (timeTotal) => {
+        // initialize variables
+        const type = timeTotal === undefined ? "score" : "time";
+        const miscStatus = category === "misc" ? true : false;
 
         try {
-            // query the score totalizer table for the particular game
-            let { data: totals, status, error } = await supabase
-                .from(tableName)
+            // query submissions table
+            let { data: submissions, status, error } = await supabase
+                .from(`${type}_submission`)
                 .select(`
-                    user_id,
                     profiles:user_id ( id, username, country, avatar_url ),
-                    total
+                    level (misc),
+                    ${type},
+                    live
                 `)
-                .order("total", isScore ? { ascending: false } : { ascending: true });
+                .eq("game_id", abb)
 
+            // error check
             if (error && status !== 406) {
                 throw error;
             }
 
-            // variables used to determine position of each submission
-            let trueCount = 1;
-            let posCount = trueCount;
+            // using our query data, we need to create two lists from the query:
+            // the {mode} totals for only live records, and the {mode} totals
+            // for all records. this for loop will also gather all unique profiles
+            // based on the submissions
+            const liveTotalsMap = {};
+            const allTotalsMap = {};
+            while (submissions.length > 0) {
+                const submission = submissions.pop();
+                if (submission.level.misc === miscStatus) {
+                    // first, extract values from submission object
+                    const userId = submission.profiles.id;
+                    const value = type === "score" ? submission.score : -Math.abs(submission.time);
+                    const name = submission.profiles.username;
+                    const country = submission.profiles.country;
+                    const avatar_url = submission.profiles.avatar_url;
 
-            // now, iterate through each record, and calculate the position.
-            // simplify each object. also, if the current user has a submission,
-            // set the form values equal to the submission
-            for (let i = 0; i < totals.length; i++) {
-                const total = totals[i];
-                total["Position"] = posCount;
-                trueCount++;
-                if (i < totals.length-1 && totals[i+1]["total"] !== total["total"]) {
-                    posCount = trueCount;
-                }
+                    // next, update the allTotals list
+                    if (userId in allTotalsMap) {
+                        allTotalsMap[userId]["total"] += value
+                    } else {
+                        allTotalsMap[userId] = { user_id: userId, name: name, country: country, avatar_url: avatar_url, total: type === "score" ? value : timeTotal + value };
+                    }
 
-                // simplify
-                total["Name"] = total.profiles.username;
-                total["Country"] = total.profiles.country;
-                total["Avatar_URL"] = total.profiles.avatar_url;
-                delete totals[i].profiles;
-
-                // finally, perform special calculation in the case of time
-                if (!isScore) {
-                    const [hours, minutes, seconds, centiseconds] = secondsToHours(total.total);
-                    total["Hours"] = hours;
-                    total["Minutes"] = minutes;
-                    total["Seconds"] = seconds;
-                    total["Centiseconds"] = centiseconds;
+                    // finally, update the liveTotals list
+                    if (submission.live) {
+                        if (userId in liveTotalsMap) {
+                            liveTotalsMap[userId]["total"] += value
+                        } else {
+                            liveTotalsMap[userId] = { user_id: userId, name: name, country: country, avatar_url: avatar_url, total: type === "score" ? value : timeTotal + value };
+                        }
+                    }
                 }
             }
 
-            if (isAll) {
-                isScore ? setAllScoreTotals(totals) : setAllTimeTotals(totals);
-            } else {
-                isScore ? setScoreTotals(totals) : setTimeTotals(totals);
+            // from our map, let's get a sorted list of profile objects sorted by total. if the type is score, it will sort in descending order. if the type
+            // is time, it will sort in ascending order
+            const liveTotals = Object.values(liveTotalsMap).sort((a, b) => type === "score" ? (a.total > b.total) : (b.total > a.total) ? -1 : 1);
+            const allTotals = Object.values(allTotalsMap).sort((a, b) => type === "score" ? (a.total > b.total) : (b.total > a.total) ? -1 : 1);
+            
+            // add position field to each element in list of objects
+            addPosition(liveTotals, type === "time" ? true : false);
+            addPosition(allTotals, type === "time" ? true : false);
+
+            // finally, update react states
+            type === "score" ? setScoreTotals(liveTotals) : setTimeTotals(liveTotals);
+            type === "score" ? setAllScoreTotals(allTotals) : setAllTimeTotals(allTotals);
+            if (type === "time") {
+                setLoading(false);
             }
 
-            console.log(totals);
-        } catch (error) {
+            console.log(liveTotals);
+            console.log(allTotals);
+
+        } catch(error) {
+            console.log(error);
             alert(error.message);
         }
     }
 
     // function that simply returns user back to the game page
     const getLinkBack = () => {
-        return `/games/${miscCheckAndUpdate(abb, "normalize")}`;
+        return `/games/${abb}`;
     }
 
     // function that allows user to navigate to the game's medal table page
@@ -184,7 +224,7 @@ const TotalizerInit = () => {
     }
 
     return { title,
-             validPath,
+             loading,
              isMisc, 
              showAllScore,
              showAllTime,
@@ -194,8 +234,8 @@ const TotalizerInit = () => {
              allTimeTotals,
              setShowAllScore,
              setShowAllTime,
-             checkPath, 
-             getTotalizer, 
+             totalsQuery,
+             getTimeTotal,
              getLinkBack, 
              getLinkToMedal 
     };

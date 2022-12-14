@@ -215,11 +215,9 @@ const GameInit = () => {
 
     // component used to render links to the totalizer boards
     const TotalizerBoards = () => {
-        const gameAbb = selectedRadioBtn === "main" ? abb : abb + "misc";
-
         return (
             <div>
-                <Link to={{pathname: `/games/${gameAbb}/totalizer`}}>
+                <Link to={{pathname: `/games/${abb}/${selectedRadioBtn}/totalizer`}}>
                     {selectedRadioBtn === "main" ? 
                         <p>Score & Time Totalizers</p>
                         :    

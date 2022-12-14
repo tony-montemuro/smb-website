@@ -6,7 +6,7 @@ import TotalizerInit from './TotalizerInit';
 
 function Totalizer() {
     const { title,
-            validPath,
+            loading,
             isMisc, 
             showAllScore,
             showAllTime,
@@ -16,37 +16,28 @@ function Totalizer() {
             allTimeTotals,
             setShowAllScore,
             setShowAllTime,
-            checkPath, 
-            getTotalizer, 
+            totalsQuery,
+            getTimeTotal,
             getLinkBack, 
             getLinkToMedal 
     } = TotalizerInit();
 
     useEffect(() => {
-        checkPath();
+        totalsQuery();
+        getTimeTotal();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);  
-
-    useEffect(() => {
-      if (validPath) {
-        getTotalizer(false, false);
-        getTotalizer(false, true);
-        getTotalizer(true, false);
-        getTotalizer(true, true);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [validPath]);  
 
   return (
     <div className="totalizer">
         <div className="totalizer-header">
-            <h1>{isMisc ? "Miscellaneous "+title : title} Totalizer</h1>
+            <h1>{isMisc ? "Miscellaneous "+ title : title} Totalizer</h1>
         </div>
         <Link to={getLinkBack()}>
           <button>Back to {title}'s Page</button>
         </Link>
         <Link to={getLinkToMedal()}>
-          <button>{isMisc ? "Miscellaneous "+title : title}'s Medal Table Page</button>
+          <button>{isMisc ? "Miscellaneous "+ title : title}'s Medal Table Page</button>
         </Link>
         <div className="totalizer-body">
           <div className="totalizer-container">
@@ -60,7 +51,7 @@ function Totalizer() {
                   onChange={ () => setShowAllScore(!showAllScore) }
               />
             </div>
-            <Board isScore={true} data={ showAllScore ? allScoreTotals : scoreTotals } />
+            <Board isScore={ true } data={ showAllScore ? allScoreTotals : scoreTotals } loading={ loading } />
           </div>
           <div className="totalizer-container">
             <h2>Time Totals</h2>
@@ -73,7 +64,7 @@ function Totalizer() {
                   onChange={ () => setShowAllTime(!showAllTime) }
               />
             </div>
-            <Board isScore={false} data={ showAllTime ? allTimeTotals : timeTotals } />
+            <Board isScore={ false } data={ showAllTime ? allTimeTotals : timeTotals } loading={ loading } />
           </div>
         </div>
     </div>
