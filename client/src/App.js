@@ -71,7 +71,7 @@ function App() {
           <Route path="/games" element={<GameSelect />}/>
           <Route path="games/:game" element={<Game />}/>
           <Route path="games/:game/:category/totalizer" element={<Totalizer />} />
-          <Route path="games/:game/medals" element={<Medals />} />
+          <Route path="games/:game/:category/medals" element={<Medals />} />
           <Route path="games/:game/:mode/:levelid" element={<Levelboard />}/>
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/support" element={<Support />}/>

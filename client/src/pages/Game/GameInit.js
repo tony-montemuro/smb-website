@@ -230,11 +230,9 @@ const GameInit = () => {
 
     // component used to render links to the medal table boards
     const MedalTableBoards = () => {
-        const gameAbb = selectedRadioBtn === "main" ? abb : abb + "misc";
-
         return (
             <div>
-                <Link to={{pathname: `/games/${gameAbb}/medals`}}>
+                <Link to={{pathname: `/games/${abb}/${selectedRadioBtn}/medals`}}>
                     {selectedRadioBtn === "main" ?
                         <p>Score & Time Medal Tables</p>
                         :

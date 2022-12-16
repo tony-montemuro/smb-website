@@ -220,7 +220,7 @@ const TotalizerInit = () => {
 
     // function that allows user to navigate to the game's medal table page
     const getLinkToMedal = () => {
-        return `/games/${abb}/medals`;
+        return `/games/${abb}/${category}/medals`;
     }
 
     return { title,

@@ -6,28 +6,30 @@ import MedalsInit from './Medalsinit';
 
 function Medals() {
     const { title,
-            validPath,
+            loading,
+            scoreLoading,
+            timeLoading,
             isMisc, 
             scoreMedals,
             timeMedals,
-            checkPath, 
-            getMedalTable, 
+            setLoading,
+            medalTableQuery,
             getLinkBack, 
             getLinkToTotals
     } = MedalsInit();
 
     useEffect(() => {
-        checkPath();
+        medalTableQuery("score");
+        medalTableQuery("time");
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);  
 
       useEffect(() => {
-        if (validPath) {
-          getMedalTable(true);
-          getMedalTable(false);
+        if (!scoreLoading && !timeLoading) {
+          setLoading(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [validPath]);  
+      }, [scoreLoading, timeLoading]);  
       
   return (
     <div className="medals">
@@ -43,11 +45,11 @@ function Medals() {
         <div className="medals-body">
           <div className="medals-container">
             <h2>Score Medal Table</h2>
-            <Board data={scoreMedals} />
+            <Board data={ scoreMedals } loading={ loading } />
           </div>
           <div className="medals-container">
             <h2>Time Medal Table</h2>
-            <Board data={timeMedals} />
+            <Board data={ timeMedals } loading={ loading } />
           </div>
         </div>
     </div>
