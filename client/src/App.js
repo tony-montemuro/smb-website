@@ -78,7 +78,7 @@ function App() {
           <Route path="/login" element={<Login />}/>
           <Route path="/profile" element={<Profile />}/>
           <Route path="/user/:userId" element={<User />}/>
-          <Route path="/user/:userId/:game" element={<UserStats />} />
+          <Route path="/user/:userId/:game/:category" element={<UserStats />} />
         </Routes>
       </div>
     </>

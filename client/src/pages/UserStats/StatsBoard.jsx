@@ -3,44 +3,39 @@ import React from "react";
 import { Link } from "react-router-dom";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
-function StatsBoard({ total, medals, user }) {
-    // helper function used to capitalize an input string called str
-    const capitalize = (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
+function StatsBoard({ total, medals, user, mode }) {
   return (
     <div className="stats-board-body">
-        <h1>{ capitalize(total.mode) }</h1>
+        <h1>{ mode }</h1>
         <div className="stats-table-container">
-            <h2>{ total.title } { capitalize(total.mode) } Total</h2>
+            <h2>{ total.title } { mode } Total</h2>
             {total.hasData ?
                 <table>
                     <thead>
                         <tr>
                             <th>Position</th>
                             <th>Player</th>
-                            <th>{ capitalize(total.mode) } Total</th>
+                            <th>{ mode } Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{ total.Position }</td>
+                            <td>{ total.position }</td>
                             <td>
                                 <div className="user-stats-info">
                                     <div><SimpleAvatar url={ user.avatar_url } size={ 50 }/></div>
                                     {user.country ?
-                                        <div><span className={`fi fi-${user.country.toLowerCase()}`}></span></div>
+                                        <div><span className={ `fi fi-${ user.country.toLowerCase() } `}></span></div>
                                         :
                                         ""
                                     }
                                     <div><Link to={ `/user/${user.user_id}` }>{ user.username }</Link></div>
                                 </div>
                             </td>
-                            { total.mode === "score" ? 
+                            { mode === "Score" ? 
                                 <td>{ total.total }</td>
                             :
-                                <td>{total.Hours}:{total.Minutes}:{total.Seconds}.{total.Centiseconds}</td>
+                                <td>{ total.hours }:{ total.minutes }:{ total.seconds }.{ total.centiseconds }</td>
                             }
                             
                         </tr>
@@ -51,7 +46,7 @@ function StatsBoard({ total, medals, user }) {
             }
         </div>
         <div className="stats-table-container">
-            <h2>{medals.title} { capitalize(medals.mode) } Medals</h2>
+            <h2>{medals.title} { mode } Medals</h2>
             {medals.hasData && total.hasData ?
                 <table>
                     <thead>
@@ -66,7 +61,7 @@ function StatsBoard({ total, medals, user }) {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{ medals.Position }</td>
+                            <td>{ medals.position }</td>
                             <td>
                                 <div className="user-stats-info">
                                     <div><SimpleAvatar url={ user.avatar_url } size={ 50 }/></div>

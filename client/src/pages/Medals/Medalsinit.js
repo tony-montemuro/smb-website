@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
+import MedalsHelper from "../../helper/MedalsHelper";
 
 const MedalsInit = () => {
     // states
@@ -17,33 +18,11 @@ const MedalsInit = () => {
     const abb = path.split("/")[2];
     const category = path.split("/")[3];
 
+    // helper functions
+    const { createUserMap, createMedalTable, addPositionToMedals } = MedalsHelper();
+
     // navigate used for redirecting
     const navigate = useNavigate();
-
-    // function that will add the position field to each medal table object in the medal table array
-    const addPosition = (medalTable) => {
-        // variables used to determine position of each submission
-        let trueCount = 1;
-        let posCount = trueCount;
-
-        // now, iterate through each entry, and calculate the position.
-        for (let i = 0; i < medalTable.length; i++) {
-            const entry = medalTable[i];
-            entry["position"] = posCount;
-            trueCount++;
-            if (
-                i < medalTable.length-1 &&
-                (
-                    medalTable[i+1]["platinum"] !== entry["platinum"] ||
-                    medalTable[i+1]["gold"] !== entry["gold"] ||
-                    medalTable[i+1]["silver"] !== entry["silver"] ||
-                    medalTable[i+1]["bronze"] !== entry["bronze"]
-                )
-            ){
-                posCount = trueCount;
-            }
-        }
-    }
 
     // in the event that the submission is empty, this query will be run to verify that the game
     // definied by abb is a valid game. if it is, it will just return an object with a single property:
@@ -126,109 +105,10 @@ const MedalsInit = () => {
             // first, update the title state
             setTitle(submissions[0].level.mode.game.name);
 
-            //next, sort the list by stage id
-            submissions = Object.values(submissions).sort((a, b) => b.level.id > a.level.id ? -1 : 1);
-            
-            // next, let's generate medal table object for each user who has submitted to
-            // the game defined by abb
-            const uniqueIds = [];
-            const medalTableObjects = submissions.map(obj => ({
-                user_id: obj.profiles.id,
-                name: obj.profiles.username,
-                country: obj.profiles.country,
-                avatar_url: obj.profiles.avatar_url,
-                bronze: 0,
-                silver: 0,
-                gold: 0,
-                platinum: 0
-             })).filter(element => {
-                if (!uniqueIds.includes(element.user_id)) {
-                    uniqueIds.push(element.user_id);
-                    return true;
-                }
-                return false;
-             });
-
-            // now, we are going to map each object to the id field. this will
-            // be important when calculating number of each medal type
-            const userMap = {};
-            medalTableObjects.forEach(obj => {
-                userMap[obj.user_id] = obj;
-            });
-
-            // now, calculate medal counts for each user
-            let i = 0;
-            while (i < submissions.length) {
-                const levelId = submissions[i].level.id;
-                let j = 1, prev = "", finished = false;
-                while (!finished) {
-                    const currRecord = submissions[i][type];
-                    const currUser = submissions[i].profiles.id;
-                    // case 1: first record. it can be either platinum, or gold
-                    if (j === 1) {
-                        if (i+j >= submissions.length || submissions[i+j].level.id !== levelId || currRecord > submissions[i+j][type]) {
-                            userMap[currUser].platinum++;
-                            prev = "platinum"
-                        } else {
-                            userMap[currUser].gold++;
-                            prev = "gold";
-                        }
-
-                    // case 2: second record. it can be either gold or silver. this is dependent on the status of the first record
-                    } else if (j === 2) {
-                        if (prev === "platinum") {
-                            userMap[currUser].silver++;
-                            prev = "silver";
-                        } else {
-                            userMap[currUser].gold++;
-                            prev = "gold";
-                        }
-
-                    // case 3: the third or more record. it can be either gold, silver, or bronze. this is dependent on the status
-                    // of the previous record
-                    } else {
-                        if (prev === "gold") {
-                            if (currRecord === submissions[i-1][type]) {
-                                userMap[currUser].gold++;
-                            } else {
-                                userMap[currUser].silver++;
-                                prev = "silver";
-                            }
-                        } else if (prev === "silver") {
-                            if (currRecord === submissions[i-1][type]) {
-                                userMap[currUser].silver++;
-                            } else {
-                                userMap[currUser].bronze++;
-                                prev = "bronze";
-                            }
-                        } else {
-                            if (currRecord === submissions[i-1][type]) {
-                                userMap[currUser].bronze++;
-                            } else {
-                                finished = true;
-                            }
-                        }
-                    }
-
-                    // now, we need to add this code for edge cases. normally won't resolve to true
-                    if (i+j >= submissions.length || submissions[i+1].level.id !== levelId) {
-                        finished = true;
-                    }
-                    i++;
-                    j++;
-                }
-                
-                // we now need to iterate i until submission[i]'s level id is different from the previous,
-                // or until we have reached the end of the submissions array
-                while (i < submissions.length && submissions[i].level.id === submissions[i-1].level.id) {
-                    i++;
-                }
-            }
-
-            // now, let's covert the map of medal table objects into an ordered list of medal table objects, based on the medal counts
-            // of each user, with a position field added to each element as well
-            const medalTable = Object.values(userMap).sort((a, b) => b.platinum-a.platinum || b.gold-a.gold || b.silver-a.silver || b.bronze-a.bronze);
-            addPosition(medalTable);
+            //next, generate medal table with positions
+            const userMap = createUserMap(submissions);
+            const medalTable = createMedalTable(userMap, submissions, type);
+            addPositionToMedals(medalTable);
 
             // finally, update react states
             setIsMisc(misc);

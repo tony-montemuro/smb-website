@@ -68,18 +68,28 @@ function User() {
                 ""}
               </div>
               <div className="user-image">
-                <SimpleAvatar url={avatar_url} size={300} />
+                <SimpleAvatar key="avatar" url={avatar_url} size={300} />
               </div>
             </div>
               <div className="user-stats">
                 <h1>View Player Stats</h1>
                 <h2>Main Games</h2>
                 {gameList.map(val => {
-                  return <Link className="user-stats-link" key={val.abb} to={{ pathname: val.abb}}><p>{val.name}</p></Link>
+                  return (
+                    <div key={`${val.abb}`} className="user-stats-link-container">
+                      <Link className="user-stats-link" key={ `${val.abb}/main` } to={ { pathname: `${val.abb}/main` } }><p>{ val.name }</p></Link>
+                      <Link className="user-stats-link" key={ `${val.abb}/misc` } to={ { pathname: `${val.abb}/misc` } }><p>{ `${val.name} (Misc.)` }</p></Link>
+                    </div>
+                  )
                 })}
                 <h2>Custom Games</h2>
                 {customGameList.map(val => {
-                  return <Link className="user-stats-link" key={val.abb} to={{ pathname: val.abb}}><p>{val.name}</p></Link>
+                  return (
+                    <div key={`${val.abb}`} className="user-stats-link-container">
+                      <Link className="user-stats-link" key={ `${val.abb}/main` } to={ { pathname: `${val.abb}/main` } }><p>{ val.name }</p></Link>
+                      <Link className="user-stats-link" key={ `${val.abb}/misc` } to={ { pathname: `${val.abb}/misc` } }><p>{ `${val.name} (Misc.)` }</p></Link>
+                    </div>
+                  )
                 })}
               </div> 
           </div>
