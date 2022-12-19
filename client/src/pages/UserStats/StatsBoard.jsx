@@ -46,7 +46,7 @@ function StatsBoard({ total, medals, user, mode }) {
             }
         </div>
         <div className="stats-table-container">
-            <h2>{medals.title} { mode } Medals</h2>
+            <h2>{ medals.title } { mode } Medals</h2>
             {medals.hasData && total.hasData ?
                 <table>
                     <thead>
@@ -66,7 +66,7 @@ function StatsBoard({ total, medals, user, mode }) {
                                 <div className="user-stats-info">
                                     <div><SimpleAvatar url={ user.avatar_url } size={ 50 }/></div>
                                     {user.country ?
-                                        <div><span className={`fi fi-${user.country.toLowerCase()}`}></span></div>
+                                        <div><span className={ `fi fi-${ user.country.toLowerCase() }` }></span></div>
                                         :
                                         ""
                                     }
@@ -85,7 +85,7 @@ function StatsBoard({ total, medals, user, mode }) {
             }
         </div>
     </div>
-  )
-}
+  );
+};
 
-export default StatsBoard
+export default StatsBoard;

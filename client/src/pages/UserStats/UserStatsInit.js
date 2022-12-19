@@ -58,7 +58,7 @@ const UserStatsInit = () => {
                 alert(error.message);
             }
         }
-    }
+    };
 
     // function used to check for valid game. if invalid, user will be redirected to home page
     const checkGame = async () => {
@@ -89,7 +89,7 @@ const UserStatsInit = () => {
                 console.log(error);
             } 
         }
-    }
+    };
 
     // this function is primarily used to get the total time for the game defined by abb. however,
     // this function also checks the category. if invalid, redirect user to home screen
@@ -103,7 +103,7 @@ const UserStatsInit = () => {
                     misc,
                     mode (game (name))
                 `)
-                .eq("game", abb)
+                .eq("game", abb);
 
             // error checks
             if (error && status === 406) {
@@ -137,7 +137,7 @@ const UserStatsInit = () => {
                 alert(error.message);
             }
         }
-    }
+    };
 
     const queryAndGetTotalsMedals = async (timeTotal) => {
         // initialize variables
@@ -216,21 +216,23 @@ const UserStatsInit = () => {
         }
     }
 
-    return { loading,
-             loadingScore,
-             loadingTime,
-             game,
-             totalTime, 
-             user, 
-             scoreTotal,
-             scoreMedals,
-             timeTotal,
-             timeMedals,
-             setLoading, 
-             checkForUser,
-             checkGame,
-             getTimeTotal,
-             queryAndGetTotalsMedals };
-}
+    return { 
+        loading,
+        loadingScore,
+        loadingTime,
+        game,
+        totalTime, 
+        user, 
+        scoreTotal,
+        scoreMedals,
+        timeTotal,
+        timeMedals,
+        setLoading, 
+        checkForUser,
+        checkGame,
+        getTimeTotal,
+        queryAndGetTotalsMedals
+    };
+};
 
 export default UserStatsInit;

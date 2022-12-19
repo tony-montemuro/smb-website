@@ -5,23 +5,27 @@ import Board from "./Board";
 import TotalizerInit from './TotalizerInit';
 
 function Totalizer() {
-    const { title,
-            loading,
-            isMisc, 
-            showAllScore,
-            showAllTime,
-            scoreTotals,
-            allScoreTotals,
-            timeTotals,
-            allTimeTotals,
-            setShowAllScore,
-            setShowAllTime,
-            totalsQuery,
-            getTimeTotal,
-            getLinkBack, 
-            getLinkToMedal 
+    // hooks and functions from init file
+    const { 
+      game,
+      loading,
+      isMisc, 
+      showAllScore,
+      showAllTime,
+      scoreTotals,
+      allScoreTotals,
+      timeTotals,
+      allTimeTotals,
+      setShowAllScore,
+      setShowAllTime,
+      totalsQuery,
+      getTimeTotal
     } = TotalizerInit();
 
+    // first function will directly fetch score totals for the game
+    // second function will first calculate the total time for the particuar game
+    // once this is complete, it will call totalsQuery with the totalTime
+    // second function is also used for path validation
     useEffect(() => {
         totalsQuery();
         getTimeTotal();
@@ -31,13 +35,13 @@ function Totalizer() {
   return (
     <div className="totalizer">
         <div className="totalizer-header">
-            <h1>{isMisc ? "Miscellaneous "+ title : title} Totalizer</h1>
+            <h1>{ isMisc ? "Miscellaneous "+ game.name : game.name } Totalizer</h1>
         </div>
-        <Link to={getLinkBack()}>
-          <button>Back to {title}'s Page</button>
+        <Link to={ `/games/${ game.abb }` }>
+          <button>Back to { game.name }'s Page</button>
         </Link>
-        <Link to={getLinkToMedal()}>
-          <button>{isMisc ? "Miscellaneous "+ title : title}'s Medal Table Page</button>
+        <Link to={ `/games/${ game.abb }/${ isMisc ? "misc" : "main" }/medals` }>
+          <button>{ isMisc ? "Miscellaneous " + game.name : game.name }'s Medal Table Page</button>
         </Link>
         <div className="totalizer-body">
           <div className="totalizer-container">
@@ -68,7 +72,7 @@ function Totalizer() {
           </div>
         </div>
     </div>
-  )
-}
+  );
+};
 
-export default Totalizer
+export default Totalizer;

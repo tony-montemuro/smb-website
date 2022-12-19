@@ -5,7 +5,7 @@ import TotalizerHelper from "../../helper/TotalizerHelper";
 
 const TotalizerInit = () => {
     // states
-    const [title, setTitle] = useState("");
+    const [game, setGame] = useState({ name: "", abb: "" });
     const [loading, setLoading] = useState(true);
     const [isMisc, setIsMisc] = useState(false);
     const [showAllScore, setShowAllScore] = useState(false);
@@ -21,7 +21,7 @@ const TotalizerInit = () => {
     const category = path.split("/")[3];
 
     // helper functions
-    const { createTotalMaps, addPositionToTotals } = TotalizerHelper()
+    const { createTotalMaps, addPositionToTotals } = TotalizerHelper();
 
     // navigate used for redirecting
     const navigate = useNavigate();
@@ -36,7 +36,8 @@ const TotalizerInit = () => {
                 .select(`
                     time, 
                     misc,
-                    mode (game (name))
+                    mode (game (name, abb)),
+                    chart_type
                 `)
                 .eq("game", abb)
 
@@ -44,7 +45,6 @@ const TotalizerInit = () => {
             if ((error && status === 406) || timeArr.length === 0) {
                 throw error ? error : { code: 1, message: "Error: invalid game." };
             }
-
             const miscStatus = category === "misc" ? true : false;
             if (category !== "main" && category !== "misc") {
                 const error = { code: 1, message: "Error: invalid category." }
@@ -52,13 +52,13 @@ const TotalizerInit = () => {
             }
 
             // update states
-            setTitle(timeArr[0].mode.game.name);
+            setGame(timeArr[0].mode.game);
             setIsMisc(miscStatus);
 
             // now, calculate the total time
             let timeTotal = 0;
             timeArr.forEach(level => {
-                if (level.misc === miscStatus) {
+                if (level.misc === miscStatus && (level.chart_type === "both" || level.chart_type === "time")) {
                     timeTotal += level.time;
                 }
             });
@@ -75,7 +75,7 @@ const TotalizerInit = () => {
                 alert(error.message);
             }
         }
-    }
+    };
 
     // this is the primary query done for this page. it queries all submissions for the game defined in abb
     // and determines the total time or score for each player based on the information recieved from the query
@@ -106,7 +106,7 @@ const TotalizerInit = () => {
             // the {mode} totals for only live records, and the {mode} totals
             // for all records. this for loop will also gather all unique profiles
             // based on the submissions
-            const { allTotalsMap, liveTotalsMap } = createTotalMaps(submissions, miscStatus, type, timeTotal)
+            const { allTotalsMap, liveTotalsMap } = createTotalMaps(submissions, miscStatus, type, timeTotal);
 
             // from our map, let's get a sorted list of profile objects sorted by total. if the type is score, it will sort in descending order. if the type
             // is time, it will sort in ascending order
@@ -137,34 +137,23 @@ const TotalizerInit = () => {
             console.log(error);
             alert(error.message);
         }
-    }
-
-    // function that simply returns user back to the game page
-    const getLinkBack = () => {
-        return `/games/${abb}`;
-    }
-
-    // function that allows user to navigate to the game's medal table page
-    const getLinkToMedal = () => {
-        return `/games/${abb}/${category}/medals`;
-    }
-
-    return { title,
-             loading,
-             isMisc, 
-             showAllScore,
-             showAllTime,
-             scoreTotals,
-             allScoreTotals,
-             timeTotals,
-             allTimeTotals,
-             setShowAllScore,
-             setShowAllTime,
-             totalsQuery,
-             getTimeTotal,
-             getLinkBack, 
-             getLinkToMedal 
     };
-}
+
+    return { 
+        game,
+        loading,
+        isMisc, 
+        showAllScore,
+        showAllTime,
+        scoreTotals,
+        allScoreTotals,
+        timeTotals,
+        allTimeTotals,
+        setShowAllScore,
+        setShowAllTime,
+        totalsQuery,
+        getTimeTotal
+    };
+};
 
 export default TotalizerInit;
