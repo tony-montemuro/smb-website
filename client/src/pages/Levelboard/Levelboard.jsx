@@ -2,168 +2,191 @@
 import "./levelboard.css";
 
 // js imports
-import React from "react";
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import LevelboardInit from "./LevelboardInit";
 import Board from "./Board";
+import FrontendHelper from "../../helper/FrontendHelper";
 import Popup from "./Popup";
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
 
-function Levelboard() {
-  const { loading,
-          records,
-          allRecords,
-          timeDefaultVal,
-          showAll,
-          title, 
-          levelList,
-          levelLength,
-          isMod,
-          formValues, 
-          formErrors,
-          hasUserSubmitted,
-          isSubmit,
-          popup,
-          submitting,
-          setShowAll,
-          setPopup,
-          init,
-          sortLevels,
-          submit,
-          remove,
-          handleChange,
-          swapLevels, 
-          handleSubmit,
-          getGame, 
-          getMode, 
-          getTotalAndMedals,
-          updateStates,
-          setLevelId, 
-          MonkeySelect
-  } = LevelboardInit();
+function Levelboard({ isMod }) {
+	// hooks and functions from init file
+	const { 
+		loading,
+		recordsLoading,
+		game,
+		records,
+		monkeys,
+		adjacent,
+		formValues,
+		formErrors,
+		currentUserSubmission,
+		boardState,
+		popup,
+		isSubmit,
+		setLoading,
+		setBoardState,
+		setPopup,
+		setIsSubmit,
+		checkPath,
+		queryMonkey,
+		querySubmissions,
+		getAdjacentLevelIds,
+		submit,
+		handleChange,
+		handleSubmit
+	} = LevelboardInit();
 
-  useEffect(() => {
-    init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+	// code that is executed upon page load, or when the URL is changed using next/previous buttons
+	const location = useLocation();
+	useEffect(() => {
+		setLoading(true);
+		checkPath();
+		queryMonkey();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.pathname]);
 
-  useEffect(() => {
-    // once the timeDefaultVal is set, we can grab the medal and total tables
-    if (timeDefaultVal) {
-      getTotalAndMedals();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeDefaultVal]);
+	// code that is executed once the path is verfied to be accurate
+	useEffect(() => {
+		if (game) {
+			querySubmissions();
+			getAdjacentLevelIds();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [game]);
 
-  useEffect(() => {
-    // if the length of levelList has been filled, we can set the title, and set loading to false,
-    // since this is the largest api call
-    if (loading && levelLength && levelList.length === levelLength) {
-      sortLevels();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [levelList]);
+	// code that is executed when both queries are finished and data is collected
+	useEffect(() => {
+		if (!recordsLoading && adjacent) {
+			setLoading(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [recordsLoading, adjacent]);
 
-  useEffect(() => {
-    // if there are no errors, and isSubmit is set to true, then submit the form values
-    // to database
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      submit();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formErrors]);
+	// code that is executed when a user attempts to submit a run
+	useEffect(() => {
+		// if there are no errors, and isSubmit is set to true, then submit the form values
+		// to database
+		if (Object.keys(formErrors).length === 0 && isSubmit) {
+			submit();
+		} else {
+			setIsSubmit(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [formErrors]);
 
-  return (
-    <div className="levelboard">
-      {loading ? 
-        <p>Loading...</p> :
-        <>
-          <div className="levelboard-header">
-            <div className="levelboard-title">
-              <button onClick={ () => swapLevels(setLevelId(0)) }>←Prev</button>
-              <h1>{ title }</h1>
-              <button onClick={ () => swapLevels(setLevelId(1)) }>Next→</button>
-              </div>
-              <div className="levelboard-buttons">
-                <Link to={ `/games/${getGame(false)}` }>
-                    <button>Back to Level Select</button>
-                </Link>
-                <Link to={ `/games/${getGame(true)}/totalizer`}>
-                  <button>Totalizer Table</button>
-                </Link>
-                <Link to={ `/games/${getGame(true)}/medals`}>
-                  <button>Medal Table</button>
-                </Link>
-                <label htmlFor="showLive">Show non-live runs: </label>
-                <input
-                  id="showLive"
-                  type="checkbox"
-                  checked={ showAll }
-                  onChange={ () => setShowAll(!showAll) }
-                />
-              </div>
-          </div>
-          <div className="levelboard-container">
-            <div className="levelboard-board">
-              <Board mode={ getMode() } allRecords={ allRecords } records={ records } showAll={ showAll } isMod={ isMod } removeFunc={ remove } />
-            </div>
-            {supabase.auth.user() ? 
-               <div className="levelboard-submit">
-               <h2>Submit a { getMode(false) }:</h2>
-               <form onSubmit={ handleSubmit }>
-                 <label htmlFor="record">{ getMode(false) }: </label>
-                 <input 
-                   id="record"
-                   type="number"
-                   value={ formValues.record }
-                   onChange={ handleChange }
-                 />
-                 <p>{ formErrors.record }</p>
-                 <label htmlFor="monkeyId">Monkey: </label>
-                 <MonkeySelect /><br />
-                 <label htmlFor="proof">Proof: </label>
-                 <input 
-                   id="proof"
-                   type="url"
-                   value={ formValues.proof }
-                   onChange={ handleChange }
-                 />
-                 <p>{ formErrors.proof }</p>
-                 <label htmlFor="isLive">Live Run: </label>
-                 <input
-                  id="isLive"
-                  type="checkbox"
-                  checked={ formValues.isLive }
-                  onChange={ handleChange }
-                 />
-                 <label htmlFor="comment">Comment (optional): </label>
-                 <input 
-                   id="comment"
-                   type="text"
-                   value={ formValues.comment }
-                   onChange={ handleChange }
-                 />
-                 <p>{ formErrors.comment }</p>
-                 <button disabled={ submitting }>Submit</button>
-               </form>
-               {hasUserSubmitted ?
-                <button disabled={ submitting } onClick={ () => updateStates(supabase.auth.user().id) }>Remove Run</button>
-                :
-                ""
-                }
-                <Popup trigger={ popup } setTrigger={ setPopup } mode={ getMode() } playerInfo={{ user_id: supabase.auth.user().id }} removeFunc={ remove } />
-             </div>
-             :
-             ""
-            }
-          </div>
-        </>
-        
-      }
-    </div>
+	// Helper functions
+	const { capitalize, cleanLevelName } = FrontendHelper();
 
-  )
-}
+	// our main page component
+	return (
+		<div className="levelboard">
+			{loading ? 
+			<p>Loading...</p> 
+			:
+			<>
+			<div className="levelboard-header">
+				<div className="levelboard-title">
+					{ adjacent.prev ?
+						<Link to={`/games/${ game.abb }/${ game.category }/${ game.mode }/${ adjacent.prev }`}>
+							<button disabled={ isSubmit }>←Prev</button>
+						</Link>
+					:	
+						""
+					}
+					<h1>{ capitalize(game.mode) }: { cleanLevelName(game.levelName) }</h1>
+					{ adjacent.next ?
+						<Link to={`/games/${ game.abb }/${ game.category }/${ game.mode }/${ adjacent.next }`}>
+							<button disabled={ isSubmit }>Next→</button>
+						</Link>
+					:
+						""
+					}
+				</div>
+				<div className="levelboard-buttons">
+				<Link to={ `/games/${ game.abb }` }>
+					<button disabled={ isSubmit }>Back to Level Select</button>
+				</Link>
+				<Link to={ `/games/${ game.abb }/${ game.category }/totalizer`}>
+					<button disabled={ isSubmit }>Totalizer Table</button>
+				</Link>
+				<Link to={ `/games/${ game.abb }/${ game.category }/medals`}>
+					<button disabled={ isSubmit }>Medal Table</button>
+				</Link>
+				<label htmlFor="showLive">Show non-live runs: </label>
+				<input
+					id="showLive"
+					type="checkbox"
+					checked={ boardState === "all" ? true : false }
+					onChange={ () => setBoardState(boardState === "live" ? "all" : "live") }
+					disabled={ isSubmit }
+				/>
+				</div>
+			</div>
+			<Board game={ game } records={ records } state={ boardState } isMod={ isMod }/>
+			{ supabase.auth.user() ?
+			<div className="levelboard-submit">
+				<h2>Submit a { capitalize(game.mode) }:</h2>
+				<form onSubmit={ handleSubmit }>
+					<label htmlFor="record">{ capitalize(game.mode) }: </label>
+					<input 
+						id="record"
+						type="number"
+						value={ formValues.record }
+						onChange={ handleChange }
+					/>
+					<p>{ formErrors.record }</p>
+					<label htmlFor="monkeyId">Monkey: </label>
+					<select 
+						id="monkeyId"
+						value={ formValues.monkeyId }
+						onChange={ handleChange }
+					>
+						{monkeys.map((monkey) => (
+							<option key={ monkey.id } value={ monkey.id }>{ monkey.monkey_name }</option>
+						))}
+					</select>
+					<br />
+					<label htmlFor="proof">Proof: </label>
+					<input 
+						id="proof"
+						type="url"
+						value={ formValues.proof }
+						onChange={ handleChange }
+					/>
+					<p>{ formErrors.proof }</p>
+					<label htmlFor="isLive">Live Run: </label>
+					<input
+						id="isLive"
+						type="checkbox"
+						checked={ formValues.isLive }
+						onChange={ handleChange }
+					/>
+					<label htmlFor="comment">Comment (optional): </label>
+					<input 
+						id="comment"
+						type="text"
+						value={ formValues.comment }
+						onChange={ handleChange }
+					/>
+					<p>{ formErrors.comment }</p>
+					<button disabled={ isSubmit }>Submit</button>
+				</form>
+				{ currentUserSubmission.user_id ? 
+					<button disabled={ isSubmit } onClick={ () => setPopup(true) }>Remove Record</button>
+				:
+					""
+				}
+				<Popup trigger={ popup } setTrigger={ setPopup } recordInfo={ currentUserSubmission } />
+			</div>
+			:
+			""
+			}
+			</> 
+			}
+		</div>
+	);
+};
 
 export default Levelboard;

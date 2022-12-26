@@ -4,160 +4,193 @@ import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 const SubmissionInit = () => {
     // states
-    const [isMod, setIsMod] = useState(false);
     const [loading, setLoading] = useState(true);
     const [gameList, setGameList] = useState([]);
     const [submissions, setSubmissions] = useState({});
+    const [timeRecords, setTimeRecords] = useState({ list: [], loaded: false });
+    const [scoreRecords, setScoreRecords] = useState({ list: [], loaded: false });
     const [currentGame, setCurrentGame] = useState("smb1");
 
     // variables
     const navigate = useNavigate("/");
 
     // function used to check if current user is a mod
-    const checkForMod = async () => {
-        try {
-            // initalize variables
-            const userId = supabase.auth.user() ? supabase.auth.user().id : null;
-            let isModVar = false;
-
-            const { data: mods, error, status } = await supabase
-                .from("moderator")
-                .select("user_id");
-
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            // now, go through list of mods. if a match is detected with the current user, set state to true
-            for (const mod of mods) {
-               if (mod.user_id === userId) {
-                isModVar = true;
-                setIsMod(true);
-               } 
-            }
-
-            // if isModVar is true, proceed. otherwise, navigate back to home
-            isModVar ? queryGames() : navHome();
-
-        } catch (error) {
-            alert(error.message);
+    const checkForMod = async (isMod) => {
+        if (!isMod) {
+            console.log("Error: Forbidden access.");
+            navigate("/");
         }
-    }
+    };
 
-    // function that is called if user is a moderator. once the list of games is queried, we can
-    // query all the recent submissions for each game
-    const queryGames = async () => {
+    // function that will query to get list of games
+    const queryGames = async() => {
         try {
+            // query game table
             const { data: games, error, status } = await supabase
-                .from("games")
-                .select("abb, name, is_custom")
-                .order("is_custom")
-                .order("name");
+                .from("game")
+                .select("abb, name")
+                .order("id")
+                .order("custom");
 
+            // error handling
             if (error && status !== 406) {
                 throw error;
             }
 
+            // update react hook with list of games
             setGameList(games);
-            queryRecentSubmissions(games);
-        } catch (error) {
+
+        } catch(error) {
+            console.log(error);
             alert(error.message);
+            navigate("/");
         }
-    }
+    };
 
-    // function that actually performs the query based on the game param
-    const querySubmissions = async (game) => {
+    // function that will query the submissions for mode. specifically, it is looking
+    // for records that have NOT been approved
+    const querySubmissions = async(mode) => {
         try {
-            const { data, error, status } = await supabase
-                .from(`${game.abb}_recent_submissions`)
+            // query submission table
+            const { data: r, error, status } = await supabase
+                .from(`${mode}_submission`)
                 .select(`
-                    created_at,
-                    user_id,
-                    profiles:user_id ( username, country ),
-                    level_name,
-                    level_id,
-                    record,
-                    isScore,
-                    isMisc,
-                    live,
+                    profiles (id, username, country),
+                    level (name, misc, mode (game (abb, name, id))),
+                    ${mode},
+                    submitted_at,
                     proof,
-                    comment
+                    comment,
+                    live
                 `)
-                .order("created_at", { ascending: true });
-
+                .eq("approved", false)
+                .order("submitted_at");
+            
+            // error handling
             if (error && status !== 406) {
                 throw error;
             }
 
-            // now, we need to clean the data up
-            for (let i = 0; i < data.length; i++) {
-                let submission = data[i];
-                
-                // simplify
-                submission.username = submission.profiles.username;
-                submission.country = submission.profiles.country;
-                delete submission.profiles;
+            // finally, update react state hooks
+            const obj = { list: r, loaded: true };
+            mode === "score" ? setScoreRecords(obj) : setTimeRecords(obj);
+            console.log(r);
 
-                // since record is stored as a float, if the current submission is a score, we need to parse to
-                // integer type. otherwise, we need to fix the submission to two decimal places
-                const record = submission.record;
-                submission.record = submission.isScore ? parseInt(record) : Number.parseFloat(record).toFixed(2);
-            }
-
-            // finally, once the data has been cleaned, update the submissions state
-            setSubmissions(submissions => ({...submissions, [game.abb]: data}));
-
-        } catch (error) {
+        } catch(error) {
+            console.log(error);
             alert(error.message);
         }
-    }
+    };
 
-    // function that sets up queries for each game (to get recent submissions)
-    const queryRecentSubmissions = async (games) => {
-        for (const game of games) {
-           querySubmissions(game);
+    // function that takes the two sets of records: scores and times, and merges
+    // them together, in order of data submitted, and combintes them into a single
+    // submissions object
+    const mergeRecords = () => {
+        // first, set up object representing all the submissions
+        const submissionObj = {};
+        gameList.forEach(game => {
+            const abb = game.abb;
+            submissionObj[abb] = [];
+        });
+        
+        // now, fill it
+        let i = 0, j = 0;
+        const sr = scoreRecords.list, tr = timeRecords.list;
+        while (i < sr.length && j < tr.length) {
+            const scoreRecord = sr[i], timeRecord = tr[j];
+            const scoreDate = scoreRecord.submitted_at, timeDate = timeRecord.submitted_at;
+            if (scoreDate < timeDate) {
+                sr[i]["record"] = scoreRecord.score;
+                sr[i]["is_score"] = true;
+                delete sr[i].score;
+                submissionObj[scoreRecord.level.mode.game.abb].push(scoreRecord);
+                i++;
+            } else {
+                tr[j]["record"] = Number.parseFloat(timeRecord.time).toFixed(2);
+                sr[i]["is_score"] = false;
+                delete tr[j].time;
+                submissionObj[timeRecord.level.mode.game.abb].push(timeRecord);
+                j++;
+            }
         }
-    }
+        while (i < sr.length) {
+            const scoreRecord = sr[i];
+            sr[i]["record"] = scoreRecord.score;
+            sr[i]["is_score"] = true;
+            delete sr[i].score;
+            submissionObj[scoreRecord.level.mode.game.abb].push(scoreRecord);
+            i++;
+        }
+        while (j < tr.length) {
+            const timeRecord = tr[j];
+            tr[j]["record"] = Number.parseFloat(timeRecord.time).toFixed(2);
+            sr[i]["is_score"] = false;
+            delete tr[j].time;
+            submissionObj[timeRecord.level.mode.game.abb].push(timeRecord);
+            j++;
+        }
 
-    // function that is called if user is not a moderator. this page is only allowed for mods
-    const navHome = () => {
-        navigate("/");
-    }
+        // finally, update react states
+        setSubmissions(submissionObj);
+        setLoading(false);
+        console.log(submissionObj);
+    };
 
     // function that will update the currentGame based on the user's selection
     const changeGame = (game) => {
         setCurrentGame(game);
-    }
+    };
 
     // function that is called when a moderator has reviewed a submission
-    const removeSubmission = async (id) => {
+    const approveSubmission = async (approvedRecord) => {
         // create a copy of the list of submissions without the reviewed submission
-        let submissionList = [];
-        for (let submission of submissions[currentGame]) {
-            if (submission.created_at !== id) {
-                submissionList.push(submission);
-            }
-        }
-        
+        // also, grab the record we are approving, since information about it is needed to update
+        const filtered = submissions[currentGame].filter(item => {
+            return item !== approvedRecord
+        });
+
         // now, update the submissions object
-        setSubmissions(submissions => ({...submissions, [currentGame]: submissionList}));
+        setSubmissions(submissions => ({...submissions, [currentGame]: filtered}));
 
         // finally, make a query to the recent submissions page to remove this submission
+        const mode = approvedRecord.is_score ? "score" : "time";
+        const userId = approvedRecord.profiles.id;
+        console.log(userId);
+        const gameId = approvedRecord.level.mode.game.abb;
+        const levelId = approvedRecord.level.name;
         try {
             const { error } = await supabase
-                .from(`${currentGame}_recent_submissions`)
-                .delete()
-                .match({ created_at: id });
+                .from(`${mode}_submission`)
+                .update({ approved: true })
+                .eq("user_id", userId)
+                .eq("game_id", gameId)
+                .eq("level_id", levelId)
 
+            // error handling
             if (error) {
                 throw (error);
             }
+
         } catch (error) {
+            console.log(error);
             alert(error.message);
         }
-    }
+    };
 
-    return { isMod, loading, gameList, submissions, currentGame, setLoading, checkForMod, changeGame, removeSubmission };
+    return { 
+        loading, 
+        gameList, 
+        scoreRecords,
+        timeRecords,
+        submissions, 
+        currentGame, 
+        checkForMod, 
+        queryGames,
+        querySubmissions,
+        mergeRecords,
+        changeGame, 
+        approveSubmission
+    };
 }
 
 export default SubmissionInit;

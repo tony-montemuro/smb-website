@@ -17,33 +17,39 @@ import Medals from "./pages/Medals/Medals";
 import UserStats from "./pages/UserStats/UserStats";
 import Submissions from "./pages/Submissions/Submissions";
 
-
 function App() {
   // states
   const [session, setSession] = useState(null);
-  const [isMod, setIsMod] = useState(false);
+  const [isMod, setIsMod] = useState(null);
 
    // function that queries the mod table to see if current user is a mod
    const queryMods = async () => {
      try {
-       // initialize 
-       const userId = supabase.auth.user() ? supabase.auth.user().id : null;
- 
-       const { data: mods, error, status } = await supabase
-         .from("moderator")
-         .select("user_id")
- 
-       if (error && status !== 406) {
-         throw error;
-       }
- 
-       // now, iterate through each mod. if a match is detected, update state
-       for (const mod of mods) {
-         if (mod.user_id === userId) {
-           setIsMod(true);
-         }
-       }
- 
+      // initialize 
+      const userId = supabase.auth.user() ? supabase.auth.user().id : null;
+
+      // perform query, if necessary
+      if (userId) {
+        const { data: mods, error, status } = await supabase
+          .from("moderator")
+          .select("user_id")
+          .eq("user_id", userId)
+
+        // error handling
+        if (error && status !== 406) {
+          throw error;
+        }
+  
+        // if data is not empty, this means match was found -> user is mod
+        if (mods.length > 0) {
+          console.log(mods);
+          setIsMod(true);
+        } else {
+          setIsMod(false);
+        }
+      } else {
+        setIsMod(false);
+      }
      } catch (error) {
         console.log(error);
      }
@@ -67,18 +73,18 @@ function App() {
       <div className="app-container">
         <Routes>
           <Route path="/" element={<Home />}/>
-          <Route path="/submissions" element={<Submissions />} />
+          <Route path="/submissions" element={<Submissions isMod={ isMod } />} />
           <Route path="/games" element={<GameSelect />}/>
           <Route path="games/:game" element={<Game />}/>
-          <Route path="games/:game/:category/totalizer" element={<Totalizer />} />
-          <Route path="games/:game/:category/medals" element={<Medals />} />
-          <Route path="games/:game/:mode/:levelid" element={<Levelboard />}/>
+          <Route path="games/:game/:category/totalizer" element={<Totalizer />}/>
+          <Route path="games/:game/:category/medals" element={<Medals />}/>
+          <Route path="games/:game/:category/:mode/:levelid" element={<Levelboard isMod={ isMod } />}/>
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/support" element={<Support />}/>
           <Route path="/login" element={<Login />}/>
           <Route path="/profile" element={<Profile />}/>
           <Route path="/user/:userId" element={<User />}/>
-          <Route path="/user/:userId/:game/:category" element={<UserStats />} />
+          <Route path="/user/:userId/:game/:category" element={<UserStats />}/>
         </Routes>
       </div>
     </>

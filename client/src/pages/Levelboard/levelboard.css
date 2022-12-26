@@ -9,12 +9,11 @@
 }
 
 .levelboard-title button {
-    margin: 10px;
-}
-
-.levelboard-back {
-    margin-top: 10px;
-    margin-bottom: 20px;
+    appearance: none;
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+    outline: none;
 }
 
 .levelboard-container table {
@@ -43,12 +42,12 @@
     background-color: #d3d3d3;
 }
 
-.levelboard-submit {
-    text-align: center;
-}
-
 .levelboard-user-info {
     display: flex;
     flex-direction: row;
     border-collapse: collapse;
+}
+
+.levelboard-submit {
+    text-align: center;
 }
