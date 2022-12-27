@@ -242,6 +242,21 @@ const GameInit = () => {
             </div>
         )
     }
+
+    // component used to render links to the world record page for a given mode
+    const WorldRecordBoards = ({ mode }) => {
+        return (
+            <div>
+                <Link to={ { pathname: `/games/${ abb }/${ selectedRadioBtn }/${ mode.toLowerCase() }` } }>
+                    {selectedRadioBtn === "main" ?
+                        <p>{ mode } World Records</p>
+                        :
+                        <p>Misc. { mode } World Records</p>
+                    }
+                </Link>
+            </div>
+        );
+    }
     
     return { loading,
             title, 
@@ -250,7 +265,8 @@ const GameInit = () => {
             handleModeChange, 
             ModeLevelTable,
             TotalizerBoards,
-            MedalTableBoards
+            MedalTableBoards,
+            WorldRecordBoards
         };
 }
 

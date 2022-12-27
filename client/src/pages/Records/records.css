@@ -1,0 +1,28 @@
+.records h1 {
+    width: 50%;
+    margin: 10px auto;
+    text-align: center;
+}
+
+.records-buttons {
+    text-align: center;
+}
+
+.records table {
+    border-collapse: collapse;
+    border: 1px solid black;
+    margin: 25px auto;
+    table-layout: fixed;
+    width: 50%;
+}
+
+.records-info-row {
+    font-weight: bold;
+}
+
+.records td {
+    box-sizing: border-box;
+    width: 33%;
+    text-align: center;
+    border: 1px solid black;
+}

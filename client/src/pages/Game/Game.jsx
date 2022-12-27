@@ -13,7 +13,8 @@ function Game() {
           handleModeChange, 
           ModeLevelTable,
           TotalizerBoards,
-          MedalTableBoards
+          MedalTableBoards,
+          WorldRecordBoards
         } = GameInit();
 
   useEffect(() => {
@@ -61,6 +62,10 @@ function Game() {
             </table>
           </div>
           <div className="game-boards">
+            <h2>Score World Records</h2>
+            <WorldRecordBoards mode={ "Score" } />
+            <h2>Time World Records</h2>
+            <WorldRecordBoards mode={ "Time" } />
             <h2>Medal Tables</h2>
             <MedalTableBoards />
             <h2>Totalizer</h2>

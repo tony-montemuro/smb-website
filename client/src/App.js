@@ -16,6 +16,7 @@ import Totalizer from "./pages/Totalizer/Totalizer";
 import Medals from "./pages/Medals/Medals";
 import UserStats from "./pages/UserStats/UserStats";
 import Submissions from "./pages/Submissions/Submissions";
+import Records from "./pages/Records/Records";
 
 function App() {
   // states
@@ -78,6 +79,7 @@ function App() {
           <Route path="games/:game" element={<Game />}/>
           <Route path="games/:game/:category/totalizer" element={<Totalizer />}/>
           <Route path="games/:game/:category/medals" element={<Medals />}/>
+          <Route path="games/:game/:category/:mode" element={<Records />} />
           <Route path="games/:game/:category/:mode/:levelid" element={<Levelboard isMod={ isMod } />}/>
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/support" element={<Support />}/>
