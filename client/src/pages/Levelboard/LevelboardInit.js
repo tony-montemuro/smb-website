@@ -60,16 +60,6 @@ const LevelboardInit = () => {
 			setCurrentUserSubmission(currUserSubmissionInit);
 			setBoardState("live");
 
-			// next, verify category and mode
-			if (category !== "main" && category !== "misc") {
-				const error = { code: 1, message: "Error: Invalid category." };
-				throw error;
-			}
-			if (mode !== "time" && mode !== "score") {
-				const error = { code: 1, message: "Error: Invalid mode." };
-				throw error;
-			}
-
 			// next, verify the levelId is valid. this requires a query to supabase
 			const { data: levelInfo, error, status } = await supabase
 				.from("level")

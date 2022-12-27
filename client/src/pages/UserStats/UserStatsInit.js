@@ -109,10 +109,6 @@ const UserStatsInit = () => {
             if (error && status === 406) {
                 throw error;
             }
-            if (category !== "misc" && category !== "main") {
-                const error = { code: 1, message: "Error: Invalid category." };
-                throw error
-            }
 
             // update states
             const miscStatus = category === "misc" ? true : false;

@@ -77,16 +77,25 @@ function App() {
           <Route path="/submissions" element={<Submissions isMod={ isMod } />} />
           <Route path="/games" element={<GameSelect />}/>
           <Route path="games/:game" element={<Game />}/>
-          <Route path="games/:game/:category/totalizer" element={<Totalizer />}/>
-          <Route path="games/:game/:category/medals" element={<Medals />}/>
-          <Route path="games/:game/:category/:mode" element={<Records />} />
-          <Route path="games/:game/:category/:mode/:levelid" element={<Levelboard isMod={ isMod } />}/>
+          <Route path="games/:game/main/totalizer" element={<Totalizer />}/>
+          <Route path="games/:game/misc/totalizer" element={<Totalizer />}/>
+          <Route path="games/:game/main/medals" element={<Medals />}/>
+          <Route path="games/:game/misc/medals" element={<Medals />}/>
+          <Route path="games/:game/main/score" element={<Records />} />
+          <Route path="games/:game/main/time" element={<Records />} />
+          <Route path="games/:game/misc/score" element={<Records />} />
+          <Route path="games/:game/misc/time" element={<Records />} />
+          <Route path="games/:game/main/time/:levelid" element={<Levelboard isMod={ isMod } />}/>
+          <Route path="games/:game/main/score/:levelid" element={<Levelboard isMod={ isMod } />}/>
+          <Route path="games/:game/misc/time/:levelid" element={<Levelboard isMod={ isMod } />}/>
+          <Route path="games/:game/misc/score/:levelid" element={<Levelboard isMod={ isMod } />}/>
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/support" element={<Support />}/>
           <Route path="/login" element={<Login />}/>
           <Route path="/profile" element={<Profile />}/>
           <Route path="/user/:userId" element={<User />}/>
-          <Route path="/user/:userId/:game/:category" element={<UserStats />}/>
+          <Route path="/user/:userId/:game/main" element={<UserStats />}/>
+          <Route path="/user/:userId/:game/misc" element={<UserStats />}/>
         </Routes>
       </div>
     </>

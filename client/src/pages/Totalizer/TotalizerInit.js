@@ -45,13 +45,9 @@ const TotalizerInit = () => {
             if ((error && status === 406) || timeArr.length === 0) {
                 throw error ? error : { code: 1, message: "Error: invalid game." };
             }
-            const miscStatus = category === "misc" ? true : false;
-            if (category !== "main" && category !== "misc") {
-                const error = { code: 1, message: "Error: invalid category." }
-                throw error;
-            }
 
             // update states
+            const miscStatus = category === "misc" ? true : false;
             setGame(timeArr[0].mode.game);
             setIsMisc(miscStatus);
 

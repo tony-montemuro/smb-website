@@ -40,10 +40,6 @@ const MedalsInit = () => {
         if (error || status === 406) {
             throw error;
         }
-        if (category !== "main" && category !== "misc") {
-            const error = { code: 1, message: "Error: invalid category." }
-            throw error;
-        }
 
         // if there are no errors, update react hooks
         setValidGame(true);

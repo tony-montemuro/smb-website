@@ -21,16 +21,6 @@ const RecordsInit = () => {
 
     const queryModeLevels = async() => {
         try {
-            // first, verify mode and category are correct
-            if (category !== "main" && category !== "misc") {
-                const error = { code: 1, message: "Error: Invalid category." };
-                throw error;
-            }
-            if (mode !== "score" && mode !== "time") {
-                const error = { code: 1, message: "Error: Invalid mode." };
-                throw error;
-            }
-
             // next, query the levels table
             const isMisc = category === "misc" ? true : false;
             const { data: levelList, error, status } = await supabase
