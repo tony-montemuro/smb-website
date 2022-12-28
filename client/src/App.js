@@ -71,10 +71,11 @@ function App() {
   return (
     <>
       <Navbar isMod={ isMod } />
-      <div className="app-container">
+      <div className="app">
         <Routes>
           <Route path="/" element={<Home />}/>
-          <Route path="/submissions" element={<Submissions isMod={ isMod } />} />
+          <Route path="/login" element={<Login />}/>
+          <Route path="/profile" element={<Profile />}/>
           <Route path="/games" element={<GameSelect />}/>
           <Route path="games/:game" element={<Game />}/>
           <Route path="games/:game/main/totalizer" element={<Totalizer />}/>
@@ -90,9 +91,8 @@ function App() {
           <Route path="games/:game/misc/time/:levelid" element={<Levelboard isMod={ isMod } />}/>
           <Route path="games/:game/misc/score/:levelid" element={<Levelboard isMod={ isMod } />}/>
           <Route path="/resources" element={<Resources />}></Route>
+          <Route path="/submissions" element={<Submissions isMod={ isMod } />} />
           <Route path="/support" element={<Support />}/>
-          <Route path="/login" element={<Login />}/>
-          <Route path="/profile" element={<Profile />}/>
           <Route path="/user/:userId" element={<User />}/>
           <Route path="/user/:userId/:game/main" element={<UserStats />}/>
           <Route path="/user/:userId/:game/misc" element={<UserStats />}/>

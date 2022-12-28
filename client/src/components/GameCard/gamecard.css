@@ -1,21 +1,7 @@
-.card-container {
-    display: grid;
-    place-items: center;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 400px));
-}
-
-.game-card {
-    display: flex;
-    flex-direction: column;
-    max-width: 200px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-
-.card-link img {
+.gamecard img {
     max-width: 200px;
 }
 
-.card-link p {
+.gamecard p {
     text-align: center;
 }

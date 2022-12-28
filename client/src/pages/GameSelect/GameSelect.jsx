@@ -1,44 +1,43 @@
-import React from "react";
 import "./gameselect.css";
+import React, { useEffect } from "react";
 import GameSelectInit from "./GameSelectInit";
-import { useEffect } from 'react';
+import FrontendHelper from "../../helper/FrontendHelper";
 import GameCard from "../../components/GameCard/GameCard";
 
 function Games() {
-  const { loading, gameList, customGameList, getGames } = GameSelectInit();
+  // states and functions from init file
+  const { loading, gameLists, getGames } = GameSelectInit();
+
+  // helper functions
+  const { capitalize } = FrontendHelper();
+
+  // code that is executed when the page is first loaded
   useEffect(() => {
     getGames();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // game select component
   return (
-    <div>
-      <div className="game-select-title">
-        <h1>Select a Game</h1>
-      </div>
-      <h2>Main Games</h2>
-      {loading ? 
-      <p>Loading...</p>
-      :
-      <div className="card-container">
-        {gameList.map((val) => {
-          return <GameCard name={val.name} abb={val.abb} key={val.abb} />
-        })}
-      </div>
-      }
-      <h2>Custom Levels</h2>
-      {loading ? 
-      <p>Loading</p>
-      :
-      <div className="card-container">
-        {customGameList.map((val) => {
-          return <GameCard name={val.name} abb={val.abb} key={val.abb} />
-        })}
-      </div>
-      }
-    </div>
-    
-    
+    <>
+      <h1>Select a Game</h1>
+      { Object.keys(gameLists).map(type => {
+        return (
+          <div key={ type } className="game-select">
+            <h2>{ capitalize(type) } Games</h2>
+            { loading ?
+              <p>Loading...</p>
+            :
+            <div className="game-select-cards">
+              {gameLists[type].map(game => {
+                return <GameCard key={ game.abb } game={ {name: game.name, abb: game.abb } } />;
+              })}
+            </div>
+            }
+          </div>
+        );
+      })}
+    </>
   );
 };
 

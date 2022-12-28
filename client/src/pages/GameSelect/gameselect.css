@@ -1,3 +1,11 @@
-.card-container {
+.game-select-cards {
     display: flex;
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 400px));
+}
+
+.game-select h2 {
+    text-align: center;
+    margin: 25px;
 }
