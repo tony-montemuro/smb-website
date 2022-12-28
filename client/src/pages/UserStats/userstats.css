@@ -1,10 +1,9 @@
-.stats-board {
-    margin-left: 10px;
-    margin-right: 10px;
+.user-stats-header {
+    text-align: center;
 }
 
-.stats-board{
-    display: flex;
+.user-stats-radio {
+    margin-top: 10px;
 }
 
 .stats-board-body {
@@ -39,4 +38,25 @@
     display: flex;
     flex-direction: row;
     border-collapse: collapse;
+}
+
+.stats-records table {
+    border-collapse: collapse;
+    border: 1px solid black;
+    margin: 25px auto;
+    table-layout: fixed;
+    width: 70%;
+}
+
+.stats-records th {
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid black;
+}
+
+.stats-records td {
+    box-sizing: border-box;
+    width: 25%;
+    text-align: center;
+    border: 1px solid black;
 }

@@ -14,7 +14,7 @@ const MedalsHelper = () => {
         const uniqueIds = [];
 
         // first, sort the submission array by level id
-        submissions = Object.values(submissions).sort((a, b) => b.level.id > a.level.id ? -1 : 1);
+        submissions = submissions.sort((a, b) => b.level.id > a.level.id ? -1 : 1);
 
         // next, let's generate medal table object for each user who has submitted to
         // the game defined by abb

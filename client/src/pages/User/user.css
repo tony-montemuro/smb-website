@@ -1,3 +1,7 @@
+.user {
+    margin-left: 10px;
+}
+
 .user-profile {
     display: flex;
     width: 500px;
@@ -11,7 +15,6 @@
     border-radius: 5px;
     margin: 10px;
     text-align: center;
-    /* background-color: red; */
 }
 
 .user-info h2 {
@@ -49,15 +52,15 @@
     border: 2px solid #808080;
     border-radius: 5px;
     margin: 10px;
-    /* background-color: blue; */
 }
 
-.user-stats { 
-    width: fit-content;
-    text-align: center;
-    padding-left: 5px;
+.user-stats-games table {
+    border-collapse: collapse;
+    margin-top: 20px;
+    width: 500px;
+    font-size: 25px;
 }
 
 .user-stats-link {
-    color: #0645AD;
+    color: blue;
 }

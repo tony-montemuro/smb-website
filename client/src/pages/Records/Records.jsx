@@ -46,8 +46,8 @@ function Records() {
       </div>
       {levelModes["modes"].map(mode => {
         return (
-          <table>
-            <tbody key={mode}>
+          <table key={mode}>
+            <tbody>
               <tr>
                 <th></th>
                 <th>{ cleanLevelName(mode) }</th>

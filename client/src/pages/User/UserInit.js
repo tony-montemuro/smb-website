@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const UserInit = () => {
     //variables
@@ -99,6 +100,22 @@ const UserInit = () => {
         }
     }
 
+    const GameBody = ({ list }) => {
+        return (
+            <tbody>
+                {list.map(game => {
+                    return (
+                        <tr key={ game.name }>
+                            <td>{ game.name }</td>
+                            <td><Link className="user-stats-link" to={ { pathname: `${game.abb}/main` } }>Main</Link></td>
+                            <td><Link className="user-stats-link" to={ { pathname: `${game.abb}/misc` } }>Misc</Link></td>
+                        </tr>
+                    );
+                })}
+            </tbody>
+        );
+    };
+
     return { username,
              country,
              youtube_url, 
@@ -110,7 +127,8 @@ const UserInit = () => {
              customGameList,
              setLoadingUser,
              loadUser,
-             queryGameList
+             queryGameList,
+             GameBody
     }
 }
 

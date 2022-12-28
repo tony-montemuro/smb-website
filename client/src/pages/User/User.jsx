@@ -2,7 +2,6 @@ import "./user.css";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import UserInit from "./UserInit";
 import { React, useEffect } from "react";
-import { Link } from "react-router-dom";
 import YT from "../../img/yt-logo.png";
 import Twitch from "../../img/twitch-logo.png";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
@@ -19,7 +18,8 @@ function User() {
          customGameList,
          setLoadingUser,
          loadUser,
-         queryGameList
+         queryGameList,
+         GameBody
     } = UserInit();
 
   useEffect(() => {
@@ -71,26 +71,24 @@ function User() {
                 <SimpleAvatar key="avatar" url={avatar_url} size={300} />
               </div>
             </div>
-              <div className="user-stats">
+              <div className="user-stats-games">
                 <h1>View Player Stats</h1>
-                <h2>Main Games</h2>
-                {gameList.map(val => {
-                  return (
-                    <div key={`${val.abb}`} className="user-stats-link-container">
-                      <Link className="user-stats-link" key={ `${val.abb}/main` } to={ { pathname: `${val.abb}/main` } }><p>{ val.name }</p></Link>
-                      <Link className="user-stats-link" key={ `${val.abb}/misc` } to={ { pathname: `${val.abb}/misc` } }><p>{ `${val.name} (Misc.)` }</p></Link>
-                    </div>
-                  )
-                })}
-                <h2>Custom Games</h2>
-                {customGameList.map(val => {
-                  return (
-                    <div key={`${val.abb}`} className="user-stats-link-container">
-                      <Link className="user-stats-link" key={ `${val.abb}/main` } to={ { pathname: `${val.abb}/main` } }><p>{ val.name }</p></Link>
-                      <Link className="user-stats-link" key={ `${val.abb}/misc` } to={ { pathname: `${val.abb}/misc` } }><p>{ `${val.name} (Misc.)` }</p></Link>
-                    </div>
-                  )
-                })}
+                <table>
+                  <thead>
+                    <tr>
+                      <th colSpan={3}>Main Games</th>
+                    </tr>
+                  </thead>
+                  <GameBody list={ gameList } />
+                </table>
+                <table>
+                  <thead>
+                    <tr>
+                      <th colSpan={3}>Custom Games</th>
+                    </tr>
+                  </thead>
+                  <GameBody list={ customGameList } />
+                </table>
               </div> 
           </div>
         }

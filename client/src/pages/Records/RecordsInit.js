@@ -74,6 +74,7 @@ const RecordsInit = () => {
                     level!inner (id, misc, name)
                 `)
                 .eq("game_id", abb)
+                .eq("live", true)
                 .eq("level.misc", isMisc)
                 .order(`${mode}`, { ascending: false })
                 .order("submitted_at");

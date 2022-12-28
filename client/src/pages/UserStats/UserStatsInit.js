@@ -18,12 +18,12 @@ const UserStatsInit = () => {
     const [loadingScore, setLoadingScore] = useState(true);
     const [loadingTime, setLoadingTime] = useState(true);
     const [game, setGame] = useState(null);
+    const [levelLists, setLevelLists] = useState({});
     const [totalTime, setTotalTime] = useState(null);
     const [user, setUser] = useState(null);
-    const [scoreTotal, setScoreTotal] = useState(null);
-    const [scoreMedals, setScoreMedals] = useState(null);
-    const [timeTotal, setTimeTotal] = useState(null);
-    const [timeMedals, setTimeMedals] = useState(null);
+    const [scoreInfo, setScoreInfo] = useState(null);
+    const [timeInfo, setTimeInfo] = useState(null);
+    const [statsType, setStatsType] = useState("Score");
 
     // helper functions
     const { createTotalMaps, addPositionToTotals } = TotalizerHelper();
@@ -60,71 +60,45 @@ const UserStatsInit = () => {
         }
     };
 
-    // function used to check for valid game. if invalid, user will be redirected to home page
-    const checkGame = async () => {
+    // function that queries the list of levels for abb game. also separates each into score and time levels.
+    // also used to calculate timeTotal, and validates the game
+    const levelsQuery = async() => {
         try {
-            // now, query the list of games, where we are searching for a match with the game abbreviation
-            // in the url
-            let { data: game, error } = await supabase
-                .from("game")
-                .select("*")
-                .eq("abb", abb)
-                .single();
-
-            // if game is invalid, error will be thrown
-            if (error) {
-                throw error;
-            }
-
-            // if no error, update game hook
-            setGame(game);
-
-        } catch(error) {
-            // error code PGRST116: abb is not found in games table, so it must be invalid
-            if (error.code === "PGRST116") {
-                console.log("Error: Invalid game.");
-                navigate("/");
-            } else {
-                alert(error.message);
-                console.log(error);
-            } 
-        }
-    };
-
-    // this function is primarily used to get the total time for the game defined by abb. however,
-    // this function also checks the category. if invalid, redirect user to home screen
-    const getTimeTotal = async () => {
-        try {
-            // query level table
-            let { data: timeArr, status, error } = await supabase
+            // query level table for all levels in a particular game
+            const isMisc = category === "misc" ? true : false;
+            let { data: allLevels, error, status } = await supabase
                 .from("level")
-                .select(`
-                    time, 
-                    misc,
-                    mode (game (name))
-                `)
-                .eq("game", abb);
+                .select("name, time, chart_type, mode (name, game (*))")
+                .eq("game", abb)
+                .eq("misc", isMisc)
+                .order("id");
 
-            // error checks
-            if (error && status === 406) {
+            // error handling
+            if (error && status !== 406) {
+                throw error;
+            }
+            if (allLevels.length === 0) {
+                const error = { code: 1, message: "Error: Invalid game." };
                 throw error;
             }
 
-            // update states
-            const miscStatus = category === "misc" ? true : false;
-            
-            // now, calculate the total time
+            // filter allLevels list into two levels: score and time
+            const scoreLevels = allLevels.filter(level => level.chart_type === "score" || level.chart_type === "both");
+            const timeLevels = allLevels.filter(level => level.chart_type === "time" || level.chart_type === "both");
+
+            // now, calculate timeTotal from timeLevels array
             let timeTotal = 0;
-            timeArr.forEach(level => {
-                if (level.misc === miscStatus) {
-                    timeTotal += level.time;
-                }
+            timeLevels.forEach(level => {
+                timeTotal += level.time;
             });
 
-            // once we have this, we can update maxTime hook
+            // update react hooks
             setTotalTime(timeTotal);
-
-        } catch (error) {
+            setLevelLists({ score: scoreLevels, time: timeLevels });
+            setGame({ ...allLevels[0].mode.game, category: category });
+            console.log(timeTotal);
+            
+        } catch(error) {
             if (error.code === 1) {
                 console.log(error.message);
                 navigate("/");
@@ -133,7 +107,7 @@ const UserStatsInit = () => {
                 alert(error.message);
             }
         }
-    };
+    }
 
     const queryAndGetTotalsMedals = async (timeTotal) => {
         // initialize variables
@@ -146,13 +120,15 @@ const UserStatsInit = () => {
                 .from(`${type}_submission`)
                 .select(`
                     profiles:user_id ( id, username, country, avatar_url ),
-                    level (id, misc),
+                    level!inner (id, misc, name),
                     ${type},
-                    live
+                    live,
+                    submitted_at
                 `)
                 .eq("game_id", abb)
                 .eq("live", true)
-                .order(`${type}`, { ascending: false })
+                .eq("level.misc", miscStatus)
+                .order(`${type}`, { ascending: false });
 
             // error check
             if (error && status !== 406) {
@@ -181,13 +157,8 @@ const UserStatsInit = () => {
                 total = { hasData: false };
             }
 
-            // finally update react hook
-            type === "score" ? setScoreTotal(total) : setTimeTotal(total);
-            console.log(total);
-
             // now, it's time to do medal table. 
             submissions = submissionCpy;
-            submissions = submissions.filter(obj => obj.level.misc === miscStatus);
             const userMap = createUserMap(submissions);
             const medalTable = createMedalTable(userMap, submissions, type);
             addPositionToMedals(medalTable);
@@ -201,10 +172,49 @@ const UserStatsInit = () => {
                 medals = { hasData: false };
             }
 
+            // now, it's time to do player rankings
+            const modes = [...new Set(levelLists[type].map(level => level.mode.name))];
+            const rankings = { modes: modes };
+            modes.forEach(mode => {
+                rankings[mode] = [];
+            });
+
+            // get players ranking on each stage
+            let j = 0;
+            levelLists[type].forEach(level => {
+                const currentLevel = level.name, currentMode = level.mode.name;
+                let record = -1, pos = -1, date = '';
+                let trueCount = 1, posCount = trueCount;
+                while (j < submissions.length && submissions[j].level.name === currentLevel) {
+                    const submission = submissions[j];
+                    if (submission.profiles.id === user.id) {
+                        record = type === "time" ? submission[type].toFixed(2) : submission[type];
+                        pos = posCount;
+                        date = submission.submitted_at;
+                    }
+                    trueCount++;
+                    if (j < submissions.length-1 && submissions[j+1][type] !== submission[type]) {
+                        posCount = trueCount;
+                    }
+                    j++;
+                }
+                rankings[currentMode].push({
+                    level: currentLevel,
+                    record: record === -1 ? '' : record,
+                    date: date ? date.slice(0, 10) : date,
+                    position: pos === -1 ? '' : pos
+                });
+            });
+
             // finally, update react hooks
-            type === "score" ? setScoreMedals(medals) : setTimeMedals(medals);
+            const info = {
+                medals: medals,
+                total: total,
+                rankings: rankings
+            };
+            type === "score" ? setScoreInfo(info) : setTimeInfo(info);
             type === "score" ? setLoadingScore(false) : setLoadingTime(false);
-            console.log(medals);
+            console.log(info);
 
         } catch (error) {
             console.log(error);
@@ -219,14 +229,13 @@ const UserStatsInit = () => {
         game,
         totalTime, 
         user, 
-        scoreTotal,
-        scoreMedals,
-        timeTotal,
-        timeMedals,
-        setLoading, 
+        scoreInfo,
+        timeInfo,
+        statsType,
+        setLoading,
+        setStatsType, 
         checkForUser,
-        checkGame,
-        getTimeTotal,
+        levelsQuery,
         queryAndGetTotalsMedals
     };
 };

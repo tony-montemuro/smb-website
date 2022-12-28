@@ -323,7 +323,7 @@ const LevelboardInit = () => {
 					monkey_id: formValues.monkeyId,
 					proof: formValues.proof,
 					comment: formValues.comment,
-					live: true,
+					live: formValues.isLive,
 					approved: false
 				}, {
                     returning: "minimal", // Don't return the value after inserting
