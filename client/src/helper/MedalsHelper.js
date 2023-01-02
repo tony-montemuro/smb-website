@@ -53,7 +53,6 @@ const MedalsHelper = () => {
     // 3.) type: a string with two possible values: "score" or "time"
     // POSTCONDITIONS (1 returns):
     // 1.) the values of the userMap sorted by bronze, then silver, then gold, then platinum (in descending order)
-    // submissions gets sorted by level id in this function!
     const createMedalTable = (userMap, submissions, type) => {
         let i = 0;
         while (i < submissions.length) {

@@ -8,19 +8,15 @@ function Medals() {
     // hooks and functions from init file
     const { 
       game,
-      validGame,
       loading,
-      scoreLoading,
-      timeLoading,
-      isMisc, 
-      scoreMedals,
-      timeMedals,
+      medals,
       setLoading,
       checkGame,
-      medalTableQuery
+      medalTableQuery,
     } = MedalsInit();
 
-    // first, query to ensure that user is trying to load medal table of a legitimate game
+    // code that is executed when the page is first loaded.
+    // query to ensure that user is trying to load medal table of a legitimate game
     useEffect(() => {
       checkGame();
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -28,43 +24,39 @@ function Medals() {
 
     // if it is a valid game, we can query the score and time submissions to generate medal tables
     useEffect(() => {
-      if (validGame) {
+      if (game.abb) {
         medalTableQuery("score");
         medalTableQuery("time");
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [validGame]);
+    }, [game]);
 
     // once both queries have finished and medal tables are generated, update loading hook
     useEffect(() => {
-      if (!scoreLoading && !timeLoading) {
+      if (medals.score && medals.time) {
         setLoading(false);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [scoreLoading, timeLoading]);  
+    }, [medals]);  
       
+  // medals component
   return (
-    <div className="medals">
-        <div className="medals-header">
-            <h1>{ isMisc ? "Miscellaneous " + game.name : game.name } Medal Table</h1>
-        </div>
+    <>
+      <div className="medals-header">
+        <h1>{ game.isMisc ? "Miscellaneous " + game.name : game.name } Medal Table</h1>
         <Link to={ `/games/${ game.abb }` }>
           <button>Back to { game.name }'s Page</button>
         </Link>
-        <Link to={ `/games/${ game.abb }/${ isMisc ? "misc" : "main" }/totalizer` }>
-          <button> { isMisc ? "Miscellaneous " + game.name : game.name }'s Totalizer Page</button>
+        <Link to={ `/games/${ game.abb }/${ game.isMisc ? "misc" : "main" }/totalizer` }>
+          <button> { game.isMisc ? "Miscellaneous " + game.name : game.name }'s Totalizer Page</button>
         </Link>
-        <div className="medals-body">
-          <div className="medals-container">
-            <h2>Score Medal Table</h2>
-            <Board data={ scoreMedals } loading={ loading } />
-          </div>
-          <div className="medals-container">
-            <h2>Time Medal Table</h2>
-            <Board data={ timeMedals } loading={ loading } />
-          </div>
-        </div>
-    </div>
+      </div>
+      <div className="medals-body">
+        { Object.keys(medals).map(mode => {
+          return <Board key={ mode } data={ medals[mode] } loading={ loading } mode={ mode } />
+        })}
+      </div>
+    </>
   );
 };
 

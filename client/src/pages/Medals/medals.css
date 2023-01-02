@@ -1,3 +1,12 @@
+.medals-header {
+    text-align: center;
+}
+
+.medals-header button {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
 .medals-body {
     display: flex;
 }
@@ -19,7 +28,8 @@
 }
 
 .medals-container th {
-    text-align: left;
+    text-align: center;
+    border: 1px solid black;
     padding: 4px 8px;
 }
 
@@ -30,6 +40,11 @@
 
 .medals-container tr:nth-child(even) {
     background-color: #d3d3d3;
+}
+
+.boards-empty {
+    font-style: italic;
+    text-align: center;
 }
 
 .medals-user-info {
