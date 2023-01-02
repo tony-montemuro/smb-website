@@ -29,7 +29,7 @@ function Board({ data, loading, mode }) {
                     <tbody>
                         { data.length === 0 ?
                             <tr>
-                                <td colSpan={ 6 } className="boards-empty">There have been no live submissions to this game's category!</td>
+                                <td colSpan={ 6 } className="medals-empty">There have been no live submissions to this game's category!</td>
                             </tr>
                         :
                             data.map((val) => {
