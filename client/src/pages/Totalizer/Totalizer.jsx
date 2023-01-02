@@ -6,72 +6,57 @@ import TotalizerInit from './TotalizerInit';
 
 function Totalizer() {
     // hooks and functions from init file
-    const { 
+    const {
+      loading, 
       game,
-      loading,
-      isMisc, 
-      showAllScore,
-      showAllTime,
-      scoreTotals,
-      allScoreTotals,
-      timeTotals,
-      allTimeTotals,
-      setShowAllScore,
-      setShowAllTime,
-      totalsQuery,
-      getTimeTotal
+      totals,
+      setLoading,
+      getGame,
+      totalsQuery
     } = TotalizerInit();
 
-    // first function will directly fetch score totals for the game
-    // second function will first calculate the total time for the particuar game
-    // once this is complete, it will call totalsQuery with the totalTime
-    // second function is also used for path validation
+    // first, set up the game state
     useEffect(() => {
-        totalsQuery();
-        getTimeTotal();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []);  
+      getGame();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    
+    // once the game is verified, we can query totals tables for score & time
+    useEffect(() => {
+      if (game.abb) {
+        totalsQuery("score");
+        totalsQuery("time");
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [game]);
 
+    // once all the total tables have been generated, set loading to false
+    useEffect(() => {
+      if (totals.score && totals.time) {
+        console.log(totals);
+        setLoading(false);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [totals]);
+
+  // totalizer component
   return (
-    <div className="totalizer">
-        <div className="totalizer-header">
-            <h1>{ isMisc ? "Miscellaneous "+ game.name : game.name } Totalizer</h1>
-        </div>
+    <>
+      <div className="totalizer-header">
+        <h1>{ game.isMisc ? "Miscellaneous "+ game.name : game.name } Totalizer</h1>
         <Link to={ `/games/${ game.abb }` }>
           <button>Back to { game.name }'s Page</button>
         </Link>
-        <Link to={ `/games/${ game.abb }/${ isMisc ? "misc" : "main" }/medals` }>
-          <button>{ isMisc ? "Miscellaneous " + game.name : game.name }'s Medal Table Page</button>
+        <Link to={ `/games/${ game.abb }/${ game.isMisc ? "misc" : "main" }/medals` }>
+          <button>{ game.isMisc ? "Miscellaneous " + game.name : game.name }'s Medal Table Page</button>
         </Link>
-        <div className="totalizer-body">
-          <div className="totalizer-container">
-            <h2>Score Totals</h2>
-            <div className="totalizer-input">
-              <label htmlFor="all">Include non-live scores: </label>
-              <input 
-                  id="all"
-                  type="checkbox"
-                  checked={showAllScore}
-                  onChange={ () => setShowAllScore(!showAllScore) }
-              />
-            </div>
-            <Board isScore={ true } data={ showAllScore ? allScoreTotals : scoreTotals } loading={ loading } />
-          </div>
-          <div className="totalizer-container">
-            <h2>Time Totals</h2>
-            <div className="totalizer-input">
-              <label htmlFor="all">Include non-live times: </label>
-              <input 
-                  id="all"
-                  type="checkbox"
-                  checked={showAllTime}
-                  onChange={ () => setShowAllTime(!showAllTime) }
-              />
-            </div>
-            <Board isScore={ false } data={ showAllTime ? allTimeTotals : timeTotals } loading={ loading } />
-          </div>
-        </div>
-    </div>
+      </div>
+      <div className="totalizer-body">
+        { Object.keys(totals).map(type => {
+          return <Board key={ type } type={ type } data={ totals[type] } loading={ loading } />
+        })}
+      </div>
+    </>
   );
 };
 

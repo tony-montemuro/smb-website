@@ -1,24 +1,26 @@
-import { useState } from "react";
+import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import TotalizerHelper from "../../helper/TotalizerHelper";
 
 const TotalizerInit = () => {
-    // states
-    const [game, setGame] = useState({ name: "", abb: "" });
-    const [loading, setLoading] = useState(true);
-    const [isMisc, setIsMisc] = useState(false);
-    const [showAllScore, setShowAllScore] = useState(false);
-    const [showAllTime, setShowAllTime] = useState(false);
-    const [scoreTotals, setScoreTotals] = useState([]);
-    const [allScoreTotals, setAllScoreTotals] = useState([]);
-    const [timeTotals, setTimeTotals] = useState([]);
-    const [allTimeTotals, setAllTimeTotals] = useState([]);
-
-    // path variables
+    /* ===== VARIABLES ===== */
     const path = window.location.pathname;
     const abb = path.split("/")[2];
     const category = path.split("/")[3];
+    const isMisc = category === "misc" ? true : false;
+
+    /* ===== STATES & REDUCERS ===== */
+    const [loading, setLoading] = useState(true);
+    const [game, setGame] = useState({ name: "", abb: "", isMisc: isMisc });
+    const [totals, dispatchTotals] = useReducer((state, action) => {
+        return { 
+            ...state,
+            [action.type]: { all: action.allData, live: action.liveData }
+        };
+    }, { score: null, time: null });
+
+    /* ===== FUNCTIONS ===== */
 
     // helper functions
     const { createTotalMaps, addPositionToTotals } = TotalizerHelper();
@@ -27,73 +29,68 @@ const TotalizerInit = () => {
     const navigate = useNavigate();
 
     // this function is primarily used to get the total time for the game defined by abb. however, this function
-    // also makes sure that the path is valid, and updates the title state and isMisc state
-    const getTimeTotal = async () => {
+    // also makes sure that the path is valid, and updates the game state
+    const getGame = async () => {
         try {
             // query level table
             let { data: timeArr, status, error } = await supabase
                 .from("level")
                 .select(`
                     time, 
-                    misc,
-                    mode (game (name, abb)),
-                    chart_type
+                    mode (game (name, abb))
                 `)
                 .eq("game", abb)
+                .eq("misc", isMisc)
+                .in("chart_type", ["both", "time"]);
 
-            // error checks
+            // error handling
             if ((error && status === 406) || timeArr.length === 0) {
                 throw error ? error : { code: 1, message: "Error: invalid game." };
             }
 
-            // update states
-            const miscStatus = category === "misc" ? true : false;
-            setGame(timeArr[0].mode.game);
-            setIsMisc(miscStatus);
-
             // now, calculate the total time
             let timeTotal = 0;
             timeArr.forEach(level => {
-                if (level.misc === miscStatus && (level.chart_type === "both" || level.chart_type === "time")) {
-                    timeTotal += level.time;
-                }
+                timeTotal += level.time;
             });
 
-            // once we have this, we can query the submissions table
-            totalsQuery(timeTotal);
+            // update game state hook
+            const gameObj = timeArr[0].mode.game;
+            setGame({
+                ...game,
+                name: gameObj.name,
+                abb: gameObj.abb,
+                time: timeTotal
+            });
 
         } catch (error) {
             if (error.code === 1) {
                 console.log(error.message);
-                navigate("/");
             } else {
                 console.log(error);
                 alert(error.message);
             }
+            navigate("/");
         }
     };
 
     // this is the primary query done for this page. it queries all submissions for the game defined in abb
     // and determines the total time or score for each player based on the information recieved from the query
     // NOTE: this function is ran twice per page load: once for score totals, and once for time totals
-    const totalsQuery = async (timeTotal) => {
-        // initialize variables
-        const type = timeTotal === undefined ? "score" : "time";
-        const miscStatus = category === "misc" ? true : false;
-
+    const totalsQuery = async (type) => {
         try {
             // query submissions table
             let { data: submissions, status, error } = await supabase
-                .from(`${type}_submission`)
+                .from(`${ type }_submission`)
                 .select(`
                     profiles:user_id ( id, username, country, avatar_url ),
                     level (misc),
-                    ${type},
+                    ${ type },
                     live
                 `)
                 .eq("game_id", abb)
 
-            // error check
+            // error handling
             if (error && status !== 406) {
                 throw error;
             }
@@ -102,7 +99,7 @@ const TotalizerInit = () => {
             // the {mode} totals for only live records, and the {mode} totals
             // for all records. this for loop will also gather all unique profiles
             // based on the submissions
-            const { allTotalsMap, liveTotalsMap } = createTotalMaps(submissions, miscStatus, type, timeTotal);
+            const { allTotalsMap, liveTotalsMap } = createTotalMaps(submissions, isMisc, type, game.time);
 
             // from our map, let's get a sorted list of profile objects sorted by total. if the type is score, it will sort in descending order. if the type
             // is time, it will sort in ascending order
@@ -119,15 +116,12 @@ const TotalizerInit = () => {
             addPositionToTotals(liveTotals, type === "time" ? true : false);
             addPositionToTotals(allTotals, type === "time" ? true : false);
 
-            // finally, update react states
-            type === "score" ? setScoreTotals(liveTotals) : setTimeTotals(liveTotals);
-            type === "score" ? setAllScoreTotals(allTotals) : setAllTimeTotals(allTotals);
-            if (type === "time") {
-                setLoading(false);
-            }
+            // finally, update react reducer
+            dispatchTotals({ type: type, allData: allTotals, liveData: liveTotals });
 
-            console.log(liveTotals);
-            console.log(allTotals);
+            // console.log(type);
+            // console.log(liveTotals);
+            // console.log(allTotals);
 
         } catch(error) {
             console.log(error);
@@ -136,19 +130,12 @@ const TotalizerInit = () => {
     };
 
     return { 
+        loading, 
         game,
-        loading,
-        isMisc, 
-        showAllScore,
-        showAllTime,
-        scoreTotals,
-        allScoreTotals,
-        timeTotals,
-        allTimeTotals,
-        setShowAllScore,
-        setShowAllTime,
-        totalsQuery,
-        getTimeTotal
+        totals,
+        setLoading,
+        getGame,
+        totalsQuery
     };
 };
 

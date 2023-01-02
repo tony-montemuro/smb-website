@@ -1,3 +1,12 @@
+.totalizer-header {
+    text-align: center;
+}
+
+.totalizer-header button {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
 .totalizer-body {
     display: flex;
 }
@@ -7,11 +16,14 @@
 }
 
 .totalizer-container h2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
     text-align: center;
 }
 
 .totalizer-input {
     text-align: center;
+    margin-bottom: 10px;
 }
 
 .totalizer-container table {
@@ -23,8 +35,11 @@
 }
 
 .totalizer-container th {
-    text-align: left;
-    padding: 4px 8px;
+    border: 1px solid black;
+}
+
+.totalizer-container tr:nth-child(even) {
+    background-color: #d3d3d3;
 }
 
 .totalizer-container td {
@@ -32,8 +47,9 @@
     padding: 4px 8px;
 }
 
-.totalizer-container tr:nth-child(even) {
-    background-color: #d3d3d3;
+.totalizer-empty {
+    font-style: italic;
+    text-align: center;
 }
 
 .totals-user-info {
