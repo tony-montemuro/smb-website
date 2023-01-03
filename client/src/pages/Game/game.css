@@ -1,40 +1,59 @@
+.game-header {
+    text-align: center;
+}
+
 .game-header button {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.game-header h1 {
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .game-body {
     display: flex;
 }
 
-.level-select {
+.game-level-list {
     flex: 1;
 }
 
-.level-select table {
+.game-level-list table {
     table-layout: auto;
     width: 100%;
     border-collapse: collapse;
 }
 
-.lvl-time-score {
-    background-color: aqua;
-    line-height: 1px;
+.game-radio-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
-.lvl-time-score button {
-    margin: 0px 10px;
-}
-
-.mode-name {
+.game-mode-name {
     background-color: blue;
     cursor: pointer;
     width: 100%;
     line-height: 12px;
 }
 
-.mode-name td {
+.game-mode-name td {
     width: 100%;
+}
+
+.game-level {
+    background-color: aqua;
+    line-height: 1px;
+}
+
+.game-level button {
+    margin: 0px 10px;
+}
+
+.game-level-name {
+    width: 80%;
 }
 
 .game-boards {

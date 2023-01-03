@@ -1,80 +1,94 @@
 import "./game.css"
-
-import React from "react";
-import GameInit from "./GameInit";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import FrontendHelper from "../../helper/FrontendHelper";
+import GameInit from "./GameInit";
+import ModeTab from "./ModeTab";
 
 function Game() {
-  const { loading,
-          title, 
-          getModesLevels, 
-          isRadioSelected, 
-          handleModeChange, 
-          ModeLevelTable,
-          TotalizerBoards,
-          MedalTableBoards,
-          WorldRecordBoards
-        } = GameInit();
+  // radio button state
+  const [selectedRadioBtn, setSelectedRadioBtn] = useState("main");
 
+  // states and functions from the init file
+  const { loading, game, levels, getLevels } = GameInit();
+
+  // helper functions
+  const { capitalize } = FrontendHelper();
+
+  // code that executed when the page is first loaded. get all levels categorized by mode
+  // also checks to make sure the pathing is valid
   useEffect(() => {
-    getModesLevels();
+    getLevels();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // game component
   return (
-    <div className="game">
+    <>
       <div className="game-header">
-        <Link to={`/games`}>
+        <Link to={ `/games` }>
           <button>Back to Game Select</button>
         </Link>
-        <h1>{title}</h1>
+        <h1>{ game.name }</h1>
       </div>
-      <div className="game-middle">
-        <label htmlFor="main">Main Charts:</label>
-        <input 
-          id="main"
-          type="radio" 
-          name="mode"
-          value="main"
-          checked={isRadioSelected("main")}
-          onChange={handleModeChange}
-          disabled={loading}>
-        </input>
-        <label htmlFor="main">Miscellaneous Charts:</label>
-        <input 
-          id="misc"
-          type="radio" 
-          name="mode"
-          value="misc"
-          checked={isRadioSelected("misc")}
-          onChange={handleModeChange}
-          disabled={loading}>
-        </input>
-      </div>
-      {loading ? 
+      { loading ? 
         <p>Loading...</p>
         :
         <div className="game-body">
-          <div className="level-select">
+          <div className="game-level-list">
+            <div className="game-radio-buttons">
+              {[{ name: "main", alias: "Main" }, { name: "misc", alias: "Miscellaneous" }].map(category => {
+                return (
+                  <div key={ category.name } className={ `game-${ category.name }-btn` }>
+                    <label htmlFor={ category.name }>{ category.alias } Charts:</label>
+                    <input 
+                      type="radio" 
+                      value={ category.name }
+                      checked={ selectedRadioBtn === category.name }
+                      onChange={ (e) => setSelectedRadioBtn(e.target.value) }
+                      disabled={ loading }>
+                    </input>
+                  </div>
+                );
+              })}
+            </div>
             <table>
-              <ModeLevelTable />
+              { Object.keys(levels[selectedRadioBtn]).map(mode => {
+                return <ModeTab 
+                  key={ `${ mode }_${ selectedRadioBtn }` } 
+                  game={ game } mode={ mode } 
+                  levels={ levels[selectedRadioBtn][mode] } 
+                  category={ selectedRadioBtn } 
+                />
+              })}
             </table>
           </div>
           <div className="game-boards">
-            <h2>Score World Records</h2>
-            <WorldRecordBoards mode={ "Score" } />
-            <h2>Time World Records</h2>
-            <WorldRecordBoards mode={ "Time" } />
-            <h2>Medal Tables</h2>
-            <MedalTableBoards />
-            <h2>Totalizer</h2>
-            <TotalizerBoards />
+            { ["score" ,"time"].map(type => {
+              return (
+                <div key={ type } className={ `game-${ type }-wrs` }>
+                  <h2>{ capitalize(type) } World Records</h2>
+                  <Link to={ { pathname: `/games/${ game.abb }/${ selectedRadioBtn }/${ type }` } }>
+                    <p>{ capitalize(selectedRadioBtn) } { capitalize(type) } World Records</p>
+                  </Link>
+                </div>
+              );
+            })}
+            { [{ name: "medals", alias: "Medal Tables" }, { name: "totalizer", alias: "Totalizers" }].map(boardType => {
+              return (
+                <div key={ boardType.name } className={ `game-${ boardType.name }` }>
+                  <h2> { boardType.alias } </h2>
+                  <Link to={ { pathname: `/games/${ game.abb }/${ selectedRadioBtn }/${ boardType.name }` } }>
+                    <p>Score & Time { boardType.alias }</p>
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </div>
       }
-    </div>
-  )
-}
+    </>
+  );
+};
 
-export default Game
+export default Game;
