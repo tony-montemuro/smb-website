@@ -1,4 +1,4 @@
-.records h1 {
+.records-header h1 {
     width: 50%;
     margin: 10px auto;
     text-align: center;
@@ -8,7 +8,11 @@
     text-align: center;
 }
 
-.records table {
+.records-buttons button:hover {
+    cursor: pointer;
+}
+
+.records-body table {
     border-collapse: collapse;
     border: 1px solid black;
     margin: 25px auto;
@@ -16,17 +20,17 @@
     width: 50%;
 }
 
-.records-info-row {
-    font-weight: bold;
-}
-
-.records td {
+.records-body td {
     box-sizing: border-box;
     width: 33%;
     text-align: center;
     border: 1px solid black;
 }
 
-.stats-records-links:visited {
+.records-body a:visited {
     color: blue;
+}
+
+.records-info-row {
+    font-weight: bold;
 }

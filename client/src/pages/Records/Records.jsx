@@ -1,23 +1,26 @@
 import "./records.css";
-import React, { useEffect } from "react";
-import RecordsInit from "./RecordsInit";
-import FrontendHelper from "../../helper/FrontendHelper";
+import React, { Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
+import FrontendHelper from "../../helper/FrontendHelper";
+import RecordsInit from "./RecordsInit";
 
 function Records() {
-  // hooks and functions from init file
+  // states and functions from init file
   const { 
     loading,
     levels,
-    levelModes, 
+    recordTable, 
     game,
-    queryModeLevels,
+    queryLevels,
     addWorldRecords
   } = RecordsInit();
 
+  // helper functions
+  const { capitalize, cleanLevelName } = FrontendHelper();
+
   // code that is executed when the page is loaded
   useEffect(() => {
-    queryModeLevels();
+    queryLevels();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -29,49 +32,64 @@ function Records() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [levels]);
 
-  // helper functions
-  const { capitalize, cleanLevelName } = FrontendHelper();
-
   // records component
   return (
-    loading ?
-    <p>Loading...</p> 
-  : 
-    <div className="records">
-      <h1>{ game.name }: { capitalize(game.mode) } World Records</h1>
-      <div className="records-buttons">
-        <Link to={{pathname: `/games/${ game.abb }`}}>
-          <button>Back to { game.name }'s Page</button>
-        </Link>
+    <>
+      <div className="records-header">
+        <h1>{ game.name }: { capitalize(game.mode) } World Records</h1>
+        <div className="records-buttons">
+          <Link to={ { pathname: `/games/${ game.abb }` } }>
+            <button disabled={ loading }>Back to { game.name }'s Page</button>
+          </Link>
+        </div>
       </div>
-      {levelModes["modes"].map(mode => {
-        return (
-          <table key={mode}>
-            <tbody>
-              <tr>
-                <th></th>
-                <th>{ cleanLevelName(mode) }</th>
-                <th></th>
-              </tr>
-              <tr className="records-info-row">
-                <td>Level Name</td>
-                <td>Score</td>
-                <td>Player(s)</td>
-              </tr>
-              {levelModes[mode].map(level => {
-                return (
-                  <tr key={ level.level }>
-                    <td>{ cleanLevelName(level.level) } </td>
-                    <td>{ level.record }</td>
-                    <td>{ level.names }</td>
+      { loading ?
+        <p>Loading...</p> 
+      :
+        <div className="records-body">
+          { Object.keys(recordTable).map(mode => {
+            return (
+              <table key={ mode }>
+                <tbody>
+                  <tr>
+                    <th colSpan={ 3 }>{ cleanLevelName(mode) }</th>
                   </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        )
-      })}
-    </div>
+                  <tr className="records-info-row">
+                    <td>Level Name</td>
+                    <td>Score</td>
+                    <td>Player(s)</td>
+                  </tr>
+                  { recordTable[mode].map(level => {
+                    return (
+                      <tr key={ level.level }>
+                        <td>
+                          <Link
+                            className="records-level-link" 
+                            to={ { pathname: `/games/${ game.abb }/${ game.category }/${ game.mode }/${ level.level }` } } 
+                          >
+                            { cleanLevelName(level.level) }
+                          </Link>
+                        </td>
+                        <td>{ level.record }</td>
+                        <td>{ level.name.map((user, index) => {
+                          return (
+                            <Fragment key={ user.id }>
+                              <Link to={ `/user/${user.id}` }>{ user.username }</Link>
+                              { index < level.name.length-1 ? ", " : null }
+                            </Fragment>
+                          );
+                        })}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            );
+          })}
+        </div>
+      }
+    </>
   );
 };
 

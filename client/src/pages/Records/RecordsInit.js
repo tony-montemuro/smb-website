@@ -1,27 +1,31 @@
 import { useState } from "react";
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 const RecordsInit = () => {
-    // variables
+    /* ===== VARIABLES ===== */
     const path = window.location.pathname;
 	const pathArr = path.split("/");
     const abb = pathArr[2];
     const category = pathArr[3];
     const mode = pathArr[4];
 
-    // states
+    /* ===== STATES ===== */
     const [loading, setLoading] = useState(true);
     const [levels, setLevels] = useState([]);
-    const [levelModes, setLevelModes] = useState({});
-    const [game, setGame] = useState({});
+    const [recordTable, setRecordTable] = useState({});
+    const [game, setGame] = useState({ name: "", mode: "", abb: "" });
+
+    /* ===== FUNCTIONS ===== */
 
     // navigate used for redirecting
     const navigate = useNavigate();
 
-    const queryModeLevels = async() => {
+    // function that is called upon page load. query the levels table
+    // for list of levels specified by the path
+    const queryLevels = async() => {
         try {
-            // next, query the levels table
+            // first, query the levels table
             const isMisc = category === "misc" ? true : false;
             const { data: levelList, error, status } = await supabase
                 .from("level")
@@ -42,13 +46,13 @@ const RecordsInit = () => {
 
             // update react state hook
             const gameObj = levelList[0].mode.game;
-            setLevels(levelList);
             setGame({
                 name: gameObj.name, 
                 abb: gameObj.abb, 
                 mode: mode,
                 category: category
             });
+            setLevels(levelList);
             console.log(levelList);
             
         } catch(error) {
@@ -62,8 +66,12 @@ const RecordsInit = () => {
         }
     };
 
+    // once levels have been loaded, we can construct record table. the
+    // recordTable object has a field for each level. each field contains
+    // the record information for that level (if there is one)
     const addWorldRecords = async() => {
         try {
+            // query records table based on pathing
             const isMisc = category === "misc" ? true : false;
             const { data: records, error, status } = await supabase
                 .from(`${mode}_submission`)
@@ -84,10 +92,10 @@ const RecordsInit = () => {
                 throw error;
             }
 
-            // sort records array by level id, and construct base levelModes obj
+            // sort records array by level id, and construct base recordTable obj
             records.sort((a, b) => a.level.id - b.level.id);
             const modes = [...new Set(levels.map(level => level.mode.name))];
-            const obj = { modes: modes };
+            const obj = {};
             modes.forEach(mode => {
                 obj[mode] = [];
             });
@@ -97,27 +105,30 @@ const RecordsInit = () => {
             for (let i = 0; i < levels.length; i++) {
                 const currentLevel = levels[i].name, currentMode = levels[i].mode.name;
                 const start = j;
-                let record = -1, names = '';
+                let record = -1;
+                const names = [];
                 while (j < records.length && records[j].level.name === currentLevel) {
                     if (records[j][mode] === records[start][mode]) {
+                        const user = records[j].profiles;
                         record = records[j][mode];
-                        names += records[j].profiles.username + ", ";
+                        names.push({ username: user.username, id: user.id });
+                        // names += records[j].profiles.username + ", ";
                     }
                     j++;
                 }
-                if (names) {
-                    names = names.slice(0, -2);
+                if (names.length > 0) {
+                    // names = names.slice(0, -2);
                     record = mode === "time" ? record.toFixed(2) : record;
                 }
                 obj[currentMode].push({
                     level: currentLevel, 
                     record: record === -1 ? '' : record, 
-                    names: names
+                    name: names
                 });
             }
 
             // update react state hooks
-            setLevelModes(obj);
+            setRecordTable(obj);
             setLoading(false);
             console.log(records);
             console.log(obj);
@@ -129,10 +140,10 @@ const RecordsInit = () => {
 
     return { 
         loading,
-        levels,
-        levelModes, 
         game,
-        queryModeLevels,
+        levels,
+        recordTable, 
+        queryLevels,
         addWorldRecords,
     };
 };
