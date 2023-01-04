@@ -38,7 +38,7 @@ function Board({ data, loading, mode }) {
                                     <td>{ val.position }</td>
                                     <td>
                                         <div className="medals-user-info">
-                                            <div><SimpleAvatar url={ val.avatar_url } size={ 50 }/></div>
+                                            <div className="medals-user-image"><SimpleAvatar url={ val.avatar_url }/></div>
                                             {val.Country ?
                                                 <div><span className={ `fi fi-${ val.country.toLowerCase() }` }></span></div>
                                                 :

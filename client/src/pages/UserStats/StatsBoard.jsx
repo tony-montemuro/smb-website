@@ -34,7 +34,7 @@ function StatsBoard({ info, user, type, game }) {
                             <td>{ total.position }</td>
                             <td>
                                 <div className="user-stats-info">
-                                    <div><SimpleAvatar url={ user.avatar_url } size={ 50 }/></div>
+                                    <div className="stats-table-image"><SimpleAvatar url={ user.avatar_url }/></div>
                                     {user.country ?
                                         <div><span className={ `fi fi-${ user.country.toLowerCase() } `}></span></div>
                                         :
@@ -75,7 +75,7 @@ function StatsBoard({ info, user, type, game }) {
                             <td>{ medals.position }</td>
                             <td>
                                 <div className="user-stats-info">
-                                    <div><SimpleAvatar url={ user.avatar_url } size={ 50 }/></div>
+                                    <div className="stats-table-image"><SimpleAvatar url={ user.avatar_url }/></div>
                                     {user.country ?
                                         <div><span className={ `fi fi-${ user.country.toLowerCase() }` }></span></div>
                                         :

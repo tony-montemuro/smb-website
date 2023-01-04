@@ -23,13 +23,11 @@ function SimpleAvatar( { url, size } ) {
       }
 
     return (
-        <div className="simple-avatar" style={{ width: size }}>
-            <img
-                src={avatarUrl ? avatarUrl : `https://place-hold.it/${size}x${size}`}
-                alt={avatarUrl ? 'Avatar' : 'No image'}
-                style={{ height: size, width: size }}> 
-            </img>
-        </div>
+        <img
+            src={avatarUrl ? avatarUrl : `https://place-hold.it/${size}x${size}`}
+            alt={avatarUrl ? 'Avatar' : 'No image'}
+            style={ { height: '100%', width: '100%' } }> 
+        </img>
     )
 }
 

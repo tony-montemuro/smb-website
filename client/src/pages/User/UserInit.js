@@ -1,25 +1,20 @@
 import { useState } from "react";
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 const UserInit = () => {
-    //variables
+    /* ===== VARIABLES ===== */
     const path = window.location.pathname;
     const pathArr = path.split("/");
     const userId = pathArr[2];
     const navigate = useNavigate();
 
-    // states
-    const [username, setUsername] = useState(null);
-    const [country, setCountry] = useState(null);
-    const [youtube_url, setYoutubeUrl] = useState(null);
-    const [twitch_url, setTwitchUrl] = useState(null);
-    const [avatar_url, setAvatarUrl] = useState(null);
-    const [loadingUser, setLoadingUser] = useState(true);
-    const [loadingGameList, setLoadingGameList] = useState(true);
-    const [gameList, setGameList] = useState([]);
-    const [customGameList, setCustomGameList] = useState([]);
+    /* ===== STATES ===== */
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [games, setGames] = useState(null);
+
+    /* ===== FUNCTIONS ===== */
 
     // function used to load a user from the database given the user id in the url
     const loadUser = async () => {
@@ -37,30 +32,26 @@ const UserInit = () => {
                 .eq("id", userId)
                 .single();
 
+            // error hanndling
             if (error || status === 406) {
                 throw error;
             }
 
+            // update user hook
+            setUser(userData);
             console.log(userData);
-
-            // update hooks for each field of data
-            setUsername(userData.username);
-            setYoutubeUrl(userData.youtube_url);
-            setTwitchUrl(userData.twitch_url);
-            setAvatarUrl(userData.avatar_url);
-            setCountry(userData.country);
 
         } catch(error) { 
             if (error.code === '22P02' || error.code === 'PGRST116') {
-                navigate("/");
+                console.log("Error: Invalid user.");
             } else {
                 console.log(error);
-                alert(error);
+                alert(error.message);
             }
+            navigate("/");
         }
-    }
+    };
 
-    // function used to query the list of games
     // function that queries the list of games from the database
     const queryGameList = async () => {
         try {
@@ -70,65 +61,36 @@ const UserInit = () => {
                 .select("*")
                 .order("name");
 
+            // error handling
             if (error && status !== 406) {
                 throw error;
             }
 
             // now, separate the games into normal and custom levels
-            let games = [];
-            let customGames = [];
-            gameArr.forEach(game => {
-                if (game.custom) {
-                    customGames.push(game);
-                } else {
-                    games.push(game);
-                }
-            });
+            let games = [], customGames = [];
+            gameArr.forEach(game => game.custom ? customGames.push(game) : games.push(game));
 
-            // finally, update states
+            // finally, update game state hook
             console.log("Game List");
             console.log(games);
             console.log("Custom List");
             console.log(customGames);
-            setGameList(games);
-            setCustomGameList(customGames);
+            setGames({ main: games, custom: customGames });
     
         } catch (error) {
+            console.log(error);
             alert(error.message);
-        } finally {
-            setLoadingGameList(false);
+            navigate("/");
         }
-    }
-
-    const GameBody = ({ list }) => {
-        return (
-            <tbody>
-                {list.map(game => {
-                    return (
-                        <tr key={ game.name }>
-                            <td>{ game.name }</td>
-                            <td><Link className="user-stats-link" to={ { pathname: `${game.abb}/main` } }>Main</Link></td>
-                            <td><Link className="user-stats-link" to={ { pathname: `${game.abb}/misc` } }>Misc</Link></td>
-                        </tr>
-                    );
-                })}
-            </tbody>
-        );
     };
 
-    return { username,
-             country,
-             youtube_url, 
-             twitch_url, 
-             avatar_url, 
-             loadingUser,
-             loadingGameList, 
-             gameList,
-             customGameList,
-             setLoadingUser,
-             loadUser,
-             queryGameList,
-             GameBody
+    return {  
+        user,
+        loading,
+        games,
+        setLoading,
+        loadUser,
+        queryGameList
     }
 }
 

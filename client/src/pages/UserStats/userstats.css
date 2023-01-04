@@ -40,6 +40,11 @@
     border-collapse: collapse;
 }
 
+.stats-table-image {
+    width: 50px;
+    height: 50px;
+}
+
 .stats-records table {
     border-collapse: collapse;
     border: 1px solid black;

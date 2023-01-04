@@ -47,7 +47,7 @@ function Board({ game, records, state, isMod }) {
                             <td>{ val.position }</td>
                             <td>
                                 <div className="levelboard-user-info">
-                                    <div><SimpleAvatar url={ val.avatar_url } size={50}/></div>
+                                    <div className="levelboard-user-image"><SimpleAvatar url={ val.avatar_url }/></div>
                                     { val.country ?
                                         <div><span className={`fi fi-${val.country.toLowerCase()}`}></span></div>
                                         :
