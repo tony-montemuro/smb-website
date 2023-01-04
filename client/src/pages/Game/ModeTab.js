@@ -18,7 +18,7 @@ function ModeTab({ game, mode, levels, category }) {
             </tr>
             { levels.map(level => {
                 return show ?
-                    <tr className="game-level">
+                    <tr key={ level.id } className="game-level">
                         <td className="game-level-name">
                             <p>{ cleanLevelName(level.id) }</p>
                         </td>
