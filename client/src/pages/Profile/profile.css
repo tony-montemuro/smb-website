@@ -1,24 +1,38 @@
-.profile {
+.profile-header {
     margin-left: 10px;
 }
 
-.profile-entry {
+.profile-body {
+    margin-left: 10px;
+}
+
+.profile-body form button {
+    margin-bottom: 10px;
+}
+
+.profile-info-entry {
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-form button {
-    margin-bottom: 10px;
-}
-
-.p-update {
+.profile-info-update {
     margin: 0;
 }
 
-.profile-btns {
+.profile-avatar-form input[type="file"] {
+    display: block;
     margin-top: 10px;
 }
 
-.profile-btn {
+.profile-avatar-form img {
+    width: 150px;
+    height: 150px;
+}
+
+.profile-avatar-form button {
+    margin-top: 10px;
+}
+
+.profile-btns button {
     margin-right: 5px;
 }

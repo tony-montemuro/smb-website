@@ -43,7 +43,7 @@ function App() {
   
         // if data is not empty, this means match was found -> user is mod
         if (mods.length > 0) {
-          console.log(mods);
+          //console.log(mods);
           setIsMod(true);
         } else {
           setIsMod(false);

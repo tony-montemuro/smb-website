@@ -1,107 +1,137 @@
 import "./profile.css";
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import ProfileInit from "./ProfileInit";
-import Avatar from "../../components/Avatar/Avatar";
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 function Profile() {
-    const { loading,
-            updating,
-            username,
-            youtube_url,
-            twitch_url,
-            avatar_url, 
-            usernameError,
-            isSubmit,
-            isUpdated,
-            setUsername, 
-            setYoutubeUrl,
-            setTwitchUrl,
-            setAvatarUrl, 
-            getProfile, 
-            handleSubmit,
-            updateProfile,
-            navToProfile, 
-            signOut,
-            CountrySelect
+    // states and functions from the init file
+    const { 
+        loading,
+        userForm,
+        avatarForm,
+        avatarRef,
+        setLoading,
+        getProfile, 
+        getCountries,
+        downloadImage,
+        handleChange,
+        updateUserInfo,
+        avatarSubmit,
+        signOut
     } = ProfileInit();
 
+    // code that is executed when the page is first loaded
     useEffect(() => {
         getProfile();
+        getCountries();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // code that is executed once both the profile and countries queries have completed
     useEffect(() => {
-        if (usernameError.length === 0 && isSubmit) {
-            updateProfile();
+        if (avatarForm.avatar_url && userForm.countryList.length > 0) {
+            setLoading(false);
+            downloadImage(avatarForm.avatar_url);
+            console.log(userForm);
+            console.log(avatarForm);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [usernameError]);
+    }, [avatarForm.avatar_url, userForm.countryList]);
 
   return (
-    <div className="profile">
-        <h1>Edit Your Profile</h1>
-        {loading ? (
+    <>
+        <div className="profile-header">
+            <h1>Edit Your Profile</h1>
+        </div>
+        { loading ? (
             "Loading..."
          ) : 
          <div className="profile-body">
-            <form onSubmit={handleSubmit}>
-                <div className="profile-entry">
+            <h2>Edit User Information</h2>
+            <form className="profile-info-form" onSubmit={ updateUserInfo }>
+                <div className="profile-info-entry">
                     <label htmlFor="username">Username: </label>
                     <input 
                         id="username"
                         type="text"
                         placeholder="username"
-                        value={username || ""}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={ userForm.user.username }
+                        onChange={ handleChange }
                     />
+                    { userForm.error.username ? <p>{ userForm.error.username }</p> : null }
                 </div>
-                {usernameError === "initState" || usernameError === "" ? "" : <p>{usernameError}</p>}
-                <label htmlFor="countryId">Country (optional): </label>
-                <CountrySelect />
-                <div className="profile-entry">
-                    <label htmlFor="youtube-url">YouTube URL (optional): </label>
+                <div className="profile-info-entry">
+                    <label htmlFor="country">Country (optional): </label>
+                    <select 
+                        id="country"
+                        value= { userForm.user.country }
+                        onChange={ handleChange }
+                    >
+                        <option key={ "null" } value={ "" }>--</option>
+                        { userForm.countryList.map(country => (
+                            <option key={ country.iso2 } value={ country.iso2 }>{ country.name }</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="profile-info-entry">
+                    <label htmlFor="youtube_url">YouTube URL (optional): </label>
                     <input
-                        id="youtube-url"
+                        id="youtube_url"
                         type="url"
                         placeholder="https://www.youtube.com/yourChannelUrl"
-                        value={youtube_url || ""}
-                        onChange={(e) => setYoutubeUrl(e.target.value)}
+                        value={ userForm.user.youtube_url }
+                        onChange={ handleChange }
                     />
                 </div>
-                <div className="profile-entry">
-                    <label htmlFor="twitch-url">Twitch URL (optional): </label>
+                <div className="profile-info-entry">
+                    <label htmlFor="twitch_url">Twitch URL (optional): </label>
                     <input 
-                        id="twitch-url"
+                        id="twitch_url"
                         type="url"
                         placeholder="https://www.twitch.tv/yourTwitch"
-                        value={twitch_url || ""}
-                        onChange={(e) => setTwitchUrl(e.target.value)}
+                        value={ userForm.user.twitch_url }
+                        onChange={ handleChange }
                     />
                 </div>
-                <div className="profile-entry">
-                    <Avatar 
-                        url={ avatar_url }
-                        size={ 150 }
-                        userId={ supabase.auth.user().id }
-                        onUpload={ (url) => {
-                            setAvatarUrl(url);
-                        } }
-                    />
-                </div>
-                <div>
-                    <button disabled={updating}>Update Profile</button>
-                    {isUpdated ? <p className="p-update">Your profile has been updated.</p> : ""}
-                </div>
+                <button disabled={ userForm.updating }>Update Profile</button>
+                { userForm.updated ? 
+                    <p className="profile-info-update">Your profile has been updated.</p>
+                :   
+                    null
+                }
             </form>
+            <h2>Update Avatar</h2>
+            <form className="profile-avatar-form" onSubmit={ avatarSubmit }>
+            <p><b>Note:</b> Must be JPEG or PNG, and cannot exceed 5 MB. If your avatar does not update immediately, give it some time.</p>
+                <img
+                    src={ avatarForm.avatarLink ? avatarForm.avatarLink : `https://place-hold.it/${150}x${150}` }
+                    alt={ avatarForm.avatarLink ? 'Avatar' : 'No image' }
+                />
+                <label htmlFor="avatar-update"></label>
+                <input
+                    type="file"
+                    id="avatar-update"
+                    accept=".jpg,.jpeg,.png"
+                    ref={ avatarRef }
+                />
+                <button disabled={ avatarForm.updating }>Save</button>
+                { avatarForm.error ? 
+                    <p> { avatarForm.error }</p>    
+                :
+                    null
+                }
+            </form>
+            <h2>Options</h2>
             <div className="profile-btns">
-                <button className="profile-btn" onClick={navToProfile}>View Profile</button>
-                <button className="profile-btn" onClick={signOut}> Sign Out</button>
+                <Link to={ `/user/${userForm.user.id}` }>
+                    <button>View Profile</button>
+                </Link>
+                <button onClick={ signOut }> Sign Out</button>
             </div>   
          </div>
         }
-    </div>
-  )
-}
+    </>
+  );
+};
 
 export default Profile;
