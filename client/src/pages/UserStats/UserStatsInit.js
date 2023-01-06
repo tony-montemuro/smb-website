@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useReducer } from "react";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import { useNavigate } from "react-router-dom";
-import TotalizerHelper from "../../helper/TotalizerHelper";
 import MedalsHelper from "../../helper/MedalsHelper";
+import TotalizerHelper from "../../helper/TotalizerHelper";
 
 const UserStatsInit = () => {
-    // variables
+    /* ===== VARIABLES ===== */
     const path = window.location.pathname;
     const pathArr = path.split("/");
     const userId = pathArr[2];
@@ -13,17 +13,15 @@ const UserStatsInit = () => {
     const category = pathArr[4];
     const navigate = useNavigate();
 
-    // states
+    /* ===== STATES & REDUCERS ===== */
     const [loading, setLoading] = useState(true);
-    const [loadingScore, setLoadingScore] = useState(true);
-    const [loadingTime, setLoadingTime] = useState(true);
     const [game, setGame] = useState(null);
-    const [levelLists, setLevelLists] = useState({});
-    const [totalTime, setTotalTime] = useState(null);
     const [user, setUser] = useState(null);
-    const [scoreInfo, setScoreInfo] = useState(null);
-    const [timeInfo, setTimeInfo] = useState(null);
-    const [statsType, setStatsType] = useState("Score");
+    const [board, dispatchboard] = useReducer((state, action) => {
+        return { ...state, [action.field]: action.data };
+    }, { type: "score", score: null, time: null });
+
+    /* ===== FUNCTIONS ===== */
 
     // helper functions
     const { createTotalMaps, addPositionToTotals } = TotalizerHelper();
@@ -88,15 +86,16 @@ const UserStatsInit = () => {
 
             // now, calculate timeTotal from timeLevels array
             let timeTotal = 0;
-            timeLevels.forEach(level => {
-                timeTotal += level.time;
-            });
+            timeLevels.forEach(level => timeTotal += level.time);
 
             // update react hooks
-            setTotalTime(timeTotal);
-            setLevelLists({ score: scoreLevels, time: timeLevels });
-            setGame({ ...allLevels[0].mode.game, category: category });
-            console.log(timeTotal);
+            setGame({ 
+                ...allLevels[0].mode.game, 
+                category: category,
+                score: scoreLevels,
+                time: timeLevels,
+                timeTotal: timeTotal
+            });
             
         } catch(error) {
             if (error.code === 1) {
@@ -109,7 +108,9 @@ const UserStatsInit = () => {
         }
     }
 
-    const queryAndGetTotalsMedals = async (timeTotal) => {
+    // function that queries the set of submissions based on the path, and calculates the following:
+    // total {type}, medal count for {type}, and the record and position of each level in {type}
+    const queryAndCalc = async (timeTotal) => {
         // initialize variables
         const type = timeTotal === undefined ? "score" : "time";
         const miscStatus = category === "misc" ? true : false;
@@ -137,7 +138,7 @@ const UserStatsInit = () => {
 
             // first, let's start with totalizer
             const submissionCpy = [...submissions];
-            const { liveTotalsMap } = createTotalMaps(submissions, miscStatus, type, totalTime);
+            const { liveTotalsMap } = createTotalMaps(submissions, miscStatus, type, timeTotal);
 
             // sort the liveTotals array by total field
             let liveTotals = [];
@@ -173,15 +174,13 @@ const UserStatsInit = () => {
             }
 
             // now, it's time to do player rankings
-            const modes = [...new Set(levelLists[type].map(level => level.mode.name))];
-            const rankings = { modes: modes };
-            modes.forEach(mode => {
-                rankings[mode] = [];
-            });
+            const modes = [...new Set(game[type].map(level => level.mode.name))];
+            const rankings = {};
+            modes.forEach(mode => {rankings[mode] = []});
 
             // get players ranking on each stage
             let j = 0;
-            levelLists[type].forEach(level => {
+            game[type].forEach(level => {
                 const currentLevel = level.name, currentMode = level.mode.name;
                 let record = -1, pos = -1, date = '';
                 let trueCount = 1, posCount = trueCount;
@@ -212,9 +211,7 @@ const UserStatsInit = () => {
                 total: total,
                 rankings: rankings
             };
-            type === "score" ? setScoreInfo(info) : setTimeInfo(info);
-            type === "score" ? setLoadingScore(false) : setLoadingTime(false);
-            console.log(info);
+            dispatchboard({ field: type, data: info });
 
         } catch (error) {
             console.log(error);
@@ -224,19 +221,14 @@ const UserStatsInit = () => {
 
     return { 
         loading,
-        loadingScore,
-        loadingTime,
         game,
-        totalTime, 
         user, 
-        scoreInfo,
-        timeInfo,
-        statsType,
-        setLoading,
-        setStatsType, 
+        board,
+        setLoading, 
+        dispatchboard,
         checkForUser,
         levelsQuery,
-        queryAndGetTotalsMedals
+        queryAndCalc 
     };
 };
 

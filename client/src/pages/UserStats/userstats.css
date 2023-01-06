@@ -1,40 +1,40 @@
-.user-stats-header {
+.stats-header {
     text-align: center;
 }
 
-.user-stats-radio {
+.stats-radio {
     margin-top: 10px;
 }
 
-.stats-board-body {
+.stats-body {
     text-align: center;
     flex: 1;
 }
 
-.stats-table-container {
+.stats-table {
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
 }
 
-.stats-board table {
+.stats-table table {
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
 }
 
-.stats-board th {
+.stats-table th {
     border: 1px solid black;
     text-align: left;
     padding: 4px 8px;
 }
 
-.stats-board td {
+.stats-table td {
     border: 1px solid black;
     padding: 4px 8px;
 }
 
-.user-stats-info {
+.stats-user-info {
     display: flex;
     flex-direction: row;
     border-collapse: collapse;
@@ -64,4 +64,8 @@
     width: 25%;
     text-align: center;
     border: 1px solid black;
+}
+
+.stats-records a {
+    color: blue;
 }
