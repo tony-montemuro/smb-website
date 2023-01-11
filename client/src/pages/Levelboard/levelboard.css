@@ -8,23 +8,36 @@
     justify-content: center;
 }
 
+.levelboard-title h1 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .levelboard-title button {
     appearance: none;
-    margin-top: 30px;
+    margin-top: 19px;
     margin-left: 10px;
     margin-right: 10px;
     outline: none;
+}
+
+.levelboard-buttons {
+    margin-bottom: 5px;
+}
+
+.levelboard-buttons > * {
+    margin: 3px;
 }
 
 .levelboard-container table {
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
-  }
+}
   
 .levelboard-container th {
     border: 1px solid black;
-    text-align: left;
+    text-align: center;
     padding: 4px 8px;
 }
 
@@ -48,11 +61,31 @@
     border-collapse: collapse;
 }
 
-.levelboard-user-image {
+/* .levelboard-user-image {
     width: 50px;
     height: 50px;
-}
+} */
 
 .levelboard-submit {
     text-align: center;
+}
+
+.levelboard-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.levelboard-popup-inner {
+    position: relative;
+    padding: 32px;
+    width: 100%;
+    max-width: 640px;
+    background-color: #fff;
 }

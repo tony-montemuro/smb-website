@@ -1,191 +1,219 @@
-// styling
 import "./levelboard.css";
-
-// js imports
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
-import LevelboardInit from "./LevelboardInit";
-import Board from "./Board";
 import FrontendHelper from "../../helper/FrontendHelper";
+import LevelboardInit from "./LevelboardInit";
 import Popup from "./Popup";
+import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
 function Levelboard({ isMod }) {
+	// variables
+	const imgLength = 50;
+
 	// hooks and functions from init file
 	const { 
 		loading,
-		recordsLoading,
 		game,
-		records,
-		monkeys,
-		adjacent,
-		formValues,
-		formErrors,
-		currentUserSubmission,
-		boardState,
-		popup,
-		isSubmit,
+		board,
+		form,
 		setLoading,
-		setBoardState,
-		setPopup,
-		setIsSubmit,
+		setBoard,
+		reset,
 		checkPath,
 		queryMonkey,
 		querySubmissions,
-		getAdjacentLevelIds,
-		submit,
 		handleChange,
-		handleSubmit
+		setBoardDelete,
+		submitRecord
 	} = LevelboardInit();
+
+	// helper functions
+	const { capitalize, cleanLevelName } = FrontendHelper();
 
 	// code that is executed upon page load, or when the URL is changed using next/previous buttons
 	const location = useLocation();
 	useEffect(() => {
-		setLoading(true);
-		checkPath();
-		queryMonkey();
+		reset();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.pathname]);
+
+	// code that is executed once the loading, form, and board states are all their initial values
+	useEffect(() => {
+		if (loading && !board.records && !form.values) {
+			checkPath();
+			queryMonkey();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [loading, board.records, form.values]);
 
 	// code that is executed once the path is verfied to be accurate
 	useEffect(() => {
 		if (game) {
 			querySubmissions();
-			getAdjacentLevelIds();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [game]);
 
 	// code that is executed when both queries are finished and data is collected
 	useEffect(() => {
-		if (!recordsLoading && adjacent) {
+		if (board.records && form.monkey) {
 			setLoading(false);
+			console.log(board);
+			console.log(form);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [recordsLoading, adjacent]);
+	}, [board.records, form.monkey]);
 
-	// code that is executed when a user attempts to submit a run
-	useEffect(() => {
-		// if there are no errors, and isSubmit is set to true, then submit the form values
-		// to database
-		if (Object.keys(formErrors).length === 0 && isSubmit) {
-			submit();
-		} else {
-			setIsSubmit(false);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [formErrors]);
-
-	// Helper functions
-	const { capitalize, cleanLevelName } = FrontendHelper();
-
-	// our main page component
+	// levelboard component
 	return (
-		<div className="levelboard">
-			{loading ? 
-			<p>Loading...</p> 
+		<>
+			{ loading ? 
+				<p>Loading...</p> 
 			:
-			<>
-			<div className="levelboard-header">
-				<div className="levelboard-title">
-					{ adjacent.prev ?
-						<Link to={`/games/${ game.abb }/${ game.category }/${ game.mode }/${ adjacent.prev }`}>
-							<button disabled={ isSubmit }>←Prev</button>
-						</Link>
-					:	
-						""
-					}
-					<h1>{ capitalize(game.mode) }: { cleanLevelName(game.levelName) }</h1>
-					{ adjacent.next ?
-						<Link to={`/games/${ game.abb }/${ game.category }/${ game.mode }/${ adjacent.next }`}>
-							<button disabled={ isSubmit }>Next→</button>
-						</Link>
+				<>
+					<div className="levelboard-header">
+						<div className="levelboard-title">
+							{ board.adjacent.prev ?
+								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.mode }/${ board.adjacent.prev }` }>
+									<button disabled={ form.submitting }>←Prev</button>
+								</Link>
+							:	
+								null
+							}
+							<h1>{ capitalize(game.mode) }: { cleanLevelName(game.levelName) }</h1>
+							{ board.adjacent.next ?
+								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.mode }/${ board.adjacent.next }` }>
+									<button disabled={ form.submitting }>Next→</button>
+								</Link>
+							:
+								null
+							}
+						</div>
+						<div className="levelboard-buttons">
+							<Link to={ `/games/${ game.abb }` }>
+								<button disabled={ form.submitting }>Back to Level Select</button>
+							</Link>
+							{ game.chart_type === "both" ?
+								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.otherMode }/${ game.levelName }` }>
+									<button disabled={ form.submitting }>{ capitalize(game.otherMode) } Board</button>
+								</Link>
+							:
+								null
+							}
+							<Link to={ `/games/${ game.abb }/${ game.category }/totalizer` }>
+								<button disabled={ form.submitting }>Totalizer Table</button>
+							</Link>
+							<Link to={ `/games/${ game.abb }/${ game.category }/medals` }>
+								<button disabled={ form.submitting }>Medal Table</button>
+							</Link>
+							<label htmlFor="showLive">Live-{ game.mode }s only: </label>
+							<input
+								id="showLive"
+								type="checkbox"
+								checked={ board.state === "live" ? true : false }
+								onChange={ () => setBoard({ ...board, state: board.state === "live" ? "all" : "live" }) }
+								disabled={ form.submitting }
+							/>
+						</div>
+					</div>
+					<div className="levelboard-container">
+						<table>
+							<thead>
+								<tr>
+									<th>Position</th>
+									<th>Name</th>
+									<th>{ capitalize(game.mode) }</th>
+									<th>Date</th>
+									<th>Monkey</th>
+									<th>Proof</th>
+									<th>Comment</th>
+									<th>Approved</th>
+									{ isMod ? <th>Delete</th> : null }
+								</tr>
+							</thead>
+							<tbody>
+							{ board.records[board.state].map((val) => {
+								return <tr key={ `${ val.profiles.username }-row` }>
+										<td>{ val.position }</td>
+										<td>
+											<div className="levelboard-user-info">
+												<div className="levelboard-user-image" style={{ width: imgLength, height: imgLength }}>
+													<SimpleAvatar url={ val.profiles.avatar_url } size={ imgLength }/>
+												</div>
+													{ val.profiles.country ?
+														<div><span className={ `fi fi-${ val.profiles.country.toLowerCase() }` }></span></div>
+													:
+														null
+												}
+												<div><Link to={ `/user/${ val.user_id }` }>{ val.profiles.username }</Link></div>
+											</div>
+										</td>
+										<td>{ val[game.mode] }</td>
+										<td>{ val.submitted_at.slice(0, 10) }</td>
+										<td>{ val.monkey.monkey_name }</td>
+										<td>{ val.proof !== "none" ? <a href={ val.proof } target="_blank" rel="noopener noreferrer">☑️</a> : null }</td>
+										<td>{ val.comment }</td>
+										<td>{ val.approved ? "True" : "False" }</td>
+										{ isMod ? <td><button onClick={ () => setBoardDelete(val.user_id) }>❌</button></td> : null }
+									</tr>
+								})}
+							</tbody>
+						</table>
+					</div>
+					{ supabase.auth.user() ?
+						<div className="levelboard-submit">
+							<h2>Submit a { capitalize(game.mode) }:</h2>
+							<form onSubmit={ submitRecord }>
+								<label htmlFor={ game.mode }>{ capitalize(game.mode) }: </label>
+								<input 
+									id={ game.mode }
+									type="number"
+									value={ form.values[game.mode] }
+									onChange={ handleChange }
+								/>
+								<p>{ form.error.record }</p>
+								<label htmlFor="monkey">Monkey: </label>
+								<select id="monkey_id" value={ form.values.monkey_id } onChange={ handleChange }>
+									{ form.monkey.map((monkey) => (
+										<option key={ monkey.id } value={ monkey.id }>{ monkey.monkey_name }</option>
+									))}
+								</select>
+								<br />
+								<label htmlFor="proof">Proof: </label>
+								<input 
+									id="proof"
+									type="url"
+									value={ form.values.proof }
+									onChange={ handleChange }
+								/>
+								<p>{ form.error.proof }</p>
+								<label htmlFor="live">Live Run: </label>
+								<input
+									id="live"
+									type="checkbox"
+									checked={ form.values.live }
+									onChange={ handleChange }
+								/>
+								<label htmlFor="comment">Comment (optional): </label>
+								<input 
+									id="comment"
+									type="text"
+									value={ form.values.comment }
+									onChange={ handleChange }
+								/>
+								<p>{ form.error.comment }</p>
+								<button disabled={ form.submitting }>Submit</button>
+							</form>
+							<button disabled={ form.submitting } onClick={ () => setBoardDelete(supabase.auth.user().id) }>Remove Record</button>
+							<Popup board={ board } setBoard={ setBoard } />
+						</div>
 					:
-						""
+						null
 					}
-				</div>
-				<div className="levelboard-buttons">
-				<Link to={ `/games/${ game.abb }` }>
-					<button disabled={ isSubmit }>Back to Level Select</button>
-				</Link>
-				<Link to={ `/games/${ game.abb }/${ game.category }/totalizer`}>
-					<button disabled={ isSubmit }>Totalizer Table</button>
-				</Link>
-				<Link to={ `/games/${ game.abb }/${ game.category }/medals`}>
-					<button disabled={ isSubmit }>Medal Table</button>
-				</Link>
-				<label htmlFor="showLive">Show non-live runs: </label>
-				<input
-					id="showLive"
-					type="checkbox"
-					checked={ boardState === "all" ? true : false }
-					onChange={ () => setBoardState(boardState === "live" ? "all" : "live") }
-					disabled={ isSubmit }
-				/>
-				</div>
-			</div>
-			<Board game={ game } records={ records } state={ boardState } isMod={ isMod }/>
-			{ supabase.auth.user() ?
-			<div className="levelboard-submit">
-				<h2>Submit a { capitalize(game.mode) }:</h2>
-				<form onSubmit={ handleSubmit }>
-					<label htmlFor="record">{ capitalize(game.mode) }: </label>
-					<input 
-						id="record"
-						type="number"
-						value={ formValues.record }
-						onChange={ handleChange }
-					/>
-					<p>{ formErrors.record }</p>
-					<label htmlFor="monkeyId">Monkey: </label>
-					<select 
-						id="monkeyId"
-						value={ formValues.monkeyId }
-						onChange={ handleChange }
-					>
-						{monkeys.map((monkey) => (
-							<option key={ monkey.id } value={ monkey.id }>{ monkey.monkey_name }</option>
-						))}
-					</select>
-					<br />
-					<label htmlFor="proof">Proof: </label>
-					<input 
-						id="proof"
-						type="url"
-						value={ formValues.proof }
-						onChange={ handleChange }
-					/>
-					<p>{ formErrors.proof }</p>
-					<label htmlFor="isLive">Live Run: </label>
-					<input
-						id="isLive"
-						type="checkbox"
-						checked={ formValues.isLive }
-						onChange={ handleChange }
-					/>
-					<label htmlFor="comment">Comment (optional): </label>
-					<input 
-						id="comment"
-						type="text"
-						value={ formValues.comment }
-						onChange={ handleChange }
-					/>
-					<p>{ formErrors.comment }</p>
-					<button disabled={ isSubmit }>Submit</button>
-				</form>
-				{ currentUserSubmission.user_id ? 
-					<button disabled={ isSubmit } onClick={ () => setPopup(true) }>Remove Record</button>
-				:
-					""
-				}
-				<Popup trigger={ popup } setTrigger={ setPopup } recordInfo={ currentUserSubmission } />
-			</div>
-			:
-			""
+				</> 
 			}
-			</> 
-			}
-		</div>
+		</>
 	);
 };
 

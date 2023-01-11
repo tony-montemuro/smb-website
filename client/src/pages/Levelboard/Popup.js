@@ -1,51 +1,52 @@
-import "./popup.css";
+import "./levelboard.css";
 import React from "react";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
-function Popup({ trigger, setTrigger, recordInfo }) {
+function Popup({ board, setBoard }) {
     // function to remove a record
     const remove = async() => {
-        try {
-            const { error } = await supabase
-                .from(`${recordInfo.mode}_submission`)
-                .delete()
-                .match({ user_id: recordInfo.user_id, game_id: recordInfo.game_id, level_id: recordInfo.level_id });
+      try {
+        const { error } = await supabase
+          .from( `${ board.delete.mode }_submission` )
+          .delete()
+          .match({ user_id: board.delete.user_id, game_id: board.delete.game_id, level_id: board.delete.level_id });
 
-            // error handling
-            if (error) {
-                throw (error);
-            }
-
-            // if successful, reload the page
-            window.location.reload();
-        } catch(error) {
-            console.log(error);
-            alert(error.message);
+        // error handling
+        if (error) {
+          throw (error);
         }
+
+        // if successful, reload the page
+        window.location.reload();
+
+      } catch(error) {
+        console.log(error);
+        alert(error.message);
+      }
     };
 
   return (
-    trigger ? 
-      recordInfo.user_id === supabase.auth.user().id ?
-      <div className="popup">
-        <div className="popup-inner">
-          <h2>Are you sure you want to remove your submission?</h2>
-          <button onClick={ () => remove() }>Yes</button>
-          <button onClick={ () => setTrigger(false) }>No</button>
-        </div> 
-      </div>
-      :
-      <div className="popup">
-        <div className="popup-inner">
-            <h2>Are you sure you want to remove the following { recordInfo.mode }
-            : { recordInfo.mode === "score" ? recordInfo.score : recordInfo.time } by { recordInfo.name }.</h2>
+    board.delete ? 
+      board.delete.user_id === supabase.auth.user().id ?
+        <div className="levelboard-popup">
+          <div className="levelboard-popup-inner">
+            <h2>Are you sure you want to remove your submission?</h2>
             <button onClick={ () => remove() }>Yes</button>
-            <button onClick={ () => setTrigger(false) }>No</button>
+            <button onClick={ () => setBoard({ ...board, delete: null }) }>No</button>
+          </div> 
         </div>
-      </div> 
+      :
+        <div className="levelboard-popup">
+          <div className="levelboard-popup-inner">
+              <h2>Are you sure you want to remove the following { board.delete.mode }
+              : { board.delete.mode === "score" ? board.delete.score : board.delete.time } by { board.delete.name }?</h2>
+              <button onClick={ () => remove() }>Yes</button>
+              <button onClick={ () => setBoard({ ...board, delete: null }) }>No</button>
+          </div>
+        </div> 
     :
-    ""
+      null
   );
-}
+};
 
 export default Popup;
