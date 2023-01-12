@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 
 const GameSelectInit = () => {
     /* ===== STATES ===== */
@@ -8,45 +7,20 @@ const GameSelectInit = () => {
 
     /* ===== FUNCTIONS ===== */
 
-    // function that makes a call to the backend server to get the list of games
-    const getGames = async () => {
-        // initialize two arrays. these are used to store list of games
-        let main = [];
-        let custom = [];
+    // function that takes the list of games, and splits it based on the custom boolean
+    const splitGameList = games => {
+        // split games
+        let main = [], custom = [];
+        games.forEach(game => game.custom ? custom.push(game) : main.push(game));
 
-        try {
-            // query the game table for the list of games
-            let {data: games, error, status} = await supabase
-                .from("game")
-                .select("abb, name, custom")
-                .order("id");
-            
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            // separate the main games from custom games into their own lists
-            games.forEach(game => {
-                game.custom ? custom.push(game) : main.push(game);
-            });
-            
-            // once this is complete, update react state hooks
-            setGameLists({ main: main, custom: custom });
-            setLoading(false);
-
-            // print statements for debugging
-            console.log(games);
-            console.log(main);
-            console.log(custom);
-
-        } catch(error) {
-            console.log(error.message);
-            alert(error.message);
-        }
+        // update react state hooks
+        setGameLists({ main: main, custom: custom });
+        setLoading(false);
+        console.log(main);
+        console.log(custom);
     };
 
-    return { loading, gameLists, getGames };
+    return { loading, gameLists, splitGameList };
 };
 
 export default GameSelectInit;

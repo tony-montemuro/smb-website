@@ -106,7 +106,7 @@ const Load = () => {
         }
     };
 
-    // function that loads all the monkey
+    // function that loads all the monkey data
     const loadMonkeys = async(setMonkeys) => {
         try {
             const { data: monkeyList, error, status } = await supabase
@@ -128,6 +128,7 @@ const Load = () => {
         }
     };
 
+    // function that loads all the profiles data
     const loadProfiles = async(setProfiles) => {
         try {
             const { data: profileList, error, status } = await supabase
@@ -147,7 +148,7 @@ const Load = () => {
             console.log(error);
             alert(error.message);
         }
-    }
+    };
 
     return { 
         queryMods, 

@@ -71,7 +71,7 @@ function App() {
           <Route path="/" element={<Home />}/>
           <Route path="/login" element={<Login />}/>
           <Route path="/profile" element={<Profile />}/>
-          <Route path="/games" element={<GameSelect />}/>
+          <Route path="/games" element={<GameSelect games={ games } />}/>
           <Route path="games/:game" element={<Game />}/>
           <Route path="games/:game/main/totalizer" element={<Totalizer />}/>
           <Route path="games/:game/misc/totalizer" element={<Totalizer />}/>
