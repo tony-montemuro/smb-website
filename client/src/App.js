@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { supabase } from "./components/SupabaseClient/SupabaseClient";
+import Load from "./Load";
 
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
@@ -19,54 +20,48 @@ import Submissions from "./pages/Submissions/Submissions";
 import Records from "./pages/Records/Records";
 
 function App() {
-  // states
+  /* ===== STATES ===== */
   const [session, setSession] = useState(null);
   const [isMod, setIsMod] = useState(null);
+  const [countries, setCountries] = useState(null);
+  const [games, setGames] = useState(null);
+  const [levels, setLevels] = useState(null);
+  const [monkeys, setMonkeys] = useState(null);
+  const [profiles, setProfiles] = useState(null);
 
-   // function that queries the mod table to see if current user is a mod
-   const queryMods = async () => {
-     try {
-      // initialize 
-      const userId = supabase.auth.user() ? supabase.auth.user().id : null;
+  // load functions from the load file
+  const { 
+    queryMods,
+    loadCountries, 
+    loadGames, 
+    loadLevels, 
+    loadMonkeys, 
+    loadProfiles 
+  } = Load();
 
-      // perform query, if necessary
-      if (userId) {
-        const { data: mods, error, status } = await supabase
-          .from("moderator")
-          .select("user_id")
-          .eq("user_id", userId)
-
-        // error handling
-        if (error && status !== 406) {
-          throw error;
-        }
-  
-        // if data is not empty, this means match was found -> user is mod
-        if (mods.length > 0) {
-          //console.log(mods);
-          setIsMod(true);
-        } else {
-          setIsMod(false);
-        }
-      } else {
-        setIsMod(false);
-      }
-     } catch (error) {
-        console.log(error);
-     }
-   }
-
-   useEffect(() => {
+  // code that is executed on page load
+  useEffect(() => {
+    // first, the session is loaded into the session hook
     setSession(supabase.auth.session());
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+
+    // next, load data
+    loadCountries(setCountries);
+    loadGames(setGames);
+    loadLevels(setLevels);
+    loadMonkeys(setMonkeys);
+    loadProfiles(setProfiles);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
- 
-   useEffect(() => {
-     queryMods();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [session]);
+
+  // code that is executed each time the session is changed
+  useEffect(() => {
+    queryMods(setIsMod);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session]);
 
   return (
     <>
