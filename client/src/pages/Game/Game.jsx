@@ -5,22 +5,23 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import GameInit from "./GameInit";
 import ModeTab from "./ModeTab";
 
-function Game() {
+function Game({ games, levelList }) {
   // radio button state
   const [selectedRadioBtn, setSelectedRadioBtn] = useState("main");
 
   // states and functions from the init file
-  const { loading, game, levels, getLevels } = GameInit();
+  const { loading, game, levels, splitLevels } = GameInit();
 
   // helper functions
   const { capitalize } = FrontendHelper();
 
-  // code that executed when the page is first loaded. get all levels categorized by mode
-  // also checks to make sure the pathing is valid
+  // code that is executed when the page loads, or when the games or levels state is updated
   useEffect(() => {
-    getLevels();
+    if (games && levelList) {
+      splitLevels(games, levelList);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [games, levelList]);
 
   // game component
   return (

@@ -49,7 +49,6 @@ const Load = () => {
 
             // update countries state
             setCountries(countryList);
-            console.log(countryList);
 
         } catch(error) {
             console.log(error);
@@ -72,13 +71,10 @@ const Load = () => {
 
             // update games state
             setGames(gameList);
-            console.log(gameList);
 
         } catch(error) {
-            if (error) {
-                console.log(error);
-                alert(error.message);
-            }
+            console.log(error);
+            alert(error.message);
         }
     };
 
@@ -98,7 +94,6 @@ const Load = () => {
 
             // update levels state
             setLevels(levelList);
-            console.log(levelList);
 
         } catch(error) {
             console.log(error);
@@ -120,7 +115,6 @@ const Load = () => {
 
             // update monkeys state
             setMonkeys(monkeyList);
-            console.log(monkeyList);
             
         } catch(error) {
             console.log(error);
@@ -142,7 +136,6 @@ const Load = () => {
 
             // update profiles state
             setProfiles(profileList);
-            console.log(profileList);
 
         } catch(error) {
             console.log(error);

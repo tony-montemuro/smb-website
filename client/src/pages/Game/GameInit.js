@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import { useNavigate } from 'react-router-dom';
 
 const GameInit = () => {
@@ -29,7 +28,7 @@ const GameInit = () => {
 
         // now, fill it, and return
         levels.forEach(level => {
-            obj[level.mode.name].push({ 
+            obj[level.mode].push({ 
                 id: level.name,
                 chart_type: level.chart_type
             });
@@ -37,40 +36,24 @@ const GameInit = () => {
         return obj;
     };
 
-    // function that queries the list of levels to generate our levelModes objects
-    const getLevels = async () => {
-        try {
-            // perform query
-            let { data: lvls, error, status } = await supabase
-                .from("level")
-                .select(`
-                    name, 
-                    misc, 
-                    mode (name, game (name, abb)),
-                    chart_type
-                `)
-                .eq("game", abb)
-                .order("id");
+    // function that verfies the path, sets game state, and sets level state
+    const splitLevels = (games, levelList) => {
+        // first, check the path. if invalid, navigate back to home page. otherwise, continue
+        const currentGame = games.find(game => game.abb === abb);
 
-            // check for error
-            if ((error && status !== 406) || lvls.length === 0) {
-                throw error ? { code: 1, message: "Error: Invalid game." } : error
-            }
-
-            // first, update the game state
-            const gameObj = lvls[0].mode.game;
-            setGame({ name: gameObj.name, abb: gameObj.abb });
-
-            // next, we need to split the levels based on whether they are misc or not
+        // if the currentGame was found, the find method will return a non-undefined object
+        if (currentGame) {
+            // first, split levels based on whether they are misc or not
+            const filteredLevels = levelList.filter(level => level.game === abb);
             const mainLevels = [], miscLevels = [];
             let mainModes = new Set(), miscModes = new Set();
-            lvls.forEach(level => {
+            filteredLevels.forEach(level => {
                 if (level.misc) {
                     miscLevels.push(level);
-                    miscModes.add(level.mode.name);
+                    miscModes.add(level.mode);
                 } else {
                     mainLevels.push(level);
-                    mainModes.add(level.mode.name);
+                    mainModes.add(level.mode);
                 }
             });
             mainModes = [...mainModes];
@@ -81,23 +64,20 @@ const GameInit = () => {
             const misc = initLevelModeObj(miscModes, miscLevels);
 
             // finally, update react states
+            setGame(currentGame);
             setLevels({ main: main, misc: misc });
-            setLoading(false); 
+            setLoading(false);
             console.log(main);
             console.log(misc);
 
-        } catch(error) {
-            if (error.code === 1) {
-                console.log(error.message);
-            } else {
-                console.log(error);
-                alert(error.message);
-            }
+        } else {
+            // if game was not found, return to home screen
+            console.log("Error: Invalid game.");
             navigate("/");
         }
     };
     
-    return { loading, game, levels, getLevels };
+    return { loading, game, levels, splitLevels };
 };
 
 export default GameInit;
