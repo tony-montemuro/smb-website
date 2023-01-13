@@ -1,7 +1,7 @@
 import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import MedalsHelper from "../../helper/MedalsHelper";
+import SubmissionQuery from "../../helper/SubmissionQuery";
 
 const MedalsInit = () => {
     /* ===== VARIABLES ===== */
@@ -21,92 +21,56 @@ const MedalsInit = () => {
 
     // helper functions
     const { createUserMap, createMedalTable, addPositionToMedals } = MedalsHelper();
+    const { query } = SubmissionQuery();
 
     // navigate used for redirecting
     const navigate = useNavigate();
 
-    // in the event that the submission is empty, this query will be run to verify that the game
-    // definied by abb is a valid game. if it is, it will just return an object with two properties:
-    // the name of the game, and the game's abbreviation. otherwise, it will return an error object.
-    const checkGame = async () => { 
-        try {
-            let { data: gameData, status, error } = await supabase
-                .from("game")
-                .select("abb, name")
-                .eq("abb", abb)
-                .single();
+    // function that verifies the path, and generates the medal table from array of submissions
+    const generateMedals = async(type, games, submissionState) => {
+        // first, check the path
+        const currentGame = games.find(game => game.abb === abb);
 
-        // error handling
-        if (error || status === 406) {
-            throw error;
-        }
-
-        // if there are no errors, update game hook
-        setGame({ ...game, name: gameData.name, abb: gameData.abb });
-
-        } catch(error) {
-            // if there is an error, navigate back to the home screen
-            if (error.code === 'PGRST116') {
-                console.log("Error: Invalid game.");
-            } else {
-                console.log(error);
-                alert(error.message);
-            }
+        // if the game is not valid, let's navigate home and end the function
+        if (!currentGame) {
+            console.log("Error: Invalid game.");
             navigate("/");
+            return;
         }
-    };
 
-    // function that will query the submissions page and generate a medal table leaderboard
-    const medalTableQuery = async(type) => {
-        try {
-            // query all submissions for abb that are also live in the {type} submission table,
-            // and are also from levels of type {isMisc}
-            let { data: submissions, status, error } = await supabase
-                .from(`${type}_submission`)
-                .select(`
-                    profiles:user_id ( id, username, country, avatar_url ),
-                    level!inner (id, misc, chart_type, mode (game (name))),
-                    ${type},
-                    live
-                `)
-                .eq("game_id", abb)
-                .eq("live", true)
-                .eq("level.misc", isMisc)
-                .order(`${type}`, { ascending: false });
+        // update game state hook
+        setGame(currentGame);
 
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-            
-            // if the submission query comes back empty, there are either no {type} submissions to this game.
-            // or no submissions to the game at all. we can just end the function prematurely, then.
-            if (submissions.length === 0) {
-                dispatchMedals({ type: type, data: [] });
-                return;
-            }
-
-            //next, generate medal table with positions
-            const userMap = createUserMap(submissions);
-            const medalTable = createMedalTable(userMap, submissions, type);
-            addPositionToMedals(medalTable);
-
-            // finally, update react medals reducer hook
-            dispatchMedals({ type: type, data: medalTable });
-            
-            console.log(medalTable);
-            console.log(submissions);
-
-        } catch(error) {
-            // if there is an error, navigate back to home page
-            if (error.code === 1) {
-                console.log(error.message);
-            } else {
-                console.log(error);
-                alert(error.message);
-            }
-            navigate("/");
+        // from here, we have two cases. if user is accessing already cached submissions, we can fetch
+        // this information from submissionState. Otherwise, we need to query, and set the submission state
+        let submissions = {};
+        if (submissionState.state && abb in submissionState.state) {
+            submissions = submissionState.state[abb];
+        } else {
+            submissions = await query(abb, type);
+            submissionState.setState({ ...submissionState.state, [abb]: submissions });
         }
+
+        // filter the submission object based on the live field and the level.misc field
+        const filtered = submissions.filter(row => row.live === true && row.level.misc === isMisc);
+        
+        // if the filtered object is empty, there are either no {type} submissions to this game.
+        // or no submissions to the game at all. we can just end the function prematurely, then.
+        if (filtered.length === 0) {
+            dispatchMedals({ type: type, data: [] });
+            return;
+        }
+
+        //next, generate medal table with positions
+        const userMap = createUserMap(filtered);
+        const medalTable = createMedalTable(userMap, filtered, type);
+        addPositionToMedals(medalTable);
+
+        // finally, update react medals reducer hook
+        dispatchMedals({ type: type, data: medalTable });
+        
+        console.log(medalTable);
+        console.log(submissions);
     };
 
     return { 
@@ -114,8 +78,7 @@ const MedalsInit = () => {
         loading,
         medals,
         setLoading,
-        checkGame,
-        medalTableQuery
+        generateMedals
     };
 };
 

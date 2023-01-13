@@ -1,37 +1,33 @@
 import "./medals.css";
 import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
-import Board from "./Board";
+import FrontendHelper from "../../helper/FrontendHelper";
 import MedalsInit from './Medalsinit';
+import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
-function Medals() {
+function Medals({ games, scoreSubmissionState, timeSubmissionState }) {
     // hooks and functions from init file
     const { 
       game,
       loading,
       medals,
       setLoading,
-      checkGame,
-      medalTableQuery,
+      generateMedals
     } = MedalsInit();
 
-    // code that is executed when the page is first loaded.
-    // query to ensure that user is trying to load medal table of a legitimate game
-    useEffect(() => {
-      checkGame();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);  
+    // helper functions
+    const { capitalize } = FrontendHelper();
 
-    // if it is a valid game, we can query the score and time submissions to generate medal tables
+    // code that is executed either or page load, or when the game state is updated
     useEffect(() => {
-      if (game.abb) {
-        medalTableQuery("score");
-        medalTableQuery("time");
+      if (games) {
+        generateMedals('score', games, scoreSubmissionState);
+        generateMedals('time', games, timeSubmissionState);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [game]);
+    }, [games]);
 
-    // once both queries have finished and medal tables are generated, update loading hook
+    // once both medal tables have been generated, loading state hook is set to false
     useEffect(() => {
       if (medals.score && medals.time) {
         setLoading(false);
@@ -53,7 +49,57 @@ function Medals() {
       </div>
       <div className="medals-body">
         { Object.keys(medals).map(mode => {
-          return <Board key={ mode } data={ medals[mode] } loading={ loading } mode={ mode } />
+          return (
+            <div key={ mode } className="medals-container">
+              <h2>{ capitalize(mode) } Medal Table</h2>
+              { loading ?
+                <p>Loading...</p>
+              :
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Position</th>
+                      <th>Name</th>
+                      <th>Platinum</th>
+                      <th>Gold</th>
+                      <th>Silver</th>
+                      <th>Bronze</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    { medals[mode].length === 0 ?
+                      <tr>
+                        <td colSpan={ 6 } className="medals-empty">There have been no live submissions to this game's category!</td>
+                      </tr>
+                    :
+                      medals[mode].map(row => {
+                        return (
+                          <tr key={ `${ row.name }-row` }>
+                            <td>{ row.position }</td>
+                            <td>
+                                <div className="medals-user-info">
+                                    <div className="medals-user-image"><SimpleAvatar url={ row.avatar_url }/></div>
+                                    { row.country ?
+                                        <div><span className={ `fi fi-${ row.country.toLowerCase() }` }></span></div>
+                                        :
+                                        ""
+                                    }
+                                    <div><Link to={ `/user/${ row.user_id }` }>{ row.name }</Link></div>
+                                </div>
+                            </td>
+                            <td>{ row.platinum }</td>
+                            <td>{ row.gold }</td>
+                            <td>{ row.silver }</td>
+                            <td>{ row.bronze }</td>
+                          </tr>
+                        );
+                      })
+                    }
+                  </tbody>
+                </table>
+              }
+            </div>
+          );
         })}
       </div>
     </>

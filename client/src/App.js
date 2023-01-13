@@ -28,6 +28,8 @@ function App() {
   const [levels, setLevels] = useState(null);
   const [monkeys, setMonkeys] = useState(null);
   const [profiles, setProfiles] = useState(null);
+  const [scoreSubmissions, setScoreSubmissions] = useState(null);
+  const [timeSubmissions, setTimeSubmissions] = useState(null);
 
   // load functions from the load file
   const { 
@@ -75,7 +77,13 @@ function App() {
           <Route path="games/:game" element={<Game games={ games } levelList={ levels } />}/>
           <Route path="games/:game/main/totalizer" element={<Totalizer />}/>
           <Route path="games/:game/misc/totalizer" element={<Totalizer />}/>
-          <Route path="games/:game/main/medals" element={<Medals />}/>
+          <Route path="games/:game/main/medals" element={
+            <Medals 
+              games={ games } 
+              scoreSubmissionState={ { state: scoreSubmissions, setState: setScoreSubmissions } }
+              timeSubmissionState={ { state: timeSubmissions, setState: setTimeSubmissions } }
+            />
+          }/>
           <Route path="games/:game/misc/medals" element={<Medals />}/>
           <Route path="games/:game/main/score" element={<Records />} />
           <Route path="games/:game/main/time" element={<Records />} />

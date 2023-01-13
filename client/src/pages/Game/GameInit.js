@@ -38,7 +38,7 @@ const GameInit = () => {
 
     // function that verfies the path, sets game state, and sets level state
     const splitLevels = (games, levelList) => {
-        // first, check the path. if invalid, navigate back to home page. otherwise, continue
+        // first, check the path
         const currentGame = games.find(game => game.abb === abb);
 
         // if the currentGame was found, the find method will return a non-undefined object
