@@ -27,32 +27,33 @@ function Game({ games, levelList }) {
   return (
     <>
       <div className="game-header">
+        <h1>{ game.name }</h1>
         <Link to={ `/games` }>
           <button>Back to Game Select</button>
         </Link>
-        <h1>{ game.name }</h1>
+        <div className="game-radio-buttons">
+          {[{ name: "main", alias: "Main" }, { name: "misc", alias: "Miscellaneous" }].map(category => {
+            return (
+              <div key={ category.name } className={ `game-${ category.name }-btn` }>
+                <label htmlFor={ category.name }>{ category.alias } Charts:</label>
+                <input 
+                  type="radio" 
+                  value={ category.name }
+                  checked={ selectedRadioBtn === category.name }
+                  onChange={ (e) => setSelectedRadioBtn(e.target.value) }
+                  disabled={ loading }>
+                </input>
+              </div>
+            );
+          })}
+        </div>
       </div>
       { loading ? 
         <p>Loading...</p>
         :
         <div className="game-body">
           <div className="game-level-list">
-            <div className="game-radio-buttons">
-              {[{ name: "main", alias: "Main" }, { name: "misc", alias: "Miscellaneous" }].map(category => {
-                return (
-                  <div key={ category.name } className={ `game-${ category.name }-btn` }>
-                    <label htmlFor={ category.name }>{ category.alias } Charts:</label>
-                    <input 
-                      type="radio" 
-                      value={ category.name }
-                      checked={ selectedRadioBtn === category.name }
-                      onChange={ (e) => setSelectedRadioBtn(e.target.value) }
-                      disabled={ loading }>
-                    </input>
-                  </div>
-                );
-              })}
-            </div>
+            <h2>{ capitalize(selectedRadioBtn) } Levels</h2>
             <table>
               { Object.keys(levels[selectedRadioBtn]).map(mode => {
                 return <ModeTab 
@@ -70,7 +71,7 @@ function Game({ games, levelList }) {
                 <div key={ type } className={ `game-${ type }-wrs` }>
                   <h2>{ capitalize(type) } World Records</h2>
                   <Link to={ { pathname: `/games/${ game.abb }/${ selectedRadioBtn }/${ type }` } }>
-                    <p>{ capitalize(selectedRadioBtn) } { capitalize(type) } World Records</p>
+                    <p>{ selectedRadioBtn === "misc" ? capitalize(selectedRadioBtn) : null } { capitalize(type) } World Records</p>
                   </Link>
                 </div>
               );
@@ -80,7 +81,7 @@ function Game({ games, levelList }) {
                 <div key={ boardType.name } className={ `game-${ boardType.name }` }>
                   <h2> { boardType.alias } </h2>
                   <Link to={ { pathname: `/games/${ game.abb }/${ selectedRadioBtn }/${ boardType.name }` } }>
-                    <p>Score & Time { boardType.alias }</p>
+                    <p>{ selectedRadioBtn === "misc" ? capitalize(selectedRadioBtn) : null } Score & Time { boardType.alias }</p>
                   </Link>
                 </div>
               );
