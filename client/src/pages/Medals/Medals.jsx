@@ -6,34 +6,38 @@ import MedalsInit from './Medalsinit';
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
 function Medals({ games, scoreSubmissionState, timeSubmissionState }) {
-    // hooks and functions from init file
-    const { 
-      game,
-      loading,
-      medals,
-      setLoading,
-      generateMedals
-    } = MedalsInit();
+  // variables
+  const imgLength = 50;
 
-    // helper functions
-    const { capitalize } = FrontendHelper();
+  // hooks and functions from init file
+  const { 
+    game,
+    loading,
+    medals,
+    setLoading,
+    generateMedals
+  } = MedalsInit();
 
-    // code that is executed either or page load, or when the game state is updated
-    useEffect(() => {
-      if (games) {
-        generateMedals('score', games, scoreSubmissionState);
-        generateMedals('time', games, timeSubmissionState);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [games]);
+  // helper functions
+  const { capitalize } = FrontendHelper();
 
-    // once both medal tables have been generated, loading state hook is set to false
-    useEffect(() => {
-      if (medals.score && medals.time) {
-        setLoading(false);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [medals]);  
+  // code that is executed either or page load, or when the game state is updated
+  useEffect(() => {
+    if (games) {
+      generateMedals('score', games, scoreSubmissionState);
+      generateMedals('time', games, timeSubmissionState);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [games]);
+
+  // once both medal tables have been generated, loading state hook is set to false
+  useEffect(() => {
+    if (medals.score && medals.time) {
+      setLoading(false);
+      console.log(medals);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [medals]);  
       
   // medals component
   return (
@@ -78,11 +82,11 @@ function Medals({ games, scoreSubmissionState, timeSubmissionState }) {
                             <td>{ row.position }</td>
                             <td>
                                 <div className="medals-user-info">
-                                    <div className="medals-user-image"><SimpleAvatar url={ row.avatar_url }/></div>
+                                    <div className="medals-user-image"><SimpleAvatar url={ row.avatar_url } size={ imgLength } /></div>
                                     { row.country ?
-                                        <div><span className={ `fi fi-${ row.country.toLowerCase() }` }></span></div>
-                                        :
-                                        ""
+                                      <div><span className={ `fi fi-${ row.country.toLowerCase() }` }></span></div>
+                                    :
+                                      null
                                     }
                                     <div><Link to={ `/user/${ row.user_id }` }>{ row.name }</Link></div>
                                 </div>

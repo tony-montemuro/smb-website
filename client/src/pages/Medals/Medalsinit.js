@@ -39,7 +39,7 @@ const MedalsInit = () => {
         }
 
         // update game state hook
-        setGame(currentGame);
+        setGame({ ...currentGame, isMisc: isMisc });
 
         // from here, we have two cases. if user is accessing already cached submissions, we can fetch
         // this information from submissionState. Otherwise, we need to query, and set the submission state
@@ -68,9 +68,6 @@ const MedalsInit = () => {
 
         // finally, update react medals reducer hook
         dispatchMedals({ type: type, data: medalTable });
-        
-        console.log(medalTable);
-        console.log(submissions);
     };
 
     return { 
