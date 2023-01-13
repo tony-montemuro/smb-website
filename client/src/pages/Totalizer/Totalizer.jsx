@@ -1,34 +1,27 @@
 import "./totalizer.css";
 import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
-import Board from "./Board";
+import TotalsBoard from "./TotalsBoard";
 import TotalizerInit from './TotalizerInit';
 
-function Totalizer() {
-    // hooks and functions from init file
-    const {
-      loading, 
-      game,
-      totals,
-      setLoading,
-      getGame,
-      totalsQuery
-    } = TotalizerInit();
+function Totalizer({ games, levels, scoreSubmissionState, timeSubmissionState }) {
+  // hooks and functions from init file
+  const {
+    loading, 
+    game,
+    totals,
+    setLoading,
+    generateTotals
+  } = TotalizerInit();
 
-    // first, set up the game state
-    useEffect(() => {
-      getGame();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    
-    // once the game is verified, we can query totals tables for score & time
-    useEffect(() => {
-      if (game.abb) {
-        totalsQuery("score");
-        totalsQuery("time");
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [game]);
+  // code that is ran when the page first loads, or when the games or levels state is changed
+  useEffect(() => {
+    if (games && levels) {
+      generateTotals("score", games, levels, scoreSubmissionState);
+      generateTotals("time", games, levels, timeSubmissionState);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [games, levels]);
 
     // once all the total tables have been generated, set loading to false
     useEffect(() => {
@@ -53,7 +46,7 @@ function Totalizer() {
       </div>
       <div className="totalizer-body">
         { Object.keys(totals).map(type => {
-          return <Board key={ type } type={ type } data={ totals[type] } loading={ loading } />
+          return <TotalsBoard key={ type } type={ type } data={ totals[type] } loading={ loading } />
         })}
       </div>
     </>

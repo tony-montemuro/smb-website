@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import FrontendHelper from "../../helper/FrontendHelper";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
-function Board({ type, data, loading }) {
+function TotalsBoard({ type, data, loading }) {
+    /* ===== VARIABLES ===== */
+	const imgLength = 50;
+
     /* ===== STATES ===== */
     const [boardState, setBoardState] = useState("live");
 
@@ -23,7 +26,7 @@ function Board({ type, data, loading }) {
                     onChange={ () => setBoardState(boardState === "live" ? "all" : "live") }
                 />
             </div>
-            {loading ? 
+            { loading ? 
                 <p>Loading...</p> 
             :
                 <table>
@@ -42,24 +45,24 @@ function Board({ type, data, loading }) {
                                 </td>
                             </tr>
                         :
-                            data[boardState].map((val) => {
-                                return <tr key={ `${val.name}-row` }>
-                                    <td>{ val.position }</td>
+                            data[boardState].map((row) => {
+                                return <tr key={ `${ row.name }-row` }>
+                                    <td>{ row.position }</td>
                                     <td>
                                         <div className="totals-user-info">
-                                        <div className="totals-user-image"><SimpleAvatar url={ val.avatar_url }/></div>
-                                            { val.country ?
-                                                <div><span className={`fi fi-${ val.country.toLowerCase() }`}></span></div>
-                                                :
-                                                ""
+                                        <div className="totals-user-image"><SimpleAvatar url={ row.avatar_url } size={ imgLength }/></div>
+                                            { row.country ?
+                                                <div><span className={ `fi fi-${ row.country.toLowerCase() }` }></span></div>
+                                            :
+                                                null
                                             }
-                                            <div><Link to={ `/user/${val.user_id}` }>{ val.name }</Link></div>
+                                            <div><Link to={ `/user/${ row.user_id }` }>{ row.name }</Link></div>
                                         </div>
                                     </td>
-                                    {type === "score" ?
-                                        <td>{ val.total }</td>
+                                    { type === "score" ?
+                                        <td>{ row.total }</td>
                                     : 
-                                        <td>{ val.hours }:{ val.minutes }:{ val.seconds }.{ val.centiseconds }</td>
+                                        <td>{ row.hours }:{ row.minutes }:{ row.seconds }.{ row.centiseconds }</td>
                                     }
                                 </tr>  
                             })}
@@ -70,4 +73,4 @@ function Board({ type, data, loading }) {
     );
 };
 
-export default memo(Board);
+export default memo(TotalsBoard);

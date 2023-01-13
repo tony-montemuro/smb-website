@@ -16,28 +16,27 @@ const TotalizerHelper = () => {
         const allTotalsMap = {}, liveTotalsMap = {};
         while (submissions.length > 0) {
             const submission = submissions.pop();
-            if (submission.level.misc === miscStatus) {
-                // first, extract values from submission object
-                const userId = submission.profiles.id;
-                const value = type === "score" ? submission.score : -Math.abs(submission.time);
-                const name = submission.profiles.username;
-                const country = submission.profiles.country;
-                const avatar_url = submission.profiles.avatar_url;
 
-                // next, update the allTotals list
-                if (userId in allTotalsMap) {
-                    allTotalsMap[userId]["total"] += value
+            // first, extract values from submission object
+            const userId = submission.profiles.id;
+            const value = type === "score" ? submission.score : -Math.abs(submission.time);
+            const name = submission.profiles.username;
+            const country = submission.profiles.country;
+            const avatar_url = submission.profiles.avatar_url;
+
+            // next, update the allTotals list
+            if (userId in allTotalsMap) {
+                allTotalsMap[userId]["total"] += value
+            } else {
+                allTotalsMap[userId] = { user_id: userId, name: name, country: country, avatar_url: avatar_url, total: type === "score" ? value : timeTotal + value };
+            }
+
+            // finally, update the liveTotals list
+            if (submission.live) {
+                if (userId in liveTotalsMap) {
+                    liveTotalsMap[userId]["total"] += value
                 } else {
-                    allTotalsMap[userId] = { user_id: userId, name: name, country: country, avatar_url: avatar_url, total: type === "score" ? value : timeTotal + value };
-                }
-
-                // finally, update the liveTotals list
-                if (submission.live) {
-                    if (userId in liveTotalsMap) {
-                        liveTotalsMap[userId]["total"] += value
-                    } else {
-                        liveTotalsMap[userId] = { user_id: userId, name: name, country: country, avatar_url: avatar_url, total: type === "score" ? value : timeTotal + value };
-                    }
+                    liveTotalsMap[userId] = { user_id: userId, name: name, country: country, avatar_url: avatar_url, total: type === "score" ? value : timeTotal + value };
                 }
             }
         }

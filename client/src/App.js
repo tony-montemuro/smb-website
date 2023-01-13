@@ -75,8 +75,22 @@ function App() {
           <Route path="/profile" element={<Profile />}/>
           <Route path="/games" element={<GameSelect games={ games } />}/>
           <Route path="games/:game" element={<Game games={ games } levelList={ levels } />}/>
-          <Route path="games/:game/main/totalizer" element={<Totalizer />}/>
-          <Route path="games/:game/misc/totalizer" element={<Totalizer />}/>
+          <Route path="games/:game/main/totalizer" element={
+            <Totalizer
+              games={ games }
+              levels={ levels }
+              scoreSubmissionState={ { state: scoreSubmissions, setState: setScoreSubmissions } }
+              timeSubmissionState={ { state: timeSubmissions, setState: setTimeSubmissions } }
+            />
+          }/>
+          <Route path="games/:game/misc/totalizer" element={
+            <Totalizer
+              games={ games }
+              levels={ levels }
+              scoreSubmissionState={ { state: scoreSubmissions, setState: setScoreSubmissions } }
+              timeSubmissionState={ { state: timeSubmissions, setState: setTimeSubmissions } }
+            />
+          }/>
           <Route path="games/:game/main/medals" element={
             <Medals 
               games={ games } 
@@ -84,7 +98,13 @@ function App() {
               timeSubmissionState={ { state: timeSubmissions, setState: setTimeSubmissions } }
             />
           }/>
-          <Route path="games/:game/misc/medals" element={<Medals />}/>
+          <Route path="games/:game/misc/medals" element={
+            <Medals 
+              games={ games } 
+              scoreSubmissionState={ { state: scoreSubmissions, setState: setScoreSubmissions } }
+              timeSubmissionState={ { state: timeSubmissions, setState: setTimeSubmissions } }
+            />
+          }/>
           <Route path="games/:game/main/score" element={<Records />} />
           <Route path="games/:game/main/time" element={<Records />} />
           <Route path="games/:game/misc/score" element={<Records />} />
