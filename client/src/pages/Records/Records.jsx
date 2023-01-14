@@ -1,45 +1,42 @@
 import "./records.css";
 import React, { Fragment, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import RecordsInit from "./RecordsInit";
 
-function Records() {
+function Records({ games, levels, submissionState }) {
   // states and functions from init file
   const { 
     loading,
-    levels,
     recordTable, 
     game,
-    queryLevels,
-    addWorldRecords
+    generateWorldRecords
   } = RecordsInit();
 
   // helper functions
   const { capitalize, cleanLevelName } = FrontendHelper();
 
-  // code that is executed when the page is loaded
+  // code that is executed on page load, when either the levelList or games state are changed, or
+  // when the user swaps between the time & score world record pages
+  const location = useLocation();
   useEffect(() => {
-    queryLevels();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // code that is executed once array of levels is loaded
-  useEffect(() => {
-    if (levels.length > 0) {
-      addWorldRecords();
+    if (games && levels) {
+      generateWorldRecords(games, levels, submissionState);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [levels]);
+  }, [location, games, levels]);
 
   // records component
   return (
     <>
       <div className="records-header">
-        <h1>{ game.name }: { capitalize(game.mode) } World Records</h1>
+        <h1>{ game.isMisc ? "Miscellaneous " : null }{ game.name }: { capitalize(game.type) } World Records</h1>
         <div className="records-buttons">
-          <Link to={ { pathname: `/games/${ game.abb }` } }>
+          <Link to={ `/games/${ game.abb }` }>
             <button disabled={ loading }>Back to { game.name }'s Page</button>
+          </Link>
+          <Link to={ `/games/${ game.abb }/${ game.category }/${ game.other }`}>
+            <button disabled={ loading }>{ game.name }: { capitalize(game.other) } World Records</button>
           </Link>
         </div>
       </div>
@@ -65,7 +62,7 @@ function Records() {
                         <td>
                           <Link
                             className="records-level-link" 
-                            to={ { pathname: `/games/${ game.abb }/${ game.category }/${ game.mode }/${ level.level }` } } 
+                            to={ `/games/${ game.abb }/${ game.category }/${ game.type }/${ level.level }` } 
                           >
                             { cleanLevelName(level.level) }
                           </Link>

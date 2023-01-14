@@ -31,6 +31,10 @@ function App() {
   const [scoreSubmissions, setScoreSubmissions] = useState(null);
   const [timeSubmissions, setTimeSubmissions] = useState(null);
 
+  /* ===== VARIABLES ===== */
+  const scoreSubmissionState = { state: scoreSubmissions, setState: setScoreSubmissions };
+  const timeSubmissionState = { state: timeSubmissions, setState: setTimeSubmissions };
+
   // load functions from the load file
   const { 
     queryMods,
@@ -75,39 +79,30 @@ function App() {
           <Route path="/profile" element={<Profile />}/>
           <Route path="/games" element={<GameSelect games={ games } />}/>
           <Route path="games/:game" element={<Game games={ games } levelList={ levels } />}/>
-          <Route path="games/:game/main/totalizer" element={
-            <Totalizer
-              games={ games }
-              levels={ levels }
-              scoreSubmissionState={ { state: scoreSubmissions, setState: setScoreSubmissions } }
-              timeSubmissionState={ { state: timeSubmissions, setState: setTimeSubmissions } }
-            />
-          }/>
-          <Route path="games/:game/misc/totalizer" element={
-            <Totalizer
-              games={ games }
-              levels={ levels }
-              scoreSubmissionState={ { state: scoreSubmissions, setState: setScoreSubmissions } }
-              timeSubmissionState={ { state: timeSubmissions, setState: setTimeSubmissions } }
-            />
-          }/>
           <Route path="games/:game/main/medals" element={
-            <Medals 
-              games={ games } 
-              scoreSubmissionState={ { state: scoreSubmissions, setState: setScoreSubmissions } }
-              timeSubmissionState={ { state: timeSubmissions, setState: setTimeSubmissions } }
-            />
+            <Medals games={ games } scoreSubmissionState={ scoreSubmissionState } timeSubmissionState={ timeSubmissionState } />
           }/>
           <Route path="games/:game/misc/medals" element={
-            <Medals 
-              games={ games } 
-              scoreSubmissionState={ { state: scoreSubmissions, setState: setScoreSubmissions } }
-              timeSubmissionState={ { state: timeSubmissions, setState: setTimeSubmissions } }
-            />
+            <Medals games={ games } scoreSubmissionState={ scoreSubmissionState } timeSubmissionState={ timeSubmissionState } />
           }/>
-          <Route path="games/:game/main/score" element={<Records />} />
-          <Route path="games/:game/main/time" element={<Records />} />
-          <Route path="games/:game/misc/score" element={<Records />} />
+          <Route path="games/:game/main/totalizer" element={
+            <Totalizer games={ games } levels={ levels } scoreSubmissionState={ scoreSubmissionState } timeSubmissionState={ timeSubmissionState } />
+          }/>
+          <Route path="games/:game/misc/totalizer" element={
+            <Totalizer games={ games } levels={ levels } scoreSubmissionState={ scoreSubmissionState } timeSubmissionState={ timeSubmissionState } />
+          }/>
+          <Route path="games/:game/main/score" element={
+            <Records games={ games } levels={ levels } submissionState={ scoreSubmissionState } />
+          }/>
+          <Route path="games/:game/main/time" element={
+            <Records games={ games } levels={ levels } submissionState={ timeSubmissionState } />
+          }/>
+          <Route path="games/:game/misc/score" element={
+            <Records games={ games } levels={ levels } submissionState={ scoreSubmissionState } />
+          }/>
+          <Route path="games/:game/misc/time" element={
+            <Records games={ games } levels={ levels } submissionState={ timeSubmissionState } />
+          }/>
           <Route path="games/:game/misc/time" element={<Records />} />
           <Route path="games/:game/main/time/:levelid" element={<Levelboard isMod={ isMod } />}/>
           <Route path="games/:game/main/score/:levelid" element={<Levelboard isMod={ isMod } />}/>

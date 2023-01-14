@@ -17,7 +17,8 @@ const SubmissionQuery = () => {
                     approved
                 `)
                 .eq("game_id", abb)
-                .order(type, { ascending: false });
+                .order(type, { ascending: false })
+                .order("submitted_at");
 
             // error handling
             if (error && status !== 406) {
