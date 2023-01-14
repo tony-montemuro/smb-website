@@ -37,14 +37,14 @@ const GameInit = () => {
     };
 
     // function that verfies the path, sets game state, and sets level state
-    const splitLevels = (games, levelList) => {
+    const splitLevels = (games, levels) => {
         // first, check the path
         const currentGame = games.find(game => game.abb === abb);
 
         // if the currentGame was found, the find method will return a non-undefined object
         if (currentGame) {
             // first, split levels based on whether they are misc or not
-            const filteredLevels = levelList.filter(level => level.game === abb);
+            const filteredLevels = levels.filter(level => level.game === abb);
             const mainLevels = [], miscLevels = [];
             let mainModes = new Set(), miscModes = new Set();
             filteredLevels.forEach(level => {

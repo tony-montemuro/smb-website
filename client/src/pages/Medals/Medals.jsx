@@ -5,7 +5,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import MedalsInit from './Medalsinit';
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
-function Medals({ games, scoreSubmissionState, timeSubmissionState }) {
+function Medals({ cache }) {
   // variables
   const imgLength = 50;
 
@@ -23,12 +23,12 @@ function Medals({ games, scoreSubmissionState, timeSubmissionState }) {
 
   // code that is executed either or page load, or when the game state is updated
   useEffect(() => {
-    if (games) {
-      generateMedals('score', games, scoreSubmissionState);
-      generateMedals('time', games, timeSubmissionState);
+    if (cache.games) {
+      generateMedals('score', cache.games, cache.scoreSubmissionState);
+      generateMedals('time', cache.games, cache.timeSubmissionState);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [games]);
+  }, [cache.games]);
 
   // once both medal tables have been generated, loading state hook is set to false
   useEffect(() => {

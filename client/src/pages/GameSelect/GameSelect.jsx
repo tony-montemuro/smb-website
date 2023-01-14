@@ -4,7 +4,7 @@ import GameSelectInit from "./GameSelectInit";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameCard from "../../components/GameCard/GameCard";
 
-function Games({ games }) {
+function Games({ cache }) {
   // states and functions from init file
   const { loading, gameLists, splitGameList } = GameSelectInit();
 
@@ -13,11 +13,11 @@ function Games({ games }) {
 
   // code that is executed when the page loads, or when the games state is changed
   useEffect(() => {
-    if (games) {
-      splitGameList(games);
+    if (cache.games) {
+      splitGameList(cache.games);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [games]);
+  }, [cache.games]);
 
   // game select component
   return (

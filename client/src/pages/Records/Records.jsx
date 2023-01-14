@@ -4,12 +4,13 @@ import { Link, useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import RecordsInit from "./RecordsInit";
 
-function Records({ games, levels, submissionState }) {
+function Records({ cache }) {
   // states and functions from init file
   const { 
     loading,
     recordTable, 
     game,
+    setLoading,
     generateWorldRecords
   } = RecordsInit();
 
@@ -20,11 +21,12 @@ function Records({ games, levels, submissionState }) {
   // when the user swaps between the time & score world record pages
   const location = useLocation();
   useEffect(() => {
-    if (games && levels) {
-      generateWorldRecords(games, levels, submissionState);
+    if (cache.games && cache.levels) {
+      setLoading(true);
+      generateWorldRecords(cache.games, cache.levels, cache.submissionState);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, games, levels]);
+  }, [location, cache.games, cache.levels]);
 
   // records component
   return (

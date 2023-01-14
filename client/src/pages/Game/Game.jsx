@@ -5,7 +5,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import GameInit from "./GameInit";
 import ModeTab from "./ModeTab";
 
-function Game({ games, levelList }) {
+function Game({ cache }) {
   // radio button state
   const [selectedRadioBtn, setSelectedRadioBtn] = useState("main");
 
@@ -17,11 +17,11 @@ function Game({ games, levelList }) {
 
   // code that is executed when the page loads, or when the games or levels state is updated
   useEffect(() => {
-    if (games && levelList) {
-      splitLevels(games, levelList);
+    if (cache.games && cache.levels) {
+      splitLevels(cache.games, cache.levels);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [games, levelList]);
+  }, [cache.games, cache.levels]);
 
   // game component
   return (

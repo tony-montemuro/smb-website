@@ -96,6 +96,7 @@ const RecordsInit = () => {
         loading,
         game,
         recordTable, 
+        setLoading,
         generateWorldRecords
     };
 };

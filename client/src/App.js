@@ -77,33 +77,32 @@ function App() {
           <Route path="/" element={<Home />}/>
           <Route path="/login" element={<Login />}/>
           <Route path="/profile" element={<Profile />}/>
-          <Route path="/games" element={<GameSelect games={ games } />}/>
-          <Route path="games/:game" element={<Game games={ games } levelList={ levels } />}/>
+          <Route path="/games" element={<GameSelect cache={ { games: games } } />}/>
+          <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>
           <Route path="games/:game/main/medals" element={
-            <Medals games={ games } scoreSubmissionState={ scoreSubmissionState } timeSubmissionState={ timeSubmissionState } />
+            <Medals cache={ { games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
           }/>
           <Route path="games/:game/misc/medals" element={
-            <Medals games={ games } scoreSubmissionState={ scoreSubmissionState } timeSubmissionState={ timeSubmissionState } />
+            <Medals cache={ { games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
           }/>
           <Route path="games/:game/main/totalizer" element={
-            <Totalizer games={ games } levels={ levels } scoreSubmissionState={ scoreSubmissionState } timeSubmissionState={ timeSubmissionState } />
+            <Totalizer cache={ { games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
           }/>
           <Route path="games/:game/misc/totalizer" element={
-            <Totalizer games={ games } levels={ levels } scoreSubmissionState={ scoreSubmissionState } timeSubmissionState={ timeSubmissionState } />
+            <Totalizer cache={ { games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
           }/>
           <Route path="games/:game/main/score" element={
-            <Records games={ games } levels={ levels } submissionState={ scoreSubmissionState } />
+            <Records cache={ { games: games, levels: levels, submissionState: scoreSubmissionState } } />
           }/>
           <Route path="games/:game/main/time" element={
-            <Records games={ games } levels={ levels } submissionState={ timeSubmissionState } />
+            <Records cache={ { games: games, levels: levels, submissionState: timeSubmissionState } } />
           }/>
           <Route path="games/:game/misc/score" element={
-            <Records games={ games } levels={ levels } submissionState={ scoreSubmissionState } />
+            <Records cache={ { games: games, levels: levels, submissionState: scoreSubmissionState } } />
           }/>
           <Route path="games/:game/misc/time" element={
-            <Records games={ games } levels={ levels } submissionState={ timeSubmissionState } />
+            <Records cache={ { games: games, levels: levels, submissionState: timeSubmissionState } } />
           }/>
-          <Route path="games/:game/misc/time" element={<Records />} />
           <Route path="games/:game/main/time/:levelid" element={<Levelboard isMod={ isMod } />}/>
           <Route path="games/:game/main/score/:levelid" element={<Levelboard isMod={ isMod } />}/>
           <Route path="games/:game/misc/time/:levelid" element={<Levelboard isMod={ isMod } />}/>

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import TotalsBoard from "./TotalsBoard";
 import TotalizerInit from './TotalizerInit';
 
-function Totalizer({ games, levels, scoreSubmissionState, timeSubmissionState }) {
+function Totalizer({ cache }) {
   // hooks and functions from init file
   const {
     loading, 
@@ -16,12 +16,12 @@ function Totalizer({ games, levels, scoreSubmissionState, timeSubmissionState })
 
   // code that is ran when the page first loads, or when the games or levels state is changed
   useEffect(() => {
-    if (games && levels) {
-      generateTotals("score", games, levels, scoreSubmissionState);
-      generateTotals("time", games, levels, timeSubmissionState);
+    if (cache.games && cache.levels) {
+      generateTotals("score", cache.games, cache.levels, cache.scoreSubmissionState);
+      generateTotals("time", cache.games, cache.levels, cache.timeSubmissionState);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [games, levels]);
+    }, [cache.games, cache.levels]);
 
     // once all the total tables have been generated, set loading to false
     useEffect(() => {
