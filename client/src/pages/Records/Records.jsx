@@ -55,7 +55,7 @@ function Records({ cache }) {
                   </tr>
                   <tr className="records-info-row">
                     <td>Level Name</td>
-                    <td>Score</td>
+                    <td>{ capitalize(game.type) }</td>
                     <td>Player(s)</td>
                   </tr>
                   { recordTable[mode].map(level => {
