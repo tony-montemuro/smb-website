@@ -127,7 +127,7 @@ const Load = () => {
         try {
             const { data: profileList, error, status } = await supabase
                 .from("profiles")
-                .select("*");
+                .select("id, username, country (iso2, name), youtube_url, twitch_url, avatar_url");
 
             // error handling
             if (error && status !== 406) {

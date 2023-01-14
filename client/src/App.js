@@ -110,7 +110,7 @@ function App() {
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/submissions" element={<Submissions isMod={ isMod } />} />
           <Route path="/support" element={<Support />}/>
-          <Route path="/user/:userId" element={<User />}/>
+          <Route path="/user/:userId" element={<User cache={ { games: games, profiles: profiles } } />}/>
           <Route path="/user/:userId/:game/main" element={<UserStats />}/>
           <Route path="/user/:userId/:game/misc" element={<UserStats />}/>
         </Routes>

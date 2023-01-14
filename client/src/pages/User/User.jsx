@@ -8,34 +8,25 @@ import Twitch from "../../img/twitch-logo.png";
 import UserInit from "./UserInit";
 import YT from "../../img/yt-logo.png";
 
-function User() {
+function User({ cache }) {
   // states and functions from the init file
   const {
     user,
     loading,
     games,
-    setLoading,
-    loadUser,
-    queryGameList
+    init
   } = UserInit();
 
   // helper functions
   const { capitalize } = FrontendHelper();
 
-  // code that is executed when the page first loads
+  // code that is executed when the page loads, or when the cache data changes
   useEffect(() => {
-    loadUser();
-    queryGameList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // code that is executed once both queries have completed
-  useEffect(() => {
-    if (user && games) {
-      setLoading(false);
+    if (cache.games && cache.profiles) {
+      init(cache.games, cache.profiles);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, games]);
+  }, [cache.games, cache.profiles]);
 
   // user component
   return (
