@@ -7,7 +7,7 @@ import LevelboardInit from "./LevelboardInit";
 import Popup from "./Popup";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
-function Levelboard({ isMod }) {
+function Levelboard({ cache }) {
 	// variables
 	const imgLength = 50;
 
@@ -20,12 +20,10 @@ function Levelboard({ isMod }) {
 		setLoading,
 		setBoard,
 		reset,
-		checkPath,
-		queryMonkey,
-		querySubmissions,
 		handleChange,
 		setBoardDelete,
-		submitRecord
+		submitRecord,
+		generateLevelboard
 	} = LevelboardInit();
 
 	// helper functions
@@ -38,29 +36,21 @@ function Levelboard({ isMod }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.pathname]);
 
-	// code that is executed once the loading, form, and board states are all their initial values
+	// code that is executed when page is loading, or when the cache fields are updated
 	useEffect(() => {
-		if (loading && !board.records && !form.values) {
-			checkPath();
-			queryMonkey();
+		if (loading && cache.games && cache.levels && cache.monkeys) {
+			generateLevelboard(cache.games, cache.levels, cache.monkeys, cache.submissionState);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [loading, board.records, form.values]);
+	}, [loading, cache.games, cache.levels, cache.monkeys]);
 
-	// code that is executed once the path is verfied to be accurate
-	useEffect(() => {
-		if (game) {
-			querySubmissions();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [game]);
-
-	// code that is executed when both queries are finished and data is collected
+	// code that is executed once the levelboard has been generated
 	useEffect(() => {
 		if (board.records && form.monkey) {
-			setLoading(false);
 			console.log(board);
 			console.log(form);
+			console.log(game);
+			setLoading(false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [board.records, form.monkey]);
@@ -75,15 +65,15 @@ function Levelboard({ isMod }) {
 					<div className="levelboard-header">
 						<div className="levelboard-title">
 							{ board.adjacent.prev ?
-								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.mode }/${ board.adjacent.prev }` }>
+								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.type }/${ board.adjacent.prev }` }>
 									<button disabled={ form.submitting }>←Prev</button>
 								</Link>
 							:	
 								null
 							}
-							<h1>{ capitalize(game.mode) }: { cleanLevelName(game.levelName) }</h1>
+							<h1>{ capitalize(game.type) }: { cleanLevelName(game.levelName) }</h1>
 							{ board.adjacent.next ?
-								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.mode }/${ board.adjacent.next }` }>
+								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.type }/${ board.adjacent.next }` }>
 									<button disabled={ form.submitting }>Next→</button>
 								</Link>
 							:
@@ -95,8 +85,8 @@ function Levelboard({ isMod }) {
 								<button disabled={ form.submitting }>Back to Level Select</button>
 							</Link>
 							{ game.chart_type === "both" ?
-								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.otherMode }/${ game.levelName }` }>
-									<button disabled={ form.submitting }>{ capitalize(game.otherMode) } Board</button>
+								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.other }/${ game.levelName }` }>
+									<button disabled={ form.submitting }>{ capitalize(game.other) } Board</button>
 								</Link>
 							:
 								null
@@ -107,7 +97,7 @@ function Levelboard({ isMod }) {
 							<Link to={ `/games/${ game.abb }/${ game.category }/medals` }>
 								<button disabled={ form.submitting }>Medal Table</button>
 							</Link>
-							<label htmlFor="showLive">Live-{ game.mode }s only: </label>
+							<label htmlFor="showLive">Live-{ game.type }s only: </label>
 							<input
 								id="showLive"
 								type="checkbox"
@@ -123,13 +113,13 @@ function Levelboard({ isMod }) {
 								<tr>
 									<th>Position</th>
 									<th>Name</th>
-									<th>{ capitalize(game.mode) }</th>
+									<th>{ capitalize(game.type) }</th>
 									<th>Date</th>
 									<th>Monkey</th>
 									<th>Proof</th>
 									<th>Comment</th>
 									<th>Approved</th>
-									{ isMod ? <th>Delete</th> : null }
+									{ cache.isMod ? <th>Delete</th> : null }
 								</tr>
 							</thead>
 							<tbody>
@@ -146,16 +136,16 @@ function Levelboard({ isMod }) {
 													:
 														null
 												}
-												<div><Link to={ `/user/${ val.user_id }` }>{ val.profiles.username }</Link></div>
+												<div><Link to={ `/user/${ val.profiles.id }` }>{ val.profiles.username }</Link></div>
 											</div>
 										</td>
-										<td>{ val[game.mode] }</td>
+										<td>{ val[game.type] }</td>
 										<td>{ val.submitted_at.slice(0, 10) }</td>
 										<td>{ val.monkey.monkey_name }</td>
 										<td>{ val.proof !== "none" ? <a href={ val.proof } target="_blank" rel="noopener noreferrer">☑️</a> : null }</td>
 										<td>{ val.comment }</td>
 										<td>{ val.approved ? "True" : "False" }</td>
-										{ isMod ? <td><button onClick={ () => setBoardDelete(val.user_id) }>❌</button></td> : null }
+										{ cache.isMod ? <td><button onClick={ () => setBoardDelete(val.profiles.id) }>❌</button></td> : null }
 									</tr>
 								})}
 							</tbody>
@@ -163,13 +153,13 @@ function Levelboard({ isMod }) {
 					</div>
 					{ supabase.auth.user() ?
 						<div className="levelboard-submit">
-							<h2>Submit a { capitalize(game.mode) }:</h2>
+							<h2>Submit a { capitalize(game.type) }:</h2>
 							<form onSubmit={ submitRecord }>
-								<label htmlFor={ game.mode }>{ capitalize(game.mode) }: </label>
+								<label htmlFor={ game.type }>{ capitalize(game.type) }: </label>
 								<input 
-									id={ game.mode }
+									id={ game.type }
 									type="number"
-									value={ form.values[game.mode] }
+									value={ form.values[game.type] }
 									onChange={ handleChange }
 								/>
 								<p>{ form.error.record }</p>
@@ -205,7 +195,11 @@ function Levelboard({ isMod }) {
 								<p>{ form.error.comment }</p>
 								<button disabled={ form.submitting }>Submit</button>
 							</form>
-							<button disabled={ form.submitting } onClick={ () => setBoardDelete(supabase.auth.user().id) }>Remove Record</button>
+							{ form.prevSubmitted ?
+								<button disabled={ form.submitting } onClick={ () => setBoardDelete(supabase.auth.user().id) }>Remove Record</button>
+							:
+								null
+							}
 							<Popup board={ board } setBoard={ setBoard } />
 						</div>
 					:

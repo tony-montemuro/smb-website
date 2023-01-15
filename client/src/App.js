@@ -103,10 +103,42 @@ function App() {
           <Route path="games/:game/misc/time" element={
             <Records cache={ { games: games, levels: levels, submissionState: timeSubmissionState } } />
           }/>
-          <Route path="games/:game/main/time/:levelid" element={<Levelboard isMod={ isMod } />}/>
-          <Route path="games/:game/main/score/:levelid" element={<Levelboard isMod={ isMod } />}/>
-          <Route path="games/:game/misc/time/:levelid" element={<Levelboard isMod={ isMod } />}/>
-          <Route path="games/:game/misc/score/:levelid" element={<Levelboard isMod={ isMod } />}/>
+          <Route path="games/:game/main/score/:levelid" element={
+            <Levelboard cache={ { 
+              games: games,
+              levels: levels,
+              monkeys: monkeys,
+              submissionState: scoreSubmissionState,
+              isMod: isMod
+            } } />}
+          />
+          <Route path="games/:game/main/time/:levelid" element={
+            <Levelboard cache={ { 
+              games: games,
+              levels: levels,
+              monkeys: monkeys,
+              submissionState: timeSubmissionState,
+              isMod: isMod
+            } } />}
+          />
+          <Route path="games/:game/misc/score/:levelid" element={
+            <Levelboard cache={ { 
+              games: games,
+              levels: levels,
+              monkeys: monkeys,
+              submissionState: scoreSubmissionState,
+              isMod: isMod
+            } } />}
+          />
+          <Route path="games/:game/misc/time/:levelid" element={
+            <Levelboard cache={ { 
+              games: games,
+              levels: levels,
+              monkeys: monkeys,
+              submissionState: timeSubmissionState,
+              isMod: isMod
+            } } />}
+          />
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/submissions" element={<Submissions isMod={ isMod } />} />
           <Route path="/support" element={<Support />}/>

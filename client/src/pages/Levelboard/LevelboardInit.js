@@ -4,19 +4,22 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardHelper from "../../helper/LevelboardHelper";
+import SubmissionQuery from "../../helper/SubmissionQuery";
 
 const LevelboardInit = () => {
 	/* ===== VARIABLES ===== */
 	const pathArr = window.location.pathname.split("/");
 	const abb = pathArr[2];
 	const category = pathArr[3];
-	const mode = pathArr[4];
+	const type = pathArr[4];
 	const levelId = pathArr[5];
+	const isMisc = category === "misc" ? true : false;
 	const boardInit = { records: null, adjacent: null, state: "live", delete: null };
 	const formInit = { 
 		values: null, 
 		error: { record: null, proof: null, comment: null },
 		monkey: null,
+		prevSubmitted: false,
 		submitting: false,
 		submitted: false
 	};
@@ -45,8 +48,9 @@ const LevelboardInit = () => {
 	/* ===== FUNCTIONS ===== */
 
 	// helper functions
-	const { addPositionToLevelboard, containsE, decimalCount } = LevelboardHelper();
 	const { capitalize } = FrontendHelper();
+	const { addPositionToLevelboard, containsE, decimalCount } = LevelboardHelper();
+	const { query } = SubmissionQuery();
 
 	// navigate used for redirecting
     const navigate = useNavigate();
@@ -58,204 +62,141 @@ const LevelboardInit = () => {
 		setBoard(boardInit);
 	};
 
-	// function that verifies user has navigated to a valid path. this function will also establish the adjacent levels
-	const checkPath = async() => {
-		try {
-			// first, verify the levelId is valid. this requires a query to supabase
-			const { data: levels, error, status } = await supabase
-				.from("level")
-				.select(`
-					name,
-					mode (game (name)),
-					chart_type
-				`)
-				.eq("game", abb)
-				.eq("misc", category === "misc")
-				.in("chart_type", [`${mode}`, "both"])
-				.order("id");
-
-			// error handling
-			if (error || status === 406) {
-				throw error;
-			}
-			if (levels.length === 0) {
-				const error = { code: 1, message: "Error: This game and category combination have no levels." };
-				throw error;
-			}
-			const levelIndex = levels.findIndex(obj => obj.name === levelId);
-			if (levelIndex === -1) {
-				const error = { code: 1, message: "Error: This level does not exist." };
-				throw error;
-			}
-
-			// figure out previous and next ids
-			let prev = null, next = null;
-			if (levelIndex > 0) {
-				prev = levels[levelIndex-1].name;
-			}
-			if (levelIndex < levels.length-1) {
-				next = levels[levelIndex+1].name;
-			}
-
-			// finally, update react hooks
-			const gameObj = { 
-				name: levels[levelIndex].mode.game.name, 
-				abb: abb, 
-				category: category, 
-				mode: mode,
-				otherMode: mode === "score" ? "time" : "score",
-				levelName: levels[levelIndex].name,
-				chart_type: levels[levelIndex].chart_type
-			};
-			setGame(gameObj);
-			setBoard({ ...board, adjacent: { prev: prev, next: next } });
-			console.log(gameObj);
-
-		} catch (error) {
-			if (error.code === 1) {
-				console.log(error.message);
-			} else {
-				console.log(error);
-				alert(error.message);
-			}
+	// function that takes games, levels, monkeys, and submissionState, and generates the levelboard based on the
+	// abb and levelId
+	const generateLevelboard = async (games, levels, monkeys, submissionState) => {		
+		// first, we need to verify the path: start with game
+		const currentGame = games.find(row => row.abb === abb);
+		if (!currentGame) {
+			console.log("Error: Invalid game.");
 			navigate("/");
+			return;
 		}
-	};
 
-	// function that queries all monkeys
-	const queryMonkey = async() => {
-		try {
-			// query monkey table
-			const { data: monkeys, error, status } = await supabase
-				.from("monkey")
-				.select()
-				.order("id")
-
-			// error handling
-			if (error && status !== 406) {
-				throw error;
-			}
-
-			// update form reducer hook
-			dispatchForm({ field: "monkey", value: monkeys });
-
-		} catch(error) {
-			console.log(error);
-			alert(error.message);
+		// next, we need to verify the level
+		const gameLevels = levels.filter(row => row.game === abb && row.misc === isMisc);
+		const level = gameLevels.map((row, index) => row.name === levelId ? { row, index } : null).filter(row => row !== null);
+		if (level.length === 0) {
+			console.log("Error: Invalid level.");
+			navigate("/");
+			return;
 		}
-	};
 
-	// function that queries submission table for relevant records
-	const querySubmissions = async() => {
-		try {
-			// query submissions table
-			let { data: table, error, status } = await supabase
-				.from(`${mode}_submission`)
-				.select(`
-					user_id,
-					profiles:user_id (username, country, avatar_url),
-					${mode},
-					monkey:monkey_id (id, monkey_name),
-					submitted_at,
-					proof,
-					comment,
-					live,
-					approved
-				`)
-				.eq("game_id", abb)
-				.eq("level_id", levelId)
-				.order(`${mode}`, { ascending: false })
-				.order("submitted_at", { ascending: true });
-			
-			// error handling
-			if (error && status !== 406) {
-				throw error;
+		// find the previous and next level indicies, if they exist
+		const levelInfo = level[0].row, levelIndex = level[0].index;
+		let prev = null, next = null;
+		if (levelIndex > 0) {
+			prev = gameLevels[levelIndex-1].name;
+		}
+		if (levelIndex < gameLevels.length-1) {
+			next = gameLevels[levelIndex+1].name;
+		}
+
+		// update game and form states
+		setGame({ 
+			...currentGame, 
+			category: category, 
+			chart_type: levelInfo.chart_type, 
+			levelName: levelInfo.name,
+			type: type,
+			other: type === "score" ? "time" : "score"
+		});
+		dispatchForm({ field: "monkey", value: monkeys });
+
+		// from here, we have two cases. if user is accessing already cached submissions, we can fetch
+        // this information from submissionState. Otherwise, we need to query, and set the submission state
+        let submissions = {};
+        if (submissionState.state && abb in submissionState.state) {
+            submissions = submissionState.state[abb];
+        } else {
+            submissions = await query(abb, type);
+            submissionState.setState({ ...submissionState.state, [abb]: submissions });
+        }
+
+		// now, filter the submissions object based on the levelId
+		const filtered = submissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
+		
+		// split board into two lists: live-only, and all records
+		const user = supabase.auth.user();
+		const userId = user ? user.id : null;
+		const liveOnly = [], all = [];
+		let formSet = false;
+		for (let i = 0; i < filtered.length; i++) {
+			const currRecord = filtered[i];
+
+			// firstly, if we are looking at time records, fix the time field to 2 decimal points
+			if (type === 'time') {
+				currRecord.time = currRecord.time.toFixed(2);
 			}
 
-			// split board into two lists: live-only, and all records
-			const user = supabase.auth.user();
-			const userId = user ? user.id : null;
-			const liveOnly = [], all = [];
-			let formSet = false;
-			for (let i = 0; i < table.length; i++) {
-				const currRecord = table[i];
-
-				// firstly, if a user is currently signed in, check if a record belongs to them
-				// if so, we need to update form values, and update the formSet flag
-				if (userId && currRecord.user_id === userId) {
-					dispatchForm({ field: "values", value: {
-						[mode]: currRecord[`${mode}`], 
-						monkey_id: currRecord.monkey.id,
-						live: currRecord["live"],
-						proof: currRecord["proof"], 
-						comment: currRecord["comment"],
-						user_id: currRecord["user_id"],
-						game_id: game.abb,
-						level_id: levelId,
-						approved: false
-					}});
-					formSet = true;
-				}
-
-				// next, if we are looking at time records, fix the time field to 2 decimal points
-				if (mode === 'time') {
-					currRecord.time = currRecord.time.toFixed(2);
-				}
-
-				// finally, add to the liveOnly array if record is live. push to all array as well
-				if (currRecord.live) {
-					liveOnly.push(Object.assign({}, currRecord));
-				}
-				all.push(currRecord);
-			}
-
-			// if the formSet flag was never set to true, this means that the client has not submitted to this chart
-			// yet. set the form to default values
-			if (!formSet) {
+			// next, if a user is currently signed in, check if a record belongs to them
+			// if so, we need to update form values, and update the formSet flag
+			if (userId && currRecord.profiles.id === userId) {
 				dispatchForm({ field: "values", value: {
-					[mode]: "", 
-					monkey_id: 1,
-					live: true,
-					proof: "", 
-					comment: "",
-					user_id: userId,
-					game_id: game.abb,
+					[type]: currRecord[`${ type }`], 
+					monkey_id: currRecord.monkey.id,
+					live: currRecord.live,
+					proof: currRecord.proof, 
+					comment: currRecord.comment,
+					user_id: currRecord.profiles.id,
+					game_id: currentGame.abb,
 					level_id: levelId,
 					approved: false
 				}});
+				dispatchForm({ field: "prevSubmitted", value: true });
+				formSet = true;
 			}
 
-			// now, let's add the position field to each record in both arrays
-			addPositionToLevelboard(liveOnly, mode);
-			addPositionToLevelboard(all, mode);
+			// finally, add to the liveOnly array if record is live. push to all array as well
+			if (currRecord.live) {
+				liveOnly.push(Object.assign({}, currRecord));
+			}
+			all.push(currRecord);
+		}
 
-			// finally, update board state hook
-			setBoard({ ...board, records: { all: all, live: liveOnly } });
+		// if the formSet flag was never set to true, this means that the client has not submitted to this chart
+		// yet. set the form to default values
+		if (!formSet) {
+			dispatchForm({ field: "values", value: {
+				[type]: "", 
+				monkey_id: 1,
+				live: true,
+				proof: "", 
+				comment: "",
+				user_id: userId,
+				game_id: currentGame.abb,
+				level_id: levelId,
+				approved: false
+			}});
+		}
 
-		} catch (error) {
-			console.log(error);
-			alert(error.message);
-		} 
+		// now, let's add the position field to each record in both arrays
+		addPositionToLevelboard(liveOnly, type);
+		addPositionToLevelboard(all, type);
+
+		// finally, update board state hook
+		setBoard({ ...board, records: { all: all, live: liveOnly }, adjacent: { prev: prev, next: next } });
 	};
 
 	// function that runs each time a form value is changed. keeps the form reducer updated
     const handleChange = (e) => {
         const { id, value, checked } = e.target;
-		id === "isLive" ? dispatchForm({ field: "values", value: { [id]: checked } }) : dispatchForm({ field: "values", value: { [id]: value } });
+		id === "live" ? dispatchForm({ field: "values", value: { [id]: checked } }) : dispatchForm({ field: "values", value: { [id]: value } });
 		console.log(form);
     };
 
 	// function that sets the delete field of the board state when a user attempts to delete a record
 	// note: when this field is set to a non-null value, a popup component will automatically be activated
 	const setBoardDelete = (id) => {
-		const row = board.records.all.find(row => row.user_id === id);
+		const row = board.records.all.find(row => row.profiles.id === id);
+		console.log(id);
 		setBoard({ ...board, delete: {
-			user_id: row.user_id,
+			user_id: row.profiles.id,
 			game_id: abb,
 			level_id: levelId,
-			mode: mode,
+			type: type,
 			name: row.profiles.username,
-			[mode]: row[mode]
+			[type]: row[type]
 		}});
 	};
 
@@ -269,26 +210,26 @@ const LevelboardInit = () => {
 		Object.keys(form.error).forEach(field => error[field] = null);
 
 		// first, validate the record
-		const record = form.values[mode];
+		const record = form.values[type];
 		if (!record) {
-            error.record = `${ capitalize(mode) } is required.`;
+            error.record = `${ capitalize(type) } is required.`;
         }
         else if (record <= 0) {
-            error.record = `${ capitalize(mode) } must be a positive value.`;
+            error.record = `${ capitalize(type) } must be a positive value.`;
         }
         else if (record > 2147483647) {
-            error.record = `${ capitalize(mode) } is invalid.`;
+            error.record = `${ capitalize(type) } is invalid.`;
         }
 
 		// make sure scores are integers
-        if (!error.record && mode === 'score') {
+        if (!error.record && type === 'score') {
             if (!Number.isInteger(+record)) {
                 error.record = "Score must be an integer value.";
             }
         }
 
 		// make sure time has two decimal places
-        if (!error.record && mode === 'time') {
+        if (!error.record && type === 'time') {
             if (decimalCount(record) !== 2) {
                 error.record = "Please ensure your submission has two decimal places.";
             }
@@ -319,7 +260,7 @@ const LevelboardInit = () => {
 		// if we made it this far, no errors were detected, so we can go ahead and submit
 		try {
 			const { error } = await supabase
-				.from(`${mode}_submission`)
+				.from(`${type}_submission`)
 				.upsert(form.values, {
                     returning: "minimal", // Don't return the value after inserting
                 }, { 
@@ -349,12 +290,10 @@ const LevelboardInit = () => {
 		setLoading,
 		setBoard,
 		reset,
-		checkPath,
-		queryMonkey,
-		querySubmissions,
 		handleChange,
 		setBoardDelete,
-		submitRecord
+		submitRecord,
+		generateLevelboard
 	};
 };  
 

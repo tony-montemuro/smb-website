@@ -5,6 +5,7 @@ import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 function Popup({ board, setBoard }) {
     // function to remove a record
     const remove = async() => {
+      console.log(board.delete);
       try {
         const { error } = await supabase
           .from( `${ board.delete.mode }_submission` )
