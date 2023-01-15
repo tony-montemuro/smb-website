@@ -110,8 +110,8 @@ function App() {
               monkeys: monkeys,
               submissionState: scoreSubmissionState,
               isMod: isMod
-            } } />}
-          />
+            } } />
+          }/>
           <Route path="games/:game/main/time/:levelid" element={
             <Levelboard cache={ { 
               games: games,
@@ -119,8 +119,8 @@ function App() {
               monkeys: monkeys,
               submissionState: timeSubmissionState,
               isMod: isMod
-            } } />}
-          />
+            } } />
+          }/>
           <Route path="games/:game/misc/score/:levelid" element={
             <Levelboard cache={ { 
               games: games,
@@ -128,8 +128,8 @@ function App() {
               monkeys: monkeys,
               submissionState: scoreSubmissionState,
               isMod: isMod
-            } } />}
-          />
+            } } />
+          }/>
           <Route path="games/:game/misc/time/:levelid" element={
             <Levelboard cache={ { 
               games: games,
@@ -137,14 +137,18 @@ function App() {
               monkeys: monkeys,
               submissionState: timeSubmissionState,
               isMod: isMod
-            } } />}
-          />
+            } } />
+          }/>
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/submissions" element={<Submissions isMod={ isMod } />} />
           <Route path="/support" element={<Support />}/>
           <Route path="/user/:userId" element={<User cache={ { games: games, profiles: profiles } } />}/>
-          <Route path="/user/:userId/:game/main" element={<UserStats />}/>
-          <Route path="/user/:userId/:game/misc" element={<UserStats />}/>
+          <Route path="/user/:userId/:game/main" element={
+            <UserStats cache={ { profiles: profiles, games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
+          }/>
+          <Route path="/user/:userId/:game/misc" element={
+            <UserStats cache={ { profiles: profiles, games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
+          }/>
         </Routes>
       </div>
     </>

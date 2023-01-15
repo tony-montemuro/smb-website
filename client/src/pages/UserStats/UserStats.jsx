@@ -5,49 +5,43 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 import UserStatsInit from "./UserStatsInit";
 
-function UserStats() {
-    // hooks and functions from init file
-    const { 
-      loading,
-      game,
-      user, 
-      board,
-      setLoading, 
-      dispatchboard,
-      checkForUser,
-      levelsQuery,
-      queryAndCalc
-    } = UserStatsInit();
+function UserStats({ cache }) {
+  // variables
+  const imgLength = 50;
 
-    // helper functions
-    const { capitalize, cleanLevelName } = FrontendHelper();
+  // hooks and functions from init file
+  const { 
+    loading,
+    game,
+    user, 
+    board,
+    setLoading, 
+    dispatchBoard,
+    validatePath,
+    generateUserStats
+  } = UserStatsInit();
 
-    // first, we need to do initial queries for checks and total calculations
-    useEffect(() => {
-      checkForUser();
-      levelsQuery();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+  // helper functions
+  const { capitalize, cleanLevelName } = FrontendHelper();
 
-    // if the initial queries are a success, we can query submissions to get medals and totals
-    useEffect(() => {
-      if (user && game) {
-        queryAndCalc();
-        queryAndCalc(game.timeTotal);
-        console.log(user);
-        console.log(game);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user, game]);
+  // code that is executed when the page loads, or when the cache fields are updated
+  useEffect(() => {
+    if (cache.profiles && cache.games && cache.levels) {
+      const { scoreLevels, timeLevels, timeTotal } = validatePath(cache.profiles, cache.games, cache.levels);
+      generateUserStats("score", scoreLevels, cache.scoreSubmissionState);
+      generateUserStats("time", timeLevels, cache.timeSubmissionState, timeTotal);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cache.profiles, cache.games, cache.levels]);
 
-    // once both time and score have queried and processed, we can update loading hook
-    useEffect(() => {
-      if (board.score && board.time) {
-        setLoading(false);
-        console.log(board);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [board]);
+  // once both time and score stats have been generated, we can update loading hook
+  useEffect(() => {
+    if (board.score && board.time) {
+      setLoading(false);
+      console.log(board);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [board.score, board.time]);
 
   // user stats component
   return (
@@ -67,7 +61,7 @@ function UserStats() {
             type="radio" 
             value="score"
             checked={ board.type === "score" }
-            onChange={ (e) => dispatchboard({ field: "type", data: e.target.value }) }>
+            onChange={ (e) => dispatchBoard({ field: "type", data: e.target.value }) }>
           </input>
           <label htmlFor="time">Time:</label>
           <input 
@@ -75,7 +69,7 @@ function UserStats() {
             type="radio" 
             value="time"
             checked={ board.type === "time" }
-            onChange={ (e) => dispatchboard({ field: "type", data: e.target.value }) }>
+            onChange={ (e) => dispatchBoard({ field: "type", data: e.target.value }) }>
           </input>
         </div>
       </div>
@@ -97,9 +91,9 @@ function UserStats() {
                   <td>{ board[board.type].total.position }</td>
                   <td>
                     <div className="stats-user-info">
-                      <div className="stats-table-image"><SimpleAvatar url={ user.avatar_url }/></div>
+                      <div className="stats-table-image"><SimpleAvatar url={ user.avatar_url } size={ imgLength } /></div>
                       { user.country ?
-                          <div><span className={ `fi fi-${ user.country.toLowerCase() }` }></span></div>
+                          <div><span className={ `fi fi-${ user.country.iso2.toLowerCase() }` }></span></div>
                           :
                           ""
                       }
@@ -137,9 +131,9 @@ function UserStats() {
                   <td>{ board[board.type].medals.position }</td>
                   <td>
                     <div className="stats-user-info">
-                      <div className="stats-table-image"><SimpleAvatar url={ user.avatar_url }/></div>
+                      <div className="stats-table-image"><SimpleAvatar url={ user.avatar_url } size={ imgLength } /></div>
                       { user.country ?
-                        <div><span className={ `fi fi-${ user.country.toLowerCase() }` }></span></div>
+                        <div><span className={ `fi fi-${ user.country.iso2.toLowerCase() }` }></span></div>
                       :
                         ""
                       }
