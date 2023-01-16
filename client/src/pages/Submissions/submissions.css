@@ -1,4 +1,37 @@
+.submissions-header {
+    text-align: center;
+}
+
+.submissions-body {
+    display: flex;
+}
+
+.submissions-body h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.submissions-select {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-basis: 20%;
+}
+
+.submissions-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-basis: 80%;
+}
+
+.submissions-list button {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
 .submissions-list table {
+    margin-top: 7px;
     table-layout: fixed;
     border-collapse: collapse;
     margin-left: auto;
@@ -7,7 +40,6 @@
 
 .submissions-list th {
     border: 1px solid black;
-    text-align: left;
     padding: 4px 8px;
 }
 

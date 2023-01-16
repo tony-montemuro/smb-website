@@ -1,135 +1,101 @@
 import "./submissions.css";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import SubmissionInit from "./SubmissionsInit";
-import FrontendHelper from "../../helper/FrontendHelper";
+import SubmissionsTable from "./SubmissionsTable";
 
-function Submissions({ isMod }) {
+function Submissions({ cache }) {
+  // states and functions from the init file
   const { 
     loading, 
-    gameList, 
-    scoreRecords,
-    timeRecords,
     submissions, 
     currentGame, 
-    checkForMod, 
-    queryGames,
-    querySubmissions,
-    mergeRecords,
-    changeGame, 
-    approveSubmission
-   } = SubmissionInit();
+    approved,
+    approving,
+    validate,
+    swapGame,
+    addToApproved,
+    removeFromApproved,
+    approveAll
+  } = SubmissionInit();
 
-  // code that is executed when the page is loaded
+  // code that is executed when the page loads, or when cache fields are updated
   useEffect(() => {
-    if (isMod !== null) {
-      checkForMod(isMod);
-      queryGames();
+    if (cache.games && cache.isMod !== null) {
+      if (validate(cache.isMod)) {
+        swapGame(cache.games[0].abb, cache.scoreSubmissionState, cache.timeSubmissionState);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMod]);
+  }, [cache.games, cache.isMod]);
 
-  // code that is executed once it is verified that the user is a moderator, and the game list is loaded
-  useEffect(() => {
-    if (isMod && gameList.length > 0) {
-      querySubmissions("score");
-      querySubmissions("time");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMod, gameList]);
-
-  // code that is executed once both the time and score submissions have both been loaded
-  useEffect(() => {
-    // once submissions has a property for each game, this means that our querying has completed
-    // and we can proceed
-    if (scoreRecords.loaded && timeRecords.loaded) {
-      mergeRecords();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scoreRecords, timeRecords]);
-
-  // Helper functions
-  const { cleanLevelName } = FrontendHelper();
-
+  // submissions component
   return (
-    <div className="submissions">
-      {isMod ? 
-      <div className="submissions-header">
-        <h1>Recent Submissions</h1>
-        <p><i>Below is the list of recent submissions. Please go through and review each submission for each game.</i></p>
-        <p>If a submission is <b>valid</b>, just click the <b>Reviewed</b> button for that submission.</p>
-        <p>If you suspect a submission is <b>invalid</b>, first navigate to the board with the invalid
-        submission by clicking on the <b>Level Name</b>. If you still are suspicious, remove the record
-        by clicking the <b>Delete</b> button. Finally, navigate back to the <b>Recent Submissions</b> page, and
-        click the <b>Reviewed</b> button for that submission.</p>
-      </div> 
+    <>
+      { cache.isMod ? 
+        <div className="submissions-header">
+          <h1>Recent Submissions</h1>
+          <p><i>Below is the list of recent submissions. Please go through and review each submission for each game.</i></p>
+          <p>To select a game, use the <b>Select Game</b> selection tool.</p>
+          <p>If a submission is <b>valid</b>, add it to the list of approved records by pressing the <b>Approve</b> button
+          for that submission. <b>NOTE:</b> In order to finalize the approval process, you <i>must</i> press
+          the <b>Approve All</b> button under the <b>Approved Submissions</b> list. Remember, if you accidently add an invalid
+          run to the <b>Approved Submissions</b> list, you can always remove it by pressing the <b>Unapprove</b> button. </p>
+          <p>If you suspect a submission is <b>invalid</b>, first navigate to the board with the invalid
+          submission by clicking on the <b>Level Name</b>. If you still are suspicious, remove the record
+          by clicking the <b>Delete</b> button.</p>
+        </div> 
       : 
-      ""}
-      {loading ?
-        <p>Loading...</p>
-        :
+        null
+      }
         <div className="submissions-body">
-          <div className="selector">
-            <form>
-              <select
-                onChange={(e) => changeGame(e.target.value)}
-                value={currentGame}
-              >
-                {gameList.map(val => {
-                  return <option key={val.abb} value={val.abb}>{val.name}</option>
-                })}
-              </select>
-            </form>
-          </div>
+          { currentGame ? 
+            <div className="submissions-select">
+              <h3>Select Game:</h3>
+              <form>
+                <select
+                  onChange={ (e) => swapGame(e.target.value, cache.scoreSubmissionState, cache.timeSubmissionState) }
+                  value={ currentGame }
+                >
+                  { cache.games.map(val => {
+                    return <option key={ val.abb } value={ val.abb }>{ val.name }</option>
+                  })}
+                </select>
+              </form>
+            </div>
+          :
+            null
+          }
           <div className="submissions-list">
-            <table>
-              <thead>
-                <tr>
-                  <th>Submission Date</th>
-                  <th>Level Name</th>
-                  <th>Mode</th>
-                  <th>User</th>
-                  <th>Record</th>
-                  <th>Live Status</th>
-                  <th>Proof</th>
-                  <th>Comment</th>
-                  <th>Approve</th>
-                </tr>
-              </thead>
-              <tbody>
-              { submissions[currentGame].map(val => {
-                return <tr key={ val.submitted_at }>
-                  <td>{ val.submitted_at }</td>
-                  <td>
-                    <Link to={`/games/${ currentGame }/${ val.level.misc ? "misc" : "main" }/${ val.is_score ? "score" : "time" }/${ val.level.name }`}>
-                      { cleanLevelName(val.level.name) }
-                    </Link>
-                  </td>
-                  <td>{ val.is_score ? "Score" : "Time" }</td>
-                  <td>
-                    <div className="submissions-user-info">
-                    {val.profiles.country ?
-                      <div><span className={ `fi fi-${val.profiles.country.toLowerCase()}` }></span></div>
-                      :
-                      ""
-                    }
-                    <div><Link to={ `/user/${ val.profiles.id }` }>{ val.profiles.username }</Link></div>
-                    </div>
-                  </td>
-                  <td>{ val.record }</td>
-                  { val.live ? <td>Live</td> : <td>Non-live</td> }
-                  <td>{ val.proof !== "none" ? <a href={val.proof} target="_blank" rel="noopener noreferrer">☑️</a> : '' }</td>
-                  <td>{ val.comment }</td>
-                  <td><button onClick={ () => approveSubmission(val) }>Approve</button></td>
-                </tr>
-              })}
-              </tbody>
-            </table>
+            <h3>Approved Submissions:</h3>
+            { approved.length > 0 ?
+              <SubmissionsTable 
+                data={ { list: approved, isApproved: true } } 
+                games={ { current: currentGame, all: cache.games } }
+                toggleBtn={ approving } 
+                buttonFunc={ removeFromApproved }
+              />
+            :
+              <p><i>Approve a submission to add it to the list!</i></p>
+            }
+            <button onClick={ () => approveAll() } disabled={ approved.length === 0 || approving }>Approve All</button>
+            <h3>Submissions:</h3>
+            { loading ? 
+              <p>Loading...</p>
+            :
+              submissions[currentGame].length > 0 ?
+                <SubmissionsTable 
+                  data={ { list: submissions[currentGame], isApproved: false } } 
+                  games={ { current: currentGame, all: cache.games } }
+                  toggleBtn={ approving } 
+                  buttonFunc={ addToApproved } 
+                />
+              :
+                <p><i>This game has no unapproved submissions!</i></p>
+            }
           </div>
         </div>
-      }
-    </div>
+    </>
   );
 }
 
