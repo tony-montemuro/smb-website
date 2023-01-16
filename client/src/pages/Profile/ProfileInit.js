@@ -32,7 +32,6 @@ const ProfileInit = () => {
         return { ...state, [action.field]: action.value };
     }, { 
         avatar_url: null,
-        avatarLink: null,
         error: null,
         updating: false
     });
@@ -42,109 +41,43 @@ const ProfileInit = () => {
     // navigate used for redirecting
     const navigate = useNavigate();
 
-    // function that grabs user data from the database
-    const getProfile = async () => {
-        // initalize variables
+    // verify a user is accessing this page. once done, 
+    const initForms = (profiles, countries) => {
+        // first, verify a user is attempting to access this page
         const user = supabase.auth.user();
-
-        try {
-            // if a non-authenticated user is attempting to view this page, redirect them home
-            // otherwise, query profiles table for user information
-            if (!user) {
-                console.log("Error: Invalid access.");
-                navigate("/");
-            
-            } else {
-                // now, query profiles table to get user profile information
-                let { data: userInfo, error, status } = await supabase
-                    .from("profiles")
-                    .select("id, username, country, youtube_url, twitch_url, avatar_url")
-                    .eq("id", user.id)
-                    .single();
-
-                // error handling
-                if (error && status !== 406) {
-                    throw error;
-                }
-                if (!userInfo) {
-                    const error = { code: 1 };
-                    throw error;
-                }
-
-                // if query returned user data successfully, update hooks
-                userInfo.country = userInfo.country ? userInfo.country : "";
-                dispatchUserForm({ field: "user", value: {
-                    id: userInfo.id,
-                    username: userInfo.username,
-                    country: userInfo.country,
-                    youtube_url: userInfo.youtube_url,
-                    twitch_url: userInfo.twitch_url
-                }});
-                dispatchAvatarForm({ field: "avatar_url", value: userInfo.avatar_url });
-            }
-
-        } catch(error) {
-            // special condition: new user who has not created a profile yet. create a default profile for them.
-            if (error.code === 1) {
-                dispatchUserForm({ field: "user", value: {
-                    id: user.id,
-                    username: "",
-                    country: "",
-                    youtube_url: "",
-                    twitch_url: "",
-                }});
-                dispatchAvatarForm({ field: "avatar_url", value: "default.png" });
-                setFirstTimeUser(true);
-            } else {
-                console.log(error);
-                alert(error.message);
-            }
+        if (!user) {
+            console.log("Error: Invalid access.");
+            navigate("/");
+            return;
         }
-    };
 
-     // function that grabs data from the country database
-     const getCountries = async () => {
-        try {
-            // read the entire countries table
-            let { data: countries, error, status } = await supabase
-                .from("countries")
-                .select("*")
-                .order("name");
-
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            // update countryList hook
-            dispatchUserForm({ field: "countryList", value: countries });
-
-        } catch (error) {
-            alert(error.message);
+        // now we have two cases: user has set up a profile, or is a first time user
+        const userInfo = profiles.find(row => row.id === user.id);
+        if (userInfo) {
+            userInfo.country = userInfo.country ? userInfo.country : "";
+            dispatchUserForm({ field: "user", value: {
+                id: userInfo.id,
+                username: userInfo.username,
+                country: userInfo.country.iso2,
+                youtube_url: userInfo.youtube_url,
+                twitch_url: userInfo.twitch_url
+            }});
+            dispatchAvatarForm({ field: "avatar_url", value: userInfo.avatar_url });
+        } else {
+            dispatchUserForm({ field: "user", value: {
+                id: user.id,
+                username: "",
+                country: "",
+                youtube_url: "",
+                twitch_url: "",
+            }});
+            dispatchAvatarForm({ field: "avatar_url", value: "default.png" });
+            setFirstTimeUser(true);
         }
-    };
 
-    // takes the avatar 'url' from the profiles table, and gets the actual url
-    const downloadImage = async (path) => {
-        try {
-            // query the supabase storage bucket for the avatar
-            const { data, error } = await supabase.storage
-                .from('avatars')
-                .download(path);
-    
-            // if there was some error, throw it
-            if (error) {
-                throw error;
-            }
-    
-            // create the url object, and update state
-            const url = URL.createObjectURL(data);
-            dispatchAvatarForm({ field: "avatarLink", value: url });
-        } catch (error) {
-            console.log("Error downloading image: ", error.message);
-        } finally {
-            dispatchAvatarForm({ field: "updating", value: false });
-        }
+        // finally, let's update user form with countries data
+        dispatchUserForm({ field: "countryList", value: countries });
+        setLoading(false);
     };
 
     // function that runs each time a form value is changed. keeps user state updated
@@ -200,10 +133,9 @@ const ProfileInit = () => {
                 throw error;
             }
 
-            // if successful, set the updated value to true
-            dispatchUserForm({ field: "updated", value: true });
-            setFirstTimeUser(false);
-            console.log("SUBMITTED!");
+            // if successful, reload the page
+            window.location.reload();
+
         } catch(error) {
             // error code 23505 occurs when user attempts to register
             // an already taken username
@@ -299,19 +231,13 @@ const ProfileInit = () => {
                 throw error;
             }
 
-            // update form reducer and ref hook
-            dispatchAvatarForm({ field: "error", value: null });
-            dispatchAvatarForm({ field: "avatar_url", value: filePath });
-            avatarRef.current.value = "";
+            // reload the page
+            window.location.reload();
 
-            // finally, redownload the image for frontend
-            downloadImage(filePath);
-            console.log("submitted!!");
-
-            } catch(error) {
-                console.log(error);
-                alert(error.message);
-            }
+        } catch(error) {
+            console.log(error);
+            alert(error.message);
+        }
     };
 
     // function that will sign the user out, and navigate them back to the home screen.
@@ -325,10 +251,7 @@ const ProfileInit = () => {
         userForm,
         avatarForm,
         avatarRef,
-        setLoading,
-        getProfile, 
-        getCountries,
-        downloadImage,
+        initForms,
         handleChange,
         updateUserInfo,
         avatarSubmit,

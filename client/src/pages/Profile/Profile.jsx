@@ -2,41 +2,29 @@ import "./profile.css";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProfileInit from "./ProfileInit";
+import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
-function Profile() {
+function Profile({ cache }) {
     // states and functions from the init file
     const { 
         loading,
         userForm,
         avatarForm,
         avatarRef,
-        setLoading,
-        getProfile, 
-        getCountries,
-        downloadImage,
+        initForms,
         handleChange,
         updateUserInfo,
         avatarSubmit,
         signOut
     } = ProfileInit();
 
-    // code that is executed when the page is first loaded
+    // code that is executed when the page is first loaded, or when the cache fields are updated
     useEffect(() => {
-        getProfile();
-        getCountries();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    // code that is executed once both the profile and countries queries have completed
-    useEffect(() => {
-        if (avatarForm.avatar_url && userForm.countryList.length > 0) {
-            setLoading(false);
-            downloadImage(avatarForm.avatar_url);
-            console.log(userForm);
-            console.log(avatarForm);
+        if (cache.profiles && cache.countries) {
+            initForms(cache.profiles, cache.countries);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [avatarForm.avatar_url, userForm.countryList]);
+    }, [cache.profiles, cache.countries]);
 
   return (
     <>
@@ -103,10 +91,7 @@ function Profile() {
             <h2>Update Avatar</h2>
             <form className="profile-avatar-form" onSubmit={ avatarSubmit }>
             <p><b>Note:</b> Must be JPEG or PNG, and cannot exceed 5 MB. If your avatar does not update immediately, give it some time.</p>
-                <img
-                    src={ avatarForm.avatarLink ? avatarForm.avatarLink : `https://place-hold.it/${150}x${150}` }
-                    alt={ avatarForm.avatarLink ? 'Avatar' : 'No image' }
-                />
+                <div className="profiles-avatar"><SimpleAvatar url={ avatarForm.avatar_url } size={ 150 } /></div>
                 <label htmlFor="avatar-update"></label>
                 <input
                     type="file"

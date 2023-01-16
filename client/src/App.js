@@ -76,7 +76,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}/>
           <Route path="/login" element={<Login />}/>
-          <Route path="/profile" element={<Profile />}/>
+          <Route path="/profile" element={<Profile cache={ { profiles: profiles, countries: countries } } />}/>
           <Route path="/games" element={<GameSelect cache={ { games: games } } />}/>
           <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>
           <Route path="games/:game/main/medals" element={

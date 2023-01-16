@@ -36,3 +36,8 @@
 .profile-btns button {
     margin-right: 5px;
 }
+
+.profiles-avatar {
+    width: 150px;
+    height: 150px;
+}
