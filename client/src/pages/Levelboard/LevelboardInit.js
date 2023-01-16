@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardHelper from "../../helper/LevelboardHelper";
-import SubmissionQuery from "../../helper/SubmissionQuery";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const LevelboardInit = () => {
 	/* ===== VARIABLES ===== */
@@ -50,7 +50,7 @@ const LevelboardInit = () => {
 	// helper functions
 	const { capitalize } = FrontendHelper();
 	const { addPositionToLevelboard, containsE, decimalCount } = LevelboardHelper();
-	const { query } = SubmissionQuery();
+	const { retrieveSubmissions } = SubmissionRead();
 
 	// navigate used for redirecting
     const navigate = useNavigate();
@@ -103,17 +103,8 @@ const LevelboardInit = () => {
 		});
 		dispatchForm({ field: "monkey", value: monkeys });
 
-		// from here, we have two cases. if user is accessing already cached submissions, we can fetch
-        // this information from submissionState. Otherwise, we need to query, and set the submission state
-        let submissions = {};
-        if (submissionState.state && abb in submissionState.state) {
-            submissions = submissionState.state[abb];
-        } else {
-            submissions = await query(abb, type);
-            submissionState.setState({ ...submissionState.state, [abb]: submissions });
-        }
-
-		// now, filter the submissions object based on the levelId
+		// get submissions, and filter based on the levelId
+        let submissions = await retrieveSubmissions(abb, type, submissionState);
 		const filtered = submissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
 		
 		// split board into two lists: live-only, and all records

@@ -1,6 +1,6 @@
 import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import SubmissionQuery from "../../helper/SubmissionQuery";
+import SubmissionRead from "../../database/read/SubmissionRead";
 import TotalizerHelper from "../../helper/TotalizerHelper";
 
 const TotalizerInit = () => {
@@ -24,7 +24,7 @@ const TotalizerInit = () => {
 
     // helper functions
     const { createTotalMaps, addPositionToTotals } = TotalizerHelper();
-    const { query } = SubmissionQuery();
+    const { retrieveSubmissions } = SubmissionRead();
 
     // navigate used for redirecting
     const navigate = useNavigate();
@@ -54,19 +54,12 @@ const TotalizerInit = () => {
             });
         }
 
-        // from here, we have two cases. if user is accessing already cached submissions, we can fetch
-        // this information from submissionState. Otherwise, we need to query, and set the submission state
-        let submissions = {};
-        if (submissionState.state && abb in submissionState.state) {
-            submissions = [...submissionState.state[abb]];
-        } else {
-            submissions = await query(abb, type);
-            submissionState.setState({ ...submissionState.state, [abb]: [...submissions] });
-        }
+        // get submissions, and filter based on the level.misc field
+        const submissions = await retrieveSubmissions(abb, type, submissionState);
+        const filtered = submissions.filter(row => row.level.misc === isMisc);
 
         // using our submission data, we need to create two lists from the query: the {mode} totals for only live records,
         // and the {mode} totals for all records. this for loop will also gather all unique profiles based on the submissions
-        const filtered = submissions.filter(row => row.level.misc === isMisc);
         const { allTotalsMap, liveTotalsMap } = createTotalMaps(filtered, isMisc, type, timeTotal);
 
         // from our map, let's get a sorted list of profile objects sorted by total. if the type is score, it will sort in descending order.

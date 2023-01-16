@@ -1,7 +1,8 @@
-import { supabase } from "../components/SupabaseClient/SupabaseClient";
+import { supabase } from "./../../components/SupabaseClient/SupabaseClient";
 
 const SubmissionQuery = () => {
-    const query = async(abb, type) => {
+    // function that reads submission data from the database based on the abb and type
+    const query = async (abb, type) => {
         try {
             const { data: submissions, error, status } = await supabase
                 .from(`${ type }_submission`)
@@ -35,7 +36,21 @@ const SubmissionQuery = () => {
         }
     };
 
-    return { query };
+    
+    // two cases: if user is accessing already cached submissions, we can fetch this information from submissionState.
+    // Otherwise, we need to query, and set the submission state
+    const retrieveSubmissions = async (abb, type, submissionState) => {
+        let submissions = {};
+        if (submissionState.state && abb in submissionState.state) {
+            submissions = submissionState.state[abb];
+        } else {
+            submissions = await query(abb, type);
+            submissionState.setState({ ...submissionState.state, [abb]: submissions });
+        }
+        return [...submissions];
+    }
+
+    return { retrieveSubmissions };
 };
 
 export default SubmissionQuery;

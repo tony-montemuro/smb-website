@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { supabase } from "./components/SupabaseClient/SupabaseClient";
-import Load from "./Load";
 
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
@@ -18,6 +17,7 @@ import Medals from "./pages/Medals/Medals";
 import UserStats from "./pages/UserStats/UserStats";
 import Submissions from "./pages/Submissions/Submissions";
 import Records from "./pages/Records/Records";
+import AppRead from "./database/read/AppRead";
 
 function App() {
   /* ===== STATES ===== */
@@ -43,7 +43,7 @@ function App() {
     loadLevels, 
     loadMonkeys, 
     loadProfiles 
-  } = Load();
+  } = AppRead();
 
   // code that is executed on page load
   useEffect(() => {

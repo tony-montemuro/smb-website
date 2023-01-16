@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SubmissionQuery from "../../helper/SubmissionQuery";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const RecordsInit = () => {
     /* ===== VARIABLES ===== */
@@ -22,7 +22,7 @@ const RecordsInit = () => {
     const navigate = useNavigate();
 
     // helper functions
-    const { query } = SubmissionQuery();
+    const { retrieveSubmissions } = SubmissionRead();
 
     // function that verifies the path, and also computes the records for each stage
     const generateWorldRecords = async (games, levels, submissionState) => {
@@ -40,17 +40,8 @@ const RecordsInit = () => {
         setGame({ ...currentGame, type: type, isMisc: isMisc, category: category, other: type === "score" ? "time" : "score" });
         const filteredLevels = levels.filter(row => row.game === abb && row.misc === isMisc && [`${type}`, "both"].includes(row.chart_type));
 
-        // from here, we have two cases. if user is accessing already cached submissions, we can fetch
-        // this information from submissionState. Otherwise, we need to query, and set the submission state
-        let submissions = {};
-        if (submissionState.state && abb in submissionState.state) {
-            submissions = submissionState.state[abb];
-        } else {
-            submissions = await query(abb, type);
-            submissionState.setState({ ...submissionState.state, [abb]: submissions });
-        }
-
-        // filter array of submissions by live and level.misc, and sort by level id
+        // get submissions, and filter based on the live field and the level.misc field. order by level id in ascending order
+        const submissions = await retrieveSubmissions(abb, type, submissionState);
         const filteredSub = submissions.filter(row => row.live === true && row.level.misc === isMisc);
         filteredSub.sort((a, b) => a.level.id - b.level.id);
 

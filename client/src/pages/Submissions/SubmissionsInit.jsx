@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
-import SubmissionQuery from "../../helper/SubmissionQuery";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const SubmissionInit = () => {
     /* ===== STATES ===== */
@@ -14,7 +14,7 @@ const SubmissionInit = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { query } = SubmissionQuery();
+    const { retrieveSubmissions } = SubmissionRead();
 
     // navigate used for redirecting
     const navigate = useNavigate("/");
@@ -29,19 +29,6 @@ const SubmissionInit = () => {
         return true;
     };
 
-    // if user is accessing already cached submissions, we can fetch this information from submissionState. 
-    // Otherwise, we need to query, and set the submission state
-    const retrieveSubmissions = async (abb, type, submissionState) => {
-        let submissions = {};
-        if (submissionState.state && abb in submissionState.state) {
-            submissions = submissionState.state[abb];
-        } else {
-            submissions = await query(abb, type);
-            submissionState.setState({ ...submissionState.state, [abb]: submissions });
-        }
-        return submissions.filter(row => !row.approved);
-    };
-
     // function that handles when the user switches to a new game
     const swapGame = async (abb, scoreSubmissionState, timeSubmissionState) => {
         // if we have not already loaded and merged the submissions for abb, we do so here
@@ -49,9 +36,11 @@ const SubmissionInit = () => {
             // updating loading hook
             setLoading(true);
 
-            // retrieve submissions for both score and time
-            const filteredScore = await retrieveSubmissions(abb, "score", scoreSubmissionState);
-            const filteredTime = await retrieveSubmissions(abb, "time", timeSubmissionState);
+            // retrieve submissions for both score and time, and filter each by the approved field
+            let submissions = await retrieveSubmissions(abb, "score", scoreSubmissionState);
+            const filteredScore = submissions.filter(row => !row.approved);
+            submissions = await retrieveSubmissions(abb, "time", timeSubmissionState);
+            const filteredTime = submissions.filter(row => !row.approved);
             
             // sort both arrays by submitted_at
             [filteredScore, filteredTime].map(arr => arr.sort((a, b) => a.submitted_at < b.submitted_at ? -1 : a.submitted_at > b.submitted_at ? 1 : 0));

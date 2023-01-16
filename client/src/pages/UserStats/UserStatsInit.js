@@ -2,7 +2,7 @@ import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import MedalsHelper from "../../helper/MedalsHelper";
 import TotalizerHelper from "../../helper/TotalizerHelper";
-import SubmissionQuery from "../../helper/SubmissionQuery";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const UserStatsInit = () => {
     /* ===== VARIABLES ===== */
@@ -27,7 +27,7 @@ const UserStatsInit = () => {
     // helper functions
     const { createTotalMaps, addPositionToTotals } = TotalizerHelper();
     const { createUserMap, createMedalTable, addPositionToMedals } = MedalsHelper();
-    const { query } = SubmissionQuery();
+    const { retrieveSubmissions } = SubmissionRead();
 
     // function that validates the path: checks the user and game. ALSO, this function filters the levels
     // of the game into two lists: score and time. the total time is calculated, and state hooks are updated
@@ -69,17 +69,8 @@ const UserStatsInit = () => {
 
     // function that generates {type} user statistics: totals, medals, and rankings
     const generateUserStats = async (type, levels, submissionState, timeTotal) => {
-        // first, we have two cases. if user is accessing already cached submissions, we can fetch
-        // this information from submissionState. Otherwise, we need to query, and set the submission state
-        let submissions = {};
-        if (submissionState.state && abb in submissionState.state) {
-            submissions = submissionState.state[abb];
-        } else {
-            submissions = await query(abb, type);
-            submissionState.setState({ ...submissionState.state, [abb]: submissions });
-        }
-
-        // now, filter the submissions by the live and level.misc fields
+        // get submissions, and filter based on the live and level.misc field
+        const submissions = await retrieveSubmissions(abb, type, submissionState);
         let filtered = submissions.filter(row => row.live === true && row.level.misc === isMisc);
 
         // first, let's start with totalizer

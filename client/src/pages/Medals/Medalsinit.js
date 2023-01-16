@@ -1,7 +1,7 @@
 import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import MedalsHelper from "../../helper/MedalsHelper";
-import SubmissionQuery from "../../helper/SubmissionQuery";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const MedalsInit = () => {
     /* ===== VARIABLES ===== */
@@ -21,7 +21,7 @@ const MedalsInit = () => {
 
     // helper functions
     const { createUserMap, createMedalTable, addPositionToMedals } = MedalsHelper();
-    const { query } = SubmissionQuery();
+    const { retrieveSubmissions } = SubmissionRead();
 
     // navigate used for redirecting
     const navigate = useNavigate();
@@ -41,17 +41,8 @@ const MedalsInit = () => {
         // update game state hook
         setGame({ ...currentGame, isMisc: isMisc });
 
-        // from here, we have two cases. if user is accessing already cached submissions, we can fetch
-        // this information from submissionState. Otherwise, we need to query, and set the submission state
-        let submissions = {};
-        if (submissionState.state && abb in submissionState.state) {
-            submissions = submissionState.state[abb];
-        } else {
-            submissions = await query(abb, type);
-            submissionState.setState({ ...submissionState.state, [abb]: submissions });
-        }
-
-        // filter the submission object based on the live field and the level.misc field
+        // get submissions, and filter based on the live field and the level.misc field
+        const submissions = await retrieveSubmissions(abb, type, submissionState);
         const filtered = submissions.filter(row => row.live === true && row.level.misc === isMisc);
         
         // if the filtered object is empty, there are either no {type} submissions to this game.
