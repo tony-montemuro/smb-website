@@ -1,6 +1,6 @@
 import { supabase } from "./../../components/SupabaseClient/SupabaseClient";
 
-const SubmissionQuery = () => {
+const SubmissionRead = () => {
     // function that reads submission data from the database based on the abb and type
     const query = async (abb, type) => {
         try {
@@ -53,4 +53,4 @@ const SubmissionQuery = () => {
     return { retrieveSubmissions };
 };
 
-export default SubmissionQuery;
+export default SubmissionRead;

@@ -8,7 +8,7 @@ function Popup({ board, setBoard }) {
       console.log(board.delete);
       try {
         const { error } = await supabase
-          .from( `${ board.delete.mode }_submission` )
+          .from( `${ board.delete.type }_submission` )
           .delete()
           .match({ user_id: board.delete.user_id, game_id: board.delete.game_id, level_id: board.delete.level_id });
 

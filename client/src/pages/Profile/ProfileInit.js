@@ -1,8 +1,12 @@
 import { useState, useRef, useReducer } from "react";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import { useNavigate } from "react-router-dom";
+import ProfileUpdate from "../../database/update/ProfileUpdate";
 
 const ProfileInit = () => {
+    /* ===== VARIABLES ===== */
+    const user = supabase.auth.user();
+
     /* ===== REFS ===== */
     const avatarRef = useRef(null);
 
@@ -40,11 +44,11 @@ const ProfileInit = () => {
 
     // navigate used for redirecting
     const navigate = useNavigate();
+    const { upsertInfo, uploadAvatar } = ProfileUpdate();
 
     // verify a user is accessing this page. once done, 
     const initForms = (profiles, countries) => {
         // first, verify a user is attempting to access this page
-        const user = supabase.auth.user();
         if (!user) {
             console.log("Error: Invalid access.");
             navigate("/");
@@ -52,7 +56,8 @@ const ProfileInit = () => {
         }
 
         // now we have two cases: user has set up a profile, or is a first time user
-        const userInfo = profiles.find(row => row.id === user.id);
+        const userId = user.id;
+        const userInfo = profiles.find(row => row.id === userId);
         if (userInfo) {
             userInfo.country = userInfo.country ? userInfo.country : "";
             dispatchUserForm({ field: "user", value: {
@@ -65,7 +70,7 @@ const ProfileInit = () => {
             dispatchAvatarForm({ field: "avatar_url", value: userInfo.avatar_url });
         } else {
             dispatchUserForm({ field: "user", value: {
-                id: user.id,
+                id: userId,
                 username: "",
                 country: "",
                 youtube_url: "",
@@ -88,7 +93,7 @@ const ProfileInit = () => {
     };
 
     // function that runs when the user submits the userInfo form
-    const updateUserInfo = async(e) => {
+    const updateUserInfo = async (e, profiles) => {
         // initialize update
         e.preventDefault();
         dispatchUserForm({ field: "updating", value: true });
@@ -107,6 +112,9 @@ const ProfileInit = () => {
         else if (!regex.test(name)) {
             error.username = "Error: Username must consist only of letters, numbers, and/or underscores.";
         }
+        else if (profiles.some(row => row.username === name && row.id !== userForm.user.id)) {
+            error.username = "Error: This username is already taken. Please try another username.";
+        }
 
         // if any errors are determined, let's return
         dispatchUserForm({ field: "error", value: error });
@@ -115,42 +123,9 @@ const ProfileInit = () => {
             return;
         }
 
-        // if we made it this far, no errors were deteched, so we can
-        // go ahead and update the user profile
-        try {
-            // perform update on profiles table
-            const userInfo = userForm.user;
-            userInfo.country = userInfo.country === "" ? null : userInfo.country;
-            let { error } = await supabase
-                .from('profiles')
-                .upsert(userInfo, {
-                    returning: "minimal", // Don't return the value after inserting
-                }
-            );
-
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            // if successful, reload the page
-            window.location.reload();
-
-        } catch(error) {
-            // error code 23505 occurs when user attempts to register
-            // an already taken username
-            if (error.code === "23505") {
-                error.username = "Error: Username already taken.";
-                dispatchUserForm({ field: "error", value: error });
-            } else {
-                console.log(error);
-                alert(error.message);
-            }
-        } finally {
-            // regardless if query was a success or not, we
-            // want to set updating to false
-            dispatchUserForm({ field: "updating", value: false });
-        }
+        // if we made it this far, no errors were deteched, so we can go ahead and update the user profile
+        await upsertInfo({ ...userForm.user });
+        dispatchUserForm({ field: "updating", value: false });
     };
 
     // function that runs when the user submits the avatarForm
@@ -181,11 +156,10 @@ const ProfileInit = () => {
         }
 
         // now, define path variables
-        const userId = supabase.auth.user().id;
+        const userId = user.id;
         const file = avatarRef.current.files[0];
         const fileExt = file.name.split(".").pop();
-        const filePath = `${userId}.${fileExt}`;
-        const fileSize = file.size;
+        const filePath = `${ userId }.${ fileExt }`;
 
         // if the file selected is not a valid type, update error state
         const validExtensions = ["png", "jpg", "jpeg"];
@@ -194,7 +168,7 @@ const ProfileInit = () => {
         }
 
         // if the file selected is greater than 5mb, update error state
-        if (fileSize > 5000000) {
+        if (file.size > 5000000) {
             error = "Error: File size too big.";
         }
 
@@ -206,38 +180,7 @@ const ProfileInit = () => {
         }
 
         // if we made it this far, we have no errors. let's update the backend
-        try {
-            // first, update the avatar bucket
-            let { error: storageError } = await supabase.storage
-                .from("avatars")
-                .upload(filePath, file, {
-                    upsert: true
-                });
-
-            // error handling
-            if (storageError) {
-                throw error;
-            }
-
-            // next, update the user's profile
-            let { error: profilesError } = await supabase
-                .from('profiles')
-                .upsert({ id: userId, avatar_url: filePath }, {
-                    returning: "minimal", // Don't return the value after inserting
-                });
-
-            // error handling
-            if (profilesError) {
-                throw error;
-            }
-
-            // reload the page
-            window.location.reload();
-
-        } catch(error) {
-            console.log(error);
-            alert(error.message);
-        }
+        await uploadAvatar(file, filePath, userId);
     };
 
     // function that will sign the user out, and navigate them back to the home screen.

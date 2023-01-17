@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardHelper from "../../helper/LevelboardHelper";
+import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const LevelboardInit = () => {
@@ -51,6 +52,7 @@ const LevelboardInit = () => {
 	const { capitalize } = FrontendHelper();
 	const { addPositionToLevelboard, containsE, decimalCount } = LevelboardHelper();
 	const { retrieveSubmissions } = SubmissionRead();
+	const { submit } = LevelboardUpdate();
 
 	// navigate used for redirecting
     const navigate = useNavigate();
@@ -193,7 +195,7 @@ const LevelboardInit = () => {
 
 	// function that will validate the form. if form is valid, the data will be submitted to the database
 	// if not, the function will return early, and update the error object
-	const submitRecord = async(e) => {
+	const submitRecord = async (e) => {
 		// initialize submission
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
@@ -249,28 +251,7 @@ const LevelboardInit = () => {
         }
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
-		try {
-			const { error } = await supabase
-				.from(`${type}_submission`)
-				.upsert(form.values, {
-                    returning: "minimal", // Don't return the value after inserting
-                }, { 
-                    onConflict: "user_id, game_id, level_id"
-                });
-				
-				// error handling
-				if (error) {
-					throw error;
-				}
-
-				// if successful, reload the page
-				window.location.reload();
-
-		} catch(error) {
-			console.log(error);
-			alert(error.message);
-		}
-		
+		await submit(type, form.values);
 	};
 
 	return {

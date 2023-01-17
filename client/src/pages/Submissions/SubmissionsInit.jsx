@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
 import SubmissionRead from "../../database/read/SubmissionRead";
+import SubmissionsUpdate from "../../database/update/SubmissionsUpdate";
 
 const SubmissionInit = () => {
     /* ===== STATES ===== */
@@ -15,6 +15,7 @@ const SubmissionInit = () => {
 
     // helper functions
     const { retrieveSubmissions } = SubmissionRead();
+    const { approve } = SubmissionsUpdate();
 
     // navigate used for redirecting
     const navigate = useNavigate("/");
@@ -110,26 +111,6 @@ const SubmissionInit = () => {
         setSubmissions({ ...submissions, [submissionAbb]: sorted });
         setApproved(approved.filter(row => row !== submission));
         console.log(submissions);
-    };
-
-    // function that will approve the submission in the database given the parameters passed to the function
-    const approve = async (type, userId, gameId, levelId) => {
-        try {
-            const { error } = await supabase
-                .from(`${ type }_submission`)
-                .update({ approved: true })
-                .eq("user_id", userId)
-                .eq("game_id", gameId)
-                .eq("level_id", levelId);
-
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-        } catch(error) {
-            throw error;
-        }
     };
 
     // function that performs the bulk approvals to the submissions in the database

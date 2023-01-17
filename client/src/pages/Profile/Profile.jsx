@@ -36,7 +36,7 @@ function Profile({ cache }) {
          ) : 
          <div className="profile-body">
             <h2>Edit User Information</h2>
-            <form className="profile-info-form" onSubmit={ updateUserInfo }>
+            <form className="profile-info-form" onSubmit={ (e) => updateUserInfo(e, cache.profiles) }>
                 <div className="profile-info-entry">
                     <label htmlFor="username">Username: </label>
                     <input 
