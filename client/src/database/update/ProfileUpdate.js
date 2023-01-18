@@ -1,4 +1,4 @@
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
+import { supabase } from "../SupabaseClient";
 
 const ProfileUpdate = () => {
     // function that takes user information, and upserts it to the profiles page

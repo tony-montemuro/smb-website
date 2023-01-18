@@ -1,7 +1,7 @@
 // imports 
 import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
+import { supabase } from "../../database/SupabaseClient";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";

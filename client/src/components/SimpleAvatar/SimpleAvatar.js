@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../SupabaseClient/SupabaseClient";
+import { supabase } from "../../database/SupabaseClient";
 
 function SimpleAvatar( { url, size } ) {
     const [avatarUrl, setAvatarUrl] = useState(null);

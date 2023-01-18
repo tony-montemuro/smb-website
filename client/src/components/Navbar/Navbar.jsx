@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "../SupabaseClient/SupabaseClient";
+import { supabase } from "../../database/SupabaseClient";
 import './navbar.css';
 
 function Navbar({ isMod }) {

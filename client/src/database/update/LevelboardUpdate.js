@@ -1,4 +1,4 @@
-import { supabase } from "./../../components/SupabaseClient/SupabaseClient";
+import { supabase } from "../SupabaseClient";
 
 const LevelboardUpdate = () => {
     // function that takes a submission, and upserts it into the {type} submissions database

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "../SupabaseClient/SupabaseClient";
+import { supabase } from "../../database/SupabaseClient";
 
 const GameCardInit = () => {
     /* ===== STATES ===== */

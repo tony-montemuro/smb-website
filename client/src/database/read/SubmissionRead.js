@@ -1,4 +1,4 @@
-import { supabase } from "./../../components/SupabaseClient/SupabaseClient";
+import { supabase } from "../SupabaseClient";
 
 const SubmissionRead = () => {
     // function that reads submission data from the database based on the abb and type

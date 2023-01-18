@@ -1,4 +1,4 @@
-import { supabase } from "./../../components/SupabaseClient/SupabaseClient";
+import { supabase } from "../SupabaseClient";
 
 const AppRead = () => {
     // function that queries the mod table to see if current user is a mod

@@ -1,6 +1,6 @@
 import "./levelboard.css";
 import React from "react";
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
+import { supabase } from "../../database/SupabaseClient";
 import LevelboardDelete from "../../database/delete/LevelboardDelete";
 
 function Popup({ board, setBoard }) {

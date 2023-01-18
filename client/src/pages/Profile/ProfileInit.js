@@ -1,5 +1,5 @@
 import { useState, useRef, useReducer } from "react";
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
+import { supabase } from "../../database/SupabaseClient";
 import { useNavigate } from "react-router-dom";
 import ProfileUpdate from "../../database/update/ProfileUpdate";
 

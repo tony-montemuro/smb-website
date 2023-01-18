@@ -1,7 +1,7 @@
 import "./levelboard.css";
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
+import { supabase } from "../../database/SupabaseClient";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardInit from "./LevelboardInit";
 import Popup from "./Popup";

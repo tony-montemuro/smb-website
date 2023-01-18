@@ -1,4 +1,4 @@
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
+import { supabase } from "../SupabaseClient";
 
 const LevelboardDelete = () => {
     // function that takes a submission object, and removes it from the {type} submission table

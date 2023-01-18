@@ -1,4 +1,4 @@
-import { supabase } from "../../components/SupabaseClient/SupabaseClient";
+import { supabase } from "../SupabaseClient";
 
 const SubmissionsUpdate = () => {
     // function that approves a submission given some submission information
