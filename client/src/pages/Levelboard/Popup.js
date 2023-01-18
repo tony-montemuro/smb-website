@@ -1,38 +1,20 @@
 import "./levelboard.css";
 import React from "react";
 import { supabase } from "../../components/SupabaseClient/SupabaseClient";
+import LevelboardDelete from "../../database/delete/LevelboardDelete";
 
 function Popup({ board, setBoard }) {
-    // function to remove a record
-    const remove = async() => {
-      console.log(board.delete);
-      try {
-        const { error } = await supabase
-          .from( `${ board.delete.type }_submission` )
-          .delete()
-          .match({ user_id: board.delete.user_id, game_id: board.delete.game_id, level_id: board.delete.level_id });
+  // helper functions
+  const { remove } = LevelboardDelete();
 
-        // error handling
-        if (error) {
-          throw (error);
-        }
-
-        // if successful, reload the page
-        window.location.reload();
-
-      } catch(error) {
-        console.log(error);
-        alert(error.message);
-      }
-    };
-
+  // popup component
   return (
     board.delete ? 
       board.delete.user_id === supabase.auth.user().id ?
         <div className="levelboard-popup">
           <div className="levelboard-popup-inner">
             <h2>Are you sure you want to remove your submission?</h2>
-            <button onClick={ () => remove() }>Yes</button>
+            <button onClick={ () => remove(board.delete) }>Yes</button>
             <button onClick={ () => setBoard({ ...board, delete: null }) }>No</button>
           </div> 
         </div>
@@ -41,7 +23,7 @@ function Popup({ board, setBoard }) {
           <div className="levelboard-popup-inner">
               <h2>Are you sure you want to remove the following { board.delete.mode }
               : { board.delete.mode === "score" ? board.delete.score : board.delete.time } by { board.delete.name }?</h2>
-              <button onClick={ () => remove() }>Yes</button>
+              <button onClick={ () => remove(board.delete) }>Yes</button>
               <button onClick={ () => setBoard({ ...board, delete: null }) }>No</button>
           </div>
         </div> 
