@@ -1,31 +1,21 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../../database/SupabaseClient";
+import { useEffect } from "react";
+import SimpleAvatarInit from "./SimpleAvatarInit";
 
 function SimpleAvatar( { url, size } ) {
-    const [avatarUrl, setAvatarUrl] = useState(null);
+    // states and functions from the init file
+    const { avatarUrl, fetchAvatar } = SimpleAvatarInit();
 
+    // code that is executed upon page load
     useEffect(() => {
-        downloadImage(url);
+        fetchAvatar(url);
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
-    
-      const downloadImage = async (path) => {
-        try {
-            const { data, error } = await supabase.storage.from('avatars').download(path);
-            if (error) {
-                throw error;
-            }
-            const url = URL.createObjectURL(data);
-            setAvatarUrl(url);
-        } catch (error) {
-            alert("Error downloading image: ", error.message);
-        }
-      }
 
+    // simple avatar component
     return (
         <img
-            src={avatarUrl ? avatarUrl : `https://place-hold.it/${size}x${size}`}
-            alt={avatarUrl ? 'Avatar' : 'No image'}
+            src={ avatarUrl ? avatarUrl : `https://place-hold.it/${ size }x${ size }` }
+            alt={ avatarUrl ? 'Avatar' : 'No image' }
             style={ { height: '100%', width: '100%' } }> 
         </img>
     )
