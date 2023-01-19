@@ -14,6 +14,7 @@ const Download = () => {
 
             // return a url object
             return URL.createObjectURL(data);
+
         } catch (error) {
             console.log(error);
             alert(error.message);
@@ -40,9 +41,23 @@ const Download = () => {
             alert(error.message);
             return null;
         }
-    }
+    };
 
-    return { downloadBoxArt, downloadAvatar };
+    // function that, given an image, imageReducer, and type, returns an image. this image may either be from
+    // the imageReducer cache, or may need to be downloaded from storage
+    const retrieveImage = async (imageName, imageReducer, type) => {
+        const images = imageReducer.reducer;
+        let img = null;
+        if (images && imageName in images) {
+            img = images[imageName];
+        } else {
+            img = type === "avatar" ? await downloadAvatar(imageName) : await downloadBoxArt(imageName);
+            imageReducer.dispatchImages({ field: imageName, data: img });
+        }
+        return img;
+    };
+
+    return { downloadAvatar, retrieveImage };
 };
 
 export default Download;

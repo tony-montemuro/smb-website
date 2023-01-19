@@ -46,7 +46,7 @@ function Totalizer({ cache }) {
       </div>
       <div className="totalizer-body">
         { Object.keys(totals).map(type => {
-          return <TotalsBoard key={ type } type={ type } data={ totals[type] } loading={ loading } />
+          return <TotalsBoard key={ type } type={ type } data={ totals[type] } loading={ loading } imageReducer={ cache.imageReducer } />
         })}
       </div>
     </>

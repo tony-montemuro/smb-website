@@ -3,13 +3,13 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import GameCardInit from "./GameCardInit";
 
-function GameCard({ game }) {
+function GameCard({ game, imageReducer }) {
     // states and functions from init file
     const { img, fetchBoxArt } = GameCardInit();
 
     // code that is executed when the page is first loaded
     useEffect(() => {
-        fetchBoxArt(game.abb);
+        fetchBoxArt(game.abb, imageReducer);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

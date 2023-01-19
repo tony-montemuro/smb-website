@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import FrontendHelper from "../../helper/FrontendHelper";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
-function TotalsBoard({ type, data, loading }) {
+function TotalsBoard({ type, data, loading, imageReducer }) {
     /* ===== VARIABLES ===== */
 	const imgLength = 50;
 
@@ -50,7 +50,7 @@ function TotalsBoard({ type, data, loading }) {
                                     <td>{ row.position }</td>
                                     <td>
                                         <div className="totals-user-info">
-                                        <div className="totals-user-image"><SimpleAvatar url={ row.avatar_url } size={ imgLength }/></div>
+                                        <div className="totals-user-image"><SimpleAvatar url={ row.avatar_url } size={ imgLength } imageReducer={ imageReducer } /></div>
                                             { row.country ?
                                                 <div><span className={ `fi fi-${ row.country.toLowerCase() }` }></span></div>
                                             :

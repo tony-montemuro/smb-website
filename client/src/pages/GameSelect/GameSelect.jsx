@@ -31,8 +31,8 @@ function Games({ cache }) {
               <p>Loading...</p>
             :
             <div className="game-select-cards">
-              {gameLists[type].map(game => {
-                return <GameCard key={ game.abb } game={ { name: game.name, abb: game.abb } } />;
+              { gameLists[type].map(game => {
+                return <GameCard key={ game.abb } game={ { name: game.name, abb: game.abb } } imageReducer={ cache.imageReducer } />;
               })}
             </div>
             }

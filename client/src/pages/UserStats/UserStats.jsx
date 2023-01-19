@@ -91,7 +91,7 @@ function UserStats({ cache }) {
                   <td>{ board[board.type].total.position }</td>
                   <td>
                     <div className="stats-user-info">
-                      <div className="stats-table-image"><SimpleAvatar url={ user.avatar_url } size={ imgLength } /></div>
+                      <div className="stats-table-image"><SimpleAvatar url={ user.avatar_url } size={ imgLength } imageReducer={ cache.imageReducer } /></div>
                       { user.country ?
                           <div><span className={ `fi fi-${ user.country.iso2.toLowerCase() }` }></span></div>
                           :
@@ -131,7 +131,7 @@ function UserStats({ cache }) {
                   <td>{ board[board.type].medals.position }</td>
                   <td>
                     <div className="stats-user-info">
-                      <div className="stats-table-image"><SimpleAvatar url={ user.avatar_url } size={ imgLength } /></div>
+                      <div className="stats-table-image"><SimpleAvatar url={ user.avatar_url } size={ imgLength } imageReducer={ cache.imageReducer } /></div>
                       { user.country ?
                         <div><span className={ `fi fi-${ user.country.iso2.toLowerCase() }` }></span></div>
                       :

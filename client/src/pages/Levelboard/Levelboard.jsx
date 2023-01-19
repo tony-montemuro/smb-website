@@ -129,7 +129,7 @@ function Levelboard({ cache }) {
 										<td>
 											<div className="levelboard-user-info">
 												<div className="levelboard-user-image" style={{ width: imgLength, height: imgLength }}>
-													<SimpleAvatar url={ val.profiles.avatar_url } size={ imgLength }/>
+													<SimpleAvatar url={ val.profiles.avatar_url } size={ imgLength } imageReducer={ cache.imageReducer } />
 												</div>
 													{ val.profiles.country ?
 														<div><span className={ `fi fi-${ val.profiles.country.toLowerCase() }` }></span></div>

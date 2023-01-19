@@ -82,7 +82,7 @@ function Medals({ cache }) {
                             <td>{ row.position }</td>
                             <td>
                                 <div className="medals-user-info">
-                                    <div className="medals-user-image"><SimpleAvatar url={ row.avatar_url } size={ imgLength } /></div>
+                                    <div className="medals-user-image"><SimpleAvatar url={ row.avatar_url } size={ imgLength } imageReducer={ cache.imageReducer } /></div>
                                     { row.country ?
                                       <div><span className={ `fi fi-${ row.country.toLowerCase() }` }></span></div>
                                     :

@@ -91,7 +91,7 @@ function Profile({ cache }) {
             <h2>Update Avatar</h2>
             <form className="profile-avatar-form" onSubmit={ avatarSubmit }>
             <p><b>Note:</b> Must be JPEG or PNG, and cannot exceed 5 MB. If your avatar does not update immediately, give it some time.</p>
-                <div className="profiles-avatar"><SimpleAvatar url={ avatarForm.avatar_url } size={ 150 } /></div>
+                <div className="profiles-avatar"><SimpleAvatar url={ avatarForm.avatar_url } size={ 150 } imageReducer={ cache.imageReducer } /></div>
                 <label htmlFor="avatar-update"></label>
                 <input
                     type="file"

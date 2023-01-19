@@ -60,7 +60,7 @@ function User({ cache }) {
               }
             </div>
             <div className="user-image">
-              <SimpleAvatar url={ user.avatar_url } size={ 300 } />
+              <SimpleAvatar url={ user.avatar_url } size={ 300 } imageReducer={ cache.imageReducer } />
             </div>
           </div>
           <div className="user-stats-games">

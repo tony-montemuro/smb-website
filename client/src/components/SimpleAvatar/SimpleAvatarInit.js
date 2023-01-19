@@ -8,13 +8,13 @@ const SimpleAvatarInit = () => {
     /* ===== FUNCTIONS ===== */
 
     // function for fetching avatar
-    const { downloadAvatar } = Download();
+    const { retrieveImage } = Download();
 
     // function that will return an image from a file name
-    const fetchAvatar = async (fileName) => {
-        const blob = await downloadAvatar(fileName);
+    const fetchAvatar = async (fileName, imageReducer) => {
+        const blob = await retrieveImage(fileName, imageReducer, "avatar");
         setAvatarUrl(blob);
-    }
+    };
 
     return { avatarUrl, fetchAvatar };
 };

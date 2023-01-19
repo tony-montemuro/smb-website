@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import SimpleAvatarInit from "./SimpleAvatarInit";
 
-function SimpleAvatar( { url, size } ) {
+function SimpleAvatar( { url, size, imageReducer } ) {
     // states and functions from the init file
     const { avatarUrl, fetchAvatar } = SimpleAvatarInit();
 
     // code that is executed upon page load
     useEffect(() => {
-        fetchAvatar(url);
+        fetchAvatar(url, imageReducer);
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
@@ -18,7 +18,7 @@ function SimpleAvatar( { url, size } ) {
             alt={ avatarUrl ? 'Avatar' : 'No image' }
             style={ { height: '100%', width: '100%' } }> 
         </img>
-    )
+    );
 }
 
 export default SimpleAvatar;

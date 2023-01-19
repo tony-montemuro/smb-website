@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { Route, Routes } from "react-router-dom";
 import { supabase } from "./database/SupabaseClient";
 
@@ -20,7 +20,7 @@ import Records from "./pages/Records/Records";
 import AppRead from "./database/read/AppRead";
 
 function App() {
-  /* ===== STATES ===== */
+  /* ===== STATES & REDUCERS ===== */
   const [session, setSession] = useState(null);
   const [isMod, setIsMod] = useState(null);
   const [countries, setCountries] = useState(null);
@@ -30,10 +30,14 @@ function App() {
   const [profiles, setProfiles] = useState(null);
   const [scoreSubmissions, setScoreSubmissions] = useState(null);
   const [timeSubmissions, setTimeSubmissions] = useState(null);
+  const [images, dispatchImages] = useReducer((state, action) => {
+    return { ...state, [action.field]: action.data }
+  }, null);
 
   /* ===== VARIABLES ===== */
   const scoreSubmissionState = { state: scoreSubmissions, setState: setScoreSubmissions };
   const timeSubmissionState = { state: timeSubmissions, setState: setTimeSubmissions };
+  const imageReducer = { reducer: images, dispatchImages: dispatchImages };
 
   // load functions from the load file
   const { 
@@ -76,20 +80,20 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}/>
           <Route path="/login" element={<Login />}/>
-          <Route path="/profile" element={<Profile cache={ { profiles: profiles, countries: countries } } />}/>
-          <Route path="/games" element={<GameSelect cache={ { games: games } } />}/>
+          <Route path="/profile" element={<Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } />}/>
+          <Route path="/games" element={<GameSelect cache={ { games: games, imageReducer: imageReducer } } />}/>
           <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>
           <Route path="games/:game/main/medals" element={
-            <Medals cache={ { games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
+            <Medals cache={ { games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
           }/>
           <Route path="games/:game/misc/medals" element={
-            <Medals cache={ { games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
+            <Medals cache={ { games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
           }/>
           <Route path="games/:game/main/totalizer" element={
-            <Totalizer cache={ { games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
+            <Totalizer cache={ { games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
           }/>
           <Route path="games/:game/misc/totalizer" element={
-            <Totalizer cache={ { games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
+            <Totalizer cache={ { games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
           }/>
           <Route path="games/:game/main/score" element={
             <Records cache={ { games: games, levels: levels, submissionState: scoreSubmissionState } } />
@@ -109,7 +113,8 @@ function App() {
               levels: levels,
               monkeys: monkeys,
               submissionState: scoreSubmissionState,
-              isMod: isMod
+              isMod: isMod,
+              imageReducer: imageReducer
             } } />
           }/>
           <Route path="games/:game/main/time/:levelid" element={
@@ -118,7 +123,8 @@ function App() {
               levels: levels,
               monkeys: monkeys,
               submissionState: timeSubmissionState,
-              isMod: isMod
+              isMod: isMod,
+              imageReducer: imageReducer
             } } />
           }/>
           <Route path="games/:game/misc/score/:levelid" element={
@@ -127,7 +133,8 @@ function App() {
               levels: levels,
               monkeys: monkeys,
               submissionState: scoreSubmissionState,
-              isMod: isMod
+              isMod: isMod,
+              imageReducer: imageReducer
             } } />
           }/>
           <Route path="games/:game/misc/time/:levelid" element={
@@ -136,7 +143,8 @@ function App() {
               levels: levels,
               monkeys: monkeys,
               submissionState: timeSubmissionState,
-              isMod: isMod
+              isMod: isMod,
+              imageReducer: imageReducer
             } } />
           }/>
           <Route path="/resources" element={<Resources />}></Route>
@@ -144,12 +152,12 @@ function App() {
             <Submissions cache={ { isMod: isMod, games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
           } />
           <Route path="/support" element={ <Support /> }/>
-          <Route path="/user/:userId" element={<User cache={ { games: games, profiles: profiles } } />}/>
+          <Route path="/user/:userId" element={<User cache={ { games: games, profiles: profiles, imageReducer: imageReducer } } />}/>
           <Route path="/user/:userId/:game/main" element={
-            <UserStats cache={ { profiles: profiles, games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
+            <UserStats cache={ { profiles: profiles, games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
           }/>
           <Route path="/user/:userId/:game/misc" element={
-            <UserStats cache={ { profiles: profiles, games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
+            <UserStats cache={ { profiles: profiles, games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
           }/>
         </Routes>
       </div>
