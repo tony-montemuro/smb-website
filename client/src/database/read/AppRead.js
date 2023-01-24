@@ -61,7 +61,7 @@ const AppRead = () => {
         try {
             const { data: gameList, error, status } = await supabase
                 .from("game")
-                .select("abb, name, custom")
+                .select("abb, name, custom, release_date")
                 .order("id");
 
             // error handling

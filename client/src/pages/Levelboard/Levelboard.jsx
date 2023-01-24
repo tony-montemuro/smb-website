@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { supabase } from "../../database/SupabaseClient";
 import FrontendHelper from "../../helper/FrontendHelper";
+import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardInit from "./LevelboardInit";
 import Popup from "./Popup";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
@@ -28,6 +29,7 @@ function Levelboard({ cache }) {
 
 	// helper functions
 	const { capitalize, cleanLevelName } = FrontendHelper();
+	const { dateB2F } = LevelboardHelper();
 
 	// code that is executed upon page load, or when the URL is changed using next/previous buttons
 	const location = useLocation();
@@ -163,6 +165,15 @@ function Levelboard({ cache }) {
 									onChange={ handleChange }
 								/>
 								<p>{ form.error.record }</p>
+								<label htmlFor="submitted_at">Date: </label>
+								<input 
+									id="submitted_at" 
+									type="date" 
+									min={ game.release_date } 
+									max={ dateB2F() }
+									value={ form.values.submitted_at }
+									onChange={ handleChange }
+								/>
 								<label htmlFor="monkey">Monkey: </label>
 								<select id="monkey_id" value={ form.values.monkey_id } onChange={ handleChange }>
 									{ form.monkey.map((monkey) => (

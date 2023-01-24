@@ -24,6 +24,7 @@ const LevelboardInit = () => {
 		submitting: false,
 		submitted: false
 	};
+	const user = supabase.auth.user();
 
 	/* ===== STATES AND REDUCERS ===== */
 	const [loading, setLoading] = useState(true);
@@ -50,7 +51,7 @@ const LevelboardInit = () => {
 
 	// helper functions
 	const { capitalize } = FrontendHelper();
-	const { addPositionToLevelboard, containsE, decimalCount } = LevelboardHelper();
+	const { addPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B } = LevelboardHelper();
 	const { retrieveSubmissions } = SubmissionRead();
 	const { submit } = LevelboardUpdate();
 
@@ -110,7 +111,6 @@ const LevelboardInit = () => {
 		const filtered = submissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
 		
 		// split board into two lists: live-only, and all records
-		const user = supabase.auth.user();
 		const userId = user ? user.id : null;
 		const liveOnly = [], all = [];
 		let formSet = false;
@@ -134,7 +134,8 @@ const LevelboardInit = () => {
 					user_id: currRecord.profiles.id,
 					game_id: currentGame.abb,
 					level_id: levelId,
-					approved: false
+					approved: false,
+					submitted_at: dateB2F(currRecord.submitted_at)
 				}});
 				dispatchForm({ field: "prevSubmitted", value: true });
 				formSet = true;
@@ -159,7 +160,8 @@ const LevelboardInit = () => {
 				user_id: userId,
 				game_id: currentGame.abb,
 				level_id: levelId,
-				approved: false
+				approved: false,
+				submitted_at: dateB2F()
 			}});
 		}
 
@@ -174,6 +176,8 @@ const LevelboardInit = () => {
 	// function that runs each time a form value is changed. keeps the form reducer updated
     const handleChange = (e) => {
         const { id, value, checked } = e.target;
+		console.log(id);
+		console.log(value);
 		id === "live" ? dispatchForm({ field: "values", value: { [id]: checked } }) : dispatchForm({ field: "values", value: { [id]: value } });
 		console.log(form);
     };
@@ -236,10 +240,49 @@ const LevelboardInit = () => {
             error.proof = "Proof is required.";
         }
 
-        // finally, validate the comment
+        // next, validate the comment
         if (form.values.comment.length > 100) {
             error.comment = "Comment must be 100 characters or less.";
         }
+
+		// finally, let's convert the date from the front-end format, to the backend format. this involves some complex logic, comments
+		// will attempt to explain
+		let backendDate = undefined;
+		const oldSubmissionData = board.records.all.find(row => row.profiles.id === user.id);
+		const currDate = dateB2F();
+
+		// first, we need to handle defining the date differently if the user has a previous submissions
+		if (oldSubmissionData) {
+			const prevDate = dateB2F(oldSubmissionData.submitted_at);
+
+			// special case: user is attempting to submit a new { type }, but has either forgotten to change the date of their old submission,
+			// or has deliberately not changed it. give them a confirmation box to ensure they have not made a mistake. if they hit 'no', the submission
+			// process will cancel. otherwise, continue.
+			if (form.values.submitted_at === prevDate && form.values[game.type] !== oldSubmissionData[game.type]) {
+				if (!window.confirm(`You are attempting to submit a new ${ game.type } with the same date as your previous submission. Are you sure this is correct?`)) {
+					return;
+				}
+			}
+
+			// CASE 1: the submission date from the form is equal to the submission date in the backend. in this case, backendDate is just date
+			// from previous submission data
+			if (form.values.submitted_at === prevDate) {
+				backendDate = oldSubmissionData.submitted_at;
+			}
+		} 
+		if (!backendDate) {
+			// CASE 2: the submission date from the form is equal to the current date. in this case, return the default call to the
+			// function converting dates from front-end format to back-end format
+			if (form.values.submitted_at === currDate) {
+				backendDate = dateF2B();
+			} 
+			
+			// CASE 3: the submission date from the form is NOT EQUAL to current date, AND was NOT EQUAL to the date from a previous submission
+			// in this case, return the call to function converting dates from front-end format to back-end format, with form date as a parameter
+			else {
+				backendDate = dateF2B(form.values.submitted_at);
+			}
+		}
 
 		// if any errors are determined, let's return
 		console.log(error);
@@ -251,7 +294,8 @@ const LevelboardInit = () => {
         }
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
-		await submit(type, form.values);
+		// await submit(type, form.values);
+		await submit(game.type, { ...form.values, submitted_at: backendDate });
 	};
 
 	return {
