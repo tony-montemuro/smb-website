@@ -114,6 +114,7 @@ function App() {
               monkeys: monkeys,
               submissionState: scoreSubmissionState,
               isMod: isMod,
+              profiles: profiles,
               imageReducer: imageReducer
             } } />
           }/>
@@ -124,6 +125,7 @@ function App() {
               monkeys: monkeys,
               submissionState: timeSubmissionState,
               isMod: isMod,
+              profiles: profiles,
               imageReducer: imageReducer
             } } />
           }/>
@@ -134,6 +136,7 @@ function App() {
               monkeys: monkeys,
               submissionState: scoreSubmissionState,
               isMod: isMod,
+              profiles: profiles,
               imageReducer: imageReducer
             } } />
           }/>
@@ -144,6 +147,7 @@ function App() {
               monkeys: monkeys,
               submissionState: timeSubmissionState,
               isMod: isMod,
+              profiles: profiles,
               imageReducer: imageReducer
             } } />
           }/>

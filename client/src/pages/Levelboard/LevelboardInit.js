@@ -9,13 +9,19 @@ import SubmissionRead from "../../database/read/SubmissionRead";
 
 const LevelboardInit = () => {
 	/* ===== VARIABLES ===== */
+	// helper functions
+	const { capitalize } = FrontendHelper();
+	const { addPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B } = LevelboardHelper();
+	const { retrieveSubmissions } = SubmissionRead();
+	const { submit } = LevelboardUpdate();
+
 	const pathArr = window.location.pathname.split("/");
 	const abb = pathArr[2];
 	const category = pathArr[3];
 	const type = pathArr[4];
 	const levelId = pathArr[5];
 	const isMisc = category === "misc" ? true : false;
-	const boardInit = { records: null, adjacent: null, state: "live", delete: null };
+	const boardInit = { records: null, adjacent: null, state: "live", update: null, delete: null };
 	const formInit = { 
 		values: null, 
 		error: { record: null, proof: null, comment: null },
@@ -25,6 +31,18 @@ const LevelboardInit = () => {
 		submitted: false
 	};
 	const user = supabase.auth.user();
+	const defaultFormVals = {
+		[type]: "", 
+		monkey_id: 1,
+		live: true,
+		proof: "", 
+		comment: "",
+		user_id: user ? user.id : undefined,
+		game_id: abb,
+		level_id: levelId,
+		approved: false,
+		submitted_at: dateB2F()
+	}
 
 	/* ===== STATES AND REDUCERS ===== */
 	const [loading, setLoading] = useState(true);
@@ -48,12 +66,6 @@ const LevelboardInit = () => {
 	}, formInit);
 
 	/* ===== FUNCTIONS ===== */
-
-	// helper functions
-	const { capitalize } = FrontendHelper();
-	const { addPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B } = LevelboardHelper();
-	const { retrieveSubmissions } = SubmissionRead();
-	const { submit } = LevelboardUpdate();
 
 	// navigate used for redirecting
     const navigate = useNavigate();
@@ -151,18 +163,7 @@ const LevelboardInit = () => {
 		// if the formSet flag was never set to true, this means that the client has not submitted to this chart
 		// yet. set the form to default values
 		if (!formSet) {
-			dispatchForm({ field: "values", value: {
-				[type]: "", 
-				monkey_id: 1,
-				live: true,
-				proof: "", 
-				comment: "",
-				user_id: userId,
-				game_id: currentGame.abb,
-				level_id: levelId,
-				approved: false,
-				submitted_at: dateB2F()
-			}});
+			dispatchForm({ field: "values", value: defaultFormVals });
 		}
 
 		// now, let's add the position field to each record in both arrays
@@ -176,9 +177,39 @@ const LevelboardInit = () => {
 	// function that runs each time a form value is changed. keeps the form reducer updated
     const handleChange = (e) => {
         const { id, value, checked } = e.target;
-		console.log(id);
-		console.log(value);
-		id === "live" ? dispatchForm({ field: "values", value: { [id]: checked } }) : dispatchForm({ field: "values", value: { [id]: value } });
+		switch (id) {
+			// case 1: live. this is a checkbox, so we need to use the "checked" variable as our value
+			case "live":
+				dispatchForm({ field: "values", value: { [id]: checked } });
+				break;
+
+			// case 2: user_id. this is a special field that only moderators are able to change. if a user is trying to update
+			// a record from a user that has already submitted to the chart, the form will be loaded with that user's submission data. 
+			// otherwise, the form is set to the default values
+			case "user_id":
+				const record = board.records.all.find(row => row.profiles.id === value);
+				if (record) {
+					dispatchForm({ field: "values", value: {
+						user_id: value,
+						game_id: abb,
+						level_id: levelId,
+						[type]: record[type],
+						submitted_at: dateB2F(record.submitted_at),
+						monkey_id: record.monkey.id,
+						proof: record.proof,
+						comment: record.comment,
+						live: record.live,
+						approved: record.approved
+					}});
+				} else {
+					dispatchForm({ field: "values", value: defaultFormVals });
+				}
+				break;
+
+			// default case: simply update the id field of the values object with the value variable
+			default:
+				dispatchForm({ field: "values", value: { [id]: value } });
+		}
 		console.log(form);
     };
 
@@ -248,7 +279,7 @@ const LevelboardInit = () => {
 		// finally, let's convert the date from the front-end format, to the backend format. this involves some complex logic, comments
 		// will attempt to explain
 		let backendDate = undefined;
-		const oldSubmissionData = board.records.all.find(row => row.profiles.id === user.id);
+		const oldSubmissionData = board.records.all.find(row => row.profiles.id === form.values.user_id);
 		const currDate = dateB2F();
 
 		// first, we need to handle defining the date differently if the user has a previous submissions
@@ -259,7 +290,8 @@ const LevelboardInit = () => {
 			// or has deliberately not changed it. give them a confirmation box to ensure they have not made a mistake. if they hit 'no', the submission
 			// process will cancel. otherwise, continue.
 			if (form.values.submitted_at === prevDate && form.values[game.type] !== oldSubmissionData[game.type]) {
-				if (!window.confirm(`You are attempting to submit a new ${ game.type } with the same date as your previous submission. Are you sure this is correct?`)) {
+				if (!window.confirm(`You are attempting to submit a new ${ game.type } with the same date as the previous submission. Are you sure this is correct?`)) {
+					dispatchForm({ field: "submitting", value: false });
 					return;
 				}
 			}
@@ -294,8 +326,7 @@ const LevelboardInit = () => {
         }
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
-		// await submit(type, form.values);
-		await submit(game.type, { ...form.values, submitted_at: backendDate });
+		await submit(type, { ...form.values, submitted_at: backendDate });
 	};
 
 	return {

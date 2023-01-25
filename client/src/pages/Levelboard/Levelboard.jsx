@@ -142,7 +142,7 @@ function Levelboard({ cache }) {
 											</div>
 										</td>
 										<td>{ val[game.type] }</td>
-										<td>{ val.submitted_at.slice(0, 10) }</td>
+										<td>{ dateB2F(val.submitted_at) }</td>
 										<td>{ val.monkey.monkey_name }</td>
 										<td>{ val.proof !== "none" ? <a href={ val.proof } target="_blank" rel="noopener noreferrer">☑️</a> : null }</td>
 										<td>{ val.comment }</td>
@@ -157,6 +157,12 @@ function Levelboard({ cache }) {
 						<div className="levelboard-submit">
 							<h2>Submit a { capitalize(game.type) }:</h2>
 							<form onSubmit={ submitRecord }>
+								<label htmlFor="user_id">User: </label>
+								<select id="user_id" value={ form.values.user_id } onChange={ handleChange }>
+									{ cache.profiles.map((profile) => (
+										<option key={ profile.id } value={ profile.id }>{ profile.username }</option>
+									))}
+								</select>
 								<label htmlFor={ game.type }>{ capitalize(game.type) }: </label>
 								<input 
 									id={ game.type }
@@ -174,7 +180,7 @@ function Levelboard({ cache }) {
 									value={ form.values.submitted_at }
 									onChange={ handleChange }
 								/>
-								<label htmlFor="monkey">Monkey: </label>
+								<label htmlFor="monkey_id">Monkey: </label>
 								<select id="monkey_id" value={ form.values.monkey_id } onChange={ handleChange }>
 									{ form.monkey.map((monkey) => (
 										<option key={ monkey.id } value={ monkey.id }>{ monkey.monkey_name }</option>
