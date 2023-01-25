@@ -77,9 +77,9 @@ const LevelboardInit = () => {
 		setBoard(boardInit);
 	};
 
-	// function that takes games, levels, monkeys, and submissionState, and generates the levelboard based on the
+	// function that takes games, levels, and submissionState, and generates the levelboard based on the
 	// abb and levelId
-	const generateLevelboard = async (games, levels, monkeys, submissionState) => {		
+	const generateLevelboard = async (games, levels, submissionState) => {		
 		// first, we need to verify the path: start with game
 		const currentGame = games.find(row => row.abb === abb);
 		if (!currentGame) {
@@ -116,7 +116,7 @@ const LevelboardInit = () => {
 			type: type,
 			other: type === "score" ? "time" : "score"
 		});
-		dispatchForm({ field: "monkey", value: monkeys });
+		dispatchForm({ field: "monkey", value: currentGame.monkeys });
 
 		// get submissions, and filter based on the levelId
         let submissions = await retrieveSubmissions(abb, type, submissionState);

@@ -26,7 +26,6 @@ function App() {
   const [countries, setCountries] = useState(null);
   const [games, setGames] = useState(null);
   const [levels, setLevels] = useState(null);
-  const [monkeys, setMonkeys] = useState(null);
   const [profiles, setProfiles] = useState(null);
   const [scoreSubmissions, setScoreSubmissions] = useState(null);
   const [timeSubmissions, setTimeSubmissions] = useState(null);
@@ -45,12 +44,41 @@ function App() {
     loadCountries, 
     loadGames, 
     loadLevels, 
-    loadMonkeys, 
+    loadGameMonkeys,
+    loadAllMonkeys, 
     loadProfiles 
   } = AppRead();
 
   // code that is executed on page load
   useEffect(() => {
+    // async function that will make concurrent api calls to the database
+    const loadData = async () => {
+      // CONCURRENT API CALLS
+
+      const [countries, games, levels, gameMonkeys, allMonkeys, profiles] = await Promise.all(
+        [loadCountries(), loadGames(), loadLevels(), loadGameMonkeys(), loadAllMonkeys(), loadProfiles()]
+      );
+
+      // HANDLE MANY-TO-MANY RELATIONSHIPS
+
+      // assign monkeys to each game
+      games.forEach(game => {
+        const gameMonkeysFiltered = gameMonkeys.filter(row => row.game === game.abb);
+        const arr = [];
+        gameMonkeysFiltered.forEach(row => {
+          arr.push(allMonkeys.find(e => e.id === row.monkey));
+        });
+        game.monkeys = arr;
+      });
+
+      // UPDATE STATES
+
+      setCountries(countries);
+      setGames(games);
+      setLevels(levels);
+      setProfiles(profiles);
+    };
+
     // first, the session is loaded into the session hook
     setSession(supabase.auth.session());
     supabase.auth.onAuthStateChange((_event, session) => {
@@ -58,11 +86,7 @@ function App() {
     });
 
     // next, load data
-    loadCountries(setCountries);
-    loadGames(setGames);
-    loadLevels(setLevels);
-    loadMonkeys(setMonkeys);
-    loadProfiles(setProfiles);
+    loadData();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -111,7 +135,6 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
-              monkeys: monkeys,
               submissionState: scoreSubmissionState,
               isMod: isMod,
               profiles: profiles,
@@ -122,7 +145,6 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
-              monkeys: monkeys,
               submissionState: timeSubmissionState,
               isMod: isMod,
               profiles: profiles,
@@ -133,7 +155,6 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
-              monkeys: monkeys,
               submissionState: scoreSubmissionState,
               isMod: isMod,
               profiles: profiles,
@@ -144,7 +165,6 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
-              monkeys: monkeys,
               submissionState: timeSubmissionState,
               isMod: isMod,
               profiles: profiles,

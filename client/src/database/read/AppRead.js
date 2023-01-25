@@ -35,7 +35,7 @@ const AppRead = () => {
     };
 
     // function that loads all the countries data
-    const loadCountries = async(setCountries) => {
+    const loadCountries = async () => {
         try {
             const { data: countryList, error, status } = await supabase
                 .from("countries")
@@ -47,19 +47,20 @@ const AppRead = () => {
                 throw error;
             }
 
-            // update countries state
-            setCountries(countryList);
+            // return data
+            return countryList;
 
         } catch(error) {
             console.log(error);
             alert(error.message);
         }
+        return [];
     };
 
     // function that loads all the game data
-    const loadGames = async(setGames) => {
+    const loadGames = async () => {
         try {
-            const { data: gameList, error, status } = await supabase
+            const { data: gamesList, error, status } = await supabase
                 .from("game")
                 .select("abb, name, custom, release_date")
                 .order("id");
@@ -69,19 +70,20 @@ const AppRead = () => {
                 throw error;
             }
 
-            // update games state
-            setGames(gameList);
+            // return data
+            return gamesList;
 
         } catch(error) {
             console.log(error);
             alert(error.message);
         }
+        return [];
     };
 
     // function that loads all the level data
-    const loadLevels = async(setLevels) => {
+    const loadLevels = async () => {
         try {
-            const { data: levelList, error, status } = await supabase
+            const { data: levelsList, error, status } = await supabase
                 .from("level")
                 .select("game, name, mode, misc, chart_type, time")
                 .order("game")
@@ -92,19 +94,42 @@ const AppRead = () => {
                 throw error;
             }
 
-            // update levels state
-            setLevels(levelList);
+            // return data
+            return levelsList;
 
         } catch(error) {
             console.log(error);
             alert(error.message);
         }
+        return [];
+    };
+
+    // function that loads all the gameMonkey data
+    const loadGameMonkeys = async () => {
+        try {
+            const { data: gameMonkeysList, error, status } = await supabase
+                .from("game_monkey")
+                .select("*");
+
+            // error handling
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            // return data
+            return gameMonkeysList;
+
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+        return [];
     };
 
     // function that loads all the monkey data
-    const loadMonkeys = async(setMonkeys) => {
+    const loadAllMonkeys = async () => {
         try {
-            const { data: monkeyList, error, status } = await supabase
+            const { data: monkeysList, error, status } = await supabase
                 .from("monkey")
                 .select("*");
 
@@ -113,19 +138,20 @@ const AppRead = () => {
                 throw error;
             }
 
-            // update monkeys state
-            setMonkeys(monkeyList);
+            // return data
+            return monkeysList;
             
         } catch(error) {
             console.log(error);
             alert(error.message);
         }
+        return [];
     };
 
     // function that loads all the profiles data
-    const loadProfiles = async(setProfiles) => {
+    const loadProfiles = async () => {
         try {
-            const { data: profileList, error, status } = await supabase
+            const { data: profilesList, error, status } = await supabase
                 .from("profiles")
                 .select("id, username, country (iso2, name), youtube_url, twitch_url, avatar_url");
 
@@ -134,13 +160,14 @@ const AppRead = () => {
                 throw error;
             }
 
-            // update profiles state
-            setProfiles(profileList);
+            // return data
+            return profilesList;
 
         } catch(error) {
             console.log(error);
             alert(error.message);
         }
+        return [];
     };
 
     return { 
@@ -148,7 +175,8 @@ const AppRead = () => {
         loadCountries, 
         loadGames, 
         loadLevels, 
-        loadMonkeys, 
+        loadGameMonkeys,
+        loadAllMonkeys, 
         loadProfiles
     };
 };

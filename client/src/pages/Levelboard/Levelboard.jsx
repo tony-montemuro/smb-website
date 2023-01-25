@@ -40,11 +40,11 @@ function Levelboard({ cache }) {
 
 	// code that is executed when page is loading, or when the cache fields are updated
 	useEffect(() => {
-		if (loading && cache.games && cache.levels && cache.monkeys) {
-			generateLevelboard(cache.games, cache.levels, cache.monkeys, cache.submissionState);
+		if (loading && cache.games && cache.levels) {
+			generateLevelboard(cache.games, cache.levels, cache.submissionState);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [loading, cache.games, cache.levels, cache.monkeys]);
+	}, [loading, cache.games, cache.levels]);
 
 	// code that is executed once the levelboard has been generated
 	useEffect(() => {
