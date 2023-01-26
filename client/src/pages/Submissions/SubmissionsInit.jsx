@@ -38,10 +38,10 @@ const SubmissionInit = () => {
             setLoading(true);
 
             // retrieve submissions for both score and time, and filter each by the approved field
-            let submissions = await retrieveSubmissions(abb, "score", scoreSubmissionState);
-            const filteredScore = submissions.filter(row => !row.approved);
-            submissions = await retrieveSubmissions(abb, "time", timeSubmissionState);
-            const filteredTime = submissions.filter(row => !row.approved);
+            let gameSubmissions = await retrieveSubmissions(abb, "score", scoreSubmissionState);
+            const filteredScore = gameSubmissions.filter(row => !row.approved);
+            gameSubmissions = await retrieveSubmissions(abb, "time", timeSubmissionState);
+            const filteredTime = gameSubmissions.filter(row => !row.approved);
             
             // sort both arrays by submitted_at
             [filteredScore, filteredTime].map(arr => arr.sort((a, b) => a.submitted_at < b.submitted_at ? -1 : a.submitted_at > b.submitted_at ? 1 : 0));
