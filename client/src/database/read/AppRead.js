@@ -109,7 +109,9 @@ const AppRead = () => {
         try {
             const { data: gameMonkeysList, error, status } = await supabase
                 .from("game_monkey")
-                .select("*");
+                .select("*")
+                .order("game")
+                .order("monkey");
 
             // error handling
             if (error && status !== 406) {
@@ -131,7 +133,8 @@ const AppRead = () => {
         try {
             const { data: monkeysList, error, status } = await supabase
                 .from("monkey")
-                .select("*");
+                .select("*")
+                .order("id");
 
             // error handling
             if (error && status !== 406) {
@@ -170,6 +173,53 @@ const AppRead = () => {
         return [];
     };
 
+    // function that loads all the region data
+    const loadGameRegions = async() => {
+        try {
+            const { data: gameRegionsList, error, status } = await supabase
+                .from("game_region")
+                .select("*")
+                .order("game")
+                .order("region");
+
+            // error handling
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            // return data
+            return gameRegionsList;
+
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+        return [];
+    }
+
+    // function that loads all the region data
+    const loadAllRegions = async() => {
+        try {
+            const { data: allRegionsList, error, status } = await supabase
+                .from("region")
+                .select("*")
+                .order("id");
+
+            // error handling
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            // return data
+            return allRegionsList;
+
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+        return [];
+    }
+
     return { 
         queryMods, 
         loadCountries, 
@@ -177,7 +227,9 @@ const AppRead = () => {
         loadLevels, 
         loadGameMonkeys,
         loadAllMonkeys, 
-        loadProfiles
+        loadProfiles,
+        loadGameRegions,
+        loadAllRegions
     };
 };
 

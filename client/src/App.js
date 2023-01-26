@@ -46,7 +46,9 @@ function App() {
     loadLevels, 
     loadGameMonkeys,
     loadAllMonkeys, 
-    loadProfiles 
+    loadProfiles,
+    loadGameRegions,
+    loadAllRegions
   } = AppRead();
 
   // code that is executed on page load
@@ -55,8 +57,8 @@ function App() {
     const loadData = async () => {
       // CONCURRENT API CALLS
 
-      const [countries, games, levels, gameMonkeys, allMonkeys, profiles] = await Promise.all(
-        [loadCountries(), loadGames(), loadLevels(), loadGameMonkeys(), loadAllMonkeys(), loadProfiles()]
+      const [countries, games, levels, gameMonkeys, allMonkeys, profiles, gameRegions, allRegions] = await Promise.all(
+        [loadCountries(), loadGames(), loadLevels(), loadGameMonkeys(), loadAllMonkeys(), loadProfiles(), loadGameRegions(), loadAllRegions()]
       );
 
       // HANDLE MANY-TO-MANY RELATIONSHIPS
@@ -69,6 +71,16 @@ function App() {
           arr.push(allMonkeys.find(e => e.id === row.monkey));
         });
         game.monkeys = arr;
+      });
+
+      // assign regions to each game
+      games.forEach(game => {
+        const gameRegionsFiltered = gameRegions.filter(row => row.game === game.abb);
+        const arr = [];
+        gameRegionsFiltered.forEach(row => {
+          arr.push(allRegions.find(e => e.id === row.region))
+        });
+        game.regions = arr;
       });
 
       // UPDATE STATES

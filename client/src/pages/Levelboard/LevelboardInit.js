@@ -9,6 +9,7 @@ import SubmissionRead from "../../database/read/SubmissionRead";
 
 const LevelboardInit = () => {
 	/* ===== VARIABLES ===== */
+
 	// helper functions
 	const { capitalize } = FrontendHelper();
 	const { addPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B } = LevelboardHelper();
@@ -26,6 +27,7 @@ const LevelboardInit = () => {
 		values: null, 
 		error: { record: null, proof: null, comment: null },
 		monkey: null,
+		region: null,
 		prevSubmitted: false,
 		submitting: false,
 		submitted: false
@@ -117,6 +119,7 @@ const LevelboardInit = () => {
 			other: type === "score" ? "time" : "score"
 		});
 		dispatchForm({ field: "monkey", value: currentGame.monkeys });
+		dispatchForm({ field: "region", value: currentGame.regions });
 
 		// get submissions, and filter based on the levelId
         let submissions = await retrieveSubmissions(abb, type, submissionState);
@@ -140,6 +143,7 @@ const LevelboardInit = () => {
 				dispatchForm({ field: "values", value: {
 					[type]: currRecord[`${ type }`], 
 					monkey_id: currRecord.monkey.id,
+					region_id: currRecord.region.id,
 					live: currRecord.live,
 					proof: currRecord.proof, 
 					comment: currRecord.comment,
@@ -163,7 +167,7 @@ const LevelboardInit = () => {
 		// if the formSet flag was never set to true, this means that the client has not submitted to this chart
 		// yet. set the form to default values
 		if (!formSet) {
-			dispatchForm({ field: "values", value: defaultFormVals });
+			dispatchForm({ field: "values", value: { ...defaultFormVals, region_id: currentGame.regions[0].id } });
 		}
 
 		// now, let's add the position field to each record in both arrays
@@ -202,7 +206,7 @@ const LevelboardInit = () => {
 						approved: record.approved
 					}});
 				} else {
-					dispatchForm({ field: "values", value: defaultFormVals });
+					dispatchForm({ field: "values", value: { ...defaultFormVals, user_id: value, region_id: game.regions[0].id } });
 				}
 				break;
 
@@ -276,6 +280,15 @@ const LevelboardInit = () => {
             error.comment = "Comment must be 100 characters or less.";
         }
 
+		// if any errors are determined, let's return
+		console.log(error);
+        dispatchForm({ field: "error", value: error });
+		if (Object.values(error).some(e => e != null)) {
+            dispatchForm({ field: "submitting", value: false });
+			console.log("failed");
+            return;
+        }
+
 		// finally, let's convert the date from the front-end format, to the backend format. this involves some complex logic, comments
 		// will attempt to explain
 		let backendDate = undefined;
@@ -315,15 +328,6 @@ const LevelboardInit = () => {
 				backendDate = dateF2B(form.values.submitted_at);
 			}
 		}
-
-		// if any errors are determined, let's return
-		console.log(error);
-        dispatchForm({ field: "error", value: error });
-		if (Object.values(error).some(e => e != null)) {
-            dispatchForm({ field: "submitting", value: false });
-			console.log("failed");
-            return;
-        }
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
 		await submit(type, { ...form.values, submitted_at: backendDate });

@@ -117,6 +117,7 @@ function Levelboard({ cache }) {
 									<th>Name</th>
 									<th>{ capitalize(game.type) }</th>
 									<th>Date</th>
+									<th>Region</th>
 									<th>Monkey</th>
 									<th>Proof</th>
 									<th>Comment</th>
@@ -143,6 +144,7 @@ function Levelboard({ cache }) {
 										</td>
 										<td>{ val[game.type] }</td>
 										<td>{ dateB2F(val.submitted_at) }</td>
+										<td>{ val.region.region_name }</td>
 										<td>{ val.monkey.monkey_name }</td>
 										<td>{ val.proof !== "none" ? <a href={ val.proof } target="_blank" rel="noopener noreferrer">☑️</a> : null }</td>
 										<td>{ val.comment }</td>
@@ -157,59 +159,84 @@ function Levelboard({ cache }) {
 						<div className="levelboard-submit">
 							<h2>Submit a { capitalize(game.type) }:</h2>
 							<form onSubmit={ submitRecord }>
-								<label htmlFor="user_id">User: </label>
-								<select id="user_id" value={ form.values.user_id } onChange={ handleChange }>
-									{ cache.profiles.map((profile) => (
-										<option key={ profile.id } value={ profile.id }>{ profile.username }</option>
-									))}
-								</select>
-								<label htmlFor={ game.type }>{ capitalize(game.type) }: </label>
-								<input 
-									id={ game.type }
-									type="number"
-									value={ form.values[game.type] }
-									onChange={ handleChange }
-								/>
-								<p>{ form.error.record }</p>
-								<label htmlFor="submitted_at">Date: </label>
-								<input 
-									id="submitted_at" 
-									type="date" 
-									min={ game.release_date } 
-									max={ dateB2F() }
-									value={ form.values.submitted_at }
-									onChange={ handleChange }
-								/>
-								<label htmlFor="monkey_id">Monkey: </label>
-								<select id="monkey_id" value={ form.values.monkey_id } onChange={ handleChange }>
-									{ form.monkey.map((monkey) => (
-										<option key={ monkey.id } value={ monkey.id }>{ monkey.monkey_name }</option>
-									))}
-								</select>
-								<br />
-								<label htmlFor="proof">Proof: </label>
-								<input 
-									id="proof"
-									type="url"
-									value={ form.values.proof }
-									onChange={ handleChange }
-								/>
-								<p>{ form.error.proof }</p>
-								<label htmlFor="live">Live Run: </label>
-								<input
-									id="live"
-									type="checkbox"
-									checked={ form.values.live }
-									onChange={ handleChange }
-								/>
-								<label htmlFor="comment">Comment (optional): </label>
-								<input 
-									id="comment"
-									type="text"
-									value={ form.values.comment }
-									onChange={ handleChange }
-								/>
-								<p>{ form.error.comment }</p>
+								{ cache.isMod ?
+									<div className="levelboard-input-group">
+										<label htmlFor="user_id">User: </label>
+										<select id="user_id" value={ form.values.user_id } onChange={ handleChange }>
+											{ cache.profiles.map((profile) => (
+												<option key={ profile.id } value={ profile.id }>{ profile.username }</option>
+											))}
+										</select>
+									</div>
+								:
+									null
+								}
+								<div className="levelboard-input-group">
+									<label htmlFor={ game.type }>{ capitalize(game.type) }: </label>
+									<input 
+										id={ game.type }
+										type="number"
+										value={ form.values[game.type] }
+										onChange={ handleChange }
+									/>
+									{ form.error.record ? <p>{ form.error.record }</p> : null }
+								</div>
+								<div className="levelboard-input-group">
+									<label htmlFor="submitted_at">Date: </label>
+									<input 
+										id="submitted_at" 
+										type="date" 
+										min={ game.release_date } 
+										max={ dateB2F() }
+										value={ form.values.submitted_at }
+										onChange={ handleChange }
+									/>
+								</div>
+								<div className="levelboard-input-group">
+									<label htmlFor="region_id">Region: </label>
+									<select id="region_id" value={ form.values.region_id } onChange={ handleChange }>
+										{ form.region.map(region => (
+											<option key={ region.id } value={ region.id }>{ region.region_name }</option>
+										))}
+									</select>
+								</div>
+								<div className="levelboard-input-group">
+									<label htmlFor="monkey_id">Monkey: </label>
+									<select id="monkey_id" value={ form.values.monkey_id } onChange={ handleChange }>
+										{ form.monkey.map((monkey) => (
+											<option key={ monkey.id } value={ monkey.id }>{ monkey.monkey_name }</option>
+										))}
+									</select>
+								</div>
+								<div className="levelboard-input-group">
+									<label htmlFor="proof">Proof: </label>
+									<input 
+										id="proof"
+										type="url"
+										value={ form.values.proof }
+										onChange={ handleChange }
+									/>
+									{ form.error.proof  ? <p>{ form.error.proof }</p> : null }
+								</div>
+								<div className="levelboard-input-group">
+									<label htmlFor="comment">Comment (optional): </label>
+									<input 
+										id="comment"
+										type="text"
+										value={ form.values.comment }
+										onChange={ handleChange }
+									/>
+									<p>{ form.error.comment }</p>
+								</div>
+								<div className="levelboard-input-group">
+									<label htmlFor="live">Live Run: </label>
+									<input
+										id="live"
+										type="checkbox"
+										checked={ form.values.live }
+										onChange={ handleChange }
+									/>
+								</div>
 								<button disabled={ form.submitting }>Submit</button>
 							</form>
 							{ form.prevSubmitted ?

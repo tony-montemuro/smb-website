@@ -10,6 +10,7 @@ const SubmissionRead = () => {
                     profiles (id, username, country, avatar_url),
                     level (name, misc, chart_type, time, id),
                     ${ type },
+                    region (id, region_name),
                     submitted_at,
                     monkey (id, monkey_name),
                     proof,
