@@ -38,9 +38,6 @@ const LevelboardUpdate = () => {
 					throw error;
 				}
 
-                // once the submission has completed, we want to reload the page
-                window.location.reload();
-
 		} catch(error) {
 			console.log(error);
             alert(error.message);

@@ -26,7 +26,7 @@ function Popup({ board, setBoard }) {
     // if the message is valid, remove the submission, and notify user that their run was deleted
     const status = await remove(board.delete);
     if (status) {
-      insertNotification({
+      await insertNotification({
         user_id: board.delete.user_id,
         game_id: board.delete.game_id,
         level_id: board.delete.level_id,
@@ -35,6 +35,7 @@ function Popup({ board, setBoard }) {
         message: form.message,
         record: board.delete.type === "score" ? board.delete.score : board.delete.time
       });
+      window.location.reload();
     }
   };
 

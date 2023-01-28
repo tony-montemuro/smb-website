@@ -14,6 +14,7 @@ const LevelboardInit = () => {
 	const { capitalize } = FrontendHelper();
 	const { addPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B } = LevelboardHelper();
 	const { retrieveSubmissions } = SubmissionRead();
+	const { insertNotification } = LevelboardUpdate();
 	const { submit } = LevelboardUpdate();
 
 	const pathArr = window.location.pathname.split("/");
@@ -25,7 +26,7 @@ const LevelboardInit = () => {
 	const boardInit = { records: null, adjacent: null, state: "live", update: null, delete: null };
 	const formInit = { 
 		values: null, 
-		error: { record: null, proof: null, comment: null },
+		error: { record: null, proof: null, comment: null, message: null },
 		monkey: null,
 		region: null,
 		prevSubmitted: false,
@@ -43,7 +44,8 @@ const LevelboardInit = () => {
 		game_id: abb,
 		level_id: levelId,
 		approved: false,
-		submitted_at: dateB2F()
+		submitted_at: dateB2F(),
+		message: ""
 	}
 
 	/* ===== STATES AND REDUCERS ===== */
@@ -151,7 +153,8 @@ const LevelboardInit = () => {
 					game_id: currentGame.abb,
 					level_id: levelId,
 					approved: false,
-					submitted_at: dateB2F(currRecord.submitted_at)
+					submitted_at: dateB2F(currRecord.submitted_at),
+					message: ""
 				}});
 				dispatchForm({ field: "prevSubmitted", value: true });
 				formSet = true;
@@ -203,7 +206,8 @@ const LevelboardInit = () => {
 						proof: record.proof,
 						comment: record.comment,
 						live: record.live,
-						approved: record.approved
+						approved: record.approved,
+						message: ""
 					}});
 				} else {
 					dispatchForm({ field: "values", value: { ...defaultFormVals, user_id: value, region_id: game.regions[0].id } });
@@ -221,7 +225,6 @@ const LevelboardInit = () => {
 	// note: when this field is set to a non-null value, a popup component will automatically be activated
 	const setBoardDelete = (id) => {
 		const row = board.records.all.find(row => row.profiles.id === id);
-		console.log(row);
 		setBoard({ ...board, delete: {
 			user_id: row.profiles.id,
 			game_id: abb,
@@ -240,6 +243,7 @@ const LevelboardInit = () => {
 		dispatchForm({ field: "submitting", value: true });
 		const error = {};
 		Object.keys(form.error).forEach(field => error[field] = null);
+		const old = board.records.all.find(row => row.profiles.id === form.values.user_id);
 
 		// first, validate the record
 		const record = form.values[type];
@@ -280,6 +284,11 @@ const LevelboardInit = () => {
             error.comment = "Comment must be 100 characters or less.";
         }
 
+		// next, validate the message
+		if (form.values.message.length > 100) {
+			error.message = "Message must be 100 characters or less.";
+		}
+
 		// if any errors are determined, let's return
 		console.log(error);
         dispatchForm({ field: "error", value: error });
@@ -292,17 +301,16 @@ const LevelboardInit = () => {
 		// finally, let's convert the date from the front-end format, to the backend format. this involves some complex logic, comments
 		// will attempt to explain
 		let backendDate = undefined;
-		const oldSubmissionData = board.records.all.find(row => row.profiles.id === form.values.user_id);
 		const currDate = dateB2F();
 
 		// first, we need to handle defining the date differently if the user has a previous submissions
-		if (oldSubmissionData) {
-			const prevDate = dateB2F(oldSubmissionData.submitted_at);
+		if (old) {
+			const prevDate = dateB2F(old.submitted_at);
 
 			// special case: user is attempting to submit a new { type }, but has either forgotten to change the date of their old submission,
 			// or has deliberately not changed it. give them a confirmation box to ensure they have not made a mistake. if they hit 'no', the submission
 			// process will cancel. otherwise, continue.
-			if (form.values.submitted_at === prevDate && form.values[game.type] !== oldSubmissionData[game.type]) {
+			if (form.values.submitted_at === prevDate && form.values[game.type] !== old[game.type]) {
 				if (!window.confirm(`You are attempting to submit a new ${ game.type } with the same date as the previous submission. Are you sure this is correct?`)) {
 					dispatchForm({ field: "submitting", value: false });
 					return;
@@ -312,7 +320,7 @@ const LevelboardInit = () => {
 			// CASE 1: the submission date from the form is equal to the submission date in the backend. in this case, backendDate is just date
 			// from previous submission data
 			if (form.values.submitted_at === prevDate) {
-				backendDate = oldSubmissionData.submitted_at;
+				backendDate = old.submitted_at;
 			}
 		} 
 		if (!backendDate) {
@@ -330,7 +338,56 @@ const LevelboardInit = () => {
 		}
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
-		await submit(type, { ...form.values, submitted_at: backendDate });
+		const { message, ...formValsCopy } = form.values;
+		formValsCopy.submitted_at = backendDate;
+		await submit(type, formValsCopy);
+
+		// next, we need to determine if a notification is necessary. there are two cases where a notification needs to be created:
+		// 1.) a moderator updates a preexisting submission
+		// 2.) a moderator inserts a new submission on behalf of a player who had no previously submitted to the current chart
+		const submissionUserId = form.values.user_id;
+		if (user.id !== submissionUserId) {
+			// first, let's define our default notification object
+			let notification = {
+				user_id: submissionUserId,
+				game_id: abb,
+				level_id: levelId,
+				type: type,
+				message: message,
+				record: form.values[type],
+				submitted_at: backendDate,
+				region: form.values.region_id,
+				monkey: form.values.monkey_id,
+				proof: form.values.proof,
+				live: form.values.live
+			}
+
+			// if old is defined, moderator is UPDATING. update notification object accordingly. otherwise, simply
+			// set the notif_type field to insert
+			if (old) {
+				notification = {
+					...notification,
+					notif_type: "update",
+					old_record: form.values[type] !== old[type] ? old[type] : null,
+					old_submitted_at: backendDate !== old.submitted_at ? old.submitted_at : null,
+					old_region: form.values.region_id !== old.region.id ? old.region.id : null,
+					old_monkey: form.values.monkey_id !== old.monkey.id ? old.monkey.id : null,
+					old_proof: form.values.proof !== old.proof ? old.proof : null,
+					old_live: form.values.live !== old.live ? old.live : null
+				}
+			} else {
+				notification = { 
+					...notification,
+					notif_type: "insert"
+				};
+			}
+			
+			// finally, insert the notification into the database
+			await insertNotification(notification);
+		}
+
+		// once all database updates have been finished, reload the page
+		window.location.reload();
 	};
 
 	return {

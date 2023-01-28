@@ -11,6 +11,7 @@ import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 function Levelboard({ cache }) {
 	// variables
 	const imgLength = 50;
+	const user = supabase.auth.user();
 
 	// hooks and functions from init file
 	const { 
@@ -155,7 +156,7 @@ function Levelboard({ cache }) {
 							</tbody>
 						</table>
 					</div>
-					{ supabase.auth.user() ?
+					{ user ?
 						<div className="levelboard-submit">
 							<h2>Submit a { capitalize(game.type) }:</h2>
 							<form onSubmit={ submitRecord }>
@@ -225,9 +226,24 @@ function Levelboard({ cache }) {
 										type="text"
 										value={ form.values.comment }
 										onChange={ handleChange }
+										disabled={ user.id !== form.values.user_id }
 									/>
 									<p>{ form.error.comment }</p>
 								</div>
+								{ user.id !== form.values.user_id ?
+									<div className="levelboard-input-group">
+										<label htmlFor="message">Leave a message (optional): </label>
+										<input 
+											id="message"
+											type="text"
+											value={ form.values.message }
+											onChange={ handleChange }
+										/>
+										{ form.error.message  ? <p>{ form.error.message }</p> : null }
+									</div>
+								:
+									null
+								}
 								<div className="levelboard-input-group">
 									<label htmlFor="live">Live Run: </label>
 									<input
@@ -240,7 +256,7 @@ function Levelboard({ cache }) {
 								<button disabled={ form.submitting }>Submit</button>
 							</form>
 							{ form.prevSubmitted ?
-								<button disabled={ form.submitting } onClick={ () => setBoardDelete(supabase.auth.user().id) }>Remove Record</button>
+								<button disabled={ form.submitting } onClick={ () => setBoardDelete(user.id) }>Remove Record</button>
 							:
 								null
 							}
