@@ -16,13 +16,12 @@ const LevelboardDelete = () => {
                 throw error;
             }
 
-            // if we made it this far, query was successful. reload the page
-            window.location.reload();
-
         } catch (error) {
             console.log(error);
             alert(error.message);
+            return false;
         }
+        return true;
     };
 
     return { remove };

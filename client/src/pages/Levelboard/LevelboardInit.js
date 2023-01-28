@@ -221,7 +221,7 @@ const LevelboardInit = () => {
 	// note: when this field is set to a non-null value, a popup component will automatically be activated
 	const setBoardDelete = (id) => {
 		const row = board.records.all.find(row => row.profiles.id === id);
-		console.log(id);
+		console.log(row);
 		setBoard({ ...board, delete: {
 			user_id: row.profiles.id,
 			game_id: abb,

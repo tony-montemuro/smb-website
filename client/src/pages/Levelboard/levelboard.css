@@ -88,3 +88,12 @@
     max-width: 640px;
     background-color: #fff;
 }
+
+.levelboard-popup form {
+    margin-bottom: 8px;
+}
+
+.levelboard-popup button {
+    margin-left: 2.5px;
+    margin-right: 2.5px;
+}
