@@ -1,6 +1,6 @@
 import { supabase } from "../SupabaseClient";
 
-const LevelboardUpdate = () => {
+const LevelboardUpdate = async () => {
     // function that takes a notification object, and inserts it into the notification table
     const insertNotification = async (notification) => {
         try {
@@ -12,9 +12,6 @@ const LevelboardUpdate = () => {
             if (error) {
                 throw error;
             }
-            
-            // once notification has been inserted, we want to reload the page
-            window.location.reload();
 
         } catch (error) {
             console.log(error);
