@@ -14,9 +14,8 @@ const LevelboardInit = () => {
 	const { capitalize } = FrontendHelper();
 	const { addPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B } = LevelboardHelper();
 	const { retrieveSubmissions } = SubmissionRead();
-	const { insertNotification } = LevelboardUpdate();
-	const { submit } = LevelboardUpdate();
-
+	const { submit, insertNotification } = LevelboardUpdate();
+	
 	const pathArr = window.location.pathname.split("/");
 	const abb = pathArr[2];
 	const category = pathArr[3];

@@ -1,6 +1,6 @@
 import { supabase } from "../SupabaseClient";
 
-const LevelboardUpdate = async () => {
+const LevelboardUpdate = () => {
     // function that takes a notification object, and inserts it into the notification table
     const insertNotification = async (notification) => {
         try {
@@ -14,8 +14,14 @@ const LevelboardUpdate = async () => {
             }
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            // delete, insert, and update will be error handled here. approvals are a special case; they are handled
+            // in a higher-up function
+            if (notification.notif_type !== "approve") {
+                console.log(error);
+                alert(error.message);
+            } else {
+                throw error;
+            }
         }
     };
 

@@ -2,14 +2,14 @@ import { supabase } from "../SupabaseClient";
 
 const SubmissionsUpdate = () => {
     // function that approves a submission given some submission information
-    const approve = async (type, userId, gameId, levelId) => {
+    const approve = async (submission) => {
         try {
             const { error } = await supabase
-                .from(`${ type }_submission`)
+                .from(`${ submission.type }_submission`)
                 .update({ approved: true })
-                .eq("user_id", userId)
-                .eq("game_id", gameId)
-                .eq("level_id", levelId);
+                .eq("user_id", submission.user_id)
+                .eq("game_id", submission.game_id)
+                .eq("level_id", submission.level_id);
 
             // error handling
             if (error) {

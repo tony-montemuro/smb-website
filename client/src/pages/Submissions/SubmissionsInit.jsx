@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import SubmissionsUpdate from "../../database/update/SubmissionsUpdate";
 
@@ -14,6 +15,7 @@ const SubmissionInit = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
+    const { insertNotification } = LevelboardUpdate();
     const { retrieveSubmissions } = SubmissionRead();
     const { approve } = SubmissionsUpdate();
 
@@ -101,6 +103,7 @@ const SubmissionInit = () => {
         const filtered = submissions[currentGame].filter(row => row !== submission);
         setSubmissions({ ...submissions, [currentGame]: filtered });
         console.log(submissions);
+        console.log(approved);
     };
 
     // function that moves a submission approved back to the submission list, in-order
@@ -117,8 +120,33 @@ const SubmissionInit = () => {
     // once all updates are done, the page will reload
     const approveAll = async () => {
         setApproving(true);
-        const promises = approved.map(e => approve(e.type, e.profiles.id, e.game.abb, e.level.name));
-        Promise.all(promises).then(() => window.location.reload()).catch((error) => console.log(error));
+        try {
+            // first, let's approve all submissions in the submission table
+            const approvePromises = approved.map(e => approve({ type: e.type, user_id: e.profiles.id, game_id: e.game.abb, level_id: e.level.name }));
+            await Promise.all(approvePromises);
+
+            // once all submissions have been approved, let's notify each user that the approval was successful
+            const notifPromises = approved.map(e => {
+                return insertNotification({
+                    type: e.type, 
+                    user_id: e.profiles.id, 
+                    game_id: e.game.abb,
+                    level_id: e.level.name,
+                    notif_type: "approve",
+                    record: e.record,
+                    old_approved: false,
+                    approved: true
+                });
+            });
+            await Promise.all(notifPromises);
+
+            // once all notifications have been sent, reload the page
+            window.location.reload();
+
+        } catch(error) {
+            console.log(error);
+            alert(error.message);
+        }
     };
 
     return { 
