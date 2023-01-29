@@ -22,11 +22,12 @@ import AppRead from "./database/read/AppRead";
 function App() {
   /* ===== STATES & REDUCERS ===== */
   const [session, setSession] = useState(null);
-  const [isMod, setIsMod] = useState(null);
   const [countries, setCountries] = useState(null);
   const [games, setGames] = useState(null);
   const [levels, setLevels] = useState(null);
   const [profiles, setProfiles] = useState(null);
+  const [isMod, setIsMod] = useState(null);
+  const [notifications, setNotifications] = useState(null);
   const [scoreSubmissions, setScoreSubmissions] = useState(null);
   const [timeSubmissions, setTimeSubmissions] = useState(null);
   const [images, dispatchImages] = useReducer((state, action) => {
@@ -38,9 +39,10 @@ function App() {
   const timeSubmissionState = { state: timeSubmissions, setState: setTimeSubmissions };
   const imageReducer = { reducer: images, dispatchImages: dispatchImages };
 
+  /* ===== FUNCTIONS ===== */
+
   // load functions from the load file
   const { 
-    queryMods,
     loadCountries, 
     loadGames, 
     loadLevels, 
@@ -48,49 +50,62 @@ function App() {
     loadAllMonkeys, 
     loadProfiles,
     loadGameRegions,
-    loadAllRegions
+    loadAllRegions,
+    loadMods,
+    loadUserNotifications
   } = AppRead();
+
+
+  // async function that will make concurrent api calls to the database
+  const loadData = async () => {
+    // make concurrent api calls to database to load data
+    const [countries, games, levels, gameMonkeys, allMonkeys, profiles, gameRegions, allRegions] = await Promise.all(
+      [loadCountries(), loadGames(), loadLevels(), loadGameMonkeys(), loadAllMonkeys(), loadProfiles(), loadGameRegions(), loadAllRegions()]
+    );
+
+    // assign monkeys to each game
+    games.forEach(game => {
+      const gameMonkeysFiltered = gameMonkeys.filter(row => row.game === game.abb);
+      const arr = [];
+      gameMonkeysFiltered.forEach(row => {
+        arr.push(allMonkeys.find(e => e.id === row.monkey));
+      });
+      game.monkeys = arr;
+    });
+
+    // assign regions to each game
+    games.forEach(game => {
+      const gameRegionsFiltered = gameRegions.filter(row => row.game === game.abb);
+      const arr = [];
+      gameRegionsFiltered.forEach(row => {
+        arr.push(allRegions.find(e => e.id === row.region))
+      });
+      game.regions = arr;
+    });
+
+    // update states
+    setCountries(countries);
+    setGames(games);
+    setLevels(levels);
+    setProfiles(profiles);
+  };
+
+
+  // async function that will make concurrent api calls to user data in the database
+  const loadUserData = async (userId) => {
+    // make concurrent api calls to database to load data
+    const [modStatus, notifs] = await Promise.all([loadMods(userId), loadUserNotifications(userId)]);
+
+    // update states
+    setIsMod(modStatus);
+    setNotifications(notifs);
+    console.log(userId);
+    console.log(notifs);
+  };
+
 
   // code that is executed on page load
   useEffect(() => {
-    // async function that will make concurrent api calls to the database
-    const loadData = async () => {
-      // CONCURRENT API CALLS
-
-      const [countries, games, levels, gameMonkeys, allMonkeys, profiles, gameRegions, allRegions] = await Promise.all(
-        [loadCountries(), loadGames(), loadLevels(), loadGameMonkeys(), loadAllMonkeys(), loadProfiles(), loadGameRegions(), loadAllRegions()]
-      );
-
-      // HANDLE MANY-TO-MANY RELATIONSHIPS
-
-      // assign monkeys to each game
-      games.forEach(game => {
-        const gameMonkeysFiltered = gameMonkeys.filter(row => row.game === game.abb);
-        const arr = [];
-        gameMonkeysFiltered.forEach(row => {
-          arr.push(allMonkeys.find(e => e.id === row.monkey));
-        });
-        game.monkeys = arr;
-      });
-
-      // assign regions to each game
-      games.forEach(game => {
-        const gameRegionsFiltered = gameRegions.filter(row => row.game === game.abb);
-        const arr = [];
-        gameRegionsFiltered.forEach(row => {
-          arr.push(allRegions.find(e => e.id === row.region))
-        });
-        game.regions = arr;
-      });
-
-      // UPDATE STATES
-
-      setCountries(countries);
-      setGames(games);
-      setLevels(levels);
-      setProfiles(profiles);
-    };
-
     // first, the session is loaded into the session hook
     setSession(supabase.auth.session());
     supabase.auth.onAuthStateChange((_event, session) => {
@@ -99,16 +114,21 @@ function App() {
 
     // next, load data
     loadData();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
 
   // code that is executed each time the session is changed
   useEffect(() => {
-    queryMods(setIsMod);
+    const user = supabase.auth.user();
+    if (session && user) {
+      loadUserData(user.id);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
+
+  // app component
   return (
     <>
       <Navbar isMod={ isMod } />
@@ -199,6 +219,6 @@ function App() {
       </div>
     </>
   );
-}
+};
 
 export default App;

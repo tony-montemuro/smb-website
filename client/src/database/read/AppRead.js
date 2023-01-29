@@ -1,39 +1,6 @@
 import { supabase } from "../SupabaseClient";
 
 const AppRead = () => {
-    // function that queries the mod table to see if current user is a mod
-    const queryMods = async (setIsMod) => {
-        try {
-            // initialize variables
-            const userId = supabase.auth.user() ? supabase.auth.user().id : null;
-
-            // perform query, if necessary
-            if (userId) {
-                const { data: mods, error, status } = await supabase
-                    .from("moderator")
-                    .select("user_id")
-                    .eq("user_id", userId);
-
-                // error handling
-                if (error && status !== 406) {
-                    throw error;
-                }
-            
-                // if data is not empty, this means match was found -> user is mod
-                if (mods.length > 0) {
-                    setIsMod(true);
-                } else {
-                    setIsMod(false);
-                }
-            } else {
-                setIsMod(false);
-            }
-        } catch (error) {
-            console.log(error);
-            alert(error.message);
-        }
-    };
-
     // function that loads all the countries data
     const loadCountries = async () => {
         try {
@@ -174,7 +141,7 @@ const AppRead = () => {
     };
 
     // function that loads all the region data
-    const loadGameRegions = async() => {
+    const loadGameRegions = async () => {
         try {
             const { data: gameRegionsList, error, status } = await supabase
                 .from("game_region")
@@ -198,7 +165,7 @@ const AppRead = () => {
     }
 
     // function that loads all the region data
-    const loadAllRegions = async() => {
+    const loadAllRegions = async () => {
         try {
             const { data: allRegionsList, error, status } = await supabase
                 .from("region")
@@ -220,8 +187,57 @@ const AppRead = () => {
         return [];
     }
 
+    // function that queries the mod table to see if current user is a mod
+    const loadMods = async (userId) => {
+        try {
+            const { data: mods, error, status } = await supabase
+                .from("moderator")
+                .select("user_id")
+                .eq("user_id", userId);
+
+            // error handling
+            if (error && status !== 406) {
+                throw error;
+            }
+        
+            // if data is not empty, this means match was found -> user is mod
+            if (mods.length > 0) {
+                return true;
+            } else {
+                return false;
+            }
+            
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+            return false;
+        }
+    };
+
+    // function that loads all the notifications for a given user
+    const loadUserNotifications = async (userId) => {
+        try {
+            const { data: notificationsList, error, status } = await supabase
+                .from("notification")
+                .select("*")
+                .eq("user_id", userId)
+                .order("notif_date");
+
+            // error handling
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            // return data
+            return notificationsList;
+
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+    };
+
     return { 
-        queryMods, 
         loadCountries, 
         loadGames, 
         loadLevels, 
@@ -229,7 +245,9 @@ const AppRead = () => {
         loadAllMonkeys, 
         loadProfiles,
         loadGameRegions,
-        loadAllRegions
+        loadAllRegions,
+        loadMods, 
+        loadUserNotifications
     };
 };
 
