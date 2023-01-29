@@ -18,6 +18,7 @@ import UserStats from "./pages/UserStats/UserStats";
 import Submissions from "./pages/Submissions/Submissions";
 import Records from "./pages/Records/Records";
 import AppRead from "./database/read/AppRead";
+import Notifications from "./pages/Notifications/Notifications";
 
 function App() {
   /* ===== STATES & REDUCERS ===== */
@@ -99,8 +100,6 @@ function App() {
     // update states
     setIsMod(modStatus);
     setNotifications(notifs);
-    console.log(userId);
-    console.log(notifs);
   };
 
 
@@ -131,13 +130,19 @@ function App() {
   // app component
   return (
     <>
-      <Navbar isMod={ isMod } />
+      <Navbar cache={ { isMod: isMod, notifications: notifications } } />
       <div className="app">
         <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="/login" element={<Login />}/>
-          <Route path="/profile" element={<Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } />}/>
+          <Route path="/" element={ <Home /> }/>
+          <Route path="/submissions" element={
+            <Submissions cache={ { isMod: isMod, games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
+          } />
           <Route path="/games" element={<GameSelect cache={ { games: games, imageReducer: imageReducer } } />}/>
+          <Route path="/resources" element={<Resources />}></Route>
+          <Route path="/support" element={ <Support /> }/>
+          <Route path="/notifications" element={ <Notifications /> } />
+          <Route path="/login" element={ <Login /> }/>
+          <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } /> }/>
           <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>
           <Route path="games/:game/main/medals" element={
             <Medals cache={ { games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
@@ -203,11 +208,6 @@ function App() {
               imageReducer: imageReducer
             } } />
           }/>
-          <Route path="/resources" element={<Resources />}></Route>
-          <Route path="/submissions" element={
-            <Submissions cache={ { isMod: isMod, games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
-          } />
-          <Route path="/support" element={ <Support /> }/>
           <Route path="/user/:userId" element={<User cache={ { games: games, profiles: profiles, imageReducer: imageReducer } } />}/>
           <Route path="/user/:userId/:game/main" element={
             <UserStats cache={ { profiles: profiles, games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
