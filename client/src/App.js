@@ -92,13 +92,20 @@ function App() {
   };
 
 
-  // async function that will make concurrent api calls to user data in the database
-  const loadUserData = async (userId) => {
-    // make concurrent api calls to database to load data
-    const [modStatus, notifs] = await Promise.all([loadMods(userId), loadUserNotifications(userId)]);
+  // async function that will check the mod status of the current user
+  const checkModStatus = async (user) => {
+    if (!user) {
+      setIsMod(false);
+    } else {
+      const modStatus = await loadMods(user.id);
+      setIsMod(modStatus);
+    }
+  };
 
-    // update states
-    setIsMod(modStatus);
+
+  // async function that will load all of the user notifications from the database
+  const loadNotifications = async (userId) => {
+    const notifs = await loadUserNotifications(userId);
     setNotifications(notifs);
   };
 
@@ -120,9 +127,10 @@ function App() {
   // code that is executed each time the session is changed
   useEffect(() => {
     const user = supabase.auth.user();
-    if (session && user) {
-      loadUserData(user.id);
+    if (session && user && !notifications) {
+      loadNotifications(user.id);
     }
+    checkModStatus(user);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
