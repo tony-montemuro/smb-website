@@ -223,6 +223,7 @@ const AppRead = () => {
                     id,
                     user_id,
                     level (name, misc, mode (game (abb, name))),
+                    moderator:profiles (id, username),
                     type,
                     notif_type,
                     notif_date,

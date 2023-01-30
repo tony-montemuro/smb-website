@@ -58,30 +58,38 @@ function Notifications({ cache }) {
               </tr>
             </thead>
             <tbody>
-              { notifications.map(row => {
-                return <tr key={ row.id }>
-                  <td>
-                    <input
-                      type="checkbox"
-                      onChange={() => console.log(`select ${row.id}`)}
-                    />
+              { notifications.length > 0 ?
+                notifications.map(row => {
+                  return <tr key={ row.id }>
+                    <td>
+                      <input
+                        type="checkbox"
+                        onChange={() => console.log(`select ${row.id}`)}
+                      />
+                    </td>
+                    <td>{ capitalize(row.notif_type) }</td>
+                    <td>
+                      <Link to={`/games/${ row.level.mode.game.abb }`}>
+                        { row.level.mode.game.name }
+                      </Link>
+                    </td>
+                    <td>
+                      <Link to={`/games/${ row.level.mode.game.abb }/${ row.level.misc ? "misc" : "main" }/${ row.type }/${ row.level.name }`}>
+                        { cleanLevelName(row.level.name) } ({ capitalize(row.type) })
+                      </Link>
+                    </td>
+                    <td>{ row.record }</td>
+                    <td>Info</td>
+                    <td>{ dateB2F(row.notif_date) }</td>
+                  </tr>
+                })
+              :
+                <tr>
+                  <td colSpan={ 7 }>
+                    <i>You have no notifications!</i>
                   </td>
-                  <td>{ capitalize(row.notif_type) }</td>
-                  <td>
-                    <Link to={`/games/${ row.level.mode.game.abb }`}>
-                      { row.level.mode.game.name }
-                    </Link>
-                  </td>
-                  <td>
-                    <Link to={`/games/${ row.level.mode.game.abb }/${ row.level.misc ? "misc" : "main" }/${ row.type }/${ row.level.name }`}>
-                      { cleanLevelName(row.level.name) } ({ capitalize(row.type) })
-                    </Link>
-                  </td>
-                  <td>{ row.record }</td>
-                  <td>Info</td>
-                  <td>{ dateB2F(row.notif_date) }</td>
                 </tr>
-              }) }
+              }
             </tbody>
           </table> 
         }

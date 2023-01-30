@@ -8,13 +8,13 @@ import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const LevelboardInit = () => {
-	/* ===== VARIABLES ===== */
-
 	// helper functions
 	const { capitalize } = FrontendHelper();
 	const { addPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B } = LevelboardHelper();
 	const { retrieveSubmissions } = SubmissionRead();
 	const { submit, insertNotification } = LevelboardUpdate();
+
+	/* ===== VARIABLES ===== */
 	
 	const pathArr = window.location.pathname.split("/");
 	const abb = pathArr[2];
@@ -351,6 +351,7 @@ const LevelboardInit = () => {
 				user_id: submissionUserId,
 				game_id: abb,
 				level_id: levelId,
+				mod_id: user.id,
 				type: type,
 				message: message,
 				record: form.values[type],

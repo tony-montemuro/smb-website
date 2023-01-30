@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../database/SupabaseClient";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import SubmissionsUpdate from "../../database/update/SubmissionsUpdate";
 
 const SubmissionInit = () => {
+    /* ===== VARIABLES ===== */
+    const user = supabase.auth.user();
+
     /* ===== STATES ===== */
     const [loading, setLoading] = useState(true);
     const [submissions, setSubmissions] = useState({});
@@ -131,6 +135,7 @@ const SubmissionInit = () => {
                     type: e.type, 
                     user_id: e.profiles.id, 
                     game_id: e.game.abb,
+                    mod_id: user.id,
                     level_id: e.level.name,
                     notif_type: "approve",
                     record: e.record,

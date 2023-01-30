@@ -5,6 +5,9 @@ import LevelboardDelete from "../../database/delete/LevelboardDelete";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 
 function Popup({ board, setBoard }) {
+  /* ===== VARIABLES ===== */
+  const user = supabase.auth.user();
+
   /* ===== STATES ===== */
   const [form, setForm] = useState({ message: "", error: null });
 
@@ -30,6 +33,7 @@ function Popup({ board, setBoard }) {
         user_id: board.delete.user_id,
         game_id: board.delete.game_id,
         level_id: board.delete.level_id,
+        mod_id: user.id,
         type: board.delete.type,
         notif_type: "delete",
         message: form.message,
@@ -42,7 +46,7 @@ function Popup({ board, setBoard }) {
   // popup component
   return (
     board.delete ? 
-      board.delete.user_id === supabase.auth.user().id ?
+      board.delete.user_id === user.id ?
         <div className="levelboard-popup">
           <div className="levelboard-popup-inner">
             <h2>Are you sure you want to remove your submission?</h2>
