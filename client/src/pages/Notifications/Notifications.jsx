@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationsInit from "./NotificationsInit";
+import LevelboardHelper from "../../helper/LevelboardHelper";
 
 function Notifications({ cache }) {
   // states and functions from init file
@@ -10,6 +11,7 @@ function Notifications({ cache }) {
 
   // helper functions
   const { cleanLevelName, capitalize } = FrontendHelper();
+  const { dateB2F } = LevelboardHelper();
 
   // code that is executed when the page first loads
   useEffect(() => {
@@ -77,7 +79,7 @@ function Notifications({ cache }) {
                   </td>
                   <td>{ row.record }</td>
                   <td>Info</td>
-                  <td>{ row.notif_date.slice(0, 10) }</td>
+                  <td>{ dateB2F(row.notif_date) }</td>
                 </tr>
               }) }
             </tbody>

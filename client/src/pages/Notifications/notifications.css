@@ -13,7 +13,19 @@
 }
 
 .notifications-body table {
-    margin: auto;
+    border-collapse: collapse;
+    border: 1px solid black;
+    margin: 25px auto;
+    width: 75%;
+}
+
+.notifications-body th {
+    border: 1px solid black;
+}
+
+.notifications-body td {
+    border: 1px solid black;
+    text-align: center;
 }
 
 .notification-body p {
