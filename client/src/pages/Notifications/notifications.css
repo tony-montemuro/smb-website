@@ -1,0 +1,21 @@
+.notifications-header {
+    margin: auto;
+    width: 40%;
+}
+
+.notifications-header-info {
+    text-align: center
+}
+
+.notifications-header ol {
+    list-style-position: inside;
+    padding: 0px;
+}
+
+.notifications-body table {
+    margin: auto;
+}
+
+.notification-body p {
+    text-align: center;
+}

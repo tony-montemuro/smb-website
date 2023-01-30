@@ -219,7 +219,29 @@ const AppRead = () => {
         try {
             const { data: notificationsList, error, status } = await supabase
                 .from("notification")
-                .select("*")
+                .select(`
+                    id,
+                    user_id,
+                    level (name, misc, mode (game (abb, name))),
+                    type,
+                    notif_type,
+                    notif_date,
+                    message,
+                    old_record,
+                    record,
+                    old_submitted_at,
+                    submitted_at,
+                    old_monkey:monkey!notification_old_monkey_fkey (monkey_name),
+                    monkey:monkey!notification_monkey_fkey (monkey_name),
+                    old_region:region!notification_old_region_fkey (region_name),
+                    region:region!notification_region_fkey (region_name),
+                    old_proof,
+                    proof,
+                    old_live,
+                    live,
+                    old_approved,
+                    approved
+                `)
                 .eq("user_id", userId)
                 .order("notif_date");
 
