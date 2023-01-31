@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationsInit from "./NotificationsInit";
 import LevelboardHelper from "../../helper/LevelboardHelper";
+import NotificationPopup from "./NotificationPopup";
 
 function Notifications({ cache }) {
   // states and functions from init file
-  const { loading, notifications, init } = NotificationsInit();
+  const { loading, notifications, currentNotif, setCurrentNotif, init } = NotificationsInit();
 
   // helper functions
   const { cleanLevelName, capitalize } = FrontendHelper();
@@ -49,11 +50,11 @@ function Notifications({ cache }) {
                     onChange={() => console.log("select all")}
                   />
                 </th>
+                <th>Details</th>
                 <th>Type</th>
                 <th>Game</th>
                 <th>Level</th>
                 <th>Record</th>
-                <th>Details</th>
                 <th>Notification Date</th>
               </tr>
             </thead>
@@ -67,6 +68,7 @@ function Notifications({ cache }) {
                         onChange={() => console.log(`select ${row.id}`)}
                       />
                     </td>
+                    <td><button onClick={ () => setCurrentNotif(row) }>Info</button></td>
                     <td>{ capitalize(row.notif_type) }</td>
                     <td>
                       <Link to={`/games/${ row.level.mode.game.abb }`}>
@@ -79,7 +81,6 @@ function Notifications({ cache }) {
                       </Link>
                     </td>
                     <td>{ row.record }</td>
-                    <td>Info</td>
                     <td>{ dateB2F(row.notif_date) }</td>
                   </tr>
                 })
@@ -92,8 +93,9 @@ function Notifications({ cache }) {
               }
             </tbody>
           </table> 
-        }
+        } 
       </div>
+      <NotificationPopup notification={ currentNotif } setNotification={ setCurrentNotif } />
     </>
   );
 };

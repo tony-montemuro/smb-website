@@ -2,9 +2,10 @@ import { useState } from "react";
 
 const NotificationsInit = () => {
     /* ===== STATES ===== */
+    const [loading, setLoading] = useState(true);
     const [notifications, setNotifications] = useState(null);
     const [selected, setSelected] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [currentNotif, setCurrentNotif] = useState(null);
 
     /* ===== FUNCTIONS ===== */
 
@@ -14,7 +15,7 @@ const NotificationsInit = () => {
         setLoading(false);
     };
 
-    return { loading, notifications, init };
+    return { loading, notifications, currentNotif, setCurrentNotif, init };
 };
 
 export default NotificationsInit;

@@ -31,3 +31,39 @@
 .notification-body p {
     text-align: center;
 }
+
+.notifications-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.notifications-popup-inner {
+    position: relative;
+    padding: 8px;
+    width: 100%;
+    max-width: 640px;
+    background-color: #fff;
+}
+
+.notifications-popup-inner button {
+    float: right;
+}
+
+.notifications-popup-inner h2 {
+    text-align: center;
+}
+
+.notifications-popup-inner p {
+    text-align: center;
+}
+
+.notifications-updated {
+    background-color: yellow;
+}

@@ -244,7 +244,7 @@ const AppRead = () => {
                     approved
                 `)
                 .eq("user_id", userId)
-                .order("notif_date");
+                .order("notif_date", { ascending: false });
 
             // error handling
             if (error && status !== 406) {
