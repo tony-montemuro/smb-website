@@ -17,6 +17,15 @@ function Popup({ board, setBoard }) {
   const { remove } = LevelboardDelete();
   const { insertNotification } = LevelboardUpdate();
 
+  // function that is called when a user deletes their own run
+  const handleDelete = async () => {
+    // await the removal of the submission
+    await remove(board.delete);
+
+    // reload the page once that is done
+    window.location.reload();
+  };
+
   // function that is called when a moderator is deleting a run from another user
   const handleModDelete = async () => {
     // first, verify that the message is not more than { max } characters
@@ -50,7 +59,7 @@ function Popup({ board, setBoard }) {
         <div className="levelboard-popup">
           <div className="levelboard-popup-inner">
             <h2>Are you sure you want to remove your submission?</h2>
-            <button onClick={ () => remove(board.delete) }>Yes</button>
+            <button onClick={ handleDelete }>Yes</button>
             <button onClick={ () => setBoard({ ...board, delete: null }) }>No</button>
           </div> 
         </div>
