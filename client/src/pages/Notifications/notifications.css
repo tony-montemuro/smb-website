@@ -12,11 +12,20 @@
     padding: 0px;
 }
 
+.notifications-body {
+    width: 75%;
+    margin: auto;
+}
+
+.notifications-body a:visited {
+    color: blue;
+}
+
 .notifications-body table {
     border-collapse: collapse;
     border: 1px solid black;
-    margin: 25px auto;
-    width: 75%;
+    margin: 10px auto;
+    width: 100%;
 }
 
 .notifications-body th {
@@ -42,6 +51,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.notifications-popup a:visited {
+    color: blue;
 }
 
 .notifications-popup-inner {

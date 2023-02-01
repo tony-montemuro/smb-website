@@ -2,7 +2,7 @@ const FrontendHelper = () => {
     // FUNCTION 1: capitalize
     // Precondition: str is a string
     // Postcondition: str is returned with it's first letter capitalized
-    const capitalize = (str) => {
+    const capitalize = str => {
         return str.charAt(0).toUpperCase()+str.slice(1);
     };
 
@@ -11,7 +11,7 @@ const FrontendHelper = () => {
     // word1_word2_..._(wordn)
     // POSTCONDITION: and transforms to following format:
     // Word1 Word2 ... (Wordn)
-    const cleanLevelName = (str) => {
+    const cleanLevelName = str => {
         const words = str.split("_");
         for (let i = 0; i < words.length; i++) {
             if (words[i][0] !== "(") {
@@ -21,9 +21,21 @@ const FrontendHelper = () => {
             }
         }
         return words.join(" ");
+    };
+
+    // FUNCTION 3: recordB2F
+    // PRECONDITION: record is a float number with at most two decimal places
+    // type is either "score" or "time"
+    // POSTCONDITION: if the type is time, we fix the number of decimal places to two. a string is returned in this case.
+    // if the type is score, simply return record, a float.
+    const recordB2F = (record, type) => {
+        if (type === "time") {
+            return record.toFixed(2);
+        }
+        return record;
     }
 
-    return { capitalize, cleanLevelName };
+    return { capitalize, cleanLevelName, recordB2F };
 };
 
 export default FrontendHelper;

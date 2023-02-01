@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 
-function NotificationPopup({ notification, setNotification }) {
+function NotificationPopup({ hook }) {
+    // variables
+    const notification = hook.state.current;
+
     // helper functions
-    const { capitalize, cleanLevelName } = FrontendHelper();
+    const { capitalize, cleanLevelName, recordB2F } = FrontendHelper();
     const { dateB2F } = LevelboardHelper();
 
     // basic info component - this is information that is included in all types of notifications
@@ -43,21 +46,20 @@ function NotificationPopup({ notification, setNotification }) {
             null
     };
 
-    console.log(notification);
     if (notification) {
         switch (notification.notif_type) {
             case "approve":
                 return (
                     <div className="notifications-popup">
                         <div className="notifications-popup-inner">
-                            <button onClick={ () => setNotification(null) }>Close</button>
+                            <button onClick={ () => hook.setState({ ...hook.state, current: null }) }>Close</button>
                             <h2>
                                 <Link to={`/user/${ notification.moderator.id }`}>{ notification.moderator.username }</Link> has approved the following submission: 
                             </h2>
                             <div className="notification-details">
                                 <ul>
                                     <NotificationBasicInfo notification={ notification } />
-                                    <li>{ capitalize(notification.type) }: { notification.record }</li>
+                                    <li>{ capitalize(notification.type) }: { recordB2F(notification.record, notification.type) }</li>
                                     <li>Approval Date: { dateB2F(notification.notif_date) }</li>
                                 </ul>
                             </div>
@@ -68,18 +70,19 @@ function NotificationPopup({ notification, setNotification }) {
                 return (
                     <div className="notifications-popup">
                         <div className="notifications-popup-inner">
-                            <button onClick={ () => setNotification(null) }>Close</button>
+                            <button onClick={ () => hook.setState({ ...hook.state, current: null }) }>Close</button>
                             <h2>
                                 <Link to={`/user/${ notification.moderator.id }`}>{ notification.moderator.username }</Link> has submitted the following submission on your behalf: 
                             </h2>
                             <div className="notification-details">
                                 <ul>
                                     <NotificationBasicInfo notification={ notification } />
-                                    <li>{ capitalize(notification.type) }: { notification.record }</li>
+                                    <li>{ capitalize(notification.type) }: { recordB2F(notification.record, notification.type) }</li>
                                     <li>Date: { dateB2F(notification.submitted_at) }</li>
                                     <li>Region: { notification.region.region_name }</li>
                                     <li>Monkey: { notification.monkey.monkey_name }</li>
                                     <li>Proof: <NotificationProof proof={ notification.proof } /></li>
+                                    <li>Live: { notification.live ? "Yes" : "No" }</li>
                                 </ul>
                             </div>
                             <NotificationMessage message={ notification.message } />
@@ -90,7 +93,7 @@ function NotificationPopup({ notification, setNotification }) {
                 return (
                     <div className="notifications-popup">
                         <div className="notifications-popup-inner">
-                            <button onClick={ () => setNotification(null) }>Close</button>
+                            <button onClick={ () => hook.setState({ ...hook.state, current: null }) }>Close</button>
                             <h2>
                                 <Link to={`/user/${ notification.moderator.id }`}>{ notification.moderator.username }</Link> has made the following updates to your submission: 
                             </h2>
@@ -100,12 +103,17 @@ function NotificationPopup({ notification, setNotification }) {
                                     { notification.old_record ? 
                                         <li><span className="notifications-updated">{ capitalize(notification.type) }: { notification.old_record } → { notification.record }</span></li>
                                     :
-                                        <li>{ capitalize(notification.type) }: { notification.record }</li>
+                                        <li>{ capitalize(notification.type) }: { recordB2F(notification.record, notification.type) }</li>
                                     }
                                     { notification.old_submitted_at ? 
                                         <li><span className="notifications-updated">Date: { dateB2F(notification.old_submitted_at) } → { dateB2F(notification.submitted_at) }</span></li>
                                     :
                                         <li>Date: { dateB2F(notification.submitted_at) }</li>
+                                    }
+                                    { notification.old_region ?
+                                        <li><span className="notifications-updated">Region: { notification.old_region.region_name } → { notification.region.region_name } </span></li>
+                                    :
+                                        <li>Region: { notification.region.region_name }</li>
                                     }
                                     { notification.old_monkey ?
                                         <li><span className="notifications-updated">Monkey: { notification.old_monkey.monkey_name } → { notification.monkey.monkey_name }</span></li>
@@ -121,6 +129,11 @@ function NotificationPopup({ notification, setNotification }) {
                                     :
                                         <li>Proof: <NotificationProof proof={ notification.proof } /></li>
                                     }
+                                    { notification.old_live ?
+                                        <li><span className="notifications-updated">Live: { notification.live ? "Yes" : "No" } → { notification.live ? "Yes" : "No" }</span></li>
+                                    :
+                                        <li>Live: { notification.live ? "Yes" : "No" }</li>
+                                    }
                                 </ul>
                             </div>
                             <NotificationMessage message={ notification.message } />
@@ -131,14 +144,14 @@ function NotificationPopup({ notification, setNotification }) {
                 return (
                     <div className="notifications-popup">
                         <div className="notifications-popup-inner">
-                            <button onClick={ () => setNotification(null) }>Close</button>
+                            <button onClick={ () => hook.setState({ ...hook.state, current: null }) }>Close</button>
                             <h2>
                                 <Link to={`/user/${ notification.moderator.id }`}>{ notification.moderator.username }</Link> has removed the following submission: 
                             </h2>
                             <div className="notification-details">
                                 <ul>
                                     <NotificationBasicInfo notification={ notification } />
-                                    <li>{ capitalize(notification.type) }: { notification.record }</li>
+                                    <li>{ capitalize(notification.type) }: { recordB2F(notification.record, notification.type) }</li>
                                     <li>Deletion Date: { dateB2F(notification.notif_date) }</li>
                                 </ul>
                             </div>

@@ -8,10 +8,18 @@ import NotificationPopup from "./NotificationPopup";
 
 function Notifications({ cache }) {
   // states and functions from init file
-  const { loading, notifications, currentNotif, setCurrentNotif, init } = NotificationsInit();
+  const { 
+    loading,
+    notifications, 
+    init, 
+    setNotifications,
+    toggleSelection,
+    toggleSelectionAll,
+    removeSelected
+  } = NotificationsInit();
 
   // helper functions
-  const { cleanLevelName, capitalize } = FrontendHelper();
+  const { cleanLevelName, capitalize, recordB2F } = FrontendHelper();
   const { dateB2F } = LevelboardHelper();
 
   // code that is executed when the page first loads
@@ -38,6 +46,7 @@ function Notifications({ cache }) {
         </ol>
       </div>
       <div className="notifications-body">
+        <button onClick={ removeSelected } disabled={ notifications.selected.length === 0 }>Delete</button>
         { loading ?
           <p>Loading...</p>
         :
@@ -47,7 +56,9 @@ function Notifications({ cache }) {
                 <th>
                   <input
                     type="checkbox"
-                    onChange={() => console.log("select all")}
+                    checked={ notifications.all.length > 0 && notifications.selected.length === notifications.all.length }
+                    disabled={ notifications.all.length === 0 }
+                    onChange={ toggleSelectionAll }
                   />
                 </th>
                 <th>Details</th>
@@ -59,16 +70,17 @@ function Notifications({ cache }) {
               </tr>
             </thead>
             <tbody>
-              { notifications.length > 0 ?
-                notifications.map(row => {
+              { notifications.all.length > 0 ?
+                notifications.all.map(row => {
                   return <tr key={ row.id }>
                     <td>
                       <input
                         type="checkbox"
-                        onChange={() => console.log(`select ${row.id}`)}
+                        checked={ notifications.selected.includes(row.id) }
+                        onChange={() => toggleSelection(row.id)}
                       />
                     </td>
-                    <td><button onClick={ () => setCurrentNotif(row) }>Info</button></td>
+                    <td><button onClick={ () => setNotifications({ ...notifications, current: row }) }>Info</button></td>
                     <td>{ capitalize(row.notif_type) }</td>
                     <td>
                       <Link to={`/games/${ row.level.mode.game.abb }`}>
@@ -80,7 +92,7 @@ function Notifications({ cache }) {
                         { cleanLevelName(row.level.name) } ({ capitalize(row.type) })
                       </Link>
                     </td>
-                    <td>{ row.record }</td>
+                    <td>{ recordB2F(row.record, row.type) }</td>
                     <td>{ dateB2F(row.notif_date) }</td>
                   </tr>
                 })
@@ -95,7 +107,7 @@ function Notifications({ cache }) {
           </table> 
         } 
       </div>
-      <NotificationPopup notification={ currentNotif } setNotification={ setCurrentNotif } />
+      <NotificationPopup hook={ { state: notifications, setState: setNotifications } } />
     </>
   );
 };
