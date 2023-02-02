@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameInit from "./GameInit";
 import ModeTab from "./ModeTab";
+import SearchBar from "../../components/SearchBar/SearchBar";
 
 function Game({ cache }) {
   // radio button state
@@ -26,6 +27,7 @@ function Game({ cache }) {
   // game component
   return (
     <>
+      { loading ? null : <div className="game-searchbar"><SearchBar game={ game.abb } levels={ cache.levels.filter(e => e.game === game.abb) } /></div> }
       <div className="game-header">
         <h1>{ game.name }</h1>
         <Link to={ `/games` }>

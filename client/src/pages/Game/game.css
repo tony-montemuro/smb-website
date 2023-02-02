@@ -1,3 +1,11 @@
+.game-searchbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
 .game-header {
     text-align: center;
 }
