@@ -20,8 +20,8 @@ const MedalsInit = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { createUserMap, createMedalTable, addPositionToMedals } = MedalsHelper();
-    const { retrieveSubmissions } = SubmissionRead();
+    const { createUserMap, getUserMap, createMedalTable, getMedalTable, addPositionToMedals, inserPositionToMedals } = MedalsHelper();
+    const { retrieveSubmissions, newQuery } = SubmissionRead();
 
     // navigate used for redirecting
     const navigate = useNavigate();
@@ -44,6 +44,11 @@ const MedalsInit = () => {
         // get submissions, and filter based on the live field and the level.misc field
         const submissions = await retrieveSubmissions(abb, type, submissionState);
         const filtered = submissions.filter(row => row.live === true && row.level.misc === isMisc);
+
+        // NEW - get submissions, and filter based on the live field and the level.misc field, then sort by level id
+        const list = await newQuery(abb, type);
+        const newFiltered = list.filter(row => row.details.live && row.level.misc === isMisc);
+        newFiltered.sort((a, b) => b.level.id > a.level.id ? -1 : 1);
         
         // if the filtered object is empty, there are either no {type} submissions to this game.
         // or no submissions to the game at all. we can just end the function prematurely, then.
@@ -52,10 +57,24 @@ const MedalsInit = () => {
             return;
         }
 
+        // NEW - if the filtered object is empty, there are either no {type} submissions to this game.
+        // or no submissions to the game at all. we can just end the function prematurely, then.
+        if (newFiltered.length === 0) {
+            // dispatchMedals({ type: type, data: [] });
+            // return;
+        }
+
         //next, generate medal table with positions
         const userMap = createUserMap(filtered);
         const medalTable = createMedalTable(userMap, filtered, type);
         addPositionToMedals(medalTable);
+
+        // NEW - generate medal table with positions
+        const newUserMap = getUserMap(newFiltered);
+        const newMedalTable = getMedalTable(newUserMap, newFiltered);
+        inserPositionToMedals(newMedalTable);
+        console.log("MEDAL TABLE GENERATED FROM NEW BACK-END:");
+        console.log(newMedalTable);
 
         // finally, update react medals reducer hook
         dispatchMedals({ type: type, data: medalTable });
