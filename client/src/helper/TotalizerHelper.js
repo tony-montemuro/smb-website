@@ -41,7 +41,49 @@ const TotalizerHelper = () => {
             }
         }
         return { allTotalsMap: allTotalsMap, liveTotalsMap: liveTotalsMap };
-    }
+    };
+
+    const getTotalMaps = (submissions, type, timeTotal) => {
+        // create both the live and all maps, empty objects to start
+        const allTotalsMap = {}, liveTotalsMap = {};
+
+        // loop through all the submissions, and generate maps based on the data
+        submissions.forEach(submission => {
+            // first, extract information from the submission object
+            const user = submission.user;
+            const userId = user.id, name = user.username, country = user.country, avatar_url = user.avatar_url;
+            const record = type === "score" ? submission.details.record : -Math.abs(submission.details.record);
+            
+            // next, update the allTotals list
+            if (userId in allTotalsMap) {
+                allTotalsMap[userId].total += record
+            } else {
+                allTotalsMap[userId] = { 
+                    user_id: userId, 
+                    name: name, 
+                    country: country, 
+                    avatar_url: avatar_url, 
+                    total: type === "score" ? record : timeTotal + record
+                };
+            }
+
+            // finally, update the liveTotals list
+            if (submission.details.live) {
+                if (userId in liveTotalsMap) {
+                    liveTotalsMap[userId]["total"] += record
+                } else {
+                    liveTotalsMap[userId] = { 
+                        user_id: userId, 
+                        name: name, 
+                        country: country, 
+                        avatar_url: avatar_url, 
+                        total: type === "score" ? record : timeTotal + record
+                    };
+                }
+            }
+        });
+        return { newAllTotalsMap: allTotalsMap, newLiveTotalsMap: liveTotalsMap };
+    };
 
     // FUNCTION 2: addPositionToTotals
     // PRECONDITIONS (2 parameters): 
@@ -91,9 +133,43 @@ const TotalizerHelper = () => {
                 total["centiseconds"] = centiseconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
             }
         }
-    }
+    };
 
-    return { createTotalMaps, addPositionToTotals };
+    const insertPositionToTotals = (totals, type) => {
+        // variables used to determine position of each submission
+        let trueCount = 1, posCount = trueCount;
+
+        // iterate through the list of totals, and calculate the position
+        totals.forEach((total, index) => {
+            // add position field
+            total.position = posCount;
+            trueCount++;
+
+            // if the next element exists and has a different total than the current total, update posCount
+            if (index < totals.length-1 && totals[index+1].total !== total.total) {
+                posCount = trueCount;
+            }
+
+            // finally, if we are dealing with time totals, we need to convert the following:
+            // seconds -> hours:minutes:seconds:centiseconds (XX:XX:XX.XX)
+            if (type === "time") {
+                // calculate each unit of time
+                let time = total.total;
+                let hours = Math.floor(time/3600);
+                let minutes = Math.floor((time%3600)/60);
+                let seconds = Math.floor(time%60);
+                let centiseconds = Math.round((time%60-seconds)*100);
+
+                // add each field to the total object
+                total.hours = hours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+                total.minutes = minutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+                total.seconds = seconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+                total.centiseconds = centiseconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            }
+        });
+    };
+
+    return { createTotalMaps, getTotalMaps, addPositionToTotals, insertPositionToTotals };
 }
 
 export default TotalizerHelper;
