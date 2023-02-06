@@ -25,9 +25,9 @@ const UserStatsInit = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { createTotalMaps, addPositionToTotals } = TotalizerHelper();
-    const { createUserMap, createMedalTable, addPositionToMedals } = MedalsHelper();
-    const { retrieveSubmissions } = SubmissionRead();
+    const { retrieveSubmissions, newQuery } = SubmissionRead();
+    const { createTotalMaps, getTotalMaps, addPositionToTotals, insertPositionToTotals } = TotalizerHelper();
+    const { createUserMap, getUserMap, createMedalTable, getMedalTable, addPositionToMedals, inserPositionToMedals } = MedalsHelper();
 
     // function that validates the path: checks the user and game. ALSO, this function filters the levels
     // of the game into two lists: score and time. the total time is calculated, and state hooks are updated
@@ -73,9 +73,17 @@ const UserStatsInit = () => {
         const submissions = await retrieveSubmissions(abb, type, submissionState);
         let filtered = submissions.filter(row => row.live === true && row.level.misc === isMisc);
 
+        // NEW - get submissions, and filter based on the live and level.misc field
+        const newSubmissions = await newQuery(abb, type);
+        let newFiltered = newSubmissions.filter(row => row.details.live && row.level.misc === isMisc);
+
         // first, let's start with totalizer
         const filteredCpy = [...filtered];
         const { liveTotalsMap } = createTotalMaps(filtered, isMisc, type, timeTotal);
+
+        // NEW - first, let's start with the totalizer
+        const newFilteredCpy = [...newFiltered];
+        const { newLiveTotalsMap } = getTotalMaps(newFiltered, type, timeTotal);
 
         // sort the liveTotals array by total field
         let liveTotals = [];
@@ -86,6 +94,16 @@ const UserStatsInit = () => {
         }
         addPositionToTotals(liveTotals, type === "time" ? true : false);
 
+        // NEW - sort the liveTotals array by total field
+        let newLiveTotals = [];
+        if (type === "score") {
+            newLiveTotals = Object.values(newLiveTotalsMap).sort((a, b) => a.total > b.total ? -1 : 1);
+        } else {
+            newLiveTotals = Object.values(newLiveTotalsMap).sort((a, b) => b.total > a.total ? -1 : 1);
+        }
+        insertPositionToTotals(newLiveTotals, type);
+
+
         // now, we can filter the liveTotals array looking for the userId's object. handle if it's not found
         let total = liveTotals.filter(obj => obj.user_id === userId);
         if (total.length > 0) {
@@ -95,11 +113,27 @@ const UserStatsInit = () => {
             total = { hasData: false };
         }
 
+        // NEW - now, we can filter the liveTotals array looking for the userId's object. handle if it's not found
+        let newTotal = newLiveTotals.filter(obj => obj.user_id === userId);
+        if (newTotal.length > 0) {
+            newTotal = newTotal[0];
+            newTotal["hasData"] = true;
+        } else {
+            newTotal = { hasData: false };
+        }
+
         // now, it's time to do medal table. 
         filtered = filteredCpy;
         const userMap = createUserMap(filtered);
         const medalTable = createMedalTable(userMap, filtered, type);
         addPositionToMedals(medalTable);
+
+        // NEW - now, it's time to do the medal table
+        newFiltered = newFilteredCpy;
+        const newUserMap = getUserMap(newFiltered);
+        const newMedalTable = getMedalTable(newUserMap, newFiltered);
+        inserPositionToMedals(newMedalTable);
+        newFiltered.sort((a, b) => b.level.id > a.level.id ? -1 : 1);
 
         // now, we can filter the medals array looking for the userId's object. handle if it's not found
         let medals = medalTable.filter(obj => obj.user_id === userId);
@@ -110,10 +144,24 @@ const UserStatsInit = () => {
             medals = { hasData: false };
         }
 
+        // NEW - now, we can filter the medals array looking for the userId's object. handle if it's not found
+        let newMedals = newMedalTable.filter(obj => obj.user.id === userId);
+        if (newMedals.length > 0) {
+            newMedals = newMedals[0];
+            newMedals["hasData"] = true;
+        } else {
+            newMedals = { hasData: false };
+        }
+
         // now, it's time to do player rankings
         const modes = [...new Set(levels.map(level => level.mode))];
         const rankings = {};
         modes.forEach(mode => {rankings[mode] = []});
+
+        // NEW - now, it's time to do player rankings
+        const newModes = [...new Set(levels.map(level => level.mode))];
+        const newRankings = {};
+        newModes.forEach(mode => { newRankings[mode] = [] });
 
         // get players ranking on each stage
         let j = 0;
@@ -143,6 +191,33 @@ const UserStatsInit = () => {
             });
         });
 
+        // NEW - get players ranking on each stage
+        j = 0;
+        levels.forEach(level => {
+            const currentLevel = level.name, currentMode = level.mode;
+            let record = -1, pos = -1, date = '';
+            let trueCount = 1, posCount = trueCount;
+            while (j < newFiltered.length && newFiltered[j].level.name === currentLevel) {
+                const submission = newFiltered[j];
+                if (submission.user.id === userId) {
+                    record = type === "time" ? submission.details.record.toFixed(2) : submission.details.record;
+                    pos = posCount;
+                    date = submission.details.submitted_at;
+                }
+                trueCount++;
+                if (j < newFiltered.length-1 && newFiltered[j+1].details.record !== submission.details.record) {
+                    posCount = trueCount;
+                }
+                j++;
+            }
+            newRankings[currentMode].push({
+                level: currentLevel,
+                record: record === -1 ? '' : record,
+                date: date ? date.slice(0, 10) : date,
+                position: pos === -1 ? '' : pos
+            });
+        });
+
         // finally, update react hooks
         const info = {
             medals: medals,
@@ -150,6 +225,10 @@ const UserStatsInit = () => {
             rankings: rankings
         };
         dispatchBoard({ field: type, data: info });
+
+        // NEW - finally, update react hooks
+        console.log(`${ type } USER STATS GENERATED FROM NEW BACK-END:`);
+        console.log({ medals: newMedals, total: newTotal, rankings: newRankings });
     };
 
     return { 
