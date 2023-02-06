@@ -270,7 +270,7 @@ const MedalsHelper = () => {
         }
     }
 
-    const inserPositionToMedals = (medalTable) => {
+    const insertPositionToMedals = (medalTable) => {
         // variables used to determine position of each submission, and an array of all medal types
         let trueCount = 1, posCount = trueCount;
         const medals = ["platinum", "gold", "silver", "bronze"];
@@ -288,7 +288,7 @@ const MedalsHelper = () => {
         });
     }
 
-    return { createUserMap, getUserMap, createMedalTable, getMedalTable, addPositionToMedals, inserPositionToMedals };
+    return { createUserMap, getUserMap, createMedalTable, getMedalTable, addPositionToMedals, insertPositionToMedals };
 }
 
 export default MedalsHelper;

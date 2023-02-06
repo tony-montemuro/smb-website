@@ -20,7 +20,7 @@ const MedalsInit = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { createUserMap, getUserMap, createMedalTable, getMedalTable, addPositionToMedals, inserPositionToMedals } = MedalsHelper();
+    const { createUserMap, getUserMap, createMedalTable, getMedalTable, addPositionToMedals, insertPositionToMedals } = MedalsHelper();
     const { retrieveSubmissions, newQuery } = SubmissionRead();
 
     // navigate used for redirecting
@@ -72,8 +72,8 @@ const MedalsInit = () => {
         // NEW - generate medal table with positions
         const newUserMap = getUserMap(newFiltered);
         const newMedalTable = getMedalTable(newUserMap, newFiltered);
-        inserPositionToMedals(newMedalTable);
-        console.log("MEDAL TABLE GENERATED FROM NEW BACK-END:");
+        insertPositionToMedals(newMedalTable);
+        console.log(`${ type } MEDAL TABLE GENERATED FROM NEW BACK-END:`);
         console.log(newMedalTable);
 
         // finally, update react medals reducer hook

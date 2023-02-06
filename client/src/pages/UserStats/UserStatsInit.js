@@ -27,7 +27,7 @@ const UserStatsInit = () => {
     // helper functions
     const { retrieveSubmissions, newQuery } = SubmissionRead();
     const { createTotalMaps, getTotalMaps, addPositionToTotals, insertPositionToTotals } = TotalizerHelper();
-    const { createUserMap, getUserMap, createMedalTable, getMedalTable, addPositionToMedals, inserPositionToMedals } = MedalsHelper();
+    const { createUserMap, getUserMap, createMedalTable, getMedalTable, addPositionToMedals, insertPositionToMedals } = MedalsHelper();
 
     // function that validates the path: checks the user and game. ALSO, this function filters the levels
     // of the game into two lists: score and time. the total time is calculated, and state hooks are updated
@@ -132,7 +132,7 @@ const UserStatsInit = () => {
         newFiltered = newFilteredCpy;
         const newUserMap = getUserMap(newFiltered);
         const newMedalTable = getMedalTable(newUserMap, newFiltered);
-        inserPositionToMedals(newMedalTable);
+        insertPositionToMedals(newMedalTable);
         newFiltered.sort((a, b) => b.level.id > a.level.id ? -1 : 1);
 
         // now, we can filter the medals array looking for the userId's object. handle if it's not found
