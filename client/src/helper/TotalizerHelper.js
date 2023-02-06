@@ -51,7 +51,7 @@ const TotalizerHelper = () => {
         submissions.forEach(submission => {
             // first, extract information from the submission object
             const user = submission.user;
-            const userId = user.id, name = user.username, country = user.country, avatar_url = user.avatar_url;
+            const userId = user.id;
             const record = type === "score" ? submission.details.record : -Math.abs(submission.details.record);
             
             // next, update the allTotals list
@@ -59,10 +59,7 @@ const TotalizerHelper = () => {
                 allTotalsMap[userId].total += record
             } else {
                 allTotalsMap[userId] = { 
-                    user_id: userId, 
-                    name: name, 
-                    country: country, 
-                    avatar_url: avatar_url, 
+                    user: user,
                     total: type === "score" ? record : timeTotal + record
                 };
             }
@@ -70,13 +67,10 @@ const TotalizerHelper = () => {
             // finally, update the liveTotals list
             if (submission.details.live) {
                 if (userId in liveTotalsMap) {
-                    liveTotalsMap[userId]["total"] += record
+                    liveTotalsMap[userId].total += record
                 } else {
                     liveTotalsMap[userId] = { 
-                        user_id: userId, 
-                        name: name, 
-                        country: country, 
-                        avatar_url: avatar_url, 
+                        user: user, 
                         total: type === "score" ? record : timeTotal + record
                     };
                 }
@@ -154,11 +148,11 @@ const TotalizerHelper = () => {
             // seconds -> hours:minutes:seconds:centiseconds (XX:XX:XX.XX)
             if (type === "time") {
                 // calculate each unit of time
-                let time = total.total;
+                let time = Math.floor(total.total);
                 let hours = Math.floor(time/3600);
                 let minutes = Math.floor((time%3600)/60);
                 let seconds = Math.floor(time%60);
-                let centiseconds = Math.round((time%60-seconds)*100);
+                let centiseconds = Math.round((total.total%60-seconds)*100);
 
                 // add each field to the total object
                 total.hours = hours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });

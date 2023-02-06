@@ -114,7 +114,7 @@ const UserStatsInit = () => {
         }
 
         // NEW - now, we can filter the liveTotals array looking for the userId's object. handle if it's not found
-        let newTotal = newLiveTotals.filter(obj => obj.user_id === userId);
+        let newTotal = newLiveTotals.filter(obj => obj.user.id === userId);
         if (newTotal.length > 0) {
             newTotal = newTotal[0];
             newTotal["hasData"] = true;

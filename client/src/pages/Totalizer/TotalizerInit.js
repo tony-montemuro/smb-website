@@ -100,7 +100,7 @@ const TotalizerInit = () => {
         insertPositionToTotals(newAllTotals, type);
         insertPositionToTotals(newLiveTotals, type);
         console.log(`${type} TOTALS GENERATED FROM NEW BACK-END:`);
-        console.log({ all: allTotals, live: liveTotals });
+        console.log({ all: newAllTotals, live: newLiveTotals });
 
         // finally, update react reducer
         dispatchTotals({ type: type, allData: allTotals, liveData: liveTotals });
