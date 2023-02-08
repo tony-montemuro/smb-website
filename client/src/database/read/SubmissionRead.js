@@ -55,6 +55,7 @@ const SubmissionRead = () => {
                         comment,
                         live
                     ),
+                    score,
                     approved
                 `)
                 .eq("game_id", abb)

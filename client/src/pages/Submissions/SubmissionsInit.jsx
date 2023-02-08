@@ -20,7 +20,7 @@ const SubmissionInit = () => {
 
     // helper functions
     const { insertNotification } = LevelboardUpdate();
-    const { retrieveSubmissions } = SubmissionRead();
+    const { retrieveSubmissions, newQuery } = SubmissionRead();
     const { approve } = SubmissionsUpdate();
 
     // navigate used for redirecting
@@ -48,14 +48,29 @@ const SubmissionInit = () => {
             const filteredScore = gameSubmissions.filter(row => !row.approved);
             gameSubmissions = await retrieveSubmissions(abb, "time", timeSubmissionState);
             const filteredTime = gameSubmissions.filter(row => !row.approved);
+
+            // NEW - retrive submissions for both score and time, and filter each by the approved field
+            let newGameSubmissions = await newQuery(abb, "score");
+            const newFilteredScore = newGameSubmissions.filter(row => !row.approved);
+            newGameSubmissions = await newQuery(abb, "time");
+            const newFilteredTime = newGameSubmissions.filter(row => !row.approved);
             
             // sort both arrays by submitted_at
             [filteredScore, filteredTime].map(arr => arr.sort((a, b) => a.submitted_at < b.submitted_at ? -1 : a.submitted_at > b.submitted_at ? 1 : 0));
 
-            // now, let's merge submissions into a single array
+            // NEW - sort both arrays by submitted_at
+            [newFilteredScore, newFilteredTime].map(arr => arr.sort((a, b) => a.details.submitted_at.localeCompare(b.details.submitted_at)));
+
+            // define variables used in the merging process
             const merged = [];
             let i = 0, j = 0;
             const sr = filteredScore.map(row => Object.assign({}, row)), tr = filteredTime.map(row => Object.assign({}, row));
+
+            // NEW - define variables used in the merging process
+            const newMerged = [];
+            const scoreSubmissions = newFilteredScore.map(row => Object.assign({}, row)), timeSubmissions = newFilteredTime.map(row => Object.assign({}, row));
+
+            // now, let's merge submissions into a single array
             while (i < sr.length && j < tr.length) {
                 const scoreRecord = sr[i], timeRecord = tr[j];
                 const scoreDate = scoreRecord.submitted_at, timeDate = timeRecord.submitted_at;
@@ -89,10 +104,43 @@ const SubmissionInit = () => {
                 merged.push(timeRecord);
                 j++;
             }
+
+            // NEW - now, let's merge submissions into a single array
+            i = 0;
+            j = 0;
+
+            // while both lists still have unmerged submissions, this loop will execute
+            while (i < scoreSubmissions.length && j < timeSubmissions.length) {
+                const score = scoreSubmissions[i], time = timeSubmissions[j];
+                const scoreDate = score.details.submitted_at, timeDate = time.details.submitted_at;
+                if (scoreDate < timeDate) {
+                    newMerged.push(score);
+                    i++;
+                } else {
+                    newMerged.push(time);
+                    j++;
+                }
+            }
             
+            // if any score submissions remain, merge them
+            while (i < scoreSubmissions.length) {
+                newMerged.push(scoreSubmissions[i]);
+                i++;
+            }
+
+            // if any time submissions remain, merge them
+            while (j < timeSubmissions.length) {
+                newMerged.push(timeSubmissions[j]);
+                j++;
+            }
+
             // finally, update the submissions state
             setSubmissions( { ...submissions, [abb]: merged } );
             console.log(merged);
+
+            // NEW - finally, update the submissions state
+            console.log(`NEW UNAPPROVED ${ abb } SUBMISSIONS GENERATED FROM NEW BACK-END:`);
+            console.log(newMerged);
         }
 
         // update game and loading state hooks
