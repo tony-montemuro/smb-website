@@ -31,6 +31,20 @@ function App() {
   const [notifications, setNotifications] = useState(null);
   const [scoreSubmissions, setScoreSubmissions] = useState(null);
   const [timeSubmissions, setTimeSubmissions] = useState(null);
+  const [submissions, dispatchSubmissions] = useReducer((state, action) => {
+    const submissionAbb = state[action.abb] || {};
+    const submissionCategory = submissionAbb[action.category] || {};
+    return {
+        ...state,
+        [action.abb]: {
+            ...submissionAbb,
+            [action.category]: {
+                ...submissionCategory,
+                [action.type]: action.data
+            }
+        }
+    };
+  }, {});
   const [images, dispatchImages] = useReducer((state, action) => {
     return { ...state, [action.field]: action.data }
   }, null);
@@ -38,6 +52,7 @@ function App() {
   /* ===== VARIABLES ===== */
   const scoreSubmissionState = { state: scoreSubmissions, setState: setScoreSubmissions };
   const timeSubmissionState = { state: timeSubmissions, setState: setTimeSubmissions };
+  const submissionReducer = { state: submissions, dispatchSubmissions: dispatchSubmissions };
   const imageReducer = { reducer: images, dispatchImages: dispatchImages };
 
   /* ===== FUNCTIONS ===== */
@@ -153,10 +168,10 @@ function App() {
           <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } /> }/>
           <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>
           <Route path="games/:game/main/medals" element={
-            <Medals cache={ { games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
+            <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
           }/>
           <Route path="games/:game/misc/medals" element={
-            <Medals cache={ { games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
+            <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
           }/>
           <Route path="games/:game/main/totalizer" element={
             <Totalizer cache={ { games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />

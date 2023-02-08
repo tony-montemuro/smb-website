@@ -1,8 +1,8 @@
 import "./medals.css";
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
-import MedalsInit from './Medalsinit';
+import MedalsInit from "./Medalsinit";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
 function Medals({ cache }) {
@@ -24,8 +24,8 @@ function Medals({ cache }) {
   // code that is executed either or page load, or when the game state is updated
   useEffect(() => {
     if (cache.games) {
-      generateMedals('score', cache.games, cache.scoreSubmissionState);
-      generateMedals('time', cache.games, cache.timeSubmissionState);
+      generateMedals("score", cache.games, cache.submissionReducer);
+      generateMedals("time", cache.games, cache.submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cache.games]);
@@ -43,19 +43,19 @@ function Medals({ cache }) {
   return (
     <>
       <div className="medals-header">
-        <h1>{ game.isMisc ? "Miscellaneous " + game.name : game.name } Medal Table</h1>
+        <h1>{ game.is_misc ? "Miscellaneous " + game.name : game.name } Medal Table</h1>
         <Link to={ `/games/${ game.abb }` }>
           <button>Back to { game.name }'s Page</button>
         </Link>
-        <Link to={ `/games/${ game.abb }/${ game.isMisc ? "misc" : "main" }/totalizer` }>
-          <button> { game.isMisc ? "Miscellaneous " + game.name : game.name }'s Totalizer Page</button>
+        <Link to={ `/games/${ game.abb }/${ game.is_misc ? "misc" : "main" }/totalizer` }>
+          <button> { game.is_misc ? "Miscellaneous " + game.name : game.name }'s Totalizer Page</button>
         </Link>
       </div>
       <div className="medals-body">
-        { Object.keys(medals).map(mode => {
+        { Object.keys(medals).map(type => {
           return (
-            <div key={ mode } className="medals-container">
-              <h2>{ capitalize(mode) } Medal Table</h2>
+            <div key={ type } className="medals-container">
+              <h2>{ capitalize(type) } Medal Table</h2>
               { loading ?
                 <p>Loading...</p>
               :
@@ -71,24 +71,24 @@ function Medals({ cache }) {
                     </tr>
                   </thead>
                   <tbody>
-                    { medals[mode].length === 0 ?
+                    { medals[type].length === 0 ?
                       <tr>
                         <td colSpan={ 6 } className="medals-empty">There have been no live submissions to this game's category!</td>
                       </tr>
                     :
-                      medals[mode].map(row => {
+                      medals[type].map(row => {
                         return (
-                          <tr key={ `${ row.name }-row` }>
+                          <tr key={ `${ row.user.username }-row` }>
                             <td>{ row.position }</td>
                             <td>
                                 <div className="medals-user-info">
-                                    <div className="medals-user-image"><SimpleAvatar url={ row.avatar_url } size={ imgLength } imageReducer={ cache.imageReducer } /></div>
-                                    { row.country ?
-                                      <div><span className={ `fi fi-${ row.country.toLowerCase() }` }></span></div>
+                                    <div className="medals-user-image"><SimpleAvatar url={ row.user.avatar_url } size={ imgLength } imageReducer={ cache.imageReducer } /></div>
+                                    { row.user.country ?
+                                      <div><span className={ `fi fi-${ row.user.country.toLowerCase() }` }></span></div>
                                     :
                                       null
                                     }
-                                    <div><Link to={ `/user/${ row.user_id }` }>{ row.name }</Link></div>
+                                    <div><Link to={ `/user/${ row.user.id }` }>{ row.user.username }</Link></div>
                                 </div>
                             </td>
                             <td>{ row.platinum }</td>

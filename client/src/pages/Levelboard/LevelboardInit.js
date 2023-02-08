@@ -129,6 +129,7 @@ const LevelboardInit = () => {
 		// NEW - get submissions, and filter based on the levelId
 		let newSubmissions = await newQuery(abb, type);
 		const newFiltered = newSubmissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
+		console.log(newFiltered);
 		
 		// initialize variables used to split the submissions
 		//const userId = user ? user.id : null;

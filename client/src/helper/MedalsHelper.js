@@ -1,5 +1,24 @@
 const MedalsHelper = () => {
 
+    // FUNCTION 0: validateMedalsPath - determine if path is valid for Medals component
+    // PRECONDITINOS (1 parameter):
+    // 1.) game: an object containing information about the game defined in the path
+    // POSTCONDITINOS (1 returns):
+    // 1.) error: a string that gives information as to why their is an issue with the path
+    // if this string returns a null value, it means no errors were detected
+    const validateMedalsPath = (game) => {
+        // initialize error variable to null
+        let error = null;
+
+        // first, ensure game is legitimate
+        if (!game) {
+            error = "Error: Invalid game.";
+        }
+
+        // return error message
+        return error;
+    }
+
     // FUNCTION 1: createTotalMaps
     // PRECONDITIONS (1 parameter): 
     // 1.) submissions: an array containing all the submissions for a particular game, with either misc or
@@ -268,7 +287,7 @@ const MedalsHelper = () => {
                 posCount = trueCount;
             }
         }
-    }
+    };
 
     const insertPositionToMedals = (medalTable) => {
         // variables used to determine position of each submission, and an array of all medal types
@@ -286,9 +305,9 @@ const MedalsHelper = () => {
                 posCount = trueCount;
             }
         });
-    }
+    };
 
-    return { createUserMap, getUserMap, createMedalTable, getMedalTable, addPositionToMedals, insertPositionToMedals };
+    return { validateMedalsPath, createUserMap, getUserMap, createMedalTable, getMedalTable, addPositionToMedals, insertPositionToMedals };
 }
 
 export default MedalsHelper;
