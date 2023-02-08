@@ -10,8 +10,8 @@ import SubmissionRead from "../../database/read/SubmissionRead";
 const LevelboardInit = () => {
 	// helper functions
 	const { capitalize } = FrontendHelper();
-	const { addPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B } = LevelboardHelper();
-	const { retrieveSubmissions } = SubmissionRead();
+	const { addPositionToLevelboard, insertPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B } = LevelboardHelper();
+	const { retrieveSubmissions, newQuery } = SubmissionRead();
 	const { submit, insertNotification } = LevelboardUpdate();
 
 	/* ===== VARIABLES ===== */
@@ -125,11 +125,22 @@ const LevelboardInit = () => {
 		// get submissions, and filter based on the levelId
         let submissions = await retrieveSubmissions(abb, type, submissionState);
 		const filtered = submissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
+
+		// NEW - get submissions, and filter based on the levelId
+		let newSubmissions = await newQuery(abb, type);
+		const newFiltered = newSubmissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
 		
-		// split board into two lists: live-only, and all records
-		const userId = user ? user.id : null;
+		// initialize variables used to split the submissions
+		//const userId = user ? user.id : null;
 		const liveOnly = [], all = [];
 		let formSet = false;
+
+		// NEW - initialize variables used to split the submissions
+		const userId = user ? user.id : null;
+		const newLiveOnly = [], newAll = [];
+		let newFormSet = false;
+
+		// split board into two lists: live-only, and all records
 		for (let i = 0; i < filtered.length; i++) {
 			const currRecord = filtered[i];
 
@@ -166,18 +177,70 @@ const LevelboardInit = () => {
 			all.push(currRecord);
 		}
 
+		// NEW - split board into two lists: live-only, and all records
+		newFiltered.forEach(submission => {
+			// firstly, if we are looking at time records, fix the time field to 2 decimal points
+			if (type === "time") {
+				submission.details.record = submission.details.record.toFixed(2);
+			}
+			
+			// next, if a user is currently signed in, check if a record belongs to them
+			// if so, we need to update form values, and update the formSet flag
+			if (userId && submission.user.id === userId) {
+				const details = submission.details;
+				// dispatchForm({ field: "values", value: {
+				// 	record: details.record, 
+				// 	monkey_id: details.monkey.id,
+				// 	region_id: details.region.id,
+				// 	live: details.live,
+				// 	proof: details.proof, 
+				// 	comment: details.comment,
+				// 	user_id: submission.user.id,
+				// 	game_id: currentGame.abb,
+				// 	level_id: levelId,
+				// 	approved: false,
+				// 	submitted_at: dateB2F(details.submitted_at),
+				// 	message: ""
+				// }});
+				// dispatchForm({ field: "prevSubmitted", value: true });
+				newFormSet = true;
+			}
+
+			// NEW - finally, add to the liveOnly array if record is live. push to all array as well
+			if (submission.details.live) {
+				newLiveOnly.push(Object.assign({}, submission));
+			}
+			newAll.push(submission);
+		});
+
 		// if the formSet flag was never set to true, this means that the client has not submitted to this chart
 		// yet. set the form to default values
 		if (!formSet) {
 			dispatchForm({ field: "values", value: { ...defaultFormVals, region_id: currentGame.regions[0].id } });
 		}
 
+		// NEW - if the formSet flag was never set to true, this means that the client has not submitted to this chart
+		// yet. set the form to default values
+		if (!newFormSet) {
+			// do things
+		}
+
 		// now, let's add the position field to each record in both arrays
 		addPositionToLevelboard(liveOnly, type);
 		addPositionToLevelboard(all, type);
 
+		// NEW - now, let's add the position field to each submission in both arrays
+		insertPositionToLevelboard(newLiveOnly);
+		insertPositionToLevelboard(newAll);
+
 		// finally, update board state hook
 		setBoard({ ...board, records: { all: all, live: liveOnly }, adjacent: { prev: prev, next: next } });
+
+		// NEW - update board state hook
+		console.log("NEW ALL SUBMISSIONS GENERATED FROM NEW BACK-END:");
+		console.log(newAll);
+		console.log("NEW LIVE SUBMISSIONS GENERATED FROM NEW BACK-END");
+		console.log(newLiveOnly);
 	};
 
 	// function that runs each time a form value is changed. keeps the form reducer updated

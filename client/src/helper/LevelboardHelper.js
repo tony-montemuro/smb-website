@@ -20,6 +20,23 @@ const LevelboardHelper = () => {
         }
     };
 
+    const insertPositionToLevelboard = (submissions) => {
+        // variables used to determine position of each submission
+        let trueCount = 1, posCount = trueCount;
+
+        // now, iterate through each submission, and calculate the position
+        submissions.forEach((submission, index) => {
+            // update the position field
+            submission.details.position = posCount;
+            trueCount++;
+
+            // if the next submission exists, and it's record is different from the current submission, update posCount to trueCount
+            if (index < submissions.length-1 && submissions[index+1].details.record !== submission.details.record) {
+                posCount = trueCount;
+            }
+        });
+    };
+
     // FUNCTION 2: containsE
     // Precondition: num is a string that represents a number
     // Postcondition: if the string contains an E, true is returned. else, false.
@@ -64,7 +81,7 @@ const LevelboardHelper = () => {
         return date ? date+"T12:00:00.000+00" : new Date().toISOString().replace("Z", "+00");
      };
 
-    return { addPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B };
+    return { addPositionToLevelboard, insertPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B };
 };
 
 export default LevelboardHelper;
