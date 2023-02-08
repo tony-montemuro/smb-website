@@ -1,5 +1,5 @@
-import React, { memo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { memo, useState } from "react";
+import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
@@ -46,17 +46,17 @@ function TotalsBoard({ type, data, loading, imageReducer }) {
                             </tr>
                         :
                             data[boardState].map((row) => {
-                                return <tr key={ `${ row.name }-row` }>
+                                return <tr key={ `${ row.user.username }-row` }>
                                     <td>{ row.position }</td>
                                     <td>
                                         <div className="totals-user-info">
-                                        <div className="totals-user-image"><SimpleAvatar url={ row.avatar_url } size={ imgLength } imageReducer={ imageReducer } /></div>
-                                            { row.country ?
-                                                <div><span className={ `fi fi-${ row.country.toLowerCase() }` }></span></div>
+                                        <div className="totals-user-image"><SimpleAvatar url={ row.user.avatar_url } size={ imgLength } imageReducer={ imageReducer } /></div>
+                                            { row.user.country ?
+                                                <div><span className={ `fi fi-${ row.user.country.toLowerCase() }` }></span></div>
                                             :
                                                 null
                                             }
-                                            <div><Link to={ `/user/${ row.user_id }` }>{ row.name }</Link></div>
+                                            <div><Link to={ `/user/${ row.user.id }` }>{ row.user.username }</Link></div>
                                         </div>
                                     </td>
                                     { type === "score" ?

@@ -174,10 +174,10 @@ function App() {
             <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
           }/>
           <Route path="games/:game/main/totalizer" element={
-            <Totalizer cache={ { games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
+            <Totalizer cache={ { games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
           }/>
           <Route path="games/:game/misc/totalizer" element={
-            <Totalizer cache={ { games: games, levels: levels, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState, imageReducer: imageReducer } } />
+            <Totalizer cache={ { games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
           }/>
           <Route path="games/:game/main/score" element={
             <Records cache={ { games: games, levels: levels, submissionState: scoreSubmissionState } } />

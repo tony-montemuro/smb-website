@@ -1,8 +1,8 @@
 import "./totalizer.css";
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import TotalsBoard from "./TotalsBoard";
-import TotalizerInit from './TotalizerInit';
+import TotalizerInit from "./TotalizerInit";
 
 function Totalizer({ cache }) {
   // hooks and functions from init file
@@ -17,8 +17,8 @@ function Totalizer({ cache }) {
   // code that is ran when the page first loads, or when the games or levels state is changed
   useEffect(() => {
     if (cache.games && cache.levels) {
-      generateTotals("score", cache.games, cache.levels, cache.scoreSubmissionState);
-      generateTotals("time", cache.games, cache.levels, cache.timeSubmissionState);
+      generateTotals("score", cache.games, cache.levels, cache.submissionReducer);
+      generateTotals("time", cache.games, cache.levels, cache.submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cache.games, cache.levels]);
@@ -36,12 +36,12 @@ function Totalizer({ cache }) {
   return (
     <>
       <div className="totalizer-header">
-        <h1>{ game.isMisc ? "Miscellaneous "+ game.name : game.name } Totalizer</h1>
+        <h1>{ game.is_misc ? "Miscellaneous "+ game.name : game.name } Totalizer</h1>
         <Link to={ `/games/${ game.abb }` }>
           <button>Back to { game.name }'s Page</button>
         </Link>
-        <Link to={ `/games/${ game.abb }/${ game.isMisc ? "misc" : "main" }/medals` }>
-          <button>{ game.isMisc ? "Miscellaneous " + game.name : game.name }'s Medal Table Page</button>
+        <Link to={ `/games/${ game.abb }/${ game.is_misc ? "misc" : "main" }/medals` }>
+          <button>{ game.is_misc ? "Miscellaneous " + game.name : game.name }'s Medal Table Page</button>
         </Link>
       </div>
       <div className="totalizer-body">

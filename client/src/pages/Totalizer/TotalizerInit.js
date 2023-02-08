@@ -1,5 +1,6 @@
 import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
+import LevelboardHelper from "../../helper/LevelboardHelper";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import TotalizerHelper from "../../helper/TotalizerHelper";
 
@@ -23,84 +24,42 @@ const TotalizerInit = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { createTotalMaps, getTotalMaps, addPositionToTotals, insertPositionToTotals } = TotalizerHelper();
-    const { retrieveSubmissions, newQuery } = SubmissionRead();
+    const { calculateTotalTime } = LevelboardHelper();
+    const { validateTotalizerPath, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
+    const { getSubmissions } = SubmissionRead();
 
     // navigate used for redirecting
     const navigate = useNavigate();
 
     // function that validates the path and generates the totalizer
-    const generateTotals = async (type, games, levels, submissionState) => {
+    const generateTotals = async (type, games, levels, submissionReducer) => {
         // first, check the path
         const currentGame = games.find(game => game.abb === abb);
+        const pathError = validateTotalizerPath(currentGame);
 
         // if the game is not valid, let's navigate home and end the function
-        if (!currentGame) {
-            console.log("Error: Invalid game.");
+        if (pathError) {
+            console.log(pathError);
             navigate("/");
             return;
         }
 
         // update game hook, and get the total time (when type is time)
-        setGame({ ...currentGame, isMisc: isMisc });
-        let timeTotal = 0;
-        if (type === "time") {
-            // first, filter level list by misc field & game
-            const filtered = levels.filter(row => row.game === abb && row.misc === isMisc && ["time", "both"].includes(row.chart_type));
+        setGame({ ...currentGame, is_misc: isMisc });
+        const totalTime = calculateTotalTime(levels, abb, isMisc, type);
 
-            // now, calculate total time
-            filtered.forEach(level => {
-                timeTotal += level.time;
-            });
-        }
+        // get submissions, and create two maps from the query: the { type } totals for only live records,
+        // and the { type } totals for all records. (key: user_id -> value: total object)
+        const submissions = await getSubmissions(abb, category, type, submissionReducer);
+        const { allTotalsMap, liveTotalsMap } = getTotalMaps(submissions, type, totalTime);
 
-        // get submissions, and filter based on the level.misc field
-        const submissions = await retrieveSubmissions(abb, type, submissionState);
-        const filtered = submissions.filter(row => row.level.misc === isMisc);
-
-        // NEW - get submissions, and filter based on the level.misc field
-        const newSubmissions = await newQuery(abb, type);
-        const newFiltered = newSubmissions.filter(row => row.level.misc === isMisc);
-
-        // using our submission data, we need to create two lists from the query: the { type } totals for only live records,
-        // and the { type } totals for all records. this for loop will also gather all unique profiles based on the submissions
-        const { allTotalsMap, liveTotalsMap } = createTotalMaps(filtered, isMisc, type, timeTotal);
-
-        // NEW - using our submission data, we need to create two lists from the query: the { type } totals for only live records,
-        // and the { type } totals for all records. this for loop will also gather all unique profiles based on the submissions
-        const { newAllTotalsMap, newLiveTotalsMap } = getTotalMaps(newFiltered, type, timeTotal);
-
-        // from our map, let's get a sorted list of profile objects sorted by total. if the type is score, it will sort in descending order.
+        // from our maps, let's get a sorted list of totals objects sorted by total field. if the type is score, it will sort in descending order.
         // if the type is time, it will sort in ascending order
-        let liveTotals = [], allTotals = [];
-        if (type === "score") {
-            liveTotals = Object.values(liveTotalsMap).sort((a, b) => a.total > b.total ? -1 : 1);
-            allTotals = Object.values(allTotalsMap).sort((a, b) => a.total > b.total ? -1 : 1);
-        } else {
-            liveTotals = Object.values(liveTotalsMap).sort((a, b) => b.total > a.total ? -1 : 1);
-            allTotals = Object.values(allTotalsMap).sort((a, b) => b.total > a.total ? -1 : 1);
-        }
+        const { liveTotals, allTotals } = sortTotals(allTotalsMap, liveTotalsMap, type);
 
-        // NEW - from our map, let's get a sorted list of profile objects sorted by total. if the type is score, it will sort in descending order.
-        // if the type is time, it will sort in ascending order
-        let newLiveTotals = [], newAllTotals = [];
-        if (type === "score") {
-            newLiveTotals = Object.values(newLiveTotalsMap).sort((a, b) => a.total > b.total ? -1 : 1);
-            newAllTotals = Object.values(newAllTotalsMap).sort((a, b) => a.total > b.total ? -1 : 1);
-        } else {
-            newLiveTotals = Object.values(newLiveTotalsMap).sort((a, b) => b.total > a.total ? -1 : 1);
-            newAllTotals = Object.values(newAllTotalsMap).sort((a, b) => b.total > a.total ? -1 : 1);
-        }
-        
-        // add position field to each element in list of objects
-        addPositionToTotals(liveTotals, type === "time" ? true : false);
-        addPositionToTotals(allTotals, type === "time" ? true : false);
-
-        // NEW - add position field to each element in the list of objects
-        insertPositionToTotals(newAllTotals, type);
-        insertPositionToTotals(newLiveTotals, type);
-        console.log(`${type} TOTALS GENERATED FROM NEW BACK-END:`);
-        console.log({ all: newAllTotals, live: newLiveTotals });
+        // add position field to each element in the list of objects
+        insertPositionToTotals(allTotals, type);
+        insertPositionToTotals(liveTotals, type);
 
         // finally, update react reducer
         dispatchTotals({ type: type, allData: allTotals, liveData: liveTotals });

@@ -1,5 +1,24 @@
 const TotalizerHelper = () => {
 
+    // FUNCTION 0: validateTotalizerPath - determine if path is valid for Totalizer component
+    // PRECONDITINOS (1 parameter):
+    // 1.) game: an object containing information about the game defined in the path
+    // POSTCONDITINOS (1 returns):
+    // 1.) error: a string that gives information as to why their is an issue with the path
+    // if this string returns a null value, it means no errors were detected
+    const validateTotalizerPath = (game) => {
+        // initialize error variable to null
+        let error = null;
+
+        // first, ensure game is legitimate
+        if (!game) {
+            error = "Error: Invalid game.";
+        }
+
+        // return error message
+        return error;
+    }
+
     // FUNCTION 1: createTotalMaps
     // PRECONDITIONS (4 parameters): 
     // 1.) submissions: an array containing all the submissions for a particular game
@@ -76,7 +95,27 @@ const TotalizerHelper = () => {
                 }
             }
         });
-        return { newAllTotalsMap: allTotalsMap, newLiveTotalsMap: liveTotalsMap };
+        return { allTotalsMap: allTotalsMap, liveTotalsMap: liveTotalsMap };
+    };
+
+    // FUNCTION 1.5: sortTotals
+    // PRECONDITIONS (3 parameters):
+    // 1.) all: a mapping of totals objects
+    // 2.) live: a mapping of totals objects, but only including live submissions
+    // 3.) type: a string, either "time" or "score"
+    // POSTCONDITIONS (2 returns):
+    // 1.) allTotals: an array of totals objects sorted by total attribute
+    // 2.) liveTotals: an array of totals objects sorted by total attribute
+    const sortTotals = (all, live, type) => {
+        let allTotals = [], liveTotals = [];
+        if (type === "score") {
+            allTotals = Object.values(all).sort((a, b) => a.total > b.total ? -1 : 1);
+            liveTotals = Object.values(live).sort((a, b) => a.total > b.total ? -1 : 1);
+        } else {
+            allTotals = Object.values(all).sort((a, b) => b.total > a.total ? -1 : 1);
+            liveTotals = Object.values(live).sort((a, b) => b.total > a.total ? -1 : 1);
+        }
+        return { allTotals: allTotals, liveTotals: liveTotals };
     };
 
     // FUNCTION 2: addPositionToTotals
@@ -163,7 +202,7 @@ const TotalizerHelper = () => {
         });
     };
 
-    return { createTotalMaps, getTotalMaps, addPositionToTotals, insertPositionToTotals };
+    return { validateTotalizerPath, createTotalMaps, getTotalMaps, sortTotals, addPositionToTotals, insertPositionToTotals };
 }
 
 export default TotalizerHelper;

@@ -1,4 +1,25 @@
 const LevelboardHelper = () => {
+    // FUNCTION 0: calculateTotalTime - find the total time
+    // PRECONDITIONS (3 parameters):
+    // 1.) levels is the list of all parameters, which is set upon page load
+    // 2.) abb is the game specified by the path
+    // 3.) isMisc is a boolean flag, determined by the path
+    // 4.) the current type, either "time" or "score"
+    // POSTCONDITIONS (1 return):
+    // 1.) timeTotal: the sum of all time attributes from the level array, filtered by abb and isMisc
+    const calculateTotalTime = (levels, abb, isMisc, type) => {
+        // initialize totalTime variable, with a default value of null
+        let totalTime = null;
+
+        // if type is time, we will filter levels, and compute the totalTime
+        if (type === "time") {
+            totalTime = 0;
+            const filteredLevels = levels.filter(row => row.game === abb && row.misc === isMisc && ["time", "both"].includes(row.chart_type));
+            filteredLevels.forEach(level => totalTime += level.time);
+        }
+        return totalTime;
+    };
+
     // FUNCTION 1: addPositionToLevelboard
     // Precondition: board is a list of record objects
     // mode is a string, with a value equal to 'time' or 'score'
@@ -81,7 +102,7 @@ const LevelboardHelper = () => {
         return date ? date+"T12:00:00.000+00" : new Date().toISOString().replace("Z", "+00");
      };
 
-    return { addPositionToLevelboard, insertPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B };
+    return { calculateTotalTime, addPositionToLevelboard, insertPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B };
 };
 
 export default LevelboardHelper;
