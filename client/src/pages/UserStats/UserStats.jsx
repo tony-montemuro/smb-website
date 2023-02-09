@@ -17,7 +17,6 @@ function UserStats({ cache }) {
     board,
     setLoading, 
     dispatchBoard,
-    validatePath,
     generateUserStats
   } = UserStatsInit();
 
@@ -27,9 +26,8 @@ function UserStats({ cache }) {
   // code that is executed when the page loads, or when the cache fields are updated
   useEffect(() => {
     if (cache.profiles && cache.games && cache.levels) {
-      const { scoreLevels, timeLevels, timeTotal } = validatePath(cache.profiles, cache.games, cache.levels);
-      generateUserStats("score", scoreLevels, cache.scoreSubmissionState);
-      generateUserStats("time", timeLevels, cache.timeSubmissionState, timeTotal);
+      generateUserStats("score", cache.profiles, cache.games, cache.levels, cache.submissionReducer);
+      generateUserStats("time", cache.profiles, cache.games, cache.levels, cache.submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cache.profiles, cache.games, cache.levels]);
@@ -51,7 +49,7 @@ function UserStats({ cache }) {
     <>
       <div className="stats-header">
         <h1>{ user.username }: { game.name }</h1>
-        <Link to={ `/user/${user.id}` }>
+        <Link to={ `/user/${ user.id }` }>
           <button>Back to { user.username }'s Profile</button>
         </Link>
         <div className="stats-radio">
@@ -77,7 +75,7 @@ function UserStats({ cache }) {
         <h1>{ capitalize(board.type) }</h1>
         <div className="stats-table">
           <h2>{ capitalize(board.type) } Total</h2>
-          { board[board.type].total.hasData ?
+          { board[board.type].total ?
             <table>
               <thead>
                 <tr>
@@ -114,7 +112,7 @@ function UserStats({ cache }) {
         </div>
         <div className="stats-table">
           <h2>{ capitalize(board.type) } Medals</h2>
-          { board[board.type].medals.hasData ?
+          { board[board.type].medals ?
             <table>
               <thead>
                 <tr>
