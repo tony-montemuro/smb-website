@@ -42,10 +42,9 @@ const MedalsInit = () => {
         // update game state hook
         setGame({ ...currentGame, is_misc: isMisc });
 
-        // get all submissions, filter based on the details.live field, and then sort by level id
+        // get all submissions, filter based on the details.live field
         const allSubmissions = await getSubmissions(abb, category, type, submissionReducer);
         const submissions = allSubmissions.filter(row => row.details.live);
-        submissions.sort((a, b) => b.level.id > a.level.id ? -1 : 1);
         
         // if the filtered object is empty, there are either no { type } submissions to this { abb } in the same { category }.
         // or no submissions to the game at all. we can just end the function prematurely, then.

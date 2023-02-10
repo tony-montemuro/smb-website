@@ -113,14 +113,18 @@ const SubmissionRead = () => {
                 throw error;
             }
 
-            // now, sort the array first by the details.record field in descending order, and then by the details.submitted_at field
-            // in ascending order and return array
+            // now, sort the array first by the level.id field in descending order, then by the details.record field in descending order.
+            // finally, by the details.submitted_at field ascending order, and return array
             submissionsList.sort((a, b) => {
+                if (b.level.id !== a.level.id) {
+                    return b.level.id - a.level.id;
+                }
                 if (b.details.record !== a.details.record) {
                     return b.details.record - a.details.record 
                 }
                 return a.details.submitted_at.localeCompare(b.details.submitted_at);
             });
+
             return submissionsList;
 
         } catch (error) {
