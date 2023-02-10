@@ -23,7 +23,7 @@ function Records({ cache }) {
   useEffect(() => {
     if (cache.games && cache.levels) {
       setLoading(true);
-      generateWorldRecords(cache.games, cache.levels, cache.submissionState);
+      generateWorldRecords(cache.games, cache.levels, cache.submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, cache.games, cache.levels]);
@@ -73,7 +73,7 @@ function Records({ cache }) {
                         <td>{ level.name.map((user, index) => {
                           return (
                             <Fragment key={ user.id }>
-                              <Link to={ `/user/${user.id}` }>{ user.username }</Link>
+                              <Link to={ `/user/${ user.id }` }>{ user.username }</Link>
                               { index < level.name.length-1 ? ", " : null }
                             </Fragment>
                           );
