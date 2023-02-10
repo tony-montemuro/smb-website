@@ -25,15 +25,20 @@ const UserStatsHelper = () => {
 
     // FUNCTION 2: getRankings - determine user's ranking for each stage
     // PRECONDITINOS (5 parameters):
-    // 1.) rankings: a large object that is split at the highest level by mode
-    // 2.) levels: a filtered array of levels sorted by the id parameter in ascending order
-    // 3.) submissions: submissions: an array containing filtered submissions for a particular game. the submissions must be
+    // 1.) levels: a filtered array of levels sorted by the id parameter in ascending order
+    // 2.) submissions: submissions: an array containing filtered submissions for a particular game. the submissions must be
     // ordered by type in descending order, then by level id in ascending order
-    // 4.) type: a string, either "time" or "score"
-    // 5.) userId: a unique string id belonging to a particular user
+    // 3.) type: a string, either "time" or "score"
+    // 4.) userId: a unique string id belonging to a particular user
     // POSTCONDITINOS (1 returns):
-    // 1.) the rankings object is filled. within each mode, you have an array rankings objects, each corresponding to a level within the mode
-    const fillRankings = (rankings, levels, submissions, type, userId) => {
+    // 1.) rankings: a large object that is split at the highest level by mode the rankings object is filled. within each mode,
+    // you have an array of rankings objects, each corresponding to a level within the mode
+    const getRankings = (levels, submissions, type, userId) => {
+        // construct base rankings obj
+        const modes = [...new Set(levels.map(level => level.mode))];
+        const rankings = {};
+        modes.forEach(mode => { rankings[mode] = [] });
+
         // define an iterator variable
         let i = 0;
 
@@ -68,9 +73,11 @@ const UserStatsHelper = () => {
                 position: pos ? pos : ''
             });
         });
+
+        return rankings;
     };
 
-    return { validateUserStatsPath, fillRankings };
+    return { validateUserStatsPath, getRankings };
 };
 
 export default UserStatsHelper;

@@ -1,6 +1,5 @@
 import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import LevelboardHelper from "../../helper/LevelboardHelper";
 import MedalsHelper from "../../helper/MedalsHelper";
 import TotalizerHelper from "../../helper/TotalizerHelper";
 import SubmissionRead from "../../database/read/SubmissionRead";
@@ -30,7 +29,7 @@ const UserStatsInit = () => {
     const { getUserMap, getMedalTable, insertPositionToMedals } = MedalsHelper();
     const { getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
     const { getSubmissions } = SubmissionRead();
-    const { validateUserStatsPath, fillRankings } = UserStatsHelper();
+    const { validateUserStatsPath, getRankings } = UserStatsHelper();
 
     // function that generates { type } user statistics: totals, medals, and rankings
     const generateUserStats = async (type, profiles, games, allLevels, submissionReducer) => {
@@ -81,12 +80,7 @@ const UserStatsInit = () => {
 
         // now, it's time to do player rankings
         submissions.sort((a, b) => b.level.id > a.level.id ? -1 : 1);
-        const modes = [...new Set(levels.map(level => level.mode))];
-        const rankings = {};
-        modes.forEach(mode => { rankings[mode] = [] });
-
-        // fill the rankings object
-        fillRankings(rankings, levels, submissions, type, userId);
+        const rankings = getRankings(levels, submissions, type, userId);
 
         // finally, update react hooks
         const info = {
