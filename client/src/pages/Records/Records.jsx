@@ -15,7 +15,7 @@ function Records({ cache }) {
   } = RecordsInit();
 
   // helper functions
-  const { capitalize, cleanLevelName } = FrontendHelper();
+  const { capitalize, cleanLevelName, recordB2F } = FrontendHelper();
 
   // code that is executed on page load, when either the levelList or games state are changed, or
   // when the user swaps between the time & score world record pages
@@ -69,7 +69,7 @@ function Records({ cache }) {
                             { cleanLevelName(level.level) }
                           </Link>
                         </td>
-                        <td>{ level.record }</td>
+                        <td>{ recordB2F(level.record, game.type) }</td>
                         <td>{ level.name.map((user, index) => {
                           return (
                             <Fragment key={ user.id }>

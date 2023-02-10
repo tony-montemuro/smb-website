@@ -24,16 +24,18 @@ const FrontendHelper = () => {
     };
 
     // FUNCTION 3: recordB2F
-    // PRECONDITION: record is a float number with at most two decimal places
-    // type is either "score" or "time"
-    // POSTCONDITION: if the type is time, we fix the number of decimal places to two. a string is returned in this case.
+    // PRECONDITION (2 parameters): 
+    // 1.) record is a float number with at most two decimal places, OR it is undefined
+    // 2.) type is either "score" or "time"
+    // POSTCONDITION (1 parameter):
+    // if the type is time, we fix the number of decimal places to two. a string is returned in this case.
     // if the type is score, simply return record, a float.
     const recordB2F = (record, type) => {
-        if (type === "time") {
+        if (record && type === "time") {
             return record.toFixed(2);
         }
         return record;
-    }
+    };
 
     return { capitalize, cleanLevelName, recordB2F };
 };

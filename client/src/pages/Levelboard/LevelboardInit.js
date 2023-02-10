@@ -145,11 +145,6 @@ const LevelboardInit = () => {
 		for (let i = 0; i < filtered.length; i++) {
 			const currRecord = filtered[i];
 
-			// firstly, if we are looking at time records, fix the time field to 2 decimal points
-			if (type === 'time') {
-				currRecord.time = currRecord.time.toFixed(2);
-			}
-
 			// next, if a user is currently signed in, check if a record belongs to them
 			// if so, we need to update form values, and update the formSet flag
 			if (userId && currRecord.profiles.id === userId) {
@@ -180,15 +175,10 @@ const LevelboardInit = () => {
 
 		// NEW - split board into two lists: live-only, and all records
 		newFiltered.forEach(submission => {
-			// firstly, if we are looking at time records, fix the time field to 2 decimal points
-			if (type === "time") {
-				submission.details.record = submission.details.record.toFixed(2);
-			}
-			
-			// next, if a user is currently signed in, check if a record belongs to them
+			// if a user is currently signed in, check if a record belongs to them
 			// if so, we need to update form values, and update the formSet flag
 			if (userId && submission.user.id === userId) {
-				const details = submission.details;
+				//const details = submission.details;
 				// dispatchForm({ field: "values", value: {
 				// 	record: details.record, 
 				// 	monkey_id: details.monkey.id,

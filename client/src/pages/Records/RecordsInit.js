@@ -43,10 +43,9 @@ const RecordsInit = () => {
         setGame({ ...currentGame, type: type, isMisc: isMisc, category: category, other: type === "score" ? "time" : "score" });
         const levels = allLevels.filter(row => row.game === abb && row.misc === isMisc && [`${ type }`, "both"].includes(row.chart_type));
 
-        // get submissions, and filter based on the details.live field. order by level id in ascending order
+        // get submissions, and filter based on the details.live field
         const allSubmissions = await getSubmissions(abb, category, type, submissionReducer);
         const submissions = allSubmissions.filter(row => row.details.live);
-        submissions.sort((a, b) => a.level.id - b.level.id);
 
         // generate record table, and update react states
         const recordTable = getRecordTable(levels, submissions, type);

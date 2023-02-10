@@ -24,16 +24,15 @@ const UserStatsHelper = () => {
     };
 
     // FUNCTION 2: getRankings - determine user's ranking for each stage
-    // PRECONDITINOS (5 parameters):
+    // PRECONDITINOS (3 parameters):
     // 1.) levels: a filtered array of levels sorted by the id parameter in ascending order
     // 2.) submissions: submissions: an array containing filtered submissions for a particular game. the submissions must be
     // ordered by type in descending order, then by level id in ascending order
-    // 3.) type: a string, either "time" or "score"
-    // 4.) userId: a unique string id belonging to a particular user
+    // 3.) userId: a unique string id belonging to a particular user
     // POSTCONDITINOS (1 returns):
     // 1.) rankings: a large object that is split at the highest level by mode the rankings object is filled. within each mode,
     // you have an array of rankings objects, each corresponding to a level within the mode
-    const getRankings = (levels, submissions, type, userId) => {
+    const getRankings = (levels, submissions, userId) => {
         // construct base rankings obj
         const modes = [...new Set(levels.map(level => level.mode))];
         const rankings = {};
@@ -54,7 +53,7 @@ const UserStatsHelper = () => {
             while (i < submissions.length && submissions[i].level.name === currentLevel) {
                 const submission = submissions[i];
                 if (submission.user.id === userId) {
-                    record = type === "time" ? submission.details.record.toFixed(2) : submission.details.record;
+                    record = submission.details.record;
                     pos = posCount;
                     date = submission.details.submitted_at;
                 }
@@ -68,7 +67,7 @@ const UserStatsHelper = () => {
             // once we have iterated through all submissions belonging to the current level, we need to update our rankings object
             rankings[currentMode].push({
                 level: currentLevel,
-                record: record ? record : '',
+                record: record,
                 date: date ? date.slice(0, 10) : '',
                 position: pos ? pos : ''
             });

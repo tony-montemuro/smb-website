@@ -29,7 +29,7 @@ function Levelboard({ cache }) {
 	} = LevelboardInit();
 
 	// helper functions
-	const { capitalize, cleanLevelName } = FrontendHelper();
+	const { capitalize, cleanLevelName, recordB2F } = FrontendHelper();
 	const { dateB2F } = LevelboardHelper();
 
 	// code that is executed upon page load, or when the URL is changed using next/previous buttons
@@ -143,7 +143,7 @@ function Levelboard({ cache }) {
 												<div><Link to={ `/user/${ val.profiles.id }` }>{ val.profiles.username }</Link></div>
 											</div>
 										</td>
-										<td>{ val[game.type] }</td>
+										<td>{ recordB2F(val[game.type], game.type) }</td>
 										<td>{ dateB2F(val.submitted_at) }</td>
 										<td>{ val.region.region_name }</td>
 										<td>{ val.monkey.monkey_name }</td>

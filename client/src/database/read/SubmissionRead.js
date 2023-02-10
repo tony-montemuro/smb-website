@@ -116,8 +116,8 @@ const SubmissionRead = () => {
             // now, sort the array first by the level.id field in descending order, then by the details.record field in descending order.
             // finally, by the details.submitted_at field ascending order, and return array
             submissionsList.sort((a, b) => {
-                if (b.level.id !== a.level.id) {
-                    return b.level.id - a.level.id;
+                if (a.level.id !== b.level.id) {
+                    return a.level.id - b.level.id;
                 }
                 if (b.details.record !== a.details.record) {
                     return b.details.record - a.details.record 

@@ -21,7 +21,7 @@ function UserStats({ cache }) {
   } = UserStatsInit();
 
   // helper functions
-  const { capitalize, cleanLevelName } = FrontendHelper();
+  const { capitalize, cleanLevelName, recordB2F } = FrontendHelper();
 
   // code that is executed when the page loads, or when the cache fields are updated
   useEffect(() => {
@@ -177,7 +177,7 @@ function UserStats({ cache }) {
                             {cleanLevelName(level.level)}
                           </Link>
                         </td>
-                        <td>{ level.record }</td>
+                        <td>{ recordB2F(level.record, board.type) }</td>
                         <td>{ level.position }</td>
                         <td>{ level.date }</td>
                       </tr>

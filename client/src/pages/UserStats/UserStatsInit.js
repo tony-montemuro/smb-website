@@ -79,7 +79,7 @@ const UserStatsInit = () => {
         let medals = medalTable.find(obj => obj.user.id === userId);
 
         // now, it's time to do player rankings
-        const rankings = getRankings(levels, submissions, type, userId);
+        const rankings = getRankings(levels, submissions, userId);
 
         // finally, update react hooks
         const info = {

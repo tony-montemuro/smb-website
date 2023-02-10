@@ -81,7 +81,7 @@ const SubmissionInit = () => {
                     merged.push(scoreRecord);
                     i++;
                 } else {
-                    tr[j]["record"] = Number.parseFloat(timeRecord.time).toFixed(2);
+                    tr[j]["record"] = timeRecord.time;
                     tr[j]["type"] = "time";
                     delete tr[j].time;
                     merged.push(timeRecord);
@@ -98,7 +98,7 @@ const SubmissionInit = () => {
             }
             while (j < tr.length) {
                 const timeRecord = tr[j];
-                tr[j]["record"] = Number.parseFloat(timeRecord.time).toFixed(2);
+                tr[j]["record"] = timeRecord.time;
                 tr[j]["type"] = "time";
                 delete tr[j].time;
                 merged.push(timeRecord);

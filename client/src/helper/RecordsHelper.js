@@ -50,16 +50,10 @@ const RecordsHelper = () => {
                 j++;
             }
 
-            // if names is non-empty, this means their are one or more submissions for this level. we need to
-            // format the record if the type is time
-            if (names.length > 0) {
-                record = type === "time" ? record.toFixed(2) : record;
-            }
-
             // finally, update our table
             recordTable[mode].push({
                 level: level.name, 
-                record: record ? record : "", 
+                record: record,
                 name: names
             });
         });

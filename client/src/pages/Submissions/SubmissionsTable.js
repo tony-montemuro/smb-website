@@ -7,7 +7,7 @@ function SubmissionsTable({ data, toggleBtn, games, buttonFunc }) {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { capitalize, cleanLevelName } = FrontendHelper();
+    const { capitalize, cleanLevelName, recordB2F } = FrontendHelper();
     const { dateB2F } = LevelboardHelper();
 
     // submissions table object
@@ -48,7 +48,7 @@ function SubmissionsTable({ data, toggleBtn, games, buttonFunc }) {
                         </Link>
                     </td>
                     <td>{ capitalize(row.type) }</td>
-                    <td>{ row.record }</td>
+                    <td>{ recordB2F(row.record, row.type) }</td>
                     <td>{ dateB2F(row.submitted_at) }</td>
                     <td>{ row.region.region_name }</td>
                     { row.live ? <td>Live</td> : <td>Non-live</td> }
