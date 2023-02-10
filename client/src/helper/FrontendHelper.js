@@ -23,7 +23,7 @@ const FrontendHelper = () => {
         return words.join(" ");
     };
 
-    // FUNCTION 3: recordB2F
+    // FUNCTION 3: recordB2F - convert record from back-end format to front-end format
     // PRECONDITION (2 parameters): 
     // 1.) record is a float number with at most two decimal places, OR it is undefined
     // 2.) type is either "score" or "time"
@@ -37,7 +37,31 @@ const FrontendHelper = () => {
         return record;
     };
 
-    return { capitalize, cleanLevelName, recordB2F };
+    // FUNCTION 4: secondsToHours - convert a time from seconds to hours
+    // PRECONDITIONS (2 parameters):
+    // 1.) record is a float number with at most two decimals places
+    // 2.) type is either "score" or "time"
+    // POSTCONDITION (1 parameter):
+    // if the type is time, we will compute the hours, minuntes, seconds, and centiseconds, and return a string with the
+    // following format: XX:XX:XX.XX
+    const secondsToHours = (record, type) => {
+        if (type === "time") {
+            // calculate each unit of time
+            let time = Math.floor(record);
+            let hours = Math.floor(time/3600).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            let minutes = Math.floor((time%3600)/60).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            let seconds = Math.floor(time%60).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            let centiseconds = Math.round((record%60-seconds)*100).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+
+            // return with following format: XX:XX:XX.XX
+            return `${ hours }:${ minutes }:${ seconds }.${ centiseconds }`;
+        }
+
+        // otherwise, just return record
+        return record;
+    };
+
+    return { capitalize, cleanLevelName, recordB2F, secondsToHours };
 };
 
 export default FrontendHelper;

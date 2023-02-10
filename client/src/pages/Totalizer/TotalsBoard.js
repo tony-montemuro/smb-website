@@ -11,7 +11,7 @@ function TotalsBoard({ type, data, loading, imageReducer }) {
     const [boardState, setBoardState] = useState("live");
 
     /* ===== FUNCTIONS ===== */
-    const { capitalize } = FrontendHelper();
+    const { capitalize, secondsToHours } = FrontendHelper();
 
     /* ===== BOARD COMPONENT ===== */
     return (
@@ -62,7 +62,7 @@ function TotalsBoard({ type, data, loading, imageReducer }) {
                                     { type === "score" ?
                                         <td>{ row.total }</td>
                                     : 
-                                        <td>{ row.hours }:{ row.minutes }:{ row.seconds }.{ row.centiseconds }</td>
+                                        <td>{ secondsToHours(row.total, type) }</td>
                                     }
                                 </tr>  
                             })}

@@ -109,20 +109,20 @@ const TotalizerHelper = () => {
 
             // finally, if we are dealing with time totals, we need to convert the following:
             // seconds -> hours:minutes:seconds:centiseconds (XX:XX:XX.XX)
-            if (type === "time") {
-                // calculate each unit of time
-                let time = Math.floor(total.total);
-                let hours = Math.floor(time/3600);
-                let minutes = Math.floor((time%3600)/60);
-                let seconds = Math.floor(time%60);
-                let centiseconds = Math.round((total.total%60-seconds)*100);
+            // if (type === "time") {
+            //     // calculate each unit of time
+            //     let time = Math.floor(total.total);
+            //     let hours = Math.floor(time/3600);
+            //     let minutes = Math.floor((time%3600)/60);
+            //     let seconds = Math.floor(time%60);
+            //     let centiseconds = Math.round((total.total%60-seconds)*100);
 
-                // add each field to the total object
-                total.hours = hours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-                total.minutes = minutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-                total.seconds = seconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-                total.centiseconds = centiseconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-            }
+            //     // add each field to the total object
+            //     total.hours = hours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            //     total.minutes = minutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            //     total.seconds = seconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            //     total.centiseconds = centiseconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            // }
         });
     };
 

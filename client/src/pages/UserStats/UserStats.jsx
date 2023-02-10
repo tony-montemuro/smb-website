@@ -21,7 +21,7 @@ function UserStats({ cache }) {
   } = UserStatsInit();
 
   // helper functions
-  const { capitalize, cleanLevelName, recordB2F } = FrontendHelper();
+  const { capitalize, cleanLevelName, recordB2F, secondsToHours } = FrontendHelper();
 
   // code that is executed when the page loads, or when the cache fields are updated
   useEffect(() => {
@@ -95,13 +95,13 @@ function UserStats({ cache }) {
                           :
                           ""
                       }
-                      <Link to={ `/user/${ user.user_id }` }>{ user.username }</Link>
+                      <Link to={ `/user/${ user.id }` }>{ user.username }</Link>
                     </div>
                   </td>
                   { board.type === "score" ?
                     <td>{ board[board.type].total.total }</td>
                   :
-                    <td>{ board[board.type].total.hours }:{ board[board.type].total.minutes }:{ board[board.type].total.seconds }.{ board[board.type].total.centiseconds }</td>
+                    <td>{ secondsToHours(board[board.type].total.total, board.type) }</td>
                   }
                 </tr>
               </tbody>
@@ -135,7 +135,7 @@ function UserStats({ cache }) {
                       :
                         ""
                       }
-                     <Link to={ `/user/${ user.user_id }` }>{ user.username }</Link>
+                     <Link to={ `/user/${ user.id }` }>{ user.username }</Link>
                     </div>
                   </td>
                   <td>{ board[board.type].medals.platinum }</td>
