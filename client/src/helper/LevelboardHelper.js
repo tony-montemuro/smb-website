@@ -1,4 +1,34 @@
+import FrontendHelper from "./FrontendHelper";
+
 const LevelboardHelper = () => {
+    // helper functions from separate modules
+    const { recordB2F } = FrontendHelper();
+
+    // FUNCTION -1: validateLevelboardPath - determine if path is valid for Levelboard component
+    // PRECONDITINOS (2 parameters):
+    // 1.) game: an object containing information about the game defined in the path
+    // 2.) level: an object containing information about the level defined in the path
+    // POSTCONDITINOS (1 returns):
+    // 1.) error: a string that gives information as to why their is an issue with the path
+    // if this string returns a null value, it means no errors were detected
+    const validateLevelboardPath = (game, level) => {
+        // initialize error variable to null
+        let error = null;
+
+        // first, ensure game is legitimate
+        if (!game) {
+            error = "Error: Invalid game.";
+        }
+
+        // next, ensure level is legitimate
+        if (!level && !error) {
+            error = "Error: Invalid user.";
+        }
+
+        // return error message
+        return error;
+    };
+
     // FUNCTION 0: calculateTotalTime - find the total time
     // PRECONDITIONS (3 parameters):
     // 1.) levels is the list of all parameters, which is set upon page load
@@ -95,6 +125,50 @@ const LevelboardHelper = () => {
         return `${year}-${month}-${day}`;
      };
 
+    // FUNCTION 4.5: submission2Form ("submission to form")
+    // PRECONDITIONS (3 parameters):
+    // 1.) submission is a submission object, or undefined
+    // 2.) game is a game object
+    // 3.) userId is a uuid string that belongs to some user, or is null
+    // POSTCONDITIONS (1 return):
+    // 1.) an object, which takes data from submission (if it exists), game, and userId (if it exists), and
+    // transforms it into an object which is compatible with the submission form
+     const submission2Form = (submission, game, userId) => {
+        // if a submission exists, we can use the data to form our formData object
+        if (submission) {
+            const details = submission.details;
+            return {
+                record: recordB2F(details.record, game.type),
+                monkey_id: details.monkey.id,
+                record_id: details.region.id,
+                live: details.live,
+                proof: details.proof,
+                comment: details.comment ? details.comment : "",
+                user_id: userId,
+                game_id: game.abb,
+                level_id: game.levelName,
+                submitted_at: dateB2F(details.submitted_at),
+                message: ""
+            };
+
+        // if not, we can fill the object with default data values
+        } else {
+            return {
+                record: "",
+                monkey_id: game.monkeys[0].id,
+                region_id: game.regions[0].id,
+                live: true,
+                proof: "",
+                comment: "",
+                user_id: userId,
+                game_id: game.abb,
+                level_id: game.levelName,
+                submitted_at: dateB2F(),
+                message: ""
+            };
+        }
+    };
+
      // FUNCTION 5: dateF2B ("date frontend-to-backend")
      // Precondition: the date parameter can take two possible states: a date with the following format: YYYY-MM-DD, or null.
      // Postcondition: the date is returned with the following format: YYYY-MM-DDTHH:MM:SS.***+00
@@ -102,7 +176,40 @@ const LevelboardHelper = () => {
         return date ? date+"T12:00:00.000+00" : new Date().toISOString().replace("Z", "+00");
      };
 
-    return { calculateTotalTime, addPositionToLevelboard, insertPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B };
+    // FUNCTION 6: getPosition - determine the posititon of a new submission
+    // PRECONDITIONS (3 parameters):
+    // 1.) record is a string representing a floating-point value
+    // 2.) submissions is a list of submissions, ordered by position
+    // POSTCONDITIONS (1 return):
+    // 1.) position: an integer value that describes the position of the new record in the submission list
+    const getPosition = (record, submissions) => {
+        // perform a while loop to find the first submission whose record is less than or equal to record param
+        let i = 0;
+        while (i < submissions.length && submissions[i].details.record > record) {
+            ++i;
+        }
+
+        // if a submission was not found, we want to return one greater than the length of the submissions array
+        if (i === submissions.length) {
+            return submissions.length+1;
+        }
+
+        // otherwise, just return the position of the submission found by the loop
+        return submissions[i].details.position;
+    };
+
+    return { 
+        validateLevelboardPath, 
+        calculateTotalTime, 
+        addPositionToLevelboard, 
+        insertPositionToLevelboard, 
+        containsE, 
+        decimalCount, 
+        dateB2F, 
+        submission2Form,
+        dateF2B,
+        getPosition
+    };
 };
 
 export default LevelboardHelper;

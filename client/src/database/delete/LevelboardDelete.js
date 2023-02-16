@@ -24,7 +24,25 @@ const LevelboardDelete = () => {
         return true;
     };
 
-    return { remove };
+    const deleteSubmission = async (id) => {
+        try {
+            const { error } = await supabase
+                .from(`all_submission`)
+                .delete()
+                .match({ id: id });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+            
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+    };
+
+    return { remove, deleteSubmission };
 };
 
 export default LevelboardDelete;

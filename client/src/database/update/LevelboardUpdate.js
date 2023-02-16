@@ -47,7 +47,26 @@ const LevelboardUpdate = () => {
 		}
     };
 
-    return { submit, insertNotification };
+    // function that takes submission data and submits it to the all_submission table
+    const submitToAll = async (submission) => {
+        try {
+            const { error } = await supabase
+                .from("all_submission")
+                .insert(submission, {
+                    returning: "minimal", // Don't return the value after inserting
+                });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+    }
+
+    return { submit, submitToAll, insertNotification };
 };
 
 export default LevelboardUpdate;

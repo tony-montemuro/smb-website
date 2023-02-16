@@ -10,9 +10,9 @@ import SubmissionRead from "../../database/read/SubmissionRead";
 const LevelboardInit = () => {
 	// helper functions
 	const { capitalize } = FrontendHelper();
-	const { addPositionToLevelboard, insertPositionToLevelboard, containsE, decimalCount, dateB2F, dateF2B } = LevelboardHelper();
-	const { retrieveSubmissions, newQuery } = SubmissionRead();
-	const { submit, insertNotification } = LevelboardUpdate();
+	const { validateLevelboardPath, insertPositionToLevelboard, containsE, decimalCount, dateB2F, submission2Form, dateF2B, getPosition } = LevelboardHelper();
+	const { getSubmissions } = SubmissionRead();
+	const { submitToAll } = LevelboardUpdate();
 
 	/* ===== VARIABLES ===== */
 	
@@ -33,19 +33,6 @@ const LevelboardInit = () => {
 		submitted: false
 	};
 	const user = supabase.auth.user();
-	const defaultFormVals = {
-		[type]: "", 
-		monkey_id: 1,
-		live: true,
-		proof: "", 
-		comment: "",
-		user_id: user ? user.id : undefined,
-		game_id: abb,
-		level_id: levelId,
-		approved: false,
-		submitted_at: dateB2F(),
-		message: ""
-	}
 
 	/* ===== STATES AND REDUCERS ===== */
 	const [loading, setLoading] = useState(true);
@@ -80,158 +67,90 @@ const LevelboardInit = () => {
 		setBoard(boardInit);
 	};
 
-	// function that takes games, levels, and submissionState, and generates the levelboard based on the
+	// function that takes games, allLevels, and submissionReducer, and generates the levelboard based on the
 	// abb and levelId
-	const generateLevelboard = async (games, levels, submissionState) => {		
-		// first, we need to verify the path: start with game
-		const currentGame = games.find(row => row.abb === abb);
-		if (!currentGame) {
-			console.log("Error: Invalid game.");
-			navigate("/");
-			return;
-		}
+	const generateLevelboard = async (games, allLevels, submissionReducer) => {		
+		// determine the current game and level - used for path verification and state data
+		const game = games.find(row => row.abb === abb);
+		let level = null, levelIndex = null;
+		const levels = allLevels.filter(row => row.game === abb && row.misc === isMisc);
+		levels.forEach((row, index) => {
+			if (row.name === levelId) {
+				level = row;
+				levelIndex = index;
+			}
+		});
 
-		// next, we need to verify the level
-		const gameLevels = levels.filter(row => row.game === abb && row.misc === isMisc);
-		const level = gameLevels.map((row, index) => row.name === levelId ? { row, index } : null).filter(row => row !== null);
-		if (level.length === 0) {
-			console.log("Error: Invalid level.");
+		// check path
+		const pathError = validateLevelboardPath(game, level);
+		if (pathError) {
+			console.log(pathError);
 			navigate("/");
 			return;
 		}
 
 		// find the previous and next level indicies, if they exist
-		const levelInfo = level[0].row, levelIndex = level[0].index;
 		let prev = null, next = null;
 		if (levelIndex > 0) {
-			prev = gameLevels[levelIndex-1].name;
+			prev = levels[levelIndex-1].name;
 		}
-		if (levelIndex < gameLevels.length-1) {
-			next = gameLevels[levelIndex+1].name;
+		if (levelIndex < levels.length-1) {
+			next = levels[levelIndex+1].name;
 		}
 
 		// update game and form states
-		setGame({ 
-			...currentGame, 
+		const gameObj = {
+			...game,
 			category: category, 
-			chart_type: levelInfo.chart_type, 
-			levelName: levelInfo.name,
+			chart_type: level.chart_type, 
+			levelName: level.name,
 			type: type,
 			other: type === "score" ? "time" : "score"
-		});
-		dispatchForm({ field: "monkey", value: currentGame.monkeys });
-		dispatchForm({ field: "region", value: currentGame.regions });
+		}
+		setGame(gameObj);
+		dispatchForm({ field: "monkey", value: game.monkeys });
+		dispatchForm({ field: "region", value: game.regions });
 
 		// get submissions, and filter based on the levelId
-        let submissions = await retrieveSubmissions(abb, type, submissionState);
-		const filtered = submissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
+		let allSubmissions = await getSubmissions(abb, category, type, submissionReducer);
+		const submissions = allSubmissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
 
-		// NEW - get submissions, and filter based on the levelId
-		let newSubmissions = await newQuery(abb, type);
-		const newFiltered = newSubmissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
-		console.log(newFiltered);
-		
 		// initialize variables used to split the submissions
-		//const userId = user ? user.id : null;
-		const liveOnly = [], all = [];
-		let formSet = false;
-
-		// NEW - initialize variables used to split the submissions
 		const userId = user ? user.id : null;
-		const newLiveOnly = [], newAll = [];
+		const live = [], all = [];
 		let newFormSet = false;
 
 		// split board into two lists: live-only, and all records
-		for (let i = 0; i < filtered.length; i++) {
-			const currRecord = filtered[i];
-
-			// next, if a user is currently signed in, check if a record belongs to them
-			// if so, we need to update form values, and update the formSet flag
-			if (userId && currRecord.profiles.id === userId) {
-				dispatchForm({ field: "values", value: {
-					[type]: currRecord[`${ type }`], 
-					monkey_id: currRecord.monkey.id,
-					region_id: currRecord.region.id,
-					live: currRecord.live,
-					proof: currRecord.proof, 
-					comment: currRecord.comment,
-					user_id: currRecord.profiles.id,
-					game_id: currentGame.abb,
-					level_id: levelId,
-					approved: false,
-					submitted_at: dateB2F(currRecord.submitted_at),
-					message: ""
-				}});
-				dispatchForm({ field: "prevSubmitted", value: true });
-				formSet = true;
-			}
-
-			// finally, add to the liveOnly array if record is live. push to all array as well
-			if (currRecord.live) {
-				liveOnly.push(Object.assign({}, currRecord));
-			}
-			all.push(currRecord);
-		}
-
-		// NEW - split board into two lists: live-only, and all records
-		newFiltered.forEach(submission => {
+		submissions.forEach(submission => {
 			// if a user is currently signed in, check if a record belongs to them
 			// if so, we need to update form values, and update the formSet flag
 			if (userId && submission.user.id === userId) {
-				//const details = submission.details;
-				// dispatchForm({ field: "values", value: {
-				// 	record: details.record, 
-				// 	monkey_id: details.monkey.id,
-				// 	region_id: details.region.id,
-				// 	live: details.live,
-				// 	proof: details.proof, 
-				// 	comment: details.comment,
-				// 	user_id: submission.user.id,
-				// 	game_id: currentGame.abb,
-				// 	level_id: levelId,
-				// 	approved: false,
-				// 	submitted_at: dateB2F(details.submitted_at),
-				// 	message: ""
-				// }});
-				// dispatchForm({ field: "prevSubmitted", value: true });
+				const formData = submission2Form(submission, gameObj, userId);
+				dispatchForm({ field: "values", value: formData });
+				dispatchForm({ field: "prevSubmitted", value: true });
 				newFormSet = true;
 			}
 
-			// NEW - finally, add to the liveOnly array if record is live. push to all array as well
+			// finally, add to the live array if record is live. push to all array as well
 			if (submission.details.live) {
-				newLiveOnly.push(Object.assign({}, submission));
+				live.push(Object.assign({}, submission));
 			}
-			newAll.push(submission);
+			all.push(submission);
 		});
 
 		// if the formSet flag was never set to true, this means that the client has not submitted to this chart
 		// yet. set the form to default values
-		if (!formSet) {
-			dispatchForm({ field: "values", value: { ...defaultFormVals, region_id: currentGame.regions[0].id } });
-		}
-
-		// NEW - if the formSet flag was never set to true, this means that the client has not submitted to this chart
-		// yet. set the form to default values
 		if (!newFormSet) {
-			// do things
+			const formData = submission2Form(undefined, gameObj, userId ? userId : null);
+			dispatchForm({ field: "values", value: formData });
 		}
-
-		// now, let's add the position field to each record in both arrays
-		addPositionToLevelboard(liveOnly, type);
-		addPositionToLevelboard(all, type);
 
 		// NEW - now, let's add the position field to each submission in both arrays
-		insertPositionToLevelboard(newLiveOnly);
-		insertPositionToLevelboard(newAll);
+		insertPositionToLevelboard(live);
+		insertPositionToLevelboard(all);
 
 		// finally, update board state hook
-		setBoard({ ...board, records: { all: all, live: liveOnly }, adjacent: { prev: prev, next: next } });
-
-		// NEW - update board state hook
-		console.log("NEW ALL SUBMISSIONS GENERATED FROM NEW BACK-END:");
-		console.log(newAll);
-		console.log("NEW LIVE SUBMISSIONS GENERATED FROM NEW BACK-END");
-		console.log(newLiveOnly);
+		setBoard({ ...board, records: { all: all, live: live }, adjacent: { prev: prev, next: next } });
 	};
 
 	// function that runs each time a form value is changed. keeps the form reducer updated
@@ -247,24 +166,10 @@ const LevelboardInit = () => {
 			// a record from a user that has already submitted to the chart, the form will be loaded with that user's submission data. 
 			// otherwise, the form is set to the default values
 			case "user_id":
-				const record = board.records.all.find(row => row.profiles.id === value);
-				if (record) {
-					dispatchForm({ field: "values", value: {
-						user_id: value,
-						game_id: abb,
-						level_id: levelId,
-						[type]: record[type],
-						submitted_at: dateB2F(record.submitted_at),
-						monkey_id: record.monkey.id,
-						proof: record.proof,
-						comment: record.comment,
-						live: record.live,
-						approved: record.approved,
-						message: ""
-					}});
-				} else {
-					dispatchForm({ field: "values", value: { ...defaultFormVals, user_id: value, region_id: game.regions[0].id } });
-				}
+				const submission = board.records.all.find(row => row.user.id === value);
+				console.log(submission);
+				const formData = submission2Form(submission, game, value);
+				dispatchForm({ field: "values", value: formData });
 				break;
 
 			// default case: simply update the id field of the values object with the value variable
@@ -277,14 +182,15 @@ const LevelboardInit = () => {
 	// function that sets the delete field of the board state when a user attempts to delete a record
 	// note: when this field is set to a non-null value, a popup component will automatically be activated
 	const setBoardDelete = (id) => {
-		const row = board.records.all.find(row => row.profiles.id === id);
+		const row = board.records.all.find(row => row.user.id === id);
 		setBoard({ ...board, delete: {
-			user_id: row.profiles.id,
+			id: row.details.id,
+			user_id: row.user.id,
 			game_id: abb,
 			level_id: levelId,
 			type: type,
-			name: row.profiles.username,
-			[type]: row[type]
+			username: row.user.username,
+			record: row.details.record
 		}});
 	};
 
@@ -296,10 +202,10 @@ const LevelboardInit = () => {
 		dispatchForm({ field: "submitting", value: true });
 		const error = {};
 		Object.keys(form.error).forEach(field => error[field] = null);
-		const old = board.records.all.find(row => row.profiles.id === form.values.user_id);
+		const old = board.records.all.find(row => row.user.id === form.values.user_id);
 
 		// first, validate the record
-		const record = form.values[type];
+		const record = form.values.record;
 		if (!record) {
             error.record = `${ capitalize(type) } is required.`;
         }
@@ -358,7 +264,7 @@ const LevelboardInit = () => {
 
 		// first, we need to handle defining the date differently if the user has a previous submissions
 		if (old) {
-			const prevDate = dateB2F(old.submitted_at);
+			const prevDate = dateB2F(old.details.submitted_at);
 
 			// special case: user is attempting to submit a new { type }, but has either forgotten to change the date of their old submission,
 			// or has deliberately not changed it. give them a confirmation box to ensure they have not made a mistake. if they hit 'no', the submission
@@ -391,54 +297,62 @@ const LevelboardInit = () => {
 		}
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
+		const id = dateF2B(), score = type === "score" ? true : false;
 		const { message, ...formValsCopy } = form.values;
 		formValsCopy.submitted_at = backendDate;
-		await submit(type, formValsCopy);
+		formValsCopy.id = id;
+		formValsCopy.score = score;
+		formValsCopy.all_position = getPosition(formValsCopy.record, board.records.all);
+		formValsCopy.position = formValsCopy.live ? getPosition(formValsCopy.record, board.records.live) : null;
+		await submitToAll(formValsCopy);
+		// console.log(formValsCopy);
+
+		// ===== THE NOTIFICATION SYSTEM WILL BE OVERHAULED; FOR NOW, COMMENT THIS ALL OUT ===== //
 
 		// next, we need to determine if a notification is necessary. there are two cases where a notification needs to be created:
 		// 1.) a moderator updates a preexisting submission
 		// 2.) a moderator inserts a new submission on behalf of a player who had no previously submitted to the current chart
-		const submissionUserId = form.values.user_id;
-		if (user.id !== submissionUserId) {
-			// first, let's define our default notification object
-			let notification = {
-				user_id: submissionUserId,
-				game_id: abb,
-				level_id: levelId,
-				mod_id: user.id,
-				type: type,
-				message: message,
-				record: form.values[type],
-				submitted_at: backendDate,
-				region: form.values.region_id,
-				monkey: form.values.monkey_id,
-				proof: form.values.proof,
-				live: form.values.live
-			}
+		// const submissionUserId = form.values.user_id;
+		// if (user.id !== submissionUserId) {
+		// 	// first, let's define our default notification object
+		// 	let notification = {
+		// 		user_id: submissionUserId,
+		// 		game_id: abb,
+		// 		level_id: levelId,
+		// 		mod_id: user.id,
+		// 		type: type,
+		// 		message: message,
+		// 		record: form.values[type],
+		// 		submitted_at: backendDate,
+		// 		region: form.values.region_id,
+		// 		monkey: form.values.monkey_id,
+		// 		proof: form.values.proof,
+		// 		live: form.values.live
+		// 	}
 
-			// if old is defined, moderator is UPDATING. update notification object accordingly. otherwise, simply
-			// set the notif_type field to insert
-			if (old) {
-				notification = {
-					...notification,
-					notif_type: "update",
-					old_record: form.values[type] !== old[type] ? old[type] : null,
-					old_submitted_at: backendDate !== old.submitted_at ? old.submitted_at : null,
-					old_region: form.values.region_id !== old.region.id ? old.region.id : null,
-					old_monkey: form.values.monkey_id !== old.monkey.id ? old.monkey.id : null,
-					old_proof: form.values.proof !== old.proof ? old.proof : null,
-					old_live: form.values.live !== old.live ? old.live : null
-				}
-			} else {
-				notification = { 
-					...notification,
-					notif_type: "insert"
-				};
-			}
+		// 	// if old is defined, moderator is UPDATING. update notification object accordingly. otherwise, simply
+		// 	// set the notif_type field to insert
+		// 	if (old) {
+		// 		notification = {
+		// 			...notification,
+		// 			notif_type: "update",
+		// 			old_record: form.values[type] !== old[type] ? old[type] : null,
+		// 			old_submitted_at: backendDate !== old.submitted_at ? old.submitted_at : null,
+		// 			old_region: form.values.region_id !== old.region.id ? old.region.id : null,
+		// 			old_monkey: form.values.monkey_id !== old.monkey.id ? old.monkey.id : null,
+		// 			old_proof: form.values.proof !== old.proof ? old.proof : null,
+		// 			old_live: form.values.live !== old.live ? old.live : null
+		// 		}
+		// 	} else {
+		// 		notification = { 
+		// 			...notification,
+		// 			notif_type: "insert"
+		// 		};
+		// 	}
 			
-			// finally, insert the notification into the database
-			await insertNotification(notification);
-		}
+		// 	// finally, insert the notification into the database
+		// 	await insertNotification(notification);
+		// }
 
 		// once all database updates have been finished, reload the page
 		window.location.reload();

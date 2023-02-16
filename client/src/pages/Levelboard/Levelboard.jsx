@@ -42,7 +42,7 @@ function Levelboard({ cache }) {
 	// code that is executed when page is loading, or when the cache fields are updated
 	useEffect(() => {
 		if (loading && cache.games && cache.levels) {
-			generateLevelboard(cache.games, cache.levels, cache.submissionState);
+			generateLevelboard(cache.games, cache.levels, cache.submissionReducer);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading, cache.games, cache.levels]);
@@ -128,29 +128,29 @@ function Levelboard({ cache }) {
 							</thead>
 							<tbody>
 							{ board.records[board.state].map((val) => {
-								return <tr key={ `${ val.profiles.username }-row` }>
-										<td>{ val.position }</td>
+								return <tr key={ `${ val.user.username }-row` }>
+										<td>{ val.details.position }</td>
 										<td>
 											<div className="levelboard-user-info">
-												<div className="levelboard-user-image" style={{ width: imgLength, height: imgLength }}>
-													<SimpleAvatar url={ val.profiles.avatar_url } size={ imgLength } imageReducer={ cache.imageReducer } />
+												<div className="levelboard-user-image" style={ { width: imgLength, height: imgLength } }>
+													<SimpleAvatar url={ val.user.avatar_url } size={ imgLength } imageReducer={ cache.imageReducer } />
 												</div>
-													{ val.profiles.country ?
-														<div><span className={ `fi fi-${ val.profiles.country.toLowerCase() }` }></span></div>
+													{ val.user.country ?
+														<div><span className={ `fi fi-${ val.user.country.toLowerCase() }` }></span></div>
 													:
 														null
 												}
-												<div><Link to={ `/user/${ val.profiles.id }` }>{ val.profiles.username }</Link></div>
+												<div><Link to={ `/user/${ val.user.id }` }>{ val.user.username }</Link></div>
 											</div>
 										</td>
-										<td>{ recordB2F(val[game.type], game.type) }</td>
-										<td>{ dateB2F(val.submitted_at) }</td>
-										<td>{ val.region.region_name }</td>
-										<td>{ val.monkey.monkey_name }</td>
-										<td>{ val.proof !== "none" ? <a href={ val.proof } target="_blank" rel="noopener noreferrer">☑️</a> : null }</td>
-										<td>{ val.comment }</td>
+										<td>{ recordB2F(val.details.record, game.type) }</td>
+										<td>{ dateB2F(val.details.submitted_at) }</td>
+										<td>{ val.details.region.region_name }</td>
+										<td>{ val.details.monkey.monkey_name }</td>
+										<td>{ val.details.proof !== "none" ? <a href={ val.proof } target="_blank" rel="noopener noreferrer">☑️</a> : null }</td>
+										<td>{ val.details.comment }</td>
 										<td>{ val.approved ? "True" : "False" }</td>
-										{ cache.isMod ? <td><button onClick={ () => setBoardDelete(val.profiles.id) }>❌</button></td> : null }
+										{ cache.isMod ? <td><button onClick={ () => setBoardDelete(val.user.id) }>❌</button></td> : null }
 									</tr>
 								})}
 							</tbody>
@@ -173,11 +173,11 @@ function Levelboard({ cache }) {
 									null
 								}
 								<div className="levelboard-input-group">
-									<label htmlFor={ game.type }>{ capitalize(game.type) }: </label>
+									<label htmlFor="record">{ capitalize(game.type) }: </label>
 									<input 
-										id={ game.type }
+										id="record"
 										type="number"
-										value={ form.values[game.type] }
+										value={ form.values.record }
 										onChange={ handleChange }
 									/>
 									{ form.error.record ? <p>{ form.error.record }</p> : null }
@@ -255,11 +255,6 @@ function Levelboard({ cache }) {
 								</div>
 								<button disabled={ form.submitting }>Submit</button>
 							</form>
-							{ form.prevSubmitted ?
-								<button disabled={ form.submitting } onClick={ () => setBoardDelete(user.id) }>Remove Record</button>
-							:
-								null
-							}
 							<Popup board={ board } setBoard={ setBoard } />
 						</div>
 					:

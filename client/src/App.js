@@ -196,6 +196,7 @@ function App() {
               games: games,
               levels: levels,
               submissionState: scoreSubmissionState,
+              submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,
               imageReducer: imageReducer
@@ -206,6 +207,7 @@ function App() {
               games: games,
               levels: levels,
               submissionState: timeSubmissionState,
+              submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,
               imageReducer: imageReducer
@@ -216,6 +218,7 @@ function App() {
               games: games,
               levels: levels,
               submissionState: scoreSubmissionState,
+              submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,
               imageReducer: imageReducer
@@ -226,6 +229,7 @@ function App() {
               games: games,
               levels: levels,
               submissionState: timeSubmissionState,
+              submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,
               imageReducer: imageReducer
