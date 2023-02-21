@@ -5,11 +5,12 @@ const SubmissionsUpdate = () => {
     const approve = async (submission) => {
         try {
             const { error } = await supabase
-                .from(`${ submission.type }_submission`)
+                .from("submission")
                 .update({ approved: true })
                 .eq("user_id", submission.user_id)
                 .eq("game_id", submission.game_id)
-                .eq("level_id", submission.level_id);
+                .eq("level_id", submission.level_id)
+                .eq("score", submission.score);
 
             // error handling
             if (error) {

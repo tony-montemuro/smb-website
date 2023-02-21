@@ -1,14 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../database/SupabaseClient";
-import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+// import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import SubmissionsUpdate from "../../database/update/SubmissionsUpdate";
 
 const SubmissionInit = () => {
-    /* ===== VARIABLES ===== */
-    const user = supabase.auth.user();
-
     /* ===== STATES ===== */
     const [loading, setLoading] = useState(true);
     const [submissions, setSubmissions] = useState({});
@@ -19,128 +15,50 @@ const SubmissionInit = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { insertNotification } = LevelboardUpdate();
-    const { retrieveSubmissions, newQuery } = SubmissionRead();
+    // const { insertNotification } = LevelboardUpdate();
+    const { getSubmissions } = SubmissionRead();
     const { approve } = SubmissionsUpdate();
 
     // navigate used for redirecting
     const navigate = useNavigate("/");
 
-    // function used to check if current user is a mod
-    const validate = isMod => {
+    // function that handles when the user switches to a new game
+    const swapGame = async (abb, isMod, submissionReducer) => {
+        // first, ensure current user is a moderator. if not, redirect them to the home page
         if (!isMod) {
             console.log("Error: Forbidden access.");
             navigate("/");
-            return false;
+            return;
         }
-        return true;
-    };
 
-    // function that handles when the user switches to a new game
-    const swapGame = async (abb, scoreSubmissionState, timeSubmissionState) => {
         // if we have not already loaded and merged the submissions for abb, we do so here
         if (!(abb in submissions)) {
             // updating loading hook
             setLoading(true);
 
-            // retrieve submissions for both score and time, and filter each by the approved field
-            let gameSubmissions = await retrieveSubmissions(abb, "score", scoreSubmissionState);
-            const filteredScore = gameSubmissions.filter(row => !row.approved);
-            gameSubmissions = await retrieveSubmissions(abb, "time", timeSubmissionState);
-            const filteredTime = gameSubmissions.filter(row => !row.approved);
+            // retrive all submissions for abb concurrently
+            const [allMainScoreSubmissions, allMiscScoreSubmissions, allMainTimeSubmissions, allMiscTimeSubmissions] = await Promise.all(
+                [
+                    getSubmissions(abb, "main", "score", submissionReducer), 
+                    getSubmissions(abb, "misc", "score", submissionReducer), 
+                    getSubmissions(abb, "main", "time", submissionReducer),
+                    getSubmissions(abb, "misc", "time", submissionReducer)
+                ]
+            );
 
-            // NEW - retrive submissions for both score and time, and filter each by the approved field
-            let newGameSubmissions = await newQuery(abb, "score");
-            const newFilteredScore = newGameSubmissions.filter(row => !row.approved);
-            newGameSubmissions = await newQuery(abb, "time");
-            const newFilteredTime = newGameSubmissions.filter(row => !row.approved);
-            
-            // sort both arrays by submitted_at
-            [filteredScore, filteredTime].map(arr => arr.sort((a, b) => a.submitted_at < b.submitted_at ? -1 : a.submitted_at > b.submitted_at ? 1 : 0));
+            // filter each list of levels by the "approved" field
+            const mainScoreSubmissions = allMainScoreSubmissions.filter(row => !row.approved);
+            const miscScoreSubmissions = allMiscScoreSubmissions.filter(row => !row.approved);
+            const mainTimeSubmissions = allMainTimeSubmissions.filter(row => !row.approved);
+            const miscTimeSubmissions = allMiscTimeSubmissions.filter(row => !row.approved);
 
-            // NEW - sort both arrays by submitted_at
-            [newFilteredScore, newFilteredTime].map(arr => arr.sort((a, b) => a.details.submitted_at.localeCompare(b.details.submitted_at)));
-
-            // define variables used in the merging process
-            const merged = [];
-            let i = 0, j = 0;
-            const sr = filteredScore.map(row => Object.assign({}, row)), tr = filteredTime.map(row => Object.assign({}, row));
-
-            // NEW - define variables used in the merging process
-            const newMerged = [];
-            const scoreSubmissions = newFilteredScore.map(row => Object.assign({}, row)), timeSubmissions = newFilteredTime.map(row => Object.assign({}, row));
-
-            // now, let's merge submissions into a single array
-            while (i < sr.length && j < tr.length) {
-                const scoreRecord = sr[i], timeRecord = tr[j];
-                const scoreDate = scoreRecord.submitted_at, timeDate = timeRecord.submitted_at;
-                if (scoreDate < timeDate) {
-                    sr[i]["record"] = scoreRecord.score;
-                    sr[i]["type"] = "score";
-                    delete sr[i].score;
-                    merged.push(scoreRecord);
-                    i++;
-                } else {
-                    tr[j]["record"] = timeRecord.time;
-                    tr[j]["type"] = "time";
-                    delete tr[j].time;
-                    merged.push(timeRecord);
-                    j++;
-                }
-            }
-            while (i < sr.length) {
-                const scoreRecord = sr[i];
-                sr[i]["record"] = scoreRecord.score;
-                sr[i]["type"] = "score";
-                delete sr[i].score;
-                merged.push(scoreRecord);
-                i++;
-            }
-            while (j < tr.length) {
-                const timeRecord = tr[j];
-                tr[j]["record"] = timeRecord.time;
-                tr[j]["type"] = "time";
-                delete tr[j].time;
-                merged.push(timeRecord);
-                j++;
-            }
-
-            // NEW - now, let's merge submissions into a single array
-            i = 0;
-            j = 0;
-
-            // while both lists still have unmerged submissions, this loop will execute
-            while (i < scoreSubmissions.length && j < timeSubmissions.length) {
-                const score = scoreSubmissions[i], time = timeSubmissions[j];
-                const scoreDate = score.details.submitted_at, timeDate = time.details.submitted_at;
-                if (scoreDate < timeDate) {
-                    newMerged.push(score);
-                    i++;
-                } else {
-                    newMerged.push(time);
-                    j++;
-                }
-            }
-            
-            // if any score submissions remain, merge them
-            while (i < scoreSubmissions.length) {
-                newMerged.push(scoreSubmissions[i]);
-                i++;
-            }
-
-            // if any time submissions remain, merge them
-            while (j < timeSubmissions.length) {
-                newMerged.push(timeSubmissions[j]);
-                j++;
-            }
+            // now, concatenate all arrays into a single array, and sort it by the id field
+            const unorderedMerged = mainScoreSubmissions.concat(miscScoreSubmissions, mainTimeSubmissions, miscTimeSubmissions);
+            const merged = unorderedMerged.sort((a, b) => a.details.id.localeCompare(b.details.id));
 
             // finally, update the submissions state
-            setSubmissions( { ...submissions, [abb]: merged } );
             console.log(merged);
-
-            // NEW - finally, update the submissions state
-            console.log(`NEW UNAPPROVED ${ abb } SUBMISSIONS GENERATED FROM NEW BACK-END:`);
-            console.log(newMerged);
+            setSubmissions( { ...submissions, [abb]: merged } );
         }
 
         // update game and loading state hooks
@@ -174,24 +92,31 @@ const SubmissionInit = () => {
         setApproving(true);
         try {
             // first, let's approve all submissions in the submission table
-            const approvePromises = approved.map(e => approve({ type: e.type, user_id: e.profiles.id, game_id: e.game.abb, level_id: e.level.name }));
+            const approvePromises = approved.map(e => approve({ 
+                user_id: e.user.id, 
+                game_id: e.game.abb, 
+                level_id: e.level.name,
+                score: e.score
+            }));
             await Promise.all(approvePromises);
 
+            // ===== NOTIFICATIONS ARE BEING TOTALLY RE-DONE. LEAVE COMMENTED OUT FOR NOW ===== //
+
             // once all submissions have been approved, let's notify each user that the approval was successful
-            const notifPromises = approved.map(e => {
-                return insertNotification({
-                    type: e.type, 
-                    user_id: e.profiles.id, 
-                    game_id: e.game.abb,
-                    mod_id: user.id,
-                    level_id: e.level.name,
-                    notif_type: "approve",
-                    record: e.record,
-                    old_approved: false,
-                    approved: true
-                });
-            });
-            await Promise.all(notifPromises);
+            // const notifPromises = approved.map(e => {
+            //     return insertNotification({
+            //         type: e.type, 
+            //         user_id: e.profiles.id, 
+            //         game_id: e.game.abb,
+            //         mod_id: user.id,
+            //         level_id: e.level.name,
+            //         notif_type: "approve",
+            //         record: e.record,
+            //         old_approved: false,
+            //         approved: true
+            //     });
+            // });
+            // await Promise.all(notifPromises);
 
             // once all notifications have been sent, reload the page
             window.location.reload();
@@ -208,7 +133,6 @@ const SubmissionInit = () => {
         currentGame, 
         approved,
         approving,
-        validate,
         swapGame,
         addToApproved,
         removeFromApproved,

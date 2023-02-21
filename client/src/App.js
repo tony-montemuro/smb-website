@@ -29,8 +29,6 @@ function App() {
   const [profiles, setProfiles] = useState(null);
   const [isMod, setIsMod] = useState(null);
   const [notifications, setNotifications] = useState(null);
-  const [scoreSubmissions, setScoreSubmissions] = useState(null);
-  const [timeSubmissions, setTimeSubmissions] = useState(null);
   const [submissions, dispatchSubmissions] = useReducer((state, action) => {
     const submissionAbb = state[action.abb] || {};
     const submissionCategory = submissionAbb[action.category] || {};
@@ -50,8 +48,6 @@ function App() {
   }, null);
 
   /* ===== VARIABLES ===== */
-  const scoreSubmissionState = { state: scoreSubmissions, setState: setScoreSubmissions };
-  const timeSubmissionState = { state: timeSubmissions, setState: setTimeSubmissions };
   const submissionReducer = { state: submissions, dispatchSubmissions: dispatchSubmissions };
   const imageReducer = { reducer: images, dispatchImages: dispatchImages };
 
@@ -158,7 +154,7 @@ function App() {
         <Routes>
           <Route path="/" element={ <Home /> }/>
           <Route path="/submissions" element={
-            <Submissions cache={ { isMod: isMod, games: games, scoreSubmissionState: scoreSubmissionState, timeSubmissionState: timeSubmissionState } } />
+            <Submissions cache={ { isMod: isMod, games: games, submissionReducer: submissionReducer} } />
           } />
           <Route path="/games" element={<GameSelect cache={ { games: games, imageReducer: imageReducer } } />}/>
           <Route path="/resources" element={<Resources />}></Route>
@@ -195,7 +191,6 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
-              submissionState: scoreSubmissionState,
               submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,
@@ -206,7 +201,6 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
-              submissionState: timeSubmissionState,
               submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,
@@ -217,7 +211,6 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
-              submissionState: scoreSubmissionState,
               submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,
@@ -228,7 +221,6 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
-              submissionState: timeSubmissionState,
               submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,

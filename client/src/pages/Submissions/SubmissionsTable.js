@@ -30,30 +30,30 @@ function SubmissionsTable({ data, toggleBtn, games, buttonFunc }) {
             </thead>
             <tbody>
             { data.list.map(row => {
-                return <tr key={ row.submitted_at }>
+                return <tr key={ row.details.submitted_at }>
                     <td>
                         <div className="submissions-user-info">
-                        { row.profiles.country ?
-                            <div><span className={ `fi fi-${ row.profiles.country.toLowerCase() }` }></span></div>
+                        { row.user.country ?
+                            <div><span className={ `fi fi-${ row.user.country.toLowerCase() }` }></span></div>
                         :
                             null
                         }
-                        <div><Link to={ `/user/${ row.profiles.id }` }>{ row.profiles.username }</Link></div>
+                        <div><Link to={ `/user/${ row.user.id }` }>{ row.user.username }</Link></div>
                         </div>
                     </td>
                     { data.isApproved ? <td>{ row.game.name }</td> : null }
                     <td>
-                        <Link to={ `/games/${ games.current }/${ row.level.misc ? "misc" : "main" }/${ row.type }/${ row.level.name }` }>
+                        <Link to={ `/games/${ games.current }/${ row.level.misc ? "misc" : "main" }/${ row.score ? "score" : "time" }/${ row.level.name }` }>
                         { cleanLevelName(row.level.name) }
                         </Link>
                     </td>
-                    <td>{ capitalize(row.type) }</td>
-                    <td>{ recordB2F(row.record, row.type) }</td>
-                    <td>{ dateB2F(row.submitted_at) }</td>
-                    <td>{ row.region.region_name }</td>
-                    { row.live ? <td>Live</td> : <td>Non-live</td> }
-                    <td>{ row.proof !== "none" ? <a href={ row.proof } target="_blank" rel="noopener noreferrer">☑️</a> : null }</td>
-                    <td>{ row.comment }</td>
+                    <td>{ capitalize(row.score ? "score" : "time") }</td>
+                    <td>{ recordB2F(row.details.record, row.score ? "score" : "time") }</td>
+                    <td>{ dateB2F(row.details.submitted_at) }</td>
+                    <td>{ row.details.region.region_name }</td>
+                    { row.details.live ? <td>Live</td> : <td>Non-live</td> }
+                    <td>{ row.details.proof !== "none" ? <a href={ row.details.proof } target="_blank" rel="noopener noreferrer">☑️</a> : null }</td>
+                    <td>{ row.details.comment }</td>
                     <td>
                         { data.isApproved ?
                             <button onClick={ () => buttonFunc(row) } disabled={ toggleBtn }>Unapprove</button>

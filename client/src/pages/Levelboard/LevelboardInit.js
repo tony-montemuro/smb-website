@@ -12,7 +12,7 @@ const LevelboardInit = () => {
 	const { capitalize } = FrontendHelper();
 	const { validateLevelboardPath, insertPositionToLevelboard, containsE, decimalCount, dateB2F, submission2Form, dateF2B, getPosition } = LevelboardHelper();
 	const { getSubmissions } = SubmissionRead();
-	const { submitToAll } = LevelboardUpdate();
+	const { submit } = LevelboardUpdate();
 
 	/* ===== VARIABLES ===== */
 	
@@ -304,7 +304,7 @@ const LevelboardInit = () => {
 		formValsCopy.score = score;
 		formValsCopy.all_position = getPosition(formValsCopy.record, board.records.all);
 		formValsCopy.position = formValsCopy.live ? getPosition(formValsCopy.record, board.records.live) : null;
-		await submitToAll(formValsCopy);
+		await submit(formValsCopy);
 		// console.log(formValsCopy);
 
 		// ===== THE NOTIFICATION SYSTEM WILL BE OVERHAULED; FOR NOW, COMMENT THIS ALL OUT ===== //
