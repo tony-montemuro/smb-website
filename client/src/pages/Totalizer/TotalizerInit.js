@@ -1,6 +1,5 @@
 import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import LevelboardHelper from "../../helper/LevelboardHelper";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import TotalizerHelper from "../../helper/TotalizerHelper";
 
@@ -24,8 +23,7 @@ const TotalizerInit = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { calculateTotalTime } = LevelboardHelper();
-    const { validateTotalizerPath, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
+    const { validateTotalizerPath, calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
     const { getSubmissions } = SubmissionRead();
 
     // navigate used for redirecting

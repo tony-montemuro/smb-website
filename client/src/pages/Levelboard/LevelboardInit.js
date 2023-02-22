@@ -2,15 +2,24 @@
 import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../database/SupabaseClient";
-import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const LevelboardInit = () => {
 	// helper functions
-	const { capitalize } = FrontendHelper();
-	const { validateLevelboardPath, insertPositionToLevelboard, containsE, decimalCount, dateB2F, submission2Form, dateF2B, getPosition } = LevelboardHelper();
+	const { 
+		validateLevelboardPath, 
+		insertPositionToLevelboard, 
+		submission2Form, 
+		dateF2B, 
+		validateRecord,
+		validateProof,
+		validateComment,
+		validateMessage,
+		fixDateForSubmission,
+		getPosition 
+	} = LevelboardHelper();
 	const { getSubmissions } = SubmissionRead();
 	const { submit } = LevelboardUpdate();
 
@@ -133,7 +142,7 @@ const LevelboardInit = () => {
 
 			// finally, add to the live array if record is live. push to all array as well
 			if (submission.details.live) {
-				live.push(Object.assign({}, submission));
+				live.push({ ...submission, details: { ...submission.details } });
 			}
 			all.push(submission);
 		});
@@ -162,7 +171,7 @@ const LevelboardInit = () => {
 				dispatchForm({ field: "values", value: { [id]: checked } });
 				break;
 
-			// case 2: user_id. this is a special field that only moderators are able to change. if a user is trying to update
+			// case 2: user_id. this is a special field that only moderators are able to change. if a moderator is trying to update
 			// a record from a user that has already submitted to the chart, the form will be loaded with that user's submission data. 
 			// otherwise, the form is set to the default values
 			case "user_id":
@@ -200,100 +209,32 @@ const LevelboardInit = () => {
 		// initialize submission
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
+
+		// create an error object that will store error messages for each field value that needs to
+		// be validated
 		const error = {};
-		Object.keys(form.error).forEach(field => error[field] = null);
-		const old = board.records.all.find(row => row.user.id === form.values.user_id);
+		Object.keys(form.error).forEach(field => error[field] = undefined);
 
-		// first, validate the record
-		const record = form.values.record;
-		if (!record) {
-            error.record = `${ capitalize(type) } is required.`;
-        }
-        else if (record <= 0) {
-            error.record = `${ capitalize(type) } must be a positive value.`;
-        }
-        else if (record > 2147483647) {
-            error.record = `${ capitalize(type) } is invalid.`;
-        }
-
-		// make sure scores are integers
-        if (!error.record && type === 'score') {
-            if (!Number.isInteger(+record)) {
-                error.record = "Score must be an integer value.";
-            }
-        }
-
-		// make sure time has two decimal places
-        if (!error.record && type === 'time') {
-            if (decimalCount(record) !== 2) {
-                error.record = "Please ensure your submission has two decimal places.";
-            }
-            else if (containsE(record)) {
-                error.record = "Invalid character detected in submission. Please ensure submission has no letters.";
-            }
-        }
-
-		// next, validate proof.
-        if (!form.values.proof) {
-            error.proof = "Proof is required.";
-        }
-
-        // next, validate the comment
-        if (form.values.comment.length > 100) {
-            error.comment = "Comment must be 100 characters or less.";
-        }
-
-		// next, validate the message
-		if (form.values.message.length > 100) {
-			error.message = "Message must be 100 characters or less.";
-		}
+		// perform form validation
+		error.record = validateRecord(form.values.record, type);
+		error.proof = validateProof(form.values.proof);
+		error.comment = validateComment(form.values.comment);
+		error.message = validateMessage(form.values.message);
 
 		// if any errors are determined, let's return
 		console.log(error);
         dispatchForm({ field: "error", value: error });
-		if (Object.values(error).some(e => e != null)) {
+		if (Object.values(error).some(e => e !== undefined)) {
             dispatchForm({ field: "submitting", value: false });
-			console.log("failed");
             return;
         }
 
-		// finally, let's convert the date from the front-end format, to the backend format. this involves some complex logic, comments
-		// will attempt to explain
-		let backendDate = undefined;
-		const currDate = dateB2F();
-
-		// first, we need to handle defining the date differently if the user has a previous submissions
-		if (old) {
-			const prevDate = dateB2F(old.details.submitted_at);
-
-			// special case: user is attempting to submit a new { type }, but has either forgotten to change the date of their old submission,
-			// or has deliberately not changed it. give them a confirmation box to ensure they have not made a mistake. if they hit 'no', the submission
-			// process will cancel. otherwise, continue.
-			if (form.values.submitted_at === prevDate && form.values[game.type] !== old[game.type]) {
-				if (!window.confirm(`You are attempting to submit a new ${ game.type } with the same date as the previous submission. Are you sure this is correct?`)) {
-					dispatchForm({ field: "submitting", value: false });
-					return;
-				}
-			}
-
-			// CASE 1: the submission date from the form is equal to the submission date in the backend. in this case, backendDate is just date
-			// from previous submission data
-			if (form.values.submitted_at === prevDate) {
-				backendDate = old.submitted_at;
-			}
-		} 
+		// finally, let's convert the date from the front-end format, to the backend format.
+		const old = board.records.all.find(row => row.user.id === form.values.user_id);
+		const backendDate = fixDateForSubmission(form.values.submitted_at, old, form.values.record, type);
 		if (!backendDate) {
-			// CASE 2: the submission date from the form is equal to the current date. in this case, return the default call to the
-			// function converting dates from front-end format to back-end format
-			if (form.values.submitted_at === currDate) {
-				backendDate = dateF2B();
-			} 
-			
-			// CASE 3: the submission date from the form is NOT EQUAL to current date, AND was NOT EQUAL to the date from a previous submission
-			// in this case, return the call to function converting dates from front-end format to back-end format, with form date as a parameter
-			else {
-				backendDate = dateF2B(form.values.submitted_at);
-			}
+			dispatchForm({ field: "submitting", value: true });
+			return;
 		}
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
@@ -355,7 +296,7 @@ const LevelboardInit = () => {
 		// }
 
 		// once all database updates have been finished, reload the page
-		window.location.reload();
+		// window.location.reload();
 	};
 
 	return {
