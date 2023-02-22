@@ -1,14 +1,12 @@
 import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
-import LevelboardHelper from "../../helper/LevelboardHelper";
 
 function SubmissionsTable({ data, toggleBtn, games, buttonFunc }) {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { capitalize, cleanLevelName, recordB2F } = FrontendHelper();
-    const { dateB2F } = LevelboardHelper();
+    const { capitalize, cleanLevelName, dateB2F, recordB2F } = FrontendHelper();
 
     // submissions table object
     return (

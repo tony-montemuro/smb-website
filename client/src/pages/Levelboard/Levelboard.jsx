@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { supabase } from "../../database/SupabaseClient";
 import FrontendHelper from "../../helper/FrontendHelper";
-import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardInit from "./LevelboardInit";
 import Popup from "./Popup";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
@@ -29,8 +28,7 @@ function Levelboard({ cache }) {
 	} = LevelboardInit();
 
 	// helper functions
-	const { capitalize, cleanLevelName, recordB2F } = FrontendHelper();
-	const { dateB2F } = LevelboardHelper();
+	const { capitalize, cleanLevelName, dateB2F, recordB2F } = FrontendHelper();
 
 	// code that is executed upon page load, or when the URL is changed using next/previous buttons
 	const location = useLocation();

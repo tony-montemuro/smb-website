@@ -23,7 +23,19 @@ const FrontendHelper = () => {
         return words.join(" ");
     };
 
-    // FUNCTION 3: recordB2F - convert record from back-end format to front-end format
+    // FUNCTION 3: dateB2F ("date backend-to-frontend")
+    // Precondition: the date parameter can take two possible states: a timestamptz formatted date, or null
+    // Postcondition: if null, the function will return the current date. otherwise, the function will return the formatted date, 
+    // converted to the client's location. output will have the following format: YYYY-MM-DD
+    const dateB2F = date => {
+        const d = date ? new Date(date) : new Date();
+        const year = d.getFullYear();
+        const month = ("0"+(d.getMonth()+1)).slice(-2);
+        const day = ("0"+d.getDate()).slice(-2);
+        return `${year}-${month}-${day}`;
+    };
+
+    // FUNCTION 4: recordB2F - convert record from back-end format to front-end format
     // PRECONDITION (2 parameters): 
     // 1.) record is a float number with at most two decimal places, OR it is undefined
     // 2.) type is either "score" or "time"
@@ -37,7 +49,7 @@ const FrontendHelper = () => {
         return record;
     };
 
-    // FUNCTION 4: secondsToHours - convert a time from seconds to hours
+    // FUNCTION 5: secondsToHours - convert a time from seconds to hours
     // PRECONDITIONS (2 parameters):
     // 1.) record is a float number with at most two decimals places
     // 2.) type is either "score" or "time"
@@ -61,7 +73,7 @@ const FrontendHelper = () => {
         return record;
     };
 
-    return { capitalize, cleanLevelName, recordB2F, secondsToHours };
+    return { capitalize, cleanLevelName, dateB2F, recordB2F, secondsToHours };
 };
 
 export default FrontendHelper;

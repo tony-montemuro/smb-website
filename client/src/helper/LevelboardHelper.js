@@ -2,7 +2,7 @@ import FrontendHelper from "./FrontendHelper";
 
 const LevelboardHelper = () => {
     // helper functions from separate modules
-    const { capitalize, recordB2F } = FrontendHelper();
+    const { capitalize, dateB2F, recordB2F } = FrontendHelper();
 
     // FUNCTION 1: validateLevelboardPath - determine if path is valid for Levelboard component
     // PRECONDITINOS (2 parameters):
@@ -52,19 +52,7 @@ const LevelboardHelper = () => {
         });
     };
 
-    // FUNCTION 3: dateB2F ("date backend-to-frontend")
-    // Precondition: the date parameter can take two possible states: a timestamptz formatted date, or null
-    // Postcondition: if null, the function will return the current date. otherwise, the function will return the formatted date, 
-    // converted to the client's location. output will have the following format: YYYY-MM-DD
-    const dateB2F = date => {
-        const d = date ? new Date(date) : new Date();
-        const year = d.getFullYear();
-        const month = ("0"+(d.getMonth()+1)).slice(-2);
-        const day = ("0"+d.getDate()).slice(-2);
-        return `${year}-${month}-${day}`;
-    };
-
-    // FUNCTION 4: submission2Form ("submission to form")
+    // FUNCTION 3: submission2Form ("submission to form")
     // PRECONDITIONS (3 parameters):
     // 1.) submission is a submission object, or undefined
     // 2.) game is a game object
@@ -108,14 +96,14 @@ const LevelboardHelper = () => {
         }
     };
 
-    // FUNCTION 5: dateF2B ("date frontend-to-backend")
+    // FUNCTION 4: dateF2B ("date frontend-to-backend")
     // Precondition: the date parameter can take two possible states: a date with the following format: YYYY-MM-DD, or null.
     // Postcondition: the date is returned with the following format: YYYY-MM-DDTHH:MM:SS.***+00
     const dateF2B = date => {
         return date ? date+"T12:00:00.000+00" : new Date().toISOString().replace("Z", "+00");
     };
 
-    // FUNCTION 6: validateRecord
+    // FUNCTION 5: validateRecord
     // PRECONDITIONS (2 parameters):
     // 1.) record: a string value representing the record of the submission
     // 2.) type: a string value, either "score" or "time"
@@ -169,7 +157,7 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 7: validateProof
+    // FUNCTION 6: validateProof
     // PRECONDITIONS (1 parameter):
     // 1.) proof: a string value representing the proof of the submission
     // POSTCONDITIONS (1 parameter):
@@ -184,7 +172,7 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 8: validateComment
+    // FUNCTION 7: validateComment
     // PRECONDITIONS (1 parameter):
     // 1.) comment: a string value representing the comment of the submission
     // POSTCONDITIONS (1 parameter):
@@ -199,7 +187,7 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 9: validateMessage
+    // FUNCTION 8: validateMessage
     // PRECONDITIONS (1 parameter):
     // 1.) message: a string value representing the message of the submission
     // POSTCONDITIONS (1 parameter):
@@ -214,7 +202,7 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 10: fixDateForSubmission
+    // FUNCTION 9: fixDateForSubmission
     // PRECONDITIONS (4 parameters):
     // 1.) submittedAt: a string representing a date with a front-end format
     // 2.) oldSubmission: either a submission object belonging to a user, or undefined, depending on whether the current
@@ -256,7 +244,7 @@ const LevelboardHelper = () => {
         return dateF2B(submittedAt);
     };
 
-    // FUNCTION 11: getPosition - determine the posititon of a new submission
+    // FUNCTION 10: getPosition - determine the posititon of a new submission
     // PRECONDITIONS (3 parameters):
     // 1.) record is a string representing a floating-point value
     // 2.) submissions is a list of submissions, ordered by position
@@ -281,7 +269,6 @@ const LevelboardHelper = () => {
     return { 
         validateLevelboardPath, 
         insertPositionToLevelboard, 
-        dateB2F, 
         submission2Form,
         dateF2B,
         validateRecord,

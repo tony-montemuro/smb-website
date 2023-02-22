@@ -1,15 +1,13 @@
 import "./notifications.css";
 import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
-import LevelboardHelper from "../../helper/LevelboardHelper";
 
 function NotificationPopup({ hook }) {
     // variables
     const notification = hook.state.current;
 
     // helper functions
-    const { capitalize, cleanLevelName, recordB2F } = FrontendHelper();
-    const { dateB2F } = LevelboardHelper();
+    const { capitalize, cleanLevelName, dateB2F, recordB2F } = FrontendHelper();
 
     // basic info component - this is information that is included in all types of notifications
     function NotificationBasicInfo({ notification }) {
