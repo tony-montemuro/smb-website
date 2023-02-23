@@ -2,6 +2,7 @@ import "./levelboard.css";
 import React, { useState } from "react";
 import { supabase } from "../../database/SupabaseClient";
 import LevelboardDelete from "../../database/delete/LevelboardDelete";
+import LevelboardHelper from "../../helper/LevelboardHelper";
 // import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 
 function Popup({ board, setBoard }) {
@@ -14,13 +15,14 @@ function Popup({ board, setBoard }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { deleteSubmission } = LevelboardDelete();
+  const { remove } = LevelboardDelete();
+  const { validateMessage } = LevelboardHelper();
   // const { insertNotification } = LevelboardUpdate();
 
   // function that is called when a user deletes their own run
   const handleDelete = async () => {
     // await the removal of the submission
-    await deleteSubmission(board.delete.id);
+    await remove(board.delete.id);
 
     // reload the page once that is done
     window.location.reload();
@@ -28,30 +30,27 @@ function Popup({ board, setBoard }) {
 
   // function that is called when a moderator is deleting a run from another user
   const handleModDelete = async () => {
-    // first, verify that the message is not more than { max } characters
-    // const max = 100;
-    // if (form.message.length > max) {
-    //   setForm({ ...form, error: `Error: Messages must be less than ${ max } characters.` });
-    //   return;
-    // }
+    // first, verify that the message is valid
+    const error = validateMessage(form.message);
+    if (error) {
+      setForm({ ...form, error: error });
+      return;
+    }
 
     // await the removal of the submission
-    await deleteSubmission(board.delete.id);
+    await remove(board.delete.id);
 
-    // ===== NOTIFICATIONS ARE BEING TOTALLY REHAULED -> COMMENT ALL THIS OUT FOR NOW ===== //
-    // if (status) {
-    //   await insertNotification({
-    //     user_id: board.delete.user_id,
-    //     game_id: board.delete.game_id,
-    //     level_id: board.delete.level_id,
-    //     mod_id: user.id,
-    //     type: board.delete.type,
-    //     notif_type: "delete",
-    //     message: form.message,
-    //     record: board.record
-    //   });
-    //   window.location.reload();
-    // }
+    // await the insertion of the delete notification
+    // const notification = { 
+    //   user_id: board.delete.user_id,
+    //   notif_type: "delete",
+    //   mod_id: user.id,
+    //   message: form.message,
+    //   old_submission_id: board.delete.id
+    // };
+    // await insertNotification(notification);
+    
+    // reload page
     window.location.reload();
   };
 

@@ -245,8 +245,8 @@ const LevelboardInit = () => {
 		formValsCopy.score = score;
 		formValsCopy.all_position = getPosition(formValsCopy.record, board.records.all);
 		formValsCopy.position = formValsCopy.live ? getPosition(formValsCopy.record, board.records.live) : null;
-		await submit(formValsCopy);
 		// console.log(formValsCopy);
+		await submit(formValsCopy);
 
 		// ===== THE NOTIFICATION SYSTEM WILL BE OVERHAULED; FOR NOW, COMMENT THIS ALL OUT ===== //
 
@@ -296,7 +296,7 @@ const LevelboardInit = () => {
 		// }
 
 		// once all database updates have been finished, reload the page
-		// window.location.reload();
+		window.location.reload();
 	};
 
 	return {

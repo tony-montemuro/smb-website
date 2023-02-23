@@ -67,7 +67,7 @@ const LevelboardHelper = () => {
             return {
                 record: recordB2F(details.record, game.type),
                 monkey_id: details.monkey.id,
-                record_id: details.region.id,
+                region_id: details.region.id,
                 live: details.live,
                 proof: details.proof,
                 comment: details.comment ? details.comment : "",
