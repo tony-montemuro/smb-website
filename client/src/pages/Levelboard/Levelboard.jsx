@@ -177,7 +177,7 @@ function Levelboard({ cache }) {
 										type="number"
 										value={ form.values.record }
 										onChange={ handleChange }
-										disabled={ user.id !== form.values.user_id && form.values.record }
+										disabled={ user.id !== form.values.user_id && board.records.all.some(row => row.user.id === form.values.user_id) }
 									/>
 									{ form.error.record ? <p>{ form.error.record }</p> : null }
 								</div>

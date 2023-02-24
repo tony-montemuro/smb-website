@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { supabase } from "../../database/SupabaseClient";
 import LevelboardDelete from "../../database/delete/LevelboardDelete";
 import LevelboardHelper from "../../helper/LevelboardHelper";
-// import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 
 function Popup({ board, setBoard }) {
   /* ===== VARIABLES ===== */
@@ -17,7 +17,7 @@ function Popup({ board, setBoard }) {
   // helper functions
   const { remove } = LevelboardDelete();
   const { validateMessage } = LevelboardHelper();
-  // const { insertNotification } = LevelboardUpdate();
+  const { insertNotification } = LevelboardUpdate();
 
   // function that is called when a user deletes their own run
   const handleDelete = async () => {
@@ -41,14 +41,17 @@ function Popup({ board, setBoard }) {
     await remove(board.delete.id);
 
     // await the insertion of the delete notification
-    // const notification = { 
-    //   user_id: board.delete.user_id,
-    //   notif_type: "delete",
-    //   mod_id: user.id,
-    //   message: form.message,
-    //   old_submission_id: board.delete.id
-    // };
-    // await insertNotification(notification);
+    const notification = { 
+      notif_type: "delete",
+      user_id: board.delete.user_id,
+      creator_id: user.id,
+      message: form.message,
+      game_id: board.delete.game_id,
+      level_id: board.delete.level_id,
+      score: board.delete.type === "score" ? true : false,
+      record: board.delete.record
+    };
+    await insertNotification(notification);
     
     // reload page
     window.location.reload();

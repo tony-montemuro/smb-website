@@ -222,9 +222,9 @@ const AppRead = () => {
                 .select(`
                     notif_date,
                     notif_type,
-                    mod_id:profiles!notification_mod_id_fkey (id, username),
+                    creator_id:profiles!notification_creator_id_fkey (id, username),
                     message,
-                    old_submission:all_submission!notification_old_submission_id_fkey (
+                    submission:all_submission!notification_submission_id_fkey (
                         level (name, misc, mode (game (abb, name))),
                         score,
                         record,
@@ -237,21 +237,9 @@ const AppRead = () => {
                         position,
                         all_position
                     ),
-                    new_submission:all_submission!notification_submission_id_fkey (
-                        level (name, misc, mode (game (abb, name))),
-                        score,
-                        record,
-                        region (region_name),
-                        submitted_at,
-                        monkey (monkey_name),
-                        proof,
-                        comment,
-                        live,
-                        position,
-                        all_position
-                    ),
-                    old_approved,
-                    approved
+                    level (name, misc, mode (game (abb, name))),
+                    score,
+                    record
                 `)
                 .eq("user_id", userId)
                 .order("notif_date", { ascending: false });

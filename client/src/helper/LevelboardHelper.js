@@ -1,8 +1,36 @@
 import FrontendHelper from "./FrontendHelper";
+import LevelboardUpdate from "../database/update/LevelboardUpdate";
 
 const LevelboardHelper = () => {
     // helper functions from separate modules
     const { capitalize, dateB2F, recordB2F } = FrontendHelper();
+    const { insertNotification } = LevelboardUpdate();
+
+    // ===== INTERNAL MODULE FUNCTIONS ===== //
+
+    // MODULE FUNCTION 1: getPosition - determine the posititon of a new submission
+    // PRECONDITIONS (3 parameters):
+    // 1.) record: a string representing a floating-point value
+    // 2.) submissions: an array of submissions, ordered by position
+    // POSTCONDITIONS (1 return):
+    // 1.) position: an integer value that describes the position of the new record in the submission list
+    const getPosition = (record, submissions) => {
+        // perform a while loop to find the first submission whose record is less than or equal to record param
+        let i = 0;
+        while (i < submissions.length && submissions[i].details.record > record) {
+            ++i;
+        }
+
+        // if a submission was not found, we want to return one greater than the length of the submissions array
+        if (i === submissions.length) {
+            return submissions.length+1;
+        }
+
+        // otherwise, just return the position of the submission found by the loop
+        return submissions[i].details.position;
+    };
+
+    // ===== RETURNED FUNCTIONS ===== //
 
     // FUNCTION 1: validateLevelboardPath - determine if path is valid for Levelboard component
     // PRECONDITINOS (2 parameters):
@@ -66,6 +94,7 @@ const LevelboardHelper = () => {
             const details = submission.details;
             return {
                 record: recordB2F(details.record, game.type),
+                score: submission.score,
                 monkey_id: details.monkey.id,
                 region_id: details.region.id,
                 live: details.live,
@@ -82,6 +111,7 @@ const LevelboardHelper = () => {
         } else {
             return {
                 record: "",
+                score: game.type === "score" ? true : false,
                 monkey_id: game.monkeys[0].id,
                 region_id: game.regions[0].id,
                 live: true,
@@ -107,7 +137,7 @@ const LevelboardHelper = () => {
     // PRECONDITIONS (2 parameters):
     // 1.) record: a string value representing the record of the submission
     // 2.) type: a string value, either "score" or "time"
-    // POSTCONDITIONS (1 parameter):
+    // POSTCONDITIONS (1 return):
     // 1.) error: a string that either contains an error message, or undefined, if there is no error
     const validateRecord = (recordField, type) => {
         // first, validate that record field is non-null
@@ -160,7 +190,7 @@ const LevelboardHelper = () => {
     // FUNCTION 6: validateProof
     // PRECONDITIONS (1 parameter):
     // 1.) proof: a string value representing the proof of the submission
-    // POSTCONDITIONS (1 parameter):
+    // POSTCONDITIONS (1 return):
     // 1.) error: a string that either contains an error message, or undefined, if there is no error
     const validateProof = proof => {
         // check if the proof field is non-null
@@ -175,7 +205,7 @@ const LevelboardHelper = () => {
     // FUNCTION 7: validateComment
     // PRECONDITIONS (1 parameter):
     // 1.) comment: a string value representing the comment of the submission
-    // POSTCONDITIONS (1 parameter):
+    // POSTCONDITIONS (1 return):
     // 1.) error: a string that either contains an error message, or undefined, if there is no error
     const validateComment = comment => {
         // check if the comment is greater than 100 characters long
@@ -190,7 +220,7 @@ const LevelboardHelper = () => {
     // FUNCTION 8: validateMessage
     // PRECONDITIONS (1 parameter):
     // 1.) message: a string value representing the message of the submission
-    // POSTCONDITIONS (1 parameter):
+    // POSTCONDITIONS (1 return):
     // 1.) error: a string that either contains an error message, or undefined, if there is no error
     const validateMessage = message => {
         // check if the message is greater than 100 characters long
@@ -202,17 +232,17 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 9: fixDateForSubmission
+    // FUNCTION 9: getDateOfSubmission
     // PRECONDITIONS (4 parameters):
     // 1.) submittedAt: a string representing a date with a front-end format
     // 2.) oldSubmission: either a submission object belonging to a user, or undefined, depending on whether the current
     // 3.) record: a string or float value representing the record that the user is submitting
     // 4.) type: a string value, either "score" or "time"
     // user has submitted to this chart
-    // POSTCONDITIONS (1 parameter):
+    // POSTCONDITIONS (1 return):
     // 1.) backendDate: a string representing a date with the back-end format, or, undefined. undefined is returned only if
     // a user is subitting a new record, but they realized they forgot to change the date
-    const fixDateForSubmission = (submittedAt, oldSubmission, record, type) => {
+    const getDateOfSubmission = (submittedAt, oldSubmission, record, type) => {
         // first, we need to handle defining the date differently if the user has a previous submissions
         if (oldSubmission) {
 			const prevDate = dateB2F(oldSubmission.details.submitted_at);
@@ -244,26 +274,57 @@ const LevelboardHelper = () => {
         return dateF2B(submittedAt);
     };
 
-    // FUNCTION 10: getPosition - determine the posititon of a new submission
-    // PRECONDITIONS (3 parameters):
-    // 1.) record is a string representing a floating-point value
-    // 2.) submissions is a list of submissions, ordered by position
-    // POSTCONDITIONS (1 return):
-    // 1.) position: an integer value that describes the position of the new record in the submission list
-    const getPosition = (record, submissions) => {
-        // perform a while loop to find the first submission whose record is less than or equal to record param
-        let i = 0;
-        while (i < submissions.length && submissions[i].details.record > record) {
-            ++i;
-        }
+    // FUNCTION 10: getSubmissionFromForm  - takes form values, and generates a new object with formatting ready for submission
+    // PRECONDITIONS (4 parameter):
+    // 1.) formVals: an object containing data generated from the submission form
+    // 2.) date: a string representing the date of the submission. this is different from the `submitted_at` field already
+    // present in the formVals object; it's converted to a backend format
+    // 3.) id: a string that uniquely idenfies the current submission
+    // 4.) submissions: an array of submissions, ordered by position
+    // POSTCONDITION (1 return):
+    // 1.) submission: an object containing mostly the same information from formValues parameter, but with
+    // additional field values, as well as removing the `message` field
+    const getSubmissionFromForm = (formVals, date, id, submissions) => {
+        // create our new submission object, which is equivelent to formVals minus the message field
+        const { message, ...submission } = formVals;
 
-        // if a submission was not found, we want to return one greater than the length of the submissions array
-        if (i === submissions.length) {
-            return submissions.length+1;
-        }
+        // add additional fields to submission object
+        submission.submitted_at = date;
+        submission.id = id;
+        submission.all_position = getPosition(submission.record, submissions);
+		submission.position = submission.live ? getPosition(submission.record, submissions) : null;
 
-        // otherwise, just return the position of the submission found by the loop
-        return submissions[i].details.position;
+        return submission;
+    };
+
+    // FUNCTION 11: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
+    // to backend
+    // PRECONDITIONS (2 parameters):
+    // 1.) formVals: an object that contains data from the submission form
+    // 2.) id: a string representing the unique id assigned to the current submission
+    // 3.) userId: a string that represents the user id of the currently signed in user, NOT necessarily of
+    // the person who submitted the submission
+    // POSTCONDITION (0 returns):
+    // this function will either generate a notification object and make a call to insert it into the database, or return early,
+    // depending on whether this submission was sent from the owner of the submission, or a moderator
+    const handleNotification = async (formVals, id, userId) => {
+        // determine the user id belonging to the submission
+        const submissionUserId = formVals.user_id;
+
+        // if these two ids are not equal, it means a moderator is inserting a submission, so we need to notify the owner
+        // of the submission of this action. if this condition is not met, the function will return early
+        if (userId !== submissionUserId) {
+			let notification = {
+				notif_type: "insert",
+				user_id: submissionUserId,
+				creator_id: userId,
+				message: formVals.message,
+				submission_id: id
+			};
+			
+			// insert the notification into the database
+			await insertNotification(notification);
+		}
     };
 
     return { 
@@ -275,8 +336,9 @@ const LevelboardHelper = () => {
         validateProof,
         validateComment,
         validateMessage,
-        fixDateForSubmission,
-        getPosition
+        getDateOfSubmission,
+        getSubmissionFromForm,
+        handleNotification
     };
 };
 

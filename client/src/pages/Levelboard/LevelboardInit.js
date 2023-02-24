@@ -17,8 +17,9 @@ const LevelboardInit = () => {
 		validateProof,
 		validateComment,
 		validateMessage,
-		fixDateForSubmission,
-		getPosition 
+		getDateOfSubmission,
+		getSubmissionFromForm,
+		handleNotification
 	} = LevelboardHelper();
 	const { getSubmissions } = SubmissionRead();
 	const { submit } = LevelboardUpdate();
@@ -231,69 +232,20 @@ const LevelboardInit = () => {
 
 		// finally, let's convert the date from the front-end format, to the backend format.
 		const old = board.records.all.find(row => row.user.id === form.values.user_id);
-		const backendDate = fixDateForSubmission(form.values.submitted_at, old, form.values.record, type);
+		const backendDate = getDateOfSubmission(form.values.submitted_at, old, form.values.record, type);
 		if (!backendDate) {
 			dispatchForm({ field: "submitting", value: true });
 			return;
 		}
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
-		const id = dateF2B(), score = type === "score" ? true : false;
-		const { message, ...formValsCopy } = form.values;
-		formValsCopy.submitted_at = backendDate;
-		formValsCopy.id = id;
-		formValsCopy.score = score;
-		formValsCopy.all_position = getPosition(formValsCopy.record, board.records.all);
-		formValsCopy.position = formValsCopy.live ? getPosition(formValsCopy.record, board.records.live) : null;
-		// console.log(formValsCopy);
-		await submit(formValsCopy);
+		const id = dateF2B();
+		const submission = getSubmissionFromForm(form.values, backendDate, id, board.records.all);
+		// console.log(submission);
+		await submit(submission);
 
-		// ===== THE NOTIFICATION SYSTEM WILL BE OVERHAULED; FOR NOW, COMMENT THIS ALL OUT ===== //
-
-		// next, we need to determine if a notification is necessary. there are two cases where a notification needs to be created:
-		// 1.) a moderator updates a preexisting submission
-		// 2.) a moderator inserts a new submission on behalf of a player who had no previously submitted to the current chart
-		// const submissionUserId = form.values.user_id;
-		// if (user.id !== submissionUserId) {
-		// 	// first, let's define our default notification object
-		// 	let notification = {
-		// 		user_id: submissionUserId,
-		// 		game_id: abb,
-		// 		level_id: levelId,
-		// 		mod_id: user.id,
-		// 		type: type,
-		// 		message: message,
-		// 		record: form.values[type],
-		// 		submitted_at: backendDate,
-		// 		region: form.values.region_id,
-		// 		monkey: form.values.monkey_id,
-		// 		proof: form.values.proof,
-		// 		live: form.values.live
-		// 	}
-
-		// 	// if old is defined, moderator is UPDATING. update notification object accordingly. otherwise, simply
-		// 	// set the notif_type field to insert
-		// 	if (old) {
-		// 		notification = {
-		// 			...notification,
-		// 			notif_type: "update",
-		// 			old_record: form.values[type] !== old[type] ? old[type] : null,
-		// 			old_submitted_at: backendDate !== old.submitted_at ? old.submitted_at : null,
-		// 			old_region: form.values.region_id !== old.region.id ? old.region.id : null,
-		// 			old_monkey: form.values.monkey_id !== old.monkey.id ? old.monkey.id : null,
-		// 			old_proof: form.values.proof !== old.proof ? old.proof : null,
-		// 			old_live: form.values.live !== old.live ? old.live : null
-		// 		}
-		// 	} else {
-		// 		notification = { 
-		// 			...notification,
-		// 			notif_type: "insert"
-		// 		};
-		// 	}
-			
-		// 	// finally, insert the notification into the database
-		// 	await insertNotification(notification);
-		// }
+		// next, handle notification
+		handleNotification(form.values, id, user.id);
 
 		// once all database updates have been finished, reload the page
 		window.location.reload();
