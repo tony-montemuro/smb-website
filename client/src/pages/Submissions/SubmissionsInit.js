@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+import { supabase } from "../../database/SupabaseClient";
+import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import SubmissionsUpdate from "../../database/update/SubmissionsUpdate";
 
 const SubmissionInit = () => {
+    /* ===== VARIABLES ===== */
+    const user = supabase.auth.user();
+
     /* ===== STATES ===== */
     const [loading, setLoading] = useState(true);
     const [submissions, setSubmissions] = useState({});
@@ -15,7 +19,7 @@ const SubmissionInit = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    // const { insertNotification } = LevelboardUpdate();
+    const { insertNotification } = LevelboardUpdate();
     const { getSubmissions } = SubmissionRead();
     const { approve } = SubmissionsUpdate();
 
@@ -100,23 +104,16 @@ const SubmissionInit = () => {
             }));
             await Promise.all(approvePromises);
 
-            // ===== NOTIFICATIONS ARE BEING TOTALLY RE-DONE. LEAVE COMMENTED OUT FOR NOW ===== //
-
             // once all submissions have been approved, let's notify each user that the approval was successful
-            // const notifPromises = approved.map(e => {
-            //     return insertNotification({
-            //         type: e.type, 
-            //         user_id: e.profiles.id, 
-            //         game_id: e.game.abb,
-            //         mod_id: user.id,
-            //         level_id: e.level.name,
-            //         notif_type: "approve",
-            //         record: e.record,
-            //         old_approved: false,
-            //         approved: true
-            //     });
-            // });
-            // await Promise.all(notifPromises);
+            const notifPromises = approved.map(e => {
+                return insertNotification({
+                    notif_type: "approve",
+                    user_id: e.user.id, 
+                    creator_id: user.id,
+                    submission_id: e.details.id
+                });
+            });
+            await Promise.all(notifPromises);
 
             // once all notifications have been sent, reload the page
             window.location.reload();
