@@ -32,7 +32,7 @@ const LevelboardInit = () => {
 	const type = pathArr[4];
 	const levelId = pathArr[5];
 	const isMisc = category === "misc" ? true : false;
-	const boardInit = { records: null, state: "live", update: null, delete: null };
+	const boardInit = { records: null, state: "live", update: null, report: null, delete: null };
 	const formInit = { 
 		values: null, 
 		error: { record: null, proof: null, comment: null, message: null },
@@ -192,9 +192,22 @@ const LevelboardInit = () => {
 		console.log(form);
     };
 
+	const setBoardReport = id => {
+		const row = board.records.all.find(row => row.user.id === id);
+		setBoard({ ...board, report: {
+			id: row.details.id,
+			user_id: row.user.id,
+			game_id: abb,
+			level_id: levelId,
+			type: type,
+			username: row.user.username,
+			record: row.details.record
+		}});
+	};
+
 	// function that sets the delete field of the board state when a user attempts to delete a record
 	// note: when this field is set to a non-null value, a popup component will automatically be activated
-	const setBoardDelete = (id) => {
+	const setBoardDelete = id => {
 		const row = board.records.all.find(row => row.user.id === id);
 		setBoard({ ...board, delete: {
 			id: row.details.id,
@@ -266,6 +279,7 @@ const LevelboardInit = () => {
 		generateLevelboard,
 		handleChange,
 		setBoardDelete,
+		setBoardReport,
 		submitRecord
 	};
 };  

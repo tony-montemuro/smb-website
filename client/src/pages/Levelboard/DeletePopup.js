@@ -5,7 +5,7 @@ import LevelboardDelete from "../../database/delete/LevelboardDelete";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 
-function Popup({ board, setBoard }) {
+function DeletePopup({ board, setBoard }) {
   /* ===== VARIABLES ===== */
   const user = supabase.auth.user();
 
@@ -57,7 +57,7 @@ function Popup({ board, setBoard }) {
     window.location.reload();
   };
 
-  // popup component
+  // deletepopup component
   return (
     board.delete ? 
       board.delete.user_id === user.id ?
@@ -90,4 +90,4 @@ function Popup({ board, setBoard }) {
   );
 };
 
-export default Popup;
+export default DeletePopup;

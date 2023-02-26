@@ -2,9 +2,10 @@ import "./levelboard.css";
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { supabase } from "../../database/SupabaseClient";
+import DeletePopup from "./DeletePopup";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardInit from "./LevelboardInit";
-import Popup from "./Popup";
+import ReportPopup from "./ReportPopup";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 
 function Levelboard({ cache }) {
@@ -24,6 +25,7 @@ function Levelboard({ cache }) {
 		generateGame,
 		generateLevelboard,
 		handleChange,
+		setBoardReport,
 		setBoardDelete,
 		submitRecord
 	} = LevelboardInit();
@@ -126,6 +128,7 @@ function Levelboard({ cache }) {
 									<th>Proof</th>
 									<th>Comment</th>
 									<th>Approved</th>
+									<th>Report</th>
 									{ cache.isMod ? <th>Delete</th> : null }
 								</tr>
 							</thead>
@@ -153,6 +156,14 @@ function Levelboard({ cache }) {
 										<td>{ val.details.proof !== "none" ? <a href={ val.proof } target="_blank" rel="noopener noreferrer">☑️</a> : null }</td>
 										<td>{ val.details.comment }</td>
 										<td>{ val.approved ? "True" : "False" }</td>
+										<td>
+											<button 
+												onClick={ () => setBoardReport(val.user.id) }
+												disabled={ supabase.auth.user() && supabase.auth.user().id === val.user.id }
+											>
+												📝
+											</button>
+										</td>
 										{ cache.isMod ? <td><button onClick={ () => setBoardDelete(val.user.id) }>❌</button></td> : null }
 									</tr>
 								})}
@@ -259,7 +270,8 @@ function Levelboard({ cache }) {
 								</div>
 								<button disabled={ form.submitting }>Submit</button>
 							</form>
-							<Popup board={ board } setBoard={ setBoard } />
+							<ReportPopup board={ board } setBoard={ setBoard } />
+							<DeletePopup board={ board } setBoard={ setBoard } />
 						</div>
 					:
 						null
