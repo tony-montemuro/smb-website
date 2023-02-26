@@ -21,10 +21,11 @@ function Levelboard({ cache }) {
 		setLoading,
 		setBoard,
 		reset,
+		generateGame,
+		generateLevelboard,
 		handleChange,
 		setBoardDelete,
-		submitRecord,
-		generateLevelboard
+		submitRecord
 	} = LevelboardInit();
 
 	// helper functions
@@ -40,7 +41,11 @@ function Levelboard({ cache }) {
 	// code that is executed when page is loading, or when the cache fields are updated
 	useEffect(() => {
 		if (loading && cache.games && cache.levels) {
-			generateLevelboard(cache.games, cache.levels, cache.submissionReducer);
+			// if game is undefined, terminate page load
+			const game = generateGame(cache.games, cache.levels);
+			if (game) {
+				generateLevelboard(game, cache.submissionReducer);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading, cache.games, cache.levels]);
@@ -65,16 +70,16 @@ function Levelboard({ cache }) {
 				<>
 					<div className="levelboard-header">
 						<div className="levelboard-title">
-							{ board.adjacent.prev ?
-								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.type }/${ board.adjacent.prev }` }>
+							{ game.adjacent.prev ?
+								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.type }/${ game.adjacent.prev }` }>
 									<button disabled={ form.submitting }>←Prev</button>
 								</Link>
 							:	
 								null
 							}
-							<h1>{ capitalize(game.type) }: { cleanLevelName(game.levelName) }</h1>
-							{ board.adjacent.next ?
-								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.type }/${ board.adjacent.next }` }>
+							<h1>{ capitalize(game.type) }: { cleanLevelName(game.level) }</h1>
+							{ game.adjacent.next ?
+								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.type }/${ game.adjacent.next }` }>
 									<button disabled={ form.submitting }>Next→</button>
 								</Link>
 							:
@@ -86,7 +91,7 @@ function Levelboard({ cache }) {
 								<button disabled={ form.submitting }>Back to Level Select</button>
 							</Link>
 							{ game.chart_type === "both" ?
-								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.other }/${ game.levelName }` }>
+								<Link to={ `/games/${ game.abb }/${ game.category }/${ game.other }/${ game.level }` }>
 									<button disabled={ form.submitting }>{ capitalize(game.other) } Board</button>
 								</Link>
 							:

@@ -57,7 +57,25 @@ const LevelboardHelper = () => {
         return error;
     };
 
-    // FUNCTION 2: insertPositionToLevelboard
+    // FUNCTION 2: getPrevAndNext - get the previous and next level names
+    // PRECONDTIONS (2 parameters):
+    // 1.) index: the index of the current level
+    // 2.) levels: an array of levels, sorted by the id parameter
+    // POSTCONDITIONS (2 returns):
+    // 1.) prev: the name of the previous level. if it does not exist, value will be null 
+    // 2.) next: the name of the next level. if it does not exist, value will be null
+    const getPrevAndNext = (index, levels) => {
+        let prev = null, next = null;
+		if (index > 0) {
+			prev = levels[index-1].name;
+		}
+		if (index < levels.length-1) {
+			next = levels[index+1].name;
+		}
+        return { prev: prev, next: next };
+    };
+
+    // FUNCTION 3: insertPositionToLevelboard
     // PRECONDITIONS (1 parameter):
     // 1.) submissions: an array of submission objects
     // POSTCONDITION (no return): 
@@ -80,7 +98,7 @@ const LevelboardHelper = () => {
         });
     };
 
-    // FUNCTION 3: submission2Form ("submission to form")
+    // FUNCTION 4: submission2Form ("submission to form")
     // PRECONDITIONS (3 parameters):
     // 1.) submission is a submission object, or undefined
     // 2.) game is a game object
@@ -126,14 +144,14 @@ const LevelboardHelper = () => {
         }
     };
 
-    // FUNCTION 4: dateF2B ("date frontend-to-backend")
+    // FUNCTION 5: dateF2B ("date frontend-to-backend")
     // Precondition: the date parameter can take two possible states: a date with the following format: YYYY-MM-DD, or null.
     // Postcondition: the date is returned with the following format: YYYY-MM-DDTHH:MM:SS.***+00
     const dateF2B = date => {
         return date ? date+"T12:00:00.000+00" : new Date().toISOString().replace("Z", "+00");
     };
 
-    // FUNCTION 5: validateRecord
+    // FUNCTION 6: validateRecord
     // PRECONDITIONS (2 parameters):
     // 1.) record: a string value representing the record of the submission
     // 2.) type: a string value, either "score" or "time"
@@ -187,7 +205,7 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 6: validateProof
+    // FUNCTION 7: validateProof
     // PRECONDITIONS (1 parameter):
     // 1.) proof: a string value representing the proof of the submission
     // POSTCONDITIONS (1 return):
@@ -202,7 +220,7 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 7: validateComment
+    // FUNCTION 8: validateComment
     // PRECONDITIONS (1 parameter):
     // 1.) comment: a string value representing the comment of the submission
     // POSTCONDITIONS (1 return):
@@ -217,7 +235,7 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 8: validateMessage
+    // FUNCTION 9: validateMessage
     // PRECONDITIONS (1 parameter):
     // 1.) message: a string value representing the message of the submission
     // POSTCONDITIONS (1 return):
@@ -232,7 +250,7 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 9: getDateOfSubmission
+    // FUNCTION 10: getDateOfSubmission
     // PRECONDITIONS (4 parameters):
     // 1.) submittedAt: a string representing a date with a front-end format
     // 2.) oldSubmission: either a submission object belonging to a user, or undefined, depending on whether the current
@@ -274,7 +292,7 @@ const LevelboardHelper = () => {
         return dateF2B(submittedAt);
     };
 
-    // FUNCTION 10: getSubmissionFromForm  - takes form values, and generates a new object with formatting ready for submission
+    // FUNCTION 11: getSubmissionFromForm  - takes form values, and generates a new object with formatting ready for submission
     // PRECONDITIONS (4 parameter):
     // 1.) formVals: an object containing data generated from the submission form
     // 2.) date: a string representing the date of the submission. this is different from the `submitted_at` field already
@@ -297,7 +315,7 @@ const LevelboardHelper = () => {
         return submission;
     };
 
-    // FUNCTION 11: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
+    // FUNCTION 12: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
     // to backend
     // PRECONDITIONS (2 parameters):
     // 1.) formVals: an object that contains data from the submission form
@@ -329,6 +347,7 @@ const LevelboardHelper = () => {
 
     return { 
         validateLevelboardPath, 
+        getPrevAndNext,
         insertPositionToLevelboard, 
         submission2Form,
         dateF2B,

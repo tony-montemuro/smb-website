@@ -7,9 +7,10 @@ import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const LevelboardInit = () => {
-	// helper functions
+	/* ===== HELPER FUNCTIONS ===== */
 	const { 
 		validateLevelboardPath, 
+		getPrevAndNext,
 		insertPositionToLevelboard, 
 		submission2Form, 
 		dateF2B, 
@@ -25,14 +26,13 @@ const LevelboardInit = () => {
 	const { submit } = LevelboardUpdate();
 
 	/* ===== VARIABLES ===== */
-	
 	const pathArr = window.location.pathname.split("/");
 	const abb = pathArr[2];
 	const category = pathArr[3];
 	const type = pathArr[4];
 	const levelId = pathArr[5];
 	const isMisc = category === "misc" ? true : false;
-	const boardInit = { records: null, adjacent: null, state: "live", update: null, delete: null };
+	const boardInit = { records: null, state: "live", update: null, delete: null };
 	const formInit = { 
 		values: null, 
 		error: { record: null, proof: null, comment: null, message: null },
@@ -77,9 +77,10 @@ const LevelboardInit = () => {
 		setBoard(boardInit);
 	};
 
-	// function that takes games, allLevels, and submissionReducer, and generates the levelboard based on the
-	// abb and levelId
-	const generateLevelboard = async (games, allLevels, submissionReducer) => {		
+	// function that takes the list of all games and levels, and generates a game object based on this information
+	// it does this based on path information. if the path information is unable to generate a game object,
+	// undefined will be returned. this will terminate the loading process immediately
+	const generateGame = (games, allLevels) => {
 		// determine the current game and level - used for path verification and state data
 		const game = games.find(row => row.abb === abb);
 		let level = null, levelIndex = null;
@@ -96,31 +97,33 @@ const LevelboardInit = () => {
 		if (pathError) {
 			console.log(pathError);
 			navigate("/");
-			return;
+			return undefined;
 		}
 
-		// find the previous and next level indicies, if they exist
-		let prev = null, next = null;
-		if (levelIndex > 0) {
-			prev = levels[levelIndex-1].name;
-		}
-		if (levelIndex < levels.length-1) {
-			next = levels[levelIndex+1].name;
-		}
-
-		// update game and form states
+		// find the previous and next level indicies, and update game & form states
+		const { prev, next } = getPrevAndNext(levelIndex, levels);
 		const gameObj = {
 			...game,
 			category: category, 
 			chart_type: level.chart_type, 
-			levelName: level.name,
+			level: level.name,
+			adjacent: {
+				prev: prev,
+				next: next,
+			},
 			type: type,
 			other: type === "score" ? "time" : "score"
 		}
+
+		// set the game state hook, and return the game object
 		setGame(gameObj);
 		dispatchForm({ field: "monkey", value: game.monkeys });
 		dispatchForm({ field: "region", value: game.regions });
+		return gameObj;
+	};
 
+	// function that takes a game object, and submissionReducer, and generates the levelboard
+	const generateLevelboard = async (game, submissionReducer) => {		
 		// get submissions, and filter based on the levelId
 		let allSubmissions = await getSubmissions(abb, category, type, submissionReducer);
 		const submissions = allSubmissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
@@ -135,7 +138,7 @@ const LevelboardInit = () => {
 			// if a user is currently signed in, check if a record belongs to them
 			// if so, we need to update form values, and update the formSet flag
 			if (userId && submission.user.id === userId) {
-				const formData = submission2Form(submission, gameObj, userId);
+				const formData = submission2Form(submission, game, userId);
 				dispatchForm({ field: "values", value: formData });
 				dispatchForm({ field: "prevSubmitted", value: true });
 				newFormSet = true;
@@ -151,16 +154,16 @@ const LevelboardInit = () => {
 		// if the formSet flag was never set to true, this means that the client has not submitted to this chart
 		// yet. set the form to default values
 		if (!newFormSet) {
-			const formData = submission2Form(undefined, gameObj, userId ? userId : null);
+			const formData = submission2Form(undefined, game, userId ? userId : null);
 			dispatchForm({ field: "values", value: formData });
 		}
 
-		// NEW - now, let's add the position field to each submission in both arrays
-		insertPositionToLevelboard(live);
+		// now, let's add the position field to each submission in both arrays
 		insertPositionToLevelboard(all);
+		insertPositionToLevelboard(live);
 
 		// finally, update board state hook
-		setBoard({ ...board, records: { all: all, live: live }, adjacent: { prev: prev, next: next } });
+		setBoard({ ...board, records: { all: all, live: live } });
 	};
 
 	// function that runs each time a form value is changed. keeps the form reducer updated
@@ -259,10 +262,11 @@ const LevelboardInit = () => {
 		setLoading,
 		setBoard,
 		reset,
+		generateGame,
+		generateLevelboard,
 		handleChange,
 		setBoardDelete,
-		submitRecord,
-		generateLevelboard
+		submitRecord
 	};
 };  
 
