@@ -236,7 +236,7 @@ const LevelboardInit = () => {
 		error.record = validateRecord(form.values.record, type);
 		error.proof = validateProof(form.values.proof);
 		error.comment = validateComment(form.values.comment);
-		error.message = validateMessage(form.values.message);
+		error.message = validateMessage(form.values.message, false);
 
 		// if any errors are determined, let's return
 		console.log(error);

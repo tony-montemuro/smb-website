@@ -26,6 +26,7 @@ function App() {
   const [countries, setCountries] = useState(null);
   const [games, setGames] = useState(null);
   const [levels, setLevels] = useState(null);
+  const [moderators, setModerators] = useState(null);
   const [profiles, setProfiles] = useState(null);
   const [isMod, setIsMod] = useState(null);
   const [notifications, setNotifications] = useState(null);
@@ -58,12 +59,12 @@ function App() {
     loadCountries, 
     loadGames, 
     loadLevels, 
+    loadModerators,
     loadGameMonkeys,
     loadAllMonkeys, 
     loadProfiles,
     loadGameRegions,
     loadAllRegions,
-    loadMods,
     loadUserNotifications
   } = AppRead();
 
@@ -71,8 +72,8 @@ function App() {
   // async function that will make concurrent api calls to the database
   const loadData = async () => {
     // make concurrent api calls to database to load data
-    const [countries, games, levels, gameMonkeys, allMonkeys, profiles, gameRegions, allRegions] = await Promise.all(
-      [loadCountries(), loadGames(), loadLevels(), loadGameMonkeys(), loadAllMonkeys(), loadProfiles(), loadGameRegions(), loadAllRegions()]
+    const [countries, games, levels, moderators, gameMonkeys, allMonkeys, profiles, gameRegions, allRegions] = await Promise.all(
+      [loadCountries(), loadGames(), loadLevels(), loadModerators(), loadGameMonkeys(), loadAllMonkeys(), loadProfiles(), loadGameRegions(), loadAllRegions()]
     );
 
     // assign monkeys to each game
@@ -99,6 +100,7 @@ function App() {
     setCountries(countries);
     setGames(games);
     setLevels(levels);
+    setModerators(moderators);
     setProfiles(profiles);
   };
 
@@ -108,8 +110,8 @@ function App() {
     if (!user) {
       setIsMod(false);
     } else {
-      const modStatus = await loadMods(user.id);
-      setIsMod(modStatus);
+      const modList = await loadModerators();
+      setIsMod(modList.some(row => row.user_id === user.id));
     }
   };
 
@@ -191,6 +193,7 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
+              moderators: moderators,
               submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,
@@ -201,6 +204,7 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
+              moderators: moderators,
               submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,
@@ -211,6 +215,7 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
+              moderators: moderators,
               submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,
@@ -221,6 +226,7 @@ function App() {
             <Levelboard cache={ { 
               games: games,
               levels: levels,
+              moderators: moderators,
               submissionReducer: submissionReducer,
               isMod: isMod,
               profiles: profiles,

@@ -236,11 +236,18 @@ const LevelboardHelper = () => {
     };
 
     // FUNCTION 9: validateMessage
-    // PRECONDITIONS (1 parameter):
+    // PRECONDITIONS (2 parameters):
     // 1.) message: a string value representing the message of the submission
+    // 2.) required: a boolean flag. if true, the function will require that message be a non-empty string. otherwise,
+    // the function will accept an empty message
     // POSTCONDITIONS (1 return):
     // 1.) error: a string that either contains an error message, or undefined, if there is no error
-    const validateMessage = message => {
+    const validateMessage = (message, required) => {
+        // first, if the message is required, and is empty, return an error
+        if (required && message.length === 0) {
+            return "Message is required!";
+        }
+
         // check if the message is greater than 100 characters long
         if (message.length > 100) {
             return "Message must be 100 characters or less.";

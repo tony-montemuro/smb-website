@@ -71,6 +71,27 @@ const AppRead = () => {
         return [];
     };
 
+    // function that loads all the moderators
+    const loadModerators = async () => {
+        try {
+            const { data: moderatorList, error, status } = await supabase
+                .from("moderator")
+                .select("*");
+
+            // error handling
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            // return data
+            return moderatorList;
+
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+    };
+
     // function that loads all the gameMonkey data
     const loadGameMonkeys = async () => {
         try {
@@ -162,7 +183,7 @@ const AppRead = () => {
             alert(error.message);
         }
         return [];
-    }
+    };
 
     // function that loads all the region data
     const loadAllRegions = async () => {
@@ -185,33 +206,6 @@ const AppRead = () => {
             alert(error.message);
         }
         return [];
-    }
-
-    // function that queries the mod table to see if current user is a mod
-    const loadMods = async (userId) => {
-        try {
-            const { data: mods, error, status } = await supabase
-                .from("moderator")
-                .select("user_id")
-                .eq("user_id", userId);
-
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-        
-            // if data is not empty, this means match was found -> user is mod
-            if (mods.length > 0) {
-                return true;
-            } else {
-                return false;
-            }
-            
-        } catch (error) {
-            console.log(error);
-            alert(error.message);
-            return false;
-        }
     };
 
     // function that loads all the notifications for a given user
@@ -262,12 +256,12 @@ const AppRead = () => {
         loadCountries, 
         loadGames, 
         loadLevels, 
+        loadModerators,
         loadGameMonkeys,
         loadAllMonkeys, 
         loadProfiles,
         loadGameRegions,
         loadAllRegions,
-        loadMods, 
         loadUserNotifications
     };
 };

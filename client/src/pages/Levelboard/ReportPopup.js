@@ -1,46 +1,101 @@
 import "./levelboard.css";
 import React, { useState } from "react";
 import LevelboardHelper from "../../helper/LevelboardHelper";
+import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+import { supabase } from "../../database/SupabaseClient";
 
-function ReportPopup({ board, setBoard }) {
+function ReportPopup({ board, setBoard, moderators }) {
+    /* ===== VARIABLES ===== */
+    const formInit = { message: "", error: null };
+
     /* ===== STATES ===== */
-    const [form, setForm] = useState({ message: "", error: null });
+    const [form, setForm] = useState(formInit);
     const [reportMessage, setReportMessage] = useState(null);
 
     /* ===== FUNCTIONS ===== */
 
     // helper functions
     const { validateMessage } = LevelboardHelper();
+    const { insertNotification } = LevelboardUpdate();
 
-    const handleReport = () => {
+    // function that is used to send reports to each mod, as well as the owner of the submission being reported
+    const handleReport = async () => {
         // first, verify that the message is valid
-        const error = validateMessage(form.message);
+        const error = validateMessage(form.message, true);
         if (error) {
             setForm({ ...form, error: error });
             return;
         }
 
-        console.log("The rest will be implemented soon!");
-        setReportMessage(`Report was successful. All moderators, as well as ${ board.report.username }, have been notified.`);
+        // now, let's get the list of mods that DOES NOT include the current user if they are a moderator
+        const user = supabase.auth.user();
+        const relevantMods = moderators.filter(row => row.user_id !== user.id);
+
+        // now, let's send the report notification to { board.report.username }, as well as all the moderators
+        const notifPromises = relevantMods.map(e => {
+            return insertNotification({
+                notif_type: "report",
+                user_id: e.user_id, 
+                creator_id: user.id,
+                submission_id: board.report.id,
+                message: form.message
+            });
+        });
+        notifPromises.push(
+            insertNotification({
+                notif_type: "report",
+                user_id: board.report.user_id, 
+                creator_id: user.id,
+                submission_id: board.report.id,
+                message: form.message
+            })
+        );
+        
+        try {
+            // await promises to complete
+            await Promise.all(notifPromises);
+
+            // finally, set the report message. this will show to the user to let them know the report was a success
+            setReportMessage(`Report was successful. All moderators, as well as ${ board.report.username }, have been notified.`);
+
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
     };
 
+    // function that resets the internal state of the component when the component is closed
+    const closePopup = () => {
+        setForm(formInit);
+        setReportMessage(null);
+        setBoard({ ...board, report: null });
+    };
+
+    // reportpopup component
     return (
         board.report ?
             <div className="levelboard-popup">
                 <div className="levelboard-popup-inner">
+                    <div className="report-levelboard-popup">
+                        <button onClick={ closePopup }>Close</button>
+                    </div>
                     <h2>Are you sure you want to report the following { board.report.type }: { board.report.record } by { board.report.username }?</h2>
+                    <p>In your message, please explain your reasoning for reporting the submission. This message will be delivered to { board.report.username },
+                    as well as the moderation team.</p>
                     <p><b>Note:</b> <i>Please only report once! Repeatedly reporting a single submission can result in a permanent account ban!</i></p>
+                    <p><i>You will know that a report was successful if you get a little message below the 'Yes' and 'No' buttons.</i></p>
                     <form>
-                        <label>Explain why you are reporting this submission: </label>
+                        <label>Message: </label>
                         <input 
                             type="text"
                             value={ form.message }
                             onChange={ e => setForm({ error: null, message: e.target.value }) }
+                            disabled={ reportMessage }
                         />
                         { form.error ? <p>{ form.error }</p> : null }
                     </form>
-                    <button onClick={ handleReport }>Yes</button>
-                    <button onClick={ () => setBoard({ ...board, report: null }) }>No</button>
+                    <button onClick={ handleReport } disabled={ reportMessage }>Yes</button>
+                    <button onClick={ closePopup } disabled={ reportMessage }>No</button>
                     { reportMessage ? <p>{ reportMessage }</p> : null }
                 </div>
             </div>

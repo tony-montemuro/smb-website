@@ -270,8 +270,8 @@ function Levelboard({ cache }) {
 								</div>
 								<button disabled={ form.submitting }>Submit</button>
 							</form>
-							<ReportPopup board={ board } setBoard={ setBoard } />
 							<DeletePopup board={ board } setBoard={ setBoard } />
+							<ReportPopup board={ board } setBoard={ setBoard } moderators={ cache.moderators } />
 						</div>
 					:
 						null

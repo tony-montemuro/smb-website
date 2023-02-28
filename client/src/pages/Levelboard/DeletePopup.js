@@ -31,7 +31,7 @@ function DeletePopup({ board, setBoard }) {
   // function that is called when a moderator is deleting a run from another user
   const handleModDelete = async () => {
     // first, verify that the message is valid
-    const error = validateMessage(form.message);
+    const error = validateMessage(form.message, false);
     if (error) {
       setForm({ ...form, error: error });
       return;

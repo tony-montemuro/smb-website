@@ -35,7 +35,7 @@ const LevelboardUpdate = () => {
         } catch (error) {
             // delete, insert, and update will be error handled here. approvals are a special case; they are handled
             // in a higher-up function
-            if (notification.notif_type !== "approve") {
+            if (notification.notif_type === "approve" || notification.notif_type === "insert") {
                 console.log(error);
                 alert(error.message);
             } else {
