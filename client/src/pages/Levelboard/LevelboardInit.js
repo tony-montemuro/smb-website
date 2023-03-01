@@ -261,7 +261,7 @@ const LevelboardInit = () => {
 		await submit(submission);
 
 		// next, handle notification
-		handleNotification(form.values, id, user.id);
+		handleNotification(form.values, id, user.id, game.level);
 
 		// once all database updates have been finished, reload the page
 		window.location.reload();

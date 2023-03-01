@@ -37,6 +37,7 @@ function ReportPopup({ board, setBoard, moderators }) {
                 notif_type: "report",
                 user_id: e.user_id, 
                 creator_id: user.id,
+                level_id: board.report.level_id,
                 submission_id: board.report.id,
                 message: form.message
             });
@@ -46,6 +47,7 @@ function ReportPopup({ board, setBoard, moderators }) {
                 notif_type: "report",
                 user_id: board.report.user_id, 
                 creator_id: user.id,
+                level_id: board.report.level_id,
                 submission_id: board.report.id,
                 message: form.message
             })

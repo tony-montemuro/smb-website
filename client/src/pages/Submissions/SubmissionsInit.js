@@ -110,6 +110,7 @@ const SubmissionInit = () => {
                     notif_type: "approve",
                     user_id: e.user.id, 
                     creator_id: user.id,
+                    level_id: e.level.name,
                     submission_id: e.details.id
                 });
             });

@@ -324,15 +324,16 @@ const LevelboardHelper = () => {
 
     // FUNCTION 12: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
     // to backend
-    // PRECONDITIONS (2 parameters):
+    // PRECONDITIONS (3 parameters):
     // 1.) formVals: an object that contains data from the submission form
     // 2.) id: a string representing the unique id assigned to the current submission
     // 3.) userId: a string that represents the user id of the currently signed in user, NOT necessarily of
     // the person who submitted the submission
+    // 4.) level: a string representing the name of the level
     // POSTCONDITION (0 returns):
     // this function will either generate a notification object and make a call to insert it into the database, or return early,
     // depending on whether this submission was sent from the owner of the submission, or a moderator
-    const handleNotification = async (formVals, id, userId) => {
+    const handleNotification = async (formVals, id, userId, level) => {
         // determine the user id belonging to the submission
         const submissionUserId = formVals.user_id;
 
@@ -344,6 +345,7 @@ const LevelboardHelper = () => {
 				user_id: submissionUserId,
 				creator_id: userId,
 				message: formVals.message,
+                level_id: level,
 				submission_id: id
 			};
 			
