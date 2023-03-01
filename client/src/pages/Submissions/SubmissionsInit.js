@@ -111,6 +111,8 @@ const SubmissionInit = () => {
                     user_id: e.user.id, 
                     creator_id: user.id,
                     level_id: e.level.name,
+                    score: e.score,
+                    record: e.details.record,
                     submission_id: e.details.id
                 });
             });

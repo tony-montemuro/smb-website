@@ -38,6 +38,8 @@ function ReportPopup({ board, setBoard, moderators }) {
                 user_id: e.user_id, 
                 creator_id: user.id,
                 level_id: board.report.level_id,
+                score: board.report.type === "score" ? true : false,
+                record: board.report.record,
                 submission_id: board.report.id,
                 message: form.message
             });
@@ -48,6 +50,8 @@ function ReportPopup({ board, setBoard, moderators }) {
                 user_id: board.report.user_id, 
                 creator_id: user.id,
                 level_id: board.report.level_id,
+                score: board.report.type === "score" ? true : false,
+                record: board.report.record,
                 submission_id: board.report.id,
                 message: form.message
             })

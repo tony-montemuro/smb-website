@@ -330,10 +330,11 @@ const LevelboardHelper = () => {
     // 3.) userId: a string that represents the user id of the currently signed in user, NOT necessarily of
     // the person who submitted the submission
     // 4.) level: a string representing the name of the level
+    // 5.) type: a string value, either "score" or "time"
     // POSTCONDITION (0 returns):
     // this function will either generate a notification object and make a call to insert it into the database, or return early,
     // depending on whether this submission was sent from the owner of the submission, or a moderator
-    const handleNotification = async (formVals, id, userId, level) => {
+    const handleNotification = async (formVals, id, userId, level, type) => {
         // determine the user id belonging to the submission
         const submissionUserId = formVals.user_id;
 
@@ -346,6 +347,8 @@ const LevelboardHelper = () => {
 				creator_id: userId,
 				message: formVals.message,
                 level_id: level,
+                score: type === "score" ? true : false,
+                record: formVals.record,
 				submission_id: id
 			};
 			
