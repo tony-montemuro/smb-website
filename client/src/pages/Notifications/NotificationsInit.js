@@ -19,6 +19,7 @@ const NotificationsInit = () => {
     const init = (notificationList) => {
         setNotifications({ ...notifications, all: notificationList });
         setLoading(false);
+        console.log(notificationList);
     };
 
     // function that will toggle a notification between the selected and unselected state
@@ -36,14 +37,14 @@ const NotificationsInit = () => {
         if (notifications.selected.length === notifications.all.length) {
             setNotifications({ ...notifications, selected: [] });
         } else {
-            setNotifications({ ...notifications, selected: notifications.all.map(row => row.id) });
+            setNotifications({ ...notifications, selected: notifications.all.map(row => row.notif_date) });
         }
     };
 
     // function that will remove the selected notifications from the database
     const removeSelected = async () => {
         // make concurrent delete calls to database
-        const promises = notifications.selected.map(id => remove(id));
+        const promises = notifications.selected.map(notif_date => remove(notif_date));
         await Promise.all(promises);
 
         // once all deletes have occurred successfully, reload the page

@@ -1,5 +1,6 @@
 import "./notifications.css";
 import { Link } from "react-router-dom";
+import { supabase } from "../../database/SupabaseClient";
 import FrontendHelper from "../../helper/FrontendHelper";
 
 function NotificationPopup({ hook }) {
@@ -16,8 +17,8 @@ function NotificationPopup({ hook }) {
                 Game: <Link to={`/games/${ notification.level.mode.game.abb }`}>{ notification.level.mode.game.name }</Link> 
             </li>
             <li>
-                Chart: <Link to={`/games/${ notification.level.mode.game.abb }/${ notification.level.misc ? "misc" : "main" }/${ notification.type }/${ notification.level.name }`}>
-                    { cleanLevelName(notification.level.name) } ({ capitalize(notification.type) })
+                Chart: <Link to={`/games/${ notification.level.mode.game.abb }/${ notification.level.misc ? "misc" : "main" }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
+                    { cleanLevelName(notification.level.name) } ({ capitalize(notification.score ? "score" : "time") })
                 </Link>
             </li>
         </>
@@ -26,17 +27,17 @@ function NotificationPopup({ hook }) {
     // proof component - simple component used to display the proof of a notification to the user
     function NotificationProof({ proof }) {
         return proof ? 
-            <a href={ notification.proof } target="_blank" rel="noopener noreferrer">Link</a>
+            <a href={ proof } target="_blank" rel="noopener noreferrer">Link</a>
         : 
             <i>None</i>
     };
 
-    // message component - simple component used to display the message from a moderator
+    // message component - simple component used to display the message from notification sender
     function NotificationMessage({ message }) {
         return message ? 
             <>
                 <h2>
-                    <Link to={`/user/${ notification.moderator.id }`}>{ notification.moderator.username }</Link> also left a message:
+                    <Link to={`/user/${ notification.creator.id }`}>{ notification.creator.username }</Link> also left a message:
                 </h2>
                 <p>"{ notification.message }"</p>
             </> 
@@ -52,12 +53,12 @@ function NotificationPopup({ hook }) {
                         <div className="notifications-popup-inner">
                             <button onClick={ () => hook.setState({ ...hook.state, current: null }) }>Close</button>
                             <h2>
-                                <Link to={`/user/${ notification.moderator.id }`}>{ notification.moderator.username }</Link> has approved the following submission: 
+                                <Link to={`/user/${ notification.creator.id }`}>{ notification.creator.username }</Link> has approved the following submission: 
                             </h2>
                             <div className="notification-details">
                                 <ul>
                                     <NotificationBasicInfo notification={ notification } />
-                                    <li>{ capitalize(notification.type) }: { recordB2F(notification.record, notification.type) }</li>
+                                    <li>{ capitalize(notification.score ? "score" : "time") }: { recordB2F(notification.record, notification.score ? "score" : "time") }</li>
                                     <li>Approval Date: { dateB2F(notification.notif_date) }</li>
                                 </ul>
                             </div>
@@ -70,68 +71,17 @@ function NotificationPopup({ hook }) {
                         <div className="notifications-popup-inner">
                             <button onClick={ () => hook.setState({ ...hook.state, current: null }) }>Close</button>
                             <h2>
-                                <Link to={`/user/${ notification.moderator.id }`}>{ notification.moderator.username }</Link> has submitted the following submission on your behalf: 
+                                <Link to={`/user/${ notification.creator.id }`}>{ notification.creator.username }</Link> has submitted the following submission on your behalf: 
                             </h2>
-                            <div className="notification-details">
+                           <div className="notification-details">
                                 <ul>
                                     <NotificationBasicInfo notification={ notification } />
-                                    <li>{ capitalize(notification.type) }: { recordB2F(notification.record, notification.type) }</li>
-                                    <li>Date: { dateB2F(notification.submitted_at) }</li>
-                                    <li>Region: { notification.region.region_name }</li>
-                                    <li>Monkey: { notification.monkey.monkey_name }</li>
-                                    <li>Proof: <NotificationProof proof={ notification.proof } /></li>
-                                    <li>Live: { notification.live ? "Yes" : "No" }</li>
-                                </ul>
-                            </div>
-                            <NotificationMessage message={ notification.message } />
-                        </div>
-                    </div>
-                );
-            case "update":
-                return (
-                    <div className="notifications-popup">
-                        <div className="notifications-popup-inner">
-                            <button onClick={ () => hook.setState({ ...hook.state, current: null }) }>Close</button>
-                            <h2>
-                                <Link to={`/user/${ notification.moderator.id }`}>{ notification.moderator.username }</Link> has made the following updates to your submission: 
-                            </h2>
-                            <div className="notification-details">
-                                <ul>
-                                    <NotificationBasicInfo notification={ notification } />
-                                    { notification.old_record ? 
-                                        <li><span className="notifications-updated">{ capitalize(notification.type) }: { notification.old_record } → { notification.record }</span></li>
-                                    :
-                                        <li>{ capitalize(notification.type) }: { recordB2F(notification.record, notification.type) }</li>
-                                    }
-                                    { notification.old_submitted_at ? 
-                                        <li><span className="notifications-updated">Date: { dateB2F(notification.old_submitted_at) } → { dateB2F(notification.submitted_at) }</span></li>
-                                    :
-                                        <li>Date: { dateB2F(notification.submitted_at) }</li>
-                                    }
-                                    { notification.old_region ?
-                                        <li><span className="notifications-updated">Region: { notification.old_region.region_name } → { notification.region.region_name } </span></li>
-                                    :
-                                        <li>Region: { notification.region.region_name }</li>
-                                    }
-                                    { notification.old_monkey ?
-                                        <li><span className="notifications-updated">Monkey: { notification.old_monkey.monkey_name } → { notification.monkey.monkey_name }</span></li>
-                                    :
-                                        <li>Monkey: { notification.monkey.monkey_name }</li>
-                                    }
-                                    { notification.old_proof ?
-                                        <li>
-                                            <span className="notifications-updated">
-                                                Proof: <NotificationProof proof={ notification.old_proof } /> → <NotificationProof proof={ notification.proof } />
-                                            </span>
-                                        </li>
-                                    :
-                                        <li>Proof: <NotificationProof proof={ notification.proof } /></li>
-                                    }
-                                    { notification.old_live ?
-                                        <li><span className="notifications-updated">Live: { notification.live ? "Yes" : "No" } → { notification.live ? "Yes" : "No" }</span></li>
-                                    :
-                                        <li>Live: { notification.live ? "Yes" : "No" }</li>
-                                    }
+                                    <li>{ capitalize(notification.score ? "score" : "time") }: { recordB2F(notification.record, notification.score ? "score" : "time") }</li>
+                                    <li>Date: { dateB2F(notification.submission.submitted_at) }</li>
+                                    <li>Region: { notification.submission.region.region_name }</li>
+                                    <li>Monkey: { notification.submission.monkey.monkey_name }</li>
+                                    <li>Proof: <NotificationProof proof={ notification.submission.proof } /></li>
+                                    <li>Live: { notification.submission.live ? "Yes" : "No" }</li>
                                 </ul>
                             </div>
                             <NotificationMessage message={ notification.message } />
@@ -144,12 +94,12 @@ function NotificationPopup({ hook }) {
                         <div className="notifications-popup-inner">
                             <button onClick={ () => hook.setState({ ...hook.state, current: null }) }>Close</button>
                             <h2>
-                                <Link to={`/user/${ notification.moderator.id }`}>{ notification.moderator.username }</Link> has removed the following submission: 
+                                <Link to={`/user/${ notification.creator.id }`}>{ notification.creator.username }</Link> has removed the following submission: 
                             </h2>
                             <div className="notification-details">
                                 <ul>
                                     <NotificationBasicInfo notification={ notification } />
-                                    <li>{ capitalize(notification.type) }: { recordB2F(notification.record, notification.type) }</li>
+                                    <li>{ capitalize(notification.score ? "score" : "time") }: { recordB2F(notification.record, notification.score ? "score" : "time") }</li>
                                     <li>Deletion Date: { dateB2F(notification.notif_date) }</li>
                                 </ul>
                             </div>
@@ -157,6 +107,44 @@ function NotificationPopup({ hook }) {
                         </div>
                     </div>
                 );
+            case "report":
+                const user = supabase.auth.user();
+                return (
+                    <div className="notifications-popup">
+                        <div className="notifications-popup-inner">
+                            <button onClick={ () => hook.setState({ ...hook.state, current: null }) }>Close</button>
+                            <h2>
+                                <Link to={ `/user/${ notification.creator.id }` }>{ notification.creator.username }</Link> has reported { user.id === notification.submission.user.id ? "your" : "the following" } submission:
+                            </h2>
+                            <div className="notification-details">
+                                <ul>
+                                    { user.id !== notification.submission.user.id ? 
+                                        <li>User: <Link to={ `/user/${ notification.submission.user.id }`}>{ notification.submission.user.username }</Link></li>
+                                    :
+                                        null
+                                    } 
+                                    <NotificationBasicInfo notification={ notification } />
+                                    <li>{ capitalize(notification.score ? "score" : "time") }: { recordB2F(notification.record, notification.score ? "score" : "time") }</li>
+                                    <li>Date: { dateB2F(notification.submission.submitted_at) }</li>
+                                    <li>Region: { notification.submission.region.region_name }</li>
+                                    <li>Monkey: { notification.submission.monkey.monkey_name }</li>
+                                    <li>Proof: <NotificationProof proof={ notification.submission.proof } /></li>
+                                    <li>Live: { notification.submission.live ? "Yes" : "No" }</li>
+                                </ul>
+                            </div>
+                            <NotificationMessage message={ notification.message } />
+                            { user.id === notification.submission.user.id ? 
+                                <>
+                                    <p><b>Note: </b><i>It is suggested that you ensure all properties of your submission are valid. If you are confident
+                                    your submission is fine, do not worry. If not, a moderator may be forced to delete your submission!</i></p>
+                                    <p><i>If a moderator falsely deletes any of your submissions, please contact the moderation team.</i></p>
+                                </>
+                            :
+                                null
+                            } 
+                        </div>
+                    </div>
+                )
             default:
                 return null;
         }

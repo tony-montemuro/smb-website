@@ -216,11 +216,10 @@ const AppRead = () => {
                 .select(`
                     notif_date,
                     notif_type,
-                    creator_id:profiles!notification_creator_id_fkey (id, username),
+                    creator:profiles!notification_creator_id_fkey (id, username),
                     message,
-                    submission:all_submission!notification_submission_id_fkey (
-                        level (name, misc, mode (game (abb, name))),
-                        score,
+                    submission:all_submission (
+                        user:profiles (id, username),
                         record,
                         region (region_name),
                         submitted_at,

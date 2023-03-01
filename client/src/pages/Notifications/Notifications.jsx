@@ -39,8 +39,8 @@ function Notifications({ cache }) {
         <ol>
           <li><b>Approvals:</b> A moderator has approved of your submission.</li>
           <li><b>Inserts:</b> A moderator has submitted a submission on your behalf.</li>
-          <li><b>Updates:</b> A moderator has modified one or more properties of your submission.</li>
           <li><b>Deletes:</b> A moderator has deleted your submission.</li>
+          <li><b>Report:</b> A user has reported { cache.isMod ? "a submission." : "one of your submissions." }</li>
         </ol>
       </div>
       <div className="notifications-body">
@@ -70,12 +70,12 @@ function Notifications({ cache }) {
             <tbody>
               { notifications.all.length > 0 ?
                 notifications.all.map(row => {
-                  return <tr key={ row.id }>
+                  return <tr key={ row.notif_date }>
                     <td>
                       <input
                         type="checkbox"
-                        checked={ notifications.selected.includes(row.id) }
-                        onChange={() => toggleSelection(row.id)}
+                        checked={ notifications.selected.includes(row.notif_date) }
+                        onChange={() => toggleSelection(row.notif_date) }
                       />
                     </td>
                     <td><button onClick={ () => setNotifications({ ...notifications, current: row }) }>Info</button></td>
@@ -86,8 +86,8 @@ function Notifications({ cache }) {
                       </Link>
                     </td>
                     <td>
-                      <Link to={`/games/${ row.level.mode.game.abb }/${ row.level.misc ? "misc" : "main" }/${ row.type }/${ row.level.name }`}>
-                        { cleanLevelName(row.level.name) } ({ capitalize(row.type) })
+                      <Link to={`/games/${ row.level.mode.game.abb }/${ row.level.misc ? "misc" : "main" }/${ row.score ? "score" : "time" }/${ row.level.name }`}>
+                        { cleanLevelName(row.level.name) } ({ capitalize(row.score ? "score" : "time") })
                       </Link>
                     </td>
                     <td>{ recordB2F(row.record, row.type) }</td>
