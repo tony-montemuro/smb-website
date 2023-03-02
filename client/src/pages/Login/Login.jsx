@@ -1,51 +1,50 @@
-import { React, useEffect } from "react";
-import LoginInit from "./LoginInit";
 import "./login.css";
+import React from "react";
+import LoginInit from "./LoginInit";
 
 function Login() {
-  const { loggingIn,
-          email, 
-          emailError, 
-          isSubmit, 
-          hasLoggedIn, 
-          handleChange, 
-          handleSubmit, 
-          handleLogin 
+  const { 
+    email, 
+    userState,
+    handleChange, 
+    handleLogin 
   } = LoginInit();
-  
-  useEffect(() => {
-    if (emailError.length === 0 && isSubmit) {
-      handleLogin();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [emailError]);
 
   return (
-    <div className="log-in">
-      <div className="log-in-header">
-        <h1>Log In</h1>
-        <p>Log in via email below: </p>
-      </div>
-      <div className="log-in-form">
-        <form onSubmit={handleSubmit}>
-          <div className="field">
-            <label htmlFor="email">Email: </label>
-            <input 
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Your email"
-              value={ email }
-              onChange={ handleChange } 
-            /><br />
-          </div>
-          <p>{ emailError !== "initState" ? emailError : ""}</p>
-          <button disabled={loggingIn}>Log In</button>
-          {hasLoggedIn ? <p>Success! Please check your email to continue.</p> : ""}
-        </form>
+    <div className="login-container">
+      <div className="login">
+        <div className="login-header">
+          <h1>Log In</h1>
+          <p>Log in via email below: </p>
+        </div>
+        <div className="login-form">
+          <form onSubmit={ handleLogin }>
+            <div className="login-email-field">
+              <label htmlFor="email">Email: </label>
+              <input 
+                id="email"
+                type="email"
+                placeholder="Your email"
+                value={ email.name }
+                onChange={ handleChange } 
+              />
+            </div>
+            { email.error ? 
+              <p> { email.error }</p>
+            :
+              null
+            }
+            <button disabled={ userState === "logging" }>Log In</button>
+            { userState === "complete" ?
+              <p>Success! Please check your email to continue.</p>
+            : 
+              null
+            }
+          </form>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Login;

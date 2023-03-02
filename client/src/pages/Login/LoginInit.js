@@ -1,67 +1,70 @@
 import { useState } from "react";
-import { supabase } from "../../database/SupabaseClient";
+import EmailLogin from "../../database/authentication/EmailLogin";
+import LoginHelper from "../../helper/LoginHelper";
 
 const LoginInit = () => {
-    // states
-    const [loggingIn, setLoggingIn] = useState(false);
-    const [email, setEmail] = useState("");
-    const [emailError, setEmailError] = useState("initState");
-    const [isSubmit, setIsSubmit] = useState(false);
-    const [hasLoggedIn, setHasLoggedIn] = useState(false);
+    /* ===== STATES  ===== */
+    const [email, setEmail] = useState({ name: "", error: undefined });
+    const [userState, setUserState] = useState("idle");
 
+    /* ===== FUNCTIONS ===== */
+
+    // helper functions
+    const { validateEmail } = LoginHelper();
+    const { login } = EmailLogin();
+
+    // FUNCTION 1: handleChange - handle changes to the email form
+    // PRECONDITINOS (1 parameter):
+    // 1.) e: an event object generated when the user makes a change to the email form
+    // POSTCONDITIONS:
+    // the `name` field of the email state hook is updated based on e.value, and the userState state hook
+    // is set to "idle"
     const handleChange = (e) => {
         const { value } = e.target;
-        setEmail(value);
-    }
+        setEmail({ ...email, name: value });
+        setUserState("idle");
+    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setIsSubmit(true);
-        setEmailError(validate(email));
-    }
-
+    // FUNCTION 2: handleLogin - handles an attempt at logging in
+    // PRECONDITINOS (1 parameter):
+    // 1.) e: an event object generated when the user makes a change to the email form
+    // POSTCONDITIONS:
+    // the function will attempt to validate the email, and log the user in. if the email is not valid, the function
+    // will terminate early, and the error field of the email state hook will update. otherwise, the function will attempt
+    // to log the user in.
+    // function that is called when the user attempts to log-in
     const handleLogin = async (e) => {
+        // initialize login process
+        e.preventDefault();
+        setUserState("logging");
+
+        // validate that the email is correct
+        const error = validateEmail(email.name);
+        if (error) {
+            setEmail({ ...email, error: error });
+            setUserState("idle");
+            return;
+        }
+
+        // if we made it past validation, we can complete the login
         try {
-            setLoggingIn(true);
+            await login(email.name);
 
-            const { error } = await supabase.auth.signIn({ email });
-            if (error) {
-                throw error;
-            } 
+            // if there are no errors, we can complete the function
+            setUserState("complete");
 
-            setHasLoggedIn(true);
-            setLoggingIn(false);
         } catch (error) {
-            alert(error.error_description || error.message);
+            console.log(error);
+            alert(error.message);
+            setUserState("idle");
         }
-    }
+    };
 
-    const validate = (email) => {
-        // variables used to check
-        let error = "";
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-
-        // handing email
-        // RULES: required, and must satisfy an email password. (the email input
-        // type should handle some of this, but these rules are more strict.)
-        if (!email) {
-            error = "Error: Email is required."
-        } 
-        else if (!emailRegex.test(email)) {
-            error = "Error: Invalid email format.";
-        }
-
-        return error;
-    }
-
-    return { loggingIn,
-             email, 
-             emailError, 
-             isSubmit, 
-             hasLoggedIn, 
-             handleChange, 
-             handleSubmit, 
-             handleLogin 
+    return { 
+        email,
+        userState,
+        handleChange, 
+        handleLogin 
     };
 }
 
