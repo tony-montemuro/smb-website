@@ -1,22 +1,51 @@
 .profile-header {
-    margin-left: 10px;
+    text-align: center;
 }
 
 .profile-body {
-    margin-left: 10px;
+    display: flex;
 }
 
 .profile-body form button {
+    margin-top: 5px;
     margin-bottom: 10px;
 }
 
-.profile-info-entry {
-    margin-top: 5px;
-    margin-bottom: 5px;
+.profile-body h2 {
+    text-align: center;
 }
 
-.profile-info-update {
-    margin: 0;
+.profile-user-info {
+    flex: 1;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.profile-info-entry {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.profile-info-entry label {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.profile-url-text {
+    width: 300px;
+}
+
+.profile-avatar-info {
+    flex: 1;
+    box-sizing: border-box;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
 }
 
 .profile-avatar-form input[type="file"] {
@@ -33,11 +62,17 @@
     margin-top: 10px;
 }
 
-.profile-btns button {
-    margin-right: 5px;
-}
-
-.profiles-avatar {
+.profile-avatar {
     width: 150px;
     height: 150px;
+    border: 1px solid black;
+}
+
+.profile-footer {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.profile-footer button {
+    margin-right: 5px;
 }

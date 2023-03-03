@@ -144,7 +144,16 @@ const AppRead = () => {
         try {
             const { data: profilesList, error, status } = await supabase
                 .from("profiles")
-                .select("id, username, country (iso2, name), youtube_url, twitch_url, avatar_url");
+                .select(`
+                    id, 
+                    username,
+                    bio,
+                    country (iso2, name), 
+                    youtube_url, 
+                    twitch_url,
+                    discord,
+                    avatar_url
+                `);
 
             // error handling
             if (error && status !== 406) {

@@ -2,7 +2,7 @@ import { supabase } from "../SupabaseClient";
 
 const ProfileUpdate = () => {
     // function that takes user information, and upserts it to the profiles page
-    const upsertInfo = async (userInfo) => {
+    const upsertUserInfo = async (userInfo) => {
         try {
             userInfo.country = userInfo.country === "" ? null : userInfo.country;
             let { error } = await supabase
@@ -27,7 +27,7 @@ const ProfileUpdate = () => {
     };
 
     // function that takes an avatar, uploads it, and updates the user's profile
-    const uploadAvatar = async (file, filePath, userId) => {
+    const uploadAvatar = async (file, filePath) => {
         try {
             // first, upload avatar to storage bucket
             let { error } = await supabase.storage
@@ -50,10 +50,11 @@ const ProfileUpdate = () => {
 
         // if we made it this far, this means the avatar successfully updated. now, lets call the
         // userInfo function to update the profiles page
-        await upsertInfo({ id: userId, avatar_url: filePath });
+        const userId = filePath.split(".")[0];
+        await upsertUserInfo({ id: userId, avatar_url: filePath });
     }
 
-    return { upsertInfo, uploadAvatar };
+    return { upsertUserInfo, uploadAvatar };
 };
 
 export default ProfileUpdate;
