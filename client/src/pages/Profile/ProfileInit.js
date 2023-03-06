@@ -3,14 +3,8 @@ import { supabase } from "../../database/SupabaseClient";
 import { useNavigate } from "react-router-dom";
 import ProfileHelper from "../../helper/ProfileHelper";
 import ProfileUpdate from "../../database/update/ProfileUpdate";
-import Session from "../../database/authentication/Session";
 
 const ProfileInit = () => {
-    const { getUser } = Session();
-
-    /* ===== VARIABLES ===== */
-    const user = getUser();
-
     /* ===== REFS ===== */
     const avatarRef = useRef(null);
 
@@ -54,14 +48,15 @@ const ProfileInit = () => {
         getFileInfo,
         validateAvatar 
     } = ProfileHelper();
+    const { upsertUserInfo, uploadAvatar } = ProfileUpdate();
 
     // navigate used for redirecting
     const navigate = useNavigate();
-    const { upsertUserInfo, uploadAvatar } = ProfileUpdate();
 
     // verify a user is accessing this page. once done, 
-    const initForms = (profiles, countries) => {
+    const initForms = (profiles, countries, session) => {
         // first, verify a user is attempting to access this page
+        const user = session.user;
         if (!user) {
             console.log("Error: Invalid access.");
             navigate("/");
@@ -117,11 +112,11 @@ const ProfileInit = () => {
     };
 
     // function that runs when the user submits the avatarForm
-    const avatarSubmit = async (e) => {
+    const avatarSubmit = async (e, session) => {
         // initialize update
         e.preventDefault();
         dispatchAvatarForm({ field: "updating", value: true });
-        const userId = user.id;
+        const userId = session.user.id;
 
         // validate the user uploaded avatar
         const error = validateAvatar(avatarRef, userId, firstTimeUser);

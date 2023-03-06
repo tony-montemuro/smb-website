@@ -132,8 +132,7 @@ function App() {
       const modList = await loadModerators();
       setIsMod(modList.some(row => row.user_id === user.id));
     }
-  }
-
+  };
 
   // code that is executed on page load
   useEffect(() => {
@@ -165,7 +164,7 @@ function App() {
           <Route path="/support" element={ <Support /> }/>
           <Route path="/notifications" element={ <Notifications cache={ { notifications: notifications, isMod: isMod } } /> } />
           <Route path="/login" element={ <Login /> }/>
-          <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } /> }/>
+          <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer, session: session } } /> }/>
           <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>
           <Route path="games/:game/main/medals" element={
             <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />

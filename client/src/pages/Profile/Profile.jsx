@@ -20,8 +20,8 @@ function Profile({ cache }) {
 
     // code that is executed when the page is first loaded, or when the cache fields are updated
     useEffect(() => {
-        if (cache.profiles && cache.countries) {
-            initForms(cache.profiles, cache.countries);
+        if (cache.profiles && cache.countries && cache.session) {
+            initForms(cache.profiles, cache.countries, cache.session); 
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cache.profiles, cache.countries]);
@@ -114,7 +114,7 @@ function Profile({ cache }) {
                 <div className="profile-avatar-info">
                     <h2>Update Avatar</h2>
                     <p><b>Note:</b> Must be JPEG or PNG, and cannot exceed 5 MB. If your avatar does not update immediately, give it some time.</p>
-                    <form className="profile-avatar-form" onSubmit={ avatarSubmit }>
+                    <form className="profile-avatar-form" onSubmit={ (e) => avatarSubmit(e, cache.session) }>
                         <div className="profile-avatar"><SimpleAvatar url={ avatarForm.avatar_url } size={ 150 } imageReducer={ cache.imageReducer } /></div>
                         <label htmlFor="avatar-update"></label>
                         <input
