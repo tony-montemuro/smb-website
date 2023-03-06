@@ -7,6 +7,7 @@ import Home from "./pages/Home/Home";
 import GameSelect from "./pages/GameSelect/GameSelect";
 import Game from "./pages/Game/Game";
 import Levelboard from "./pages/Levelboard/Levelboard"
+import Session from "./database/authentication/Session";
 import Support from "./pages/Support/Support";
 import Resources from "./pages/Resources/Resources";
 import Login from "./pages/Login/Login";
@@ -68,6 +69,8 @@ function App() {
     loadUserNotifications
   } = AppRead();
 
+  // load database functions
+  const { getSession, getUser } = Session();
 
   // async function that will make concurrent api calls to the database
   const loadData = async () => {
@@ -104,34 +107,37 @@ function App() {
     setProfiles(profiles);
   };
 
+  // async function that is used to set the session, and also listens for session changes
+  const sessionSetter = async () => {
+    const session = await getSession();
+    setSession(session);
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  };
 
-  // async function that will check the mod status of the current user
-  const checkModStatus = async (user) => {
+  // async function that loads the user notifications, and checks the mod status
+  const sessionLoad = async () => {
+    // first, let's handle notifications
+    const user = await getUser();
+    if (user && !notifications) {
+      const notifs = await loadUserNotifications(user.id);
+      setNotifications(notifs);
+    }
+    
+    // next, let's check for mod status
     if (!user) {
       setIsMod(false);
     } else {
       const modList = await loadModerators();
       setIsMod(modList.some(row => row.user_id === user.id));
     }
-  };
-
-
-  // async function that will load all of the user notifications from the database
-  const loadNotifications = async (userId) => {
-    const notifs = await loadUserNotifications(userId);
-    setNotifications(notifs);
-  };
+  }
 
 
   // code that is executed on page load
   useEffect(() => {
-    // first, the session is loaded into the session hook
-    setSession(supabase.auth.session());
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    // next, load data
+    sessionSetter();
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -139,11 +145,7 @@ function App() {
 
   // code that is executed each time the session is changed
   useEffect(() => {
-    const user = supabase.auth.user();
-    if (session && user && !notifications) {
-      loadNotifications(user.id);
-    }
-    checkModStatus(user);
+    sessionLoad();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 

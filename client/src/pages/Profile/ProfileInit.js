@@ -3,10 +3,13 @@ import { supabase } from "../../database/SupabaseClient";
 import { useNavigate } from "react-router-dom";
 import ProfileHelper from "../../helper/ProfileHelper";
 import ProfileUpdate from "../../database/update/ProfileUpdate";
+import Session from "../../database/authentication/Session";
 
 const ProfileInit = () => {
+    const { getUser } = Session();
+
     /* ===== VARIABLES ===== */
-    const user = supabase.auth.user();
+    const user = getUser();
 
     /* ===== REFS ===== */
     const avatarRef = useRef(null);

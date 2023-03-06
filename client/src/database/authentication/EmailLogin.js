@@ -2,7 +2,7 @@ import { supabase } from "../SupabaseClient";
 
 const EmailLogin = () => {
     // FUNCTION 1: login - attempt to log in a user
-    // PRECONDITINOS (1 parameter):
+    // PRECONDITIONS (1 parameter):
     // 1.) email: a string that represents the email of the user attempting to login
     // POSTCONDITIONS (1 returns):
     // 1.) if successful, an email should be sent to the email address provided, which will allow the user
@@ -10,7 +10,9 @@ const EmailLogin = () => {
     const login = async (email) => {
         try {
             // attempt to login
-            const { error } = await supabase.auth.signIn({ email });
+            const { error } = await supabase
+                .auth
+                .signInWithOtp({ email });
 
             // error handling
             if (error) {
