@@ -91,7 +91,7 @@ const ProfileHelper = () => {
         const regex = new RegExp('^.{2,32}#\\d{4}$');
 
         // now, ensure the string conforms to the formatted expressed in the regex expression
-        if (!regex.test(discord)) {
+        if (discord && !regex.test(discord)) {
             return "Error: Discord username is not properly formatted.";
         }
 

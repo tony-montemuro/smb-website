@@ -2,6 +2,7 @@ import "./user.css";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { React, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Discord from "../../img/discord-logo.png";
 import FrontendHelper from "../../helper/FrontendHelper";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 import Twitch from "../../img/twitch-logo.png";
@@ -14,7 +15,8 @@ function User({ cache }) {
     user,
     loading,
     games,
-    init
+    init,
+    alertDiscord
   } = UserInit();
 
   // helper functions
@@ -30,37 +32,60 @@ function User({ cache }) {
 
   // user component
   return (
-    <>
+    <div className="user">
       { loading ?
           <p>Loading...</p>
       : 
         <>
-          <div className="user-profile">
-            <div className="user-info">
-              <h2>{ user.username }</h2>
-              { user.country ? 
-                <div className="user-country-name">
-                  <span className={ `fi fi-${ user.country.iso2.toLowerCase() }` }></span>
-                  <p>{ user.country.name }</p>
-                </div>
-              :
-                null
-              }
+          <div className="user-info">
+            <h2>{ user.username }</h2>
+            { user.country ? 
+              <div className="user-country-name">
+                <span className={ `fi fi-${ user.country.iso2.toLowerCase() }` }></span>
+                <p>{ user.country.name }</p>
+              </div>
+            :
+              null
+            }
+            <div className="user-image">
+              <SimpleAvatar url={ user.avatar_url } size={ 400 } imageReducer={ cache.imageReducer } />
+            </div>
+            <div className="user-info-socials">
               { user.youtube_url ? 
-                <a href={ user.youtube_url } target="_blank" rel="noopener noreferrer">
-                <img className="social-media-logo" alt="yt-logo" src={ YT }></img></a>
+                <div className="user-info-social">
+                  <a href={ user.youtube_url } target="_blank" rel="noopener noreferrer">
+                    <img className="social-media-logo" alt="yt-logo" src={ YT }></img>
+                  </a>
+                </div>                
               : 
                 null
               }
               { user.twitch_url ? 
-                <a href={ user.twitch_url } target="_blank" rel="noopener noreferrer">
-                <img className="social-media-logo" alt="twitch-logo" src={ Twitch }></img></a> 
+                <div className="user-info-social">
+                  <a href={ user.twitch_url } target="_blank" rel="noopener noreferrer">
+                    <img className="social-media-logo" alt="twitch-logo" src={ Twitch }></img>
+                  </a>
+                </div>
               : 
                 null
               }
+              { user.discord ?
+                <div className="user-info-social">
+                  <button className="user-discord-button" onClick={ () => alertDiscord(user.discord) }>
+                    <img className="social-media-logo" alt="discord-logo" src={ Discord }></img>
+                  </button>
+                </div>
+              :
+                null  
+              }
             </div>
-            <div className="user-image">
-              <SimpleAvatar url={ user.avatar_url } size={ 300 } imageReducer={ cache.imageReducer } />
+            <div className="user-about-me">
+              <h3>About Me</h3>
+              { user.bio ?
+                <p>{ user.bio }</p>
+              :
+                <p><i>This player has no About Me.</i></p>
+              }
             </div>
           </div>
           <div className="user-stats-games">
@@ -90,7 +115,7 @@ function User({ cache }) {
           </div> 
         </>
       }
-    </>
+    </div>
   );
 };
 

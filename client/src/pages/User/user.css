@@ -1,20 +1,22 @@
-.user-profile {
+.user {
     display: flex;
-    width: 500px;
+    justify-content: center;
 }
 
 .user-info {
     display: flex;
     flex-direction: column;
-    flex: auto;
     border: 2px solid #808080;
     border-radius: 5px;
     margin: 10px;
     text-align: center;
+    width: 500px;
 }
 
 .user-info h2 {
     text-align: center;
+    margin-top: 10px;
+    margin-bottom: 0px;
 }
 
 .user-country-name {
@@ -32,28 +34,58 @@
     margin-left: 2px;
 }
 
+.user-image {
+    width: 400px;
+    height: 400px;
+    border: 2px solid #808080;
+    border-radius: 5px;
+    margin: 0 auto;
+}
+
 .user-info a {
     margin-left: auto;
     margin-right: auto;
 }
 
+.user-info-socials {
+    display: flex;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.user-info-social {
+    flex: 1;
+}
+
 .social-media-logo {
-    width: 50px;
+    width: 40px;
     height: auto;
     padding-top: 18px;
 }
 
-.user-image {
-    width: 300px;
-    height: 300px;
-    display: block;
-    border: 2px solid #808080;
-    border-radius: 5px;
-    margin: 10px;
+.user-discord-button {
+    padding: 0;
+    border: none;
+    width: 50px;
+    height: 32px;
+    background-color: white;
+    text-align: center;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.user-about-me p {
+    margin-left: 3px;
+    margin-right: 3px;
+    word-wrap: break-word;
 }
 
 .user-stats-games {
-    margin-left: 10px;
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid #808080;
+    border-radius: 5px;
+    align-self: flex-start;
 }
 
 .user-stats-games table {

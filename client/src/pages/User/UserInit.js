@@ -36,11 +36,16 @@ const UserInit = () => {
         setLoading(false);
     };
 
+    const alertDiscord = (discord) => {
+        alert(`Discord username: ${ discord }.`);
+    };
+
     return {  
         user,
         loading,
         games,
-        init
+        init,
+        alertDiscord
     }
 }
 
