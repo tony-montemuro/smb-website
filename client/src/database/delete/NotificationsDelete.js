@@ -2,12 +2,12 @@ import { supabase } from "../SupabaseClient";
 
 const NotificationsDelete = () => {
     // function that makes a delete call to the notification table in the database based on the id
-    const remove = async (id) => {
+    const remove = async (notif_date) => {
         try {
             const { error } = await supabase
                 .from("notification")
                 .delete()
-                .match({ id: id });
+                .match({ notif_date: notif_date });
 
             // error handling
             if (error) {
