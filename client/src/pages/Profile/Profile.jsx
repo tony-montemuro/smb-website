@@ -20,11 +20,11 @@ function Profile({ cache }) {
 
     // code that is executed when the page is first loaded, or when the cache fields are updated
     useEffect(() => {
-        if (cache.profiles && cache.countries && cache.session) {
+        if (cache.profiles && cache.countries && (cache.session || cache.session === null)) {
             initForms(cache.profiles, cache.countries, cache.session); 
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cache.profiles, cache.countries]);
+    }, [cache.profiles, cache.countries, cache.session]);
 
   return (
     <>

@@ -56,15 +56,14 @@ const ProfileInit = () => {
     // verify a user is accessing this page. once done, 
     const initForms = (profiles, countries, session) => {
         // first, verify a user is attempting to access this page
-        const user = session.user;
-        if (!user) {
+        if (!session) {
             console.log("Error: Invalid access.");
             navigate("/");
             return;
         }
 
         // now we have two cases: user has set up a profile, or is a first time user
-        const userId = user.id;
+        const userId = session.user.id;
         const userInfo = profiles.find(row => row.id === userId);
         dispatchUserForm({ field: "user", value: generateFormVals(userInfo, userId) });
         dispatchAvatarForm({ field: "avatar_url", value: userInfo ? userInfo.avatar_url : "default.png" });

@@ -17,20 +17,9 @@ const Session = () => {
             console.log(error);
             alert(error.message);
         }
-    }
-
-    // FUNCTION 2: getUser - get information about the current user
-    // PRECONDITIONS: none
-    // POSTCONDITIONS (1 returns):
-    // 1.) if a user is signed in, their corresponding user object will be returned. otherwise, a null object will
-    // be returned
-    const getUser = async () => {
-        const session = await getSession();
-        const { user } = session;
-        return user;
     };
 
-    return { getSession, getUser };
+    return { getSession };
 };
 
 export default Session;

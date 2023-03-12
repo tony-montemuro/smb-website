@@ -23,7 +23,7 @@ import Notifications from "./pages/Notifications/Notifications";
 
 function App() {
   /* ===== STATES & REDUCERS ===== */
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(undefined);
   const [countries, setCountries] = useState(null);
   const [games, setGames] = useState(null);
   const [levels, setLevels] = useState(null);
@@ -70,7 +70,7 @@ function App() {
   } = AppRead();
 
   // load database functions
-  const { getSession, getUser } = Session();
+  const { getSession } = Session();
 
   // async function that will make concurrent api calls to the database
   const loadData = async () => {
@@ -107,31 +107,41 @@ function App() {
     setProfiles(profiles);
   };
 
-  // async function that is used to set the session, and also listens for session changes
-  const sessionSetter = async () => {
-    const session = await getSession();
-    setSession(session);
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  };
-
   // async function that loads the user notifications, and checks the mod status
-  const sessionLoad = async () => {
-    // first, let's handle notifications
-    const user = await getUser();
-    if (user && !notifications) {
+  const updateSessionData = async (newSession) => {
+    if (newSession) {
+      // first, let's handle notifications
+      const user = newSession.user;
       const notifs = await loadUserNotifications(user.id);
       setNotifications(notifs);
-    }
-    
-    // next, let's check for mod status
-    if (!user) {
-      setIsMod(false);
-    } else {
+
+      // next, let's check for mod status
       const modList = await loadModerators();
       setIsMod(modList.some(row => row.user_id === user.id));
+      
+    } else {
+      setIsMod(false);
     }
+  };
+
+  // async function that is used to set the session, and also listens for session changes
+  const sessionSetter = async () => {
+    // get the new session, update the session state hook, and update relevant session hooks (notifications, isMod)
+    const session = await getSession();
+    setSession(session);
+    updateSessionData(session);
+
+    // listener for changes to the auth state
+    supabase.auth.onAuthStateChange((event, newSession) => {
+      // special case: the current session is the same as the previous session
+      if (session && newSession && session.user.id === newSession.user.id) {
+        return;
+      }
+
+      // otherwise, we want to update the session state hook, and update relevant session data
+      setSession(newSession);
+      updateSessionData(newSession);
+    });
   };
 
   // code that is executed on page load
@@ -140,19 +150,11 @@ function App() {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
-
-  // code that is executed each time the session is changed
-  useEffect(() => {
-    sessionLoad();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
-
 
   // app component
   return (
     <>
-      <Navbar cache={ { isMod: isMod, notifications: notifications } } />
+      <Navbar cache={ { isMod: isMod, notifications: notifications, session: session } } />
       <div className="app">
         <Routes>
           <Route path="/" element={ <Home /> }/>

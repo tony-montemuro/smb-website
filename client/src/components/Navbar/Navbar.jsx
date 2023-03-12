@@ -1,14 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Session from "../../database/authentication/Session";
 import './navbar.css';
 
-function Navbar({ cache }) {
-  // helper functions
-  const { getUser } = Session();
-
-  const user = getUser();
-  
+function Navbar({ cache }) {  
   return (
     <nav className="nav">
       <Link to="/" className="site-title">Home</Link>
@@ -29,7 +23,7 @@ function Navbar({ cache }) {
         <li>
           <Link to="/support">Support</Link>
         </li>
-        { user ? 
+        { cache.session ? 
           <>
             <li>
                 <Link to="/notifications">
