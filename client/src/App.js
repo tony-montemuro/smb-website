@@ -159,7 +159,7 @@ function App() {
         <Routes>
           <Route path="/" element={ <Home /> }/>
           <Route path="/submissions" element={
-            <Submissions cache={ { isMod: isMod, games: games, submissionReducer: submissionReducer} } />
+            <Submissions cache={ { isMod: isMod, games: games, submissionReducer: submissionReducer, session: session } } />
           } />
           <Route path="/games" element={<GameSelect cache={ { games: games, imageReducer: imageReducer } } />}/>
           <Route path="/resources" element={<Resources />}></Route>

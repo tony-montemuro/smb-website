@@ -5,7 +5,6 @@ import FrontendHelper from "../../helper/FrontendHelper";
 function NotificationPopup({ hook, session }) {
     // variables
     const notification = hook.state.current;
-    console.log("rendered?");
 
     // helper functions
     const { capitalize, cleanLevelName, dateB2F, recordB2F } = FrontendHelper();

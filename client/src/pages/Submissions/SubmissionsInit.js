@@ -1,14 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../database/SupabaseClient";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import SubmissionsUpdate from "../../database/update/SubmissionsUpdate";
 
 const SubmissionInit = () => {
-    /* ===== VARIABLES ===== */
-    const user = supabase.auth.user();
-
     /* ===== STATES ===== */
     const [loading, setLoading] = useState(true);
     const [submissions, setSubmissions] = useState({});
@@ -92,8 +88,11 @@ const SubmissionInit = () => {
 
     // function that performs the bulk approvals to the submissions in the database
     // once all updates are done, the page will reload
-    const approveAll = async () => {
+    const approveAll = async (session) => {
+        // prepare approval process
+        const user = session.user;
         setApproving(true);
+
         try {
             // first, let's approve all submissions in the submission table
             const approvePromises = approved.map(e => approve({ 
@@ -109,6 +108,7 @@ const SubmissionInit = () => {
                 return insertNotification({
                     notif_type: "approve",
                     user_id: e.user.id, 
+                    game_id: e.game.abb, 
                     creator_id: user.id,
                     level_id: e.level.name,
                     score: e.score,

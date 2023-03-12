@@ -49,7 +49,7 @@ function Submissions({ cache }) {
                 <h3>Select Game:</h3>
                 <form>
                   <select
-                    onChange={ (e) => swapGame(e.target.value, cache.submissionReducer) }
+                    onChange={ (e) => swapGame(e.target.value, cache.isMod, cache.submissionReducer) }
                     value={ currentGame }
                   >
                     { cache.games.map(val => {
@@ -73,7 +73,7 @@ function Submissions({ cache }) {
               :
                 <p><i>Approve a submission to add it to the list!</i></p>
               }
-              <button onClick={ () => approveAll() } disabled={ approved.length === 0 || approving }>Approve All</button>
+              <button onClick={ () => approveAll(cache.session) } disabled={ approved.length === 0 || approving }>Approve All</button>
               <h3>Submissions:</h3>
               { loading ? 
                 <p>Loading...</p>
