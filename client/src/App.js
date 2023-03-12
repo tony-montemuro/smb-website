@@ -164,7 +164,7 @@ function App() {
           <Route path="/games" element={<GameSelect cache={ { games: games, imageReducer: imageReducer } } />}/>
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/support" element={ <Support /> }/>
-          <Route path="/notifications" element={ <Notifications cache={ { notifications: notifications, isMod: isMod } } /> } />
+          <Route path="/notifications" element={ <Notifications cache={ { notifications: notifications, isMod: isMod, session: session } } /> } />
           <Route path="/login" element={ <Login /> }/>
           <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer, session: session } } /> }/>
           <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>

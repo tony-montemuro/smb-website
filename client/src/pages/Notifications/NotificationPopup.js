@@ -1,11 +1,11 @@
 import "./notifications.css";
 import { Link } from "react-router-dom";
-import { supabase } from "../../database/SupabaseClient";
 import FrontendHelper from "../../helper/FrontendHelper";
 
-function NotificationPopup({ hook }) {
+function NotificationPopup({ hook, session }) {
     // variables
     const notification = hook.state.current;
+    console.log("rendered?");
 
     // helper functions
     const { capitalize, cleanLevelName, dateB2F, recordB2F } = FrontendHelper();
@@ -108,7 +108,7 @@ function NotificationPopup({ hook }) {
                     </div>
                 );
             case "report":
-                const user = supabase.auth.user();
+                const user = session.user;
                 return (
                     <div className="notifications-popup">
                         <div className="notifications-popup-inner">
