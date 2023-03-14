@@ -1,8 +1,13 @@
 import "./notifications.css";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
+import { UserContext } from "../../App";
 
-function NotificationPopup({ hook, session }) {
+function NotificationPopup({ hook }) {
+    // user state from user context
+    const { user } = useContext(UserContext);
+
     // variables
     const notification = hook.state.current;
 
@@ -107,7 +112,6 @@ function NotificationPopup({ hook, session }) {
                     </div>
                 );
             case "report":
-                const user = session.user;
                 return (
                     <div className="notifications-popup">
                         <div className="notifications-popup-inner">

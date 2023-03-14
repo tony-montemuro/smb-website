@@ -1,10 +1,14 @@
 import "./profile.css";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProfileInit from "./ProfileInit";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
+import { UserContext } from "../../App";
 
 function Profile({ cache }) {
+    // user state from user context
+    const { user } = useContext(UserContext);
+
     // states and functions from the init file
     const { 
         loading,
@@ -20,11 +24,11 @@ function Profile({ cache }) {
 
     // code that is executed when the page is first loaded, or when the cache fields are updated
     useEffect(() => {
-        if (cache.profiles && cache.countries && cache.session !== undefined) {
-            initForms(cache.profiles, cache.countries, cache.session); 
+        if (cache.profiles && cache.countries && user !== undefined) {
+            initForms(cache.profiles, cache.countries, user); 
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cache.profiles, cache.countries, cache.session]);
+    }, [cache.profiles, cache.countries, user]);
 
   return (
     <>
@@ -114,7 +118,7 @@ function Profile({ cache }) {
                 <div className="profile-avatar-info">
                     <h2>Update Avatar</h2>
                     <p><b>Note:</b> Must be JPEG or PNG, and cannot exceed 5 MB. If your avatar does not update immediately, give it some time.</p>
-                    <form className="profile-avatar-form" onSubmit={ (e) => avatarSubmit(e, cache.session) }>
+                    <form className="profile-avatar-form" onSubmit={ (e) => avatarSubmit(e, user) }>
                         <div className="profile-avatar"><SimpleAvatar url={ avatarForm.avatar_url } size={ 150 } imageReducer={ cache.imageReducer } /></div>
                         <label htmlFor="avatar-update"></label>
                         <input

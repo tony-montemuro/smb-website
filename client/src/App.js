@@ -1,7 +1,7 @@
-import { useState, useEffect, useReducer } from "react";
+/* ===== IMPORTS ===== */
+import { useState, useEffect, useReducer, createContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import { supabase } from "./database/SupabaseClient";
-
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import GameSelect from "./pages/GameSelect/GameSelect";
@@ -21,9 +21,12 @@ import Records from "./pages/Records/Records";
 import AppRead from "./database/read/AppRead";
 import Notifications from "./pages/Notifications/Notifications";
 
+/* ===== CONTEXTS ===== */
+export const UserContext = createContext();
+
 function App() {
   /* ===== STATES & REDUCERS ===== */
-  const [session, setSession] = useState(undefined);
+  const [user, setUser] = useState(undefined);
   const [countries, setCountries] = useState(null);
   const [games, setGames] = useState(null);
   const [levels, setLevels] = useState(null);
@@ -108,28 +111,30 @@ function App() {
   };
 
   // async function that loads the user notifications, and checks the mod status
-  const updateSessionData = async (newSession) => {
-    if (newSession) {
+  const updateUserData = async (session) => {
+    // two different cases: a null session, or a session belonging to a user
+    if (session) {
       // first, let's handle notifications
-      const user = newSession.user;
+      const user = session.user;
       const notifs = await loadUserNotifications(user.id);
       setNotifications(notifs);
 
       // next, let's check for mod status
       const modList = await loadModerators();
       setIsMod(modList.some(row => row.user_id === user.id));
+      setUser({ id: session.user.id, email: session.user.email });
       
     } else {
+      setUser(null);
       setIsMod(false);
     }
   };
 
   // async function that is used to set the session, and also listens for session changes
   const sessionSetter = async () => {
-    // get the new session, update the session state hook, and update relevant session hooks (notifications, isMod)
+    // get the new session, and update session data
     const session = await getSession();
-    setSession(session);
-    updateSessionData(session);
+    updateUserData(session);
 
     // listener for changes to the auth state
     supabase.auth.onAuthStateChange((event, newSession) => {
@@ -138,9 +143,8 @@ function App() {
         return;
       }
 
-      // otherwise, we want to update the session state hook, and update relevant session data
-      setSession(newSession);
-      updateSessionData(newSession);
+      // otherwise, update the user data
+      updateUserData(newSession);
     });
   };
 
@@ -153,20 +157,20 @@ function App() {
 
   // app component
   return (
-    <>
-      <Navbar cache={ { isMod: isMod, notifications: notifications, session: session } } />
+    <UserContext.Provider value={ { user, setUser } }>
+      <Navbar cache={ { isMod: isMod, notifications: notifications } } />
       <div className="app">
         <Routes>
           <Route path="/" element={ <Home /> }/>
           <Route path="/submissions" element={
-            <Submissions cache={ { isMod: isMod, games: games, submissionReducer: submissionReducer, session: session } } />
+            <Submissions cache={ { isMod: isMod, games: games, submissionReducer: submissionReducer } } />
           } />
           <Route path="/games" element={<GameSelect cache={ { games: games, imageReducer: imageReducer } } />}/>
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/support" element={ <Support /> }/>
-          <Route path="/notifications" element={ <Notifications cache={ { notifications: notifications, isMod: isMod, session: session } } /> } />
+          <Route path="/notifications" element={ <Notifications cache={ { notifications: notifications, isMod: isMod } } /> } />
           <Route path="/login" element={ <Login /> }/>
-          <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer, session: session } } /> }/>
+          <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } /> }/>
           <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>
           <Route path="games/:game/main/medals" element={
             <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
@@ -245,7 +249,7 @@ function App() {
           }/>
         </Routes>
       </div>
-    </>
+    </UserContext.Provider>
   );
 };
 

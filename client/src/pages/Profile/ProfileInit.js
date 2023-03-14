@@ -54,16 +54,16 @@ const ProfileInit = () => {
     const navigate = useNavigate();
 
     // verify a user is accessing this page. once done, 
-    const initForms = (profiles, countries, session) => {
+    const initForms = (profiles, countries, user) => {
         // first, verify a user is attempting to access this page
-        if (!session) {
+        if (!user) {
             console.log("Error: Invalid access.");
             navigate("/");
             return;
         }
 
         // now we have two cases: user has set up a profile, or is a first time user
-        const userId = session.user.id;
+        const userId = user.id;
         const userInfo = profiles.find(row => row.id === userId);
         dispatchUserForm({ field: "user", value: generateFormVals(userInfo, userId) });
         dispatchAvatarForm({ field: "avatar_url", value: userInfo ? userInfo.avatar_url : "default.png" });
@@ -111,11 +111,11 @@ const ProfileInit = () => {
     };
 
     // function that runs when the user submits the avatarForm
-    const avatarSubmit = async (e, session) => {
+    const avatarSubmit = async (e, user) => {
         // initialize update
         e.preventDefault();
         dispatchAvatarForm({ field: "updating", value: true });
-        const userId = session.user.id;
+        const userId = user.id;
 
         // validate the user uploaded avatar
         const error = validateAvatar(avatarRef, userId, firstTimeUser);

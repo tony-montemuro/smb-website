@@ -1,8 +1,9 @@
 import "./submissions.css";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import SubmissionInit from "./SubmissionsInit";
 import SubmissionsTable from "./SubmissionsTable";
+import { UserContext } from "../../App";
 
 function Submissions({ cache }) {
   // states and functions from the init file
@@ -17,6 +18,9 @@ function Submissions({ cache }) {
     removeFromApproved,
     approveAll
   } = SubmissionInit();
+
+  // user state from user context
+  const { user } = useContext(UserContext);
 
   // code that is executed when the page loads, or when cache fields are updated
   useEffect(() => {
@@ -73,7 +77,7 @@ function Submissions({ cache }) {
               :
                 <p><i>Approve a submission to add it to the list!</i></p>
               }
-              <button onClick={ () => approveAll(cache.session) } disabled={ approved.length === 0 || approving }>Approve All</button>
+              <button onClick={ () => approveAll(user) } disabled={ approved.length === 0 || approving }>Approve All</button>
               <h3>Submissions:</h3>
               { loading ? 
                 <p>Loading...</p>

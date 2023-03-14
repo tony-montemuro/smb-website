@@ -1,8 +1,12 @@
-import React from "react";
-import { Link } from "react-router-dom";
 import './navbar.css';
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+import { UserContext } from "../../App";
 
 function Navbar({ cache }) {  
+  // user state from user context
+  const { user } = useContext(UserContext);
+
   return (
     <nav className="nav">
       <Link to="/" className="site-title">Home</Link>
@@ -23,7 +27,7 @@ function Navbar({ cache }) {
         <li>
           <Link to="/support">Support</Link>
         </li>
-        { cache.session ? 
+        { user ? 
           <>
             <li>
                 <Link to="/notifications">

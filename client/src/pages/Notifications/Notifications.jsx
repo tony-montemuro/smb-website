@@ -105,7 +105,7 @@ function Notifications({ cache }) {
           </table> 
         } 
       </div>
-      <NotificationPopup hook={ { state: notifications, setState: setNotifications } } session={ cache.session } />
+      <NotificationPopup hook={ { state: notifications, setState: setNotifications } } />
     </>
   );
 };

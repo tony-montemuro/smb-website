@@ -88,9 +88,8 @@ const SubmissionInit = () => {
 
     // function that performs the bulk approvals to the submissions in the database
     // once all updates are done, the page will reload
-    const approveAll = async (session) => {
+    const approveAll = async (user) => {
         // prepare approval process
-        const user = session.user;
         setApproving(true);
 
         try {
