@@ -1,8 +1,8 @@
 import "./levelboard.css";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
-import { supabase } from "../../database/SupabaseClient";
+import { UserContext } from "../../App";
 
 function ReportPopup({ board, setBoard, moderators }) {
     /* ===== VARIABLES ===== */
@@ -11,6 +11,7 @@ function ReportPopup({ board, setBoard, moderators }) {
     /* ===== STATES ===== */
     const [form, setForm] = useState(formInit);
     const [reportMessage, setReportMessage] = useState(null);
+    const { user } = useContext(UserContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -28,7 +29,6 @@ function ReportPopup({ board, setBoard, moderators }) {
         }
 
         // now, let's get the list of mods that DOES NOT include the current user if they are a moderator
-        const user = supabase.auth.user();
         const relevantMods = moderators.filter(row => row.user_id !== user.id);
 
         // now, let's send the report notification to { board.report.username }, as well as all the moderators

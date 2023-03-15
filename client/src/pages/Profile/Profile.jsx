@@ -24,11 +24,11 @@ function Profile({ cache }) {
 
     // code that is executed when the page is first loaded, or when the cache fields are updated
     useEffect(() => {
-        if (cache.profiles && cache.countries && user !== undefined) {
-            initForms(cache.profiles, cache.countries, user); 
+        if (cache.countries && user.id !== undefined) {
+            initForms(user, cache.countries); 
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cache.profiles, cache.countries, user]);
+    }, [cache.countries, user]);
 
   return (
     <>

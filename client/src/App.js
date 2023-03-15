@@ -25,15 +25,22 @@ import Notifications from "./pages/Notifications/Notifications";
 export const UserContext = createContext();
 
 function App() {
+  /* ===== VARIABLES ===== */
+  const defaultUser = {
+    id: undefined,
+    email: undefined,
+    notifications: [],
+    profile: undefined,
+    is_mod: false
+  };
+
   /* ===== STATES & REDUCERS ===== */
-  const [user, setUser] = useState(undefined);
+  const [user, setUser] = useState(defaultUser);
   const [countries, setCountries] = useState(null);
   const [games, setGames] = useState(null);
   const [levels, setLevels] = useState(null);
   const [moderators, setModerators] = useState(null);
   const [profiles, setProfiles] = useState(null);
-  const [isMod, setIsMod] = useState(null);
-  const [notifications, setNotifications] = useState(null);
   const [submissions, dispatchSubmissions] = useReducer((state, action) => {
     const submissionAbb = state[action.abb] || {};
     const submissionCategory = submissionAbb[action.category] || {};
@@ -52,7 +59,7 @@ function App() {
     return { ...state, [action.field]: action.data }
   }, null);
 
-  /* ===== VARIABLES ===== */
+  /* ===== MORE VARIABLES ===== */
   const submissionReducer = { state: submissions, dispatchSubmissions: dispatchSubmissions };
   const imageReducer = { reducer: images, dispatchImages: dispatchImages };
 
@@ -69,7 +76,9 @@ function App() {
     loadProfiles,
     loadGameRegions,
     loadAllRegions,
-    loadUserNotifications
+    loadUserNotifications,
+    loadUserProfile,
+    isModerator
   } = AppRead();
 
   // load database functions
@@ -114,19 +123,24 @@ function App() {
   const updateUserData = async (session) => {
     // two different cases: a null session, or a session belonging to a user
     if (session) {
-      // first, let's handle notifications
+      // make concurrent api calls to database to load user data
       const user = session.user;
-      const notifs = await loadUserNotifications(user.id);
-      setNotifications(notifs);
+      const [notifs, profile, is_mod] = await Promise.all(
+        [loadUserNotifications(user.id), loadUserProfile(user.id), isModerator(user.id)]
+      );
 
-      // next, let's check for mod status
-      const modList = await loadModerators();
-      setIsMod(modList.some(row => row.user_id === user.id));
-      setUser({ id: session.user.id, email: session.user.email });
+      // update the user state
+      setUser({
+        id: user.id,
+        email: user.email,
+        notifications: notifs,
+        profile: profile,
+        is_mod: is_mod
+      });
       
     } else {
-      setUser(null);
-      setIsMod(false);
+      // if we have a null session, there is no current user. simply set the state to default value
+      setUser({ ...defaultUser, id: null });
     }
   };
 
@@ -157,18 +171,18 @@ function App() {
 
   // app component
   return (
-    <UserContext.Provider value={ { user, setUser } }>
-      <Navbar cache={ { isMod: isMod, notifications: notifications } } />
+    <UserContext.Provider value={ { user } }>
+      <Navbar />
       <div className="app">
         <Routes>
           <Route path="/" element={ <Home /> }/>
           <Route path="/submissions" element={
-            <Submissions cache={ { isMod: isMod, games: games, submissionReducer: submissionReducer } } />
+            <Submissions cache={ { games: games, submissionReducer: submissionReducer } } />
           } />
           <Route path="/games" element={<GameSelect cache={ { games: games, imageReducer: imageReducer } } />}/>
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/support" element={ <Support /> }/>
-          <Route path="/notifications" element={ <Notifications cache={ { notifications: notifications, isMod: isMod } } /> } />
+          <Route path="/notifications" element={ <Notifications /> } />
           <Route path="/login" element={ <Login /> }/>
           <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } /> }/>
           <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>
@@ -202,7 +216,6 @@ function App() {
               levels: levels,
               moderators: moderators,
               submissionReducer: submissionReducer,
-              isMod: isMod,
               profiles: profiles,
               imageReducer: imageReducer
             } } />
@@ -213,7 +226,6 @@ function App() {
               levels: levels,
               moderators: moderators,
               submissionReducer: submissionReducer,
-              isMod: isMod,
               profiles: profiles,
               imageReducer: imageReducer
             } } />
@@ -224,7 +236,6 @@ function App() {
               levels: levels,
               moderators: moderators,
               submissionReducer: submissionReducer,
-              isMod: isMod,
               profiles: profiles,
               imageReducer: imageReducer
             } } />
@@ -235,7 +246,6 @@ function App() {
               levels: levels,
               moderators: moderators,
               submissionReducer: submissionReducer,
-              isMod: isMod,
               profiles: profiles,
               imageReducer: imageReducer
             } } />

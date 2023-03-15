@@ -1,11 +1,15 @@
 import "./notifications.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationsInit from "./NotificationsInit";
 import NotificationPopup from "./NotificationPopup";
+import { UserContext } from "../../App";
 
-function Notifications({ cache }) {
+function Notifications() {
+  // user state from user context
+  const { user } = useContext(UserContext);
+
   // states and functions from init file
   const { 
     loading,
@@ -22,11 +26,11 @@ function Notifications({ cache }) {
 
   // code that is executed when the page first loads
   useEffect(() => {
-    if (cache.notifications) {
-      init(cache.notifications)
+    if (user.notifications) {
+      init(user.notifications)
     }
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cache.notifications]);
+  }, [user]);
 
   // notification component
   return (
@@ -40,7 +44,7 @@ function Notifications({ cache }) {
           <li><b>Approvals:</b> A moderator has approved of your submission.</li>
           <li><b>Inserts:</b> A moderator has submitted a submission on your behalf.</li>
           <li><b>Deletes:</b> A moderator has deleted your submission.</li>
-          <li><b>Report:</b> A user has reported { cache.isMod ? "a submission." : "one of your submissions." }</li>
+          <li><b>Report:</b> A user has reported { user.is_mod ? "a submission." : "one of your submissions." }</li>
         </ol>
       </div>
       <div className="notifications-body">

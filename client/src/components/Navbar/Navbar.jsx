@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../App";
 
-function Navbar({ cache }) {  
+function Navbar() {  
   // user state from user context
   const { user } = useContext(UserContext);
 
@@ -11,7 +11,7 @@ function Navbar({ cache }) {
     <nav className="nav">
       <Link to="/" className="site-title">Home</Link>
       <ul>
-        { cache.isMod ?
+        { user.id && user.is_mod ?
           <li>
             <Link to="/submissions">Recent Submissions</Link>
           </li>
@@ -27,11 +27,11 @@ function Navbar({ cache }) {
         <li>
           <Link to="/support">Support</Link>
         </li>
-        { user ? 
+        { user.id ? 
           <>
             <li>
                 <Link to="/notifications">
-                  { cache.notifications && cache.notifications.length > 0 ? cache.notifications.length : null } Notifications
+                  { user.notifications.length > 0 ? user.notifications.length : null } Notifications
                 </Link>
             </li>
             <li>

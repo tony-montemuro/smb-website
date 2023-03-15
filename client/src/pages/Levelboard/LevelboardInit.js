@@ -1,7 +1,6 @@
 // imports 
 import { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../database/SupabaseClient";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
@@ -42,7 +41,6 @@ const LevelboardInit = () => {
 		submitting: false,
 		submitted: false
 	};
-	const user = supabase.auth.user();
 
 	/* ===== STATES AND REDUCERS ===== */
 	const [loading, setLoading] = useState(true);
@@ -123,13 +121,13 @@ const LevelboardInit = () => {
 	};
 
 	// function that takes a game object, and submissionReducer, and generates the levelboard
-	const generateLevelboard = async (game, submissionReducer) => {		
+	const generateLevelboard = async (game, submissionReducer, user) => {		
 		// get submissions, and filter based on the levelId
 		let allSubmissions = await getSubmissions(abb, category, type, submissionReducer);
 		const submissions = allSubmissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
 
 		// initialize variables used to split the submissions
-		const userId = user ? user.id : null;
+		const userId = user.id;
 		const live = [], all = [];
 		let newFormSet = false;
 
@@ -222,8 +220,9 @@ const LevelboardInit = () => {
 
 	// function that will validate the form. if form is valid, the data will be submitted to the database
 	// if not, the function will return early, and update the error object
-	const submitRecord = async (e) => {
+	const submitRecord = async (e, user) => {
 		// initialize submission
+		console.log(user);
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
 
@@ -257,7 +256,6 @@ const LevelboardInit = () => {
 		// if we made it this far, no errors were detected, so we can go ahead and submit
 		const id = dateF2B();
 		const submission = getSubmissionFromForm(form.values, backendDate, id, board.records.all);
-		// console.log(submission);
 		await submit(submission);
 
 		// next, handle notification

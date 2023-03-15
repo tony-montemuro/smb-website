@@ -260,6 +260,60 @@ const AppRead = () => {
         }
     };
 
+    // function that loads the profile for a particular user
+    const loadUserProfile = async (userId) => {
+        try {
+            const { data: profile, error } = await supabase
+                .from("profiles")
+                .select(`
+                    username,
+                    country (iso2, name),
+                    youtube_url,
+                    twitch_url,
+                    avatar_url,
+                    discord,
+                    bio
+                `)
+                .eq("id", userId)
+                .single()
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            // return data
+            return profile;
+            
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+    };
+
+    // function that determines if the current user should have moderator privileges, based on the userId parameter
+    const isModerator = async (userId) => {
+        try {
+            const { data: moderator, error } = await supabase
+                .from("moderator")
+                .select("user_id")
+                .eq("user_id", userId)
+                .maybeSingle()
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            // return true if moderator returns an object; false otherwise
+            return moderator ? true : false;
+        
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+    };
+
     return { 
         loadCountries, 
         loadGames, 
@@ -270,7 +324,9 @@ const AppRead = () => {
         loadProfiles,
         loadGameRegions,
         loadAllRegions,
-        loadUserNotifications
+        loadUserNotifications,
+        loadUserProfile,
+        isModerator
     };
 };
 

@@ -1,17 +1,19 @@
 import "./levelboard.css";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { supabase } from "../../database/SupabaseClient";
 import DeletePopup from "./DeletePopup";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardInit from "./LevelboardInit";
 import ReportPopup from "./ReportPopup";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
+import { UserContext } from "../../App";
 
 function Levelboard({ cache }) {
+	// user state from user context
+  const { user } = useContext(UserContext);
+
 	// variables
 	const imgLength = 50;
-	const user = supabase.auth.user();
 
 	// hooks and functions from init file
 	const { 
@@ -42,15 +44,15 @@ function Levelboard({ cache }) {
 
 	// code that is executed when page is loading, or when the cache fields are updated
 	useEffect(() => {
-		if (loading && cache.games && cache.levels) {
+		if (loading && cache.games && cache.levels && user.id !== undefined) {
 			// if game is undefined, terminate page load
 			const game = generateGame(cache.games, cache.levels);
 			if (game) {
-				generateLevelboard(game, cache.submissionReducer);
+				generateLevelboard(game, cache.submissionReducer, user);
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [loading, cache.games, cache.levels]);
+	}, [loading, cache.games, cache.levels, user]);
 
 	// code that is executed once the levelboard has been generated
 	useEffect(() => {
@@ -129,7 +131,7 @@ function Levelboard({ cache }) {
 									<th>Comment</th>
 									<th>Approved</th>
 									<th>Report</th>
-									{ cache.isMod ? <th>Delete</th> : null }
+									{ user.is_mod ? <th>Delete</th> : null }
 								</tr>
 							</thead>
 							<tbody>
@@ -159,22 +161,22 @@ function Levelboard({ cache }) {
 										<td>
 											<button 
 												onClick={ () => setBoardReport(val.user.id) }
-												disabled={ supabase.auth.user() && supabase.auth.user().id === val.user.id }
+												disabled={ user.id && user.id === val.user.id }
 											>
 												📝
 											</button>
 										</td>
-										{ cache.isMod ? <td><button onClick={ () => setBoardDelete(val.user.id) }>❌</button></td> : null }
+										{ user.is_mod ? <td><button onClick={ () => setBoardDelete(val.user.id) }>❌</button></td> : null }
 									</tr>
 								})}
 							</tbody>
 						</table>
 					</div>
-					{ user ?
+					{ user.id ?
 						<div className="levelboard-submit">
 							<h2>Submit a { capitalize(game.type) }:</h2>
-							<form onSubmit={ submitRecord }>
-								{ cache.isMod ?
+							<form onSubmit={ (e) => submitRecord(e, user) }>
+								{ user.is_mod ?
 									<div className="levelboard-input-group">
 										<label htmlFor="user_id">User: </label>
 										<select id="user_id" value={ form.values.user_id } onChange={ handleChange }>

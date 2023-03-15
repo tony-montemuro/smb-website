@@ -120,7 +120,7 @@ const LevelboardHelper = () => {
                 comment: details.comment ? details.comment : "",
                 user_id: userId,
                 game_id: game.abb,
-                level_id: game.levelName,
+                level_id: game.level,
                 submitted_at: dateB2F(details.submitted_at),
                 message: ""
             };

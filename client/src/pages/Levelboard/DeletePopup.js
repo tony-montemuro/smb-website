@@ -1,16 +1,14 @@
 import "./levelboard.css";
-import React, { useState } from "react";
-import { supabase } from "../../database/SupabaseClient";
+import React, { useContext, useState } from "react";
 import LevelboardDelete from "../../database/delete/LevelboardDelete";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+import { UserContext } from "../../App";
 
 function DeletePopup({ board, setBoard }) {
-  /* ===== VARIABLES ===== */
-  const user = supabase.auth.user();
-
   /* ===== STATES ===== */
   const [form, setForm] = useState({ message: "", error: null });
+  const { user } = useContext(UserContext);
 
   /* ===== FUNCTIONS ===== */
 
