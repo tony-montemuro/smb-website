@@ -1,3 +1,4 @@
+/* ===== IMPORTS ===== */
 import "./submissions.css";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { useEffect, useContext } from "react";
@@ -6,8 +7,12 @@ import SubmissionsTable from "./SubmissionsTable";
 import { UserContext } from "../../App";
 
 function Submissions({ cache }) {
+  /* ===== CONTEXTS ===== */
+
   // user state from user context
   const { user } = useContext(UserContext);
+
+  /* ===== FUNCTIONS ===== */
 
   // states and functions from the init file
   const { 
@@ -22,15 +27,17 @@ function Submissions({ cache }) {
     approveAll
   } = SubmissionInit();
 
+  /* ===== EFFECTS ===== */
+
   // code that is executed when the page loads, or when cache fields are updated
   useEffect(() => {
     if (cache.games && user.id !== undefined) {
-      swapGame(cache.games[0].abb, user.is_mod, cache.submissionReducer);
+      swapGame(cache.games[0].abb, cache.submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cache.games, user]);
 
-  // submissions component
+  /* ===== SUBMISSIONS COMPONENT ===== */
   return (
     <>
       { user.is_mod ? 
@@ -53,7 +60,7 @@ function Submissions({ cache }) {
                 <h3>Select Game:</h3>
                 <form>
                   <select
-                    onChange={ (e) => swapGame(e.target.value, user.is_mod, cache.submissionReducer) }
+                    onChange={ (e) => swapGame(e.target.value, cache.submissionReducer) }
                     value={ currentGame }
                   >
                     { cache.games.map(val => {

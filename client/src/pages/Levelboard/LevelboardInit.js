@@ -1,9 +1,10 @@
-// imports 
-import { useState, useReducer } from "react";
+/* ===== IMPORTS ===== */
+import { useContext, useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
+import { UserContext } from "../../App";
 
 const LevelboardInit = () => {
 	/* ===== HELPER FUNCTIONS ===== */
@@ -23,6 +24,11 @@ const LevelboardInit = () => {
 	} = LevelboardHelper();
 	const { getSubmissions } = SubmissionRead();
 	const { submit } = LevelboardUpdate();
+
+	/* ===== CONTEXTS ===== */
+
+	// user state from user context
+	const { user } = useContext(UserContext);
 
 	/* ===== VARIABLES ===== */
 	const pathArr = window.location.pathname.split("/");
@@ -121,7 +127,7 @@ const LevelboardInit = () => {
 	};
 
 	// function that takes a game object, and submissionReducer, and generates the levelboard
-	const generateLevelboard = async (game, submissionReducer, user) => {		
+	const generateLevelboard = async (game, submissionReducer) => {		
 		// get submissions, and filter based on the levelId
 		let allSubmissions = await getSubmissions(abb, category, type, submissionReducer);
 		const submissions = allSubmissions.filter(row => row.level.name === levelId).map(row => Object.assign({}, row));
@@ -165,7 +171,7 @@ const LevelboardInit = () => {
 	};
 
 	// function that runs each time a form value is changed. keeps the form reducer updated
-    const handleChange = (e) => {
+    const handleChange = e => {
         const { id, value, checked } = e.target;
 		switch (id) {
 			// case 1: live. this is a checkbox, so we need to use the "checked" variable as our value
@@ -190,6 +196,8 @@ const LevelboardInit = () => {
 		console.log(form);
     };
 
+	// function that sets the report field of the board state when a user attempts to report a record
+	// note: when this field is set to a non-null value, a popup component will automatically be activated
 	const setBoardReport = id => {
 		const row = board.records.all.find(row => row.user.id === id);
 		setBoard({ ...board, report: {
@@ -220,9 +228,8 @@ const LevelboardInit = () => {
 
 	// function that will validate the form. if form is valid, the data will be submitted to the database
 	// if not, the function will return early, and update the error object
-	const submitRecord = async (e, user) => {
+	const submitRecord = async (e) => {
 		// initialize submission
-		console.log(user);
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
 

@@ -1,3 +1,4 @@
+/* ===== IMPORTS ===== */
 import "./levelboard.css";
 import React, { useContext, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -9,11 +10,15 @@ import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 import { UserContext } from "../../App";
 
 function Levelboard({ cache }) {
+	/* ===== CONTEXTS ===== */
+
 	// user state from user context
   const { user } = useContext(UserContext);
 
-	// variables
+	/* ===== VARIABLES ===== */
 	const imgLength = 50;
+
+	/* ===== FUNCTIONS ===== */
 
 	// hooks and functions from init file
 	const { 
@@ -35,6 +40,8 @@ function Levelboard({ cache }) {
 	// helper functions
 	const { capitalize, cleanLevelName, dateB2F, recordB2F } = FrontendHelper();
 
+	/* ===== EFFECTS ===== */
+
 	// code that is executed upon page load, or when the URL is changed using next/previous buttons
 	const location = useLocation();
 	useEffect(() => {
@@ -48,7 +55,7 @@ function Levelboard({ cache }) {
 			// if game is undefined, terminate page load
 			const game = generateGame(cache.games, cache.levels);
 			if (game) {
-				generateLevelboard(game, cache.submissionReducer, user);
+				generateLevelboard(game, cache.submissionReducer);
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,7 +72,7 @@ function Levelboard({ cache }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [board.records, form.monkey]);
 
-	// levelboard component
+	/* ===== LEVELBOARD COMPONENT ===== */
 	return (
 		<>
 			{ loading ? 
@@ -175,7 +182,7 @@ function Levelboard({ cache }) {
 					{ user.id ?
 						<div className="levelboard-submit">
 							<h2>Submit a { capitalize(game.type) }:</h2>
-							<form onSubmit={ (e) => submitRecord(e, user) }>
+							<form onSubmit={ submitRecord }>
 								{ user.is_mod ?
 									<div className="levelboard-input-group">
 										<label htmlFor="user_id">User: </label>

@@ -1,3 +1,4 @@
+/* ===== IMPORTS ===== */
 import "./levelboard.css";
 import React, { useContext, useState } from "react";
 import LevelboardHelper from "../../helper/LevelboardHelper";
@@ -8,10 +9,14 @@ function ReportPopup({ board, setBoard, moderators }) {
     /* ===== VARIABLES ===== */
     const formInit = { message: "", error: null };
 
+    /* ===== CONTEXTS ===== */
+
+    // user state from user context
+    const { user } = useContext(UserContext);
+
     /* ===== STATES ===== */
     const [form, setForm] = useState(formInit);
     const [reportMessage, setReportMessage] = useState(null);
-    const { user } = useContext(UserContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -77,7 +82,7 @@ function ReportPopup({ board, setBoard, moderators }) {
         setBoard({ ...board, report: null });
     };
 
-    // reportpopup component
+    /* ===== REPORT POPUP COMPONENT ===== */
     return (
         board.report ?
             <div className="levelboard-popup">

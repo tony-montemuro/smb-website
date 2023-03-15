@@ -1,3 +1,4 @@
+/* ===== IMPORTS ===== */
 import "./notifications.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
@@ -5,14 +6,20 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import { UserContext } from "../../App";
 
 function NotificationPopup({ hook }) {
+    /* ===== CONTEXTS ===== */
+
     // user state from user context
     const { user } = useContext(UserContext);
 
-    // variables
+    /* ===== VARIABLES ===== */
     const notification = hook.state.current;
+
+    /* ===== FUNCTIONS ===== */
 
     // helper functions
     const { capitalize, cleanLevelName, dateB2F, recordB2F } = FrontendHelper();
+
+    /* ===== COMPONENTS ===== */
 
     // basic info component - this is information that is included in all types of notifications
     function NotificationBasicInfo({ notification }) {

@@ -1,3 +1,4 @@
+/* ===== IMPORTS ===== */
 import "./levelboard.css";
 import React, { useContext, useState } from "react";
 import LevelboardDelete from "../../database/delete/LevelboardDelete";
@@ -6,9 +7,13 @@ import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import { UserContext } from "../../App";
 
 function DeletePopup({ board, setBoard }) {
+  /* ===== CONTEXTS ===== */
+
+  // user state from user context
+  const { user } = useContext(UserContext);
+
   /* ===== STATES ===== */
   const [form, setForm] = useState({ message: "", error: null });
-  const { user } = useContext(UserContext);
 
   /* ===== FUNCTIONS ===== */
 
@@ -55,7 +60,7 @@ function DeletePopup({ board, setBoard }) {
     window.location.reload();
   };
 
-  // deletepopup component
+  /* ===== DELETE POPUP COMPONENT ===== */
   return (
     board.delete ? 
       board.delete.user_id === user.id ?

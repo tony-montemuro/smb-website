@@ -1,3 +1,4 @@
+/* ===== IMPORTS ===== */
 import "./notifications.css";
 import React, { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
@@ -7,8 +8,12 @@ import NotificationPopup from "./NotificationPopup";
 import { UserContext } from "../../App";
 
 function Notifications() {
+  /* ===== CONTEXTS ===== */
+  
   // user state from user context
   const { user } = useContext(UserContext);
+
+  /* ===== FUNCTIONS ===== */
 
   // states and functions from init file
   const { 
@@ -24,6 +29,8 @@ function Notifications() {
   // helper functions
   const { cleanLevelName, capitalize, dateB2F, recordB2F } = FrontendHelper();
 
+  /* ===== EFFECTS ===== */
+
   // code that is executed when the page first loads
   useEffect(() => {
     if (user.notifications) {
@@ -32,7 +39,7 @@ function Notifications() {
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // notification component
+  /* ===== NOTIFICATION COMPONENT ===== */
   return (
     <>
       <div className="notifications-header">

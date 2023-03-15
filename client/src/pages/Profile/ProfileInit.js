@@ -1,10 +1,17 @@
-import { useState, useRef, useReducer } from "react";
+/* ===== IMPORTS ===== */
+import { useContext, useReducer, useRef, useState } from "react";
 import { supabase } from "../../database/SupabaseClient";
 import { useNavigate } from "react-router-dom";
 import ProfileHelper from "../../helper/ProfileHelper";
 import ProfileUpdate from "../../database/update/ProfileUpdate";
+import { UserContext } from "../../App";
 
 const ProfileInit = () => {
+    /* ===== CONTEXTS ===== */
+
+    // user state from user context
+    const { user } = useContext(UserContext);
+
     /* ===== REFS ===== */
     const avatarRef = useRef(null);
 
@@ -54,7 +61,7 @@ const ProfileInit = () => {
     const navigate = useNavigate();
 
     // verify a user is accessing this page. once done, 
-    const initForms = (user, countries) => {
+    const initForms = (countries) => {
         // first, verify a user is attempting to access this page
         if (!user.id) {
             console.log("Error: Invalid access.");
@@ -77,7 +84,7 @@ const ProfileInit = () => {
     };
 
     // function that runs each time a form value is changed. keeps user state updated
-    const handleChange = (e) => {
+    const handleChange = e => {
         const { id, value } = e.target;
         dispatchUserForm({ field: "user", value: { [id]: value } });
         console.log(userForm);
@@ -111,7 +118,7 @@ const ProfileInit = () => {
     };
 
     // function that runs when the user submits the avatarForm
-    const avatarSubmit = async (e, user) => {
+    const avatarSubmit = async (e) => {
         // initialize update
         e.preventDefault();
         dispatchAvatarForm({ field: "updating", value: true });

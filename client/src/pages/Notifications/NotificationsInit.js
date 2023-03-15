@@ -16,14 +16,14 @@ const NotificationsInit = () => {
     const { remove } = NotificationsDelete();
 
     // function that initializes the states of the page given the notificationList parameter, an array of notification objects
-    const init = (notificationList) => {
-        setNotifications({ ...notifications, all: notificationList });
+    const init = (notifs) => {
+        setNotifications({ ...notifications, all: notifs });
         setLoading(false);
-        console.log(notificationList);
+        console.log(notifs);
     };
 
     // function that will toggle a notification between the selected and unselected state
-    const toggleSelection = (id) => {
+    const toggleSelection = id => {
         const idIndex = notifications.selected.indexOf(id);
         if (idIndex > -1) {
             setNotifications({ ...notifications, selected: [...notifications.selected.slice(0, idIndex), ...notifications.selected.slice(idIndex+1)] });

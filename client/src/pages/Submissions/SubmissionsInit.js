@@ -1,10 +1,17 @@
-import { useState } from "react";
+/* ===== IMPORTS ===== */
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import SubmissionsUpdate from "../../database/update/SubmissionsUpdate";
+import { UserContext } from "../../App";
 
 const SubmissionInit = () => {
+    /* ===== CONTEXTS ===== */
+
+    // user state from user context
+    const { user } = useContext(UserContext);
+
     /* ===== STATES ===== */
     const [loading, setLoading] = useState(true);
     const [submissions, setSubmissions] = useState({});
@@ -23,8 +30,9 @@ const SubmissionInit = () => {
     const navigate = useNavigate("/");
 
     // function that handles when the user switches to a new game
-    const swapGame = async (abb, isMod, submissionReducer) => {
+    const swapGame = async (abb, submissionReducer) => {
         // first, ensure current user is a moderator. if not, redirect them to the home page
+        const isMod = user.is_mod;
         if (!isMod) {
             console.log("Error: Forbidden access.");
             navigate("/");
@@ -88,7 +96,7 @@ const SubmissionInit = () => {
 
     // function that performs the bulk approvals to the submissions in the database
     // once all updates are done, the page will reload
-    const approveAll = async (user) => {
+    const approveAll = async () => {
         // prepare approval process
         setApproving(true);
 

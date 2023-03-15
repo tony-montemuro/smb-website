@@ -1,12 +1,16 @@
+/* ===== IMPORTS ===== */
 import './navbar.css';
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../App";
 
 function Navbar() {  
+  /* ===== CONTEXTS ===== */
+
   // user state from user context
   const { user } = useContext(UserContext);
 
+  /* ===== NAVBAR COMPONENT ===== */
   return (
     <nav className="nav">
       <Link to="/" className="site-title">Home</Link>
