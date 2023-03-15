@@ -81,8 +81,52 @@ function App() {
     isModerator
   } = AppRead();
 
-  // load database functions
-  const { getSession } = Session();
+  // load the getSession function
+  const { getSession } = Session();  
+
+  // async function that loads user data based on a session object
+  const updateUserData = async (session) => {
+    // two different cases: a null session, or a session belonging to a user
+    if (session) {
+      // make concurrent api calls to database to load user data
+      const user = session.user;
+      const [notifs, profile, is_mod] = await Promise.all(
+        [loadUserNotifications(user.id), loadUserProfile(user.id), isModerator(user.id)]
+      );
+
+      // update the user state
+      setUser({
+        id: user.id,
+        email: user.email,
+        notifications: notifs,
+        profile: profile,
+        is_mod: is_mod
+      });
+      
+    } else {
+      // if we have a null session, there is no current user. simply set the state to default value
+      setUser({ ...defaultUser, id: null });
+    }
+  };
+
+  // async function that is used to fetch the current session, and also listens for session changes
+  // from the session object, a user state hook object will be generated
+  const loadSession = async () => {
+    // get the new session, and update session data
+    const session = await getSession();
+    updateUserData(session);
+
+    // listener for changes to the auth state
+    supabase.auth.onAuthStateChange((event, newSession) => {
+      // special case: the current session is the same as the previous session
+      if (session && newSession && session.user.id === newSession.user.id) {
+        return;
+      }
+
+      // otherwise, update the user data
+      updateUserData(newSession);
+    });
+  };
 
   // async function that will make concurrent api calls to the database
   const loadData = async () => {
@@ -119,57 +163,14 @@ function App() {
     setProfiles(profiles);
   };
 
-  // async function that loads the user notifications, and checks the mod status
-  const updateUserData = async (session) => {
-    // two different cases: a null session, or a session belonging to a user
-    if (session) {
-      // make concurrent api calls to database to load user data
-      const user = session.user;
-      const [notifs, profile, is_mod] = await Promise.all(
-        [loadUserNotifications(user.id), loadUserProfile(user.id), isModerator(user.id)]
-      );
-
-      // update the user state
-      setUser({
-        id: user.id,
-        email: user.email,
-        notifications: notifs,
-        profile: profile,
-        is_mod: is_mod
-      });
-      
-    } else {
-      // if we have a null session, there is no current user. simply set the state to default value
-      setUser({ ...defaultUser, id: null });
-    }
-  };
-
-  // async function that is used to set the session, and also listens for session changes
-  const sessionSetter = async () => {
-    // get the new session, and update session data
-    const session = await getSession();
-    updateUserData(session);
-
-    // listener for changes to the auth state
-    supabase.auth.onAuthStateChange((event, newSession) => {
-      // special case: the current session is the same as the previous session
-      if (session && newSession && session.user.id === newSession.user.id) {
-        return;
-      }
-
-      // otherwise, update the user data
-      updateUserData(newSession);
-    });
-  };
-
   // code that is executed on page load
   useEffect(() => {
-    sessionSetter();
+    loadSession();
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // app component
+  /* ===== APP COMPONENT ===== */
   return (
     <UserContext.Provider value={ { user } }>
       <Navbar />
