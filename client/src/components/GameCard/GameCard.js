@@ -1,7 +1,8 @@
+/* ===== IMPORTS ===== */
 import { useState } from "react";
 import Download from "../../database/storage/Download";
 
-const GameCardInit = () => {
+const GameCard = () => {
     /* ===== STATES ===== */
     const [img, setImg] = useState(null);
 
@@ -11,13 +12,12 @@ const GameCardInit = () => {
     const { retrieveImage } = Download();
     
     // function that will return an image from an abbreviation (abb)
-    const fetchBoxArt = async (abb, imageState) => {
-        // const blob = await downloadBoxArt(abb);
-        const blob = await retrieveImage(abb, imageState, "boxart");
+    const fetchBoxArt = async (abb, imageReducer) => {
+        const blob = await retrieveImage(abb, imageReducer, "boxart");
         setImg(blob);
     };
 
     return { img, fetchBoxArt };
 };
 
-export default GameCardInit;
+export default GameCard;

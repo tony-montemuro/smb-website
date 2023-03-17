@@ -5,7 +5,7 @@ import { supabase } from "./database/SupabaseClient";
 import { UserContext, StaticCacheContext } from "./Contexts";
 import AppRead from "./database/read/AppRead";
 import Game from "./pages/Game/Game";
-import GameSelect from "./pages/GameSelect/GameSelect";
+import GameSelect from "./pages/GameSelect/GameSelect.jsx";
 import Home from "./pages/Home/Home";
 import Levelboard from "./pages/Levelboard/Levelboard";
 import Login from "./pages/Login/Login";
@@ -214,7 +214,7 @@ function App() {
             <Route path="/submissions" element={
               <Submissions cache={ { games: games, submissionReducer: submissionReducer } } />
             } />
-            <Route path="/games" element={<GameSelect cache={ { games: games, imageReducer: imageReducer } } />}/>
+            <Route path="/games" element={<GameSelect imageReducer={ imageReducer } />}/>
             <Route path="/resources" element={<Resources />}></Route>
             <Route path="/support" element={ <Support /> }/>
             <Route path="/notifications" element={ <Notifications /> } />
