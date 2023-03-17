@@ -4,7 +4,7 @@ import React, { useContext, useState } from "react";
 import LevelboardDelete from "../../database/delete/LevelboardDelete";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts";
 
 function DeletePopup({ board, setBoard }) {
   /* ===== CONTEXTS ===== */

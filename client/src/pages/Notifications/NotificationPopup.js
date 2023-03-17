@@ -3,7 +3,7 @@ import "./notifications.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts";
 
 function NotificationPopup({ hook }) {
     /* ===== CONTEXTS ===== */

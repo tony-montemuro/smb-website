@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationsInit from "./NotificationsInit";
 import NotificationPopup from "./NotificationPopup";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts";
 
 function Notifications() {
   /* ===== CONTEXTS ===== */

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts";
 
 const LevelboardInit = () => {
 	/* ===== HELPER FUNCTIONS ===== */

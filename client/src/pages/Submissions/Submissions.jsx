@@ -4,7 +4,7 @@ import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { useEffect, useContext } from "react";
 import SubmissionInit from "./SubmissionsInit";
 import SubmissionsTable from "./SubmissionsTable";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts";
 
 function Submissions({ cache }) {
   /* ===== CONTEXTS ===== */

@@ -4,7 +4,7 @@ import { supabase } from "../../database/SupabaseClient";
 import { useNavigate } from "react-router-dom";
 import ProfileHelper from "../../helper/ProfileHelper";
 import ProfileUpdate from "../../database/update/ProfileUpdate";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts";
 
 const ProfileInit = () => {
     /* ===== CONTEXTS ===== */

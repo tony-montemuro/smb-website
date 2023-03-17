@@ -298,7 +298,7 @@ const AppRead = () => {
                 .from("moderator")
                 .select("user_id")
                 .eq("user_id", userId)
-                .maybeSingle()
+                .maybeSingle();
 
             // error handling
             if (error) {
@@ -308,6 +308,57 @@ const AppRead = () => {
             // return true if moderator returns an object; false otherwise
             return moderator ? true : false;
         
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+    };
+
+    // function that loads all the data for each game, and returns it as an array of objects
+    const newLoadGames = async () => {
+        try {
+            const { data: gameList, error, status } = await supabase
+                .from("game")
+                .select(`
+                    abb,
+                    custom, 
+                    game_monkey (
+                        monkey (
+                            id,
+                            monkey_name
+                        )
+                    ),
+                    game_region (
+                        region (
+                            id,
+                            region_name
+                        )
+                    ),
+                    mode (
+                        level (
+                            chart_type,
+                            name,
+                            time
+                        ),
+                        misc,
+                        name
+                    ),
+                    name,
+                    release_date
+                `)
+                .order("id")
+                .order("id", { foreignTable: "mode", ascending: true })
+                .order("name", { foreignTable: "mode", ascending: true })
+                .order("id", { foreignTable: "mode.level", ascending: true });
+
+            // error handling
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            // return the games
+            return gameList;
+
         } catch (error) {
             console.log(error);
             alert(error.message);
@@ -326,7 +377,8 @@ const AppRead = () => {
         loadAllRegions,
         loadUserNotifications,
         loadUserProfile,
-        isModerator
+        isModerator,
+        newLoadGames
     };
 };
 

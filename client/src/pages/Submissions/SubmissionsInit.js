@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import SubmissionsUpdate from "../../database/update/SubmissionsUpdate";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts";
 
 const SubmissionInit = () => {
     /* ===== CONTEXTS ===== */

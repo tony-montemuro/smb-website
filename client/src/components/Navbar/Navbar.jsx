@@ -2,7 +2,7 @@
 import './navbar.css';
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts";
 
 function Navbar() {  
   /* ===== CONTEXTS ===== */

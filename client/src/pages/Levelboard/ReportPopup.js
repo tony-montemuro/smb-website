@@ -3,7 +3,7 @@ import "./levelboard.css";
 import React, { useContext, useState } from "react";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts";
 
 function ReportPopup({ board, setBoard, moderators }) {
     /* ===== VARIABLES ===== */

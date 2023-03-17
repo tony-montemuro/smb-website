@@ -4,7 +4,7 @@ import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProfileInit from "./ProfileInit";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts";
 
 function Profile({ cache }) {
     /* ===== CONTEXTS ===== */

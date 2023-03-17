@@ -1,28 +1,26 @@
 /* ===== IMPORTS ===== */
-import { useState, useEffect, useReducer, createContext } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { supabase } from "./database/SupabaseClient";
-import Navbar from "./components/Navbar/Navbar";
-import Home from "./pages/Home/Home";
-import GameSelect from "./pages/GameSelect/GameSelect";
-import Game from "./pages/Game/Game";
-import Levelboard from "./pages/Levelboard/Levelboard"
-import Session from "./database/authentication/Session";
-import Support from "./pages/Support/Support";
-import Resources from "./pages/Resources/Resources";
-import Login from "./pages/Login/Login";
-import Profile from "./pages/Profile/Profile";
-import User from "./pages/User/User";
-import Totalizer from "./pages/Totalizer/Totalizer";
-import Medals from "./pages/Medals/Medals";
-import UserStats from "./pages/UserStats/UserStats";
-import Submissions from "./pages/Submissions/Submissions";
-import Records from "./pages/Records/Records";
+import { UserContext, StaticCacheContext } from "./Contexts";
 import AppRead from "./database/read/AppRead";
+import Game from "./pages/Game/Game";
+import GameSelect from "./pages/GameSelect/GameSelect";
+import Home from "./pages/Home/Home";
+import Levelboard from "./pages/Levelboard/Levelboard";
+import Login from "./pages/Login/Login";
+import Medals from "./pages/Medals/Medals";
+import Navbar from "./components/Navbar/Navbar";
 import Notifications from "./pages/Notifications/Notifications";
-
-/* ===== CONTEXTS ===== */
-export const UserContext = createContext();
+import Profile from "./pages/Profile/Profile";
+import Records from "./pages/Records/Records";
+import Resources from "./pages/Resources/Resources";
+import Session from "./database/authentication/Session";
+import Submissions from "./pages/Submissions/Submissions";
+import Support from "./pages/Support/Support";
+import Totalizer from "./pages/Totalizer/Totalizer";
+import User from "./pages/User/User";
+import UserStats from "./pages/UserStats/UserStats";
 
 function App() {
   /* ===== VARIABLES ===== */
@@ -33,9 +31,15 @@ function App() {
     profile: undefined,
     is_mod: false
   };
+  const defaultStaticCache = {
+    countries: [],
+    games: [],
+    profiles: []
+  };
 
   /* ===== STATES & REDUCERS ===== */
   const [user, setUser] = useState(defaultUser);
+  const [staticCache, setStaticCache] = useState(defaultStaticCache);
   const [countries, setCountries] = useState(null);
   const [games, setGames] = useState(null);
   const [levels, setLevels] = useState(null);
@@ -78,7 +82,8 @@ function App() {
     loadAllRegions,
     loadUserNotifications,
     loadUserProfile,
-    isModerator
+    isModerator,
+    newLoadGames,
   } = AppRead();
 
   // load the getSession function
@@ -131,8 +136,8 @@ function App() {
   // async function that will make concurrent api calls to the database
   const loadData = async () => {
     // make concurrent api calls to database to load data
-    const [countries, games, levels, moderators, gameMonkeys, allMonkeys, profiles, gameRegions, allRegions] = await Promise.all(
-      [loadCountries(), loadGames(), loadLevels(), loadModerators(), loadGameMonkeys(), loadAllMonkeys(), loadProfiles(), loadGameRegions(), loadAllRegions()]
+    const [countries, newGames, games, levels, moderators, gameMonkeys, allMonkeys, newProfiles, profiles, gameRegions, allRegions] = await Promise.all(
+      [loadCountries(), newLoadGames(), loadGames(), loadLevels(), loadModerators(), loadGameMonkeys(), loadAllMonkeys(), loadProfiles(), loadProfiles(), loadGameRegions(), loadAllRegions()]
     );
 
     // assign monkeys to each game
@@ -155,12 +160,40 @@ function App() {
       game.regions = arr;
     });
 
+    // clean up the many-to-many relationships present in each game object
+    newGames.forEach(game => {
+      // first, handle the game <==> monkey relationship
+      game.monkey = [];
+      game.game_monkey.forEach(row => game.monkey.push(row.monkey));
+      delete game.game_monkey;
+
+      // next, handle the game <==> region relationship
+      game.region = [];
+      game.game_region.forEach(row => game.region.push(row.region));
+      delete game.game_region;
+    });
+
+    // add the mod field to each profile object
+    newProfiles.forEach(profile => {
+      profile.mod = false;
+      moderators.forEach(moderator => {
+        if (profile.id === moderator.user_id) {
+          profile.mod = true;
+        }
+      });
+    });
+
     // update states
     setCountries(countries);
     setGames(games);
     setLevels(levels);
     setModerators(moderators);
     setProfiles(profiles);
+    setStaticCache({
+      countries: countries,
+      games: newGames,
+      profiles: newProfiles
+    });
   };
 
   // code that is executed on page load
@@ -173,93 +206,95 @@ function App() {
   /* ===== APP COMPONENT ===== */
   return (
     <UserContext.Provider value={ { user } }>
-      <Navbar />
-      <div className="app">
-        <Routes>
-          <Route path="/" element={ <Home /> }/>
-          <Route path="/submissions" element={
-            <Submissions cache={ { games: games, submissionReducer: submissionReducer } } />
-          } />
-          <Route path="/games" element={<GameSelect cache={ { games: games, imageReducer: imageReducer } } />}/>
-          <Route path="/resources" element={<Resources />}></Route>
-          <Route path="/support" element={ <Support /> }/>
-          <Route path="/notifications" element={ <Notifications /> } />
-          <Route path="/login" element={ <Login /> }/>
-          <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } /> }/>
-          <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>
-          <Route path="games/:game/main/medals" element={
-            <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
-          }/>
-          <Route path="games/:game/misc/medals" element={
-            <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
-          }/>
-          <Route path="games/:game/main/totalizer" element={
-            <Totalizer cache={ { games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
-          }/>
-          <Route path="games/:game/misc/totalizer" element={
-            <Totalizer cache={ { games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
-          }/>
-          <Route path="games/:game/main/score" element={
-            <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
-          }/>
-          <Route path="games/:game/main/time" element={
-            <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
-          }/>
-          <Route path="games/:game/misc/score" element={
-            <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
-          }/>
-          <Route path="games/:game/misc/time" element={
-            <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
-          }/>
-          <Route path="games/:game/main/score/:levelid" element={
-            <Levelboard cache={ { 
-              games: games,
-              levels: levels,
-              moderators: moderators,
-              submissionReducer: submissionReducer,
-              profiles: profiles,
-              imageReducer: imageReducer
-            } } />
-          }/>
-          <Route path="games/:game/main/time/:levelid" element={
-            <Levelboard cache={ { 
-              games: games,
-              levels: levels,
-              moderators: moderators,
-              submissionReducer: submissionReducer,
-              profiles: profiles,
-              imageReducer: imageReducer
-            } } />
-          }/>
-          <Route path="games/:game/misc/score/:levelid" element={
-            <Levelboard cache={ { 
-              games: games,
-              levels: levels,
-              moderators: moderators,
-              submissionReducer: submissionReducer,
-              profiles: profiles,
-              imageReducer: imageReducer
-            } } />
-          }/>
-          <Route path="games/:game/misc/time/:levelid" element={
-            <Levelboard cache={ { 
-              games: games,
-              levels: levels,
-              moderators: moderators,
-              submissionReducer: submissionReducer,
-              profiles: profiles,
-              imageReducer: imageReducer
-            } } />
-          }/>
-          <Route path="/user/:userId" element={<User cache={ { games: games, profiles: profiles, imageReducer: imageReducer } } />}/>
-          <Route path="/user/:userId/:game/main" element={
-            <UserStats cache={ { profiles: profiles, games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
-          }/>
-          <Route path="/user/:userId/:game/misc" element={
-            <UserStats cache={ { profiles: profiles, games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
-          }/>
-        </Routes>
-      </div>
+      <StaticCacheContext.Provider value={ { staticCache } }>
+        <Navbar />
+        <div className="app">
+          <Routes>
+            <Route path="/" element={ <Home /> }/>
+            <Route path="/submissions" element={
+              <Submissions cache={ { games: games, submissionReducer: submissionReducer } } />
+            } />
+            <Route path="/games" element={<GameSelect cache={ { games: games, imageReducer: imageReducer } } />}/>
+            <Route path="/resources" element={<Resources />}></Route>
+            <Route path="/support" element={ <Support /> }/>
+            <Route path="/notifications" element={ <Notifications /> } />
+            <Route path="/login" element={ <Login /> }/>
+            <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } /> }/>
+            <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>
+            <Route path="games/:game/main/medals" element={
+              <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+            }/>
+            <Route path="games/:game/misc/medals" element={
+              <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+            }/>
+            <Route path="games/:game/main/totalizer" element={
+              <Totalizer cache={ { games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+            }/>
+            <Route path="games/:game/misc/totalizer" element={
+              <Totalizer cache={ { games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+            }/>
+            <Route path="games/:game/main/score" element={
+              <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
+            }/>
+            <Route path="games/:game/main/time" element={
+              <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
+            }/>
+            <Route path="games/:game/misc/score" element={
+              <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
+            }/>
+            <Route path="games/:game/misc/time" element={
+              <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
+            }/>
+            <Route path="games/:game/main/score/:levelid" element={
+              <Levelboard cache={ { 
+                games: games,
+                levels: levels,
+                moderators: moderators,
+                submissionReducer: submissionReducer,
+                profiles: profiles,
+                imageReducer: imageReducer
+              } } />
+            }/>
+            <Route path="games/:game/main/time/:levelid" element={
+              <Levelboard cache={ { 
+                games: games,
+                levels: levels,
+                moderators: moderators,
+                submissionReducer: submissionReducer,
+                profiles: profiles,
+                imageReducer: imageReducer
+              } } />
+            }/>
+            <Route path="games/:game/misc/score/:levelid" element={
+              <Levelboard cache={ { 
+                games: games,
+                levels: levels,
+                moderators: moderators,
+                submissionReducer: submissionReducer,
+                profiles: profiles,
+                imageReducer: imageReducer
+              } } />
+            }/>
+            <Route path="games/:game/misc/time/:levelid" element={
+              <Levelboard cache={ { 
+                games: games,
+                levels: levels,
+                moderators: moderators,
+                submissionReducer: submissionReducer,
+                profiles: profiles,
+                imageReducer: imageReducer
+              } } />
+            }/>
+            <Route path="/user/:userId" element={<User cache={ { games: games, profiles: profiles, imageReducer: imageReducer } } />}/>
+            <Route path="/user/:userId/:game/main" element={
+              <UserStats cache={ { profiles: profiles, games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+            }/>
+            <Route path="/user/:userId/:game/misc" element={
+              <UserStats cache={ { profiles: profiles, games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+            }/>
+          </Routes>
+        </div>
+      </StaticCacheContext.Provider>
     </UserContext.Provider>
   );
 };

@@ -7,7 +7,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardInit from "./LevelboardInit";
 import ReportPopup from "./ReportPopup";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
-import { UserContext } from "../../App";
+import { UserContext } from "../../Contexts";
 
 function Levelboard({ cache }) {
 	/* ===== CONTEXTS ===== */
