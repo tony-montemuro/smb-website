@@ -19,7 +19,7 @@ import Session from "./database/authentication/Session";
 import Submissions from "./pages/Submissions/Submissions";
 import Support from "./pages/Support/Support";
 import Totalizer from "./pages/Totalizer/Totalizer";
-import User from "./pages/User/User";
+import User from "./pages/User/User.jsx";
 import UserStats from "./pages/UserStats/UserStats";
 
 function App() {
@@ -285,7 +285,7 @@ function App() {
                 imageReducer: imageReducer
               } } />
             }/>
-            <Route path="/user/:userId" element={<User cache={ { games: games, profiles: profiles, imageReducer: imageReducer } } />}/>
+            <Route path="/user/:userId" element={<User imageReducer={ imageReducer } />}/>
             <Route path="/user/:userId/:game/main" element={
               <UserStats cache={ { profiles: profiles, games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
             }/>
