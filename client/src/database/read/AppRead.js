@@ -337,6 +337,7 @@ const AppRead = () => {
                     mode (
                         level (
                             chart_type,
+                            misc,
                             name,
                             time
                         ),

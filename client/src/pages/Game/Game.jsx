@@ -1,95 +1,132 @@
-import "./game.css"
-import React, { useState, useEffect } from "react";
+/* ===== IMPORTS ===== */
+import "./Game.css"
 import { Link } from "react-router-dom";
+import { StaticCacheContext } from "../../Contexts";
+import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
-import GameInit from "./GameInit";
-import ModeTab from "./ModeTab";
-import SearchBar from "../../components/SearchBar/SearchBar";
+import GameLogic from "./Game.js";
+import ModeBody from "./ModeBody";
+import SearchBar from "../../components/SearchBar/SearchBar.jsx";
 
-function Game({ cache }) {
+function Game() {
+  /* ===== VARIABLES ===== */
+  const abb = window.location.pathname.split("/")[2];
+
+  /* ===== CONTEXTS ===== */
+
+  // static cache state from static cache context
+  const { staticCache } = useContext(StaticCacheContext);
+
+  /* ===== STATES AND FUNCTIONS ===== */
+
   // radio button state
   const [selectedRadioBtn, setSelectedRadioBtn] = useState("main");
 
-  // states and functions from the init file
-  const { loading, game, levels, splitLevels } = GameInit();
+  // states and functions from the js file
+  const { game, fetchGame } = GameLogic();
 
   // helper functions
   const { capitalize } = FrontendHelper();
 
-  // code that is executed when the page loads, or when the games or levels state is updated
+  /* ===== EFFECTS ===== */
+
+  // code that is executed when the page loads, or when the staticCache object is updated
   useEffect(() => {
-    if (cache.games && cache.levels) {
-      splitLevels(cache.games, cache.levels);
+    if (staticCache.games.length > 0) {
+      fetchGame(abb);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cache.games, cache.levels]);
+  }, [staticCache]);
 
-  // game component
+  /* ===== GAME COMPONENT ===== */
   return (
     <>
-      { loading ? null : <div className="game-searchbar"><SearchBar game={ game.abb } levels={ cache.levels.filter(e => e.game === game.abb) } /></div> }
-      <div className="game-header">
-        <h1>{ game.name }</h1>
-        <Link to={ `/games` }>
-          <button>Back to Game Select</button>
-        </Link>
-        <div className="game-radio-buttons">
-          {[{ name: "main", alias: "Main" }, { name: "misc", alias: "Miscellaneous" }].map(category => {
-            return (
-              <div key={ category.name } className={ `game-${ category.name }-btn` }>
-                <label htmlFor={ category.name }>{ category.alias } Charts:</label>
-                <input 
-                  type="radio" 
-                  value={ category.name }
-                  checked={ selectedRadioBtn === category.name }
-                  onChange={ (e) => setSelectedRadioBtn(e.target.value) }
-                  disabled={ loading }>
-                </input>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      { loading ? 
-        <p>Loading...</p>
-        :
-        <div className="game-body">
-          <div className="game-level-list">
-            <h2>{ capitalize(selectedRadioBtn) } Levels</h2>
-            <table>
-              { Object.keys(levels[selectedRadioBtn]).map(mode => {
-                return <ModeTab 
-                  key={ `${ mode }_${ selectedRadioBtn }` } 
-                  game={ game } mode={ mode } 
-                  levels={ levels[selectedRadioBtn][mode] } 
-                  category={ selectedRadioBtn } 
-                />
+      { /* If the game data has been loaded, we can render the game's information to the client. Otherwise,
+      render a loading component. */ }
+      { game ?
+        <>
+
+          {/* SearchBar component - used to search through the list of levels corresponding to game */}
+          <div className="game-searchbar">
+            <SearchBar abb={ abb } />
+          </div>
+
+          { /* Game Header - this div renders general information related to the game */ }
+          <div className="game-header">
+
+            {/* Title of the game */}
+            <h1>{ game.name }</h1>
+
+            {/* Link back to the game select page */}
+            <Link to={ `/games` }>
+              <button>Back to Game Select</button>
+            </Link>
+
+            { /* Two radio buttons to toggle between two category modes: main and misc. */ }
+            <div className="game-radio-buttons">
+              {[{ name: "main", alias: "Main" }, { name: "misc", alias: "Miscellaneous" }].map(category => {
+                return (
+                  <div key={ category.name } className={ `game-${ category.name }-btn` }>
+                    <label htmlFor={ category.name }>{ category.alias } Charts:</label>
+                    <input 
+                      type="radio" 
+                      value={ category.name }
+                      checked={ selectedRadioBtn === category.name }
+                      onChange={ (e) => setSelectedRadioBtn(e.target.value) }>
+                    </input>
+                  </div>
+                );
               })}
-            </table>
+            </div>
+
           </div>
-          <div className="game-boards">
-            { ["score" ,"time"].map(type => {
-              return (
-                <div key={ type } className={ `game-${ type }-wrs` }>
-                  <h2>{ capitalize(type) } World Records</h2>
-                  <Link to={ { pathname: `/games/${ game.abb }/${ selectedRadioBtn }/${ type }` } }>
-                    <p>{ selectedRadioBtn === "misc" ? capitalize(selectedRadioBtn) : null } { capitalize(type) } World Records</p>
-                  </Link>
-                </div>
-              );
-            })}
-            { [{ name: "medals", alias: "Medal Tables" }, { name: "totalizer", alias: "Totalizers" }].map(boardType => {
-              return (
-                <div key={ boardType.name } className={ `game-${ boardType.name }` }>
-                  <h2> { boardType.alias } </h2>
-                  <Link to={ { pathname: `/games/${ game.abb }/${ selectedRadioBtn }/${ boardType.name }` } }>
-                    <p>{ selectedRadioBtn === "misc" ? capitalize(selectedRadioBtn) : null } Score & Time { boardType.alias }</p>
-                  </Link>
-                </div>
-              );
-            })}
+
+          { /* Game Body - This div includes the level list, as well as links to game boards. */ }
+          <div className="game-body">
+
+            { /* Game Level List - Specifies the category of levels, and renders a list of levels to select. */ }
+            <div className="game-level-list">
+              <h2>{ capitalize(selectedRadioBtn) } Levels</h2>
+              <table>
+                { game.mode.filter(mode => selectedRadioBtn === "misc" ? mode.misc : !mode.misc).map(mode => {
+                  return <ModeBody abb={ abb } category={ selectedRadioBtn } modeName={ mode.name } key={ `${ selectedRadioBtn }_${ mode.name }` } />;
+                })}
+              </table>
+            </div>
+
+            {/* Game Boards */}
+            <div className="game-boards">
+
+              { /* This map function will render both a link to the time & score world record boards. */ }
+              { ["score" ,"time"].map(type => {
+                return (
+                  <div key={ type } className={ `game-${ type }-wrs` }>
+                    <h2>{ capitalize(type) } World Records</h2>
+                    <Link to={ `/games/${ game.abb }/${ selectedRadioBtn }/${ type }` }>
+                      <p>{ selectedRadioBtn === "misc" ? capitalize(selectedRadioBtn) : null } { capitalize(type) } World Records</p>
+                    </Link>
+                  </div>
+                );
+              })}
+
+              { /* This map function will render both a link to the medal table and totalizer boards. */ }
+              { [{ name: "medals", alias: "Medal Tables" }, { name: "totalizer", alias: "Totalizers" }].map(boardType => {
+                return (
+                  <div key={ boardType.name } className={ `game-${ boardType.name }` }>
+                    <h2> { boardType.alias } </h2>
+                    <Link to={ `/games/${ game.abb }/${ selectedRadioBtn }/${ boardType.name }` }>
+                      <p>{ selectedRadioBtn === "misc" ? capitalize(selectedRadioBtn) : null } Score & Time { boardType.alias }</p>
+                    </Link>
+                  </div>
+                );
+              })}
+
+            </div>
           </div>
-        </div>
+        </>
+      :
+        // Loading component
+        <p>Loading...</p>
       }
     </>
   );

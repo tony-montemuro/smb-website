@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { supabase } from "./database/SupabaseClient";
 import { UserContext, StaticCacheContext } from "./Contexts";
 import AppRead from "./database/read/AppRead";
-import Game from "./pages/Game/Game";
+import Game from "./pages/Game/Game.jsx";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
 import Home from "./pages/Home/Home";
 import Levelboard from "./pages/Levelboard/Levelboard";
@@ -194,6 +194,7 @@ function App() {
       games: newGames,
       profiles: newProfiles
     });
+    console.log(newGames);
   };
 
   // code that is executed on page load
@@ -220,7 +221,7 @@ function App() {
             <Route path="/notifications" element={ <Notifications /> } />
             <Route path="/login" element={ <Login /> }/>
             <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } /> }/>
-            <Route path="games/:game" element={<Game cache={ { games: games, levels: levels } } />}/>
+            <Route path="games/:game" element={ <Game /> }/>
             <Route path="games/:game/main/medals" element={
               <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
             }/>
