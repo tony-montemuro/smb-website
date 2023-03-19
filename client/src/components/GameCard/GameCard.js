@@ -28,4 +28,5 @@ const GameCard = () => {
     return { img, fetchBoxArt };
 };
 
+/* ===== EXPORTS ===== */
 export default GameCard;

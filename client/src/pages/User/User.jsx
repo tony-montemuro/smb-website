@@ -136,4 +136,5 @@ function User({ imageReducer }) {
   );
 };
 
+/* ===== EXPORTS ===== */
 export default User;

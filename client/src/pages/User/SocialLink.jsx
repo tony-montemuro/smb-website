@@ -13,4 +13,5 @@ function SocialLink({ name, link, logo }) {
       null;
   };
   
-  export default SocialLink;
+/* ===== EXPORTS ===== */
+export default SocialLink;

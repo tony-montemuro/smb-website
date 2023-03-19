@@ -58,4 +58,5 @@ const SearchBar = abb => {
     return { searchRef, filtered, handleFilter, clearSearch };
 };
 
+/* ===== EXPORTS ===== */
 export default SearchBar;

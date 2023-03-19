@@ -132,4 +132,5 @@ function Game() {
   );
 };
 
+/* ===== EXPORTS ===== */
 export default Game;

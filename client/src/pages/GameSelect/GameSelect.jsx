@@ -39,4 +39,5 @@ function GameSelect({ imageReducer }) {
   );
 };
 
+/* ===== EXPORTS ===== */
 export default GameSelect;

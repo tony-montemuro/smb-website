@@ -31,4 +31,5 @@ function GameCard({ game, imageReducer }) {
     );
 };
 
+/* ===== EXPORTS ===== */
 export default GameCard;

@@ -96,4 +96,5 @@ function SearchBar({ abb }) {
   );
 };
 
+/* ===== EXPORTS ===== */
 export default SearchBar;
