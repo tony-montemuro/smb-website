@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./Medals.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { StaticCacheContext } from "../../Contexts";
 import { useContext, useEffect } from "react";
 import MedalsLogic from "./Medals.js";
@@ -8,7 +8,8 @@ import MedalTable from "./MedalTable";
 
 function Medals({ submissionReducer, imageReducer }) {
   /* ===== VARIABLES ===== */
-  const path = window.location.pathname;
+  const location = useLocation();
+  const path = location.pathname;
   const abb = path.split("/")[2];
   const category = path.split("/")[3];
   const isMisc = category === "misc" ? true : false;
@@ -30,7 +31,8 @@ function Medals({ submissionReducer, imageReducer }) {
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the page loads, or when the staticCache object is updated
+  // code that is executed when the page loads, when the staticCache object is updated, or when the user
+  // switches between miscellaneous and main
   useEffect(() => {
     if (staticCache.games.length > 0) {
       if (fetchGame(abb)) {
@@ -38,7 +40,7 @@ function Medals({ submissionReducer, imageReducer }) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staticCache]);
+  }, [staticCache, location.pathname]);
       
   /* ===== MEDALS COMPONENT ===== */
   return game && medals ?
@@ -52,6 +54,11 @@ function Medals({ submissionReducer, imageReducer }) {
         { /* Return to game page button */ }
         <Link to={ `/games/${ game.abb }` }>
           <button>Back to { game.name }'s Page</button>
+        </Link>
+
+        { /* The other category's medal table page button */ }
+        <Link to={ `/games/${ game.abb }/${ isMisc ? "main" : "misc" }/medals` }>
+          <button> { !isMisc && "Miscellaneous" } { game.name }'s Medal Table Page</button>
         </Link>
 
         { /* Game totalizer page button */ }
