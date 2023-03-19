@@ -11,15 +11,15 @@
     display: flex;
 }
 
-.medals-container {
+.medals-table {
     flex: 1;
 }
 
-.medals-container h2 {
+.medals-table h2 {
     text-align: center;
 }
 
-.medals-container table {
+.medals-table table {
     margin-left: auto;
     margin-right: auto;
     table-layout: auto;
@@ -27,18 +27,18 @@
     border-collapse: collapse;
 }
 
-.medals-container th {
+.medals-table th {
     text-align: center;
     border: 1px solid black;
     padding: 4px 8px;
 }
 
-.medals-container td {
+.medals-table td {
     border: 1px solid black;
     padding: 4px 8px;
 }
 
-.medals-container tr:nth-child(even) {
+.medals-table tr:nth-child(even) {
     background-color: #d3d3d3;
 }
 

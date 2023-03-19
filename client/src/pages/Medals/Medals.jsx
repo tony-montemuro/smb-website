@@ -1,113 +1,78 @@
-import "./medals.css";
-import React, { useEffect } from "react";
+/* ===== IMPORTS ===== */
+import "./Medals.css";
 import { Link } from "react-router-dom";
-import FrontendHelper from "../../helper/FrontendHelper";
-import MedalsInit from "./Medalsinit";
-import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
+import { StaticCacheContext } from "../../Contexts";
+import { useContext, useEffect } from "react";
+import MedalsLogic from "./Medals.js";
+import MedalTable from "./MedalTable";
 
-function Medals({ cache }) {
-  // variables
-  const imgLength = 50;
+function Medals({ submissionReducer, imageReducer }) {
+  /* ===== VARIABLES ===== */
+  const path = window.location.pathname;
+  const abb = path.split("/")[2];
+  const category = path.split("/")[3];
+  const isMisc = category === "misc" ? true : false;
 
-  // hooks and functions from init file
+  /* ===== CONTEXTS ===== */
+
+  // static cache state from static cache context
+  const { staticCache } = useContext(StaticCacheContext);
+
+  /* ===== STATES AND FUNCTIONS ===== */
+
+  // states and functions from the js file
   const { 
     game,
-    loading,
     medals,
-    setLoading,
-    generateMedals
-  } = MedalsInit();
+    fetchGame,
+    fetchMedals
+  } = MedalsLogic();
 
-  // helper functions
-  const { capitalize } = FrontendHelper();
+  /* ===== EFFECTS ===== */
 
-  // code that is executed either or page load, or when the game state is updated
+  // code that is executed when the page loads, or when the staticCache object is updated
   useEffect(() => {
-    if (cache.games) {
-      generateMedals("score", cache.games, cache.submissionReducer);
-      generateMedals("time", cache.games, cache.submissionReducer);
+    if (staticCache.games.length > 0) {
+      if (fetchGame(abb)) {
+        fetchMedals(abb, category, submissionReducer);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cache.games]);
-
-  // once both medal tables have been generated, loading state hook is set to false
-  useEffect(() => {
-    if (medals.score && medals.time) {
-      setLoading(false);
-      console.log(medals);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [medals]);  
+  }, [staticCache]);
       
-  // medals component
-  return (
+  /* ===== MEDALS COMPONENT ===== */
+  return game && medals ?
+    // Medals Header - Displays the name of the game, as well as buttons to navigate to related pages.
     <>
       <div className="medals-header">
-        <h1>{ game.is_misc ? "Miscellaneous " + game.name : game.name } Medal Table</h1>
+
+        { /* Game Title */ }
+        <h1>{ isMisc && "Miscellaneous" } { game.name } Medal Table</h1>
+
+        { /* Return to game page button */ }
         <Link to={ `/games/${ game.abb }` }>
           <button>Back to { game.name }'s Page</button>
         </Link>
-        <Link to={ `/games/${ game.abb }/${ game.is_misc ? "misc" : "main" }/totalizer` }>
-          <button> { game.is_misc ? "Miscellaneous " + game.name : game.name }'s Totalizer Page</button>
+
+        { /* Game totalizer page button */ }
+        <Link to={ `/games/${ game.abb }/${ category }/totalizer` }>
+          <button> { isMisc && "Miscellaneous" } { game.name }'s Totalizer Page</button>
         </Link>
+
       </div>
+
+      { /*  Medals Body - Render both the score and time medal tables. */ }
       <div className="medals-body">
         { Object.keys(medals).map(type => {
-          return (
-            <div key={ type } className="medals-container">
-              <h2>{ capitalize(type) } Medal Table</h2>
-              { loading ?
-                <p>Loading...</p>
-              :
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Position</th>
-                      <th>Name</th>
-                      <th>Platinum</th>
-                      <th>Gold</th>
-                      <th>Silver</th>
-                      <th>Bronze</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    { medals[type].length === 0 ?
-                      <tr>
-                        <td colSpan={ 6 } className="medals-empty">There have been no live submissions to this game's category!</td>
-                      </tr>
-                    :
-                      medals[type].map(row => {
-                        return (
-                          <tr key={ `${ row.user.username }-row` }>
-                            <td>{ row.position }</td>
-                            <td>
-                                <div className="medals-user-info">
-                                    <div className="medals-user-image"><SimpleAvatar url={ row.user.avatar_url } size={ imgLength } imageReducer={ cache.imageReducer } /></div>
-                                    { row.user.country ?
-                                      <div><span className={ `fi fi-${ row.user.country.toLowerCase() }` }></span></div>
-                                    :
-                                      null
-                                    }
-                                    <div><Link to={ `/user/${ row.user.id }` }>{ row.user.username }</Link></div>
-                                </div>
-                            </td>
-                            <td>{ row.platinum }</td>
-                            <td>{ row.gold }</td>
-                            <td>{ row.silver }</td>
-                            <td>{ row.bronze }</td>
-                          </tr>
-                        );
-                      })
-                    }
-                  </tbody>
-                </table>
-              }
-            </div>
-          );
+          return <MedalTable medals={ medals } type={ type } imageReducer={ imageReducer } key={ type } />
         })}
       </div>
+
     </>
-  );
+  :
+    // Loading component
+    <p>Loading...</p>
 };
 
+/* ===== EXPORTS ===== */
 export default Medals;

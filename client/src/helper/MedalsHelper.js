@@ -1,27 +1,10 @@
 const MedalsHelper = () => {
+    /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: validateMedalsPath - determine if path is valid for Medals component
-    // PRECONDITINOS (1 parameter):
-    // 1.) game: an object containing information about the game defined in the path
-    // POSTCONDITINOS (1 returns):
-    // 1.) error: a string that gives information as to why their is an issue with the path
-    // if this string returns a null value, it means no errors were detected
-    const validateMedalsPath = (game) => {
-        // initialize error variable to null
-        let error = null;
-
-        // first, ensure game is legitimate
-        if (!game) {
-            error = "Error: Invalid game.";
-        }
-
-        return error;
-    };
-
-    // FUNCTION 2: getUserMap - generate a mapping of users
+    // FUNCTION 1: getUserMap - generate a mapping of users
     // PRECONDITIONS (1 parameter): 
     // 1.) submissions: an array containing filtered submissions for a particular game
-    // POSTCONDITIONS (1 returns):
+    // POSTCONDITIONS (1 possible outcome):
     // 1.) userMap: an object representing a map with the following key value pair:
     //                   user_id -> platinum, gold, silver, bronze
     const getUserMap = (submissions) => {
@@ -47,13 +30,13 @@ const MedalsHelper = () => {
         return userMap;
     };
 
-    // FUNCTION 3: createMedalTable
+    // FUNCTION 2: createMedalTable
     // PRECONDITIONS (2 parameters): 
     // 1.) userMap: an object representing a map with the following key value pair:
     //              user_id -> platinum, gold, silver, bronze
     // 2.) submissions: an array containing filtered submissions for a particular game. the submissions must be
     // ordered by type in descending order, then by level id in ascending order
-    // POSTCONDITIONS (1 returns):
+    // POSTCONDITIONS (1 possible outcome):
     // 1.) an array: the values of the userMap sorted by the following fields (ordered by sorting order) in descending order: 
     // platinum, gold, silver, bronze
     const getMedalTable = (userMap, submissions) => {
@@ -147,10 +130,10 @@ const MedalsHelper = () => {
         return Object.values(userMap).sort((a, b) => b.platinum-a.platinum || b.gold-a.gold || b.silver-a.silver || b.bronze-a.bronze);
     };
 
-    // FUNCTION 4: insertPositionToMedals
+    // FUNCTION 3: insertPositionToMedals
     // PRECONDITIONS (1 parameter): 
     // 1.) medalTable: an array of user objects sorted in descending order by platinum, then gold, then silver, then bronze
-    // POSTCONDITIONS (0 returns):
+    // POSTCONDITIONS (1 possible outcome):
     // for each object in medalTable, a new field is added: position.
     const insertPositionToMedals = (medalTable) => {
         // variables used to determine position of each submission, and an array of all medal types
@@ -170,7 +153,8 @@ const MedalsHelper = () => {
         });
     };
 
-    return { validateMedalsPath, getUserMap, getMedalTable, insertPositionToMedals };
-}
+    return { getUserMap, getMedalTable, insertPositionToMedals };
+};
 
+/* ===== EXPORTS ===== */
 export default MedalsHelper;

@@ -9,7 +9,7 @@ import GameSelect from "./pages/GameSelect/GameSelect.jsx";
 import Home from "./pages/Home/Home";
 import Levelboard from "./pages/Levelboard/Levelboard";
 import Login from "./pages/Login/Login";
-import Medals from "./pages/Medals/Medals";
+import Medals from "./pages/Medals/Medals.jsx";
 import Navbar from "./components/Navbar/Navbar";
 import Notifications from "./pages/Notifications/Notifications";
 import Profile from "./pages/Profile/Profile";
@@ -223,10 +223,10 @@ function App() {
             <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } /> }/>
             <Route path="games/:game" element={ <Game /> }/>
             <Route path="games/:game/main/medals" element={
-              <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+              <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/misc/medals" element={
-              <Medals cache={ { games: games, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+              <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/main/totalizer" element={
               <Totalizer cache={ { games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
