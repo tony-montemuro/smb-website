@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
 import "./User.css";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { StaticCacheContext } from "../../Contexts";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Discord from "../../img/discord-logo.png";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
 import SocialLink from "./SocialLink";
@@ -13,6 +13,7 @@ import YT from "../../img/yt-logo.png";
 
 function User({ imageReducer }) {
   /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
   const userId = window.location.pathname.split("/")[2];
 
   /* ===== CONTEXTS ===== */
@@ -21,16 +22,29 @@ function User({ imageReducer }) {
   const { staticCache } = useContext(StaticCacheContext);
 
   /* ===== STATES AND FUNCTIONS ===== */
+  const [user, setUser] = useState(undefined);
 
   // states and functions from the init file
-  const { user, fetchUser, alertDiscord } = UserLogic();
+  const { alertDiscord } = UserLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the page loads, or when the staticCache object is updated
   useEffect(() => {
     if (staticCache.profiles.length > 0) {
-      fetchUser(userId);
+      // see if userId corresponds to a profile stored in cache
+      const profiles = staticCache.profiles;
+      const user = profiles.find(row => row.id === userId);
+
+      // if not, we will print an error message, and navigate to the home screen
+      if (!user) {
+        console.log("Error: Invalid user.");
+        navigate("/");
+        return;
+      }
+
+      // update the user state hook
+      setUser(user);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache]);
