@@ -11,11 +11,11 @@
     display: flex;
 }
 
-.totalizer-container {
+.totalizer-table {
     flex: 1;
 }
 
-.totalizer-container h2 {
+.totalizer-table h2 {
     margin-top: 10px;
     margin-bottom: 10px;
     text-align: center;
@@ -26,7 +26,7 @@
     margin-bottom: 10px;
 }
 
-.totalizer-container table {
+.totalizer-table table {
     margin-left: auto;
     margin-right: auto;
     table-layout: auto;
@@ -34,15 +34,15 @@
     border-collapse: collapse;
 }
 
-.totalizer-container th {
+.totalizer-table th {
     border: 1px solid black;
 }
 
-.totalizer-container tr:nth-child(even) {
+.totalizer-table tr:nth-child(even) {
     background-color: #d3d3d3;
 }
 
-.totalizer-container td {
+.totalizer-table td {
     border: 1px solid black;
     padding: 4px 8px;
 }

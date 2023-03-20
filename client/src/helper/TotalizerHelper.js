@@ -1,46 +1,7 @@
 const TotalizerHelper = () => {
+    /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: validateTotalizerPath - determine if path is valid for Totalizer component
-    // PRECONDITINOS (1 parameter):
-    // 1.) game: an object containing information about the game defined in the path
-    // POSTCONDITINOS (1 returns):
-    // 1.) error: a string that gives information as to why their is an issue with the path
-    // if this string returns a null value, it means no errors were detected
-    const validateTotalizerPath = (game) => {
-        // initialize error variable to null
-        let error = null;
-
-        // first, ensure game is legitimate
-        if (!game) {
-            error = "Error: Invalid game.";
-        }
-
-        // return error message
-        return error;
-    };
-
-    // FUNCTION 2: calculateTotalTime - find the total time
-    // PRECONDITIONS (3 parameters):
-    // 1.) levels is the list of all parameters, which is set upon page load
-    // 2.) abb is the game specified by the path
-    // 3.) isMisc is a boolean flag, determined by the path
-    // 4.) the current type, either "time" or "score"
-    // POSTCONDITIONS (1 return):
-    // 1.) timeTotal: the sum of all time attributes from the level array, filtered by abb and isMisc
-    const calculateTotalTime = (levels, abb, isMisc, type) => {
-        // initialize totalTime variable, with a default value of null
-        let totalTime = null;
-
-        // if type is time, we will filter levels, and compute the totalTime
-        if (type === "time") {
-            totalTime = 0;
-            const filteredLevels = levels.filter(row => row.game === abb && row.misc === isMisc && ["time", "both"].includes(row.chart_type));
-            filteredLevels.forEach(level => totalTime += level.time);
-        }
-        return totalTime;
-    };
-
-    // FUNCTION 3: getTotalMaps - generate a mapping of users
+    // FUNCTION 1: getTotalMaps - generate a mapping of users
     // PRECONDITIONS (3 parameters): 
     // 1.) submissions: an array containing filtered submissions for a particular game
     // 2.) type: a string value that can be one of two values: "score" or "time"
@@ -87,7 +48,7 @@ const TotalizerHelper = () => {
         return { allTotalsMap: allTotalsMap, liveTotalsMap: liveTotalsMap };
     };
 
-    // FUNCTION 4: sortTotals - sort total objects based on the total field
+    // FUNCTION 2: sortTotals - sort total objects based on the total field
     // PRECONDITIONS (3 parameters):
     // 1.) all: a mapping of totals objects
     // 2.) live: a mapping of totals objects, but only including live submissions
@@ -107,7 +68,7 @@ const TotalizerHelper = () => {
         return { allTotals: allTotals, liveTotals: liveTotals };
     };
 
-    // FUNCTION 5: insertPositionToTotals
+    // FUNCTION 3: insertPositionToTotals
     // PRECONDITIONS (2 parameters): 
     // 1.) totals: an array of totals objects sorted in descending order by total field
     // 2.) type: a string, either "time" or "score"
@@ -130,7 +91,8 @@ const TotalizerHelper = () => {
         });
     };
 
-    return { validateTotalizerPath, calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals };
-}
+    return { getTotalMaps, sortTotals, insertPositionToTotals };
+};
 
+/* ===== EXPORTS ===== */
 export default TotalizerHelper;

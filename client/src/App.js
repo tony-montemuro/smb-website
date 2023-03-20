@@ -18,7 +18,7 @@ import Resources from "./pages/Resources/Resources";
 import Session from "./database/authentication/Session";
 import Submissions from "./pages/Submissions/Submissions";
 import Support from "./pages/Support/Support";
-import Totalizer from "./pages/Totalizer/Totalizer";
+import Totalizer from "./pages/Totalizer/Totalizer.jsx";
 import User from "./pages/User/User.jsx";
 import UserStats from "./pages/UserStats/UserStats";
 
@@ -229,10 +229,10 @@ function App() {
               <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/main/totalizer" element={
-              <Totalizer cache={ { games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+              <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/misc/totalizer" element={
-              <Totalizer cache={ { games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+              <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/main/score" element={
               <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
