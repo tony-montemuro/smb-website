@@ -1,13 +1,14 @@
 /* ===== IMPORTS ===== */
 import "./Medals.css";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { StaticCacheContext } from "../../Contexts";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import MedalsLogic from "./Medals.js";
 import MedalTable from "./MedalTable";
 
 function Medals({ submissionReducer, imageReducer }) {
   /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname;
   const abb = path.split("/")[2];
@@ -20,12 +21,11 @@ function Medals({ submissionReducer, imageReducer }) {
   const { staticCache } = useContext(StaticCacheContext);
 
   /* ===== STATES AND FUNCTIONS ===== */
+  const [game, setGame] = useState(undefined);
 
   // states and functions from the js file
   const { 
-    game,
     medals,
-    fetchGame,
     fetchMedals
   } = MedalsLogic();
 
@@ -35,9 +35,20 @@ function Medals({ submissionReducer, imageReducer }) {
   // switches between miscellaneous and main
   useEffect(() => {
     if (staticCache.games.length > 0) {
-      if (fetchGame(abb)) {
-        fetchMedals(abb, category, submissionReducer);
+      // see if abb corresponds to a game stored in cache
+      const games = staticCache.games;
+      const game = games.find(row => row.abb === abb);
+
+      // if not, we will print an error message, and navigate to the home screen
+      if (!game) {
+        console.log("Error: Invalid game.");
+        navigate("/");
+        return;
       }
+
+      // update the game state hook, and fetch medals
+      setGame(game);
+      fetchMedals(abb, category, submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache, location.pathname]);
