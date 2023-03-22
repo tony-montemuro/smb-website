@@ -1,11 +1,11 @@
 /* ===== IMPORTS ===== */
 import "./Records.css";
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
+import RecordsLogic from "./Records.js";
 
-function RecordTable({ mode, recordTable }) {
+function RecordTable({ mode, allLiveFilter, recordTable }) {
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 3;
   const location = useLocation();
@@ -16,6 +16,7 @@ function RecordTable({ mode, recordTable }) {
 
   /* ===== FUNCTIONS ===== */
   const { capitalize, cleanLevelName, recordB2F } = FrontendHelper();
+  const { allGreater } = RecordsLogic();
 
   /* ===== RECORD TABLE COMPONENT ===== */
   return (
@@ -39,9 +40,9 @@ function RecordTable({ mode, recordTable }) {
         </tr>
 
         { /* Render a row for each level */ }
-        { recordTable[mode].map(level => {
+        { recordTable[allLiveFilter][mode].map((level, index) => {
           return (
-            <tr key={ level.level }>
+            <tr className={ allGreater(recordTable, mode, index) ? "records-different-row" : "records-same-row" } key={ level.level }>
 
               { /* First element is the name of the level, which allows user to navigate to that level's chart */ }
               <td>

@@ -17,12 +17,22 @@
     cursor: pointer;
 }
 
+.records-input {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.records-body p {
+    text-align: center;
+}
+
 .records-body table {
     border-collapse: collapse;
     border: 1px solid black;
     margin: 25px auto;
     table-layout: fixed;
-    width: 50%;
+    width: 75%;
 }
 
 .records-body td {
@@ -30,6 +40,14 @@
     width: 33%;
     text-align: center;
     border: 1px solid black;
+}
+
+.records-same-row {
+    background-color: #90ee90;
+}
+
+.records-different-row {
+    background-color: #ff6961;
 }
 
 .records-body a:visited {

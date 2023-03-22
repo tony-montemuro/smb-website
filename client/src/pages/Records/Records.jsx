@@ -25,11 +25,13 @@ function Records({ cache }) {
 
   /* ===== STATES AND FUNCTIONS ===== */
   const [game, setGame] = useState(undefined);
+  const [allLiveFilter, setAllLiveFilter] = useState("live");
 
   // states and functions from js file
   const {
     recordTable,
-    fetchRecords
+    fetchRecords,
+    numNotLive
   } = RecordsLogic();
 
   // helper functions
@@ -38,7 +40,7 @@ function Records({ cache }) {
   /* ===== EFFECTS ===== */
 
   // code that is executed when the page loads, when the staticCache object is updated, or when the user
-  // switches between miscellaneous and main
+  // switches between score and time
   useEffect(() => {
     if (staticCache.games.length > 0) {
       // see if abb corresponds to a game stored in cache
@@ -78,7 +80,7 @@ function Records({ cache }) {
 
           { /* Other type world record page button. */ }
           <Link to={ `/games/${ abb }/${ category }/${ otherType }`}>
-            <button>{ game.name }: { capitalize(otherType) } World Records</button>
+            <button>{ isMisc && "Miscellaneous" } { game.name }: { capitalize(otherType) } World Records</button>
           </Link>
 
         </div>
@@ -86,9 +88,25 @@ function Records({ cache }) {
 
       { /* Records - Render a record table for each mode. */ }
       <div className="records-body">
-        { Object.keys(recordTable).map(mode => {
-          return <RecordTable mode={ mode } recordTable={ recordTable } key={ mode } />
+
+        { /* Live-input: Toggle records page between rendering all records and just live records */ }
+        <div className="records-input">
+          <label htmlFor="live">Live-records only: </label>
+          <input
+            id="live"
+            type="checkbox"
+            checked={ allLiveFilter === "live" }
+            onChange={ () => setAllLiveFilter(allLiveFilter === "live" ? "all" : "live") }
+          />
+        </div>
+
+        <p><i>There are</i> <b>{ numNotLive() }</b> <i>level(s) where the live record is worse than the overall record.</i></p>
+
+        { /* Render a record table for each mode based on the allLiveFilter */ }
+        { Object.keys(recordTable[allLiveFilter]).map(mode => {
+          return <RecordTable mode={ mode } allLiveFilter={ allLiveFilter } recordTable={ recordTable } key={ mode } />
         })}
+
       </div>
       
     </>
