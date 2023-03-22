@@ -235,16 +235,16 @@ function App() {
               <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/main/score" element={
-              <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
+              <Records submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/main/time" element={
-              <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
+              <Records submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/misc/score" element={
-              <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
+              <Records submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/misc/time" element={
-              <Records cache={ { games: games, levels: levels, submissionReducer: submissionReducer } } />
+              <Records submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/main/score/:levelid" element={
               <Levelboard cache={ { 

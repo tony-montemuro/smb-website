@@ -7,7 +7,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import RecordsLogic from "./Records.js";
 import RecordTable from "./RecordTable";
 
-function Records({ cache }) {
+function Records({ submissionReducer }) {
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,7 +56,7 @@ function Records({ cache }) {
 
       // update the game state hook, and fetch the totals
       setGame(game);
-      fetchRecords(game, category, type, cache.submissionReducer);
+      fetchRecords(game, category, type, submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache, location.pathname]);
