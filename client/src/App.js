@@ -222,6 +222,8 @@ function App() {
             <Route path="/login" element={ <Login /> }/>
             <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } /> }/>
             <Route path="games/:game" element={ <Game /> }/>
+            <Route path="games/:game/main" element={ <Game /> }/>
+            <Route path="games/:game/misc" element={ <Game /> }/>
             <Route path="games/:game/main/medals" element={
               <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>

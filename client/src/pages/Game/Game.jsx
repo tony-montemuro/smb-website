@@ -1,16 +1,19 @@
 /* ===== IMPORTS ===== */
 import "./Game.css"
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { StaticCacheContext } from "../../Contexts";
 import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
-import GameLogic from "./Game.js";
 import ModeBody from "./ModeBody";
 import SearchBar from "../../components/SearchBar/SearchBar.jsx";
 
 function Game() {
   /* ===== VARIABLES ===== */
-  const abb = window.location.pathname.split("/")[2];
+  const navigate = useNavigate();
+  const location = useLocation();
+  const path = location.pathname.split("/");
+  const abb = path[2];
+  const category = path[3];
 
   /* ===== CONTEXTS ===== */
 
@@ -18,22 +21,37 @@ function Game() {
   const { staticCache } = useContext(StaticCacheContext);
 
   /* ===== STATES AND FUNCTIONS ===== */
-
-  // radio button state
-  const [selectedRadioBtn, setSelectedRadioBtn] = useState("main");
-
-  // states and functions from the js file
-  const { game, fetchGame } = GameLogic();
+  const [selectedRadioBtn, setSelectedRadioBtn] = useState(category ? category : "main");
+  const [game, setGame] = useState(undefined);
 
   // helper functions
   const { capitalize } = FrontendHelper();
+
+  // simple function that handles the radio button change
+  const handleChange = (e) => {
+    const category = e.target.value;
+    setSelectedRadioBtn(category);
+    navigate(`/games/${ abb }/${ category }`);
+  };
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the page loads, or when the staticCache object is updated
   useEffect(() => {
     if (staticCache.games.length > 0) {
-      fetchGame(abb);
+      // see if abb corresponds to a game stored in cache
+      const games = staticCache.games;
+      const game = games.find(row => row.abb === abb);
+
+      // if not, we will print an error message, and navigate to the home screen
+      if (!game) {
+        console.log("Error: Invalid game.");
+        navigate("/");
+        return;
+      }
+
+      // update the game state hook, and fetch the totals
+      setGame(game);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache]);
@@ -72,7 +90,7 @@ function Game() {
                       type="radio" 
                       value={ category.name }
                       checked={ selectedRadioBtn === category.name }
-                      onChange={ (e) => setSelectedRadioBtn(e.target.value) }>
+                      onChange={ handleChange }>
                     </input>
                   </div>
                 );
