@@ -1,95 +1,101 @@
-import "./records.css";
-import React, { Fragment, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+/* ===== IMPORTS ====== */
+import "./Records.css";
+import { useContext, useEffect, useState } from "react";
+import { StaticCacheContext } from "../../Contexts";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
-import RecordsInit from "./RecordsInit";
+import RecordsLogic from "./Records.js";
+import RecordTable from "./RecordTable";
 
 function Records({ cache }) {
-  // states and functions from init file
-  const { 
-    loading,
-    recordTable, 
-    game,
-    setLoading,
-    generateWorldRecords
-  } = RecordsInit();
+  /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
+  const location = useLocation();
+  const path = location.pathname.split("/");
+  const abb = path[2];
+  const category = path[3];
+  const type = path[4];
+  const otherType = type === "score" ? "time" : "score";
+  const isMisc = category === "misc" ? true : false;
+
+  /* ===== CONTEXTS ===== */
+
+  // static cache state from static cache context
+  const { staticCache } = useContext(StaticCacheContext);
+
+  /* ===== STATES AND FUNCTIONS ===== */
+  const [game, setGame] = useState(undefined);
+
+  // states and functions from js file
+  const {
+    recordTable,
+    fetchRecords
+  } = RecordsLogic();
 
   // helper functions
-  const { capitalize, cleanLevelName, recordB2F } = FrontendHelper();
+  const { capitalize } = FrontendHelper();
 
-  // code that is executed on page load, when either the levelList or games state are changed, or
-  // when the user swaps between the time & score world record pages
-  const location = useLocation();
+  /* ===== EFFECTS ===== */
+
+  // code that is executed when the page loads, when the staticCache object is updated, or when the user
+  // switches between miscellaneous and main
   useEffect(() => {
-    if (cache.games && cache.levels) {
-      setLoading(true);
-      generateWorldRecords(cache.games, cache.levels, cache.submissionReducer);
+    if (staticCache.games.length > 0) {
+      // see if abb corresponds to a game stored in cache
+      const games = staticCache.games;
+      const game = games.find(row => row.abb === abb);
+
+      // if not, we will print an error message, and navigate to the home screen
+      if (!game) {
+        console.log("Error: Invalid game.");
+        navigate("/");
+        return;
+      }
+
+      // update the game state hook, and fetch the totals
+      setGame(game);
+      fetchRecords(game, category, type, cache.submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, cache.games, cache.levels]);
+  }, [staticCache, location.pathname]);
 
-  // records component
-  return (
+  /* ===== RECORDS COMPONENT ===== */
+  return game && recordTable ?
     <>
+      { /* Records Header - Displays the name of the game, as well as buttons to navigate to related pages. */ }
       <div className="records-header">
-        <h1>{ game.isMisc ? "Miscellaneous " : null }{ game.name }: { capitalize(game.type) } World Records</h1>
+
+        { /* Game Title */ }
+        <h1>{ isMisc && "Miscellaneous" } { game.name }: { capitalize(type) } World Records</h1>
+
+        { /* Records Buttons - Buttons to navigate to related pages. */ }
         <div className="records-buttons">
-          <Link to={ `/games/${ game.abb }` }>
-            <button disabled={ loading }>Back to { game.name }'s Page</button>
+
+          { /* Return to game page button. */ }
+          <Link to={ `/games/${ abb }` }>
+            <button>Back to { game.name }'s Page</button>
           </Link>
-          <Link to={ `/games/${ game.abb }/${ game.category }/${ game.other }`}>
-            <button disabled={ loading }>{ game.name }: { capitalize(game.other) } World Records</button>
+
+          { /* Other type world record page button. */ }
+          <Link to={ `/games/${ abb }/${ category }/${ otherType }`}>
+            <button>{ game.name }: { capitalize(otherType) } World Records</button>
           </Link>
+
         </div>
       </div>
-      { loading ?
-        <p>Loading...</p> 
-      :
-        <div className="records-body">
-          { Object.keys(recordTable).map(mode => {
-            return (
-              <table key={ mode }>
-                <tbody>
-                  <tr>
-                    <th colSpan={ 3 }>{ cleanLevelName(mode) }</th>
-                  </tr>
-                  <tr className="records-info-row">
-                    <td>Level Name</td>
-                    <td>{ capitalize(game.type) }</td>
-                    <td>Player(s)</td>
-                  </tr>
-                  { recordTable[mode].map(level => {
-                    return (
-                      <tr key={ level.level }>
-                        <td>
-                          <Link
-                            className="records-level-link" 
-                            to={ `/games/${ game.abb }/${ game.category }/${ game.type }/${ level.level }` } 
-                          >
-                            { cleanLevelName(level.level) }
-                          </Link>
-                        </td>
-                        <td>{ recordB2F(level.record, game.type) }</td>
-                        <td>{ level.name.map((user, index) => {
-                          return (
-                            <Fragment key={ user.id }>
-                              <Link to={ `/user/${ user.id }` }>{ user.username }</Link>
-                              { index < level.name.length-1 ? ", " : null }
-                            </Fragment>
-                          );
-                        })}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            );
-          })}
-        </div>
-      }
+
+      { /* Records - Render a record table for each mode. */ }
+      <div className="records-body">
+        { Object.keys(recordTable).map(mode => {
+          return <RecordTable mode={ mode } recordTable={ recordTable } key={ mode } />
+        })}
+      </div>
+      
     </>
-  );
+  :
+    // Loading component
+    <p>Loading...</p>
 };
 
+/* ===== EXPORTS ===== */
 export default Records;
