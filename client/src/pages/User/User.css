@@ -91,8 +91,25 @@
 .user-stats-games table {
     border-collapse: collapse;
     margin-top: 20px;
-    width: 500px;
+    width: 650px;
+}
+
+.user-stats-game-element {
     font-size: 25px;
+}
+
+.user-stats-category {
+    margin: 5px;
+    text-align: center;
+}
+
+.user-stats-category h2 {
+    margin: 5px;
+}
+
+.user-stats-category a {
+    margin: 5px;
+    font-size: 20px;
 }
 
 .user-stats-link {

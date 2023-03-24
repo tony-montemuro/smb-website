@@ -1,9 +1,13 @@
 /* ===== IMPORTS ===== */
-import { Link } from "react-router-dom";
+import "./User.css";
 import { StaticCacheContext } from "../../Contexts";
 import { useContext } from "react";
+import UserStatsCategory from "./UserStatsCategory";
 
 function UserStatsDirectory() {
+  /* ===== VARIABLES ===== */
+  const TABLE_WIDTH = 3;
+
   /* ===== CONTEXTS ===== */
 
   // static cache state from static cache context
@@ -23,7 +27,9 @@ function UserStatsDirectory() {
             { /* Table header will simply specify the type of games. */ }
             <thead>
               <tr>
-                <th colSpan={ 3 }>{ type } Games</th>
+                <th colSpan={ TABLE_WIDTH }>
+                  <h2>{ type } Games</h2>
+                </th>
               </tr>
             </thead>
 
@@ -33,9 +39,9 @@ function UserStatsDirectory() {
                 return (
                   // Each row contains: the name of the game, a link to main stats, and a link to misc stats
                   <tr key={ game.name }>
-                    <td>{ game.name }</td>
-                    <td><Link className="user-stats-link" to={ `${ game.abb }/main` }>Main</Link></td>
-                    <td><Link className="user-stats-link" to={ `${ game.abb }/misc` }>Misc</Link></td>
+                    <td className="user-stats-game-element">{ game.name }</td>
+                    <td><UserStatsCategory game={ game } category={ "main" } /></td>
+                    <td><UserStatsCategory game={ game } category={ "misc" } /></td>
                   </tr>
                 );
               })}

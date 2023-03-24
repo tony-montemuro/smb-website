@@ -33,6 +33,14 @@
     padding: 4px 8px;
 }
 
+.stats-table-header {
+    margin-bottom: 10px;
+}
+
+.stats-table-header h2 {
+    margin-bottom: 0px;
+}
+
 .stats-user-info {
     display: flex;
     flex-direction: row;

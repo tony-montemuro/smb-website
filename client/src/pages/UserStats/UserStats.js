@@ -65,19 +65,18 @@ const UserStats = () => {
         return { record: record, index: submissionIndex }; 
     };
 
-    // FUNCTION 2: generate rankings - given a path, game object, type, and submissions array, generate a rankings object
+    // FUNCTION 2: generate rankings - given a path, game object, and submissions array, generate a rankings object
     // PRECONDITIONS (4 parameters):
     // 1.) path: an array that contains path information from the URL
     // 2.) game: an object containing information about the game defined in the path
-    // 3.) type: the current type, either "time" or "score". type is fetched from the URL
-    // 4.) submissions: an array containing submissions for a particular game. the submissions must
+    // 3.) submissions: an array containing submissions for a particular game. the submissions must
     // be ordered by type in descending order, then by level id in ascending order
     // POSTCONDITIONS (1 possible outcome, 1 return):
-    // 1.) rankings: rankings has a field for each mode belonging to { game }, { category }, and { type }
+    // 1.) rankings: rankings has a field for each mode belonging to { userId }, { category }, and { type }
     // each field is mapped to an array of record objects, each of which has 4 fields: level, record, date, and position
-    const generateRankings = (path, game, type, submissions) => {
+    const generateRankings = (path, game, submissions) => {
         // initialize variables used in the function
-        const userId = path[2], category = path[4];
+        const userId = path[2], category = path[4], type = path[5];
         const rankings = {};
         const isMisc = category === "misc" ? true : false;
         let submissionIndex = 0;
@@ -106,56 +105,7 @@ const UserStats = () => {
         return rankings;
     };
 
-    // FUNCTION 3: generate user stats - given a path, game object, submissions array, type, and totalTime integer, generate a user
-    // stats object
-    // PRECONDITIONS (5 parameters):
-    // 1.) path: an array that contains path information from the URL
-    // 2.) game: an object containing information about the game defined in the page
-    // 3.) submissions: an array containing submissions for a particular game. the submissions must
-    // be ordered by type in descending order, then by level id in ascending order
-    // 4.) type: the current type, either "time" or "score"
-    // 5.) totalTime: a floating point value that is the sum of each level with a time chart
-    // POSTCONDITIONS (1 possible outcome, 1 return):
-    // 1.) userStats: userStats has a field corresponding to each stat type: totals, medals, and rankings
-    // each of these is a separate object with different information
-    const generateUserStats = (path, game, submissions, type, totalTime) => {
-        // unpack path parameter
-        const userId = path[2];
-        
-        // create a copy of the submissions
-        const submissionsCpy = [...submissions];
-
-        // let's start with the totalizer
-        const { liveTotalsMap } = getTotalMaps(submissions, type, totalTime);
-        const { liveTotals } = sortTotals({}, liveTotalsMap, type);
-        insertPositionToTotals(liveTotals, type);
-
-        // we can filter the liveTotals array looking for the userId's object
-        const totals = liveTotals.find(obj => obj.user.id === userId);
-
-        // now, it's time to do the medal table
-        submissions = submissionsCpy;
-        const userMap = getUserMap(submissions);
-        const medalTable = getMedalTable(userMap, submissions);
-        insertPositionToMedals(medalTable);
-
-        // we can filter the medals array looking for the userId's object. handle if it's not found
-        const medals = medalTable.find(obj => obj.user.id === userId);
-
-        // now, it's time to do player rankings
-        const rankings = generateRankings(path, game, type, submissions);
-
-        // create the user stats object, and return it
-        const userStats = {
-            medals: medals,
-            totals: totals,
-            rankings: rankings
-        };
-        
-        return userStats;
-    };
-
-    // FUNCTION 4: fetch user stats - given a path, game object, and submissionReducer object, fetch the stats object
+    // FUNCTION 3: fetch user stats - given a path, game object, and submissionReducer object, fetch the stats object
     // PRECONDITIONS (3 parameters):
     // 1.) path: an array that contains path information from the URL
     // 2.) game: an object containing information about the game defined in the page
@@ -163,39 +113,57 @@ const UserStats = () => {
         // a.) reducer: the submission reducer itself (state)
         // b.) dispatchSubmissions: the reducer function used to update the reducer
     // POSTCONDITIONS (1 possible outcome):
-    // 1.) given this information, we are able to first generate two submission arrays: one for score, and one for time (both
-    // filtered by the details.live field). from these arrays, we generate two separate userStats objects. these two objects
-    // are then combined to form 'stats', a single object which contains both user stats objects. the setStats() function
-    // is called to update the stats object
+    // 1.) given this information, we are able to first generate two submission arrays: one for all, and one for live only. 
+    // from these arrays, we generate two separate userStats objects. these two objects are then combined to form 'stats',
+    // a single object which contains both user stats objects. the setStats() function is called to update the stats object
     const fetchUserStats = async (path, game, submissionReducer) => {
         // unpack path parameter
-        const category = path[4];
+        const userId = path[2], category = path[4], type = path[5];
 
         // first, let's compute the total time of the game
         const isMisc = category === "misc" ? true : false;
         const totalTime = calculateTotalTime(game, isMisc);
 
-        // get both score and time submissions that are a part of the category
-        const [allScoreSubmissions, allTimeSubmissions] = await Promise.all(
-            [
-                getSubmissions(game.abb, category, "score", submissionReducer), 
-                getSubmissions(game.abb, category, "time", submissionReducer)
-            ]
-        );
+        // fetch submissions
+        const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
 
-        // filter both arrays of submissions by the level.live and level.misc fields
-        const scoreSubmissions = allScoreSubmissions.filter(row => row.details.live && row.level.misc === isMisc);
-        const timeSubmissions = allTimeSubmissions.filter(row => row.details.live && row.level.misc === isMisc);
+        // let's start with the totalizer
+        const { allTotalsMap, liveTotalsMap } = getTotalMaps(allSubmissions, type, totalTime);
+        const { allTotals, liveTotals } = sortTotals(allTotalsMap, liveTotalsMap, type);
+        insertPositionToTotals(allTotals, type);
+        insertPositionToTotals(liveTotals, type);
 
-        // generate a user stats object for each array of submissions
-        const scoreUserStats = generateUserStats(path, game, scoreSubmissions, "score", totalTime);
-        const timeUserStats = generateUserStats(path, game, timeSubmissions, "time", totalTime);
+        // we can filter the allTotals & liveTotals array looking for the userId's object
+        const allTotal = allTotals.find(obj => obj.user.id === userId);
+        const liveTotal = liveTotals.find(obj => obj.user.id === userId);
 
-        // create our stats object, and update the stats state
+        // now, it's time to do the medal table
+        const submissions = allSubmissions.filter(row => row.details.live);
+        const userMap = getUserMap(submissions);
+        const medalTable = getMedalTable(userMap, submissions);
+        insertPositionToMedals(medalTable);
+
+        // we can filter the medalTable looking for the userId's object. [note: medal tables are the same for all and live!]
+        const allMedals = medalTable.find(obj => obj.user.id === userId);
+        const liveMedals = allMedals;
+
+        // now, it's time to do player rankings
+        const allRankings = generateRankings(path, game, allSubmissions);
+        const liveRankings = generateRankings(path, game, submissions);
+
+        // create our stats object
         const stats = {
-            score: scoreUserStats,
-            time: timeUserStats
-        }
+            all: {
+                medals: allMedals,
+                rankings: allRankings,
+                total: allTotal
+            },
+            live: {
+                medals: liveMedals,
+                rankings: liveRankings,
+                total: liveTotal
+            }
+        };
         
         // update the stats state hook
         console.log(stats);

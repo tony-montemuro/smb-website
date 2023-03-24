@@ -289,10 +289,16 @@ function App() {
               } } />
             }/>
             <Route path="/user/:userId" element={<User imageReducer={ imageReducer } />}/>
-            <Route path="/user/:userId/:game/main" element={
+            <Route path="/user/:userId/:game/main/score" element={
               <UserStats submissionReducer={ submissionReducer } />
             }/>
-            <Route path="/user/:userId/:game/misc" element={
+            <Route path="/user/:userId/:game/misc/score" element={
+              <UserStats submissionReducer={ submissionReducer } />
+            }/>
+            <Route path="/user/:userId/:game/main/time" element={
+              <UserStats submissionReducer={ submissionReducer } />
+            }/>
+            <Route path="/user/:userId/:game/misc/time" element={
               <UserStats submissionReducer={ submissionReducer } />
             }/>
           </Routes>
