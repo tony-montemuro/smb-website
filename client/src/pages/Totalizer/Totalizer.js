@@ -10,37 +10,10 @@ const Totalizer = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
+    const { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
     const { getSubmissions } = SubmissionRead();
 
-    // FUNCTION 1: calculateTotalTime - calculate the sum of all times for every level in a game with a time chart
-    // PRECONDITIONS (2 parameters):
-    // 1.) game: an object containing information about the game defined in the path
-    // 2.) isMisc: a boolean value. true when category is misc, false when category is main
-    // POSTCONDITIONS (1 return):
-    // 1.) total: a floating point value that is the sum of each level with a time chart
-    const calculateTotalTime = (game, isMisc) => {
-        // define a variable to store the total
-        let total = 0;
-        
-        // for each game
-        game.mode.forEach(mode => {
-
-            // we only want to consider levels that are part of the category defined by the isMisc parameter
-            if (mode.misc === isMisc) {
-
-                // for each mode
-                mode.level.forEach(level => {
-
-                    // we only want to consider levels that have time charts
-                    total += ["time", "both"].includes(level.chart_type) ? level.time : 0;
-                });
-            }
-        });
-        return total;
-    };
-
-    // FUNCTION 2: generateTotalizer - given an array of submissions, a type, and a totalTime, generate two separate arrays that
+    // FUNCTION 1: generateTotalizer - given an array of submissions, a type, and a totalTime, generate two separate arrays that
     // collectively represent the totalizer for a submission type combination
     // PRECONDITIONS (3 parameters):
     // 1.) submissions: an array containing unfiltered submissions for a particular game. the submissions must be
@@ -69,7 +42,7 @@ const Totalizer = () => {
         return { all: allTotals, live: liveTotals };
     };
 
-    // FUNCTION 3: fetchTotals - given a game and category, use the submissions to generate a totals object
+    // FUNCTION 2: fetchTotals - given a game and category, use the submissions to generate a totals object
     // PRECONDITIONS (3 parameters):
     // 1.) game: an object containing information about the game defined in the path
     // 2.) category: the current category, either "main" or "misc". category is fetched from the URL

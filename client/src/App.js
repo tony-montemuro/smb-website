@@ -20,7 +20,7 @@ import Submissions from "./pages/Submissions/Submissions";
 import Support from "./pages/Support/Support";
 import Totalizer from "./pages/Totalizer/Totalizer.jsx";
 import User from "./pages/User/User.jsx";
-import UserStats from "./pages/UserStats/UserStats";
+import UserStats from "./pages/UserStats/UserStats.jsx";
 
 function App() {
   /* ===== VARIABLES ===== */
@@ -290,10 +290,10 @@ function App() {
             }/>
             <Route path="/user/:userId" element={<User imageReducer={ imageReducer } />}/>
             <Route path="/user/:userId/:game/main" element={
-              <UserStats cache={ { profiles: profiles, games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+              <UserStats submissionReducer={ submissionReducer } />
             }/>
             <Route path="/user/:userId/:game/misc" element={
-              <UserStats cache={ { profiles: profiles, games: games, levels: levels, submissionReducer: submissionReducer, imageReducer: imageReducer } } />
+              <UserStats submissionReducer={ submissionReducer } />
             }/>
           </Routes>
         </div>

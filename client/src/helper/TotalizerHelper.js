@@ -1,7 +1,34 @@
 const TotalizerHelper = () => {
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: getTotalMaps - generate a mapping of users
+    // FUNCTION 1: calculateTotalTime - calculate the sum of all times for every level in a game with a time chart
+    // PRECONDITIONS (2 parameters):
+    // 1.) game: an object containing information about the game defined in the path
+    // 2.) isMisc: a boolean value. true when category is misc, false when category is main
+    // POSTCONDITIONS (1 return):
+    // 1.) total: a floating point value that is the sum of each level with a time chart
+    const calculateTotalTime = (game, isMisc) => {
+        // define a variable to store the total
+        let total = 0;
+        
+        // for each game
+        game.mode.forEach(mode => {
+
+            // we only want to consider levels that are part of the category defined by the isMisc parameter
+            if (mode.misc === isMisc) {
+
+                // for each mode
+                mode.level.forEach(level => {
+
+                    // we only want to consider levels that have time charts
+                    total += ["time", "both"].includes(level.chart_type) ? level.time : 0;
+                });
+            }
+        });
+        return total;
+    };
+
+    // FUNCTION 2: getTotalMaps - generate a mapping of users
     // PRECONDITIONS (3 parameters): 
     // 1.) submissions: an array containing filtered submissions for a particular game
     // 2.) type: a string value that can be one of two values: "score" or "time"
@@ -48,7 +75,7 @@ const TotalizerHelper = () => {
         return { allTotalsMap: allTotalsMap, liveTotalsMap: liveTotalsMap };
     };
 
-    // FUNCTION 2: sortTotals - sort total objects based on the total field
+    // FUNCTION 3: sortTotals - sort total objects based on the total field
     // PRECONDITIONS (3 parameters):
     // 1.) all: a mapping of totals objects
     // 2.) live: a mapping of totals objects, but only including live submissions
@@ -68,7 +95,7 @@ const TotalizerHelper = () => {
         return { allTotals: allTotals, liveTotals: liveTotals };
     };
 
-    // FUNCTION 3: insertPositionToTotals
+    // FUNCTION 4: insertPositionToTotals
     // PRECONDITIONS (2 parameters): 
     // 1.) totals: an array of totals objects sorted in descending order by total field
     // 2.) type: a string, either "time" or "score"
@@ -91,7 +118,7 @@ const TotalizerHelper = () => {
         });
     };
 
-    return { getTotalMaps, sortTotals, insertPositionToTotals };
+    return { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals };
 };
 
 /* ===== EXPORTS ===== */
