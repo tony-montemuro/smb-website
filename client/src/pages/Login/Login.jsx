@@ -1,25 +1,35 @@
-import "./login.css";
-import React from "react";
-import LoginInit from "./LoginInit";
+/* ===== IMPORTS ====== */
+import "./Login.css";
+import LoginLogic from "./Login.js";
 
 function Login() {
+  /* ===== STATES AND FUNCTIONS ====== */
+
+  // states and functions from the js file
   const { 
     email, 
     userState,
     handleChange, 
     handleLogin 
-  } = LoginInit();
+  } = LoginLogic();
 
+  /* ===== LOGIN COMPONENT ===== */
   return (
     <div className="login-container">
       <div className="login">
+
+        { /* Login header */ }
         <div className="login-header">
           <h1>Log In</h1>
           <p>Log in via email below: </p>
         </div>
+
+        { /* Login form: allows user to sign in via email account */ }
         <div className="login-form">
           <form onSubmit={ handleLogin }>
             <div className="login-email-field">
+
+              { /* Email input: a place for the user to enter their email account */ }
               <label htmlFor="email">Email: </label>
               <input 
                 id="email"
@@ -29,22 +39,24 @@ function Login() {
                 onChange={ handleChange } 
               />
             </div>
-            { email.error ? 
-              <p> { email.error }</p>
-            :
-              null
-            }
+
+            { /* If there was an error logging in, render it here. */ }
+            { email.error && <p>{ email.error }</p> }
+
+            { /* Form button: When pressed, the application will attempt to log the user in.
+            If the application is in the processing of logging in, the button will be disabled. */ }
             <button disabled={ userState === "logging" }>Log In</button>
-            { userState === "complete" ?
-              <p>Success! Please check your email to continue.</p>
-            : 
-              null
-            }
+
+            { /* If the login was a success, render a confirmation message here. */ }
+            { userState === "complete" && <p>Success! Please check your email to continue.</p> }
+
           </form>
         </div>
       </div>
+
     </div>
   );
 };
 
+/* ===== EXPORTS ===== */
 export default Login;

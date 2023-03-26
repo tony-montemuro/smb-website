@@ -8,7 +8,7 @@ import Game from "./pages/Game/Game.jsx";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
 import Home from "./pages/Home/Home";
 import Levelboard from "./pages/Levelboard/Levelboard";
-import Login from "./pages/Login/Login";
+import Login from "./pages/Login/Login.jsx";
 import Medals from "./pages/Medals/Medals.jsx";
 import Navbar from "./components/Navbar/Navbar";
 import Notifications from "./pages/Notifications/Notifications";

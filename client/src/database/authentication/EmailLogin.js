@@ -1,3 +1,4 @@
+/* ===== IMPORTS ===== */
 import { supabase } from "../SupabaseClient";
 
 const EmailLogin = () => {
@@ -7,7 +8,7 @@ const EmailLogin = () => {
     // POSTCONDITIONS (1 returns):
     // 1.) if successful, an email should be sent to the email address provided, which will allow the user
     // to complete the login process. if a failure, an error will be thrown by this function
-    const login = async (email) => {
+    const login = async email => {
         try {
             // attempt to login
             const { error } = await supabase
@@ -28,4 +29,5 @@ const EmailLogin = () => {
     return { login };
 };
 
+/* ===== EXPORTS ===== */
 export default EmailLogin;
