@@ -12,7 +12,7 @@ import Login from "./pages/Login/Login.jsx";
 import Medals from "./pages/Medals/Medals.jsx";
 import Navbar from "./components/Navbar/Navbar";
 import Notifications from "./pages/Notifications/Notifications";
-import Profile from "./pages/Profile/Profile";
+import Profile from "./pages/Profile/Profile.jsx";
 import Records from "./pages/Records/Records.jsx";
 import Resources from "./pages/Resources/Resources";
 import Session from "./database/authentication/Session";

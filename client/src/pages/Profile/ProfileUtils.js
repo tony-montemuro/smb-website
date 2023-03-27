@@ -1,6 +1,9 @@
-const ProfileHelper = () => {
+// additional profile utility functions
+const ProfileUtils = () => {
+    /* ===== FUNCTIONS ===== */
+
     // FUNCTION 1: generateFormVals - generate an object representing the form values
-    // PRECONDITIONS (1 parameter):
+    // PRECONDITIONS (2 parameters):
     // 1.) userInfo - an profile object, which will be undefined if the user has not yet set up their profile
     // 2.) userId - a string representing the id of the current user
     // POSTCONDITINOS (1 parameter):
@@ -104,20 +107,19 @@ const ProfileHelper = () => {
     // POSTCONDITIONS (2 returns):
     // 1.) file: the file object associated with the ref hook
     // 2.) fileExt: the extension of the file
-    const getFileInfo = (avatarRef) => {
+    const getFileInfo = avatarRef => {
         const file = avatarRef.current.files[0];
         return { file: file, fileExt: file.name.split(".").pop() };
     };
 
     // FUNCTION 6: validateAvatar - determine if user has uploaded a valid avatar
-    // PRECONDITIONS (3 parameters):
+    // PRECONDITIONS (2 parameters):
     // 1.) avatarRef: a ref to the image input for avatar form
-    // 2.) userId: a string representing the id of the current user
-    // 3.) firstTimeUser: a boolean flag, whether or not the current user has profile created or not
+    // 2.) firstTimeUser: a boolean flag, whether or not the current user has profile created or not
     // POSTCONDTIONS (1 parameter):
     // 1.) error: error: a string that gives information as to why their image is problematic, if there is any problems.
     // if this string returns undefined, it means no errors were detected
-    const validateAvatar = (avatarRef, userId, firstTimeUser) => {
+    const validateAvatar = (avatarRef, firstTimeUser) => {
         // first, check if the user has created a profile. if they have not, return an error message
         if (firstTimeUser) {
             return "Error: Please edit your profile information before choosing an avatar.";
@@ -148,4 +150,5 @@ const ProfileHelper = () => {
     return { generateFormVals, validateUsername, validateBio, validateDiscord, getFileInfo, validateAvatar };
 };
 
-export default ProfileHelper;
+/* ===== EXPORTS ===== */
+export default ProfileUtils;

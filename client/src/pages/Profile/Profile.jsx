@@ -1,160 +1,89 @@
 /* ===== IMPORTS ===== */
-import "./profile.css";
-import React, { useContext, useEffect } from "react";
+import "./Profile.css";
 import { Link } from "react-router-dom";
-import ProfileInit from "./ProfileInit";
-import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
-import { UserContext } from "../../Contexts";
+import { StaticCacheContext, UserContext } from "../../Contexts";
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import ProfileLogic from "./Profile.js";
+import UserInfoForm from "./UserInfoForm";
+import AvatarInfoForm from "./AvatarInfoForm";
 
 function Profile({ cache }) {
+    /* ===== VARIABLES ===== */
+    const navigate = useNavigate();
+
     /* ===== CONTEXTS ===== */
 
-    // user state from user context
+    // static cache state from static cache context & user state from user context 
+    const { staticCache } = useContext(StaticCacheContext);
     const { user } = useContext(UserContext);
 
     /* ===== FUNCTIONS ===== */
 
     // states and functions from the init file
     const { 
-        loading,
         userForm,
         avatarForm,
-        avatarRef,
         initForms,
         handleChange,
         updateUserInfo,
         avatarSubmit,
-        signOut
-    } = ProfileInit();
+        signOutUser
+    } = ProfileLogic();
 
     /* ===== EFFECTS ===== */
 
-    // code that is executed when the page is first loaded, or when the cache fields are updated
+    // code that is executed when the page loads, or when the staticCache object is updated
     useEffect(() => {
-        if (cache.countries && user.id !== undefined) {
-            initForms(cache.countries); 
+        if (staticCache.countries.length > 0 && user.id !== undefined) {
+          // if not user.id (meaning user is null), current user is not authenticated. thus, deny
+          // access to this page.
+          if (!user.id) {
+            console.log("Error: Invalid access.");
+            navigate("/");
+            return;
+          }
+    
+          // call function to initialize both forms
+          initForms();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cache.countries, user]);
+      }, [staticCache, user]);
 
     /* ===== PROFILE COMPONENT ===== */
-    return (
+    return userForm.user && userForm.countries && avatarForm.avatar_url ?
         <>
+            { /* Profile header */ }
             <div className="profile-header">
                 <h1>Edit Your Profile</h1>
             </div>
-            { loading ? (
-                "Loading..."
-            ) : 
-            <>
-                <div className="profile-body">
-                    <div className="profile-user-info">
-                        <h2>Edit User Information</h2>
-                        <form className="profile-info-form" onSubmit={ (e) => updateUserInfo(e, cache.profiles) }>
-                            <div className="profile-info-entry">
-                                <label htmlFor="username">Username: </label>
-                                <input 
-                                    id="username"
-                                    type="text"
-                                    placeholder="username"
-                                    value={ userForm.user.username }
-                                    onChange={ handleChange }
-                                />
-                                { userForm.error.username ? <p>{ userForm.error.username }</p> : null }
-                            </div>
-                            <div className="profile-info-entry">
-                                <label htmlFor="bio">About Me (optional): </label>
-                                <textarea
-                                    id="bio"
-                                    rows={ 4 }
-                                    cols={ 50 } 
-                                    placeholder="About Me"
-                                    value={ userForm.user.bio }
-                                    onChange={ handleChange }
-                                />
-                                { userForm.error.bio ? <p>{ userForm.error.bio }</p> : null }
-                            </div>
-                            <div className="profile-info-entry">
-                                <label htmlFor="country">Country (optional): </label>
-                                <select 
-                                    id="country"
-                                    value= { userForm.user.country }
-                                    onChange={ handleChange }
-                                >
-                                    <option key={ "null" } value={ "" }>--</option>
-                                    { userForm.countries.map(country => (
-                                        <option key={ country.iso2 } value={ country.iso2 }>{ country.name }</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="profile-info-entry">
-                                <label htmlFor="youtube_url">YouTube URL (optional): </label>
-                                <input
-                                    id="youtube_url"
-                                    type="url"
-                                    placeholder="https://www.youtube.com/ChannelUrl"
-                                    value={ userForm.user.youtube_url }
-                                    onChange={ handleChange }
-                                    className="profile-url-text"
-                                />
-                            </div>
-                            <div className="profile-info-entry">
-                                <label htmlFor="twitch_url">Twitch URL (optional): </label>
-                                <input 
-                                    id="twitch_url"
-                                    type="url"
-                                    placeholder="https://www.twitch.tv/Username"
-                                    value={ userForm.user.twitch_url }
-                                    onChange={ handleChange }
-                                    className="profile-url-text"
-                                />
-                            </div>
-                            <div className="profile-info-entry">
-                                <label htmlFor="discord">Discord Username (optional): </label>
-                                <input 
-                                    id="discord"
-                                    type="text"
-                                    placeholder="Username#0000"
-                                    value={ userForm.user.discord }
-                                    onChange={ handleChange }
-                                />
-                                { userForm.error.discord ? <p>{ userForm.error.discord }</p> : null }
-                            </div>
-                            <button disabled={ userForm.updating }>Update Profile</button>
-                        </form>
-                    </div>
-                    <div className="profile-avatar-info">
-                        <h2>Update Avatar</h2>
-                        <p><b>Note:</b> Must be JPEG or PNG, and cannot exceed 5 MB. If your avatar does not update immediately, give it some time.</p>
-                        <form className="profile-avatar-form" onSubmit={ avatarSubmit }>
-                            <div className="profile-avatar"><SimpleAvatar url={ avatarForm.avatar_url } size={ 150 } imageReducer={ cache.imageReducer } /></div>
-                            <label htmlFor="avatar-update"></label>
-                            <input
-                                type="file"
-                                id="avatar-update"
-                                accept=".jpg,.jpeg,.png"
-                                ref={ avatarRef }
-                            />
-                            <button disabled={ avatarForm.updating }>Save</button>
-                            { avatarForm.error ? 
-                                <p> { avatarForm.error }</p>    
-                            :
-                                null
-                            }
-                        </form>
-                    </div>
-                </div>
-                <div className="profile-footer">
-                    <h2>Options</h2>
-                    <Link to={ `/user/${userForm.user.id}` }>
-                        <button>View Profile</button>
-                    </Link>
-                    <button onClick={ signOut }> Sign Out</button>
-                </div>
-            </>
-            }
-        </>
-    );
+
+            { /* Profile body - render the two profile forms */ }
+            <div className="profile-body"> 
+                <UserInfoForm form={ userForm } handleChange={ handleChange } formSubmit={ updateUserInfo } />
+                <AvatarInfoForm form={ avatarForm } formSubmit={ avatarSubmit } imageReducer={ cache.imageReducer } />
+            </div>
+
+            {/* Profile footer */}
+            <div className="profile-footer">
+
+                { /* Footer header */ }
+                <h2>Options</h2>
+
+                { /* Button to navigate to the user's page */ }
+                <Link to={ `/user/${ userForm.user.id }` }>
+                    <button>View Profile</button>
+                </Link>
+
+                { /* Button to sign the user out */ }
+                <button onClick={ signOutUser }> Sign Out</button>
+            </div>
+      </>
+    :
+        
+        // Loading component
+        <p>Loading...</p>
 };
 
+/* ===== EXPORTS ===== */
 export default Profile;
