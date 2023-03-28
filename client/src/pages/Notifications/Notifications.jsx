@@ -1,13 +1,15 @@
 /* ===== IMPORTS ===== */
-import "./notifications.css";
-import React, { useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
-import FrontendHelper from "../../helper/FrontendHelper";
-import NotificationsInit from "./NotificationsInit";
-import NotificationPopup from "./NotificationPopup";
+import "./Notifications.css";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../../Contexts";
+import NotificationsLogic from "./Notifications.js";
+import NotificationPopup from "./NotificationPopup";
+import NotificationTableRow from "./NotificationTableRow";
 
 function Notifications() {
+  /* ===== VARIABLES ===== */
+  const TABLE_WIDTH = 7;
+
   /* ===== CONTEXTS ===== */
   
   // user state from user context
@@ -17,17 +19,13 @@ function Notifications() {
 
   // states and functions from init file
   const { 
-    loading,
     notifications, 
     init, 
     setNotifications,
     toggleSelection,
     toggleSelectionAll,
     removeSelected
-  } = NotificationsInit();
-
-  // helper functions
-  const { cleanLevelName, capitalize, dateB2F, recordB2F } = FrontendHelper();
+  } = NotificationsLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -40,13 +38,18 @@ function Notifications() {
   }, [user]);
 
   /* ===== NOTIFICATION COMPONENT ===== */
-  return (
+  return notifications.all ?
     <>
+      { /* Notifications header */ }
       <div className="notifications-header">
         <div className="notifications-header-info">
+
+          { /* Render name of the page, and a message introducing the page. */ }
           <h1>Notifications</h1>
           <p><i>Below is the list of all your notifications. There are 4 types of notifications:</i></p>
         </div>
+
+        { /* Notification type list - render a list element describing each notification type. */ }
         <ol>
           <li><b>Approvals:</b> A moderator has approved of your submission.</li>
           <li><b>Inserts:</b> A moderator has submitted a submission on your behalf.</li>
@@ -54,71 +57,77 @@ function Notifications() {
           <li><b>Report:</b> A user has reported { user.is_mod ? "a submission." : "one of your submissions." }</li>
         </ol>
       </div>
+
+      { /* Notification body */ }
       <div className="notifications-body">
+
+        { /* Delete button - when pressed, will remove all notifications the user has selected. This button
+        is disabled if no notifications are selected. */ }
         <button onClick={ removeSelected } disabled={ notifications.selected.length === 0 }>Delete</button>
-        { loading ?
-          <p>Loading...</p>
-        :
-          <table>
-            <thead>
+
+        { /* Notification table */ }
+        <table>
+
+          { /* Table header - render information about what is contained in each row */ }
+          <thead>
+            <tr>
+
+              { /* Select all toggle - a checkbox the user can select to either select/unselect all notifications */ }
+              <th>
+                <input
+                  type="checkbox"
+                  checked={ notifications.all.length > 0 && notifications.selected.length === notifications.all.length }
+                  disabled={ notifications.all.length === 0 }
+                  onChange={ toggleSelectionAll }
+                />
+              </th>
+
+              <th>Details</th>
+              <th>Type</th>
+              <th>Game</th>
+              <th>Level</th>
+              <th>Record</th>
+              <th>Notification Date</th>
+            </tr>
+          </thead>
+
+          { /* Table body - render a row for each notification */ }
+          <tbody>
+
+            { /* If there are notifications, map a NotificationTableRow element for each notification */ }
+            { notifications.all.length > 0 ?
+              notifications.all.map(row => {
+                return <NotificationTableRow 
+                  row={ row } 
+                  notifications= { notifications } 
+                  setNotifications={ setNotifications } 
+                  toggleSelection={ toggleSelection } 
+                  key={ row.notif_date }
+                />;
+              })
+            :
+            
+              // Otherwise, render a single row that informs the user they have no notifications
               <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={ notifications.all.length > 0 && notifications.selected.length === notifications.all.length }
-                    disabled={ notifications.all.length === 0 }
-                    onChange={ toggleSelectionAll }
-                  />
-                </th>
-                <th>Details</th>
-                <th>Type</th>
-                <th>Game</th>
-                <th>Level</th>
-                <th>Record</th>
-                <th>Notification Date</th>
+                <td colSpan={ TABLE_WIDTH }>
+                  <i>You have no notifications!</i>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              { notifications.all.length > 0 ?
-                notifications.all.map(row => {
-                  return <tr key={ row.notif_date }>
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={ notifications.selected.includes(row.notif_date) }
-                        onChange={() => toggleSelection(row.notif_date) }
-                      />
-                    </td>
-                    <td><button onClick={ () => setNotifications({ ...notifications, current: row }) }>Info</button></td>
-                    <td>{ capitalize(row.notif_type) }</td>
-                    <td>
-                      <Link to={`/games/${ row.level.mode.game.abb }`}>
-                        { row.level.mode.game.name }
-                      </Link>
-                    </td>
-                    <td>
-                      <Link to={`/games/${ row.level.mode.game.abb }/${ row.level.misc ? "misc" : "main" }/${ row.score ? "score" : "time" }/${ row.level.name }`}>
-                        { cleanLevelName(row.level.name) } ({ capitalize(row.score ? "score" : "time") })
-                      </Link>
-                    </td>
-                    <td>{ recordB2F(row.record, row.type) }</td>
-                    <td>{ dateB2F(row.notif_date) }</td>
-                  </tr>
-                })
-              :
-                <tr>
-                  <td colSpan={ 7 }>
-                    <i>You have no notifications!</i>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table> 
-        } 
+            }
+
+          </tbody>
+
+        </table> 
       </div>
-      <NotificationPopup hook={ { state: notifications, setState: setNotifications } } />
+
+      { /* Notification popup element - will only render if the current field in the notification state is set */ }
+      <NotificationPopup notifications={ notifications } setNotifications={ setNotifications } />
     </>
-  );
+  :
+
+    // Loading component
+    <p>Loading...</p>
 };
 
+/* ===== EXPORTS ===== */
 export default Notifications;

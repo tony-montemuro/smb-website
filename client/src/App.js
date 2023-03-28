@@ -11,7 +11,7 @@ import Levelboard from "./pages/Levelboard/Levelboard";
 import Login from "./pages/Login/Login.jsx";
 import Medals from "./pages/Medals/Medals.jsx";
 import Navbar from "./components/Navbar/Navbar";
-import Notifications from "./pages/Notifications/Notifications";
+import Notifications from "./pages/Notifications/Notifications.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import Records from "./pages/Records/Records.jsx";
 import Resources from "./pages/Resources/Resources";
