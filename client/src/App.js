@@ -40,7 +40,6 @@ function App() {
   /* ===== STATES & REDUCERS ===== */
   const [user, setUser] = useState(defaultUser);
   const [staticCache, setStaticCache] = useState(defaultStaticCache);
-  const [countries, setCountries] = useState(null);
   const [games, setGames] = useState(null);
   const [levels, setLevels] = useState(null);
   const [moderators, setModerators] = useState(null);
@@ -184,7 +183,6 @@ function App() {
     });
 
     // update states
-    setCountries(countries);
     setGames(games);
     setLevels(levels);
     setModerators(moderators);
@@ -220,7 +218,7 @@ function App() {
             <Route path="/support" element={ <Support /> }/>
             <Route path="/notifications" element={ <Notifications /> } />
             <Route path="/login" element={ <Login /> }/>
-            <Route path="/profile" element={ <Profile cache={ { profiles: profiles, countries: countries, imageReducer: imageReducer } } /> }/>
+            <Route path="/profile" element={ <Profile imageReducer={ imageReducer } /> }/>
             <Route path="games/:game" element={ <Game /> }/>
             <Route path="games/:game/main" element={ <Game /> }/>
             <Route path="games/:game/misc" element={ <Game /> }/>

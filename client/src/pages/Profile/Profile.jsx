@@ -8,7 +8,7 @@ import ProfileLogic from "./Profile.js";
 import UserInfoForm from "./UserInfoForm";
 import AvatarInfoForm from "./AvatarInfoForm";
 
-function Profile({ cache }) {
+function Profile({ imageReducer }) {
     /* ===== VARIABLES ===== */
     const navigate = useNavigate();
 
@@ -61,7 +61,7 @@ function Profile({ cache }) {
             { /* Profile body - render the two profile forms */ }
             <div className="profile-body"> 
                 <UserInfoForm form={ userForm } handleChange={ handleChange } formSubmit={ updateUserInfo } />
-                <AvatarInfoForm form={ avatarForm } formSubmit={ avatarSubmit } imageReducer={ cache.imageReducer } />
+                <AvatarInfoForm form={ avatarForm } formSubmit={ avatarSubmit } imageReducer={ imageReducer } />
             </div>
 
             {/* Profile footer */}
