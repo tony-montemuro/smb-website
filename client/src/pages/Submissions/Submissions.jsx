@@ -1,112 +1,158 @@
 /* ===== IMPORTS ===== */
-import "./submissions.css";
+import "./Submissions.css";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { useEffect, useContext } from "react";
-import SubmissionInit from "./SubmissionsInit";
-import SubmissionsTable from "./SubmissionsTable";
-import { UserContext } from "../../Contexts";
+import { useNavigate } from "react-router-dom";
+import SubmissionsLogic from "./Submissions.js";
+import SubmissionsTable from "./SubmissionsTable.jsx";
+import { StaticCacheContext, UserContext } from "../../Contexts";
 
-function Submissions({ cache }) {
+function Submissions({ submissionReducer }) {
+  /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
+
   /* ===== CONTEXTS ===== */
 
   // user state from user context
   const { user } = useContext(UserContext);
 
+  // static cache state from static cache context
+  const { staticCache } = useContext(StaticCacheContext);
+
   /* ===== FUNCTIONS ===== */
 
   // states and functions from the init file
   const { 
-    loading, 
     submissions, 
-    currentGame, 
+    game, 
     approved,
     approving,
     swapGame,
     addToApproved,
     removeFromApproved,
     approveAll
-  } = SubmissionInit();
+  } = SubmissionsLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the page loads, or when cache fields are updated
   useEffect(() => {
-    if (cache.games && user.id !== undefined) {
-      swapGame(cache.games[0].abb, cache.submissionReducer);
+    if (staticCache.games.length > 0 && user.id !== undefined) {
+      // ensure current user is a moderator
+      const isMod = user && user.is_mod;
+
+      // if not, let's log an error, navigate back to the homepage, and return early
+      if (!isMod) {
+        console.log("Error: Forbidden access.");
+        navigate("/");
+        return;
+      }
+
+      // if we have made it this far, we can go ahead and load the first game in cache
+      swapGame(staticCache.games[0].abb, submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cache.games, user]);
+  }, [staticCache, user]);
 
-  /* ===== SUBMISSIONS COMPONENT ===== */
-  return (
+  /* ===== SUBMISSIONS COMPONENT [ONLY loads for moderators] ===== */
+  return user.is_mod &&
     <>
-      { user.is_mod ? 
-        <>
-          <div className="submissions-header">
-            <h1>Recent Submissions</h1>
-            <p><i>Below is the list of recent submissions. Please go through and review each submission for each game.</i></p>
-            <p>To select a game, use the <b>Select Game</b> selection tool.</p>
-            <p>If a submission is <b>valid</b>, add it to the list of approved records by pressing the <b>Approve</b> button
-            for that submission. <b>NOTE:</b> In order to finalize the approval process, you <i>must</i> press
-            the <b>Approve All</b> button under the <b>Approved Submissions</b> list. Remember, if you accidently add an invalid
-            run to the <b>Approved Submissions</b> list, you can always remove it by pressing the <b>Unapprove</b> button. </p>
-            <p>If you suspect a submission is <b>invalid</b>, first navigate to the board with the invalid
-            submission by clicking on the <b>Level Name</b>. If you still are suspicious, remove the record
-            by clicking the <b>Delete</b> button.</p>
-          </div> 
-          <div className="submissions-body">
-            { currentGame ? 
-              <div className="submissions-select">
-                <h3>Select Game:</h3>
-                <form>
-                  <select
-                    onChange={ (e) => swapGame(e.target.value, cache.submissionReducer) }
-                    value={ currentGame }
-                  >
-                    { cache.games.map(val => {
-                      return <option key={ val.abb } value={ val.abb }>{ val.name }</option>
-                    })}
-                  </select>
-                </form>
-              </div>
-            :
-              null
-            }
-            <div className="submissions-list">
-              <h3>Approved Submissions:</h3>
-              { approved.length > 0 ?
-                <SubmissionsTable 
-                  data={ { list: approved, isApproved: true } } 
-                  games={ { current: currentGame, all: cache.games } }
-                  toggleBtn={ approving } 
-                  buttonFunc={ removeFromApproved }
-                />
-              :
-                <p><i>Approve a submission to add it to the list!</i></p>
-              }
-              <button onClick={ () => approveAll(user) } disabled={ approved.length === 0 || approving }>Approve All</button>
-              <h3>Submissions:</h3>
-              { loading ? 
-                <p>Loading...</p>
-              :
-                submissions[currentGame].length > 0 ?
-                  <SubmissionsTable 
-                    data={ { list: submissions[currentGame], isApproved: false } } 
-                    games={ { current: currentGame, all: cache.games } }
-                    toggleBtn={ approving } 
-                    buttonFunc={ addToApproved } 
-                  />
-                :
-                  <p><i>This game has no unapproved submissions!</i></p>
-              }
-            </div>
-          </div>
-        </>
-      : 
-        null
-      }
-    </>
-  );
-}
+      { /* Submissions header - introduce moderator to the page */ }
+      <div className="submissions-header">
 
+        { /* Header - display the title of the page */ }
+        <h1>Recent Submissions</h1>
+
+        { /* Brief introduction to the page */ }
+        <p><i>Below is the list of recent submissions. Please go through and review each submission for each game.</i></p>
+
+        { /* Instructions on how to operate this page. */ }
+        <p>To select a game, use the <b>Select Game</b> selection tool.</p>
+        <p>If a submission is <b>valid</b>, add it to the list of approved records by pressing the <b>Approve</b> button
+        for that submission. <b>NOTE:</b> In order to finalize the approval process, you <i>must</i> press
+        the <b>Approve All</b> button under the <b>Approved Submissions</b> list. Remember, if you accidently add an invalid
+        run to the <b>Approved Submissions</b> list, you can always remove it by pressing the <b>Unapprove</b> button. </p>
+        <p>If you suspect a submission is <b>invalid</b>, first navigate to the board with the invalid
+        submission by clicking on the <b>Level Name</b>. If you still are suspicious, remove the record
+        by clicking the <b>Delete</b> button.</p>
+
+      </div> 
+
+      { /* Submissions body - render the game selector, approved submissions list, and submissions list */ }
+      <div className="submissions-body">
+
+        { /* Only render the game selector when games are loaded into cache, and the game state is defined */ }
+        { staticCache.games.length > 0 && game && 
+          <div className="submissions-select">
+            <h3>Select Game:</h3>
+
+            { /* Game select component: allows user to select one of the games loaded in cache from the dropdown */ }
+            <select
+              onChange={ (e) => swapGame(e.target.value, submissionReducer) }
+              value={ game }
+            >
+              { staticCache.games.map(val => {
+                return <option key={ val.abb } value={ val.abb }>{ val.name }</option>
+              })}
+            </select>
+
+          </div>
+        }
+
+        { /* Submissions list component - contains both the approved submission list, and unapproved submissions list */ }
+        <div className="submissions-list">
+          <h3>Approved Submissions:</h3>
+
+          { /* If there are any approved submissions, render a submission table that renders them all */ }
+          { approved.length > 0 ?
+            <SubmissionsTable 
+              submissions={ approved }
+              isApproved={ true } 
+              game={ game }
+              buttonIsDisabled={ approving } 
+              buttonFunc={ removeFromApproved }
+            />
+          :
+
+            // Otherwise, render a message instructing the moderator how to add approved submissions to the approved list
+            <p><i>Approve a submission to add it to the list!</i></p>
+          }
+
+          { /* Approve all button - When pressed, all submissions in the approved list will be approved in the database, and page
+          is reloaded. */ }
+          <button onClick={ () => approveAll(user) } disabled={ approved.length === 0 || approving }>Approve All</button>
+
+          { /* Unapproved submissions list: renders all the submissions in game that have not been approved */ }
+          <h3>Submissions:</h3>
+
+          { /* If the submissions[game] has been defined, we can attempt to render the submission table. */ }
+          { submissions[game] ? 
+
+            // If the array of all unapproved submissions is greater than 0, we can render the submission table
+            submissions[game].length > 0 ?
+              <SubmissionsTable 
+                submissions={ submissions[game] }
+                isApproved={ false }
+                game={ game }
+                buttonIsDisabled={ approving } 
+                buttonFunc={ addToApproved } 
+              />
+            :
+
+              // Otherwise, render a message stating that there do not exist any unapproved submissions for game.
+              <p><i>This game has no unapproved submissions!</i></p>
+
+          :
+
+            // Loading component while we await the submissions to be loaded
+            <p>Loading...</p>
+            
+          }
+
+        </div>
+      </div>
+    </>
+};
+
+/* ===== EXPORTS ===== */
 export default Submissions;

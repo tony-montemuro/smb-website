@@ -16,7 +16,7 @@ import Profile from "./pages/Profile/Profile.jsx";
 import Records from "./pages/Records/Records.jsx";
 import Resources from "./pages/Resources/Resources";
 import Session from "./database/authentication/Session";
-import Submissions from "./pages/Submissions/Submissions";
+import Submissions from "./pages/Submissions/Submissions.jsx";
 import Support from "./pages/Support/Support";
 import Totalizer from "./pages/Totalizer/Totalizer.jsx";
 import User from "./pages/User/User.jsx";
@@ -211,7 +211,7 @@ function App() {
           <Routes>
             <Route path="/" element={ <Home /> }/>
             <Route path="/submissions" element={
-              <Submissions cache={ { games: games, submissionReducer: submissionReducer } } />
+              <Submissions submissionReducer={ submissionReducer } />
             } />
             <Route path="/games" element={<GameSelect imageReducer={ imageReducer } />}/>
             <Route path="/resources" element={<Resources />}></Route>
