@@ -1,12 +1,12 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../Contexts";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
-import { UserContext } from "../../Contexts";
 
-const LevelboardInit = () => {
+const Levelboard = () => {
 	/* ===== HELPER FUNCTIONS ===== */
 	const { 
 		validateLevelboardPath, 
@@ -289,4 +289,5 @@ const LevelboardInit = () => {
 	};
 };  
 
-export default LevelboardInit;
+/* ===== EXPORTS ===== */
+export default Levelboard;

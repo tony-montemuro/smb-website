@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
-import "./levelboard.css";
-import React, { useContext, useEffect } from "react";
+import "./Levelboard.css";
 import { Link, useLocation } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { UserContext } from "../../Contexts";
 import DeletePopup from "./DeletePopup";
 import FrontendHelper from "../../helper/FrontendHelper";
-import LevelboardInit from "./LevelboardInit";
+import LevelboardLogic from "./Levelboard.js";
 import ReportPopup from "./ReportPopup";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
-import { UserContext } from "../../Contexts";
 
 function Levelboard({ cache }) {
 	/* ===== CONTEXTS ===== */
@@ -20,7 +20,7 @@ function Levelboard({ cache }) {
 
 	/* ===== FUNCTIONS ===== */
 
-	// hooks and functions from init file
+	// states and functions from js file
 	const { 
 		loading,
 		game,
@@ -35,7 +35,7 @@ function Levelboard({ cache }) {
 		setBoardReport,
 		setBoardDelete,
 		submitRecord
-	} = LevelboardInit();
+	} = LevelboardLogic();
 
 	// helper functions
 	const { capitalize, cleanLevelName, dateB2F, recordB2F } = FrontendHelper();
@@ -291,4 +291,5 @@ function Levelboard({ cache }) {
 	);
 };
 
+/* ===== EXPORTS ===== */
 export default Levelboard;

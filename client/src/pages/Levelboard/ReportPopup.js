@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
-import "./levelboard.css";
-import React, { useContext, useState } from "react";
+import "./Levelboard.css";
+import { useContext, useState } from "react";
+import { UserContext } from "../../Contexts";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
-import { UserContext } from "../../Contexts";
 
 function ReportPopup({ board, setBoard, moderators }) {
     /* ===== VARIABLES ===== */
@@ -115,4 +115,5 @@ function ReportPopup({ board, setBoard, moderators }) {
     );
 };
 
+/* ===== EXPORTS ===== */
 export default ReportPopup;

@@ -1,10 +1,10 @@
 /* ===== IMPORTS ===== */
-import "./levelboard.css";
-import React, { useContext, useState } from "react";
+import "./Levelboard.css";
+import { useContext, useState } from "react";
+import { UserContext } from "../../Contexts";
 import LevelboardDelete from "../../database/delete/LevelboardDelete";
 import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
-import { UserContext } from "../../Contexts";
 
 function DeletePopup({ board, setBoard }) {
   /* ===== CONTEXTS ===== */
@@ -93,4 +93,5 @@ function DeletePopup({ board, setBoard }) {
   );
 };
 
+/* ===== EXPORTS ===== */
 export default DeletePopup;
