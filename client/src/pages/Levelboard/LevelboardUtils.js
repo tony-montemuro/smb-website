@@ -1,87 +1,66 @@
-import FrontendHelper from "./FrontendHelper";
-import LevelboardUpdate from "../database/update/LevelboardUpdate";
+/* ===== IMPORTS ===== */
+import { useContext } from "react";
+import { UserContext } from "../../Contexts";
+import FrontendHelper from "../../helper/FrontendHelper";
+import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 
-const LevelboardHelper = () => {
-    // helper functions from separate modules
+const LevelboardUtils = () => {
+    /* ===== CONTEXTS ===== */
+
+    // user state from user context
+    const { user } = useContext(UserContext);
+
+    /* ===== FUNCTIONS ===== */
+
+    // helper functions
     const { capitalize, dateB2F, recordB2F } = FrontendHelper();
+
+    // database functions
     const { insertNotification } = LevelboardUpdate();
 
-    // ===== INTERNAL MODULE FUNCTIONS ===== //
-
-    // MODULE FUNCTION 1: getPosition - determine the posititon of a new submission
-    // PRECONDITIONS (3 parameters):
-    // 1.) record: a string representing a floating-point value
-    // 2.) submissions: an array of submissions, ordered by position
-    // POSTCONDITIONS (1 return):
-    // 1.) position: an integer value that describes the position of the new record in the submission list
-    const getPosition = (record, submissions) => {
-        // perform a while loop to find the first submission whose record is less than or equal to record param
-        let i = 0;
-        while (i < submissions.length && submissions[i].details.record > record) {
-            ++i;
-        }
-
-        // if a submission was not found, we want to return one greater than the length of the submissions array
-        if (i === submissions.length) {
-            return submissions.length+1;
-        }
-
-        // otherwise, just return the position of the submission found by the loop
-        return submissions[i].details.position;
-    };
-
-    // ===== RETURNED FUNCTIONS ===== //
-
-    // FUNCTION 1: validateLevelboardPath - determine if path is valid for Levelboard component
-    // PRECONDITINOS (2 parameters):
-    // 1.) game: an object containing information about the game defined in the path
-    // 2.) level: an object containing information about the level defined in the path
-    // POSTCONDITINOS (1 returns):
-    // 1.) error: a string that gives information as to why their is an issue with the path
-    // if this string returns a null value, it means no errors were detected
-    const validateLevelboardPath = (game, level) => {
-        // initialize error variable to null
-        let error = null;
-
-        // first, ensure game is legitimate
-        if (!game) {
-            error = "Error: Invalid game.";
-        }
-
-        // next, ensure level is legitimate
-        if (!level && !error) {
-            error = "Error: Invalid user.";
-        }
-
-        // return error message
-        return error;
-    };
-
-    // FUNCTION 2: getPrevAndNext - get the previous and next level names
+    // FUNCTION 1: getPrevAndNext - get the previous and next level names
     // PRECONDTIONS (2 parameters):
-    // 1.) index: the index of the current level
-    // 2.) levels: an array of levels, sorted by the id parameter
+    // 1.) game: an object containing information about the game defined in the path
+    // 2.) category: the current category, either "main" or "misc", also defined in the path
+    // 3.) levelName: a string corresponding to the name of a level, also defined in the path
     // POSTCONDITIONS (2 returns):
     // 1.) prev: the name of the previous level. if it does not exist, value will be null 
     // 2.) next: the name of the next level. if it does not exist, value will be null
-    const getPrevAndNext = (index, levels) => {
-        let prev = null, next = null;
-		if (index > 0) {
-			prev = levels[index-1].name;
-		}
-		if (index < levels.length-1) {
-			next = levels[index+1].name;
-		}
-        return { prev: prev, next: next };
+    const getPrevAndNext = (game, category, levelName) => {
+        // first, let's get the array of mode objects belonging to category
+        const isMisc = category === "misc" ? true : false;
+        const modes = game.mode.filter(row => row.misc === isMisc);
+
+        // define our obj containing the prev and next variables
+        const obj = { prev: null, next: null };
+
+        // iterate through each level to find the match, so we can determine previous and next
+        for (let i = 0; i < modes.length; i++) {
+            const levelArr = modes[i].level;
+
+            for (let j = 0; j < levelArr.length; j++) {
+                const name = levelArr[j].name;
+                if (name === levelName) {
+                    // if the next element exists in the level array, set next to that.
+                    // if NOT, now need to check if level array exists after current one. if so, set next to next array[0]
+                    // if NOT EITHER, then next will remain set to null
+                    obj.next = j+1 < levelArr.length ? levelArr[j+1].name : (i+1 < modes.length ? modes[i+1].level[0].name : null);
+                    return obj;
+                } else {
+                    obj.prev = name;
+                }
+            }
+        }
     };
 
-    // FUNCTION 3: insertPositionToLevelboard
+    // FUNCTION 2: insertPositionToLevelboard - for each submission, add the position.details field
     // PRECONDITIONS (1 parameter):
-    // 1.) submissions: an array of submission objects
-    // POSTCONDITION (no return): 
-    // each submission object in the submissions array  is updated to include position field,
-    // which accurately ranks each record based on the record field
-    const insertPositionToLevelboard = (submissions) => {
+    // 1.) submissions: an array of submission objects, ordered in descending order by details.record, then in ascending order
+    // by details.submitted_at
+    // POSTCONDITIONS (1 possible outcome): 
+    // each submission object in the submissions array is updated to include position field, which accurately ranks each record
+    // based on the details.record field
+    const insertPositionToLevelboard = submissions => {
         // variables used to determine position of each submission
         let trueCount = 1, posCount = trueCount;
 
@@ -98,20 +77,23 @@ const LevelboardHelper = () => {
         });
     };
 
-    // FUNCTION 4: submission2Form ("submission to form")
-    // PRECONDITIONS (3 parameters):
-    // 1.) submission is a submission object, or undefined
-    // 2.) game is a game object
-    // 3.) userId is a uuid string that belongs to some user, or is null
-    // POSTCONDITIONS (1 return):
-    // 1.) an object, which takes data from submission (if it exists), game, and userId (if it exists), and
-    // transforms it into an object which is compatible with the submission form
-     const submission2Form = (submission, game, userId) => {
+    // FUNCTION 3: submission2Form ("submission to form")
+    // PRECONDITIONS (5 parameters):
+    // 1.) submission: a submission object, or undefined
+    // 2.) game: an object containing information about the game
+    // 3.) type: a string, either "score" or "time"
+    // 4.) levelName: a valid name of a level
+    // 5.) userId: a uuid string that belongs to some user, or is null
+    // POSTCONDITIONS (2 possible outcomes, 1 return):
+    // if submission is defined, we use the information from this object to define the return object
+    // if not, we set many of the form values to their default values
+    // the object returned is compatible with the submission form
+    const submission2Form = (submission, game, type, levelName, userId) => {
         // if a submission exists, we can use the data to form our formData object
         if (submission) {
             const details = submission.details;
             return {
-                record: recordB2F(details.record, game.type),
+                record: recordB2F(details.record, type),
                 score: submission.score,
                 monkey_id: details.monkey.id,
                 region_id: details.region.id,
@@ -120,43 +102,50 @@ const LevelboardHelper = () => {
                 comment: details.comment ? details.comment : "",
                 user_id: userId,
                 game_id: game.abb,
-                level_id: game.level,
+                level_id: levelName,
                 submitted_at: dateB2F(details.submitted_at),
                 message: ""
             };
 
         // if not, we can fill the object with default data values
         } else {
+            console.log(game);
             return {
                 record: "",
-                score: game.type === "score" ? true : false,
-                monkey_id: game.monkeys[0].id,
-                region_id: game.regions[0].id,
+                score: type === "score" ? true : false,
+                monkey_id: game.monkey[0].id,
+                region_id: game.region[0].id,
                 live: true,
                 proof: "",
                 comment: "",
                 user_id: userId,
                 game_id: game.abb,
-                level_id: game.levelName,
+                level_id: levelName,
                 submitted_at: dateB2F(),
                 message: ""
             };
         }
     };
 
-    // FUNCTION 5: dateF2B ("date frontend-to-backend")
-    // Precondition: the date parameter can take two possible states: a date with the following format: YYYY-MM-DD, or null.
-    // Postcondition: the date is returned with the following format: YYYY-MM-DDTHH:MM:SS.***+00
+    // FUNCTION 4: dateF2B ("date frontend-to-backend") - converts a date paramter in a front-end format to a back-end format
+    // PRECONDITIONS (1 parameter): 
+    // 1.) date: a string, which can take two possible values:
+        // a.) a date with the following format: YYYY-MM-DD
+        // b.) null
+    // POSTCONDITIONS (1 return, 2 possible outcomes):
+    // if date is defined, we return the date with the following string appended to the end: YYYY-MM-DDTHH:MM:SS.***+00
+    // if date is undefined, we return the current date with the same format
     const dateF2B = date => {
         return date ? date+"T12:00:00.000+00" : new Date().toISOString().replace("Z", "+00");
     };
 
-    // FUNCTION 6: validateRecord
+    // FUNCTION 5: validateRecord - given a record field and type, validate the record
     // PRECONDITIONS (2 parameters):
-    // 1.) record: a string value representing the record of the submission
+    // 1.) recordField: a string value representing the record of the submission
     // 2.) type: a string value, either "score" or "time"
-    // POSTCONDITIONS (1 return):
-    // 1.) error: a string that either contains an error message, or undefined, if there is no error
+    // POSTCONDITIONS (1 return, 2 possible outcomes):
+    // if the record is determined to be invalid, return a string that contains the error message
+    // if the record is determined to be valid, return undefined
     const validateRecord = (recordField, type) => {
         // first, validate that record field is non-null
         if (!recordField) {
@@ -205,11 +194,12 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 7: validateProof
+    // FUNCTION 6: validateProof - given a proof string, validate the proof
     // PRECONDITIONS (1 parameter):
     // 1.) proof: a string value representing the proof of the submission
-    // POSTCONDITIONS (1 return):
-    // 1.) error: a string that either contains an error message, or undefined, if there is no error
+    // POSTCONDITIONS (1 return, 2 possible outcomes):
+    // if the proof is determined to be invalid, return a string that contains the error message
+    // if the proof is determined to be valid, return undefined
     const validateProof = proof => {
         // check if the proof field is non-null
         if (!proof) {
@@ -220,11 +210,12 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 8: validateComment
+    // FUNCTION 7: validateComment - given a comment string, validate the comment
     // PRECONDITIONS (1 parameter):
     // 1.) comment: a string value representing the comment of the submission
-    // POSTCONDITIONS (1 return):
-    // 1.) error: a string that either contains an error message, or undefined, if there is no error
+    // POSTCONDITIONS (1 return, 2 possible outcomes):
+    // if the comment is determined to be invalid, return a string that contains the error message
+    // if the comment is determined to be valid, return undefined
     const validateComment = comment => {
         // check if the comment is greater than 100 characters long
         if (comment.length > 100) {
@@ -235,38 +226,19 @@ const LevelboardHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 9: validateMessage
-    // PRECONDITIONS (2 parameters):
-    // 1.) message: a string value representing the message of the submission
-    // 2.) required: a boolean flag. if true, the function will require that message be a non-empty string. otherwise,
-    // the function will accept an empty message
-    // POSTCONDITIONS (1 return):
-    // 1.) error: a string that either contains an error message, or undefined, if there is no error
-    const validateMessage = (message, required) => {
-        // first, if the message is required, and is empty, return an error
-        if (required && message.length === 0) {
-            return "Message is required!";
-        }
-
-        // check if the message is greater than 100 characters long
-        if (message.length > 100) {
-            return "Message must be 100 characters or less.";
-        }
-
-        // if we made it this far, the comment is valid! return undefined, since there is no error
-        return undefined;
-    };
-
-    // FUNCTION 10: getDateOfSubmission
+    // FUNCTION 8: getDateOfSubmission - given the frontend date, oldSubmission data, the new record, and type, determine the
+    // date of the new submission date
     // PRECONDITIONS (4 parameters):
     // 1.) submittedAt: a string representing a date with a front-end format
     // 2.) oldSubmission: either a submission object belonging to a user, or undefined, depending on whether the current
     // 3.) record: a string or float value representing the record that the user is submitting
     // 4.) type: a string value, either "score" or "time"
     // user has submitted to this chart
-    // POSTCONDITIONS (1 return):
-    // 1.) backendDate: a string representing a date with the back-end format, or, undefined. undefined is returned only if
-    // a user is subitting a new record, but they realized they forgot to change the date
+    // POSTCONDITIONS (1 return, 2 possible outcomes):
+    // special case: if the submission date of the new submission is the same as that of the previous submission, but the records 
+    // are different, the user will be notified that they likely made an error. if the user rejects the confirmation message, 
+    // undefined returned
+    // in all other cases, a string representing a date with the back-end format is returned
     const getDateOfSubmission = (submittedAt, oldSubmission, record, type) => {
         // first, we need to handle defining the date differently if the user has a previous submissions
         if (oldSubmission) {
@@ -299,14 +271,36 @@ const LevelboardHelper = () => {
         return dateF2B(submittedAt);
     };
 
-    // FUNCTION 11: getSubmissionFromForm  - takes form values, and generates a new object with formatting ready for submission
+    // FUNCTION 9: getPosition - determine the posititon of a new submission
+    // PRECONDITIONS (2 parameters):
+    // 1.) record: a string representing a floating-point value that corresponds to a record
+    // 2.) submissions: an array of submissions, ordered by position
+    // POSTCONDITIONS (1 possible outcome, 1 return):
+    // 1.) position: an integer value that describes the position of the new record in the submission list
+    const getPosition = (record, submissions) => {
+        // perform a while loop to find the first submission whose record is less than or equal to record param
+        let i = 0;
+        while (i < submissions.length && submissions[i].details.record > record) {
+            ++i;
+        }
+
+        // if a submission was not found, we want to return one greater than the length of the submissions array
+        if (i === submissions.length) {
+            return submissions.length+1;
+        }
+
+        // otherwise, just return the position of the submission found by the loop
+        return submissions[i].details.position;
+    };
+
+    // FUNCTION 10: getSubmissionFromForm  - takes form values, and generates a new object with formatting ready for submission
     // PRECONDITIONS (4 parameter):
     // 1.) formVals: an object containing data generated from the submission form
     // 2.) date: a string representing the date of the submission. this is different from the `submitted_at` field already
     // present in the formVals object; it's converted to a backend format
     // 3.) id: a string that uniquely idenfies the current submission
     // 4.) submissions: an array of submissions, ordered by position
-    // POSTCONDITION (1 return):
+    // POSTCONDITION (1 possible outcome, 1 return):
     // 1.) submission: an object containing mostly the same information from formValues parameter, but with
     // additional field values, as well as removing the `message` field
     const getSubmissionFromForm = (formVals, date, id, submissions) => {
@@ -322,32 +316,30 @@ const LevelboardHelper = () => {
         return submission;
     };
 
-    // FUNCTION 12: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
+    // FUNCTION 11: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
     // to backend
-    // PRECONDITIONS (3 parameters):
+    // PRECONDITIONS (2 parameters):
     // 1.) formVals: an object that contains data from the submission form
     // 2.) id: a string representing the unique id assigned to the current submission
-    // 3.) userId: a string that represents the user id of the currently signed in user, NOT necessarily of
-    // the person who submitted the submission
-    // 4.) level: a string representing the name of the level
-    // 5.) type: a string value, either "score" or "time"
-    // POSTCONDITION (0 returns):
-    // this function will either generate a notification object and make a call to insert it into the database, or return early,
-    // depending on whether this submission was sent from the owner of the submission, or a moderator
-    const handleNotification = async (formVals, id, userId, level, type) => {
+    // POSTCONDITION (2 possible outcomes):
+    // if the current user does not own the submission, this function will generate a notification object and make a call to 
+    // insert it into the database
+    // if the current user does own the submission, this function returns early
+    const handleNotification = async (formVals, id) => {
         // determine the user id belonging to the submission
         const submissionUserId = formVals.user_id;
 
         // if these two ids are not equal, it means a moderator is inserting a submission, so we need to notify the owner
         // of the submission of this action. if this condition is not met, the function will return early
-        if (userId !== submissionUserId) {
+        if (user.id !== submissionUserId) {
 			let notification = {
 				notif_type: "insert",
 				user_id: submissionUserId,
-				creator_id: userId,
+				creator_id: user.id,
 				message: formVals.message,
-                level_id: level,
-                score: type === "score" ? true : false,
+                game_id: formVals.game_id,
+                level_id: formVals.level_id,
+                score: formVals.score,
                 record: formVals.record,
 				submission_id: id
 			};
@@ -358,19 +350,18 @@ const LevelboardHelper = () => {
     };
 
     return { 
-        validateLevelboardPath, 
-        getPrevAndNext,
+        getPrevAndNext, 
         insertPositionToLevelboard, 
-        submission2Form,
-        dateF2B,
+        submission2Form, 
+        dateF2B, 
         validateRecord,
         validateProof,
         validateComment,
-        validateMessage,
         getDateOfSubmission,
         getSubmissionFromForm,
         handleNotification
     };
 };
 
-export default LevelboardHelper;
+/* ===== EXPORTS ===== */
+export default LevelboardUtils;

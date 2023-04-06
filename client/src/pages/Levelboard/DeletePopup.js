@@ -1,96 +1,124 @@
 /* ===== IMPORTS ===== */
-import "./Levelboard.css";
 import { useContext, useState } from "react";
 import { UserContext } from "../../Contexts";
 import LevelboardDelete from "../../database/delete/LevelboardDelete";
-import LevelboardHelper from "../../helper/LevelboardHelper";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+import ValidationHelper from "../../helper/ValidationHelper";
 
-function DeletePopup({ board, setBoard }) {
-  /* ===== CONTEXTS ===== */
-
-  // user state from user context
-  const { user } = useContext(UserContext);
-
-  /* ===== STATES ===== */
-  const [form, setForm] = useState({ message: "", error: null });
-
-  /* ===== FUNCTIONS ===== */
-
-  // helper functions
-  const { remove } = LevelboardDelete();
-  const { validateMessage } = LevelboardHelper();
-  const { insertNotification } = LevelboardUpdate();
-
-  // function that is called when a user deletes their own run
-  const handleDelete = async () => {
-    // await the removal of the submission
-    await remove(board.delete.id);
-
-    // reload the page once that is done
-    window.location.reload();
-  };
-
-  // function that is called when a moderator is deleting a run from another user
-  const handleModDelete = async () => {
-    // first, verify that the message is valid
-    const error = validateMessage(form.message, false);
-    if (error) {
-      setForm({ ...form, error: error });
-      return;
-    }
-
-    // await the removal of the submission
-    await remove(board.delete.id);
-
-    // await the insertion of the delete notification
-    const notification = { 
-      notif_type: "delete",
-      user_id: board.delete.user_id,
-      creator_id: user.id,
-      message: form.message,
-      game_id: board.delete.game_id,
-      level_id: board.delete.level_id,
-      score: board.delete.type === "score" ? true : false,
-      record: board.delete.record
-    };
-    await insertNotification(notification);
+const DeletePopup = () => {
+    /* ===== VARIABLES ===== */
+    const formInit = { message: "", error: null };
     
-    // reload page
-    window.location.reload();
-  };
+    /* ===== CONTEXTS ===== */
 
-  /* ===== DELETE POPUP COMPONENT ===== */
-  return (
-    board.delete ? 
-      board.delete.user_id === user.id ?
-        <div className="levelboard-popup">
-          <div className="levelboard-popup-inner">
-            <h2>Are you sure you want to remove your submission?</h2>
-            <button onClick={ handleDelete }>Yes</button>
-            <button onClick={ () => setBoard({ ...board, delete: null }) }>No</button>
-          </div> 
-        </div>
-      :
-        <div className="levelboard-popup">
-          <div className="levelboard-popup-inner">
-              <h2>Are you sure you want to remove the following { board.delete.type }: { board.delete.record } by { board.delete.username }?</h2>
-              <form>
-                <label>Leave a message: </label>
-                <input 
-                  type="text"
-                  value={ form.message }
-                  onChange={ e => setForm({ error: null, message: e.target.value }) }
-                />
-                { form.error ? <p>{ form.error }</p> : null }
-              </form>
-              <button onClick={ handleModDelete }>Yes</button>
-              <button onClick={ () => setBoard({ ...board, delete: null }) }>No</button>
-          </div>
-        </div> 
-    :
-      null
-  );
+    // user state from user context
+    const { user } = useContext(UserContext);
+
+    /* ===== STATES ===== */
+    const [form, setForm] = useState(formInit);
+
+    /* ===== FUNCTIONS ===== */
+
+    // helper functions
+    const { validateMessage } = ValidationHelper();
+
+    // database functions
+    const { remove } = LevelboardDelete();
+    const { insertNotification } = LevelboardUpdate();
+
+    // FUNCTION 1: handleOwnDelete - function that is called when a moderator deletes their own run
+    // PRECONDITIONS (1 parameter, 1 condition):
+    // 1.) submission_id: a string representing the id of the submission being deleted
+    // this submission must belong to the current user
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the submission is successfully removed from the database, the page is reloaded
+    // otherwise, the user is alerted of the error that has occured, and the page is not reloaded
+    const handleOwnDelete = async (submission_id) => {
+        try {
+            // await the removal of the submission
+            await remove(submission_id);
+
+            // if successful, reload the page
+            window.location.reload();
+
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+    };
+
+    // FUNCTION 2: handleDelete - general function called when a moderator deletes a run (NOT belonging to themselves)
+    // PRECONDITIONS (1 parameter, 1 condition):
+    // 1.) deleteObj: an object that contains information about the submission to be deleted. comes from the board state in Levelboard.js.
+    // this submission must NOT belong to the current user
+    // POSTCONDITIONS (3 possible outcomes):
+    // if the message field in form is not validated, this function will update the error state in the setForm field by calling the
+    // setForm() function, and return early
+    // if the message field in form is validated, and the database queries are successful, the function will simply reload the page
+    // if the message field in form is validated, but the database queries are unsuccessful, the user will be informed of the error
+    // that caused the queries to fail, and the page is NOT reloaded
+    const handleDelete = async (deleteObj) => {
+        // first, verify that the message is valid
+        const error = validateMessage(form.message, false);
+
+        // if there is an error, update the error field of the form state, and return the function early
+        if (error) {
+            setForm({ ...form, error: error });
+            return;
+        }
+
+        // notification object
+        const notification = { 
+            notif_type: "delete",
+            user_id: deleteObj.user_id,
+            creator_id: user.id,
+            message: form.message,
+            game_id: deleteObj.game_id,
+            level_id: deleteObj.level_id,
+            score: deleteObj.type === "score" ? true : false,
+            record: deleteObj.record
+        };
+
+        // perform database queries
+        try {
+            // first, remove the submission
+            await remove(deleteObj.id);
+
+            // then, insert the notification
+            await insertNotification(notification);
+
+            // if both queries succeed, reload the page
+            window.location.reload();
+
+        } catch (error) {
+            console.log(error);
+            alert(error.message);
+        }
+    };
+    
+    // FUNCTION 3: handleChange - function that is called everytime the user updates the message form
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: an event object generated when the user makes a change to the message form
+    // POSTCONDITIONS (1 possible outcome):
+    // the error and message fields of the form state are updated by calling the setForm() function. the error field is
+    // set to null (default value), and the message field is set to the current value of the form field
+    const handleChange = (e) => {
+        setForm({ error: null, message: e.target.value });
+    };
+
+    // FUNCTION 4 - closePopup: given the board state, and it's corresponding function (setBoard), close the popup
+    // PRECONDITIONS (2 parameters):
+    // 1.) board: the board state, which is defined in Levelboard.js
+    // 2.) setBoard: the function that allows you to update the board state
+    // POSTCONDITIONS (1 possible outcome):
+    // the form is set to it's default value by calling setForm(formInit), and the delete popup is closed by calling
+    // setBoard({ ...board, delete: null })
+    const closePopup = (board, setBoard) => {
+        setForm(formInit);
+        setBoard({ ...board, delete: null });
+    };
+    
+    return { form, handleOwnDelete, handleDelete, handleChange, closePopup };
 };
 
 /* ===== EXPORTS ===== */

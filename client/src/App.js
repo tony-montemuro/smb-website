@@ -40,10 +40,6 @@ function App() {
   /* ===== STATES & REDUCERS ===== */
   const [user, setUser] = useState(defaultUser);
   const [staticCache, setStaticCache] = useState(defaultStaticCache);
-  const [games, setGames] = useState(null);
-  const [levels, setLevels] = useState(null);
-  const [moderators, setModerators] = useState(null);
-  const [profiles, setProfiles] = useState(null);
   const [submissions, dispatchSubmissions] = useReducer((state, action) => {
     const submissionAbb = state[action.abb] || {};
     const submissionCategory = submissionAbb[action.category] || {};
@@ -71,18 +67,12 @@ function App() {
   // load functions from the load file
   const { 
     loadCountries, 
-    loadGames, 
-    loadLevels, 
-    loadModerators,
-    loadGameMonkeys,
-    loadAllMonkeys, 
+    loadGames,
+    loadModerators, 
     loadProfiles,
-    loadGameRegions,
-    loadAllRegions,
     loadUserNotifications,
     loadUserProfile,
-    isModerator,
-    newLoadGames,
+    isModerator
   } = AppRead();
 
   // load the getSession function
@@ -135,32 +125,12 @@ function App() {
   // async function that will make concurrent api calls to the database
   const loadData = async () => {
     // make concurrent api calls to database to load data
-    const [countries, newGames, games, levels, moderators, gameMonkeys, allMonkeys, newProfiles, profiles, gameRegions, allRegions] = await Promise.all(
-      [loadCountries(), newLoadGames(), loadGames(), loadLevels(), loadModerators(), loadGameMonkeys(), loadAllMonkeys(), loadProfiles(), loadProfiles(), loadGameRegions(), loadAllRegions()]
+    const [countries, games, moderators, profiles] = await Promise.all(
+      [loadCountries(), loadGames(), loadModerators(), loadProfiles()]
     );
 
-    // assign monkeys to each game
-    games.forEach(game => {
-      const gameMonkeysFiltered = gameMonkeys.filter(row => row.game === game.abb);
-      const arr = [];
-      gameMonkeysFiltered.forEach(row => {
-        arr.push(allMonkeys.find(e => e.id === row.monkey));
-      });
-      game.monkeys = arr;
-    });
-
-    // assign regions to each game
-    games.forEach(game => {
-      const gameRegionsFiltered = gameRegions.filter(row => row.game === game.abb);
-      const arr = [];
-      gameRegionsFiltered.forEach(row => {
-        arr.push(allRegions.find(e => e.id === row.region))
-      });
-      game.regions = arr;
-    });
-
     // clean up the many-to-many relationships present in each game object
-    newGames.forEach(game => {
+    games.forEach(game => {
       // first, handle the game <==> monkey relationship
       game.monkey = [];
       game.game_monkey.forEach(row => game.monkey.push(row.monkey));
@@ -173,7 +143,7 @@ function App() {
     });
 
     // add the mod field to each profile object
-    newProfiles.forEach(profile => {
+    profiles.forEach(profile => {
       profile.mod = false;
       moderators.forEach(moderator => {
         if (profile.id === moderator.user_id) {
@@ -182,17 +152,14 @@ function App() {
       });
     });
 
-    // update states
-    setGames(games);
-    setLevels(levels);
-    setModerators(moderators);
-    setProfiles(profiles);
+    // update static cache
     setStaticCache({
       countries: countries,
-      games: newGames,
-      profiles: newProfiles
+      games: games,
+      moderators: moderators,
+      profiles: profiles
     });
-    console.log(newGames);
+    console.log(games);
   };
 
   // code that is executed on page load
@@ -247,44 +214,16 @@ function App() {
               <Records submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/main/score/:levelid" element={
-              <Levelboard cache={ { 
-                games: games,
-                levels: levels,
-                moderators: moderators,
-                submissionReducer: submissionReducer,
-                profiles: profiles,
-                imageReducer: imageReducer
-              } } />
+              <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/main/time/:levelid" element={
-              <Levelboard cache={ { 
-                games: games,
-                levels: levels,
-                moderators: moderators,
-                submissionReducer: submissionReducer,
-                profiles: profiles,
-                imageReducer: imageReducer
-              } } />
+              <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/misc/score/:levelid" element={
-              <Levelboard cache={ { 
-                games: games,
-                levels: levels,
-                moderators: moderators,
-                submissionReducer: submissionReducer,
-                profiles: profiles,
-                imageReducer: imageReducer
-              } } />
+              <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/misc/time/:levelid" element={
-              <Levelboard cache={ { 
-                games: games,
-                levels: levels,
-                moderators: moderators,
-                submissionReducer: submissionReducer,
-                profiles: profiles,
-                imageReducer: imageReducer
-              } } />
+              <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>
             <Route path="/user/:userId" element={<User imageReducer={ imageReducer } />}/>
             <Route path="/user/:userId/:game/main/score" element={

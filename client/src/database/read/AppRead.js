@@ -1,6 +1,9 @@
+/* ===== IMPORTS ===== */
 import { supabase } from "../SupabaseClient";
 
 const AppRead = () => {
+    /* ===== FUNCTIONS ===== */
+    
     // function that loads all the countries data
     const loadCountries = async () => {
         try {
@@ -24,51 +27,56 @@ const AppRead = () => {
         return [];
     };
 
-    // function that loads all the game data
+    // function that loads all the data for each game, and returns it as an array of objects
     const loadGames = async () => {
         try {
-            const { data: gamesList, error, status } = await supabase
+            const { data: gameList, error, status } = await supabase
                 .from("game")
-                .select("abb, name, custom, release_date")
-                .order("id");
+                .select(`
+                    abb,
+                    custom, 
+                    game_monkey (
+                        monkey (
+                            id,
+                            monkey_name
+                        )
+                    ),
+                    game_region (
+                        region (
+                            id,
+                            region_name
+                        )
+                    ),
+                    mode (
+                        level (
+                            chart_type,
+                            misc,
+                            name,
+                            time
+                        ),
+                        misc,
+                        name
+                    ),
+                    name,
+                    release_date
+                `)
+                .order("id")
+                .order("id", { foreignTable: "mode", ascending: true })
+                .order("name", { foreignTable: "mode", ascending: true })
+                .order("id", { foreignTable: "mode.level", ascending: true });
 
             // error handling
             if (error && status !== 406) {
                 throw error;
             }
 
-            // return data
-            return gamesList;
+            // return the games
+            return gameList;
 
-        } catch(error) {
+        } catch (error) {
             console.log(error);
             alert(error.message);
         }
-        return [];
-    };
-
-    // function that loads all the level data
-    const loadLevels = async () => {
-        try {
-            const { data: levelsList, error, status } = await supabase
-                .from("level")
-                .select("game, name, mode, misc, chart_type, time")
-                .order("game")
-                .order("id");
-
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            // return data
-            return levelsList;
-
-        } catch(error) {
-            console.log(error);
-            alert(error.message);
-        }
-        return [];
     };
 
     // function that loads all the moderators
@@ -90,53 +98,6 @@ const AppRead = () => {
             console.log(error);
             alert(error.message);
         }
-    };
-
-    // function that loads all the gameMonkey data
-    const loadGameMonkeys = async () => {
-        try {
-            const { data: gameMonkeysList, error, status } = await supabase
-                .from("game_monkey")
-                .select("*")
-                .order("game")
-                .order("monkey");
-
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            // return data
-            return gameMonkeysList;
-
-        } catch (error) {
-            console.log(error);
-            alert(error.message);
-        }
-        return [];
-    };
-
-    // function that loads all the monkey data
-    const loadAllMonkeys = async () => {
-        try {
-            const { data: monkeysList, error, status } = await supabase
-                .from("monkey")
-                .select("*")
-                .order("id");
-
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            // return data
-            return monkeysList;
-            
-        } catch(error) {
-            console.log(error);
-            alert(error.message);
-        }
-        return [];
     };
 
     // function that loads all the profiles data
@@ -164,53 +125,6 @@ const AppRead = () => {
             return profilesList;
 
         } catch(error) {
-            console.log(error);
-            alert(error.message);
-        }
-        return [];
-    };
-
-    // function that loads all the region data
-    const loadGameRegions = async () => {
-        try {
-            const { data: gameRegionsList, error, status } = await supabase
-                .from("game_region")
-                .select("*")
-                .order("game")
-                .order("region");
-
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            // return data
-            return gameRegionsList;
-
-        } catch (error) {
-            console.log(error);
-            alert(error.message);
-        }
-        return [];
-    };
-
-    // function that loads all the region data
-    const loadAllRegions = async () => {
-        try {
-            const { data: allRegionsList, error, status } = await supabase
-                .from("region")
-                .select("*")
-                .order("id");
-
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            // return data
-            return allRegionsList;
-
-        } catch (error) {
             console.log(error);
             alert(error.message);
         }
@@ -314,73 +228,16 @@ const AppRead = () => {
         }
     };
 
-    // function that loads all the data for each game, and returns it as an array of objects
-    const newLoadGames = async () => {
-        try {
-            const { data: gameList, error, status } = await supabase
-                .from("game")
-                .select(`
-                    abb,
-                    custom, 
-                    game_monkey (
-                        monkey (
-                            id,
-                            monkey_name
-                        )
-                    ),
-                    game_region (
-                        region (
-                            id,
-                            region_name
-                        )
-                    ),
-                    mode (
-                        level (
-                            chart_type,
-                            misc,
-                            name,
-                            time
-                        ),
-                        misc,
-                        name
-                    ),
-                    name,
-                    release_date
-                `)
-                .order("id")
-                .order("id", { foreignTable: "mode", ascending: true })
-                .order("name", { foreignTable: "mode", ascending: true })
-                .order("id", { foreignTable: "mode.level", ascending: true });
-
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            // return the games
-            return gameList;
-
-        } catch (error) {
-            console.log(error);
-            alert(error.message);
-        }
-    };
-
     return { 
         loadCountries, 
-        loadGames, 
-        loadLevels, 
+        loadGames,
         loadModerators,
-        loadGameMonkeys,
-        loadAllMonkeys, 
         loadProfiles,
-        loadGameRegions,
-        loadAllRegions,
         loadUserNotifications,
         loadUserProfile,
-        isModerator,
-        newLoadGames
+        isModerator
     };
 };
 
+/* ===== EXPORTS ===== */
 export default AppRead;

@@ -1,15 +1,17 @@
 /* ===== IMPORTS ===== */
-import "./Levelboard.css";
 import { useContext, useState } from "react";
-import { UserContext } from "../../Contexts";
-import LevelboardHelper from "../../helper/LevelboardHelper";
+import { StaticCacheContext, UserContext } from "../../Contexts";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+import ValidationHelper from "../../helper/ValidationHelper";
 
-function ReportPopup({ board, setBoard, moderators }) {
+const DeletePopup = () => {
     /* ===== VARIABLES ===== */
     const formInit = { message: "", error: null };
 
     /* ===== CONTEXTS ===== */
+
+    // static cache state from static cache context
+    const { staticCache } = useContext(StaticCacheContext);
 
     // user state from user context
     const { user } = useContext(UserContext);
@@ -21,99 +23,91 @@ function ReportPopup({ board, setBoard, moderators }) {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { validateMessage } = LevelboardHelper();
+    const { validateMessage } = ValidationHelper();
     const { insertNotification } = LevelboardUpdate();
 
-    // function that is used to send reports to each mod, as well as the owner of the submission being reported
-    const handleReport = async () => {
+    // FUNCTION 1 - handleReport: given the report object, send an array of reports to all moderators, and the owner
+    // of the submission
+    // PRECONDITIONS (1 parameter):
+    // 1.) report: an object that contains information about the reported submission. comes from the board state in Levelboard.js.
+    // POSTCONDITIONS (3 possible outcomes):
+    // if the message is not validated, the error field of form is updated by calling setForm() function, and the function returns early
+    // if the message is validated, and at least one notification fails to insert, user is alerted of the error
+    // if the message is validated, and all notifications insert, reportMessage is updated by calling the setReportMessage function
+    const handleReport = async (report) => {
         // first, verify that the message is valid
         const error = validateMessage(form.message, true);
         if (error) {
             setForm({ ...form, error: error });
             return;
         }
-
+    
         // now, let's get the list of mods that DOES NOT include the current user if they are a moderator
+        const moderators = staticCache.moderators;
         const relevantMods = moderators.filter(row => row.user_id !== user.id);
+    
+        // define our base notifObject
+        const notifObject = {
+            notif_type: "report",
+            creator_id: user.id,
+            game_id: report.game_id,
+            level_id: report.level_id,
+            score: report.type === "score" ? true : false,
+            record: report.record,
+            submission_id: report.id,
+            message: form.message
+        };
 
-        // now, let's send the report notification to { board.report.username }, as well as all the moderators
+        // create an array of functions, each of which corresponds to a function call to inserting a notification to the database
+        // this is for moderators
         const notifPromises = relevantMods.map(e => {
-            return insertNotification({
-                notif_type: "report",
-                user_id: e.user_id, 
-                creator_id: user.id,
-                level_id: board.report.level_id,
-                score: board.report.type === "score" ? true : false,
-                record: board.report.record,
-                submission_id: board.report.id,
-                message: form.message
-            });
+            return insertNotification({ ...notifObject, user_id: e.user_id });
         });
+
+        // finally, push the function that inserts a notification to the database for the user being reported
         notifPromises.push(
-            insertNotification({
-                notif_type: "report",
-                user_id: board.report.user_id, 
-                creator_id: user.id,
-                level_id: board.report.level_id,
-                score: board.report.type === "score" ? true : false,
-                record: board.report.record,
-                submission_id: board.report.id,
-                message: form.message
-            })
+            insertNotification({ ...notifObject, user_id: report.user_id })
         );
-        
+          
+        // now, let's actually perform all the queries
         try {
             // await promises to complete
             await Promise.all(notifPromises);
-
+        
             // finally, set the report message. this will show to the user to let them know the report was a success
-            setReportMessage(`Report was successful. All moderators, as well as ${ board.report.username }, have been notified.`);
-
+            setReportMessage(`Report was successful. All moderators, as well as ${ report.username }, have been notified.`);
+    
         } catch (error) {
             console.log(error);
             alert(error.message);
         }
     };
 
-    // function that resets the internal state of the component when the component is closed
-    const closePopup = () => {
+    // FUNCTION 2 - handleChange: given the event object, update the form state each time a user makes a change
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: an event object generated when the user makes a change to the message form
+    // POSTCONDITIONS (1 possible outcome):
+    // the form state is updated by calling the setForm() function. the error field is set to null, and
+    // the message field is set to the current value of the form
+    const handleChange = (e) => {
+        setForm({ error: null, message: e.target.value });
+    };
+
+    // FUNCTION 3 - closePopup: given the board state, and it's corresponding function (setBoard), close the popup
+    // PRECONDITIONS (2 parameters):
+    // 1.) board: the board state, which is defined in Levelboard.js
+    // 2.) setBoard: the function that allows you to update the board state
+    // POSTCONDITIONS (1 possible outcome):
+    // the form is set to it's default value by calling setForm(formInit), setReportMessage is set to it's default value
+    // by calling setReportMessage(null), and the report popup is closed by calling setBoard({ ...board, report: null })
+    const closePopup = (board, setBoard) => {
         setForm(formInit);
         setReportMessage(null);
         setBoard({ ...board, report: null });
     };
 
-    /* ===== REPORT POPUP COMPONENT ===== */
-    return (
-        board.report ?
-            <div className="levelboard-popup">
-                <div className="levelboard-popup-inner">
-                    <div className="report-levelboard-popup">
-                        <button onClick={ closePopup }>Close</button>
-                    </div>
-                    <h2>Are you sure you want to report the following { board.report.type }: { board.report.record } by { board.report.username }?</h2>
-                    <p>In your message, please explain your reasoning for reporting the submission. This message will be delivered to { board.report.username },
-                    as well as the moderation team.</p>
-                    <p><b>Note:</b> <i>Please only report once! Repeatedly reporting a single submission can result in a permanent account ban!</i></p>
-                    <p><i>You will know that a report was successful if you get a little message below the 'Yes' and 'No' buttons.</i></p>
-                    <form>
-                        <label>Message: </label>
-                        <input 
-                            type="text"
-                            value={ form.message }
-                            onChange={ e => setForm({ error: null, message: e.target.value }) }
-                            disabled={ reportMessage }
-                        />
-                        { form.error ? <p>{ form.error }</p> : null }
-                    </form>
-                    <button onClick={ handleReport } disabled={ reportMessage }>Yes</button>
-                    <button onClick={ closePopup } disabled={ reportMessage }>No</button>
-                    { reportMessage ? <p>{ reportMessage }</p> : null }
-                </div>
-            </div>
-        :
-            null
-    );
+    return { form, reportMessage, handleReport, handleChange, closePopup };
 };
 
 /* ===== EXPORTS ===== */
-export default ReportPopup;
+export default DeletePopup;
