@@ -200,8 +200,12 @@ const AppRead = () => {
             return profile;
             
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            if (error.code === "PGRST116") {
+                alert("Welcome to SMBElite! Please create your profile to get started!");
+            } else {
+                console.log(error);
+                alert(error.message);
+            }
         }
     };
 
