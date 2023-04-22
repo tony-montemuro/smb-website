@@ -4,7 +4,11 @@ import { supabase } from "../SupabaseClient";
 const AppRead = () => {
     /* ===== FUNCTIONS ===== */
     
-    // function that loads all the countries data
+    // FUNCTION 1: loadCountries - async function that makes a call to supabase to get an array of all the countries
+    // PRECONDTIONS: NONE
+    // POSTCONDTIONS (2 possible outcomes):
+    // if the query is successful, the list of countries is simply returned
+    // otherwise, the user is alerted of the error, and an empty array is returned
     const loadCountries = async () => {
         try {
             const { data: countryList, error, status } = await supabase
@@ -23,11 +27,15 @@ const AppRead = () => {
         } catch(error) {
             console.log(error);
             alert(error.message);
+            return [];
         }
-        return [];
     };
 
-    // function that loads all the data for each game, and returns it as an array of objects
+    // FUNCTION 2: loadGames - async function that makes a call to supabase to get an array of all the games
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, the list of games is simply returned
+    // otherwise, the user is alerted of the error, and an empty array is returned
     const loadGames = async () => {
         try {
             const { data: gameList, error, status } = await supabase
@@ -76,10 +84,15 @@ const AppRead = () => {
         } catch (error) {
             console.log(error);
             alert(error.message);
+            return [];
         }
     };
 
-    // function that loads all the moderators
+    // FUNCTION 3: loadModerators - async function that makes a call to supabase to get an array of all the moderators
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, the list of moderators is simply returned
+    // otherwise, the user is alerted of the error, and an empty array is returned
     const loadModerators = async () => {
         try {
             const { data: moderatorList, error, status } = await supabase
@@ -97,10 +110,15 @@ const AppRead = () => {
         } catch (error) {
             console.log(error);
             alert(error.message);
+            return [];
         }
     };
 
-    // function that loads all the profiles data
+    // FUNCTION 4: loadProfiles - async function that makes a call to supabase to get an array of all the profiles
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, the list of profiles is simply returned
+    // otherwise, the user is alerted of the error, and an empty array is returned
     const loadProfiles = async () => {
         try {
             const { data: profilesList, error, status } = await supabase
@@ -127,11 +145,17 @@ const AppRead = () => {
         } catch(error) {
             console.log(error);
             alert(error.message);
+            return [];
         }
-        return [];
     };
 
-    // function that loads all the notifications for a given user
+    // FUNCTION 5: loadUserNotifications - async function that makes a call to supabase to get an array of all notifications for
+    // a given user
+    // PRECONDITIONS (1 parameter):
+    // 1.) userId - a string corresponding to the uuid of a user, typically the currently signed-in user
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, the list of notifications is simply returned
+    // otherwise, the user is alerted of the error, and an empty array is returned
     const loadUserNotifications = async (userId) => {
         try {
             const { data: notificationsList, error, status } = await supabase
@@ -171,10 +195,16 @@ const AppRead = () => {
         } catch (error) {
             console.log(error);
             alert(error.message);
+            return [];
         }
     };
 
-    // function that loads the profile for a particular user
+    // FUNCTION 6: loadUserProfile - async function that makes a call to supabase to get the profile object for a given user
+    // PRECONDITIONS (1 parameter):
+    // 1.) userId - a string corresponding to the uuid of a user, typically the currently signed-in user
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, the profile object is simply returned
+    // otherwise, the user is alerted of the error, and null is returned
     const loadUserProfile = async (userId) => {
         try {
             const { data: profile, error } = await supabase
@@ -200,16 +230,23 @@ const AppRead = () => {
             return profile;
             
         } catch (error) {
+            // special case: user is authenticated, but has not created a profile yet
             if (error.code === "PGRST116") {
                 alert("Welcome to SMBElite! Please create your profile to get started!");
             } else {
                 console.log(error);
                 alert(error.message);
             }
+            return null;
         }
     };
 
-    // function that determines if the current user should have moderator privileges, based on the userId parameter
+    // FUNCTION 7: isModerator - async function that makes a call to supabase to determine whether or not the given user is a moderator
+    // PRECONDITIONS (1 parameter):
+    // 1.) userId - a string corresponding to the uuid of a user, typically the currently signed-in user
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, return a boolean value: true if the user is a moderator, and false otherwise
+    // otherwise, the user is alerted of the error, and false is returned
     const isModerator = async (userId) => {
         try {
             const { data: moderator, error } = await supabase
@@ -229,6 +266,7 @@ const AppRead = () => {
         } catch (error) {
             console.log(error);
             alert(error.message);
+            return false;
         }
     };
 
