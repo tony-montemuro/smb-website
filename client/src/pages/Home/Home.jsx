@@ -2,6 +2,7 @@
 import "./Home.css";
 import { useEffect } from "react";
 import HomeLogic from "./Home.js";
+import RecentSubmissionRow from "./RecentSubmissionRow";
 
 function Home() {
   /* ===== STATES & FUNCTIONS ===== */
@@ -18,7 +19,7 @@ function Home() {
   }, []);
 
   /* ===== HOME COMPONENT ===== */
-  return (
+  return submissions &&
     <>
       <div className="home-header">
         <h1>Welcome to SMBElite!</h1>
@@ -26,9 +27,26 @@ function Home() {
       </div>
       <div className="home-body">
         <h2>Recent Submissions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Submitted</th>
+              <th>User</th>
+              <th>Game</th>
+              <th>Level</th>
+              <th>Type</th>
+              <th>Record</th>
+              <th>Position</th>
+            </tr>
+          </thead>
+          <tbody>
+            { submissions.map((submission) => {
+              return <RecentSubmissionRow submission={ submission } key={ submission.id } />
+            })}
+          </tbody>
+        </table>
       </div>
     </>
-  );
 };
 
 /* ===== EXPORTS ===== */

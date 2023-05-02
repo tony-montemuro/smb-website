@@ -5,3 +5,26 @@
 .home-body {
     text-align: center;
 }
+
+.home-body table {
+    margin-top: 7px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.home-body th {
+    border: 1px solid black;
+    padding: 4px 8px;
+}
+
+.home-body td {
+    border: 1px solid black;
+    padding: 4px 8px;
+}
+
+.home-user-info {
+    display: flex;
+    flex-direction: row;
+}
