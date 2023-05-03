@@ -64,6 +64,7 @@ const Levelboard = () => {
 				return { ...state, [action.field]: action.value };
 		}
 	}, formInit);
+	const [deleteSubmission, setDeleteSubmission] = useState(undefined);
 
 	/* ===== FUNCTIONS ===== */
 
@@ -195,15 +196,15 @@ const Levelboard = () => {
 		}});
 	};
 
-	// FUNCTION 5: setBoardDelete - sets the delete field of the board state when a moderator attempts to delete a record
+	// FUNCTION 5: setDelete - sets the deleteSubmission state when moderator attempts to delete a record
 	// PRECONDITIONS (1 parameter):
 	// 1.) id: a string, representing the uuid user id of a user. this parameter is used to find the record that belongs to that user
 	// POSTCONDITIONS (1 possible outcome):
-	// the record belonging to id is found, and this information is used to update the delete field of the board state by calling
-	// the setBoard() function. when this field is set to a non-null value, the delete popup will render
-	const setBoardDelete = id => {
+	// the record belonging to id is found, and this information is used to update the deleteSubmission state by calling
+	// the setDeleteSubmission() function. when this field is set to a non-null value, the delete popup will render
+	const setDelete = id => {
 		const row = board.records.all.find(row => row.user.id === id);
-		setBoard({ ...board, delete: {
+		setDeleteSubmission({
 			id: row.details.id,
 			user_id: row.user.id,
 			game_id: abb,
@@ -211,7 +212,7 @@ const Levelboard = () => {
 			type: type,
 			username: row.user.username,
 			record: row.details.record
-		}});
+		});
 	};
 
 	// FUNCTION 6: submitRecord - function that validates and submits a record to the database
@@ -268,10 +269,12 @@ const Levelboard = () => {
 	return {
 		board,
 		form,
+		deleteSubmission,
 		setBoard,
 		setupBoard,
+		setDeleteSubmission,
 		handleChange,
-		setBoardDelete,
+		setDelete,
 		setBoardReport,
 		submitRecord
 	};

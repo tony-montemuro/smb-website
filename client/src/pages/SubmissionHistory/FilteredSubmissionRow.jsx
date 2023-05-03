@@ -1,11 +1,18 @@
 /* ===== IMPORTS ===== */
+import { useContext } from "react";
 import { useLocation } from "react-router-dom";
+import { UserContext } from "../../Contexts";
 import FrontendHelper from "../../helper/FrontendHelper";
 
-function FilteredSubmissionRow({ submission }) {
+function FilteredSubmissionRow({ submission, deleteFunc }) {
   /* ===== VARIABLES ===== */
 	const location = useLocation();
 	const type = location.pathname.split("/")[4];
+
+  /* ===== CONTEXTS ===== */
+  
+  // user state from user context
+  const { user } = useContext(UserContext);
 
   /* ===== FUNCTIONS ===== */
 
@@ -44,6 +51,9 @@ function FilteredSubmissionRow({ submission }) {
 
       { /* All Position - Render the overall position of the submission */ }
       <td>{ submission.all_position }</td>
+
+      { /* Delete Button - Render delete button for moderators only so that they can delete a submission. */ }
+      { user.is_mod && <td><button onClick={ () => deleteFunc(submission) }>❌</button></td> }
     </tr>
   );
 };

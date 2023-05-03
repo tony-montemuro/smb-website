@@ -12,9 +12,9 @@ import Medals from "./pages/Medals/Medals.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
 import Notifications from "./pages/Notifications/Notifications.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
-import RecordHistory from "./pages/RecordHistory/RecordHistory.jsx";
 import Records from "./pages/Records/Records.jsx";
 import Resources from "./pages/Resources/Resources.jsx";
+import SubmissionHistory from "./pages/SubmissionHistory/SubmissionHistory.jsx";
 import Submissions from "./pages/Submissions/Submissions.jsx";
 import Support from "./pages/Support/Support.jsx";
 import Totalizer from "./pages/Totalizer/Totalizer.jsx";
@@ -109,16 +109,16 @@ function App() {
               <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
             }/>
             <Route path="games/:game/main/score/:levelid/:userid" element={
-              <RecordHistory />
+              <SubmissionHistory />
             }/>
             <Route path="games/:game/misc/score/:levelid/:userid" element={
-              <RecordHistory />
+              <SubmissionHistory />
             }/>
             <Route path="games/:game/main/time/:levelid/:userid" element={
-              <RecordHistory />
+              <SubmissionHistory />
             }/>
             <Route path="games/:game/misc/time/:levelid/:userid" element={
-              <RecordHistory />
+              <SubmissionHistory />
             }/>
             <Route path="/user/:userId" element={<User imageReducer={ imageReducer } />}/>
             <Route path="/user/:userId/:game/main/score" element={

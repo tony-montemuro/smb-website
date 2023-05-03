@@ -1,16 +1,17 @@
 /* ===== IMPORTS ===== */
-import "./RecordHistory.css";
+import "./SubmissionHistory.css";
 import { Link } from "react-router-dom";
-import { StaticCacheContext } from "../../Contexts";
-import { useContext, useEffect, useState } from "react";
+import { StaticCacheContext, UserContext } from "../../Contexts";
+import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import DeletePopup from "../../components/DeletePopup/DeletePopup.jsx";
 import FilteredSubmissionRow from "./FilteredSubmissionRow";
 import FrontendHelper from "../../helper/FrontendHelper";
 import PathHelper from "../../helper/PathHelper";
-import RecordHistoryLogic from "./RecordHistory";
+import SubmissionHistoryLogic from "./SubmissionHistory";
 import Username from "../../components/Username/Username";
 
-function RecordHistory() {
+function SubmissionHistory() {
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
 	const location = useLocation();
@@ -27,12 +28,15 @@ function RecordHistory() {
   // static cache state from static cache context
   const { staticCache } = useContext(StaticCacheContext);
 
-  /* ===== STATES & FUNCTIONS ====== */
-  const [user, setUser] = useState(undefined);
+  // user state from user context
+  const { user } = useContext(UserContext);
 
+  /* ===== STATES & FUNCTIONS ====== */
   // states and functions from the js file
+  const { submissions, deleteSubmission, profile, setDeleteSubmission, setProfile, getSubmissions, setDelete } = SubmissionHistoryLogic();
+
+  // helper functions
   const { capitalize, cleanLevelName } = FrontendHelper();
-  const { submissions, getSubmissions } = RecordHistoryLogic();
   const { fetchLevelFromGame } = PathHelper();
 
   /* ===== EFFECTS ====== */
@@ -65,17 +69,17 @@ function RecordHistory() {
 			}
 
       // see if the userId corresponds to a profile stored in the profiles array
-      const user = profiles.find(row => row.id === userId);
+      const profile = profiles.find(row => row.id === userId);
 
       // if not, we will print an error message, and navigate to the home screen
-			if (!user) {
+			if (!profile) {
 				console.log("Error: Invalid user.");
 				navigate("/");
 				return;
 			}
 
-			// update state hook for user
-      setUser(user);
+			// update state hook for profile
+      setProfile(profile);
 			
       // finally, given information about the path, fetch submissions for this page
 			getSubmissions(abb, levelName, userId, type);
@@ -95,12 +99,11 @@ function RecordHistory() {
         <div>
           The following is the list of all submissions by&nbsp;
           <>
-            <Username country={ user.country ? user.country.iso2 : null } userId={ user.id } username={ user.username } />
+            <Username country={ profile.country ? profile.country.iso2 : null } userId={ profile.id } username={ profile.username } />
             &nbsp;to&nbsp;
             <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }` }>{ cleanLevelName(levelName) } ({ capitalize(type) })</Link>:
           </>
         </div>
-
       </div>
 
       { /* Record History Body - The actual content of the page: a table of submissions */ }
@@ -120,6 +123,7 @@ function RecordHistory() {
               <th>Live</th>
               <th>Position</th>
               <th>All Position</th>
+              { user.is_mod && <th>Delete</th> }
             </tr>
           </thead>
 
@@ -128,22 +132,27 @@ function RecordHistory() {
             { submissions.length > 0 ?
               // If any submissions exist, render them using the submission data.
               submissions.map(submission => {
-                return <FilteredSubmissionRow submission={ submission } key={ submission.id } />;
+                return <FilteredSubmissionRow 
+                  submission={ submission } 
+                  deleteFunc={ setDelete }
+                  key={ submission.id }
+                />;
               })
             :
               // Otherwise, render a message to the client stating that the user specified in the path has not submitted to the level.
               <tr>
-                <td className="record-history-empty" colSpan={ TABLE_WIDTH }><i>This user has never submitted to this chart.</i></td>
+                <td className="record-history-empty" colSpan={ user.is_mod ? TABLE_WIDTH+1 : TABLE_WIDTH }><i>This user has never submitted to this chart.</i></td>
               </tr>
             }
           </tbody>
 
         </table>
       </div>
+      <DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } />
     </>
    
   ;
 };
 
 /* ===== EXPORTS ===== */
-export default RecordHistory;
+export default SubmissionHistory;

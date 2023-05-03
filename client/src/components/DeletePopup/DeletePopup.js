@@ -106,16 +106,15 @@ const DeletePopup = () => {
         setForm({ error: null, message: e.target.value });
     };
 
-    // FUNCTION 4 - closePopup: given the board state, and it's corresponding function (setBoard), close the popup
-    // PRECONDITIONS (2 parameters):
-    // 1.) board: the board state, which is defined in Levelboard.js
-    // 2.) setBoard: the function that allows you to update the board state
+    // FUNCTION 4 - closePopup: given the setSubmission function, close the popup
+    // PRECONDITIONS (1 parameter):
+    // 1.) setBoard: the function that allows you to update the submission state, which will close the popup
     // POSTCONDITIONS (1 possible outcome):
     // the form is set to it's default value by calling setForm(formInit), and the delete popup is closed by calling
-    // setBoard({ ...board, delete: null })
-    const closePopup = (board, setBoard) => {
+    // the setSubmission() function with a null value
+    const closePopup = (setSubmission) => {
         setForm(formInit);
-        setBoard({ ...board, delete: null });
+        setSubmission(null);
     };
     
     return { form, handleOwnDelete, handleDelete, handleChange, closePopup };

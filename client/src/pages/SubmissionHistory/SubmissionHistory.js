@@ -1,10 +1,21 @@
 /* ===== IMPORTS ===== */
+import { useLocation } from "react-router-dom";
 import { useState } from "react"; 
 import RecordHistoryRead from "../../database/read/RecordHistoryRead";
 
-const RecordHistory = () => {
+const SubmissionHistory = () => {
+    /* ===== VARIABLES ===== */
+    const location = useLocation();
+    const path = location.pathname.split("/");
+    const abb = path[2];
+    const type = path[4];
+    const levelName = path[5];
+    const userId = path[6];
+
     /* ===== STATES ===== */
     const [submissions, setSubmissions] = useState(undefined);
+    const [deleteSubmission, setDeleteSubmission] = useState(undefined);
+    const [profile, setProfile] = useState(undefined);
 
     /* ===== FUNCTIONS ===== */
 
@@ -26,8 +37,26 @@ const RecordHistory = () => {
         setSubmissions(submissions);
     };
 
-    return { submissions, getSubmissions };
+    // FUNCTION 2: setDelete - given a submission object, update the delete submission state (which will pull up the delete popup)
+    // PRECONDITIONS (1 parameter):
+    // 1.) submission: a submission object, corresponding to one of the submissions rendered on-screen
+    // POSTCONDITIONS (1 possible outcome):
+    // combining data from the submission object, as well as path information, set the delete submission by calling the
+    // setDeleteSubmission() function
+    const setDelete = (submission) => {
+        setDeleteSubmission({
+            id: submission.id,
+			user_id: userId,
+			game_id: abb,
+			level_id: levelName,
+			type: type,
+			username: profile.username,
+			record: submission.record
+        });
+    };
+
+    return { submissions, deleteSubmission, profile, setDeleteSubmission, setProfile, getSubmissions, setDelete };
 };
 
 /* ===== EXPORTS ===== */
-export default RecordHistory;
+export default SubmissionHistory;

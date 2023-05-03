@@ -3,13 +3,13 @@ import "./Levelboard.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { StaticCacheContext, UserContext } from "../../Contexts";
+import DeletePopup from "../../components/DeletePopup/DeletePopup.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
 import FormPopup from "./FormPopup";
 import PathHelper from "../../helper/PathHelper";
 import ReportPopup from "./ReportPopup.jsx";
-import DeletePopup from "./DeletePopup.jsx";
 
 function Levelboard({ imageReducer, submissionReducer }) {
 	/* ===== VARIABLES ===== */
@@ -40,10 +40,12 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	const { 
 		board,
 		form,
+		deleteSubmission,
 		setBoard,
 		setupBoard,
+		setDeleteSubmission,
 		handleChange,
-		setBoardDelete,
+		setDelete,
 		setBoardReport,
 		submitRecord
 	} = LevelboardLogic();
@@ -189,7 +191,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 								submission={ val } 
 								imageReducer={ imageReducer } 
 								reportFunc={ setBoardReport } 
-								deleteFunc={ setBoardDelete } 
+								deleteFunc={ setDelete } 
 								key={ val.details.id } 
 							/>
 						})}
@@ -199,7 +201,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			</div>
 
 			{ /* Popups */ }
-			<DeletePopup board={ board } setBoard={ setBoard } />
+			<DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } />
 			<ReportPopup board={ board } setBoard={ setBoard } />
 			<FormPopup 
 				form={ form }
