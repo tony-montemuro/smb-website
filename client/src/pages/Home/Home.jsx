@@ -54,6 +54,7 @@ function Home() {
                 return <RecentSubmissionRow submission={ submission } key={ submission.id } />
               })}
             </tbody>
+            
           </table>
         </div>
 
