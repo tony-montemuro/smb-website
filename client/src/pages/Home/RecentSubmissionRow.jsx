@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
-import HomeLogic from "./Home.js";
 import FrontendHelper from "../../helper/FrontendHelper.js";
+import Username from "../../components/Username/Username.jsx";
 
 function RecentSubmissionRow({ submission }) {
   /* ===== VARIABLES ===== */
@@ -12,25 +12,15 @@ function RecentSubmissionRow({ submission }) {
   const user = submission.user;
 
   /* ===== FUNCTIONS ===== */
-  
-  // funtions from the Home js file
-  const { getTimeDifference } = HomeLogic();
 
   // helper functions
-  const { cleanLevelName, capitalize } = FrontendHelper();
+  const { cleanLevelName, capitalize, getTimeDifference } = FrontendHelper();
 
   /* ===== RECENT SUBMISSION ROW COMPONENT ===== */
   return (
     <tr>
       <td>{ getTimeDifference(submission.id) }</td>
-      <td>
-        <div className="home-user-info">
-          { user.country &&
-            <div><span className={ `fi fi-${ user.country.toLowerCase() }` }></span></div>
-          }
-          <div><Link to={ `/user/${ user.id }` }>{ user.username }</Link></div>
-        </div>
-      </td>
+      <td><Username country={ user.country } userId={ user.id } username={ user.username } /></td>
       <td><Link to={ `/games/${ game.abb }` }>{ game.name }</Link></td>
       <td><Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>{ cleanLevelName(level.name) }</Link></td>
       <td>{ capitalize(type) }</td>

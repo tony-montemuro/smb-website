@@ -67,28 +67,7 @@ const Levelboard = () => {
 
 	/* ===== FUNCTIONS ===== */
 
-	// FUNCTION 1: fetchLevelFromGame: given a game object, and level name, determine if the level is present in the object, and return it
-	// PRECONDITIONS (2 parameters):
-	// 1.) game: an object containing information about the game defined in the path
-	// 2.) levelName: a string corresponding to the name of a level, also defined in the path
-	// POSTCONDITIONS (2 outcomes):
-	// if the level is found in the game object, return the corresponding level object
-	// otherwise, just return null
-	const fetchLevelFromGame = (game, levelName) => {
-		const isMisc = category === "misc" ? true : false;
-		for (const mode of game.mode) {				// for each mode in the game object
-			if (mode.misc === isMisc) {
-				for (const level of mode.level) {	// for each level in the mode object
-					if (level.name === levelName) {
-						return level;
-					}
-				}
-			}
-		}
-		return null;
-	};
-
-	// FUNCTION 2: splitSubmissionsAndUpdateForm - given an array of submissions, split submissions into live and all array. also,
+	// FUNCTION 1: splitSubmissionsAndUpdateForm - given an array of submissions, split submissions into live and all array. also,
 	// if a submission belongs to the current user, update the form
 	// PRECONDITIONS (2 parameters):
 	// 1.) submissions: an array of submissions objects, which must first be ordered by the current level name defined in the path.
@@ -137,7 +116,7 @@ const Levelboard = () => {
 		return { all: all, live: live };
 	};
 
-	// FUNCTION 3 - setupBoard: given information about the path and the submissionReducer, set up the board object
+	// FUNCTION 2: setupBoard - given information about the path and the submissionReducer, set up the board object
 	// PRECONDITIONS (2 parameters):
 	// 1.) game: an object containing information about the game defined in the path
 	// 2.) submissionReducer: an object with two fields:
@@ -165,7 +144,7 @@ const Levelboard = () => {
 		setBoard({ ...board, records: { all: all, live: live }, adjacent: { prev: prev, next: next } });
 	};
 
-	// FUNCTION 4: handleChange - function that is run each time the user modifies the submission form
+	// FUNCTION 3: handleChange - function that is run each time the user modifies the submission form
 	// PRECONDITIONS (2 parameters):
 	// 1.) e: an event object generated when the user makes a change to the submission form
 	// 2.) game: an object containing information about the game defined in the path
@@ -197,7 +176,7 @@ const Levelboard = () => {
 		};
     };
 
-	// FUNCTION 5: setBoardReport - sets the report field of the board state when user attempts to report a record
+	// FUNCTION 4: setBoardReport - sets the report field of the board state when user attempts to report a record
 	// PRECONDITIONS (1 parameter):
 	// 1.) id: a string, representing the uuid user id of a user. this parameter is used to find the record that belongs to that user
 	// POSTCONDITIONS (1 possible outcome):
@@ -216,7 +195,7 @@ const Levelboard = () => {
 		}});
 	};
 
-	// FUNCTION 6: setBoardDelete - sets the delete field of the board state when a moderator attempts to delete a record
+	// FUNCTION 5: setBoardDelete - sets the delete field of the board state when a moderator attempts to delete a record
 	// PRECONDITIONS (1 parameter):
 	// 1.) id: a string, representing the uuid user id of a user. this parameter is used to find the record that belongs to that user
 	// POSTCONDITIONS (1 possible outcome):
@@ -235,7 +214,7 @@ const Levelboard = () => {
 		}});
 	};
 
-	// FUNCTION 7: submitRecord - function that validates and submits a record to the database
+	// FUNCTION 6: submitRecord - function that validates and submits a record to the database
 	// PRECONDITIONS (1 parameter):
 	// 1.) e: an event object generated when the user submits the submission form
 	// POSTCONDITIONS (2 possible outcomes)
@@ -290,7 +269,6 @@ const Levelboard = () => {
 		board,
 		form,
 		setBoard,
-		fetchLevelFromGame,
 		setupBoard,
 		handleChange,
 		setBoardDelete,

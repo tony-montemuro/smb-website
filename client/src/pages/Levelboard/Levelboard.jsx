@@ -7,6 +7,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
 import FormPopup from "./FormPopup";
+import PathHelper from "../../helper/PathHelper";
 import ReportPopup from "./ReportPopup.jsx";
 import DeletePopup from "./DeletePopup.jsx";
 
@@ -40,7 +41,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 		board,
 		form,
 		setBoard,
-		fetchLevelFromGame,
 		setupBoard,
 		handleChange,
 		setBoardDelete,
@@ -50,6 +50,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 
 	// helper functions
 	const { capitalize, cleanLevelName } = FrontendHelper();
+	const { fetchLevelFromGame } = PathHelper();
 
 	/* ===== EFFECTS ===== */
 
@@ -69,7 +70,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			}
 
 			// see if levelName corresponds to a level stored in the game object
-			const level = fetchLevelFromGame(game, levelName);
+			const level = fetchLevelFromGame(game, levelName, category);
 			
 			// if not, we will print an error message, and navigate to the home screen
 			if (!level) {

@@ -42,7 +42,7 @@ function LevelboardRow({ submission, imageReducer, reportFunc, deleteFunc }) {
       </td>
 
       { /* Render the record */ }
-      <td>{ recordB2F(submission.details.record, type) }</td>
+      <td><Link to={ submission.user.id }>{ recordB2F(submission.details.record, type) }</Link></td>
 
       { /* Render the submission date */ }
       <td>{ dateB2F(submission.details.submitted_at) }</td>

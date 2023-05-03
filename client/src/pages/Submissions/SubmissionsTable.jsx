@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
+import Username from "../../components/Username/Username";
 
 function SubmissionsTable({ submissions, isApproved, game, buttonIsDisabled, buttonFunc }) {
   /* ===== FUNCTIONS ===== */
@@ -47,14 +48,7 @@ function SubmissionsTable({ submissions, isApproved, game, buttonIsDisabled, but
         return <tr key={ row.details.submitted_at }>
 
           { /* User data: Render the user's country and username */ }
-          <td>
-            <div className="submissions-user-info">
-              { row.user.country &&
-                <div><span className={ `fi fi-${ row.user.country.toLowerCase() }` }></span></div>
-              }
-              <div><Link to={ `/user/${ row.user.id }` }>{ row.user.username }</Link></div>
-            </div>
-          </td>
+          <td><Username country={ row.user.country } userId={ row.user.id } username={ row.user.username } /></td>
 
           { /* Additional table data for approved table only: game data. Render a Link tag that links to the games page,
           and also displays the name of the game. */ }

@@ -1,6 +1,5 @@
 /* ===== IMPORTS ===== */
 import "./User.css";
-import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { useNavigate } from "react-router-dom";
 import { StaticCacheContext } from "../../Contexts";
 import { useContext, useEffect, useState } from "react";

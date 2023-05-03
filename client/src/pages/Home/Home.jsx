@@ -35,7 +35,7 @@ function Home() {
           <h2>Recent Submissions</h2>
           <table>
 
-            { /* Table header: specifies the information displayed in each cell of the table*/ }
+            { /* Table header: specifies the information displayed in each cell of the table */ }
             <thead>
               <tr>
                 <th>Submitted</th>
