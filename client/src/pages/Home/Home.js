@@ -19,7 +19,6 @@ const Home = () => {
     const getSubmissions = async () => {
         const submissions = await queryRecentSubmissions();
         setSubmissions(submissions);
-        console.log(submissions);
     };
 
     // FUNCTION 2: makePlural - given a number, determine what character should end a string
