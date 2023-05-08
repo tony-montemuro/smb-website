@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import "./Levelboard.css";
+import { GameContext, UserContext } from "../../Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { StaticCacheContext, UserContext } from "../../Contexts";
 import DeletePopup from "../../components/DeletePopup/DeletePopup.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardLogic from "./Levelboard.js";
@@ -24,14 +24,13 @@ function Levelboard({ imageReducer, submissionReducer }) {
 
 	/* ===== CONTEXTS ===== */
 
-	// static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
-
 	// user state from user context
   const { user } = useContext(UserContext);
 
+	// game state from game context
+  const { game } = useContext(GameContext);
+
 	/* ===== STATES & FUNCTIONS ===== */
-	const [game, setGame] = useState(undefined);
 	const [level, setLevel] = useState(undefined);
 	const [levelboardState, setLevelboardState] = useState("live");
 	const [submitPopup, setSubmitPopup] = useState(false);
@@ -59,40 +58,26 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	// code that is executed when the page loads, when the staticCache object is updated, or when the user
   // switches levels
 	useEffect(() => {
-		const games = staticCache.games;
-		if (games.length > 0) {
-			// see if abb corresponds to a game stored in cache
-			const game = games.find(row => row.abb === abb);
-
-			// if not, we will print an error message, and navigate to the home screen
-			if (!game) {
-				console.log("Error: Invalid game.");
-				navigate("/");
-				return;
-			}
-
-			// see if levelName corresponds to a level stored in the game object
-			const level = fetchLevelFromGame(game, levelName, category);
-			
-			// if not, we will print an error message, and navigate to the home screen
-			if (!level) {
-				console.log("Error: Invalid level.");
-				navigate("/");
-				return;
-			}
-
-			// update state hooks corresponding to game and level
-			setGame(game);
-			setLevel(level);
-			
-			// set up the board object
-			setupBoard(game, submissionReducer);
+		// see if levelName corresponds to a level stored in the game object
+		const level = fetchLevelFromGame(game, levelName, category);
+		
+		// if not, we will print an error message, and navigate to the home screen
+		if (!level) {
+			console.log("Error: Invalid level.");
+			navigate("/");
+			return;
 		}
+
+		// update the level state hook
+		setLevel(level);
+		
+		// set up the board object
+		setupBoard(game, submissionReducer);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [staticCache, location.pathname]);
+	}, [location.pathname]);
 
 	/* ===== LEVELBOARD COMPONENT ===== */
-	return game && level && board.records && form.values ?
+	return level && board.records && form.values ?
 		// Levelboard header - Contains general information about them game and board
 		<>
 			<div className="levelboard-header">
@@ -207,7 +192,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 				form={ form }
 				formPopup={ submitPopup } 
 				setFormPopup={ setSubmitPopup } 
-				game={ game }
 				board={ board }
 				handleChangeFunc={ handleChange }
 				submitFunc={ submitRecord } 

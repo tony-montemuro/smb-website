@@ -1,16 +1,13 @@
 /* ===== IMPORTS ===== */
-import { StaticCacheContext } from "../../Contexts";
+import { GameContext } from "../../Contexts";
 import { useContext, useRef, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 
-const SearchBar = abb => {
+const SearchBar = () => {
     /* ===== CONTEXTS ===== */
 
-    // static cache state from static cache context
-    const { staticCache } = useContext(StaticCacheContext);
-
-    /* ===== VARIABLES ===== */
-    const game = staticCache.games.find(row => row.abb === abb);
+    // game state from game context
+    const { game } = useContext(GameContext);
 
     /* ===== REFS ===== */
     const searchRef = useRef(null);
