@@ -74,10 +74,16 @@ function App() {
               <Route index element={ <Game /> } />
               <Route path="main" element={ <Game /> }/>
               <Route path="misc" element={ <Game /> }/>
-              <Route path="main/medals" element={
+              <Route path="main/medals/score" element={
                 <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
               }/>
-              <Route path="misc/medals" element={
+              <Route path="main/medals/time" element={
+                <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="misc/medals/score" element={
+                <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="misc/medals/time" element={
                 <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
               }/>
               <Route path="main/totalizer" element={
