@@ -1,10 +1,14 @@
 /* ===== IMPORTS ===== */
 import "./GameSelect.css";
+import { Link } from "react-router-dom";
 import { StaticCacheContext } from "../../Contexts";
 import { useContext } from "react";
-import GameCard from "../../components/GameCard/GameCard.jsx";
+import BoxArt from "../../components/BoxArt/BoxArt.jsx";
 
 function GameSelect({ imageReducer }) {
+  /* ===== VARIABLES ===== */
+  const BOX_WIDTH = 200;
+
   /* ===== CONTEXTS ===== */
 
 	// static cache state from static cache context
@@ -27,7 +31,12 @@ function GameSelect({ imageReducer }) {
               Otherwise, render a loading component. */ }
               { staticCache.games.length > 0 ?
                 staticCache.games.filter(game => type === "Custom" ? game.custom : !game.custom).map(game => (
-                  <GameCard key={ game.abb } game={ game } imageReducer={ imageReducer } />
+                  <div className="game-select-card" key={ game.abb }>
+                    <Link to={ { pathname: `/games/${ game.abb }` } }>
+                      <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
+                      <p>{ game.name } </p>
+                    </Link>
+                  </div>
                 ))
               :
                 <p>Loading...</p>

@@ -1,0 +1,22 @@
+.game-layout-header {
+    display: flex;
+    margin: 10px;
+    align-items: center;
+}
+
+.game-layout-header-title {
+    margin-left: 10px;
+}
+
+.game-layout-body {
+    display: flex;
+}
+
+.game-layout-body-content {
+    flex: 8;
+}
+
+.game-layout-body-sidebar {
+    flex: 2;
+    text-align: center;
+}

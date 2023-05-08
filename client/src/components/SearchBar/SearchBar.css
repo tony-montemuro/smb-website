@@ -1,5 +1,7 @@
 .searchbar {
     width: 400px;
+    margin-left: auto;
+    margin-bottom: auto;
 }
 
 .searchbar-inputs-container {

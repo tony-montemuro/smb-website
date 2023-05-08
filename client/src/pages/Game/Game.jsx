@@ -5,7 +5,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import ModeBody from "./ModeBody";
-import SearchBar from "../../components/SearchBar/SearchBar.jsx";
 
 function Game() {
   /* ===== VARIABLES ===== */
@@ -36,21 +35,8 @@ function Game() {
   /* ===== GAME COMPONENT ===== */
   return (
     <>
-      {/* SearchBar component - used to search through the list of levels corresponding to game */}
-      <div className="game-searchbar">
-        <SearchBar />
-      </div>
-
       { /* Game Header - this div renders general information related to the game */ }
       <div className="game-header">
-
-        {/* Title of the game */}
-        <h1>{ game.name }</h1>
-
-        {/* Link back to the game select page */}
-        <Link to={ `/games` }>
-          <button>Back to Game Select</button>
-        </Link>
 
         { /* Two radio buttons to toggle between two category modes: main and misc. */ }
         <div className="game-radio-buttons">

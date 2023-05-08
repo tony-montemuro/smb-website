@@ -1,14 +1,19 @@
 /* ===== IMPORTS ====== */
+import "./GameLayout.css";
 import { GameContext, StaticCacheContext } from "../../Contexts";
+import { Link } from "react-router-dom";
 import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BoxArt from "../BoxArt/BoxArt.jsx";
+import SearchBar from "../SearchBar/SearchBar.jsx";
 
-function GameLayout() {
+function GameLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const params = useParams();
   const { abb } = params;
   const navigate = useNavigate();
+  const BOX_WIDTH = 150;
 
   /* ===== CONTEXTS ====== */
 
@@ -43,10 +48,45 @@ function GameLayout() {
   /* ===== GAME LAYOUT COMPONENT ===== */
   return game ?
     <>
-      <h1>Game Layout!</h1>
-      <GameContext.Provider value={ { game } }>
-        <Outlet />
-      </GameContext.Provider>
+      {/* Game Layout Header - Render general game information at top of each game page */}
+      <div className="game-layout-header">
+
+        { /* Render the box art */ }
+        <Link to={ `/games/${ game.abb }` }>
+          <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
+        </Link>
+
+        { /* Render information about the game: title, whether it's a main or custom pack, and the release date */ }
+        <div className="game-layout-header-title">
+          <Link to={ `/games/${ game.abb }` }>
+            <h1>{ game.name }</h1>
+          </Link>
+          <p>Release Date: { game.release_date } </p>
+          <p> { game.custom ? "Custom Pack" : "Main Game" } </p>
+        </div>
+
+        { /* Render the level search bar */ }
+        <SearchBar abb={ game.abb } />
+
+      </div>
+
+      <div className="game-layout-body">
+        <div className="game-layout-body-content">
+          <GameContext.Provider value={ { game } }>
+            <Outlet />
+          </GameContext.Provider>
+        </div>
+        <div className="game-layout-body-sidebar">
+          <h2>Main Category</h2>
+          <h3>World Records</h3>
+          <h3>Medal Tables</h3>
+          <h3>Totalizers</h3>
+          <h2>Miscellanous Category</h2>
+          <h3>World Records</h3>
+          <h3>Medal Tables</h3>
+          <h3>Totalizers</h3>
+        </div>
+      </div>
     </>
   :
     // Loading component

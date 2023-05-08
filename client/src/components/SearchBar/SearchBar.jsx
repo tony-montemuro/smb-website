@@ -1,21 +1,24 @@
 /* ===== IMPORTS ===== */
 import "./SearchBar.css";
-import { GameContext } from "../../Contexts";
+import { StaticCacheContext } from "../../Contexts";
 import { useContext } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardButton from "../LevelboardButton/LevelboardButton";
 import SearchBarLogic from "./SearchBar.js";
 
-function SearchBar() {
+function SearchBar({ abb }) {
   /* ===== CONTEXTS ===== */
 
-  // game state from game context
-  const { game } = useContext(GameContext);
+  // static cache state from static cache context
+  const { staticCache } = useContext(StaticCacheContext);
+
+  /* ===== VARIABLES ===== */
+  const game = staticCache.games.find(row => row.abb === abb);
 
   /* ===== FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { filtered, searchRef, handleFilter, clearSearch } = SearchBarLogic();
+  const { filtered, searchRef, handleFilter, clearSearch } = SearchBarLogic(abb);
 
   // helper functions
   const { cleanLevelName } = FrontendHelper();

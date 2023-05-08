@@ -70,7 +70,7 @@ function App() {
             <Route path="/notifications" element={ <Notifications /> } />
             <Route path="/login" element={ <Login /> }/>
             <Route path="/profile" element={ <Profile imageReducer={ imageReducer } /> }/>
-            <Route path="/games/:abb" element={ <GameLayout /> } >
+            <Route path="/games/:abb" element={ <GameLayout imageReducer={ imageReducer } /> } >
               <Route index element={ <Game /> } />
               <Route path="main" element={ <Game /> }/>
               <Route path="misc" element={ <Game /> }/>
