@@ -20,3 +20,19 @@
     flex: 2;
     text-align: center;
 }
+
+.game-layout-body-info {
+    margin: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.game-layout-body-info h2 {
+    margin: 0;
+}
+
+.game-layout-body-links {
+    display: flex;
+    justify-content: space-around;
+}

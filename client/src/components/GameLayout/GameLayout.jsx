@@ -7,6 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 import SearchBar from "../SearchBar/SearchBar.jsx";
+import GameLayoutInfo from "./GameLayoutInfo";
 
 function GameLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -77,14 +78,8 @@ function GameLayout({ imageReducer }) {
           </GameContext.Provider>
         </div>
         <div className="game-layout-body-sidebar">
-          <h2>Main Category</h2>
-          <h3>World Records</h3>
-          <h3>Medal Tables</h3>
-          <h3>Totalizers</h3>
-          <h2>Miscellanous Category</h2>
-          <h3>World Records</h3>
-          <h3>Medal Tables</h3>
-          <h3>Totalizers</h3>
+          <GameLayoutInfo abb={ game.abb } category={ "main" } />
+          <GameLayoutInfo abb={ game.abb } category={ "misc" } />
         </div>
       </div>
     </>
