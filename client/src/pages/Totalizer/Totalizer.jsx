@@ -1,16 +1,18 @@
 /* ===== IMPORTS ===== */
 import "./Totalizer.css";
 import { GameContext } from "../../Contexts";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useContext, useEffect } from "react";
+import FrontendHelper from "../../helper/FrontendHelper";
 import TotalizerLogic from "./Totalizer.js";
 import TotalizerTable from "./TotalizerTable";
 
 function Totalizer({ imageReducer, submissionReducer }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
-  const path = location.pathname;
-  const category = path.split("/")[3];
+  const path = location.pathname.split("/");
+  const category = path[3];
+  const type = path[5];
   const isMisc = category === "misc" ? true : false;
 
   /* ===== CONTEXTS ===== */
@@ -19,6 +21,9 @@ function Totalizer({ imageReducer, submissionReducer }) {
   const { game } = useContext(GameContext);
 
   /* ===== STATES AND FUNCTIONS ===== */
+
+  // helper functions
+  const { capitalize } = FrontendHelper();
 
   // states and functions from the js file
   const {
@@ -30,40 +35,22 @@ function Totalizer({ imageReducer, submissionReducer }) {
 
   // code that is executed when the component mounts, or when the user switches between miscellaneous and main
   useEffect(() => {
-    fetchTotals(game, category, submissionReducer);
+    fetchTotals(game, category, type, submissionReducer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   /* ===== TOTALIZER COMPONENT ===== */
   return totals ? 
     <>
+
+    { /* Totalizer Header - Render the title of the totalizer, based on category and type. */ }
       <div className="totalizer-header">
-
-        { /* Game Title */ }
-        <h1>{ isMisc && "Miscellaneous" } { game.name } Totalizer</h1>
-
-        { /* Return to game page button */ }
-        <Link to={ `/games/${ game.abb }` }>
-          <button>Back to { game.name }'s Page</button>
-        </Link>
-
-        { /* The other category's totalizer page button */ }
-        <Link to={ `/games/${ game.abb }/${ isMisc ? "main" : "misc" }/totalizer` }>
-          <button> { !isMisc && "Miscellaneous" } { game.name }'s Totalizer Page</button>
-        </Link>
-
-        { /* Game medal table page button */ }
-        <Link to={ `/games/${ game.abb }/${ isMisc ? "misc" : "main" }/medals` }>
-          <button>{ isMisc && "Miscellaneous" } { game.name }'s Medal Table Page</button>
-        </Link>
-
+        <h1>{ isMisc && "Miscellaneous" } { capitalize(type) } Totalizer</h1>
       </div>
 
-      { /* Totalizer Body - Render both the score and time totalizer tables. */ }
+      { /* Totalizer Body - Render the { type } totalizer table. */ }
       <div className="totalizer-body">
-        { Object.keys(totals).map(type => {
-          return <TotalizerTable type={ type } totals={ totals[type] } imageReducer={ imageReducer } key={ type }/>
-        })}
+        <TotalizerTable type={ type } totals={ totals } imageReducer={ imageReducer } />
       </div>
 
     </>

@@ -42,38 +42,32 @@ const Totalizer = () => {
         return { all: allTotals, live: liveTotals };
     };
 
-    // FUNCTION 2: fetchTotals - given a game and category, use the submissions to generate a totals object
+    // FUNCTION 2: fetchTotals - given a game, category, & type, use the submissions to generate a totals object
     // PRECONDITIONS (3 parameters):
     // 1.) game: an object containing information about the game defined in the path
     // 2.) category: the current category, either "main" or "misc". category is fetched from the URL
-    // 3.) submissionReducer: an object with two fields:
+    // 3.) type: the type of medal table, either "score" or "time". type is fetched from the URL
+    // 4.) submissionReducer: an object with two fields:
         // a.) reducer: the submission reducer itself (state)
         // b.) dispatchSubmissions: the reducer function used to update the reducer
     // POSTCONDITIONS (1 possible outcome):
-    // 1.) total: a totals object is generated. totals has two fields, score and time. each of these fields is mapped to
-    // another object, each with two more fields, all and live. each of these fields is mapped to a totalizer array
-    // once this object is generated, call the setTotals() function to update the totals state
-    const fetchTotals = async (game, category, submissionReducer) => {
+    // 1.) total: a totals object is generated. totals has two fields, all and live. each of these fields is mapped to a 
+    // totalizer array. once this object is generated, call the setTotals() function to update the totals state
+    const fetchTotals = async (game, category, type, submissionReducer) => {
         // first, let's compute the total time of the game
         const isMisc = category === "misc" ? true : false;
         const totalTime = calculateTotalTime(game, isMisc);
 
-        // get both score and time submissions that are a part of the category
-        const [scoreSubmissions, timeSubmissions] = await Promise.all(
-            [
-                getSubmissions(game.abb, category, "score", submissionReducer), 
-                getSubmissions(game.abb, category, "time", submissionReducer)
-            ]
-        );
+        // get the { type } submissions that are a part of the { category } of { game.abb }
+        const submissions = await getSubmissions(game.abb, category, type, submissionReducer);
 
-        // generate totalizer objects for both score and time submissions
-        const { all: scoreAll, live: scoreLive } = generateTotalizer(scoreSubmissions, "score", totalTime);
-        const { all: timeAll, live: timeLive } = generateTotalizer(timeSubmissions, "time", totalTime);
+        // generate totalizer object
+        const { all, live } = generateTotalizer(submissions, type, totalTime);
         
         // update the totals state
         const totals = {
-            score: { all: scoreAll, live: scoreLive },
-            time: { all: timeAll, live: timeLive }
+            all: all,
+            live: live
         };
         setTotals(totals);
     };
