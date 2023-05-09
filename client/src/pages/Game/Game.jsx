@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameLogic from "./Game.js";
 import ModeBody from "./ModeBody";
-import RecentGameSubmissionRow from "./RecentGameSubmissionRow";
+import RecentSubmissionsRow from "../../components/RecentSubmissionsRow/RecentSubmissionsRow";
 
 function Game() {
   /* ===== VARIABLES ===== */
@@ -89,7 +89,7 @@ function Game() {
             { /* Table body - render a row for each submission object in the array. */ }
             <tbody>
               { submissions.map(submission => {
-                return <RecentGameSubmissionRow submission={ submission } key={ submission.id } />;
+                return <RecentSubmissionsRow submission={ submission } renderGame={ false } key={ submission.id } />;
               })}
             </tbody>
           </table>

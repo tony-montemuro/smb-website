@@ -2,7 +2,7 @@
 import "./Home.css";
 import { useEffect } from "react";
 import HomeLogic from "./Home.js";
-import RecentSubmissionRow from "./RecentSubmissionRow";
+import RecentSubmissionsRow from "../../components/RecentSubmissionsRow/RecentSubmissionsRow";
 
 function Home() {
   /* ===== STATES & FUNCTIONS ===== */
@@ -51,7 +51,7 @@ function Home() {
             { /* Table body - the actual content itself, rendered row by row given submission data */ }
             <tbody>
               { submissions.map((submission) => {
-                return <RecentSubmissionRow submission={ submission } key={ submission.id } />
+                return <RecentSubmissionsRow submission={ submission } renderGame={ true } key={ submission.id } />
               })}
             </tbody>
             
