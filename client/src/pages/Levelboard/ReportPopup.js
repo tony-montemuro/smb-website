@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { StaticCacheContext, UserContext } from "../../Contexts";
-import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const DeletePopup = () => {
@@ -24,7 +24,7 @@ const DeletePopup = () => {
 
     // helper functions
     const { validateMessage } = ValidationHelper();
-    const { insertNotification } = LevelboardUpdate();
+    const { insertNotification } = NotificationUpdate();
 
     // FUNCTION 1 - handleReport: given the report object, send an array of reports to all moderators, and the owner
     // of the submission

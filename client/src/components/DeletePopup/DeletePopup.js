@@ -2,7 +2,7 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../../Contexts";
 import AllSubmissionDelete from "../../database/delete/AllSubmissionDelete";
-import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const DeletePopup = () => {
@@ -24,7 +24,7 @@ const DeletePopup = () => {
 
     // database functions
     const { deleteSubmission } = AllSubmissionDelete();
-    const { insertNotification } = LevelboardUpdate();
+    const { insertNotification } = NotificationUpdate();
 
     // FUNCTION 1: handleOwnDelete - function that is called when a moderator deletes their own run
     // PRECONDITIONS (1 parameter, 1 condition):

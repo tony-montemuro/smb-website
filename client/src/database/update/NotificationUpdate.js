@@ -1,30 +1,10 @@
 /* ===== IMPORTS ===== */
 import { supabase } from "../SupabaseClient";
 
-const LevelboardUpdate = () => {
+const NotificationUpdate = () => {
     /* ===== FUNCTIONS ===== */
 
-    // function that takes submission data and submits it to the all_submission table
-    const submit = async (submission) => {
-        try {
-            const { error } = await supabase
-                .from("all_submission")
-                .insert(submission, {
-                    returning: "minimal", // Don't return the value after inserting
-                });
-
-            // error handling
-            if (error) {
-                throw error;
-            }
-            
-        } catch (error) {
-            console.log(error);
-            alert(error.message);
-        }
-    };
-
-    // FUNCTION 2: insertNotification - takes a notification object, and inserts it into the notification table
+    // FUNCTION 1: insertNotification - takes a notification object, and inserts it into the notification table
     // PRECONDITIONS (1 parameter):
     // 1.) notification: a notification object, which contains many of the fields required by the notification table in the database
     // POSTCONDITIONS (2 possible outcomes):
@@ -53,8 +33,8 @@ const LevelboardUpdate = () => {
         }
     };
 
-    return { submit, insertNotification };
+    return { insertNotification };
 };
 
 /* ===== EXPORTS ===== */
-export default LevelboardUpdate;
+export default NotificationUpdate;
