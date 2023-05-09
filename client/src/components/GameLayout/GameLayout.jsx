@@ -71,16 +71,22 @@ function GameLayout({ imageReducer }) {
 
       </div>
 
+      {/* Game Layout Body - Render specific page information, as well as sidebar */}
       <div className="game-layout-body">
+
+        {/* Game Layout Content - The actual page itself. */}
         <div className="game-layout-body-content">
           <GameContext.Provider value={ { game } }>
             <Outlet />
           </GameContext.Provider>
         </div>
+
+        { /* Game Layout Sidebar - a set of links used to navigate various game pages. */ }
         <div className="game-layout-body-sidebar">
           <GameLayoutInfo abb={ game.abb } category={ "main" } />
           <GameLayoutInfo abb={ game.abb } category={ "misc" } />
         </div>
+        
       </div>
     </>
   :

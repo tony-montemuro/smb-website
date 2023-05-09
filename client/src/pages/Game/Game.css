@@ -12,6 +12,24 @@
     padding-inline-start: 30px;
 }
 
+.game-recent-submissions table {
+    margin-top: 7px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.game-recent-submissions th {
+    border: 1px solid black;
+    padding: 4px 8px;
+}
+
+.game-recent-submissions td {
+    border: 1px solid black;
+    padding: 4px 8px;
+}
+
 .game-level-list {
     flex: 1;
 }
