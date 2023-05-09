@@ -2,7 +2,7 @@
 import { useContext, useState, useReducer } from "react";
 import { useLocation } from "react-router-dom";
 import { UserContext } from "../../Contexts";
-import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import LevelboardUtils from "./LevelboardUtils";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import ValidationHelper from "../../helper/ValidationHelper";
@@ -23,7 +23,7 @@ const Levelboard = () => {
 	} = LevelboardUtils();
 	const { validateMessage } = ValidationHelper();
 	const { getSubmissions } = SubmissionRead();
-	const { submit } = LevelboardUpdate();
+	const { insertSubmission } = AllSubmissionUpdate();
 
 	/* ===== CONTEXTS ===== */
 
@@ -257,7 +257,7 @@ const Levelboard = () => {
 		// if we made it this far, no errors were detected, so we can go ahead and submit
 		const id = dateF2B();
 		const submission = getSubmissionFromForm(form.values, backendDate, id, board.records.all);
-		await submit(submission);
+		await insertSubmission(submission);
 
 		// next, handle notification
 		await handleNotification(form.values, id);

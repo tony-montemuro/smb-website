@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { StaticCacheContext, UserContext } from "../../Contexts";
-import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+import NotificationUpdate from "../../database/update/NotificationUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
-import SubmissionsUpdate from "../../database/update/SubmissionsUpdate";
+import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 
 const Submissions = () => {
     /* ===== CONTEXTS ===== */
@@ -23,9 +23,9 @@ const Submissions = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { insertNotification } = LevelboardUpdate();
+    const { insertNotification } = NotificationUpdate();
     const { getSubmissions } = SubmissionRead();
-    const { approve } = SubmissionsUpdate();
+    const { approveSubmission } = SubmissionUpdate();
 
     // FUNCTION 1: swapGame - given an abb and the submissionReducer, update the game state, and load all submissions for a game
     // PRECONDITIONS (2 parameters):
@@ -116,7 +116,7 @@ const Submissions = () => {
 
         try {
             // first, let's approve all submissions in the submission table
-            const approvePromises = approved.map(e => approve({ 
+            const approvePromises = approved.map(e => approveSubmission({ 
                 user_id: e.user.id, 
                 game_id: e.game.abb, 
                 level_id: e.level.name,

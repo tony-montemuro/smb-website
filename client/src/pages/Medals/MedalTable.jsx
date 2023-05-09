@@ -1,26 +1,16 @@
 /* ===== IMPORTS ===== */
 import "./Medals.css";
-import { Link } from "react-router-dom";
-import FrontendHelper from "../../helper/FrontendHelper";
 import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
+import Username from "../../components/Username/Username.jsx";
 
-function MedalTable({ medals, type, imageReducer }) {
+function MedalTable({ table, imageReducer }) {
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 6;
   const IMG_LENGTH = 50;
 
-  /* ===== FUNCTIONS ===== */
-
-  // helper functions
-  const { capitalize } = FrontendHelper();
-
   /* ===== MEDAL TABLE COMPONENT ===== */
   return (
-    <div className="medals-table" key={ type }>
-
-      { /* Table title - Used to show the type of table */ }
-      <h2>{ capitalize(type) } Medal Table</h2>
-      
+    <div className="medals-table">
       <table>
         
         { /* Table header - specifies the information displayed in each cell of the medal table */ }
@@ -37,33 +27,43 @@ function MedalTable({ medals, type, imageReducer }) {
 
         { /* Table body - render a row for each medals table object in the array. */ }
         <tbody>
-          { medals[type].length === 0 ?
+          { table.length === 0 ?
 
-            // If the medals[type] array is empty, render a single row displaying this information to the user.
+            // If the table array is empty, render a single row displaying this information to the user.
             <tr>
               <td colSpan={ TABLE_LENGTH } className="medals-empty">There have been no live submissions to this game's category!</td>
             </tr>
           :
-            // Otherwise, we want to render a row for each medal table object in the medals[type] array.
-            medals[type].map(row => {
+            // Otherwise, we want to render a row for each medal table object in the table array.
+            table.map(row => {
               return (
                 <tr key={ `${ row.user.username }-row` }>
+
+                  { /* Position: render the position of the user */ }
                   <td>{ row.position }</td>
+
+                  {/* User info - Render the user's profile picture, as well as their username */}
                   <td>
-                      <div className="medals-user-info">
-                          <div className="medals-user-image">
-                            <SimpleAvatar url={ row.user.avatar_url } size={ IMG_LENGTH } imageReducer={ imageReducer } />
-                          </div>
-                          { row.user.country &&
-                            <div><span className={ `fi fi-${ row.user.country.toLowerCase() }` }></span></div>
-                          }
-                          <div><Link to={ `/user/${ row.user.id }` }>{ row.user.username }</Link></div>
+                    <div className="medals-user-info">
+                      <div className="medals-user-image">
+                        <SimpleAvatar url={ row.user.avatar_url } size={ IMG_LENGTH } imageReducer={ imageReducer } />
                       </div>
+                      <Username country={ row.user.country } username={ row.user.username } userId={ row.user.id } />
+                    </div>
                   </td>
+
+                  { /* Platinum - render the user's number of platinum medals */ }
                   <td>{ row.platinum }</td>
+
+                  { /* Gold - render the user's number of gold medals */ }
                   <td>{ row.gold }</td>
+
+                  { /* Silver - render the user's number of silver medals */ }
                   <td>{ row.silver }</td>
+
+                  { /* Bronze - render the user's number of bronze medals */ }
                   <td>{ row.bronze }</td>
+
                 </tr>
               );
             })

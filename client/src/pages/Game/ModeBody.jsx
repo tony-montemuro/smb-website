@@ -1,20 +1,19 @@
 /* ===== IMPORTS ===== */
 import "./Game.css";
-import { StaticCacheContext } from "../../Contexts";
+import { GameContext } from "../../Contexts";
 import { useContext, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardButton from "../../components/LevelboardButton/LevelboardButton";
 
-function ModeBody({ abb, category, modeName }) {
+function ModeBody({ category, modeName }) {
   /* ===== CONTEXTS ===== */
 
-  // static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
+  // game state from game context
+  const { game } = useContext(GameContext);
 
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 3;
   const misc = category === "misc" ? true : false;
-  const game = staticCache.games.find(row => row.abb === abb);
   const mode = game.mode.find(row => row.misc === misc && row.name === modeName);
 
   /* ===== STATES ===== */
@@ -25,7 +24,7 @@ function ModeBody({ abb, category, modeName }) {
   // helper functions
   const { cleanLevelName } = FrontendHelper();
 
-  /* ===== MODEBODY COMPONENT ===== */
+  /* ===== MODE BODY COMPONENT ===== */
   return (
     // the following is a table body. the table body will always render a row that shows the name of the mode
     // however, if the user clicks on the mode row, it will toggle between an expanded and unexpanded state

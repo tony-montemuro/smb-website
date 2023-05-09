@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import Username from "../../components/Username/Username.jsx";
 
-function RecentSubmissionRow({ submission }) {
+function RecentSubmissionsRow({ submission, renderGame }) {
   /* ===== VARIABLES ===== */
   const level = submission.level;
   const category = level.misc ? "misc" : "main";
@@ -21,7 +21,7 @@ function RecentSubmissionRow({ submission }) {
     <tr>
       <td>{ getTimeDifference(submission.id) }</td>
       <td><Username country={ user.country } userId={ user.id } username={ user.username } /></td>
-      <td><Link to={ `/games/${ game.abb }` }>{ game.name }</Link></td>
+      { renderGame && <td><Link to={ `/games/${ game.abb }` }>{ game.name }</Link></td> }
       <td><Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>{ cleanLevelName(level.name) }</Link></td>
       <td>{ capitalize(type) }</td>
       <td>{ submission.record }</td>
@@ -31,4 +31,4 @@ function RecentSubmissionRow({ submission }) {
 };
 
 /* ===== EXPORTS ====== */
-export default RecentSubmissionRow;
+export default RecentSubmissionsRow;

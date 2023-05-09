@@ -1,26 +1,40 @@
-.game-searchbar {
+.game {
     display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    margin-top: 10px;
-    margin-right: 10px;
 }
 
-.game-header {
+.game-info {
+    flex: 1;
     text-align: center;
+    margin: 10px;
 }
 
-.game-header button {
-    margin-top: 5px;
-    margin-bottom: 5px;
+.game-rules ol {
+    padding-inline-start: 30px;
 }
 
-.game-header h1 {
-    margin-top: 5px;
-    margin-bottom: 5px;
+.game-recent-submissions table {
+    margin-top: 7px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.game-radio-buttons {
+.game-recent-submissions th {
+    border: 1px solid black;
+    padding: 4px 8px;
+}
+
+.game-recent-submissions td {
+    border: 1px solid black;
+    padding: 4px 8px;
+}
+
+.game-level-list {
+    flex: 1;
+}
+
+.game-radio-btns {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -28,12 +42,8 @@
     margin-bottom: 5px;
 }
 
-.game-body {
-    display: flex;
-}
-
-.game-level-list {
-    flex: 1;
+.game-radio-btn {
+    margin: 5px;
 }
 
 .game-level-list h2 {
@@ -70,9 +80,4 @@
 
 .game-level-name {
     width: 80%;
-}
-
-.game-boards {
-    flex: 1;
-    text-align: center;
 }

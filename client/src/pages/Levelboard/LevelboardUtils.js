@@ -2,7 +2,7 @@
 import { useContext } from "react";
 import { UserContext } from "../../Contexts";
 import FrontendHelper from "../../helper/FrontendHelper";
-import LevelboardUpdate from "../../database/update/LevelboardUpdate";
+import NotificationUpdate from "../../database/update/NotificationUpdate";
 
 const LevelboardUtils = () => {
     /* ===== CONTEXTS ===== */
@@ -16,7 +16,7 @@ const LevelboardUtils = () => {
     const { capitalize, dateB2F, recordB2F } = FrontendHelper();
 
     // database functions
-    const { insertNotification } = LevelboardUpdate();
+    const { insertNotification } = NotificationUpdate();
 
     // FUNCTION 1: getPrevAndNext - get the previous and next level names
     // PRECONDTIONS (2 parameters):

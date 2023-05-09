@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { UserContext, StaticCacheContext } from "./Contexts";
 import AppLogic from "./App.js";
 import Game from "./pages/Game/Game.jsx";
+import GameLayout from "./components/GameLayout/GameLayout";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
@@ -69,57 +70,71 @@ function App() {
             <Route path="/notifications" element={ <Notifications /> } />
             <Route path="/login" element={ <Login /> }/>
             <Route path="/profile" element={ <Profile imageReducer={ imageReducer } /> }/>
-            <Route path="games/:game" element={ <Game /> }/>
-            <Route path="games/:game/main" element={ <Game /> }/>
-            <Route path="games/:game/misc" element={ <Game /> }/>
-            <Route path="games/:game/main/medals" element={
-              <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/misc/medals" element={
-              <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/main/totalizer" element={
-              <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/misc/totalizer" element={
-              <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/main/score" element={
-              <Records submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/main/time" element={
-              <Records submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/misc/score" element={
-              <Records submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/misc/time" element={
-              <Records submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/main/score/:levelid" element={
-              <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/main/time/:levelid" element={
-              <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/misc/score/:levelid" element={
-              <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/misc/time/:levelid" element={
-              <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
-            }/>
-            <Route path="games/:game/main/score/:levelid/:userid" element={
-              <SubmissionHistory />
-            }/>
-            <Route path="games/:game/misc/score/:levelid/:userid" element={
-              <SubmissionHistory />
-            }/>
-            <Route path="games/:game/main/time/:levelid/:userid" element={
-              <SubmissionHistory />
-            }/>
-            <Route path="games/:game/misc/time/:levelid/:userid" element={
-              <SubmissionHistory />
-            }/>
+            <Route path="/games/:abb" element={ <GameLayout imageReducer={ imageReducer } /> } >
+              <Route index element={ <Game /> } />
+              <Route path="main" element={ <Game /> }/>
+              <Route path="misc" element={ <Game /> }/>
+              <Route path="main/medals/score" element={
+                <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="main/medals/time" element={
+                <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="misc/medals/score" element={
+                <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="misc/medals/time" element={
+                <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="main/totalizer/score" element={
+                <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="main/totalizer/time" element={
+                <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="misc/totalizer/score" element={
+                <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="misc/totalizer/time" element={
+                <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="main/score" element={
+                <Records submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="main/time" element={
+                <Records submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="misc/score" element={
+                <Records submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="misc/time" element={
+                <Records submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="main/score/:levelid" element={
+                <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="main/time/:levelid" element={
+                <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="misc/score/:levelid" element={
+                <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="misc/time/:levelid" element={
+                <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+              }/>
+              <Route path="main/score/:levelid/:userid" element={
+                <SubmissionHistory />
+              }/>
+              <Route path="misc/score/:levelid/:userid" element={
+                <SubmissionHistory />
+              }/>
+              <Route path="main/time/:levelid/:userid" element={
+                <SubmissionHistory />
+              }/>
+              <Route path="misc/time/:levelid/:userid" element={
+                <SubmissionHistory />
+              }/>
+            </Route>
             <Route path="/user/:userId" element={<User imageReducer={ imageReducer } />}/>
             <Route path="/user/:userId/:game/main/score" element={
               <UserStats submissionReducer={ submissionReducer } />

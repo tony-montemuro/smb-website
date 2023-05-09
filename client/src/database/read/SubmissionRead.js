@@ -1,10 +1,21 @@
+/* ===== IMPORTS ===== */
 import { supabase } from "../SupabaseClient";
 
 const SubmissionRead = () => {
-    // function that reads submission data from the database based on the abb, category, and type
+    /* ===== FUNCTIONS ===== */
+
+    // FUNCTION 1: query - an internal module function that actually performs query to get submissions
+    // PRECONDITIONS (3 parameters):
+    // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.
+    // 2.) category: a string value, either "main" or "misc".
+    // 3.) type: a string value, either "score" or "time".
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is a success, an array of submissions belonging to the game (specified by abb) category and type,
+    // ordered by level id, then record, then submission date
+    // if the query is unsuccessful, an empty array is returned, and the user is informed of the error
     const query = async (abb, category, type) => {
         try {
-            const { data: submissionsList, error, status } = await supabase
+            const { data: submissions, error, status } = await supabase
                 .from("submission")
                 .select(`
                     level!inner (name, misc, chart_type, time, id),
@@ -33,7 +44,7 @@ const SubmissionRead = () => {
 
             // now, sort the array first by the level.id field in descending order, then by the details.record field in descending order.
             // finally, by the details.submitted_at field ascending order, and return array
-            submissionsList.sort((a, b) => {
+            submissions.sort((a, b) => {
                 if (a.level.id !== b.level.id) {
                     return a.level.id - b.level.id;
                 }
@@ -43,7 +54,7 @@ const SubmissionRead = () => {
                 return a.details.submitted_at.localeCompare(b.details.submitted_at);
             });
 
-            return submissionsList;
+            return submissions;
 
         } catch (error) {
             console.log(error);
@@ -52,7 +63,16 @@ const SubmissionRead = () => {
         }
     };
 
-    // two cases: if user is accessing already cached submissions, we can fetch this information from submissionReducer.
+    // FUNCTION 2: getSubmissions - the public facing function used to get a list of submissions given some parameters
+    // PRECONDITIONS (4 parameters):
+    // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.
+    // 2.) category: a string value, either "main" or "misc".
+    // 3.) type: a string value, either "score" or "time".
+    // 4.) submissionReducer: an object with two fields:
+		// a.) reducer: the submission reducer itself (state)
+		// b.) dispatchSubmissions: the reducer function used to update the reducer
+    // POSTCONDITIONS (2 possible outcomes):
+    // if user is accessing already cached submissions, we can fetch this information from submissionReducer.
     // otherwise, we need to query, and update the submission reducer
     const getSubmissions = async (abb, category, type, submissionReducer) => {
         // initialize submissions object
@@ -71,4 +91,5 @@ const SubmissionRead = () => {
     return { getSubmissions };
 };
 
+/* ===== EXPORTS ===== */
 export default SubmissionRead;

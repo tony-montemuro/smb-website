@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./SubmissionHistory.css";
+import { GameContext, StaticCacheContext, UserContext } from "../../Contexts";
 import { Link } from "react-router-dom";
-import { StaticCacheContext, UserContext } from "../../Contexts";
 import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DeletePopup from "../../components/DeletePopup/DeletePopup.jsx";
@@ -31,6 +31,9 @@ function SubmissionHistory() {
   // user state from user context
   const { user } = useContext(UserContext);
 
+  // game state from game context
+  const { game } = useContext(GameContext);
+
   /* ===== STATES & FUNCTIONS ====== */
   // states and functions from the js file
   const { submissions, deleteSubmission, profile, setDeleteSubmission, setProfile, getSubmissions, setDelete } = SubmissionHistoryLogic();
@@ -44,20 +47,9 @@ function SubmissionHistory() {
   // code that is executed when the component mounts, & when the static cache object is updated
   useEffect(() => {
     // cache variables
-    const games = staticCache.games;
     const profiles = staticCache.profiles;
     
-		if (games.length > 0 && profiles.length > 0) {
-			// see if abb corresponds to a game stored in cache
-			const game = games.find(row => row.abb === abb);
-
-			// if not, we will print an error message, and navigate to the home screen
-			if (!game) {
-				console.log("Error: Invalid game.");
-				navigate("/");
-				return;
-			}
-
+		if (profiles.length > 0) {
 			// see if levelName corresponds to a level stored in the game array
 			const level = fetchLevelFromGame(game, levelName, category);
 			
@@ -88,7 +80,7 @@ function SubmissionHistory() {
   }, [staticCache]);
 
   /* ===== RECORD HISTORY COMPONENT ===== */
-  return submissions &&
+  return profile && submissions &&
     <>
 
       { /* Record History Header - Render information about the page. */ }

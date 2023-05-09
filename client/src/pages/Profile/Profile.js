@@ -3,8 +3,9 @@ import { StaticCacheContext, UserContext } from "../../Contexts";
 import { useContext, useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileUtils from "./ProfileUtils.js";
-import ProfileUpdate from "../../database/update/ProfileUpdate";
+import ProfilesUpdate from "../../database/update/ProfilesUpdate";
 import Signout from "../../database/authentication/Signout";
+import Upload from "../../database/storage/Upload";
 
 const Profile = () => {
     /* ===== VARIABLES ===== */
@@ -55,8 +56,9 @@ const Profile = () => {
         getFileInfo,
         validateAvatar 
     } = ProfileUtils();
-    const { upsertUserInfo, uploadAvatar } = ProfileUpdate();
+    const { upsertUserInfo } = ProfilesUpdate();
     const { signOut } = Signout();
+    const { uploadAvatar } = Upload();
 
     // FUNCTION 1: initForms - initialize both the user form and the avatar form
     // PRECONDITIONS (1 condition):

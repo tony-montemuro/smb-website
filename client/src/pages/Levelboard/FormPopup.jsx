@@ -1,15 +1,18 @@
 /* ===== IMPORTS ===== */
 import "./Levelboard.css";
-import { StaticCacheContext, UserContext } from "../../Contexts";
+import { GameContext, StaticCacheContext, UserContext } from "../../Contexts";
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 
-function FormPopup({ form, formPopup, setFormPopup, game, board, submitFunc, handleChangeFunc }) {
+function FormPopup({ form, formPopup, setFormPopup, board, submitFunc, handleChangeFunc }) {
   /* ===== CONTEXTS ===== */
 
 	// static cache state from static cache context
   const { staticCache } = useContext(StaticCacheContext);
+
+  // game state from game context
+  const { game } = useContext(GameContext);
 
 	// user state from user context
   const { user } = useContext(UserContext);
