@@ -1,8 +1,11 @@
+/* ===== IMPORTS ===== */
 import { supabase } from "../SupabaseClient";
 
-const NotificationsDelete = () => {
+const NotificationDelete = () => {
+    /* ===== FUNCTIONS ===== */
+
     // function that makes a delete call to the notification table in the database based on the id
-    const remove = async (notif_date) => {
+    const deleteNotification = async (notif_date) => {
         try {
             const { error } = await supabase
                 .from("notification")
@@ -20,7 +23,8 @@ const NotificationsDelete = () => {
         }
     };
 
-    return { remove };
+    return { deleteNotification };
 };
 
-export default NotificationsDelete;
+/* ===== EXPORTS ===== */
+export default NotificationDelete;

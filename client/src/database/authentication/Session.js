@@ -2,6 +2,8 @@
 import { supabase } from "../SupabaseClient";
 
 const Session = () => {
+    /* ===== FUNCTIONS ===== */
+
     // FUNCTION 1: getSession - get the current session object
     // PRECONDITIONS: none
     // POSTCONDITIONS (1 returns, 2 possible outcomes):

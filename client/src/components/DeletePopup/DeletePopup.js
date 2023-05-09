@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { UserContext } from "../../Contexts";
-import LevelboardDelete from "../../database/delete/LevelboardDelete";
+import AllSubmissionDelete from "../../database/delete/AllSubmissionDelete";
 import LevelboardUpdate from "../../database/update/LevelboardUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
@@ -23,7 +23,7 @@ const DeletePopup = () => {
     const { validateMessage } = ValidationHelper();
 
     // database functions
-    const { remove } = LevelboardDelete();
+    const { deleteSubmission } = AllSubmissionDelete();
     const { insertNotification } = LevelboardUpdate();
 
     // FUNCTION 1: handleOwnDelete - function that is called when a moderator deletes their own run
@@ -36,7 +36,7 @@ const DeletePopup = () => {
     const handleOwnDelete = async (submission_id) => {
         try {
             // await the removal of the submission
-            await remove(submission_id);
+            await deleteSubmission(submission_id);
 
             // if successful, reload the page
             window.location.reload();
@@ -82,7 +82,7 @@ const DeletePopup = () => {
         // perform database queries
         try {
             // first, remove the submission
-            await remove(deleteObj.id);
+            await deleteSubmission(deleteObj.id);
 
             // then, insert the notification
             await insertNotification(notification);

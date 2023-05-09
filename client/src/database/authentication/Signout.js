@@ -2,6 +2,8 @@
 import { supabase } from "../SupabaseClient";
 
 const Signout = () => {
+    /* ===== FUNCTIONS ===== */
+
     // FUNCTION 1: signOut - attempt to sign out a user
     // PRECONDITIONS (1 condition):
     // the application should have a currently signed-in user when this function is called

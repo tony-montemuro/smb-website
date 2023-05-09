@@ -1,6 +1,9 @@
+/* ===== IMPORTS ===== */
 import { supabase } from "../SupabaseClient";
 
 const SubmissionRead = () => {
+    /* ===== FUNCTIONS ===== */
+
     // FUNCTION 1: query - an internal module function that actually performs query to get submissions
     // PRECONDITIONS (3 parameters):
     // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.

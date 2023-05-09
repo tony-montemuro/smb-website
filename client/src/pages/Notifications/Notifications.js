@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useState } from "react";
-import NotificationsDelete from "../../database/delete/NotificationsDelete";
+import NotificationDelete from "../../database/delete/NotificationDelete";
 
 const Notifications = () => {
     /* ===== STATES ===== */
@@ -12,8 +12,8 @@ const Notifications = () => {
 
     /* ===== FUNCTIONS ===== */
 
-    // helper functions
-    const { remove } = NotificationsDelete();
+    // database functions
+    const { deleteNotification } = NotificationDelete();
 
     // FUNCTION 1: init - update the notifications state's all parameter with the array of user notifications
     // PRECONDITIONS (1 condition):
@@ -64,7 +64,7 @@ const Notifications = () => {
     // will await all calls, and once they have all been resolved, the page reloads.
     const removeSelected = async () => {
         // make concurrent delete calls to database
-        const promises = notifications.selected.map(notif_date => remove(notif_date));
+        const promises = notifications.selected.map(notif_date => deleteNotification(notif_date));
         await Promise.all(promises);
 
         // once all deletes have occurred successfully, reload the page

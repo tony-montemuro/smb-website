@@ -2,6 +2,8 @@
 import { supabase } from "../SupabaseClient";
 
 const EmailLogin = () => {
+    /* ===== FUNCTIONS ===== */
+
     // FUNCTION 1: login - attempt to log in a user
     // PRECONDITIONS (1 parameter):
     // 1.) email: a string that represents the email of the user attempting to login
