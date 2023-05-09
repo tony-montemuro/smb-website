@@ -52,7 +52,7 @@ function RecordTable({ mode, allLiveFilter, recordTable }) {
               </td>
 
               { /* Second element is the record */ }
-              <td>{ recordB2F(level.record, type) }</td>
+              <td>{ level.record && recordB2F(level.record, type) }</td>
 
               { /* Third element is the names of each user who has record. This is a list of links, as each name will link to their
               user profile. */ }

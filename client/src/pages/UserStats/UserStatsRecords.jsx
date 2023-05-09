@@ -57,7 +57,7 @@ function UserStatsRecords({ rankings }) {
                     </td>
 
                     { /* Element 2 - Record */ }
-                    <td>{ recordB2F(level.record, type) }</td>
+                    <td>{ level.record && recordB2F(level.record, type) }</td>
 
                     { /* Element 3 - Position */ }
                     <td>{ level.position }</td>

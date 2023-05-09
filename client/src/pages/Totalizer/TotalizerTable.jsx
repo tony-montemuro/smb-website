@@ -73,13 +73,7 @@ function TotalizerTable({ type, totals, imageReducer }) {
                 </td>
 
                 { /* Total - render the actual total */ }
-                { type === "score" ?
-                  // If the type is score, we will simply render the total
-                  <td>{ row.total }</td>
-                : 
-                  // Otherwise, we need to convert to an hour format
-                  <td>{ secondsToHours(row.total, type) }</td>
-                }
+                <td>{ secondsToHours(row.total, type) }</td>
 
               </tr>  
             })}

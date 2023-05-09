@@ -109,7 +109,6 @@ const LevelboardUtils = () => {
 
         // if not, we can fill the object with default data values
         } else {
-            console.log(game);
             return {
                 record: "",
                 score: type === "score" ? true : false,
