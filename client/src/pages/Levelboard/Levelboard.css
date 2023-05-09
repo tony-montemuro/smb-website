@@ -21,12 +21,12 @@
     outline: none;
 }
 
-.levelboard-buttons {
-    margin-bottom: 5px;
+.levelboard-buttons button {
+    margin: 3px;
 }
 
-.levelboard-buttons > * {
-    margin: 3px;
+.levelboard-toggle {
+    margin: 5px;
 }
 
 .levelboard-container table {

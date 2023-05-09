@@ -110,11 +110,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 					{ /* Button that pulls up the submission popup. NOTE: this button should only render if the user has a profile. */ }
 					{ user.profile && <button onClick={ () => setSubmitPopup(true) }>Submit a { capitalize(type) }</button> }
 
-					{ /* Button to navigate back to game page */ }
-					<Link to={ `/games/${ abb }/${ category }` }>
-						<button disabled={ form.submitting }>Back to Level Select</button>
-					</Link>
-
 					{ /* Button to navigate to the levelboard of the other type. NOTE: this only will be rendered if the
 					chart_type field in the level state is set to "both" */ }
 					{ level.chart_type === "both" &&
@@ -123,15 +118,8 @@ function Levelboard({ imageReducer, submissionReducer }) {
 						</Link>
 					}
 
-					{ /* Button to navigate to the game's totalizer page. */ }
-					<Link to={ `/games/${ abb }/${ category }/totalizer` }>
-						<button disabled={ form.submitting }>Totalizer Table</button>
-					</Link>
-
-					{ /* Button to navigate to the game's medal table page. */ }
-					<Link to={ `/games/${ abb }/${ category }/medals` }>
-						<button disabled={ form.submitting }>Medal Table</button>
-					</Link>
+				</div>
+				<div className="levelboard-toggle">
 
 					{ /* All-live toggle: Toggles the levelboard between all and live, allowing both arrays of submissions to be rendered. */ }
 					<label htmlFor="showLive">Live-{ type }s only: </label>

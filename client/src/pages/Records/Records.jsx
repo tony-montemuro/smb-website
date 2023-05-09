@@ -1,7 +1,7 @@
 /* ===== IMPORTS ====== */
 import "./Records.css";
 import { GameContext } from "../../Contexts";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import RecordsLogic from "./Records.js";
@@ -11,10 +11,8 @@ function Records({ submissionReducer }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const path = location.pathname.split("/");
-  const abb = path[2];
   const category = path[3];
   const type = path[4];
-  const otherType = type === "score" ? "time" : "score";
   const isMisc = category === "misc" ? true : false;
 
   /* ===== CONTEXTS ===== */
@@ -50,22 +48,8 @@ function Records({ submissionReducer }) {
       <div className="records-header">
 
         { /* Game Title */ }
-        <h1>{ isMisc && "Miscellaneous" } { game.name }: { capitalize(type) } World Records</h1>
+        <h1>{ isMisc && "Miscellaneous" } { capitalize(type) } World Records</h1>
 
-        { /* Records Buttons - Buttons to navigate to related pages. */ }
-        <div className="records-buttons">
-
-          { /* Return to game page button. */ }
-          <Link to={ `/games/${ abb }` }>
-            <button>Back to { game.name }'s Page</button>
-          </Link>
-
-          { /* Other type world record page button. */ }
-          <Link to={ `/games/${ abb }/${ category }/${ otherType }`}>
-            <button>{ isMisc && "Miscellaneous" } { game.name }: { capitalize(otherType) } World Records</button>
-          </Link>
-
-        </div>
       </div>
 
       { /* Records - Render a record table for each mode. */ }

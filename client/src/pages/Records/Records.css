@@ -2,19 +2,6 @@
     width: 50%;
     margin: 10px auto;
     text-align: center;
-} 
-
-.records-buttons {
-    text-align: center;
-}
-
-.records-buttons button {
-    margin-left: 5px;
-    margin-right: 5px;
-}
-
-.records-buttons button:hover {
-    cursor: pointer;
 }
 
 .records-input {
