@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useState } from "react";
-import GameRead from "../../database/read/GameRead";
+import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 
 const Game = () => {
     /* ===== STATES ===== */
@@ -9,7 +9,7 @@ const Game = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { queryRecentGameSubmissions } = GameRead();
+    const { queryRecentGameSubmissions } = AllSubmissionRead();
     
     // FUNCTION 1: getSubmissions
     const getSubmissions = async (abb) => {

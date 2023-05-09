@@ -1,7 +1,11 @@
 /* ===== IMPORTS ===== */
 import { supabase } from "./database/SupabaseClient";
 import { useReducer, useState } from "react";
-import AppRead from "./database/read/AppRead";
+import CountriesRead from "./database/read/CountriesRead";
+import GameRead from "./database/read/GameRead";
+import ModeratorRead from "./database/read/ModeratorRead";
+import NotificationRead from "./database/read/NotificationRead";
+import ProfileRead from "./database/read/ProfileRead";
 import Session from "./database/authentication/Session";
 
 const App = () => {
@@ -43,15 +47,11 @@ const App = () => {
   /* ===== FUNCTIONS ===== */
 
   // database functions to load data
-  const { 
-    loadCountries, 
-    loadGames,
-    loadModerators, 
-    loadProfiles,
-    loadUserNotifications,
-    loadUserProfile,
-    isModerator
-  } = AppRead();
+  const { queryCountries } = CountriesRead();
+  const { queryGames } = GameRead();
+  const { queryModerators, isModerator } = ModeratorRead();
+  const { queryUserNotifications } = NotificationRead();
+  const { queryProfiles, queryUserProfile } = ProfileRead();
 
   // database function used to retrieve the current session
   const { getSession } = Session();
@@ -70,7 +70,7 @@ const App = () => {
       // make concurrent api calls to database to load user data
       const user = session.user, userId = user.id;
       const [notifs, profile, is_mod] = await Promise.all(
-        [loadUserNotifications(userId), loadUserProfile(userId), isModerator(userId)]
+        [queryUserNotifications(userId), queryUserProfile(userId), isModerator(userId)]
       );
 
       // update the user state
@@ -125,7 +125,7 @@ const App = () => {
   const loadData = async () => {
     // make concurrent api calls to database to load data
     const [countries, games, moderators, profiles] = await Promise.all(
-      [loadCountries(), loadGames(), loadModerators(), loadProfiles()]
+      [queryCountries(), queryGames(), queryModerators(), queryProfiles()]
     );
 
     // clean up the many-to-many relationships present in each game object

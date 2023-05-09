@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useLocation } from "react-router-dom";
 import { useState } from "react"; 
-import RecordHistoryRead from "../../database/read/RecordHistoryRead";
+import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 
 const SubmissionHistory = () => {
     /* ===== VARIABLES ===== */
@@ -20,7 +20,7 @@ const SubmissionHistory = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { queryFilteredSubmissions } = RecordHistoryRead();
+    const { queryFilteredSubmissions } = AllSubmissionRead();
 
     // FUNCTION 1: getSubmissions - given the abb, levelName, userId, and type from path, get the list of submissions from the database
     // PRECONDITIONS (4 parameters):
