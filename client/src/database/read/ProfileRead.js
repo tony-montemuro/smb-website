@@ -17,6 +17,7 @@ const ProfileRead = () => {
                     id, 
                     username,
                     bio,
+                    birthday,
                     country (iso2, name), 
                     youtube_url, 
                     twitch_url,
@@ -56,7 +57,8 @@ const ProfileRead = () => {
                     twitch_url,
                     avatar_url,
                     discord,
-                    bio
+                    bio,
+                    birthday
                 `)
                 .eq("id", userId)
                 .single()

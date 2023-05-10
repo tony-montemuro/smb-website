@@ -2,6 +2,10 @@
 import "./Profile.css";
 
 function UserInfoForm({ form, handleChange, formSubmit }) {
+  /* ===== VARIABLES ===== */
+  const BIO_WIDTH = 50;
+  const BIO_HEIGHT = 4;
+
   /* ===== USER INFO FORM COMPONENT ===== */
   return (
     <div className="profile-user-info">
@@ -28,13 +32,24 @@ function UserInfoForm({ form, handleChange, formSubmit }) {
 
         </div>
 
+        <div className="profile-info-entry">
+          <label htmlFor="birthday">Birthday (optional): </label>
+          <input 
+            id="birthday" 
+            type="date" 
+            min="1900-01-01" 
+            value={ form.user.birthday }
+            onChange={ handleChange }
+          />
+        </div>
+
         { /* About me field: an optional textarea field, with the only requirement being it remains under 200 characters. */ }
         <div className="profile-info-entry">
           <label htmlFor="bio">About Me (optional): </label>
           <textarea
             id="bio"
-            rows={ 4 }
-            cols={ 50 } 
+            rows={ BIO_HEIGHT }
+            cols={ BIO_WIDTH } 
             placeholder="About Me"
             value={ form.user.bio }
             onChange={ handleChange }

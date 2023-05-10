@@ -127,6 +127,7 @@ const Profile = () => {
 
         // if we made it this far, no errors were deteched, so we can go ahead and update the user profile
         try {
+            userForm.user.birthday = userForm.user.birthday.length > 0 ? userForm.user.birthday : null;
             await upsertUserInfo({ ...userForm.user });
 
             // if successful, reload the page

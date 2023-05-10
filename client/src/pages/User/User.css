@@ -10,28 +10,6 @@
     border-radius: 5px;
     margin: 10px;
     text-align: center;
-    width: 500px;
-}
-
-.user-info h2 {
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 0px;
-}
-
-.user-country-name {
-    display: flex;
-    flex-direction: row;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.user-country-name span {
-    margin-right: 2px;
-}
-
-.user-country-name p {
-    margin-left: 2px;
 }
 
 .user-info a {
@@ -67,11 +45,16 @@
 }
 
 .user-about-me p {
-    margin-left: 3px;
-    margin-right: 3px;
+    text-align: left;
+    margin-left: 5px;
+    margin-right: 5px;
     word-wrap: break-word;
 }
 
 .user-stats-link {
     color: blue;
+}
+
+.user-missing {
+    text-align: center;
 }
