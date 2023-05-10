@@ -1,9 +1,12 @@
 /* ===== IMPORTS ===== */
-import "./User.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 
 function UserStatsCategory({ game, category }) {
+  /* ===== VARIABLES ===== */
+  const params = useParams();
+  const { userId } = params;
+
   /* ===== FUNCTIONS ===== */
   
   // helper functions
@@ -11,10 +14,10 @@ function UserStatsCategory({ game, category }) {
 
   /* ===== USER STATS CATEGORY COMPONENT ===== */
   return (
-    <div className="user-stats-category">
+    <div className="user-layout-category">
       <h2>{ capitalize(category) }</h2>
-      <Link className="user-stats-link" to={ `${ game.abb }/${ category }/score` }>Score</Link>
-      <Link className="user-stats-link" to={ `${ game.abb }/${ category }/time` }>Time</Link>
+      <Link className="user-stats-link" to={ `/user/${ userId }/${ game.abb }/${ category }/score` }>Score</Link>
+      <Link className="user-stats-link" to={ `/user/${ userId }/${ game.abb }/${ category }/time` }>Time</Link>
     </div>
   );
 };

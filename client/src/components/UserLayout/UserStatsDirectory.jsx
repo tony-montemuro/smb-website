@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import "./User.css";
 import { StaticCacheContext } from "../../Contexts";
 import { useContext } from "react";
 import UserStatsCategory from "./UserStatsCategory";
@@ -15,7 +14,7 @@ function UserStatsDirectory() {
 
   /* ===== USER STATS DIRECTORY COMPONENT ===== */
   return (
-    <div className="user-stats-games">
+    <div className="user-layout-stats">
       { /* Title */ }
       <h1>View Player Stats</h1>
 
@@ -39,7 +38,7 @@ function UserStatsDirectory() {
                 return (
                   // Each row contains: the name of the game, a link to main stats, and a link to misc stats
                   <tr key={ game.name }>
-                    <td className="user-stats-game-element">{ game.name }</td>
+                    <td className="user-layout-game-element">{ game.name }</td>
                     <td><UserStatsCategory game={ game } category={ "main" } /></td>
                     <td><UserStatsCategory game={ game } category={ "misc" } /></td>
                   </tr>

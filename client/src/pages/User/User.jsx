@@ -1,63 +1,76 @@
 /* ===== IMPORTS ===== */
 import "./User.css";
-import { useNavigate } from "react-router-dom";
-import { StaticCacheContext } from "../../Contexts";
-import { useContext, useEffect, useState } from "react";
-import UserInfo from "./UserInfo";
-import UserStatsDirectory from "./UserStatsDirectory";
+import { ProfileContext } from "../../Contexts";
+import { useContext } from "react";
+import Discord from "../../img/discord-logo.png";
+import Avatar from "../../components/Avatar/Avatar.jsx";
+import SocialLink from "./SocialLink";
+import Twitch from "../../img/twitch-logo.png";
+import UserLogic from "./User.js";
+import YT from "../../img/yt-logo.png";
 
 function User({ imageReducer }) {
   /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
-  const userId = window.location.pathname.split("/")[2];
+  const IMG_SIZE = 400;
 
   /* ===== CONTEXTS ===== */
 
-  // static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
+  // profile state from profile context
+  const { profile } = useContext(ProfileContext);
 
-  /* ===== STATES AND FUNCTIONS ===== */
-  const [user, setUser] = useState(undefined);
+  /* ===== FUNCTIONS ===== */
 
-  /* ===== EFFECTS ===== */
-
-  // code that is executed when the page loads, or when the staticCache object is updated
-  useEffect(() => {
-    if (staticCache.profiles.length > 0) {
-      // see if userId corresponds to a profile stored in cache
-      const profiles = staticCache.profiles;
-      const user = profiles.find(row => row.id === userId);
-
-      // if not, we will print an error message, and navigate to the home screen
-      if (!user) {
-        console.log("Error: Invalid user.");
-        navigate("/");
-        return;
-      }
-
-      // update the user state hook
-      setUser(user);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staticCache]);
+  // functions from user js file
+  const { alertDiscord } = UserLogic();
 
   /* ===== USER COMPONENT ===== */
   return (
-    // If the user data has been loaded, we can render the user's information to the client. Otherwise, 
-    // render a loading component.
     <div className="user">
-      { user ?
-        <>
+      <div className="user-info">
+        { /* Render username */ }
+        <h2>{ profile.username }</h2>
 
-          { /* Render both user info, and a directory to the user stats pages */ }
-          <UserInfo user={ user } imageReducer={ imageReducer } />
-          <UserStatsDirectory />
-          
-        </>
-      :
-        // Loading Component
-        <p>Loading...</p>
-      }
+        { /* A user is not required to have a country. Only render country information if it exists */ }
+        { profile.country &&
+          <div className="user-country-name">
+            <span className={ `fi fi-${ profile.country.iso2.toLowerCase() }` }></span>
+            <p>{ profile.country.name }</p>
+          </div>
+        }
+
+        { /* Image will be handled by the Avatar component. */ }
+        <div>
+          <Avatar url={ profile.avatar_url } size={ IMG_SIZE } imageReducer={ imageReducer } />
+        </div>
+
+        { /* Socials - Render the user's social media information. */ }
+        <div className="user-info-socials">
+          <SocialLink name="youtube" link={ profile.youtube_url } logo={ YT } />
+          <SocialLink name="twitch" link={ profile.twitch_url } logo={ Twitch } />
+
+          { /* Discord is not a link, but a button. So, it is handled here. User is not required to have a discord.
+          Only render discord information if it exists */ }
+          { profile.discord &&
+            <div className="user-info-social">
+              <button className="user-discord-button" onClick={ () => alertDiscord(profile.discord) }>
+                <img className="social-media-logo" alt="discord-logo" src={ Discord }></img>
+              </button>
+            </div>
+          }
+        </div>
+
+        { /* Bio - Render the user's About Me. */ }
+        <div className="user-about-me">
+          <h3>About Me</h3>
+
+          { /* A user is not required to have a bio. Only render bio if it exists. */ }
+          { profile.bio &&
+            <p>{ profile.bio }</p>
+          }
+
+        </div>
+
+      </div>
     </div>
   );
 };

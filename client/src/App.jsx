@@ -136,7 +136,7 @@ function App() {
                 <SubmissionHistory />
               }/>
             </Route>
-            <Route path="/user/:userId" element={ <UserLayout /> } >
+            <Route path="/user/:userId" element={ <UserLayout imageReducer={ imageReducer } /> } >
               <Route index element={ <User imageReducer={ imageReducer } />} />
               <Route path=":game/main/score" element={
                 <UserStats submissionReducer={ submissionReducer } />
