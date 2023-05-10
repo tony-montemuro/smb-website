@@ -4,13 +4,12 @@ import { useContext } from "react";
 import { UserContext } from "../../Contexts";
 import { Link, useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
-import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
+import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 
 function LevelboardRow({ submission, imageReducer, reportFunc, deleteFunc }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
 	const type = location.pathname.split("/")[4];
-  const IMG_LENGTH = 50;
 
   /* ===== CONTEXTS ===== */
 
@@ -30,15 +29,13 @@ function LevelboardRow({ submission, imageReducer, reportFunc, deleteFunc }) {
 
       { /* Render information about the user */ }
       <td>
-        <div className="levelboard-user-info">
-          <div className="levelboard-user-image" style={ { width: IMG_LENGTH, height: IMG_LENGTH } }>
-            <SimpleAvatar url={ submission.user.avatar_url } size={ IMG_LENGTH } imageReducer={ imageReducer } />
-          </div>
-            { submission.user.country &&
-              <div><span className={ `fi fi-${ submission.user.country.toLowerCase() }` }></span></div>
-            }
-          <div><Link to={ `/user/${ submission.user.id }` }>{ submission.user.username }</Link></div>
-        </div>
+        <DetailedUsername
+          url={ submission.user.avatar_url }
+          imageReducer={ imageReducer }
+          country={ submission.user.country }
+          userId={ submission.user.id }
+          username={ submission.user.username }
+        />
       </td>
 
       { /* Render the record */ }

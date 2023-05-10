@@ -55,12 +55,6 @@
     background-color: #d3d3d3;
 }
 
-.levelboard-user-info {
-    display: flex;
-    flex-direction: row;
-    border-collapse: collapse;
-}
-
 .levelboard-input-group {
     margin-bottom: 8px;
 }

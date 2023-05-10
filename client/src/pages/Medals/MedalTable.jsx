@@ -1,12 +1,10 @@
 /* ===== IMPORTS ===== */
 import "./Medals.css";
-import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
-import Username from "../../components/Username/Username.jsx";
+import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 
 function MedalTable({ table, imageReducer }) {
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 6;
-  const IMG_LENGTH = 50;
 
   /* ===== MEDAL TABLE COMPONENT ===== */
   return (
@@ -44,12 +42,13 @@ function MedalTable({ table, imageReducer }) {
 
                   {/* User info - Render the user's profile picture, as well as their username */}
                   <td>
-                    <div className="medals-user-info">
-                      <div className="medals-user-image">
-                        <SimpleAvatar url={ row.user.avatar_url } size={ IMG_LENGTH } imageReducer={ imageReducer } />
-                      </div>
-                      <Username country={ row.user.country } username={ row.user.username } userId={ row.user.id } />
-                    </div>
+                    <DetailedUsername
+                      url={ row.user.avatar_url }
+                      imageReducer={ imageReducer }
+                      country={ row.user.country }
+                      userId={ row.user.id }
+                      username={ row.user.username }
+                    />
                   </td>
 
                   { /* Platinum - render the user's number of platinum medals */ }

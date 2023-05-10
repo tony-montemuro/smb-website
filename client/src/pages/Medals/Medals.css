@@ -46,14 +46,3 @@
     font-style: italic;
     text-align: center;
 }
-
-.medals-user-info {
-    display: flex;
-    flex-direction: row;
-    border-collapse: collapse;
-}
-
-.medals-user-image {
-    width: 50px;
-    height: 50px;
-}

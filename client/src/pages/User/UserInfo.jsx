@@ -1,7 +1,7 @@
 /* ===== IMPORTS ====== */
 import "./User.css";
 import Discord from "../../img/discord-logo.png";
-import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
+import Avatar from "../../components/Avatar/Avatar.jsx";
 import SocialLink from "./SocialLink";
 import Twitch from "../../img/twitch-logo.png";
 import UserLogic from "./User.js";
@@ -30,9 +30,9 @@ function UserInfo({ user, imageReducer }) {
         </div>
       }
 
-      { /* Image will be handled by the SimpleAvatar component. */ }
-      <div className="user-image">
-        <SimpleAvatar url={ user.avatar_url } size={ IMG_SIZE } imageReducer={ imageReducer } />
+      { /* Image will be handled by the Avatar component. */ }
+      <div>
+        <Avatar url={ user.avatar_url } size={ IMG_SIZE } imageReducer={ imageReducer } />
       </div>
 
       { /* Socials - Render the user's social media information. */ }

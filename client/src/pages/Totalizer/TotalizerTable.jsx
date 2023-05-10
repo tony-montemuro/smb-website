@@ -1,14 +1,12 @@
 /* ===== IMPORTS ===== */
 import "./Totalizer.css";
 import { useState } from "react";
+import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
-import SimpleAvatar from "../../components/SimpleAvatar/SimpleAvatar";
-import Username from "../../components/Username/Username.jsx";
 
 function TotalizerTable({ type, totals, imageReducer }) {
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 3;
-  const IMG_LENGTH = 50;
 
   /* ===== STATES ===== */
   const [tableState, setTableState] = useState("live");
@@ -64,12 +62,13 @@ function TotalizerTable({ type, totals, imageReducer }) {
 
                 {/* User info - Render the user's profile picture, as well as their username */}
                 <td>
-                  <div className="totals-user-info">
-                    <div className="totals-user-image">
-                      <SimpleAvatar url={ row.user.avatar_url } size={ IMG_LENGTH } imageReducer={ imageReducer } />
-                    </div>
-                    <Username country={ row.user.country } username={ row.user.username } userId={ row.user.id } />
-                  </div>
+                  <DetailedUsername
+                    url={ row.user.avatar_url }
+                    imageReducer={ imageReducer }
+                    country={ row.user.country }
+                    userId={ row.user.id }
+                    username={ row.user.username }
+                  />
                 </td>
 
                 { /* Total - render the actual total */ }
