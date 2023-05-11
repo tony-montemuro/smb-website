@@ -1,16 +1,18 @@
 .user {
     display: flex;
     justify-content: center;
+    flex-direction: column;
 }
 
 .user-info {
-    flex: 1;
     display: flex;
     flex-direction: column;
     border: 2px solid #808080;
     border-radius: 5px;
     margin: 10px;
     text-align: center;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 .user-info a {
@@ -61,11 +63,12 @@
 }
 
 .user-featured-video {
-    flex: 1;
     display: flex;
     flex-direction: column;
     border: 2px solid #808080;
     border-radius: 5px;
     margin: 10px;
     text-align: center;
+    margin-left: 10%;
+    margin-right: 10%;
 }

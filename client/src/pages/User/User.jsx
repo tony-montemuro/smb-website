@@ -6,6 +6,7 @@ import Discord from "../../img/discord-logo.png";
 import SocialLink from "./SocialLink";
 import Twitch from "../../img/twitch-logo.png";
 import UserLogic from "./User.js";
+import YouTube from "react-youtube";
 import YT from "../../img/yt-logo.png";
 
 function User() {
@@ -17,7 +18,7 @@ function User() {
   /* ===== FUNCTIONS ===== */
 
   // functions from user js file
-  const { alertDiscord } = UserLogic();
+  const { alertDiscord, getVideoId } = UserLogic();
 
   /* ===== USER COMPONENT ===== */
   return (
@@ -82,19 +83,13 @@ function User() {
 
       </div>
       
-      <div className="user-featured-video">
-        { console.log(profile.featured_video) }
-        <h1>Featured Video</h1>
-        <iframe 
-          width="560" 
-          height="315" 
-          src={ "https://www.youtube.com/embed/xNRJwmlRBNU"  }
-          title="YouTube video player" 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-          allowfullscreen>
-        </iframe>
-      </div>
+      {
+        profile.featured_video &&
+          <div className="user-featured-video">
+            <h1>Featured Video</h1>
+            <YouTube videoId={ getVideoId(profile.featured_video) } />
+          </div>
+      }
     </div>
   );
 };
