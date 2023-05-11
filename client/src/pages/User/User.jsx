@@ -83,11 +83,13 @@ function User() {
 
       </div>
       
-      {
-        profile.featured_video &&
+      { profile.featured_video &&
           <div className="user-featured-video">
             <h1>Featured Video</h1>
-            <YouTube videoId={ getVideoId(profile.featured_video) } />
+            <YouTube className="user-featured-video-player" videoId={ getVideoId(profile.featured_video) } />
+            { profile.video_description &&
+              <p>{ profile.video_description }</p>
+            }
           </div>
       }
     </div>

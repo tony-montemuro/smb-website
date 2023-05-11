@@ -23,7 +23,8 @@ const ProfileRead = () => {
                     twitch_url,
                     discord,
                     avatar_url,
-                    featured_video
+                    featured_video,
+                    video_description
                 `);
 
             // error handling
@@ -60,7 +61,8 @@ const ProfileRead = () => {
                     discord,
                     bio,
                     birthday,
-                    featured_video
+                    featured_video,
+                    video_description
                 `)
                 .eq("id", userId)
                 .single()

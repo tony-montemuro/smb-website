@@ -19,7 +19,8 @@ const ProfileUtils = () => {
                 youtube_url: userInfo.youtube_url ? userInfo.youtube_url : "",
                 twitch_url: userInfo.twitch_url ? userInfo.twitch_url : "",
                 discord: userInfo.discord ? userInfo.discord : "",
-                featured_video: userInfo.featured_video ? userInfo.featured_video : ""
+                featured_video: userInfo.featured_video ? userInfo.featured_video : "",
+                video_description: userInfo.video_description ? userInfo.video_description : ""
             };
         } else {
             return {
@@ -31,7 +32,8 @@ const ProfileUtils = () => {
                 youtube_url: "",
                 twitch_url: "",
                 discord: "",
-                featured_video: ""
+                featured_video: "",
+                video_description: ""
             };
         }
     };
@@ -123,7 +125,28 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 6: getFileInfo - determine the file information from an image form ref
+    // FUNCTION 6: validateVideoDescription - determine if the video description has a valid format
+    // PRECONDITIONS (2 parameters):
+    // 1.) description: a string that the user has entered for their video description
+    // 2.) featuredVideo: a string that the user has entered for their featured video
+    // POSTCONDITIONS (1 returns):
+    // 1.) error: a string that gives information as to why their video URL is problematic, if there is any problems.
+    // if this string returns undefined, it means no errors were detected
+    const validateVideoDescription = (description, featuredVideo) => {
+        // if the description exists, it is necessary that a featured video must also exist
+        if (description && !featuredVideo) {
+            return "Error: Featured YouTube Video URL is required to fill out this field.";
+        }
+
+        // check that the description is within the character limit of 200 characters
+        if (description.length > 200) {
+            return "Error: Video Description must be 200 characters or less.";
+        }
+
+        return undefined;
+    };
+
+    // FUNCTION 7: getFileInfo - determine the file information from an image form ref
     // PRECONDITIONS (1 parameter):
     // 1.) avatarRef: a ref to the image input for avatar form
     // POSTCONDITIONS (2 returns):
@@ -134,7 +157,7 @@ const ProfileUtils = () => {
         return { file: file, fileExt: file.name.split(".").pop() };
     };
 
-    // FUNCTION 7: validateAvatar - determine if user has uploaded a valid avatar
+    // FUNCTION 8: validateAvatar - determine if user has uploaded a valid avatar
     // PRECONDITIONS (2 parameters):
     // 1.) avatarRef: a ref to the image input for avatar form
     // 2.) firstTimeUser: a boolean flag, whether or not the current user has profile created or not
@@ -169,7 +192,16 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    return { generateFormVals, validateUsername, validateBio, validateDiscord, validateFeaturedVideo, getFileInfo, validateAvatar };
+    return { 
+        generateFormVals, 
+        validateUsername, 
+        validateBio, 
+        validateDiscord, 
+        validateFeaturedVideo, 
+        validateVideoDescription,
+        getFileInfo, 
+        validateAvatar 
+    };
 };
 
 /* ===== EXPORTS ===== */

@@ -128,7 +128,26 @@ function UserInfoForm({ form, handleChange, formSubmit }) {
               onChange={ handleChange }
             />
           </div>
+
+          { /* If error.featured_video is defined, featured video field had an issue. Render it here. */ }
           { form.error.featured_video && <p>{ form.error.featured_video }</p> }
+
+          { /* Video Description: an optional text field that allows the user to include a description with the
+          featured video of their choice on their page. */ }
+          <div className="profile-info-entry">
+            <label htmlFor="video_description">Video Description (optional): </label>
+            <textarea
+              id="video_description"
+              rows={ BIO_HEIGHT }
+              cols={ BIO_WIDTH } 
+              placeholder="Include a description"
+              value={ form.user.video_description }
+              onChange={ handleChange }
+            />
+          </div>
+
+          { /* If error.video_description is defined, video description field had an issue. Render it here. */ }
+          { form.error.video_description && <p>{ form.error.video_description }</p> }
 
         </div>
 

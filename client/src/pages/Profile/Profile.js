@@ -41,7 +41,7 @@ const Profile = () => {
     }, {
         user: null,
         updating: false,
-        error: { username: undefined, bio: undefined, discord: undefined, featured_video: undefined },
+        error: { username: undefined, bio: undefined, discord: undefined, featured_video: undefined, video_description: undefined },
         countries: []
     });
 
@@ -54,6 +54,7 @@ const Profile = () => {
         validateBio, 
         validateDiscord, 
         validateFeaturedVideo,
+        validateVideoDescription,
         getFileInfo,
         validateAvatar 
     } = ProfileUtils();
@@ -119,6 +120,7 @@ const Profile = () => {
         error.bio = validateBio(userForm.user.bio);
         error.discord = validateDiscord(userForm.user.discord);
         error.featured_video = validateFeaturedVideo(userForm.user.featured_video);
+        error.video_description = validateVideoDescription(userForm.user.video_description, userForm.user.featured_video);
 
         // if any errors are determined, let's return
         dispatchUserForm({ field: "error", value: error });
