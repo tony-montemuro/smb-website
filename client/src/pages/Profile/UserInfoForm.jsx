@@ -16,6 +16,8 @@ function UserInfoForm({ form, handleChange, formSubmit }) {
       { /* User form */ }
       <form className="profile-info-form" onSubmit={ formSubmit }>
 
+        <h3>Profile</h3>
+
         { /* Username field: a required text field that every user must have filled before submitting */ }
         <div className="profile-info-entry">
           <label htmlFor="username">Username: </label>
@@ -32,15 +34,19 @@ function UserInfoForm({ form, handleChange, formSubmit }) {
 
         </div>
 
+        { /* Country field: an optional dropdown of countries that the user can select from. */ }
         <div className="profile-info-entry">
-          <label htmlFor="birthday">Birthday (optional): </label>
-          <input 
-            id="birthday" 
-            type="date" 
-            min="1900-01-01" 
-            value={ form.user.birthday }
+          <label htmlFor="country">Country (optional): </label>
+          <select 
+            id="country"
+            value= { form.user.country }
             onChange={ handleChange }
-          />
+          >
+            <option key={ "null" } value={ "" }>--</option>
+            { form.countries.map(country => (
+              <option key={ country.iso2 } value={ country.iso2 }>{ country.name }</option>
+            ))}
+          </select>
         </div>
 
         { /* About me field: an optional textarea field, with the only requirement being it remains under 200 characters. */ }
@@ -60,20 +66,18 @@ function UserInfoForm({ form, handleChange, formSubmit }) {
 
         </div>
 
-        { /* Country field: an optional dropdown of countries that the user can select from. */ }
         <div className="profile-info-entry">
-          <label htmlFor="country">Country (optional): </label>
-          <select 
-            id="country"
-            value= { form.user.country }
+          <label htmlFor="birthday">Birthday (optional): </label>
+          <input 
+            id="birthday" 
+            type="date" 
+            min="1900-01-01" 
+            value={ form.user.birthday }
             onChange={ handleChange }
-          >
-            <option key={ "null" } value={ "" }>--</option>
-            { form.countries.map(country => (
-              <option key={ country.iso2 } value={ country.iso2 }>{ country.name }</option>
-            ))}
-          </select>
+          />
         </div>
+
+        <h3>Socials</h3>
 
         { /* Youtube URL field: an optional text field where the user can enter their youtube URL. */ }
         <div className="profile-info-entry">
@@ -115,6 +119,8 @@ function UserInfoForm({ form, handleChange, formSubmit }) {
 
           { /* If error.discord is defined, discord field had an issue. Render it here. */ }
           { form.error.discord && <p>{ form.error.discord }</p> }
+
+          <h3>Featured Video</h3>
 
           { /* Featured YouTube Video URL: an optional text field that allows the user to include a YouTube
           video of their choice on their page. */ }
