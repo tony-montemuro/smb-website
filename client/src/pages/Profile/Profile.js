@@ -41,7 +41,7 @@ const Profile = () => {
     }, {
         user: null,
         updating: false,
-        error: { username: undefined, bio: undefined, discord: undefined },
+        error: { username: undefined, bio: undefined, discord: undefined, featured_video: undefined, video_description: undefined },
         countries: []
     });
 
@@ -53,6 +53,8 @@ const Profile = () => {
         validateUsername, 
         validateBio, 
         validateDiscord, 
+        validateFeaturedVideo,
+        validateVideoDescription,
         getFileInfo,
         validateAvatar 
     } = ProfileUtils();
@@ -117,6 +119,8 @@ const Profile = () => {
         error.username = validateUsername(userForm.user.username, userForm.user.id, profiles);
         error.bio = validateBio(userForm.user.bio);
         error.discord = validateDiscord(userForm.user.discord);
+        error.featured_video = validateFeaturedVideo(userForm.user.featured_video);
+        error.video_description = validateVideoDescription(userForm.user.video_description, userForm.user.featured_video);
 
         // if any errors are determined, let's return
         dispatchUserForm({ field: "error", value: error });
@@ -127,6 +131,7 @@ const Profile = () => {
 
         // if we made it this far, no errors were deteched, so we can go ahead and update the user profile
         try {
+            userForm.user.birthday = userForm.user.birthday.length > 0 ? userForm.user.birthday : null;
             await upsertUserInfo({ ...userForm.user });
 
             // if successful, reload the page

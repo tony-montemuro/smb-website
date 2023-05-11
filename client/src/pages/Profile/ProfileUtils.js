@@ -6,7 +6,7 @@ const ProfileUtils = () => {
     // PRECONDITIONS (2 parameters):
     // 1.) userInfo - an profile object, which will be undefined if the user has not yet set up their profile
     // 2.) userId - a string representing the id of the current user
-    // POSTCONDITINOS (1 parameter):
+    // POSTCONDITIONS (1 parameter):
     // 1.) formObj - an object generated to take the data from userInfo and make it "form friendly"
     const generateFormVals = (userInfo, userId) => {
         if (userInfo) {
@@ -14,30 +14,36 @@ const ProfileUtils = () => {
                 id: userId,
                 username: userInfo.username,
                 bio: userInfo.bio ? userInfo.bio : "",
+                birthday: userInfo.birthday ? userInfo.birthday : "",
                 country: userInfo.country ? userInfo.country.iso2 : "",
                 youtube_url: userInfo.youtube_url ? userInfo.youtube_url : "",
                 twitch_url: userInfo.twitch_url ? userInfo.twitch_url : "",
-                discord: userInfo.discord ? userInfo.discord : ""
+                discord: userInfo.discord ? userInfo.discord : "",
+                featured_video: userInfo.featured_video ? userInfo.featured_video : "",
+                video_description: userInfo.video_description ? userInfo.video_description : ""
             };
         } else {
             return {
                 id: userId,
                 username: "",
                 bio: "",
+                birthday: "",
                 country: "",
                 youtube_url: "",
                 twitch_url: "",
-                discord: ""
+                discord: "",
+                featured_video: "",
+                video_description: ""
             };
         }
     };
 
     // FUNCTION 2: validateUsername - determine if user has entered a valid username
-    // PRECONDITINOS (3 parameters):
+    // PRECONDITIONS (3 parameters):
     // 1.) username: a string that the user has made for their username
     // 2.) id: a string that corresponds to the current user's id
     // 3.) profiles: an array of profile objects
-    // POSTCONDITINOS (1 returns):
+    // POSTCONDITIONS (1 returns):
     // 1.) error: a string that gives information as to why their username is problematic, if there is any problems.
     // if this string returns undefined, it means no errors were detected
     const validateUsername = (username, id, profiles) => {
@@ -69,9 +75,9 @@ const ProfileUtils = () => {
     };
 
     // FUNCTION 3: validateBio - determine if user has entered a valid bio
-    // PRECONDITINOS (1 parameter):
+    // PRECONDITIONS (1 parameter):
     // 1.) bio: a string that the user has made for their bio
-    // POSTCONDITINOS (1 returns):
+    // POSTCONDITIONS (1 returns):
     // 1.) error: a string that gives information as to why their bio is problematic, if there is any problems.
     // if this string returns undefined, it means no errors were detected
     const validateBio = bio => {
@@ -86,7 +92,7 @@ const ProfileUtils = () => {
     // FUNCTION 4: validateDiscord - determine if user has entered a valid discord username
     // PRECONDITINOS (1 parameter):
     // 1.) discord: a string that the user has entered for their discord username
-    // POSTCONDITINOS (1 returns):
+    // POSTCONDITIONS (1 returns):
     // 1.) error: a string that gives information as to why their discord username is problematic, if there is any problems.
     // if this string returns undefined, it means no errors were detected
     const validateDiscord = discord => {
@@ -101,7 +107,46 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 5: getFileInfo - determine the file information from an image form ref
+    // FUNCTION 5: validateFeaturedVideo - determine if the featured video has a valid format
+    // PRECONDITIONS (1 parameter):
+    // 1.) featuredVideo: a string that the user has entered for their featured video
+    // POSTCONDITIONS (1 returns):
+    // 1.) error: a string that gives information as to why their video URL is problematic, if there is any problems.
+    // if this string returns undefined, it means no errors were detected
+    const validateFeaturedVideo = featuredVideo => {
+        // regex used to validate the featured video
+        const regex = new RegExp('(?:https?://)?(?:www\\.)?youtu(?:\\.be/|be\\.com/\\S*(?:watch|embed)(?:(?:(?=/[-a-zA-Z0-9_]{11,}(?!\\S))/)|(?:\\S*v=|v/)))([-a-zA-Z0-9_]{11,})');
+    
+        // now, ensure the string conforms to the formatted expressed in the regex expression
+        if (featuredVideo && !regex.test(featuredVideo)) {
+            return "Error: Video URL is not properly formatted. Please make sure it is a YouTube video.";
+        }
+
+        return undefined;
+    };
+
+    // FUNCTION 6: validateVideoDescription - determine if the video description has a valid format
+    // PRECONDITIONS (2 parameters):
+    // 1.) description: a string that the user has entered for their video description
+    // 2.) featuredVideo: a string that the user has entered for their featured video
+    // POSTCONDITIONS (1 returns):
+    // 1.) error: a string that gives information as to why their video URL is problematic, if there is any problems.
+    // if this string returns undefined, it means no errors were detected
+    const validateVideoDescription = (description, featuredVideo) => {
+        // if the description exists, it is necessary that a featured video must also exist
+        if (description && !featuredVideo) {
+            return "Error: Featured YouTube Video URL is required to fill out this field.";
+        }
+
+        // check that the description is within the character limit of 200 characters
+        if (description.length > 200) {
+            return "Error: Video Description must be 200 characters or less.";
+        }
+
+        return undefined;
+    };
+
+    // FUNCTION 7: getFileInfo - determine the file information from an image form ref
     // PRECONDITIONS (1 parameter):
     // 1.) avatarRef: a ref to the image input for avatar form
     // POSTCONDITIONS (2 returns):
@@ -112,7 +157,7 @@ const ProfileUtils = () => {
         return { file: file, fileExt: file.name.split(".").pop() };
     };
 
-    // FUNCTION 6: validateAvatar - determine if user has uploaded a valid avatar
+    // FUNCTION 8: validateAvatar - determine if user has uploaded a valid avatar
     // PRECONDITIONS (2 parameters):
     // 1.) avatarRef: a ref to the image input for avatar form
     // 2.) firstTimeUser: a boolean flag, whether or not the current user has profile created or not
@@ -147,7 +192,16 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    return { generateFormVals, validateUsername, validateBio, validateDiscord, getFileInfo, validateAvatar };
+    return { 
+        generateFormVals, 
+        validateUsername, 
+        validateBio, 
+        validateDiscord, 
+        validateFeaturedVideo, 
+        validateVideoDescription,
+        getFileInfo, 
+        validateAvatar 
+    };
 };
 
 /* ===== EXPORTS ===== */

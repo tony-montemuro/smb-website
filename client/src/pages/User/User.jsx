@@ -1,62 +1,96 @@
 /* ===== IMPORTS ===== */
 import "./User.css";
-import { useNavigate } from "react-router-dom";
-import { StaticCacheContext } from "../../Contexts";
-import { useContext, useEffect, useState } from "react";
-import UserInfo from "./UserInfo";
-import UserStatsDirectory from "./UserStatsDirectory";
+import { ProfileContext } from "../../Contexts";
+import { useContext } from "react";
+import Discord from "../../img/discord-logo.png";
+import SocialLink from "./SocialLink";
+import Twitch from "../../img/twitch-logo.png";
+import UserLogic from "./User.js";
+import YouTube from "react-youtube";
+import YT from "../../img/yt-logo.png";
 
-function User({ imageReducer }) {
-  /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
-  const userId = window.location.pathname.split("/")[2];
-
+function User() {
   /* ===== CONTEXTS ===== */
 
-  // static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
+  // profile state from profile context
+  const { profile } = useContext(ProfileContext);
 
-  /* ===== STATES AND FUNCTIONS ===== */
-  const [user, setUser] = useState(undefined);
+  /* ===== FUNCTIONS ===== */
 
-  /* ===== EFFECTS ===== */
-
-  // code that is executed when the page loads, or when the staticCache object is updated
-  useEffect(() => {
-    if (staticCache.profiles.length > 0) {
-      // see if userId corresponds to a profile stored in cache
-      const profiles = staticCache.profiles;
-      const user = profiles.find(row => row.id === userId);
-
-      // if not, we will print an error message, and navigate to the home screen
-      if (!user) {
-        console.log("Error: Invalid user.");
-        navigate("/");
-        return;
-      }
-
-      // update the user state hook
-      setUser(user);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staticCache]);
+  // functions from user js file
+  const { alertDiscord, getVideoId } = UserLogic();
 
   /* ===== USER COMPONENT ===== */
   return (
-    // If the user data has been loaded, we can render the user's information to the client. Otherwise, 
-    // render a loading component.
     <div className="user">
-      { user ?
-        <>
+      <div className="user-info">
 
-          { /* Render both user info, and a directory to the user stats pages */ }
-          <UserInfo user={ user } imageReducer={ imageReducer } />
-          <UserStatsDirectory />
-          
-        </>
-      :
-        // Loading Component
-        <p>Loading...</p>
+        <h1>User Information</h1>
+
+        { /* Contact - Render the user's social media information. */ }
+        <div className="user-info-contact">
+          <h2>Socials</h2>
+
+          { /* Render socials if any exist. */ }
+          { profile.youtube_url || profile.twitch_url || profile.discord ?
+            <div className="user-info-socials">
+              <SocialLink name="youtube" link={ profile.youtube_url } logo={ YT } />
+              <SocialLink name="twitch" link={ profile.twitch_url } logo={ Twitch } />
+
+              { /* Discord is not a link, but a button. So, it is handled here. User is not required to have a discord.
+              Only render discord information if it exists */ }
+              { profile.discord &&
+                <div className="user-info-social">
+                  <button className="user-discord-button" onClick={ () => alertDiscord(profile.discord) }>
+                    <img className="social-media-logo" alt="discord-logo" src={ Discord }></img>
+                  </button>
+                </div>
+              }
+            </div>
+          :
+
+          // Otherwise, render a message telling the client that the user has no socials.
+            <div className="user-missing">
+              <p><i>This user has no socials.</i></p>
+            </div>
+          }
+
+        </div>
+
+        { /* Details - Render the user's details. */ }
+        <h2>Details</h2>
+
+        { /* Render details if any exist. */ }
+        { profile.bio || profile.birthday ?
+          <div className="user-about-me">
+            { /* A user is not required to have a bio. Only render bio if it exists. */ }
+            { profile.bio &&
+              <p><b>About Me:</b> { profile.bio }</p>
+            }
+  
+            { /* A user is not required to have a birthday. Only render birthday if it exists. */ }
+            { profile.birthday &&
+              <p><b>Birthday:</b> { profile.birthday }</p>
+            }
+
+          </div>
+        :
+          // Otherwise, render a message telling the client that the user has no details.
+          <div className="user-missing">
+            <p><i>This user has no details.</i></p>
+          </div>
+        }
+
+      </div>
+      
+      { profile.featured_video &&
+          <div className="user-featured-video">
+            <h1>Featured Video</h1>
+            <YouTube className="user-featured-video-player" videoId={ getVideoId(profile.featured_video) } />
+            { profile.video_description &&
+              <p>{ profile.video_description }</p>
+            }
+          </div>
       }
     </div>
   );

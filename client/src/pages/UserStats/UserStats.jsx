@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./UserStats.css";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { StaticCacheContext } from "../../Contexts";
 import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
@@ -16,7 +16,9 @@ function UserStats({ submissionReducer }) {
   const path = location.pathname.split("/");
   const userId = path[2];
   const abb = path[3];
+  const category = path[4];
   const type = path[5];
+  const isMisc = category === "misc" ? true : false;
 
   /* ===== CONTEXTS ===== */
 
@@ -61,7 +63,7 @@ function UserStats({ submissionReducer }) {
       fetchUserStats(path, game, submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staticCache]);
+  }, [staticCache, location.pathname]);
 
   /* ===== USER STATS COMPONENT ===== */
   return game && user && stats ?
@@ -69,12 +71,7 @@ function UserStats({ submissionReducer }) {
       <div className="stats-header">
 
         { /* User and game title */ }
-        <h1>{ user.username }: { game.name } { capitalize(type) }</h1>
-
-        { /* Return to user page button */ }
-        <Link to={ `/user/${ user.id }` }>
-          <button>Back to { user.username }'s Profile</button>
-        </Link>
+        <h1>{ isMisc && "Miscellaneous" } { game.name }: { capitalize(type) }</h1>
 
         { /* Live-input: Toggle records page between rendering all records and just live records */ }
         <div className="records-input">

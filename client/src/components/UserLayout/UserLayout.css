@@ -1,0 +1,72 @@
+.user-layout {
+    display: flex;
+}
+
+.user-layout-content {
+    flex: 7;
+}
+
+.user-layout-sidebar {
+    flex: 3;
+}
+
+.user-layout-profile {
+    text-align: center;
+    margin: 10px;
+    border: 2px solid #808080;
+    border-radius: 5px;
+}
+
+.user-layout-profile img {
+    margin-top: 10px;
+}
+
+.user-layout-profile h2 {
+    margin: 0;
+    margin-top: 5px;
+}
+
+.user-layout-country {
+    display: flex;
+    justify-content: center;
+}
+
+.user-layout-stats {
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid #808080;
+    border-radius: 5px;
+    align-self: flex-start;
+}
+
+.user-layout-stats h1 {
+    text-align: center;
+}
+
+.user-layout-stats table {
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.user-layout-stats tr {
+    border-bottom: 10px solid transparent;
+}
+
+.user-layout-game-element {
+    font-size: 25px;
+    text-align: center;
+}
+
+.user-layout-category {
+    margin: 5px;
+    text-align: center;
+}
+
+.user-layout-category h2 {
+    margin: 5px;
+}
+
+.user-layout-category a {
+    margin: 5px;
+    font-size: 20px;
+}
