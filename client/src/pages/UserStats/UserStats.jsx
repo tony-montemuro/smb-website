@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./UserStats.css";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { StaticCacheContext } from "../../Contexts";
 import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
