@@ -116,6 +116,20 @@ function UserInfoForm({ form, handleChange, formSubmit }) {
           { /* If error.discord is defined, discord field had an issue. Render it here. */ }
           { form.error.discord && <p>{ form.error.discord }</p> }
 
+          { /* Featured YouTube Video URL: an optional text field that allows the user to include a YouTube
+          video of their choice on their page. */ }
+          <div className="profile-info-entry">
+            <label htmlFor="featured_video">Featured YouTube Video URL (optional): </label>
+            <input 
+              id="featured_video"
+              type="text"
+              placeholder="Any YouTube video you like!"
+              value={ form.user.featured_video }
+              onChange={ handleChange }
+            />
+          </div>
+          { form.error.featured_video && <p>{ form.error.featured_video }</p> }
+
         </div>
 
         { /* Form button: button user uses to complete the form. Will disable while application processes form. */ }
