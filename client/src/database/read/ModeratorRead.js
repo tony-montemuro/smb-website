@@ -40,8 +40,8 @@ const ModeratorRead = () => {
         try {
             const { data: moderator, error } = await supabase
                 .from("moderator")
-                .select("user_id")
-                .eq("user_id", userId)
+                .select("profile!inner(user_id)")
+                .eq("profile.user_id", userId)
                 .maybeSingle();
 
             // error handling

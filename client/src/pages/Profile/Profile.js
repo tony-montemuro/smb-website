@@ -156,7 +156,7 @@ const Profile = () => {
         // initialize update
         e.preventDefault();
         dispatchAvatarForm({ field: "updating", value: true });
-        const userId = user.id;
+        const profileId = user.profile.id;
 
         // validate the user uploaded avatar
         const error = validateAvatar(avatarRef, firstTimeUser);
@@ -171,7 +171,7 @@ const Profile = () => {
         // if we made it this far, we have no errors. let's update the backend
         const { file, fileExt } = getFileInfo(avatarRef);
         try {
-            await uploadAvatar(file, `${ userId }.${ fileExt }`);
+            await uploadAvatar(file, `${ profileId }.${ fileExt }`);
 
             // if successful, reload the page
             window.location.reload();

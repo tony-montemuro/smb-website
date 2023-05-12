@@ -15,11 +15,11 @@ const UserStats = () => {
     const { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
     const { getSubmissions } = SubmissionRead();
 
-    // FUNCTION 1 - generateRecord - given a submissionIndex, userId, levelName, and submission list, generate a record
+    // FUNCTION 1 - generateRecord - given a submissionIndex, profileId, levelName, and submission list, generate a record
     // object that contains information about a user's submission on a certain level
     // PRECONDITIONS (4 parameters):
     // 1.) submissionIndex: the current index in our higher-level loop of the submissions
-    // 2.) userId: a string that contains the id of a user
+    // 2.) profileId: a string that contains the id of a user
     // 3.) levelName: the string name of a level
     // 4.) submissions: submissions: an array containing submissions for a particular game. the submissions must be
     // ordered by type in descending order, then by level id in ascending order
@@ -30,7 +30,7 @@ const UserStats = () => {
         // date - a string representing the submission date of the user's record
         // position - the position of the submission
     // 2.) index: the updated submissionIndex is returned, since JS passes integers by value, and this value is changed in this function
-    const generateRecord = (submissionIndex, userId, levelName, submissions) => {
+    const generateRecord = (submissionIndex, profileId, levelName, submissions) => {
         // initialize variables used in the function
         let trueCount = 1, posCount = trueCount;
         const record = {
@@ -45,8 +45,8 @@ const UserStats = () => {
         while (submissionIndex < submissions.length && submissions[submissionIndex].level.name === levelName) {
             const submission = submissions[submissionIndex];
 
-            // if the current submission belongs to userId, update record object
-            if (submission.user.id === userId) {
+            // if the current submission belongs to profileId, update record object
+            if (submission.user.id === profileId) {
                 record.record = submission.details.record;
                 record.position = posCount;
                 record.date = submission.details.submitted_at;
@@ -72,11 +72,11 @@ const UserStats = () => {
     // 3.) submissions: an array containing submissions for a particular game. the submissions must
     // be ordered by type in descending order, then by level id in ascending order
     // POSTCONDITIONS (1 possible outcome, 1 return):
-    // 1.) rankings: rankings has a field for each mode belonging to { userId }, { category }, and { type }
+    // 1.) rankings: rankings has a field for each mode belonging to { profileId }, { category }, and { type }
     // each field is mapped to an array of record objects, each of which has 4 fields: level, record, date, and position
     const generateRankings = (path, game, submissions) => {
         // initialize variables used in the function
-        const userId = path[2], category = path[4], type = path[5];
+        const profileId = parseInt(path[2]), category = path[4], type = path[5];
         const rankings = {};
         const isMisc = category === "misc" ? true : false;
         let submissionIndex = 0;
@@ -91,7 +91,7 @@ const UserStats = () => {
 
                     // only consider levels with a { type } chart
                     if ([type, "both"].includes(level.chart_type)) {
-                        const { index, record } = generateRecord(submissionIndex, userId, level.name, submissions);
+                        const { index, record } = generateRecord(submissionIndex, profileId, level.name, submissions);
                         submissionIndex = index;
                         records.push(record);
                     }
@@ -118,7 +118,7 @@ const UserStats = () => {
     // a single object which contains both user stats objects. the setStats() function is called to update the stats object
     const fetchUserStats = async (path, game, submissionReducer) => {
         // unpack path parameter
-        const userId = path[2], category = path[4], type = path[5];
+        const profileId = parseInt(path[2]), category = path[4], type = path[5];
 
         // first, let's compute the total time of the game
         const isMisc = category === "misc" ? true : false;
@@ -133,9 +133,10 @@ const UserStats = () => {
         insertPositionToTotals(allTotals, type);
         insertPositionToTotals(liveTotals, type);
 
-        // we can filter the allTotals & liveTotals array looking for the userId's object
-        const allTotal = allTotals.find(obj => obj.user.id === userId);
-        const liveTotal = liveTotals.find(obj => obj.user.id === userId);
+        // we can filter the allTotals & liveTotals array looking for the profileId's object
+        console.log(allTotals);
+        const allTotal = allTotals.find(obj => obj.user.id === profileId);
+        const liveTotal = liveTotals.find(obj => obj.user.id === profileId);
 
         // now, it's time to do the medal table
         const submissions = allSubmissions.filter(row => row.details.live);
@@ -143,8 +144,8 @@ const UserStats = () => {
         const medalTable = getMedalTable(userMap, submissions);
         insertPositionToMedals(medalTable);
 
-        // we can filter the medalTable looking for the userId's object. [note: medal tables are the same for all and live!]
-        const allMedals = medalTable.find(obj => obj.user.id === userId);
+        // we can filter the medalTable looking for the profileId's object. [note: medal tables are the same for all and live!]
+        const allMedals = medalTable.find(obj => obj.user.id === profileId);
         const liveMedals = allMedals;
 
         // now, it's time to do player rankings

@@ -12,7 +12,7 @@ const ProfileRead = () => {
     const queryProfiles = async () => {
         try {
             const { data: profiles, error, status } = await supabase
-                .from("profiles")
+                .from("profile")
                 .select(`
                     id, 
                     username,
@@ -51,8 +51,9 @@ const ProfileRead = () => {
     const queryUserProfile = async (userId) => {
         try {
             const { data: profile, error } = await supabase
-                .from("profiles")
+                .from("profile")
                 .select(`
+                    id,
                     username,
                     country (iso2, name),
                     youtube_url,
@@ -64,8 +65,8 @@ const ProfileRead = () => {
                     featured_video,
                     video_description
                 `)
-                .eq("id", userId)
-                .single()
+                .eq("user_id", userId)
+                .single();
 
             // error handling
             if (error) {

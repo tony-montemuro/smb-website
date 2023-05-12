@@ -70,7 +70,7 @@ const App = () => {
       // make concurrent api calls to database to load user data
       const user = session.user, userId = user.id;
       const [notifs, profile, is_mod] = await Promise.all(
-        [queryUserNotifications(userId), queryUserProfile(userId), isModerator(userId)]
+        [queryUserNotifications(), queryUserProfile(userId), isModerator(userId)]
       );
 
       // update the user state
@@ -145,11 +145,16 @@ const App = () => {
     profiles.forEach(profile => {
       profile.mod = false;
       moderators.forEach(moderator => {
-        if (profile.id === moderator.user_id) {
+        if (profile.id === moderator.profile_id) {
           profile.mod = true;
         }
       });
     });
+
+    console.log(countries);
+    console.log(games);
+    console.log(moderators);
+    console.log(profiles);
 
     // update static cache
     setStaticCache({

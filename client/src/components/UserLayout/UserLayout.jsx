@@ -9,7 +9,7 @@ import UserStatsDirectory from "./UserStatsDirectory";
 function UserLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const params = useParams();
-  const { userId } = params;
+  const { profileId } = params;
   const navigate = useNavigate();
   const IMG_WIDTH = 300;
 
@@ -26,9 +26,9 @@ function UserLayout({ imageReducer }) {
   // code that is executed when the component mounts
   useEffect(() => {
     if (staticCache.profiles.length > 0) {
-      // see if userId corresponds to a profile stored in cache
+      // see if profileId corresponds to a profile stored in cache
       const profiles = staticCache.profiles;
-      const profile = profiles.find(row => row.id === userId);
+      const profile = profiles.find(row => row.id === parseInt(profileId));
 
       // if not, we will print an error message, and navigate to the home screen
       if (!profile) {

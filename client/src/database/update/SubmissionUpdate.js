@@ -16,7 +16,7 @@ const SubmissionUpdate = () => {
             const { error } = await supabase
                 .from("submission")
                 .update({ approved: true })
-                .eq("user_id", submission.user_id)
+                .eq("profile_id", submission.profile_id)
                 .eq("game_id", submission.game_id)
                 .eq("level_id", submission.level_id)
                 .eq("score", submission.score);

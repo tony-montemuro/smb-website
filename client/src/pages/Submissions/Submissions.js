@@ -117,7 +117,7 @@ const Submissions = () => {
         try {
             // first, let's approve all submissions in the submission table
             const approvePromises = approved.map(e => approveSubmission({ 
-                user_id: e.user.id, 
+                profile_id: e.user.id, 
                 game_id: e.game.abb, 
                 level_id: e.level.name,
                 score: e.score
@@ -128,9 +128,9 @@ const Submissions = () => {
             const notifPromises = approved.map(e => {
                 return insertNotification({
                     notif_type: "approve",
-                    user_id: e.user.id, 
+                    profile_id: e.user.id, 
                     game_id: e.game.abb, 
-                    creator_id: user.id,
+                    creator_id: user.profile.id,
                     level_id: e.level.name,
                     score: e.score,
                     record: e.details.record,

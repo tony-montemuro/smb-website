@@ -11,7 +11,8 @@ const ProfileUtils = () => {
     const generateFormVals = (userInfo, userId) => {
         if (userInfo) {
             return {
-                id: userId,
+                id: userInfo.id,
+                user_id: userId,
                 username: userInfo.username,
                 bio: userInfo.bio ? userInfo.bio : "",
                 birthday: userInfo.birthday ? userInfo.birthday : "",
@@ -24,7 +25,8 @@ const ProfileUtils = () => {
             };
         } else {
             return {
-                id: userId,
+                id: "",
+                user_id: userId,
                 username: "",
                 bio: "",
                 birthday: "",
@@ -47,7 +49,6 @@ const ProfileUtils = () => {
     // 1.) error: a string that gives information as to why their username is problematic, if there is any problems.
     // if this string returns undefined, it means no errors were detected
     const validateUsername = (username, id, profiles) => {
-        console.log(username);
         // regex used to validate username
         const regex = new RegExp('^[A-Za-z0-9_]*$');
 
@@ -57,8 +58,8 @@ const ProfileUtils = () => {
         }
         
         // now, check that the length of the username is valid
-        if (username.length < 5 || username.length > 25) {
-            return "Error: Username must be between 5 and 25 characters long.";
+        if (username.length < 4 || username.length > 25) {
+            return "Error: Username must be between 4 and 25 characters long.";
         }
 
         // now, ensure the username is well-formatted (alphanumeric and underscores)

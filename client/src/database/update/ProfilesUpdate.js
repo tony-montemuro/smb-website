@@ -13,7 +13,7 @@ const ProfilesUpdate = () => {
         try {
             userInfo.country = userInfo.country === "" ? null : userInfo.country;
             let { error } = await supabase
-                .from('profiles')
+                .from("profile")
                 .upsert(userInfo, {
                     returning: "minimal", // Don't return the value after inserting
                 }

@@ -3,7 +3,7 @@ import "./Username.css";
 import "../../../node_modules/flag-icons/css/flag-icons.min.css";
 import { Link } from "react-router-dom";
 
-function Username({ country, userId, username }) {
+function Username({ country, profileId, username }) {
   /* ===== USERNAME COMPONENT ===== */
   return (
     <div className="username">
@@ -17,7 +17,7 @@ function Username({ country, userId, username }) {
       }
 
       { /* Using the userId, create a link to the user's page. */ }
-      <Link to={ `/user/${ userId }` }>{ username }</Link>
+      <Link to={ `/user/${ profileId }` }>{ username }</Link>
       
     </div>
   );

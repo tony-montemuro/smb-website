@@ -123,20 +123,20 @@ function App() {
               <Route path="misc/time/:levelid" element={
                 <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
               }/>
-              <Route path="main/score/:levelid/:userid" element={
+              <Route path="main/score/:levelid/:profileId" element={
                 <SubmissionHistory />
               }/>
-              <Route path="misc/score/:levelid/:userid" element={
+              <Route path="misc/score/:levelid/:profileId" element={
                 <SubmissionHistory />
               }/>
-              <Route path="main/time/:levelid/:userid" element={
+              <Route path="main/time/:levelid/:profileId" element={
                 <SubmissionHistory />
               }/>
-              <Route path="misc/time/:levelid/:userid" element={
+              <Route path="misc/time/:levelid/:profileId" element={
                 <SubmissionHistory />
               }/>
             </Route>
-            <Route path="/user/:userId" element={ <UserLayout imageReducer={ imageReducer } /> } >
+            <Route path="/user/:profileId" element={ <UserLayout imageReducer={ imageReducer } /> } >
               <Route index element={ <User />} />
               <Route path=":game/main/score" element={
                 <UserStats submissionReducer={ submissionReducer } />

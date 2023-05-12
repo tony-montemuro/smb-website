@@ -24,7 +24,7 @@ function RecentGameSubmissionRow({ submission }) {
   return (
     <tr>
       <td>{ getTimeDifference(submission.id) }</td>
-      <td><Username country={ user.country } userId={ user.id } username={ user.username } /></td>
+      <td><Username country={ user.country } profileId={ user.id } username={ user.username } /></td>
       <td><Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>{ cleanLevelName(level.name) }</Link></td>
       <td>{ capitalize(type) }</td>
       <td>{ submission.record }</td>

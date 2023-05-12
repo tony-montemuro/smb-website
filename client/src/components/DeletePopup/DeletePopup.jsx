@@ -17,7 +17,7 @@ function DeletePopup({ submission, setSubmission }) {
     submission &&
 
       // If the submission being deleted belongs to the current user, render this popup.
-      (submission.user_id === user.id ?
+      (submission.profile_id === user.profile.id ?
         <div className="levelboard-popup">
           <div className="levelboard-popup-inner">
 

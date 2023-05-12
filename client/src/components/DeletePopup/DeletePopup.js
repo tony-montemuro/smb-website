@@ -70,8 +70,8 @@ const DeletePopup = () => {
         // notification object
         const notification = { 
             notif_type: "delete",
-            user_id: deleteObj.user_id,
-            creator_id: user.id,
+            profile_id: deleteObj.profile_id,
+            creator_id: user.profile.id,
             message: form.message,
             game_id: deleteObj.game_id,
             level_id: deleteObj.level_id,

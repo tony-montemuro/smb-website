@@ -46,8 +46,8 @@ function FormPopup({ form, formPopup, setFormPopup, board, submitFunc, handleCha
             NOTE: this form input is reserved for moderators only! */ }
             { user.is_mod &&
               <div className="levelboard-input-group">
-                <label htmlFor="user_id">User: </label>
-                <select id="user_id" value={ form.values.user_id } onChange={ (e) => handleChangeFunc(e, game) }>
+                <label htmlFor="profile_id">User: </label>
+                <select id="profile_id" value={ form.values.profile_id } onChange={ (e) => handleChangeFunc(e, game) }>
                   { profiles.map((profile) => (
                     <option key={ profile.id } value={ profile.id }>{ profile.username }</option>
                   ))}
@@ -63,7 +63,7 @@ function FormPopup({ form, formPopup, setFormPopup, board, submitFunc, handleCha
                 type="number"
                 value={ form.values.record }
                 onChange={ (e) => handleChangeFunc(e, game) }
-                disabled={ user.id !== form.values.user_id && board.records.all.some(row => row.user.id === form.values.user_id) }
+                disabled={ user.profile.id !== form.values.profile_id && board.records.all.some(row => row.user.id === form.values.profile_id) }
               />
 
               { /* If the error.record field is defined, render that underneath the record field. */ }
@@ -127,7 +127,7 @@ function FormPopup({ form, formPopup, setFormPopup, board, submitFunc, handleCha
                 type="text"
                 value={ form.values.comment }
                 onChange={ (e) => handleChangeFunc(e, game) }
-                disabled={ user.id !== form.values.user_id }
+                disabled={ user.profile.id !== form.values.profile_id }
               />
 
               { /* If the error.comment field is defined, render that underneath the proof field. */ }
@@ -138,7 +138,7 @@ function FormPopup({ form, formPopup, setFormPopup, board, submitFunc, handleCha
             { /* Submission message input: allows a moderator to include a message for the submission, since users will recieve a
             notification when a moderator submits or updates a submission on behalf of them. The message is included in this.
             NOTE: This input form should only render if the current user is a moderator, and the form user is different than the mod. */ }
-            { user.is_mod && user.id !== form.values.user_id &&
+            { user.is_mod && user.profile.id !== form.values.profile_id &&
               <div className="levelboard-input-group">
                 <label htmlFor="message">Leave a message (optional): </label>
                 <input 

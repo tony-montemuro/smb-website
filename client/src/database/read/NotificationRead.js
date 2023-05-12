@@ -6,22 +6,23 @@ const NotificationRead = () => {
 
     // FUNCTION 1: queryUserNotifications - async function that makes a call to supabase to get an array of all notifications for
     // a given user
-    // PRECONDITIONS (1 parameter):
-    // 1.) userId - a string corresponding to the uuid of a user, typically the currently signed-in user
+    // PRECONDITIONS (1 condition):
+    // this function should only return notifications belonging to the authenticated user. this should be ensured by an RLS policy in the
+    // database
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the list of notifications is simply returned
     // otherwise, the user is alerted of the error, and an empty array is returned
-    const queryUserNotifications = async (userId) => {
+    const queryUserNotifications = async () => {
         try {
             const { data: notificationsList, error, status } = await supabase
                 .from("notification")
                 .select(`
                     notif_date,
                     notif_type,
-                    creator:profiles!notification_creator_id_fkey (id, username),
+                    creator:profile!notification_creator_id_fkey (id, username),
                     message,
                     submission:all_submission (
-                        user:profiles (id, username),
+                        user:profile (id, username),
                         record,
                         region (region_name),
                         submitted_at,
@@ -36,7 +37,6 @@ const NotificationRead = () => {
                     score,
                     record
                 `)
-                .eq("user_id", userId)
                 .order("notif_date", { ascending: false });
 
             // error handling

@@ -44,12 +44,12 @@ const DeletePopup = () => {
     
         // now, let's get the list of mods that DOES NOT include the current user if they are a moderator
         const moderators = staticCache.moderators;
-        const relevantMods = moderators.filter(row => row.user_id !== user.id);
+        const relevantMods = moderators.filter(row => row.profile_id !== user.profile.id);
     
         // define our base notifObject
         const notifObject = {
             notif_type: "report",
-            creator_id: user.id,
+            creator_id: user.profile.id,
             game_id: report.game_id,
             level_id: report.level_id,
             score: report.type === "score" ? true : false,
@@ -61,12 +61,12 @@ const DeletePopup = () => {
         // create an array of functions, each of which corresponds to a function call to inserting a notification to the database
         // this is for moderators
         const notifPromises = relevantMods.map(e => {
-            return insertNotification({ ...notifObject, user_id: e.user_id });
+            return insertNotification({ ...notifObject, profile_id: e.profile_id });
         });
 
         // finally, push the function that inserts a notification to the database for the user being reported
         notifPromises.push(
-            insertNotification({ ...notifObject, user_id: report.user_id })
+            insertNotification({ ...notifObject, profile_id: report.profile_id })
         );
           
         // now, let's actually perform all the queries

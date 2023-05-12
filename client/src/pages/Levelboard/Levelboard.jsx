@@ -58,23 +58,25 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	// code that is executed when the page loads, when the staticCache object is updated, or when the user
   // switches levels
 	useEffect(() => {
-		// see if levelName corresponds to a level stored in the game object
-		const level = fetchLevelFromGame(game, levelName, category);
-		
-		// if not, we will print an error message, and navigate to the home screen
-		if (!level) {
-			console.log("Error: Invalid level.");
-			navigate("/");
-			return;
-		}
+		if (user !== undefined) {
+			// see if levelName corresponds to a level stored in the game object
+			const level = fetchLevelFromGame(game, levelName, category);
+			
+			// if not, we will print an error message, and navigate to the home screen
+			if (!level) {
+				console.log("Error: Invalid level.");
+				navigate("/");
+				return;
+			}
 
-		// update the level state hook
-		setLevel(level);
-		
-		// set up the board object
-		setupBoard(game, submissionReducer);
+			// update the level state hook
+			setLevel(level);
+			
+			// set up the board object
+			setupBoard(game, submissionReducer);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [location.pathname]);
+	}, [user, location.pathname]);
 
 	/* ===== LEVELBOARD COMPONENT ===== */
 	return level && board.records && form.values ?

@@ -83,24 +83,24 @@ const LevelboardUtils = () => {
     // 2.) game: an object containing information about the game
     // 3.) type: a string, either "score" or "time"
     // 4.) levelName: a valid name of a level
-    // 5.) userId: a uuid string that belongs to some user, or is null
+    // 5.) profile: a profile integer that belongs to some profile, or is null
     // POSTCONDITIONS (2 possible outcomes, 1 return):
     // if submission is defined, we use the information from this object to define the return object
     // if not, we set many of the form values to their default values
     // the object returned is compatible with the submission form
-    const submission2Form = (submission, game, type, levelName, userId) => {
+    const submission2Form = (submission, game, type, levelName, profileId) => {
         // if a submission exists, we can use the data to form our formData object
         if (submission) {
             const details = submission.details;
             return {
-                record: recordB2F(details.record, type),
+                record: type === "time" ? recordB2F(details.record, type) : details.record,
                 score: submission.score,
                 monkey_id: details.monkey.id,
                 region_id: details.region.id,
                 live: details.live,
                 proof: details.proof,
                 comment: details.comment ? details.comment : "",
-                user_id: userId,
+                profile_id: parseInt(profileId),
                 game_id: game.abb,
                 level_id: levelName,
                 submitted_at: dateB2F(details.submitted_at),
@@ -117,7 +117,7 @@ const LevelboardUtils = () => {
                 live: true,
                 proof: "",
                 comment: "",
-                user_id: userId,
+                profile_id: profileId,
                 game_id: game.abb,
                 level_id: levelName,
                 submitted_at: dateB2F(),
@@ -326,15 +326,15 @@ const LevelboardUtils = () => {
     // if the current user does own the submission, this function returns early
     const handleNotification = async (formVals, id) => {
         // determine the user id belonging to the submission
-        const submissionUserId = formVals.user_id;
+        const submissionProfileId = formVals.profile_id;
 
         // if these two ids are not equal, it means a moderator is inserting a submission, so we need to notify the owner
         // of the submission of this action. if this condition is not met, the function will return early
-        if (user.id !== submissionUserId) {
+        if (user.profile.id !== submissionProfileId) {
 			let notification = {
 				notif_type: "insert",
-				user_id: submissionUserId,
-				creator_id: user.id,
+				profile_id: submissionProfileId,
+				creator_id: user.profile.id,
 				message: formVals.message,
                 game_id: formVals.game_id,
                 level_id: formVals.level_id,

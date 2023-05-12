@@ -46,7 +46,7 @@ function MedalTable({ table, imageReducer }) {
                       url={ row.user.avatar_url }
                       imageReducer={ imageReducer }
                       country={ row.user.country }
-                      userId={ row.user.id }
+                      profileId={ row.user.id }
                       username={ row.user.username }
                     />
                   </td>

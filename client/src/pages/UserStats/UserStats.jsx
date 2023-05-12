@@ -14,7 +14,6 @@ function UserStats({ submissionReducer }) {
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
-  const userId = path[2];
   const abb = path[3];
   const category = path[4];
   const type = path[5];
@@ -27,7 +26,6 @@ function UserStats({ submissionReducer }) {
 
   /* ===== STATES & FUNCTIONS ===== */
   const [game, setGame] = useState(undefined);
-  const [user, setUser] = useState(undefined);
   const [allLiveFilter, setAllLiveFilter] = useState("live");
 
   // hooks and functions from the js file
@@ -44,29 +42,26 @@ function UserStats({ submissionReducer }) {
   // code that is executed when the page loads, when the staticCache object is updated
   useEffect(() => {
     if (staticCache.games.length > 0 && staticCache.profiles.length > 0) {
-      // see if abb corresponds to a game stored in cache, and if userId corresponds to a profile stored in cache
-      const games = staticCache.games, profiles = staticCache.profiles;
+      // see if abb corresponds to a game stored in cache
+      const games = staticCache.games;
       const game = games.find(row => row.abb === abb);
-      const profile = profiles.find(row => row.id === userId);
 
       // if either do not match, handle the error, and navigate to the home screen
-      if (!game || !profile) {
-        !game && console.log("Error: Invalid game.");
-        !profile && console.log("Error: Invalid user.");
+      if (!game) {
+        console.log("Error: Invalid game.");
         navigate("/");
         return;
       }
 
       // otherwise, update the game & user state hooks, and fetch user stats
       setGame(game);
-      setUser(profile);
       fetchUserStats(path, game, submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache, location.pathname]);
 
   /* ===== USER STATS COMPONENT ===== */
-  return game && user && stats ?
+  return game && stats ?
     <>
       <div className="stats-header">
 

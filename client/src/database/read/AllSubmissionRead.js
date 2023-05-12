@@ -29,7 +29,7 @@ const AllSubmissionRead = () => {
                     name
                 ),
                 position,
-                user:profiles (
+                user:profile (
                     country,
                     id,
                     username
@@ -66,13 +66,13 @@ const AllSubmissionRead = () => {
     // PRECONDITIONS (4 parameters):
     // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.
     // 2.) levelName: a string value, representing the name of a level.
-    // 3.) userId: a string value, representing a user's uuid value. this is used to uniquely identify a user.
+    // 3.) userId: an integer value, representing a user's profile id.
     // 4.) isScore: a boolean value. true if the submission is a score, false otherwise.
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the submissions that pass through the filter from the database are returned, sorted from most recent
     // to least recent
     // if the query is a failure, the user is alerted of the error, and an empty array is returned
-    const queryFilteredSubmissions = async (abb, levelName, userId, isScore) => {
+    const queryFilteredSubmissions = async (abb, levelName, profileId, isScore) => {
         try {
             const { data: submissions, error } = await supabase
                 .from("all_submission")
@@ -89,7 +89,7 @@ const AllSubmissionRead = () => {
                     submitted_at
                 `)
                 .eq("level_id", levelName)
-                .eq("user_id", userId)
+                .eq("profile_id", profileId)
                 .eq("score", isScore)
                 .eq("game_id", abb)
                 .order("id", { ascending: false });

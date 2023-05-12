@@ -20,7 +20,7 @@ function SubmissionHistory() {
 	const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
-  const userId = path[6];
+  const profileId = path[6];
   const TABLE_WIDTH = 10;
 
   /* ===== CONTEXTS ===== */
@@ -60,8 +60,8 @@ function SubmissionHistory() {
 				return;
 			}
 
-      // see if the userId corresponds to a profile stored in the profiles array
-      const profile = profiles.find(row => row.id === userId);
+      // see if the profileId corresponds to a profile stored in the profiles array
+      const profile = profiles.find(row => row.id === parseInt(profileId));
 
       // if not, we will print an error message, and navigate to the home screen
 			if (!profile) {
@@ -74,7 +74,7 @@ function SubmissionHistory() {
       setProfile(profile);
 			
       // finally, given information about the path, fetch submissions for this page
-			getSubmissions(abb, levelName, userId, type);
+			getSubmissions(abb, levelName, profileId, type);
 		}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache]);
@@ -91,7 +91,7 @@ function SubmissionHistory() {
         <div>
           The following is the list of all submissions by&nbsp;
           <>
-            <Username country={ profile.country ? profile.country.iso2 : null } userId={ profile.id } username={ profile.username } />
+            <Username country={ profile.country ? profile.country.iso2 : null } profileId={ profile.id } username={ profile.username } />
             &nbsp;to&nbsp;
             <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }` }>{ cleanLevelName(levelName) } ({ capitalize(type) })</Link>:
           </>

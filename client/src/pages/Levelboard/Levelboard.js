@@ -85,7 +85,7 @@ const Levelboard = () => {
 	// 2.) otherwise, set the form using the values in the submission object assigned to the signed-in user
 	const splitSubmissionsAndUpdateForm = (submissions, game) => {
 		// initialize variables used to split the submissions
-		const userId = user ? user.id : null;
+		const profileId = user ? user.profile.id : null;
 		const live = [], all = [];
 		let formSet = false;
 
@@ -93,8 +93,8 @@ const Levelboard = () => {
 		submissions.forEach(submission => {
 			// if a user is currently signed in, check if a record belongs to them
 			// if so, we need to update form values, and update the formSet flag
-			if (userId && submission.user.id === userId) {
-				const formData = submission2Form(submission, game, type, levelName, userId);
+			if (profileId && submission.user.id === profileId) {
+				const formData = submission2Form(submission, game, type, levelName, profileId);
 				dispatchForm({ field: "values", value: formData });
 				dispatchForm({ field: "prevSubmitted", value: true });
 				formSet = true;
@@ -110,7 +110,7 @@ const Levelboard = () => {
 		// if the formSet flag was never set to true, this means that the client has not submitted to this chart
 		// yet. set the form to default values
 		if (!formSet) {
-			const formData = submission2Form(undefined, game, type, levelName, userId ? userId : null);
+			const formData = submission2Form(undefined, game, type, levelName, profileId ? profileId : null);
 			dispatchForm({ field: "values", value: formData });
 		}
 
@@ -151,7 +151,7 @@ const Levelboard = () => {
 	// 2.) game: an object containing information about the game defined in the path
 	// POSTCONDITIONS (3 possible outcomes):
 	// if the field id is live, we use the checked variable rather than the value variable to update the form
-	// if the field id is user_id, we must update the entire form, since each user has completely different form data
+	// if the field id is profile_id, we must update the entire form, since each user has completely different form data
 	// otherwise, we simply update the form field based on the value variable
     const handleChange = (e, game) => {
         const { id, value, checked } = e.target;
@@ -161,12 +161,12 @@ const Levelboard = () => {
 				dispatchForm({ field: "values", value: { [id]: checked } });
 				break;
 
-			// case 2: user_id. this is a special field that only moderators are able to change. if a moderator is trying to update
+			// case 2: profile_id. this is a special field that only moderators are able to change. if a moderator is trying to update
 			// a record from a user that has already submitted to the chart, the form will be loaded with that user's submission data. 
 			// otherwise, the form is set to the default values
-			case "user_id":
-				const submission = board.records.all.find(row => row.user.id === value);
-				console.log(submission);
+			case "profile_id":
+				console.log(board.records.all);
+				const submission = board.records.all.find(row => row.user.id === parseInt(value));
 				const formData = submission2Form(submission, game, type, levelName, value);
 				dispatchForm({ field: "values", value: formData });
 				break;
@@ -187,7 +187,7 @@ const Levelboard = () => {
 		const row = board.records.all.find(row => row.user.id === id);
 		setBoard({ ...board, report: {
 			id: row.details.id,
-			user_id: row.user.id,
+			profile_id: row.user.id,
 			game_id: abb,
 			level_id: levelName,
 			type: type,
@@ -206,7 +206,7 @@ const Levelboard = () => {
 		const row = board.records.all.find(row => row.user.id === id);
 		setDeleteSubmission({
 			id: row.details.id,
-			user_id: row.user.id,
+			profile_id: row.user.id,
 			game_id: abb,
 			level_id: levelName,
 			type: type,
@@ -239,7 +239,6 @@ const Levelboard = () => {
 		error.message = validateMessage(form.values.message, false);
 
 		// if any errors are determined, let's return
-		console.log(error);
         dispatchForm({ field: "error", value: error });
 		if (Object.values(error).some(e => e !== undefined)) {
             dispatchForm({ field: "submitting", value: false });
@@ -247,7 +246,7 @@ const Levelboard = () => {
         }
 
 		// finally, let's convert the date from the front-end format, to the backend format.
-		const old = board.records.all.find(row => row.user.id === form.values.user_id);
+		const old = board.records.all.find(row => row.user.id === form.values.profile_id);
 		const backendDate = getDateOfSubmission(form.values.submitted_at, old, form.values.record, type);
 		if (!backendDate) {
 			dispatchForm({ field: "submitting", value: true });

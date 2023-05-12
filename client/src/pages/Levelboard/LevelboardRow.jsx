@@ -33,13 +33,13 @@ function LevelboardRow({ submission, imageReducer, reportFunc, deleteFunc }) {
           url={ submission.user.avatar_url }
           imageReducer={ imageReducer }
           country={ submission.user.country }
-          userId={ submission.user.id }
+          profileId={ submission.user.id }
           username={ submission.user.username }
         />
       </td>
 
       { /* Render the record */ }
-      <td><Link to={ submission.user.id }>{ recordB2F(submission.details.record, type) }</Link></td>
+      <td><Link to={ `${submission.user.id}` }>{ recordB2F(submission.details.record, type) }</Link></td>
 
       { /* Render the submission date */ }
       <td>{ dateB2F(submission.details.submitted_at) }</td>
