@@ -46,7 +46,7 @@ const UserStats = () => {
             const submission = submissions[submissionIndex];
 
             // if the current submission belongs to profileId, update record object
-            if (submission.user.id === profileId) {
+            if (submission.profile.id === profileId) {
                 record.record = submission.details.record;
                 record.position = posCount;
                 record.date = submission.details.submitted_at;
@@ -134,9 +134,8 @@ const UserStats = () => {
         insertPositionToTotals(liveTotals, type);
 
         // we can filter the allTotals & liveTotals array looking for the profileId's object
-        console.log(allTotals);
-        const allTotal = allTotals.find(obj => obj.user.id === profileId);
-        const liveTotal = liveTotals.find(obj => obj.user.id === profileId);
+        const allTotal = allTotals.find(obj => obj.profile.id === profileId);
+        const liveTotal = liveTotals.find(obj => obj.profile.id === profileId);
 
         // now, it's time to do the medal table
         const submissions = allSubmissions.filter(row => row.details.live);
@@ -145,7 +144,7 @@ const UserStats = () => {
         insertPositionToMedals(medalTable);
 
         // we can filter the medalTable looking for the profileId's object. [note: medal tables are the same for all and live!]
-        const allMedals = medalTable.find(obj => obj.user.id === profileId);
+        const allMedals = medalTable.find(obj => obj.profile.id === profileId);
         const liveMedals = allMedals;
 
         // now, it's time to do player rankings

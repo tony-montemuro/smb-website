@@ -48,7 +48,7 @@ function SubmissionsTable({ submissions, isApproved, game, buttonIsDisabled, but
         return <tr key={ row.details.submitted_at }>
 
           { /* User data: Render the user's country and username */ }
-          <td><Username country={ row.user.country } profileId={ row.user.id } username={ row.user.username } /></td>
+          <td><Username country={ row.profile.country } profileId={ row.profile.id } username={ row.profile.username } /></td>
 
           { /* Additional table data for approved table only: game data. Render a Link tag that links to the games page,
           and also displays the name of the game. */ }

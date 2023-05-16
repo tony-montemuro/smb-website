@@ -29,6 +29,7 @@ const Medals = () => {
         const table = getMedalTable(userMap, submissions);
         insertPositionToMedals(table);
 
+        console.log(table);
         return table;
     }
 

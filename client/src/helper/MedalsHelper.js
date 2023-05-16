@@ -6,7 +6,7 @@ const MedalsHelper = () => {
     // 1.) submissions: an array containing filtered submissions for a particular game
     // POSTCONDITIONS (1 possible outcome):
     // 1.) userMap: an object representing a map with the following key value pair:
-    //                   user_id -> platinum, gold, silver, bronze
+    //                   profile_id -> profile information, platinum, gold, silver, bronze
     const getUserMap = (submissions) => {
         // initialize variables
         const userMap = {};
@@ -14,16 +14,16 @@ const MedalsHelper = () => {
 
         // now, create the user map from the submission parameter
         submissions.forEach(submission => {
-            const userId = submission.user.id;
-            if (!uniqueIds.includes(userId)) {
-                userMap[userId] = {
-                    user: submission.user,
+            const profileId = submission.profile.id;
+            if (!uniqueIds.includes(profileId)) {
+                userMap[profileId] = {
+                    profile: submission.profile,
                     bronze: 0,
                     silver: 0,
                     gold: 0,
                     platinum: 0
                 };
-                uniqueIds.push(userId);
+                uniqueIds.push(profileId);
             }
         });
 
@@ -54,7 +54,7 @@ const MedalsHelper = () => {
             while (!finished) {
                 // define commonly referenced variables for the current submission
                 const currRecord = submissions[i].details.record;
-                const currUser = submissions[i].user.id;
+                const currUser = submissions[i].profile.id;
 
                 // case 1: first record. it can be either platinum, or gold. a platinum is awarded in the following cases:
                 // 1.) the submission is better than any other submission for a particular level (condition 3 of if statement)

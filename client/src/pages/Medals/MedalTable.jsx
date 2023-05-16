@@ -35,7 +35,7 @@ function MedalTable({ table, imageReducer }) {
             // Otherwise, we want to render a row for each medal table object in the table array.
             table.map(row => {
               return (
-                <tr key={ `${ row.user.username }-row` }>
+                <tr key={ `${ row.profile.username }-row` }>
 
                   { /* Position: render the position of the user */ }
                   <td>{ row.position }</td>
@@ -43,11 +43,11 @@ function MedalTable({ table, imageReducer }) {
                   {/* User info - Render the user's profile picture, as well as their username */}
                   <td>
                     <DetailedUsername
-                      url={ row.user.avatar_url }
+                      url={ row.profile.avatar_url }
                       imageReducer={ imageReducer }
-                      country={ row.user.country }
-                      profileId={ row.user.id }
-                      username={ row.user.username }
+                      country={ row.profile.country }
+                      profileId={ row.profile.id }
+                      username={ row.profile.username }
                     />
                   </td>
 

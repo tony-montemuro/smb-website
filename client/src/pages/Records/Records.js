@@ -21,7 +21,7 @@ const Records = () => {
     // 1.) record: a record object is generated, which has 3 fields: level, record, and names
         // level - the string name of a level
         // record - a floating point value that represents the world record, or null if there is no record
-        // names - an array of user objects (users that have the record), which is a simple object with a username and id field 
+        // names - an array of profile objects (users that have the record), which is a simple object with a username and id field 
     // 2.) index: the updated submissionIndex is returned, since JS passes integers by value, and this value is changed in this function
     const generateRecord = (submissionIndex, levelName, submissions) => {
         // initialize variables used in the function
@@ -38,9 +38,9 @@ const Records = () => {
             // if the current submission has the same record as the first submission for the level, it is record. thus, we need
             // to update the record object
             if (submissions[submissionIndex].details.record === submissions[start].details.record) {
-                const user = submissions[submissionIndex].user;
+                const profile = submissions[submissionIndex].profile;
                 record.record = submissions[submissionIndex].details.record;
-                record.names.push({ username: user.username, id: user.id });
+                record.names.push({ username: profile.username, id: profile.id });
             }
             submissionIndex++;
         }

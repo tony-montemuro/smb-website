@@ -10,7 +10,7 @@ function RecentGameSubmissionRow({ submission }) {
   const level = submission.level;
   const category = level.misc ? "misc" : "main";
   const type = submission.score ? "score" : "time";
-  const user = submission.user;
+  const profile = submission.profile;
   
   /* ===== CONTEXTS ===== */
 
@@ -24,7 +24,7 @@ function RecentGameSubmissionRow({ submission }) {
   return (
     <tr>
       <td>{ getTimeDifference(submission.id) }</td>
-      <td><Username country={ user.country } profileId={ user.id } username={ user.username } /></td>
+      <td><Username country={ profile.country } profileId={ profile.id } username={ profile.username } /></td>
       <td><Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>{ cleanLevelName(level.name) }</Link></td>
       <td>{ capitalize(type) }</td>
       <td>{ submission.record }</td>

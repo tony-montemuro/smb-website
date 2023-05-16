@@ -55,7 +55,7 @@ function TotalizerTable({ type, totals, imageReducer }) {
 
             // Otherwise, we want to render a row for each totalizer object in the totals[totalState] array.
             totals[tableState].map(row => {
-              return <tr key={ `${ row.user.username }-row` }>
+              return <tr key={ `${ row.profile.username }-row` }>
 
                 { /* Position: render the position of the user */ }
                 <td>{ row.position }</td>
@@ -63,11 +63,11 @@ function TotalizerTable({ type, totals, imageReducer }) {
                 {/* User info - Render the user's profile picture, as well as their username */}
                 <td>
                   <DetailedUsername
-                    url={ row.user.avatar_url }
+                    url={ row.profile.avatar_url }
                     imageReducer={ imageReducer }
-                    country={ row.user.country }
-                    profileId={ row.user.id }
-                    username={ row.user.username }
+                    country={ row.profile.country }
+                    profileId={ row.profile.id }
+                    username={ row.profile.username }
                   />
                 </td>
 

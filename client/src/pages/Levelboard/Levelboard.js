@@ -85,7 +85,7 @@ const Levelboard = () => {
 	// 2.) otherwise, set the form using the values in the submission object assigned to the signed-in user
 	const splitSubmissionsAndUpdateForm = (submissions, game) => {
 		// initialize variables used to split the submissions
-		const profileId = user ? user.profile.id : null;
+		const profileId = user && user.profile ? user.profile.id : null;
 		const live = [], all = [];
 		let formSet = false;
 
@@ -93,7 +93,7 @@ const Levelboard = () => {
 		submissions.forEach(submission => {
 			// if a user is currently signed in, check if a record belongs to them
 			// if so, we need to update form values, and update the formSet flag
-			if (profileId && submission.user.id === profileId) {
+			if (profileId && submission.profile.id === profileId) {
 				const formData = submission2Form(submission, game, type, levelName, profileId);
 				dispatchForm({ field: "values", value: formData });
 				dispatchForm({ field: "prevSubmitted", value: true });
@@ -166,7 +166,7 @@ const Levelboard = () => {
 			// otherwise, the form is set to the default values
 			case "profile_id":
 				console.log(board.records.all);
-				const submission = board.records.all.find(row => row.user.id === parseInt(value));
+				const submission = board.records.all.find(row => row.profile.id === parseInt(value));
 				const formData = submission2Form(submission, game, type, levelName, value);
 				dispatchForm({ field: "values", value: formData });
 				break;
@@ -179,38 +179,38 @@ const Levelboard = () => {
 
 	// FUNCTION 4: setBoardReport - sets the report field of the board state when user attempts to report a record
 	// PRECONDITIONS (1 parameter):
-	// 1.) id: a string, representing the uuid user id of a user. this parameter is used to find the record that belongs to that user
+	// 1.) id: an integer, representing the user's profile unique id. this parameter is used to find the record that belongs to that user
 	// POSTCONDITIONS (1 possible outcome):
 	// the record belonging to id is found, and this information is used to update the report field of the board state by calling
 	// the setBoard() function. when this field is set to a non-null value, the report popup will render
 	const setBoardReport = id => {
-		const row = board.records.all.find(row => row.user.id === id);
+		const row = board.records.all.find(row => row.profile.id === id);
 		setBoard({ ...board, report: {
 			id: row.details.id,
-			profile_id: row.user.id,
+			profile_id: row.profile.id,
 			game_id: abb,
 			level_id: levelName,
 			type: type,
-			username: row.user.username,
+			username: row.profile.username,
 			record: row.details.record
 		}});
 	};
 
 	// FUNCTION 5: setDelete - sets the deleteSubmission state when moderator attempts to delete a record
 	// PRECONDITIONS (1 parameter):
-	// 1.) id: a string, representing the uuid user id of a user. this parameter is used to find the record that belongs to that user
+	// 1.) id: an integer, representing the user's profile unique id. this parameter is used to find the record that belongs to that user
 	// POSTCONDITIONS (1 possible outcome):
 	// the record belonging to id is found, and this information is used to update the deleteSubmission state by calling
 	// the setDeleteSubmission() function. when this field is set to a non-null value, the delete popup will render
 	const setDelete = id => {
-		const row = board.records.all.find(row => row.user.id === id);
+		const row = board.records.all.find(row => row.profile.id === id);
 		setDeleteSubmission({
 			id: row.details.id,
-			profile_id: row.user.id,
+			profile_id: row.profile.id,
 			game_id: abb,
 			level_id: levelName,
 			type: type,
-			username: row.user.username,
+			username: row.profile.username,
 			record: row.details.record
 		});
 	};
@@ -246,7 +246,7 @@ const Levelboard = () => {
         }
 
 		// finally, let's convert the date from the front-end format, to the backend format.
-		const old = board.records.all.find(row => row.user.id === form.values.profile_id);
+		const old = board.records.all.find(row => row.profile.id === form.values.profile_id);
 		const backendDate = getDateOfSubmission(form.values.submitted_at, old, form.values.record, type);
 		if (!backendDate) {
 			dispatchForm({ field: "submitting", value: true });

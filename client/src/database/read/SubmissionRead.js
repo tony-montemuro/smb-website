@@ -19,7 +19,7 @@ const SubmissionRead = () => {
                 .from("submission")
                 .select(`
                     level!inner (name, misc, chart_type, time, id),
-                    user:profile (id, username, country, avatar_url),
+                    profile (id, username, country, avatar_url),
                     details:all_submission (
                         id,
                         record,

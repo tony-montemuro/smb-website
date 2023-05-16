@@ -33,7 +33,7 @@ function ReportPopup({ notifications, setNotifications }) {
 
         { /* Popup header - includes a link to the reporter's user page */ }
         <h2>
-          <Link to={ `/user/${ notification.creator.id }` }>{ notification.creator.username }</Link> has reported { user.id === notification.submission.user.id ? "your" : "the following" } submission:
+          <Link to={ `/user/${ notification.creator.id }` }>{ notification.creator.username }</Link> has reported { user.id === notification.submission.profile.id ? "your" : "the following" } submission:
         </h2>
 
         { /* Notification details */ }
@@ -41,8 +41,8 @@ function ReportPopup({ notifications, setNotifications }) {
           <ul>
 
             { /* Render the owner of the reported submission. If the report is for the current user, we do not need to render. */ }
-            { user.id !== notification.submission.user.id && 
-              <li>User: <Link to={ `/user/${ notification.submission.user.id }`}>{ notification.submission.user.username }</Link></li>
+            { user.id !== notification.submission.profile.id && 
+              <li>User: <Link to={ `/user/${ notification.submission.profile.id }`}>{ notification.submission.profile.username }</Link></li>
             }
 
             { /* Render basic information about submission - includes the game, as well as level */ }
@@ -73,7 +73,7 @@ function ReportPopup({ notifications, setNotifications }) {
         <NotificationMessage message={ notification.message } notification={ notification } />
 
         { /* Render a disclaimer message about reports. Only render if the reported submission belongs to the current user. */ }
-        { user.id === notification.submission.user.id && 
+        { user.id === notification.submission.profile.id && 
           <>
             <p><b>Note: </b><i>It is suggested that you ensure all properties of your submission are valid. If you are confident
             your submission is fine, do not worry. If not, a moderator may be forced to delete your submission!</i></p>

@@ -151,11 +151,6 @@ const App = () => {
       });
     });
 
-    console.log(countries);
-    console.log(games);
-    console.log(moderators);
-    console.log(profiles);
-
     // update static cache
     setStaticCache({
       countries: countries,

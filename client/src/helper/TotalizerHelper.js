@@ -35,9 +35,9 @@ const TotalizerHelper = () => {
     // 3.) timeTotal: the sum of all level times for a particular game
     // POSTCONDITIONS (2 returns):
     // 1.) allTotalsMap: an object representing a map with the following key value pair:
-    //               userId -> (total of ALL scores)
+    //               profileId -> profile info AND total of ALL scores
     // 2.) liveTotalMap: an object representing a map with the following key value pair:
-    //               userId -> (total of ONLY LIVE scores)
+    //               profileId -> profile info AND total of ONLY LIVE scores
     const getTotalMaps = (submissions, type, timeTotal) => {
         // create both the live and all maps, empty objects to start
         const allTotalsMap = {}, liveTotalsMap = {};
@@ -45,27 +45,27 @@ const TotalizerHelper = () => {
         // loop through all the submissions, and generate maps based on the data
         submissions.forEach(submission => {
             // first, extract information from the submission object
-            const user = submission.user;
-            const userId = user.id;
+            const profile = submission.profile;
+            const profileId = profile.id;
             const record = type === "score" ? submission.details.record : -Math.abs(submission.details.record);
             
             // next, update the allTotals list
-            if (userId in allTotalsMap) {
-                allTotalsMap[userId].total += record
+            if (profileId in allTotalsMap) {
+                allTotalsMap[profileId].total += record
             } else {
-                allTotalsMap[userId] = { 
-                    user: user,
+                allTotalsMap[profileId] = { 
+                    profile: profile,
                     total: type === "score" ? record : timeTotal + record
                 };
             }
 
             // finally, update the liveTotals list
             if (submission.details.live) {
-                if (userId in liveTotalsMap) {
-                    liveTotalsMap[userId].total += record
+                if (profileId in liveTotalsMap) {
+                    liveTotalsMap[profileId].total += record
                 } else {
-                    liveTotalsMap[userId] = { 
-                        user: user, 
+                    liveTotalsMap[profileId] = { 
+                        profile: profile, 
                         total: type === "score" ? record : timeTotal + record
                     };
                 }
@@ -98,10 +98,9 @@ const TotalizerHelper = () => {
     // FUNCTION 4: insertPositionToTotals
     // PRECONDITIONS (2 parameters): 
     // 1.) totals: an array of totals objects sorted in descending order by total field
-    // 2.) type: a string, either "time" or "score"
-    // POSTCONDITIONS (0 returns):
+    // POSTCONDITIONS (1 possible outcome):
     // for each object in totals, a new field is added: position.
-    const insertPositionToTotals = (totals, type) => {
+    const insertPositionToTotals = (totals) => {
         // variables used to determine position of each submission
         let trueCount = 1, posCount = trueCount;
 

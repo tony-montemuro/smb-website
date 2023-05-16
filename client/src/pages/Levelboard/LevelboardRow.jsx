@@ -30,16 +30,16 @@ function LevelboardRow({ submission, imageReducer, reportFunc, deleteFunc }) {
       { /* Render information about the user */ }
       <td>
         <DetailedUsername
-          url={ submission.user.avatar_url }
+          url={ submission.profile.avatar_url }
           imageReducer={ imageReducer }
-          country={ submission.user.country }
-          profileId={ submission.user.id }
-          username={ submission.user.username }
+          country={ submission.profile.country }
+          profileId={ submission.profile.id }
+          username={ submission.profile.username }
         />
       </td>
 
       { /* Render the record */ }
-      <td><Link to={ `${submission.user.id}` }>{ recordB2F(submission.details.record, type) }</Link></td>
+      <td><Link to={ `${submission.profile.id}` }>{ recordB2F(submission.details.record, type) }</Link></td>
 
       { /* Render the submission date */ }
       <td>{ dateB2F(submission.details.submitted_at) }</td>
@@ -61,18 +61,20 @@ function LevelboardRow({ submission, imageReducer, reportFunc, deleteFunc }) {
 
       { /* Report button: when pressed, a report popup will appear, which will allow the user to report the submission. Users can report
       any submission other than their own submission. */ }
-      <td>
-        <button 
-          onClick={ () => reportFunc(submission.user.id) }
-          disabled={ user.id && user.id === submission.user.id }
-        >
-          📝
-        </button>
-      </td>
+      { user &&
+        <td>
+          <button 
+            onClick={ () => reportFunc(submission.profile.id) }
+            disabled={ user.profile && user.profile.id === submission.profile.id }
+          >
+            📝
+          </button>
+        </td>
+      }
 
       { /* Delete button: a button that allows moderators to delete a submission. This button should only render if the current
       authenticated user is a moderator. */ }
-      { user.is_mod && <td><button onClick={ () => deleteFunc(submission.user.id) }>❌</button></td> }
+      { user.is_mod && <td><button onClick={ () => deleteFunc(submission.profile.id) }>❌</button></td> }
 
     </tr>
   );

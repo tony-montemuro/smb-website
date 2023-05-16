@@ -29,7 +29,7 @@ const AllSubmissionRead = () => {
                     name
                 ),
                 position,
-                user:profile (
+                profile (
                     country,
                     id,
                     username
@@ -66,7 +66,7 @@ const AllSubmissionRead = () => {
     // PRECONDITIONS (4 parameters):
     // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.
     // 2.) levelName: a string value, representing the name of a level.
-    // 3.) userId: an integer value, representing a user's profile id.
+    // 3.) profileId: an integer value, representing a user's profile id.
     // 4.) isScore: a boolean value. true if the submission is a score, false otherwise.
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the submissions that pass through the filter from the database are returned, sorted from most recent
