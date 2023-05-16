@@ -35,7 +35,7 @@ const Download = () => {
     // 1.) path: a string that represents the name of a file in the avatar storage bucket
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, we convert the blob object returned into a url object, and return it
-    // if the query is unsuccessful, we alert the user of the error, and return null
+    // if the query is unsuccessful, simply return null
     const downloadAvatar = async (path) => {
         try {
             // query supabase avatar storage for image
@@ -50,8 +50,6 @@ const Download = () => {
             return URL.createObjectURL(data);
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
             return null;
         }
     };

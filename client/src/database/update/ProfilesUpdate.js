@@ -11,13 +11,11 @@ const ProfilesUpdate = () => {
     // if failure, this function will throw an error, which will be handled in the caller function
     const upsertUserInfo = async (userInfo) => {
         try {
-            userInfo.country = userInfo.country === "" ? null : userInfo.country;
             let { error } = await supabase
                 .from("profile")
-                .upsert(userInfo, {
-                    returning: "minimal", // Don't return the value after inserting
-                }
-            );
+                .upsert(userInfo,
+                    { onConflict: 'id' }
+                );
 
             // error handling
             if (error) {

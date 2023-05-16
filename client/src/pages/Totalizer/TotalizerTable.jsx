@@ -63,7 +63,6 @@ function TotalizerTable({ type, totals, imageReducer }) {
                 {/* User info - Render the user's profile picture, as well as their username */}
                 <td>
                   <DetailedUsername
-                    url={ row.profile.avatar_url }
                     imageReducer={ imageReducer }
                     country={ row.profile.country }
                     profileId={ row.profile.id }

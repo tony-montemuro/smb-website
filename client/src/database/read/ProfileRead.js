@@ -22,7 +22,6 @@ const ProfileRead = () => {
                     youtube_url, 
                     twitch_url,
                     discord,
-                    avatar_url,
                     featured_video,
                     video_description
                 `);
@@ -58,7 +57,6 @@ const ProfileRead = () => {
                     country (iso2, name),
                     youtube_url,
                     twitch_url,
-                    avatar_url,
                     discord,
                     bio,
                     birthday,

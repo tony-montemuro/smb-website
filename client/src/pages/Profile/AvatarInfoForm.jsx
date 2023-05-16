@@ -3,7 +3,7 @@ import "./Profile.css";
 import { useRef } from "react";
 import Avatar from "../../components/Avatar/Avatar.jsx";
 
-function AvatarInfoForm({ form, formSubmit, imageReducer }) {
+function AvatarInfoForm({ profileId, form, formSubmit, imageReducer }) {
   /* ===== VARIABLES ===== */
   const IMG_LENGTH = 150;
 
@@ -22,7 +22,7 @@ function AvatarInfoForm({ form, formSubmit, imageReducer }) {
       <form className="profile-avatar-form" onSubmit={ (e) => formSubmit(e, avatarRef) }>
 
         { /* Render the user's current avatar */ }
-        <Avatar url={ form.avatar_url } size={ IMG_LENGTH } imageReducer={ imageReducer } />
+        <Avatar profileId={ profileId } size={ IMG_LENGTH } imageReducer={ imageReducer } />
 
         { /* Avatar field - a optional file field, where the user can upload their avatar */ }
         <label htmlFor="avatar-update"></label>

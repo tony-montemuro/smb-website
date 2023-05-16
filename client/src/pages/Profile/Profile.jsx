@@ -51,7 +51,7 @@ function Profile({ imageReducer }) {
       }, [staticCache, user]);
 
     /* ===== PROFILE COMPONENT ===== */
-    return userForm.user && userForm.countries && avatarForm.avatar_url ?
+    return userForm.user && userForm.countries ?
         <>
             { /* Profile header */ }
             <div className="profile-header">
@@ -61,7 +61,7 @@ function Profile({ imageReducer }) {
             { /* Profile body - render the two profile forms */ }
             <div className="profile-body"> 
                 <UserInfoForm form={ userForm } handleChange={ handleChange } formSubmit={ updateUserInfo } />
-                <AvatarInfoForm form={ avatarForm } formSubmit={ avatarSubmit } imageReducer={ imageReducer } />
+                <AvatarInfoForm profileId={ userForm.user.id } form={ avatarForm } formSubmit={ avatarSubmit } imageReducer={ imageReducer } />
             </div>
 
             {/* Profile footer */}

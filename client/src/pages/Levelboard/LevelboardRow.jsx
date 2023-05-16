@@ -30,7 +30,6 @@ function LevelboardRow({ submission, imageReducer, reportFunc, deleteFunc }) {
       { /* Render information about the user */ }
       <td>
         <DetailedUsername
-          url={ submission.profile.avatar_url }
           imageReducer={ imageReducer }
           country={ submission.profile.country }
           profileId={ submission.profile.id }

@@ -22,7 +22,6 @@ const Profile = () => {
     const [avatarForm, dispatchAvatarForm] = useReducer((state, action) => {
         return { ...state, [action.field]: action.value };
     }, { 
-        avatar_url: null,
         error: null,
         updating: false
     });
@@ -75,7 +74,6 @@ const Profile = () => {
         const userId = user.id;
         const profile = user.profile;
         dispatchUserForm({ field: "user", value: generateFormVals(profile, userId) });
-        dispatchAvatarForm({ field: "avatar_url", value: profile ? profile.avatar_url : "default.png" });
 
         // if user has no profile, they are a first time user. set the firstTimeUser flag to true
         if (!profile) {
@@ -132,6 +130,7 @@ const Profile = () => {
         // if we made it this far, no errors were deteched, so we can go ahead and update the user profile
         try {
             userForm.user.birthday = userForm.user.birthday.length > 0 ? userForm.user.birthday : null;
+            userForm.user.country = userForm.user.country === "" ? null : userForm.user.country;
             await upsertUserInfo({ ...userForm.user });
 
             // if successful, reload the page
@@ -169,9 +168,9 @@ const Profile = () => {
         }
 
         // if we made it this far, we have no errors. let's update the backend
-        const { file, fileExt } = getFileInfo(avatarRef);
+        const { file } = getFileInfo(avatarRef);
         try {
-            await uploadAvatar(file, `${ profileId }.${ fileExt }`);
+            await uploadAvatar(file, profileId);
 
             // if successful, reload the page
             window.location.reload();

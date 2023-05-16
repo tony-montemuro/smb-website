@@ -55,7 +55,7 @@ function UserLayout({ imageReducer }) {
 
           { /* User avatar and name - link back to the main user page. */ }
           <Link to={ `/user/${ profile.id }` }>
-            <Avatar url={ profile.avatar_url } size={ IMG_WIDTH } imageReducer={ imageReducer }  />
+            <Avatar profileId={ profile.id } size={ IMG_WIDTH } imageReducer={ imageReducer }  />
             <h2>{ profile.username }</h2>
           </Link>
 

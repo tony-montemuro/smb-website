@@ -4,7 +4,7 @@ import Download from "../../database/storage/Download";
 
 const Avatar = () => {
     /* ===== STATES ===== */
-    const [avatarUrl, setAvatarUrl] = useState(null);
+    const [avatar, setAvatar] = useState(undefined);
 
     /* ===== FUNCTIONS ===== */
 
@@ -13,18 +13,18 @@ const Avatar = () => {
 
     // FUNCTION 1: fetchAvatar - function that will return an image given a file name and imageReducer
     // PRECONDITIONS (2 parameters):
-    // 1.) fileName: a string representing the name of an avatar. typically has a uuid format with a file extension appended to the end
+    // 1.) fileName: an integer representing a user's uniquer profile ID
     // 2.) imageReducer: an object with two fields:
         // a.) reducer: the image reducer itself (state)
         // b.) dispatchSubmissions: the reducer function used to update the reducer
     // POSTCONDITIONS (1 possible outcome):
-    // the URL of an image is returned, and this url will become the avatarUrl state by calling the setAvatarUrl() function
-    const fetchAvatar = async (fileName, imageReducer) => {
-        const url = await retrieveImage(fileName, imageReducer, "avatar");
-        setAvatarUrl(url);
+    // the URL of an image is returned, and this url will become the avatar state by calling the setAvatar() function
+    const fetchAvatar = async (profileId, imageReducer) => {
+        const url = await retrieveImage(profileId, imageReducer, "avatar");
+        setAvatar(url);
     };
 
-    return { avatarUrl, fetchAvatar };
+    return { avatar, fetchAvatar };
 };
 
 /* ===== EXPORTS ===== */
