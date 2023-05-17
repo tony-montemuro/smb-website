@@ -63,7 +63,7 @@ function FormPopup({ form, formPopup, setFormPopup, board, submitFunc, handleCha
                 type="number"
                 value={ form.values.record }
                 onChange={ (e) => handleChangeFunc(e, game) }
-                disabled={ user.profile.id !== form.values.profile_id && board.records.all.some(row => row.user.id === form.values.profile_id) }
+                disabled={ user.profile.id !== form.values.profile_id && board.records.all.some(row => row.profile.id === form.values.profile_id) }
               />
 
               { /* If the error.record field is defined, render that underneath the record field. */ }

@@ -165,9 +165,10 @@ const Levelboard = () => {
 			// a record from a user that has already submitted to the chart, the form will be loaded with that user's submission data. 
 			// otherwise, the form is set to the default values
 			case "profile_id":
-				console.log(board.records.all);
 				const submission = board.records.all.find(row => row.profile.id === parseInt(value));
 				const formData = submission2Form(submission, game, type, levelName, value);
+				console.log(board.records.all);
+				console.log(formData);
 				dispatchForm({ field: "values", value: formData });
 				break;
 
