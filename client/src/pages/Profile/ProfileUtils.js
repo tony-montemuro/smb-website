@@ -193,6 +193,55 @@ const ProfileUtils = () => {
         return undefined;
     };
 
+    // FUNCTION 9: convertToPNG - async function that takes a file object, and converts it to a PNG, if necessary
+    // PRECONDITIONS (1 parameter):
+    // 1.) file: a File object of one of the three types: PNG, JPG, or JPEG
+    // POSTCONDITIONS (3 possible outcomes):
+    // if the file is already a png, the file will simply be returned
+    // if the file is a jpg or jpeg, and the conversion is successful, an new File object is returned, storing the image converted to
+    // a png
+    // if the file is a jpg or jpeg, and the conversion is a failure, the promise resolves to an error, which is handled by the caller function
+    const convertToPNG = async (file) => {
+        if (file.type === "image/jpeg" || file.type === "image/jpg") {
+            return new Promise((resolve, reject) => {
+                // create our image file
+                const img = new Image();
+
+                // code that is executed once the image file is fully loaded
+                img.onload = function() {
+                    // create canvas
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext('2d');
+
+                    // set canvas size
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    // perform conversion
+                    canvas.toBlob(function(blob) {
+                        const convertedFile = new File([blob], file.name, {
+                            type: "image/png",
+                            lastModified: file.lastModified,
+                          });
+                          resolve(convertedFile);
+                    }, "image/png");
+                };
+
+                // code that is executed if the file conversion fails
+                img.onerror = function(error) {
+                    reject(error);
+                };
+
+                // set the src property to the file converted to an object URL
+                img.src = URL.createObjectURL(file);
+            });
+        };
+
+        // otherwise, simply return the file
+        return file;
+    };
+
     return { 
         generateFormVals, 
         validateUsername, 
@@ -201,7 +250,8 @@ const ProfileUtils = () => {
         validateFeaturedVideo, 
         validateVideoDescription,
         getFileInfo, 
-        validateAvatar 
+        validateAvatar,
+        convertToPNG
     };
 };
 

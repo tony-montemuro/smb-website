@@ -55,7 +55,8 @@ const Profile = () => {
         validateFeaturedVideo,
         validateVideoDescription,
         getFileInfo,
-        validateAvatar 
+        validateAvatar,
+        convertToPNG
     } = ProfileUtils();
     const { upsertUserInfo } = ProfilesUpdate();
     const { signOut } = Signout();
@@ -170,10 +171,13 @@ const Profile = () => {
         // if we made it this far, we have no errors. let's update the backend
         const { file } = getFileInfo(avatarRef);
         try {
-            await uploadAvatar(file, profileId);
+            // convert file and upload
+            const convertedFile = await convertToPNG(file);
+            await uploadAvatar(convertedFile, `${profileId}.png`);
 
             // if successful, reload the page
             window.location.reload();
+            
         } catch (error) {
             console.log(error);
             alert(error.message);

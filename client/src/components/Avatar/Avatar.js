@@ -20,7 +20,7 @@ const Avatar = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the URL of an image is returned, and this url will become the avatar state by calling the setAvatar() function
     const fetchAvatar = async (profileId, imageReducer) => {
-        const url = await retrieveImage(profileId, imageReducer, "avatar");
+        const url = await retrieveImage(`${profileId}.png`, imageReducer, "avatar");
         setAvatar(url);
     };
 
