@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { UserContext, StaticCacheContext } from "./Contexts";
 import AppLogic from "./App.js";
+import EmailUpdate from "./pages/EmailUpdate/EmailUpdate.jsx";
 import Game from "./pages/Game/Game.jsx";
 import GameLayout from "./components/GameLayout/GameLayout";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
@@ -70,6 +71,7 @@ function App() {
             <Route path="/support" element={ <Support /> }/>
             <Route path="/notifications" element={ <Notifications /> } />
             <Route path="/login" element={ <Login /> }/>
+            <Route path="/email-update" element={ <EmailUpdate /> } />
             <Route path="/profile" element={ <Profile imageReducer={ imageReducer } /> }/>
             <Route path="/games/:abb" element={ <GameLayout imageReducer={ imageReducer } /> } >
               <Route index element={ <Game /> } />

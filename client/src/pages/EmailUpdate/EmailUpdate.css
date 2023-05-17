@@ -1,0 +1,16 @@
+.email-update-container {
+    height: 90vh;
+    width: 100%;
+    position: relative;
+}
+
+.email-update {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -14vh 0 0 -14vh;
+}
+
+.email-update button {
+    margin-top: 10px;
+}

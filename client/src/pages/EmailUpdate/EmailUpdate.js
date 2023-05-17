@@ -3,7 +3,10 @@ import { useState } from "react";
 import EmailLogin from "../../database/authentication/EmailLogin";
 import ValidationHelper from "../../helper/ValidationHelper";
 
-const Login = () => {
+const EmailUpdate = () => {
+    /* ===== VARIABLES ===== */
+    const defaultEmailState = { name: "", error: undefined };
+
     /* ===== STATES  ===== */
     const [email, setEmail] = useState({ name: "", error: undefined });
     const [userState, setUserState] = useState("idle");
@@ -14,7 +17,12 @@ const Login = () => {
     const { validateEmail } = ValidationHelper();
 
     // database functions
-    const { login } = EmailLogin();
+    const { updateEmail } = EmailLogin();
+
+    // FUNCTION 0: initForm
+    const initForm = () => {
+        setEmail(defaultEmailState);
+    }
 
     // FUNCTION 1: handleChange - handle changes to the email form
     // PRECONDITIONS (1 parameter):
@@ -28,15 +36,15 @@ const Login = () => {
         setUserState("idle");
     };
 
-    // FUNCTION 2: handleLogin - handles an attempt at logging in
+    // FUNCTION 2: handleEmailUpdate - handles an attempt at updating the email
     // PRECONDITIONS (1 parameter):
-    // 1.) e: an event object generated when the user makes a change to the email form
-    // POSTCONDITIONS (1 possible outcome):
+    // 1.) e: an event object generated when the user submits the email form
+    // POSTCONDITIONS (3 possible outcome):
     // if the email is not valid, the function will terminate early, and the error field of the email state hook will update. 
-    // if the function successfully begins the login process, the user state is updated to complete by calling the
+    // if the function successfully begins email updating process, the user state is updated to complete by calling the
     // setUserState() function with the "complete" argument, and any email error is removed.
-    // if the function fails to begin the login process, the user is alerted of the error.
-    const handleLogin = async (e) => {
+    // if the function fails to begin the email updating process, the user is alerted of the error.
+    const handleEmailUpdate = async (e) => {
         // initialize login process
         e.preventDefault();
         setUserState("logging");
@@ -49,9 +57,9 @@ const Login = () => {
             return;
         }
 
-        // if we made it past validation, we can complete the login
+        // if we made it past validation, we can begin the email update process
         try {
-            await login(email.name);
+            await updateEmail(email.name);
 
             // if there are no errors, we can complete the function
             setUserState("complete");
@@ -64,13 +72,8 @@ const Login = () => {
         }
     };
 
-    return { 
-        email,
-        userState,
-        handleChange, 
-        handleLogin 
-    };
-}
+    return { email, userState, initForm, handleChange, handleEmailUpdate };
+};
 
 /* ===== EXPORTS ===== */
-export default Login;
+export default EmailUpdate;

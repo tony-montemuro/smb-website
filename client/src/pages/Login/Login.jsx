@@ -20,8 +20,8 @@ function Login() {
 
         { /* Login header */ }
         <div className="login-header">
-          <h1>Log In</h1>
-          <p>Log in via email below: </p>
+          <h1>Log In / Sign Up</h1>
+          <p>Log in or sign up via email below: </p>
         </div>
 
         { /* Login form: allows user to sign in via email account */ }

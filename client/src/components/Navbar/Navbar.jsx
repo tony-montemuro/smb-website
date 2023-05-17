@@ -54,6 +54,11 @@ function Navbar() {
                 </Link>
             </li>
 
+            { /* Link to the email update page */ }
+            <li>
+              <Link to="/email-update">Update Email</Link>
+            </li>
+
             { /* Link to the profile page */ }
             <li>
               <Link to="/profile">Edit Profile</Link>
@@ -63,7 +68,7 @@ function Navbar() {
         : 
           // If not an authenticated user, render a link to the login page
           <li>
-            <Link to="/login">Login</Link>
+            <Link to="/login">Login / Sign Up</Link>
           </li>
           
         }
