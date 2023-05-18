@@ -124,8 +124,9 @@ const Submissions = () => {
             }));
             await Promise.all(approvePromises);
 
-            // once all submissions have been approved, let's notify each user that the approval was successful
-            const notifPromises = approved.map(e => {
+            // once all submissions have been approved, let's notify each user other than the current user that the approval was successful
+            const filteredApproved = approved.filter(row => row.profile.id !== user.profile.id);
+            const notifPromises = filteredApproved.map(e => {
                 return insertNotification({
                     notif_type: "approve",
                     profile_id: e.profile.id, 
