@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState, useReducer } from "react";
 import { useLocation } from "react-router-dom";
-import { UserContext } from "../../Contexts";
+import { GameContext, UserContext } from "../../Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import LevelboardUtils from "./LevelboardUtils";
 import SubmissionRead from "../../database/read/SubmissionRead";
@@ -26,6 +26,9 @@ const Levelboard = () => {
 	const { insertSubmission } = AllSubmissionUpdate();
 
 	/* ===== CONTEXTS ===== */
+
+	// game state from game context
+	const { game } = useContext(GameContext);
 
 	// user state from user context
 	const { user } = useContext(UserContext);
@@ -70,11 +73,10 @@ const Levelboard = () => {
 
 	// FUNCTION 1: splitSubmissionsAndUpdateForm - given an array of submissions, split submissions into live and all array. also,
 	// if a submission belongs to the current user, update the form
-	// PRECONDITIONS (2 parameters):
+	// PRECONDITIONS (1 parameter):
 	// 1.) submissions: an array of submissions objects, which must first be ordered by the current level name defined in the path.
 	// also, it must be first ordered in descending order by the details.record field, then in ascending order by the details.submitted_at
 	// field
-	// 2.) game: an object containing information about the game defined in the path
 	// POSTCONDITIONS (2 returns, 2 possible outcomes):
 	// the function always has the same two returns:
 	// 1.) all: the sorted array of submission objects that has all submission objects in the `submissions` array
@@ -83,7 +85,7 @@ const Levelboard = () => {
 	// 1.) if their is no signed-in user, OR their does not exist a submission object belonging to the signed-in user, set the form
 	// to default values
 	// 2.) otherwise, set the form using the values in the submission object assigned to the signed-in user
-	const splitSubmissionsAndUpdateForm = (submissions, game) => {
+	const splitSubmissionsAndUpdateForm = (submissions) => {
 		// initialize variables used to split the submissions
 		const profileId = user && user.profile ? user.profile.id : null;
 		const live = [], all = [];
@@ -94,7 +96,7 @@ const Levelboard = () => {
 			// if a user is currently signed in, check if a record belongs to them
 			// if so, we need to update form values, and update the formSet flag
 			if (profileId && submission.profile.id === profileId) {
-				const formData = submission2Form(submission, game, type, levelName, profileId);
+				const formData = submission2Form(submission, type, levelName, profileId);
 				dispatchForm({ field: "values", value: formData });
 				dispatchForm({ field: "prevSubmitted", value: true });
 				formSet = true;
@@ -110,7 +112,7 @@ const Levelboard = () => {
 		// if the formSet flag was never set to true, this means that the client has not submitted to this chart
 		// yet. set the form to default values
 		if (!formSet) {
-			const formData = submission2Form(undefined, game, type, levelName, profileId ? profileId : null);
+			const formData = submission2Form(undefined, type, levelName, profileId ? profileId : null);
 			dispatchForm({ field: "values", value: formData });
 		}
 
@@ -119,16 +121,15 @@ const Levelboard = () => {
 
 	// FUNCTION 2: setupBoard - given information about the path and the submissionReducer, set up the board object
 	// PRECONDITIONS (2 parameters):
-	// 1.) game: an object containing information about the game defined in the path
-	// 2.) submissionReducer: an object with two fields:
+	// 1.) submissionReducer: an object with two fields:
 		// a.) reducer: the submission reducer itself (state)
 		// b.) dispatchSubmissions: the reducer function used to update the reducer
 	// POSTCONDITIONS (1 possible outcome):
 	// the list of submissions are generated, which is then split into two arrays: all and live. these arrays
 	// are used to set the records field of the board state, which is updated by calling the setBoard() function
-	const setupBoard = async (game, submissionReducer) => {
+	const setupBoard = async (submissionReducer) => {
 		// first, let's get the names of the previous and next level
-		const { prev, next } = getPrevAndNext(game, category, levelName);
+		const { prev, next } = getPrevAndNext(category, levelName);
 
 		// get submissions, and filter based on the levelId
 		let allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
@@ -145,7 +146,7 @@ const Levelboard = () => {
 		setBoard({ ...board, records: { all: all, live: live }, adjacent: { prev: prev, next: next } });
 	};
 
-	// FUNCTION 3: handleChange - function that is run each time the user modifies the submission form
+	// FUNCTION 3: handleInsertChange - function that is run each time the user modifies the insert submission form
 	// PRECONDITIONS (2 parameters):
 	// 1.) e: an event object generated when the user makes a change to the submission form
 	// 2.) game: an object containing information about the game defined in the path
@@ -153,7 +154,7 @@ const Levelboard = () => {
 	// if the field id is live, we use the checked variable rather than the value variable to update the form
 	// if the field id is profile_id, we must update the entire form, since each user has completely different form data
 	// otherwise, we simply update the form field based on the value variable
-    const handleChange = (e, game) => {
+    const handleInsertChange = (e, game) => {
         const { id, value, checked } = e.target;
 		switch (id) {
 			// case 1: live. this is a checkbox, so we need to use the "checked" variable as our value
@@ -166,7 +167,7 @@ const Levelboard = () => {
 			// otherwise, the form is set to the default values
 			case "profile_id":
 				const submission = board.records.all.find(row => row.profile.id === parseInt(value));
-				const formData = submission2Form(submission, game, type, levelName, value);
+				const formData = submission2Form(submission, type, levelName, value);
 				console.log(board.records.all);
 				console.log(formData);
 				dispatchForm({ field: "values", value: formData });
@@ -178,7 +179,7 @@ const Levelboard = () => {
 		};
     };
 
-	// FUNCTION 4: setBoardReport - sets the report field of the board state when user attempts to report a record
+	// FUNCTION 5: setBoardReport - sets the report field of the board state when user attempts to report a record
 	// PRECONDITIONS (1 parameter):
 	// 1.) id: an integer, representing the user's profile unique id. this parameter is used to find the record that belongs to that user
 	// POSTCONDITIONS (1 possible outcome):
@@ -197,7 +198,7 @@ const Levelboard = () => {
 		}});
 	};
 
-	// FUNCTION 5: setDelete - sets the deleteSubmission state when moderator attempts to delete a record
+	// FUNCTION 6: setDelete - sets the deleteSubmission state when moderator attempts to delete a record
 	// PRECONDITIONS (1 parameter):
 	// 1.) id: an integer, representing the user's profile unique id. this parameter is used to find the record that belongs to that user
 	// POSTCONDITIONS (1 possible outcome):
@@ -216,7 +217,7 @@ const Levelboard = () => {
 		});
 	};
 
-	// FUNCTION 6: submitRecord - function that validates and submits a record to the database
+	// FUNCTION 7: submitRecord - function that validates and submits a record to the database
 	// PRECONDITIONS (1 parameter):
 	// 1.) e: an event object generated when the user submits the submission form
 	// POSTCONDITIONS (2 possible outcomes)
@@ -246,13 +247,9 @@ const Levelboard = () => {
             return;
         }
 
-		// finally, let's convert the date from the front-end format, to the backend format.
+		// convert the date from the front-end format, to the backend format.
 		const old = board.records.all.find(row => row.profile.id === form.values.profile_id);
-		const backendDate = getDateOfSubmission(form.values.submitted_at, old, form.values.record, type);
-		if (!backendDate) {
-			dispatchForm({ field: "submitting", value: true });
-			return;
-		}
+		const backendDate = getDateOfSubmission(form.values.submitted_at, old);
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
 		const id = dateF2B();
@@ -273,10 +270,10 @@ const Levelboard = () => {
 		setBoard,
 		setupBoard,
 		setDeleteSubmission,
-		handleChange,
+		handleInsertChange,
 		setDelete,
 		setBoardReport,
-		submitRecord
+		submitRecord,
 	};
 };  
 

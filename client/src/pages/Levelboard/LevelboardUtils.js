@@ -1,11 +1,14 @@
 /* ===== IMPORTS ===== */
+import { GameContext, UserContext } from "../../Contexts";
 import { useContext } from "react";
-import { UserContext } from "../../Contexts";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 
 const LevelboardUtils = () => {
     /* ===== CONTEXTS ===== */
+
+    // game state from game context
+    const { game } = useContext(GameContext);
 
     // user state from user context
     const { user } = useContext(UserContext);
@@ -20,13 +23,12 @@ const LevelboardUtils = () => {
 
     // FUNCTION 1: getPrevAndNext - get the previous and next level names
     // PRECONDTIONS (2 parameters):
-    // 1.) game: an object containing information about the game defined in the path
-    // 2.) category: the current category, either "main" or "misc", also defined in the path
-    // 3.) levelName: a string corresponding to the name of a level, also defined in the path
+    // 1.) category: the current category, either "main" or "misc", also defined in the path
+    // 2.) levelName: a string corresponding to the name of a level, also defined in the path
     // POSTCONDITIONS (2 returns):
     // 1.) prev: the name of the previous level. if it does not exist, value will be null 
     // 2.) next: the name of the next level. if it does not exist, value will be null
-    const getPrevAndNext = (game, category, levelName) => {
+    const getPrevAndNext = (category, levelName) => {
         // first, let's get the array of mode objects belonging to category
         const isMisc = category === "misc" ? true : false;
         const modes = game.mode.filter(row => row.misc === isMisc);
@@ -78,17 +80,16 @@ const LevelboardUtils = () => {
     };
 
     // FUNCTION 3: submission2Form ("submission to form")
-    // PRECONDITIONS (5 parameters):
+    // PRECONDITIONS (4 parameters):
     // 1.) submission: a submission object, or undefined
-    // 2.) game: an object containing information about the game
-    // 3.) type: a string, either "score" or "time"
-    // 4.) levelName: a valid name of a level
-    // 5.) profile: a profile integer that belongs to some profile, or is null
+    // 2.) type: a string, either "score" or "time"
+    // 3.) levelName: a valid name of a level
+    // 4.) profile: a profile integer that belongs to some profile, or is null
     // POSTCONDITIONS (2 possible outcomes, 1 return):
     // if submission is defined, we use the information from this object to define the return object
     // if not, we set many of the form values to their default values
     // the object returned is compatible with the submission form
-    const submission2Form = (submission, game, type, levelName, profileId) => {
+    const submission2Form = (submission, type, levelName, profileId) => {
         // if a submission exists, we can use the data to form our formData object
         if (submission) {
             const details = submission.details;
@@ -238,19 +239,11 @@ const LevelboardUtils = () => {
     // are different, the user will be notified that they likely made an error. if the user rejects the confirmation message, 
     // undefined returned
     // in all other cases, a string representing a date with the back-end format is returned
-    const getDateOfSubmission = (submittedAt, oldSubmission, record, type) => {
+    const getDateOfSubmission = (submittedAt, oldSubmission) => {
         // first, we need to handle defining the date differently if the user has a previous submissions
         if (oldSubmission) {
+            // convert 
 			const prevDate = dateB2F(oldSubmission.details.submitted_at);
-
-			// special case: user is attempting to submit a new { type }, but has either forgotten to change the date of their old submission,
-			// or has deliberately not changed it. give them a confirmation box to ensure they have not made a mistake. if they hit 'no', the submission
-			// process will cancel. otherwise, continue.
-			if (submittedAt === prevDate && record !== oldSubmission.details.record) {
-				if (!window.confirm(`You are attempting to submit a new ${ type } with the same date as the previous submission. Are you sure this is correct?`)) {
-					return undefined;
-				}
-			}
 
 			// CASE 1: the submission date from the form is equal to the submission date in the backend. in this case, just return
             // the details.submitted_at field from the oldSubmission object

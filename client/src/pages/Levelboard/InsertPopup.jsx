@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 
-function FormPopup({ form, formPopup, setFormPopup, board, submitFunc, handleChangeFunc }) {
+function InsertPopup({ form, insertPopup, setInsertPopup, board, submitFunc, handleChangeFunc }) {
   /* ===== CONTEXTS ===== */
 
 	// static cache state from static cache context
@@ -29,9 +29,14 @@ function FormPopup({ form, formPopup, setFormPopup, board, submitFunc, handleCha
   const { capitalize, dateB2F } = FrontendHelper();
 
   /* ===== FORM POPUP COMPONENT ===== */ 
-  return formPopup &&
+  return insertPopup &&
     <div className="levelboard-popup">
       <div className="levelboard-popup-inner">
+        
+        { /* Close popup button */ }
+        <div className="report-levelboard-popup">
+          <button onClick={ () => setInsertPopup(false) }>Close</button>
+        </div>
 
         { /* Levelboard submit - contains the form header and form for submitting submissions to the database */ }
         <div className="levelboard-submit">
@@ -169,10 +174,9 @@ function FormPopup({ form, formPopup, setFormPopup, board, submitFunc, handleCha
 
           </form>
         </div>
-        <button onClick={ () => setFormPopup(false) }>Close</button>
       </div>
     </div>
 };
 
 /* ===== EXPORTS ===== */
-export default FormPopup;
+export default InsertPopup;

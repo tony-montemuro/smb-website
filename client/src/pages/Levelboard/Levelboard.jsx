@@ -7,9 +7,10 @@ import DeletePopup from "../../components/DeletePopup/DeletePopup.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
-import FormPopup from "./FormPopup";
+import InsertPopup from "./InsertPopup.jsx";
 import PathHelper from "../../helper/PathHelper";
 import ReportPopup from "./ReportPopup.jsx";
+import UpdatePopup from "./UpdatePopup.jsx";
 
 function Levelboard({ imageReducer, submissionReducer }) {
 	/* ===== VARIABLES ===== */
@@ -33,7 +34,8 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	/* ===== STATES & FUNCTIONS ===== */
 	const [level, setLevel] = useState(undefined);
 	const [levelboardState, setLevelboardState] = useState("live");
-	const [submitPopup, setSubmitPopup] = useState(false);
+	const [insertPopup, setInsertPopup] = useState(false);
+	const [updatePopup, setUpdatePopup] = useState(null);
 
 	// states and functions from js file
 	const { 
@@ -43,7 +45,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 		setBoard,
 		setupBoard,
 		setDeleteSubmission,
-		handleChange,
+		handleInsertChange,
 		setDelete,
 		setBoardReport,
 		submitRecord
@@ -73,7 +75,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			setLevel(level);
 			
 			// set up the board object
-			setupBoard(game, submissionReducer);
+			setupBoard(submissionReducer);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, location.pathname]);
@@ -110,7 +112,15 @@ function Levelboard({ imageReducer, submissionReducer }) {
 				<div className="levelboard-buttons">
 
 					{ /* Button that pulls up the submission popup. NOTE: this button should only render if the user has a profile. */ }
-					{ user.profile && <button onClick={ () => setSubmitPopup(true) }>Submit a { capitalize(type) }</button> }
+					{ user.profile && <button onClick={ () => setInsertPopup(true) }>Submit a { capitalize(type) }</button> }
+
+					{ /* Button that pulls up the update submission popup. NOTE: this button should only render if the user has a profile,
+					and a submission on the current levelboard. */ }
+					{ user.profile && board.records.all.some(row => row.profile.id === user.profile.id) &&
+						<button onClick={ () => setUpdatePopup(board.records.all.find(row => row.profile.id === user.profile.id)) }>
+							Update Submission
+						</button>
+					}
 
 					{ /* Button to navigate to the levelboard of the other type. NOTE: this only will be rendered if the
 					chart_type field in the level state is set to "both" */ }
@@ -178,13 +188,18 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			{ /* Popups */ }
 			<DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } />
 			<ReportPopup board={ board } setBoard={ setBoard } />
-			<FormPopup 
+			<InsertPopup 
 				form={ form }
-				formPopup={ submitPopup } 
-				setFormPopup={ setSubmitPopup } 
+				insertPopup={ insertPopup } 
+				setInsertPopup={ setInsertPopup } 
 				board={ board }
-				handleChangeFunc={ handleChange }
+				handleChangeFunc={ handleInsertChange }
 				submitFunc={ submitRecord } 
+			/>
+			<UpdatePopup
+				updatePopup={ updatePopup }
+				setUpdatePopup={ setUpdatePopup }
+				submissions={ board.records.all }
 			/>
 
 		</>
