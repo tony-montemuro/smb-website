@@ -37,8 +37,7 @@ const UpdatePopup = () => {
         submission2Form, 
         validateComment, 
         validateProof, 
-        getDateOfSubmission, 
-        getSubmissionFromForm
+        getDateOfSubmission
     } = LevelboardUtils();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
@@ -48,6 +47,11 @@ const UpdatePopup = () => {
 	};
 
     // FUNCTION 2: handleChange - function that is called whenever the user makes any change to the form
+    // PRECONDITIONS (1 parameter)
+	// 1.) e: an event object generated when the user makes a change to the form
+	// POSTCONDITIONS (2 possible outcomes):
+	// if the field id is live, we use the checked variable rather than the value variable to update the form
+	// otherwise, we simply update the form field based on the value variable
 	const handleChange = (e) => {
         const { id, value, checked } = e.target;
 		switch (id) {
@@ -62,8 +66,24 @@ const UpdatePopup = () => {
 		};
     };
 
-    // FUNCTION 3: handleSubmit - function that is called when the user submits the form
-    const handleSubmit = async (e, submission, submissions) => {
+    // FUNCTION 3: getSubmissionFromForm - takes form data, and converts to a submission object
+    const getSubmissionFromForm = (formVals, date, id, oldSubmission) => {
+        // create our new submission object, which is equivelent to formVals minus the message field
+        const { message, ...submission } = formVals;
+
+        // add additional fields to submission object
+        submission.submitted_at = date;
+        submission.id = id;
+
+        // position fields are NOT updated when a submission is updated!
+        submission.all_position = oldSubmission.all_position;
+		submission.position = oldSubmission.position;
+
+        return submission;
+    };
+
+    // FUNCTION 4: handleSubmit - function that is called when the user submits the form
+    const handleSubmit = async (e, submission) => {
         // initialize submission
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
@@ -89,7 +109,7 @@ const UpdatePopup = () => {
 
         // if we made it this far, no errors were detected, so we can go ahead and submit
 		const id = submission.details.id;
-		const updatedSubmission = getSubmissionFromForm(form.values, backendDate, id, submissions);
+		const updatedSubmission = getSubmissionFromForm(form.values, backendDate, id, submission);
 
         try {
             // attempt to update the submission
@@ -97,7 +117,7 @@ const UpdatePopup = () => {
 
             // reload the page
             window.location.reload();
-            
+
         } catch (error) {
             // if there is an error, inform the user
             console.log(error.message);

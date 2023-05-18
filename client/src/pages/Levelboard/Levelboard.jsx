@@ -35,18 +35,19 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	const [level, setLevel] = useState(undefined);
 	const [levelboardState, setLevelboardState] = useState("live");
 	const [insertPopup, setInsertPopup] = useState(false);
-	const [updatePopup, setUpdatePopup] = useState(null);
 
 	// states and functions from js file
 	const { 
 		board,
 		form,
 		deleteSubmission,
+		updatePopup,
 		setBoard,
 		setupBoard,
 		setDeleteSubmission,
 		handleInsertChange,
 		setDelete,
+		setUpdate,
 		setBoardReport,
 		submitRecord
 	} = LevelboardLogic();
@@ -117,7 +118,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 					{ /* Button that pulls up the update submission popup. NOTE: this button should only render if the user has a profile,
 					and a submission on the current levelboard. */ }
 					{ user.profile && board.records.all.some(row => row.profile.id === user.profile.id) &&
-						<button onClick={ () => setUpdatePopup(board.records.all.find(row => row.profile.id === user.profile.id)) }>
+						<button onClick={ () => setUpdate(board.records.all.find(row => row.profile.id === user.profile.id)) }>
 							Update Submission
 						</button>
 					}
@@ -164,8 +165,11 @@ function Levelboard({ imageReducer, submissionReducer }) {
 							<th>Approved</th>
 							<th>Report</th>
 
+							{ /* Update header element should ONLY render if the current user is a moderator */ }
+							{ user && user.is_mod && <th>Update</th> }
+
 							{ /* Delete header element should ONLY render if the current user is a moderator */ }
-							{ user.is_mod ? <th>Delete</th> : null }
+							{ user && user.is_mod && <th>Delete</th> }
 						</tr>
 					</thead>
 
@@ -176,7 +180,8 @@ function Levelboard({ imageReducer, submissionReducer }) {
 								submission={ val } 
 								imageReducer={ imageReducer } 
 								reportFunc={ setBoardReport } 
-								deleteFunc={ setDelete } 
+								deleteFunc={ setDelete }
+								updateFunc={ setUpdate }
 								key={ val.details.id } 
 							/>
 						})}
@@ -198,8 +203,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			/>
 			<UpdatePopup
 				updatePopup={ updatePopup }
-				setUpdatePopup={ setUpdatePopup }
-				submissions={ board.records.all }
+				setUpdatePopup={ setUpdate }
 			/>
 
 		</>

@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 
-function LevelboardRow({ submission, imageReducer, reportFunc, deleteFunc }) {
+function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, deleteFunc }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
 	const type = location.pathname.split("/")[4];
@@ -66,14 +66,18 @@ function LevelboardRow({ submission, imageReducer, reportFunc, deleteFunc }) {
             onClick={ () => reportFunc(submission.profile.id) }
             disabled={ user.profile && user.profile.id === submission.profile.id }
           >
-            📝
+            ⚠️
           </button>
         </td>
       }
 
+      { /* Update button: a button that allows moderators to update a submission. This butotn should only render if the current
+      authenticated user is a moderator */ }
+      { user && user.is_mod && <td><button onClick={ () => updateFunc(submission) }>✍️</button></td> }
+
       { /* Delete button: a button that allows moderators to delete a submission. This button should only render if the current
       authenticated user is a moderator. */ }
-      { user.is_mod && <td><button onClick={ () => deleteFunc(submission.profile.id) }>❌</button></td> }
+      { user && user.is_mod && <td><button onClick={ () => deleteFunc(submission.profile.id) }>❌</button></td> }
 
     </tr>
   );

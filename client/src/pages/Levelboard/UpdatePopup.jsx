@@ -4,13 +4,15 @@ import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import UpdatePopupLogic from "./UpdatePopup.js";
+import Username from "../../components/Username/Username";
 
-function UpdatePopup({ updatePopup, setUpdatePopup, submissions }) {
+function UpdatePopup({ updatePopup, setUpdatePopup }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const path = location.pathname.split("/");
   const type = path[4];
   const levelName = path[5];
+  const profile = updatePopup ? updatePopup.profile : null;
 
   /* ===== CONTEXTS ===== */
 
@@ -33,7 +35,7 @@ function UpdatePopup({ updatePopup, setUpdatePopup, submissions }) {
   // code that is executed when the component mounts, or when updatePopup is modified
   useEffect(() => {
     if (updatePopup) {
-      fillForm(updatePopup, type, levelName, user.profile.id); 
+      fillForm(updatePopup, type, levelName, updatePopup.profile.id); 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updatePopup]); 
@@ -52,15 +54,24 @@ function UpdatePopup({ updatePopup, setUpdatePopup, submissions }) {
         <div className="levelboard-update">
 
           { /* Form header */ }
-          <h2>Update Your Submission</h2>
+          <h2>Update Submission</h2>
 
           { /* Form description - explains the distinction between updating a submission, and inserting a new one */ }
           <p><i>This form is for updating the details of an existing submission. If you wish to submit a new { type }, please press
           the</i> <b>Submit a Score</b> <i>button.</i></p>
 
           { /* Update submission form */ }
-          <form onSubmit={ (e) => handleSubmit(e, updatePopup, submissions) }>
+          <form onSubmit={ (e) => handleSubmit(e, updatePopup) }>
 
+            { /* Submission user: display the username of the submission, if the owner of the submission is NOT the same
+            as the current user. this will only ever show up for moderators. */ }
+            { user.profile.id !== profile.id && 
+              <span>User:&nbsp;
+                <Username country={ profile.country } profileId={ profile.id } username={ profile.username } />
+              </span>
+            }
+
+            { /* Submission record: simply display the record, which is not able to be changed in this input. */ }
             <p>{ capitalize(type) }: { recordB2F(updatePopup.details.record) }</p>
 
             { /* Submission date input: allows the user to modify the date they achieved their submission. */ }
