@@ -14,7 +14,7 @@ const ProfileRead = () => {
             const { data: profiles, error, status } = await supabase
                 .from("profile")
                 .select(`
-                    id, 
+                    id,
                     username,
                     bio,
                     birthday,

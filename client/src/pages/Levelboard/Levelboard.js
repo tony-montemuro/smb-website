@@ -135,6 +135,7 @@ const Levelboard = () => {
 		// get submissions, and filter based on the levelId
 		let allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
 		const submissions = allSubmissions.filter(row => row.level.name === levelName).map(row => Object.assign({}, row));
+		console.log(submissions);
 
 		// split submissions into two arrays: all and live. [NOTE: this function will also update the form!]
 		const { all, live } = splitSubmissionsAndUpdateForm(submissions, game, type, levelName);

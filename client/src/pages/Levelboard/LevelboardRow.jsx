@@ -25,7 +25,7 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
   return (
     <tr>
       { /* Render the position */ }
-      <td>{ submission.details.position }</td>
+      <td>{ submission.position }</td>
 
       { /* Render information about the user */ }
       <td>

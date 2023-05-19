@@ -21,12 +21,14 @@ const SubmissionRead = () => {
                     level!inner (name, misc, chart_type, time, id),
                     profile (id, username, country),
                     details:all_submission (
+                        all_position,
                         id,
                         record,
                         region (id, region_name),
                         submitted_at,
                         monkey (id, monkey_name),
                         proof,
+                        position,
                         comment,
                         live
                     ),

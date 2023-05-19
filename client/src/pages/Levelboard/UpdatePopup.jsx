@@ -148,6 +148,24 @@ function UpdatePopup({ updatePopup, setUpdatePopup }) {
               />
             </div>
 
+            { /* Submission message input: allows a moderator to include a message for the submission, since users will recieve a
+            notification when a moderator submits or updates a submission on behalf of them. The message is included in this.
+            NOTE: This input form should only render if the current user is a moderator, and the form user is different than the mod. */ }
+            { user.is_mod && user.profile.id !== form.values.profile_id &&
+              <div className="levelboard-input-group">
+                <label htmlFor="message">Leave a message (optional): </label>
+                <input 
+                  id="message"
+                  type="text"
+                  value={ form.values.message }
+                  onChange={ (e) => handleChange(e) }
+                />
+
+                { /* If the error.message field is defined, render that underneath the proof field. */ }
+                { form.error.message  && <p>{ form.error.message }</p> }
+              </div>
+            }
+
             { /* Form submission button: submits the form. NOTE: button is disabled if the submitting field of form is true. */ }
             <button disabled={ form.submitting }>Update</button>
 

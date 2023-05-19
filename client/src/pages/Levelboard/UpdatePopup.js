@@ -1,7 +1,9 @@
 /* ===== IMPORTS ===== */
-import { useReducer } from "react";
+import { useContext, useReducer } from "react";
+import { UserContext } from "../../Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import LevelboardUtils from "./LevelboardUtils";
+import NotificationUpdate from "../../database/update/NotificationUpdate";
 
 const UpdatePopup = () => {
     /* ===== VARIABLES ===== */
@@ -10,6 +12,11 @@ const UpdatePopup = () => {
 		error: { proof: null, comment: null },
         submitting: false
 	};
+
+    /* ===== CONTEXTS ===== */
+
+    // user state from user context
+    const { user } = useContext(UserContext);
 
     /* ===== STATES & REDUCERS ===== */
     const [form, dispatchForm] = useReducer((state, action) => {
@@ -31,6 +38,7 @@ const UpdatePopup = () => {
 
     // database functions
     const { updateSubmission } = AllSubmissionUpdate(); 
+    const { insertNotification } = NotificationUpdate();
 
     // helper functions
     const { 
@@ -76,13 +84,54 @@ const UpdatePopup = () => {
         submission.id = id;
 
         // position fields are NOT updated when a submission is updated!
-        submission.all_position = oldSubmission.all_position;
-		submission.position = oldSubmission.position;
+        submission.all_position = oldSubmission.details.all_position;
+		submission.position = oldSubmission.details.position;
 
         return submission;
     };
 
-    // FUNCTION 4: handleSubmit - function that is called when the user submits the form
+    // FUNCTION 4: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
+    // to backend
+    // PRECONDITIONS (2 parameters):
+    // 1.) formVals: an object that contains data from the submission form
+    // 2.) oldSubmission: a submission object containing information on the un-updated submission
+    // 3.) id: a string representing the unique id assigned to the current submission
+    // POSTCONDITION (2 possible outcomes):
+    // if the current user does not own the submission, this function will generate a notification object and make a call to 
+    // insert it into the database
+    // if the current user does own the submission, this function returns early
+    const handleNotification = async (formVals, oldSubmission, id) => {
+        // initialize variables
+        const submissionProfileId = formVals.profile_id;
+        const submissionDetails = oldSubmission.details;
+
+        // if these two ids are not equal, it means a moderator is updating a submission, so we need to notify the owner
+        // of the submission of this action. if this condition is not met, the function will return early
+        if (user.profile.id !== submissionProfileId) {
+			const notification = {
+				notif_type: "update",
+				profile_id: submissionProfileId,
+				creator_id: user.profile.id,
+				message: formVals.message,
+                game_id: formVals.game_id,
+                level_id: formVals.level_id,
+                score: formVals.score,
+                record: formVals.record,
+				submission_id: id,
+                submitted_at: submissionDetails.submitted_at,
+                region_id: submissionDetails.region.id,
+                monkey_id: submissionDetails.monkey.id,
+                proof: submissionDetails.proof,
+                live: submissionDetails.live,
+                comment: submissionDetails.comment
+			};
+			
+			// insert the notification into the database
+			await insertNotification(notification);
+		}
+    };
+
+    // FUNCTION 5: handleSubmit - function that is called when the user submits the form
     const handleSubmit = async (e, submission) => {
         // initialize submission
 		e.preventDefault();
@@ -115,13 +164,26 @@ const UpdatePopup = () => {
             // attempt to update the submission
             await updateSubmission(updatedSubmission);
 
+            // now, handle the notification
+            await handleNotification(form.values, submission, id);
+
             // reload the page
             window.location.reload();
 
         } catch (error) {
-            // if there is an error, inform the user
-            console.log(error.message);
-            alert(error);
+            if (error.code === "42501" && error.message === 'new row violates row-level security policy "Enforce receiving profile exists [RESTRICTIVE]" for table "notification"') {
+                // special case: moderator attempted to update a submission for a profile who is unauthenticated. this is actually
+                // expected behavior, so let's proceed as if there were not issues
+                window.location.reload();
+
+            } else {
+                // general case: if there is an error, inform the user
+                console.log(error);
+                alert(error.message);
+                
+            }
+
+            
         };
     };
 

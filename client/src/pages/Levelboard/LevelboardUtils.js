@@ -55,7 +55,7 @@ const LevelboardUtils = () => {
         }
     };
 
-    // FUNCTION 2: insertPositionToLevelboard - for each submission, add the position.details field
+    // FUNCTION 2: insertPositionToLevelboard - for each submission, add the position field
     // PRECONDITIONS (1 parameter):
     // 1.) submissions: an array of submission objects, ordered in descending order by details.record, then in ascending order
     // by details.submitted_at
@@ -69,7 +69,7 @@ const LevelboardUtils = () => {
         // now, iterate through each submission, and calculate the position
         submissions.forEach((submission, index) => {
             // update the position field
-            submission.details.position = posCount;
+            submission.position = posCount;
             trueCount++;
 
             // if the next submission exists, and it's record is different from the current submission, update posCount to trueCount
