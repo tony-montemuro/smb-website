@@ -77,6 +77,11 @@
     text-align: center;
 }
 
+.notification-details {
+    display: inline-block
+}
+
 .notifications-updated {
     background-color: yellow;
+    display: block;
 }

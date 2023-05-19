@@ -24,9 +24,9 @@ const NotificationRead = () => {
                     submission:all_submission (
                         profile (id, username),
                         record,
-                        region (region_name),
+                        region (id, region_name),
                         submitted_at,
-                        monkey (monkey_name),
+                        monkey (id, monkey_name),
                         proof,
                         comment,
                         live,
@@ -35,7 +35,13 @@ const NotificationRead = () => {
                     ),
                     level (name, misc, mode (game (abb, name))),
                     score,
-                    record
+                    record,
+                    submitted_at,
+                    region (id, region_name),
+                    monkey (id, monkey_name),
+                    proof,
+                    live,
+                    comment
                 `)
                 .order("notif_date", { ascending: false });
 

@@ -4,6 +4,7 @@ import ApprovePopup from "./ApprovePopup";
 import InsertPopup from "./InsertPopup";
 import DeletePopup from "./DeletePopup";
 import ReportPopup from "./ReportPopup";
+import UpdatePopup from "./UpdatePopup";
 
 function NotificationPopup({ notifications, setNotifications }) {
   /* ===== VARIABLES ===== */
@@ -20,6 +21,8 @@ function NotificationPopup({ notifications, setNotifications }) {
         return <DeletePopup notifications={ notifications } setNotifications={ setNotifications } />;
       case "report":
         return <ReportPopup notifications={ notifications } setNotifications={ setNotifications } />;
+      case "update":
+        return <UpdatePopup notifications={ notifications } setNotifications={ setNotifications } />;
       default:
         return null;
     }

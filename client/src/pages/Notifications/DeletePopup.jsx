@@ -41,7 +41,7 @@ function DeletePopup({ notifications, setNotifications }) {
             </li>
 
               { /* Render the submission deletion date */ }
-            <li>Deletion Date: { dateB2F(notification.notif_date) }</li>
+            <li>Date: { dateB2F(notification.notif_date) }</li>
 
           </ul>
         </div>
