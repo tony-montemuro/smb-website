@@ -1,11 +1,12 @@
 /* ===== IMPORTS ===== */
 import "./Levelboard.css";
 import { GameContext, StaticCacheContext, UserContext } from "../../Contexts";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
+import InsertPopupLogic from "./InsertPopup.js";
 
-function InsertPopup({ form, insertPopup, setInsertPopup, board, submitFunc, handleChangeFunc }) {
+function InsertPopup({ insertPopup, setInsertPopup, submissions }) {
   /* ===== CONTEXTS ===== */
 
 	// static cache state from static cache context
@@ -22,14 +23,29 @@ function InsertPopup({ form, insertPopup, setInsertPopup, board, submitFunc, han
   const path = location.pathname.split("/");
   const type = path[4];
   const profiles = staticCache.profiles;
+  const allSubmissions = submissions.all;
+  const liveSubmissions = submissions.live;
 
-  /* ===== FUNCTIONS ===== */
+  /* ===== STATES & FUNCTIONS ===== */
+
+  // states and functions from the js file
+  const { form, fillForm, handleChange, handleSubmit } = InsertPopupLogic(); 
   
   // helper functions
   const { capitalize, dateB2F } = FrontendHelper();
 
+  /* ===== EFFECTS ===== */
+
+  // code that is executed when the component mounts, and when the insertPopup state is changed
+  useEffect(() => {
+    if (insertPopup) {
+      fillForm();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [insertPopup]);
+
   /* ===== FORM POPUP COMPONENT ===== */ 
-  return insertPopup &&
+  return insertPopup && form.values &&
     <div className="levelboard-popup">
       <div className="levelboard-popup-inner">
         
@@ -45,14 +61,14 @@ function InsertPopup({ form, insertPopup, setInsertPopup, board, submitFunc, han
           <h2>Submit a { capitalize(type) }:</h2>
 
           { /* Submission form - allows users to submit a record to the database */ }
-          <form onSubmit={ submitFunc }>
+          <form onSubmit={ (e) => handleSubmit(e, allSubmissions, liveSubmissions) }>
 
             { /* User input: allows a moderator to select which user they want to submit on behalf of from a dropdown menu. 
             NOTE: this form input is reserved for moderators only! */ }
             { user.is_mod &&
               <div className="levelboard-input-group">
                 <label htmlFor="profile_id">User: </label>
-                <select id="profile_id" value={ form.values.profile_id } onChange={ (e) => handleChangeFunc(e, game) }>
+                <select id="profile_id" value={ form.values.profile_id } onChange={ (e) => handleChange(e) }>
                   { profiles.map((profile) => (
                     <option key={ profile.id } value={ profile.id }>{ profile.username }</option>
                   ))}
@@ -67,8 +83,7 @@ function InsertPopup({ form, insertPopup, setInsertPopup, board, submitFunc, han
                 id="record"
                 type="number"
                 value={ form.values.record }
-                onChange={ (e) => handleChangeFunc(e, game) }
-                disabled={ user.profile.id !== form.values.profile_id && board.records.all.some(row => row.profile.id === form.values.profile_id) }
+                onChange={ (e) => handleChange(e) }
               />
 
               { /* If the error.record field is defined, render that underneath the record field. */ }
@@ -85,14 +100,14 @@ function InsertPopup({ form, insertPopup, setInsertPopup, board, submitFunc, han
                 min={ game.release_date } 
                 max={ dateB2F() }
                 value={ form.values.submitted_at }
-                onChange={ (e) => handleChangeFunc(e, game) }
+                onChange={ (e) => handleChange(e) }
               />
             </div>
 
             { /* Submission region input: allows the user to select the region they achieved their submission on from a dropdown. */ }
             <div className="levelboard-input-group">
               <label htmlFor="region_id">Region: </label>
-              <select id="region_id" value={ form.values.region_id } onChange={ (e) => handleChangeFunc(e, game) }>
+              <select id="region_id" value={ form.values.region_id } onChange={ (e) => handleChange(e) }>
                 { game.region.map(region => (
                   <option key={ region.id } value={ region.id }>{ region.region_name }</option>
                 ))}
@@ -102,7 +117,7 @@ function InsertPopup({ form, insertPopup, setInsertPopup, board, submitFunc, han
             { /* Submission monkey input: allows the user to select the monkey they achieved their submission on from a dropdown. */ }
             <div className="levelboard-input-group">
               <label htmlFor="monkey_id">Monkey: </label>
-              <select id="monkey_id" value={ form.values.monkey_id } onChange={ (e) => handleChangeFunc(e, game) }>
+              <select id="monkey_id" value={ form.values.monkey_id } onChange={ (e) => handleChange(e) }>
                 { game.monkey.map((monkey) => (
                   <option key={ monkey.id } value={ monkey.id }>{ monkey.monkey_name }</option>
                 ))}
@@ -116,7 +131,7 @@ function InsertPopup({ form, insertPopup, setInsertPopup, board, submitFunc, han
                 id="proof"
                 type="url"
                 value={ form.values.proof }
-                onChange={ (e) => handleChangeFunc(e, game) }
+                onChange={ (e) => handleChange(e) }
               />
 
               { /* If the error.proof field is defined, render that underneath the proof field. */ }
@@ -131,7 +146,7 @@ function InsertPopup({ form, insertPopup, setInsertPopup, board, submitFunc, han
                 id="comment"
                 type="text"
                 value={ form.values.comment }
-                onChange={ (e) => handleChangeFunc(e, game) }
+                onChange={ (e) => handleChange(e) }
                 disabled={ user.profile.id !== form.values.profile_id }
               />
 
@@ -150,7 +165,7 @@ function InsertPopup({ form, insertPopup, setInsertPopup, board, submitFunc, han
                   id="message"
                   type="text"
                   value={ form.values.message }
-                  onChange={ (e) => handleChangeFunc(e, game) }
+                  onChange={ (e) => handleChange(e) }
                 />
 
                 { /* If the error.message field is defined, render that underneath the proof field. */ }
@@ -165,7 +180,7 @@ function InsertPopup({ form, insertPopup, setInsertPopup, board, submitFunc, han
                 id="live"
                 type="checkbox"
                 checked={ form.values.live }
-                onChange={ (e) => handleChangeFunc(e, game) }
+                onChange={ (e) => handleChange(e) }
               />
             </div>
 

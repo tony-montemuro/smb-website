@@ -22,11 +22,12 @@ const NotificationUpdate = () => {
             }
 
         } catch (error) {
-            // delete & update will be error in caller function. approvals & inserts are handled here
-            // in a higher-up function
-            if (notification.notif_type === "approve" || notification.notif_type === "insert") {
+            // special case: approve notification error are handled in this function, while all others are handled in caller functions
+            if (notification.notif_type === "approve") {
                 console.log(error);
                 alert(error.message);
+
+            // general case: error is handled by caller function
             } else {
                 throw error;
             }

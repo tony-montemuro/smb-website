@@ -9,7 +9,7 @@ const AllSubmissionUpdate = () => {
      // 1.) submission: a submission object, which has all fields matching the all_submission table
      // POSTCONDITIONS (2 possible outcomes):
      // if the query is successful, the function will simply return
-     // if the query is unsuccessful, the function will alert the user of the error, and return
+     // if the query is unsuccessful, the function will throw an error, which will be handled by the caller function
      const insertSubmission = async submission => {
         try {
             const { error } = await supabase
@@ -22,8 +22,8 @@ const AllSubmissionUpdate = () => {
             }
             
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            // handle error in caller function
+            throw error;
         }
     };
 

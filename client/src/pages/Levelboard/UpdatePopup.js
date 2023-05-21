@@ -49,8 +49,14 @@ const UpdatePopup = () => {
     } = LevelboardUtils();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
-	const fillForm = (submission, type, levelName, profileId) => {
-		const formVals = submission2Form(submission, type, levelName, profileId);
+    // PRECONDITIONS (3 parameters):
+    // 1.) submission: a submission object, which contains information about the current submission
+    // 2.) type: a string, either "score" or "time", which is defined in the URL
+    // 3.) levelName: a valid level name string, which is defined in the URL
+    // POSTCONDITIONS (1 possible outcome)
+    // the submission is transformed into a format compatible with the form, and is updated by calling the dispatchForm() function
+	const fillForm = (submission, type, levelName) => {
+		const formVals = submission2Form(submission, type, levelName, submission.profile.id);
 		dispatchForm({ field: "values", value: formVals });
 	};
 
@@ -75,6 +81,13 @@ const UpdatePopup = () => {
     };
 
     // FUNCTION 3: getSubmissionFromForm - takes form data, and converts to a submission object
+    // PRECONDITIONS (4 parameters):
+    // 1.) formVals: an object that stores the updated submission form values
+    // 2.) date: a string representing the backend date of a submission
+    // 3.) id: a string representing the id of the submission
+    // 4.) oldSubmission: a submission object, which represents the submission pre-update
+    // POSTCONDITIONS (1 possible outcome):
+    // the parameters are used to transform form data into a submission object which the database can accept 
     const getSubmissionFromForm = (formVals, date, id, oldSubmission) => {
         // create our new submission object, which is equivelent to formVals minus the message field
         const { message, ...submission } = formVals;
@@ -132,6 +145,14 @@ const UpdatePopup = () => {
     };
 
     // FUNCTION 5: handleSubmit - function that is called when the user submits the form
+    // PRECONDITIONS (2 parameters):
+    // 1.) e: an event object which is generated when the user submits the update submission form
+    // 2.) submission: a submission object, which represents the submission pre-update
+    // POSTCONDITIONS (3 possible outcomes):
+    // if the form fails to validate, the function will return early, and the user will be shown the errors
+    // if the form successfully validates, but the data fails to submit, the submission process is halted, and the user is displayed an
+    // error message
+    // if the form successfully validates, and the data successfully submits, then the page is reloaded
     const handleSubmit = async (e, submission) => {
         // initialize submission
 		e.preventDefault();
@@ -182,8 +203,6 @@ const UpdatePopup = () => {
                 alert(error.message);
                 
             }
-
-            
         };
     };
 

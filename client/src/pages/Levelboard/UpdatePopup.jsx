@@ -35,7 +35,7 @@ function UpdatePopup({ updatePopup, setUpdatePopup }) {
   // code that is executed when the component mounts, or when updatePopup is modified
   useEffect(() => {
     if (updatePopup) {
-      fillForm(updatePopup, type, levelName, updatePopup.profile.id); 
+      fillForm(updatePopup, type, levelName); 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updatePopup]); 

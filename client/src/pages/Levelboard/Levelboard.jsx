@@ -39,17 +39,14 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	// states and functions from js file
 	const { 
 		board,
-		form,
 		deleteSubmission,
 		updatePopup,
 		setBoard,
 		setupBoard,
 		setDeleteSubmission,
-		handleInsertChange,
 		setDelete,
 		setUpdate,
-		setBoardReport,
-		submitRecord
+		setBoardReport
 	} = LevelboardLogic();
 
 	// helper functions
@@ -82,7 +79,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	}, [user, location.pathname]);
 
 	/* ===== LEVELBOARD COMPONENT ===== */
-	return level && board.records && form.values ?
+	return level && board.records ?
 		// Levelboard header - Contains general information about them game and board
 		<>
 			<div className="levelboard-header">
@@ -93,7 +90,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 					{ /* Previous level button */ }
 					{ board.adjacent.prev && 
 						<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.prev }` }>
-							<button disabled={ form.submitting }>←Prev</button>
+							<button>←Prev</button>
 						</Link>
 					}
 
@@ -103,7 +100,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 					{ /* Next level button */ }
 					{ board.adjacent.next &&
 					<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.next }` }>
-						<button disabled={ form.submitting }>Next→</button>
+						<button>Next→</button>
 					</Link>
 					}
 					
@@ -127,7 +124,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 					chart_type field in the level state is set to "both" */ }
 					{ level.chart_type === "both" &&
 						<Link to={ `/games/${ abb }/${ category }/${ otherType }/${ level.name }` }>
-							<button disabled={ form.submitting }>{ capitalize(otherType) } Board</button>
+							<button>{ capitalize(otherType) } Board</button>
 						</Link>
 					}
 
@@ -141,7 +138,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 						type="checkbox"
 						checked={ levelboardState === "live" ? true : false }
 						onChange={ () => setLevelboardState(levelboardState === "live" ? "all" : "live") }
-						disabled={ form.submitting }
 					/>
 
 				</div>
@@ -194,12 +190,9 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			<DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } />
 			<ReportPopup board={ board } setBoard={ setBoard } />
 			<InsertPopup 
-				form={ form }
 				insertPopup={ insertPopup } 
 				setInsertPopup={ setInsertPopup } 
-				board={ board }
-				handleChangeFunc={ handleInsertChange }
-				submitFunc={ submitRecord } 
+				submissions={ board.records }
 			/>
 			<UpdatePopup
 				updatePopup={ updatePopup }
