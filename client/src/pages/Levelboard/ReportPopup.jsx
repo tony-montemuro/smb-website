@@ -1,27 +1,45 @@
 /* ===== IMPORTS ===== */
 import "./Levelboard.css";
+import { useLocation } from "react-router-dom";
+import FrontendHelper from "../../helper/FrontendHelper";
 import ReportPopupLogic from "./ReportPopup.js";
+import Username from "../../components/Username/Username";
 
-function ReportPopup({ board, setBoard }) {
+function ReportPopup({ submission, setSubmission }) {
+  /* ===== VARIABLES ===== */
+  const location = useLocation();
+	const type = location.pathname.split("/")[4];
+
   /* ===== STATES AND FUNCTIONS ===== */
+
+  // states and functions from js file
   const { form, reportMessage, handleReport, handleChange, closePopup } = ReportPopupLogic();
+
+  // helper functions
+  const { recordB2F } = FrontendHelper();
 
   /* ===== REPORT POPUP COMPONENT ===== */
   return (
-    board.report &&
+    submission &&
       <div className="levelboard-popup">
         <div className="levelboard-popup-inner">
 
           { /* Close popup button */ }
           <div className="report-levelboard-popup">
-            <button onClick={ () => closePopup(board, setBoard) }>Close</button>
+            <button onClick={ () => closePopup(setSubmission) }>Close</button>
           </div>
 
-          { /* Report description for user */ }
-          <h2>Are you sure you want to report the following { board.report.type }: { board.report.record } by { board.report.username }?</h2>
-          <p>In your message, please explain your reasoning for reporting the submission. This message will be delivered to { board.report.username },
-          as well as the moderation team.</p>
+          { /* Report popup header */ }
+          <h2>Are you sure you want to report the following { type }: { recordB2F(submission.details.record, type) } by&nbsp; 
+          <Username country={ submission.profile.country } profileId={ submission.profile.id } username={ submission.profile.username } />?</h2>
+
+          { /* Report popup description */ }
+          <span>In your message, please explain your reasoning for reporting the submission. This message will be delivered to&nbsp;
+          <Username country={ submission.profile.country } profileId={ submission.profile.id } username={ submission.profile.username } />,
+          as well as the moderation team.</span>
+
           <p><b>Note:</b> <i>Please only report once! Repeatedly reporting a single submission can result in a permanent account ban!</i></p>
+
           <p><i>You will know that a report was successful if you get a little message below the 'Yes' and 'No' buttons.</i></p>
           
           { /* Report form */ }
@@ -42,10 +60,10 @@ function ReportPopup({ board, setBoard }) {
           </form>
 
           { /* Button that, when pressed, reports the submission */ }
-          <button onClick={ () => handleReport(board.report) } disabled={ reportMessage }>Yes</button>
+          <button onClick={ () => handleReport(submission) } disabled={ reportMessage }>Yes</button>
 
           { /* Button that, when pressed, closes the popup */ }
-          <button onClick={ () => closePopup(board, setBoard) } disabled={ reportMessage }>No</button>
+          <button onClick={ () => closePopup(setSubmission) } disabled={ reportMessage }>No</button>
 
           { /* If the report message is set, render it at the bottom of the popup */ }
           { reportMessage && <p>{ reportMessage }</p> }

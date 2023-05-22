@@ -1,12 +1,18 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { StaticCacheContext, UserContext } from "../../Contexts";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
-const DeletePopup = () => {
+const ReportPopup = () => {
     /* ===== VARIABLES ===== */
     const formInit = { message: "", error: null };
+    const location = useLocation();
+	const path = location.pathname.split("/");
+	const abb = path[2];
+	const type = path[4];
+	const levelName = path[5];
 
     /* ===== CONTEXTS ===== */
 
@@ -29,12 +35,12 @@ const DeletePopup = () => {
     // FUNCTION 1 - handleReport: given the report object, send an array of reports to all moderators, and the owner
     // of the submission
     // PRECONDITIONS (1 parameter):
-    // 1.) report: an object that contains information about the reported submission. comes from the board state in Levelboard.js.
+    // 1.) submission: a submission object that contains information about the reported submission
     // POSTCONDITIONS (3 possible outcomes):
     // if the message is not validated, the error field of form is updated by calling setForm() function, and the function returns early
     // if the message is validated, and at least one notification fails to insert, user is alerted of the error
     // if the message is validated, and all notifications insert, reportMessage is updated by calling the setReportMessage function
-    const handleReport = async (report) => {
+    const handleReport = async (submission) => {
         // first, verify that the message is valid
         const error = validateMessage(form.message, true);
         if (error) {
@@ -50,11 +56,11 @@ const DeletePopup = () => {
         const notifObject = {
             notif_type: "report",
             creator_id: user.profile.id,
-            game_id: report.game_id,
-            level_id: report.level_id,
-            score: report.type === "score" ? true : false,
-            record: report.record,
-            submission_id: report.id,
+            game_id: abb,
+            level_id: levelName,
+            score: type === "score" ? true : false,
+            record: submission.details.record,
+            submission_id: submission.details.id,
             message: form.message
         };
 
@@ -66,7 +72,7 @@ const DeletePopup = () => {
 
         // finally, push the function that inserts a notification to the database for the user being reported
         notifPromises.push(
-            insertNotification({ ...notifObject, profile_id: report.profile_id })
+            insertNotification({ ...notifObject, profile_id: submission.profile.id })
         );
           
         // now, let's actually perform all the queries
@@ -75,7 +81,7 @@ const DeletePopup = () => {
             await Promise.all(notifPromises);
         
             // finally, set the report message. this will show to the user to let them know the report was a success
-            setReportMessage(`Report was successful. All moderators, as well as ${ report.username }, have been notified.`);
+            setReportMessage(`Report was successful. All moderators, as well as ${ submission.details.username }, have been notified.`);
     
         } catch (error) {
             console.log(error);
@@ -93,21 +99,20 @@ const DeletePopup = () => {
         setForm({ error: null, message: e.target.value });
     };
 
-    // FUNCTION 3 - closePopup: given the board state, and it's corresponding function (setBoard), close the popup
-    // PRECONDITIONS (2 parameters):
-    // 1.) board: the board state, which is defined in Levelboard.js
-    // 2.) setBoard: the function that allows you to update the board state
+    // FUNCTION 3 - closePopup: given the setSubmission function, reset & close the popup
+    // PRECONDITIONS (1 parameter):
+    // 1.) setSubmission - function used to update the reportSubmission state in Levelboard.jsx. when set to null, the popup will close
     // POSTCONDITIONS (1 possible outcome):
-    // the form is set to it's default value by calling setForm(formInit), setReportMessage is set to it's default value
-    // by calling setReportMessage(null), and the report popup is closed by calling setBoard({ ...board, report: null })
-    const closePopup = (board, setBoard) => {
+    // the form is set to it's default value by calling setForm() with formInit argument, setReportMessage is set to it's default value
+    // by calling setReportMessage() with a null argument, and the report popup is closed by calling setSubmission() with a null argument
+    const closePopup = (setSubmission) => {
         setForm(formInit);
         setReportMessage(null);
-        setBoard({ ...board, report: null });
+        setSubmission(null);
     };
 
     return { form, reportMessage, handleReport, handleChange, closePopup };
 };
 
 /* ===== EXPORTS ===== */
-export default DeletePopup;
+export default ReportPopup;

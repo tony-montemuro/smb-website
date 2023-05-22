@@ -35,18 +35,16 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	const [level, setLevel] = useState(undefined);
 	const [levelboardState, setLevelboardState] = useState("live");
 	const [insertPopup, setInsertPopup] = useState(false);
+	const [reportSubmission, setReportSubmission] = useState(undefined);
+	const [updateSubmission, setUpdateSubmission] = useState(undefined);
 
 	// states and functions from js file
 	const { 
 		board,
 		deleteSubmission,
-		updateSubmission,
-		setBoard,
 		setupBoard,
 		setDeleteSubmission,
-		setDelete,
-		setUpdateSubmission,
-		setBoardReport
+		setDelete
 	} = LevelboardLogic();
 
 	// helper functions
@@ -129,6 +127,8 @@ function Levelboard({ imageReducer, submissionReducer }) {
 					}
 
 				</div>
+
+				{ /* Levelboard toggle - contains a toggle to switch the levelboard between the live and all states */ }
 				<div className="levelboard-toggle">
 
 					{ /* All-live toggle: Toggles the levelboard between all and live, allowing both arrays of submissions to be rendered. */ }
@@ -175,7 +175,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 							return <LevelboardRow 
 								submission={ val } 
 								imageReducer={ imageReducer } 
-								reportFunc={ setBoardReport } 
+								reportFunc={ setReportSubmission } 
 								deleteFunc={ setDelete }
 								updateFunc={ setUpdateSubmission }
 								key={ val.details.id } 
@@ -188,7 +188,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 
 			{ /* Popups */ }
 			<DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } />
-			<ReportPopup board={ board } setBoard={ setBoard } />
+			<ReportPopup submission={ reportSubmission } setSubmission={ setReportSubmission } />
 			<InsertPopup 
 				popup={ insertPopup } 
 				setPopup={ setInsertPopup } 

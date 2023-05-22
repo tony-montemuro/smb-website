@@ -20,12 +20,11 @@ const Levelboard = () => {
 	const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
-	const boardInit = { records: null, report: null, delete: null };
+	const boardInit = { records: null, report: null };
 
-	/* ===== STATES AND REDUCERS ===== */
+	/* ===== STATES ===== */
 	const [board, setBoard] = useState(boardInit);
 	const [deleteSubmission, setDeleteSubmission] = useState(undefined);
-	const [updateSubmission, setUpdateSubmission] = useState(null);
 
 	/* ===== FUNCTIONS ===== */
 
@@ -138,26 +137,7 @@ const Levelboard = () => {
 		setBoard({ ...board, records: { all: all, live: live }, adjacent: { prev: prev, next: next } });
 	};
 
-	// FUNCTION 5: setBoardReport - sets the report field of the board state when user attempts to report a record
-	// PRECONDITIONS (1 parameter):
-	// 1.) id: an integer, representing the user's profile unique id. this parameter is used to find the record that belongs to that user
-	// POSTCONDITIONS (1 possible outcome):
-	// the record belonging to id is found, and this information is used to update the report field of the board state by calling
-	// the setBoard() function. when this field is set to a non-null value, the report popup will render
-	const setBoardReport = id => {
-		const row = board.records.all.find(row => row.profile.id === id);
-		setBoard({ ...board, report: {
-			id: row.details.id,
-			profile_id: row.profile.id,
-			game_id: abb,
-			level_id: levelName,
-			type: type,
-			username: row.profile.username,
-			record: row.details.record
-		}});
-	};
-
-	// FUNCTION 6: setDelete - sets the deleteSubmission state when moderator attempts to delete a record
+	// FUNCTION 5: setDelete - sets the deleteSubmission state when moderator attempts to delete a record
 	// PRECONDITIONS (1 parameter):
 	// 1.) id: an integer, representing the user's profile unique id. this parameter is used to find the record that belongs to that user
 	// POSTCONDITIONS (1 possible outcome):
@@ -179,13 +159,9 @@ const Levelboard = () => {
 	return {
 		board,
 		deleteSubmission,
-		updateSubmission,
-		setBoard,
 		setupBoard,
 		setDeleteSubmission,
-		setDelete,
-		setUpdateSubmission,
-		setBoardReport
+		setDelete
 	};
 };  
 

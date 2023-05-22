@@ -63,7 +63,7 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
       { user &&
         <td>
           <button 
-            onClick={ () => reportFunc(submission.profile.id) }
+            onClick={ () => reportFunc(submission) }
             disabled={ user.profile && user.profile.id === submission.profile.id }
           >
             ⚠️
