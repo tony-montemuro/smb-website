@@ -54,6 +54,7 @@ function FilteredSubmissionRow({ submission, deleteFunc }) {
 
       { /* Delete Button - Render delete button for moderators only so that they can delete a submission. */ }
       { user.is_mod && <td><button onClick={ () => deleteFunc(submission) }>❌</button></td> }
+      
     </tr>
   );
 };

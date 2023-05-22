@@ -16,7 +16,6 @@ const Levelboard = () => {
 	/* ===== VARIABLES ===== */
 	const location = useLocation();
 	const path = location.pathname.split("/");
-	const abb = path[2];
 	const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
@@ -137,31 +136,11 @@ const Levelboard = () => {
 		setBoard({ ...board, records: { all: all, live: live }, adjacent: { prev: prev, next: next } });
 	};
 
-	// FUNCTION 5: setDelete - sets the deleteSubmission state when moderator attempts to delete a record
-	// PRECONDITIONS (1 parameter):
-	// 1.) id: an integer, representing the user's profile unique id. this parameter is used to find the record that belongs to that user
-	// POSTCONDITIONS (1 possible outcome):
-	// the record belonging to id is found, and this information is used to update the deleteSubmission state by calling
-	// the setDeleteSubmission() function. when this field is set to a non-null value, the delete popup will render
-	const setDelete = id => {
-		const row = board.records.all.find(row => row.profile.id === id);
-		setDeleteSubmission({
-			id: row.details.id,
-			profile_id: row.profile.id,
-			game_id: abb,
-			level_id: levelName,
-			type: type,
-			username: row.profile.username,
-			record: row.details.record
-		});
-	};
-
 	return {
 		board,
 		deleteSubmission,
 		setupBoard,
-		setDeleteSubmission,
-		setDelete
+		setDeleteSubmission
 	};
 };  
 

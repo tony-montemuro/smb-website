@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { UserContext } from "../../Contexts";
 import AllSubmissionDelete from "../../database/delete/AllSubmissionDelete";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
@@ -7,6 +8,11 @@ import ValidationHelper from "../../helper/ValidationHelper";
 
 const DeletePopup = () => {
     /* ===== VARIABLES ===== */
+    const location = useLocation();
+	const path = location.pathname.split("/");
+	const abb = path[2];
+	const type = path[4];
+	const levelName = path[5];
     const formInit = { message: "", error: null };
     
     /* ===== CONTEXTS ===== */
@@ -49,15 +55,14 @@ const DeletePopup = () => {
 
     // FUNCTION 2: handleDelete - general function called when a moderator deletes a run (NOT belonging to themselves)
     // PRECONDITIONS (1 parameter, 1 condition):
-    // 1.) deleteObj: an object that contains information about the submission to be deleted. comes from the board state in Levelboard.js.
-    // this submission must NOT belong to the current user
+    // 1.) submission: a submission object that contains information about the submission to be deleted
     // POSTCONDITIONS (3 possible outcomes):
     // if the message field in form is not validated, this function will update the error state in the setForm field by calling the
     // setForm() function, and return early
     // if the message field in form is validated, and the database queries are successful, the function will simply reload the page
     // if the message field in form is validated, but the database queries are unsuccessful, the user will be informed of the error
     // that caused the queries to fail, and the page is NOT reloaded
-    const handleDelete = async (deleteObj) => {
+    const handleDelete = async (submission) => {
         // first, verify that the message is valid
         const error = validateMessage(form.message, false);
 
@@ -70,19 +75,19 @@ const DeletePopup = () => {
         // notification object
         const notification = { 
             notif_type: "delete",
-            profile_id: deleteObj.profile_id,
+            profile_id: submission.profile.id,
             creator_id: user.profile.id,
             message: form.message,
-            game_id: deleteObj.game_id,
-            level_id: deleteObj.level_id,
-            score: deleteObj.type === "score" ? true : false,
-            record: deleteObj.record
+            game_id: abb,
+            level_id: levelName,
+            score: type === "score" ? true : false,
+            record: submission.details.record
         };
 
         // perform database queries
         try {
             // first, remove the submission
-            await deleteSubmission(deleteObj.id);
+            await deleteSubmission(submission.details.id);
 
             // then, insert the notification
             await insertNotification(notification);
@@ -91,8 +96,15 @@ const DeletePopup = () => {
             window.location.reload();
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            if (error.code === "42501" && error.message === 'new row violates row-level security policy "Enforce receiving profile exists [RESTRICTIVE]" for table "notification"') {
+                // special case: moderator attempted to update a submission for a profile who is unauthenticated. this is actually
+                // expected behavior, so let's proceed as if there were not issues
+                window.location.reload();
+            } else {
+                // general case: display error to user
+                console.log(error);
+                alert(error.message);
+            }
         }
     };
     

@@ -35,6 +35,7 @@ function SubmissionHistory() {
   const { game } = useContext(GameContext);
 
   /* ===== STATES & FUNCTIONS ====== */
+
   // states and functions from the js file
   const { submissions, deleteSubmission, profile, setDeleteSubmission, setProfile, getSubmissions, setDelete } = SubmissionHistoryLogic();
 
@@ -122,6 +123,7 @@ function SubmissionHistory() {
           { /* Table body - the actual content itself, rendered row by row given submission data */ }
           <tbody>
             { submissions.length > 0 ?
+
               // If any submissions exist, render them using the submission data.
               submissions.map(submission => {
                 return <FilteredSubmissionRow 
@@ -130,16 +132,21 @@ function SubmissionHistory() {
                   key={ submission.id }
                 />;
               })
+
             :
+
               // Otherwise, render a message to the client stating that the user specified in the path has not submitted to the level.
               <tr>
                 <td className="record-history-empty" colSpan={ user.is_mod ? TABLE_WIDTH+1 : TABLE_WIDTH }><i>This user has never submitted to this chart.</i></td>
               </tr>
+
             }
           </tbody>
 
         </table>
       </div>
+
+      { /* Delete Popup */ }
       <DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } />
     </>
    

@@ -77,7 +77,7 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
 
       { /* Delete button: a button that allows moderators to delete a submission. This button should only render if the current
       authenticated user is a moderator. */ }
-      { user && user.is_mod && <td><button onClick={ () => deleteFunc(submission.profile.id) }>❌</button></td> }
+      { user && user.is_mod && <td><button onClick={ () => deleteFunc(submission) }>❌</button></td> }
 
     </tr>
   );

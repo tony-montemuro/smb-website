@@ -6,11 +6,7 @@ import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 const SubmissionHistory = () => {
     /* ===== VARIABLES ===== */
     const location = useLocation();
-    const path = location.pathname.split("/");
-    const abb = path[2];
-    const type = path[4];
-    const levelName = path[5];
-    const profileId = path[6];
+    const profileId = location.pathname.split("/")[6];
 
     /* ===== STATES ===== */
     const [submissions, setSubmissions] = useState(undefined);
@@ -45,13 +41,8 @@ const SubmissionHistory = () => {
     // setDeleteSubmission() function
     const setDelete = (submission) => {
         setDeleteSubmission({
-            id: submission.id,
-			profile_id: profileId,
-			game_id: abb,
-			level_id: levelName,
-			type: type,
-			username: profile.username,
-			record: submission.record
+            details: { id: submission.id, record: submission.record },
+            profile: { id: profileId, username: profile.username, country: profile.country.iso2 }
         });
     };
 

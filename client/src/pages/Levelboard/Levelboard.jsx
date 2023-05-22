@@ -43,8 +43,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 		board,
 		deleteSubmission,
 		setupBoard,
-		setDeleteSubmission,
-		setDelete
+		setDeleteSubmission
 	} = LevelboardLogic();
 
 	// helper functions
@@ -176,7 +175,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 								submission={ val } 
 								imageReducer={ imageReducer } 
 								reportFunc={ setReportSubmission } 
-								deleteFunc={ setDelete }
+								deleteFunc={ setDeleteSubmission }
 								updateFunc={ setUpdateSubmission }
 								key={ val.details.id } 
 							/>
