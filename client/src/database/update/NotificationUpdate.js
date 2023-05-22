@@ -14,7 +14,7 @@ const NotificationUpdate = () => {
         try {
             const { error } = await supabase
                 .from("notification")
-                .insert(notification, { returning: 'minimal' });
+                .insert(notification);
 
             // error handling
             if (error) {
@@ -22,13 +22,19 @@ const NotificationUpdate = () => {
             }
 
         } catch (error) {
-            // special case: approve notification error are handled in this function, while all others are handled in caller functions
+            // special case #1: approve notification error are handled in this function, while all others are handled in caller functions
             if (notification.notif_type === "approve") {
                 console.log(error);
                 alert(error.message);
+            }
+            // special case #2: report notification attempted to be sent to an unauthenticated user. this is actually expected behavior,
+            // so do not throw an error; just return
+            else if (notification.notif_type === "report" && error.code === "42501" && error.message === 'new row violates row-level security policy "Enforce receiving profile exists [RESTRICTIVE]" for table "notification"') {
+                return;
+            }
 
             // general case: error is handled by caller function
-            } else {
+            else {
                 throw error;
             }
         }

@@ -7,7 +7,7 @@ import ValidationHelper from "../../helper/ValidationHelper";
 
 const ReportPopup = () => {
     /* ===== VARIABLES ===== */
-    const formInit = { message: "", error: null };
+    const formInit = { message: "", error: null, submitting: false, submitted: false };
     const location = useLocation();
 	const path = location.pathname.split("/");
 	const abb = path[2];
@@ -24,7 +24,6 @@ const ReportPopup = () => {
 
     /* ===== STATES ===== */
     const [form, setForm] = useState(formInit);
-    const [reportMessage, setReportMessage] = useState(null);
 
     /* ===== FUNCTIONS ===== */
 
@@ -41,16 +40,19 @@ const ReportPopup = () => {
     // if the message is validated, and at least one notification fails to insert, user is alerted of the error
     // if the message is validated, and all notifications insert, reportMessage is updated by calling the setReportMessage function
     const handleReport = async (submission) => {
-        // first, verify that the message is valid
+        // first, update the form to prevent multiple submissions
+        setForm({ ...form, submitting: true });
+
+        // next, verify that the message is valid
         const error = validateMessage(form.message, true);
         if (error) {
-            setForm({ ...form, error: error });
+            setForm({ ...form, error: error, submitting: false });
             return;
         }
     
         // now, let's get the list of mods that DOES NOT include the current user if they are a moderator
         const moderators = staticCache.moderators;
-        const relevantMods = moderators.filter(row => row.profile_id !== user.profile.id);
+        const relevantMods = moderators.filter(row => row.profile_id !== user.profile.id && row.profile_id !== submission.profile.id);
     
         // define our base notifObject
         const notifObject = {
@@ -80,8 +82,9 @@ const ReportPopup = () => {
             // await promises to complete
             await Promise.all(notifPromises);
         
-            // finally, set the report message. this will show to the user to let them know the report was a success
-            setReportMessage(`Report was successful. All moderators, as well as ${ submission.details.username }, have been notified.`);
+            // finally, update form submitting & submitted fields. this will ensure the form does not allow resubmits, and render a success
+            // message to the user
+            setForm({ ...form, submitting: false, submitted: true });
     
         } catch (error) {
             console.log(error);
@@ -103,15 +106,14 @@ const ReportPopup = () => {
     // PRECONDITIONS (1 parameter):
     // 1.) setSubmission - function used to update the reportSubmission state in Levelboard.jsx. when set to null, the popup will close
     // POSTCONDITIONS (1 possible outcome):
-    // the form is set to it's default value by calling setForm() with formInit argument, setReportMessage is set to it's default value
-    // by calling setReportMessage() with a null argument, and the report popup is closed by calling setSubmission() with a null argument
+    // the form is set to it's default value by calling setForm() with formInit argument, and the report popup is closed by calling 
+    // setSubmission() with a null argument
     const closePopup = (setSubmission) => {
         setForm(formInit);
-        setReportMessage(null);
         setSubmission(null);
     };
 
-    return { form, reportMessage, handleReport, handleChange, closePopup };
+    return { form, handleReport, handleChange, closePopup };
 };
 
 /* ===== EXPORTS ===== */

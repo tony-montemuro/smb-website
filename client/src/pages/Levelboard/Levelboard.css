@@ -92,8 +92,12 @@
     margin-right: 2.5px;
 }
 
-.report-levelboard-popup {
+.levelboard-report-close {
     text-align: right;
+}
+
+.levelboard-report-message {
+    margin-top: 5px;
 }
 
 .levelboard-update {
