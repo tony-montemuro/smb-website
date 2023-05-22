@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import InsertPopupLogic from "./InsertPopup.js";
 
-function InsertPopup({ insertPopup, setInsertPopup, submissions }) {
+function InsertPopup({ popup, setPopup, submissions }) {
   /* ===== CONTEXTS ===== */
 
 	// static cache state from static cache context
@@ -29,29 +29,29 @@ function InsertPopup({ insertPopup, setInsertPopup, submissions }) {
   /* ===== STATES & FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { form, fillForm, handleChange, handleSubmit } = InsertPopupLogic(); 
+  const { form, fillForm, handleChange, handleSubmit, closePopup } = InsertPopupLogic(); 
   
   // helper functions
   const { capitalize, dateB2F } = FrontendHelper();
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component mounts, and when the insertPopup state is changed
+  // code that is executed when the component mounts, and when the popup state is changed
   useEffect(() => {
-    if (insertPopup) {
+  if (popup) {
       fillForm();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [insertPopup]);
+  }, [popup]);
 
   /* ===== FORM POPUP COMPONENT ===== */ 
-  return insertPopup && form.values &&
+  return popup && form.values &&
     <div className="levelboard-popup">
       <div className="levelboard-popup-inner">
         
         { /* Close popup button */ }
         <div className="report-levelboard-popup">
-          <button onClick={ () => setInsertPopup(false) }>Close</button>
+          <button onClick={ () => closePopup(setPopup) }>Close</button>
         </div>
 
         { /* Levelboard submit - contains the form header and form for submitting submissions to the database */ }

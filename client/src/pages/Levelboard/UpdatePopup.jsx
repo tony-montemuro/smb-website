@@ -6,13 +6,13 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import UpdatePopupLogic from "./UpdatePopup.js";
 import Username from "../../components/Username/Username";
 
-function UpdatePopup({ updatePopup, setUpdatePopup }) {
+function UpdatePopup({ submission, setSubmission }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const path = location.pathname.split("/");
   const type = path[4];
   const levelName = path[5];
-  const profile = updatePopup ? updatePopup.profile : null;
+  const profile = submission ? submission.profile : null;
 
   /* ===== CONTEXTS ===== */
 
@@ -25,7 +25,7 @@ function UpdatePopup({ updatePopup, setUpdatePopup }) {
   /* ===== STATES & FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { form, fillForm, handleChange, handleSubmit } = UpdatePopupLogic();
+  const { form, fillForm, handleChange, handleSubmit, closePopup } = UpdatePopupLogic();
 
   // helper functions
   const { capitalize, recordB2F, dateB2F } = FrontendHelper();
@@ -34,20 +34,20 @@ function UpdatePopup({ updatePopup, setUpdatePopup }) {
 
   // code that is executed when the component mounts, or when updatePopup is modified
   useEffect(() => {
-    if (updatePopup) {
-      fillForm(updatePopup, type, levelName); 
+    if (submission) {
+      fillForm(submission, type, levelName); 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updatePopup]); 
+  }, [submission]); 
   
   /* ===== UPDATE POPUP ===== */
-  return updatePopup && form.values &&
+  return submission && form.values &&
     <div className="levelboard-popup">
       <div className="levelboard-popup-inner">
 
         { /* Close popup button */ }
         <div className="report-levelboard-popup">
-          <button onClick={ () => setUpdatePopup(null) }>Close</button>
+          <button onClick={ () => closePopup(setSubmission) }>Close</button>
         </div>
 
         { /* Levelboard update */ }
@@ -61,7 +61,7 @@ function UpdatePopup({ updatePopup, setUpdatePopup }) {
           the</i> <b>Submit a Score</b> <i>button.</i></p>
 
           { /* Update submission form */ }
-          <form onSubmit={ (e) => handleSubmit(e, updatePopup) }>
+          <form onSubmit={ (e) => handleSubmit(e, submission) }>
 
             { /* Submission user: display the username of the submission, if the owner of the submission is NOT the same
             as the current user. this will only ever show up for moderators. */ }
@@ -72,7 +72,7 @@ function UpdatePopup({ updatePopup, setUpdatePopup }) {
             }
 
             { /* Submission record: simply display the record, which is not able to be changed in this input. */ }
-            <p>{ capitalize(type) }: { recordB2F(updatePopup.details.record) }</p>
+            <p>{ capitalize(type) }: { recordB2F(submission.details.record) }</p>
 
             { /* Submission date input: allows the user to modify the date they achieved their submission. */ }
             <div className="levelboard-input-group">

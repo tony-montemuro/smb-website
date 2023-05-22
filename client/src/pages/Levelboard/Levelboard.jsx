@@ -40,12 +40,12 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	const { 
 		board,
 		deleteSubmission,
-		updatePopup,
+		updateSubmission,
 		setBoard,
 		setupBoard,
 		setDeleteSubmission,
 		setDelete,
-		setUpdate,
+		setUpdateSubmission,
 		setBoardReport
 	} = LevelboardLogic();
 
@@ -115,7 +115,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 					{ /* Button that pulls up the update submission popup. NOTE: this button should only render if the user has a profile,
 					and a submission on the current levelboard. */ }
 					{ user.profile && board.records.all.some(row => row.profile.id === user.profile.id) &&
-						<button onClick={ () => setUpdate(board.records.all.find(row => row.profile.id === user.profile.id)) }>
+						<button onClick={ () => setUpdateSubmission(board.records.all.find(row => row.profile.id === user.profile.id)) }>
 							Update Submission
 						</button>
 					}
@@ -177,7 +177,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 								imageReducer={ imageReducer } 
 								reportFunc={ setBoardReport } 
 								deleteFunc={ setDelete }
-								updateFunc={ setUpdate }
+								updateFunc={ setUpdateSubmission }
 								key={ val.details.id } 
 							/>
 						})}
@@ -190,13 +190,13 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			<DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } />
 			<ReportPopup board={ board } setBoard={ setBoard } />
 			<InsertPopup 
-				insertPopup={ insertPopup } 
-				setInsertPopup={ setInsertPopup } 
+				popup={ insertPopup } 
+				setPopup={ setInsertPopup } 
 				submissions={ board.records }
 			/>
 			<UpdatePopup
-				updatePopup={ updatePopup }
-				setUpdatePopup={ setUpdate }
+				submission={ updateSubmission }
+				setSubmission={ setUpdateSubmission }
 			/>
 
 		</>

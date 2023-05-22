@@ -16,9 +16,7 @@ const InsertPopup = () => {
     const formInit = { 
 		values: null, 
 		error: { record: null, proof: null, comment: null, message: null },
-		prevSubmitted: false,
-		submitting: false,
-		submitted: false
+		submitting: false
 	};
 
     /* ===== CONTEXTS ===== */
@@ -209,12 +207,23 @@ const InsertPopup = () => {
                 // general case: if there is an error, inform the user
                 console.log(error);
                 alert(error.message);
-                
+                dispatchForm({ field: "submitting", value: false });
             }
         };
 	};
 
-    return { form, fillForm, handleChange, handleSubmit }; 
+    // FUNCTION 6: closePopup - function that is activated when the user attempts to close the popup
+    // PRECONDITIONS (1 parameter):
+    // 1.) setPopup - function used to update the insertPopup state in Levelboard.jsx. when set to false, the popup will close
+    // POSTCONDITIONS (1 possible outcomes):
+    // the form is set to default values by calling the dispatchForm() function with the { field: "all" } argument, and the popup
+    // is set to false
+    const closePopup = (setPopup) => {
+        dispatchForm({ field: "all" });
+        setPopup(false);
+    };
+
+    return { form, fillForm, handleChange, handleSubmit, closePopup }; 
 };
 
 /* ===== EXPORTS ===== */

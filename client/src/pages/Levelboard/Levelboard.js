@@ -25,7 +25,7 @@ const Levelboard = () => {
 	/* ===== STATES AND REDUCERS ===== */
 	const [board, setBoard] = useState(boardInit);
 	const [deleteSubmission, setDeleteSubmission] = useState(undefined);
-	const [updatePopup, setUpdatePopup] = useState(null);
+	const [updateSubmission, setUpdateSubmission] = useState(null);
 
 	/* ===== FUNCTIONS ===== */
 
@@ -176,25 +176,15 @@ const Levelboard = () => {
 		});
 	};
 
-	// FUNCTION 7: setUpdate - function that is called user attempts to update a submission
-	// PRECONDITIONS (1 parameter):
-	// 1.) submission: a submission object. if a normal authenticated user is calling this function, it should ONLY be their own
-	// submission. if a moderator calls this function, it can be any submission to the levelboard
-	// POSTCONDITIONS (1 possible outcome):
-	// the updatePopup state is updated by calling the setUpdatePopup() function
-	const setUpdate = (submission) => {
-		setUpdatePopup(submission);
-	};
-
 	return {
 		board,
 		deleteSubmission,
-		updatePopup,
+		updateSubmission,
 		setBoard,
 		setupBoard,
 		setDeleteSubmission,
 		setDelete,
-		setUpdate,
+		setUpdateSubmission,
 		setBoardReport
 	};
 };  

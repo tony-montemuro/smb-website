@@ -7,7 +7,7 @@ import NotificationUpdate from "../../database/update/NotificationUpdate";
 
 const UpdatePopup = () => {
     /* ===== VARIABLES ===== */
-    const updateFormInit = {
+    const formInit = {
 		values: null,
 		error: { proof: null, comment: null },
         submitting: false
@@ -29,10 +29,12 @@ const UpdatePopup = () => {
 						...action.value
 					}
 				};
+            case "all":
+                return formInit;
 			default:
 				return { ...state, [action.field]: action.value };
 		}
-	}, updateFormInit);
+	}, formInit);
 
     /* ===== FUNCTIONS ===== */
 
@@ -201,12 +203,23 @@ const UpdatePopup = () => {
                 // general case: if there is an error, inform the user
                 console.log(error);
                 alert(error.message);
-                
+                dispatchForm({ field: "submitting", value: false });
             }
         };
     };
 
-    return { form, fillForm, handleChange, handleSubmit };
+    // FUNCTION 6: closePopup - function that is activated when the user attempts to close the popup
+    // PRECONDITIONS (1 parameter):
+    // 1.) setSubmission - function used to update the updateSubmission state in Levelboard.jsx. when set to null, the popup will close
+    // POSTCONDITIONS (1 possible outcomes):
+    // the form is set to default values by calling the dispatchForm() function with the { field: "all" } argument, and the popup
+    // is set to false
+    const closePopup = (setPopup) => {
+        dispatchForm({ field: "all" });
+        setPopup(null);
+    };
+
+    return { form, fillForm, handleChange, handleSubmit, closePopup };
 };
 
 /* ===== EXPORTS ===== */
