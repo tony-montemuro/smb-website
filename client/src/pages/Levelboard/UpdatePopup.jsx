@@ -46,8 +46,8 @@ function UpdatePopup({ submission, setSubmission }) {
       <div className="levelboard-popup-inner">
 
         { /* Close popup button */ }
-        <div className="report-levelboard-popup">
-          <button onClick={ () => closePopup(setSubmission) }>Close</button>
+        <div className="levelboard-popup-close-btn">
+          <button onClick={ () => closePopup(setSubmission) } disabled={ form.submitting }>Close</button>
         </div>
 
         { /* Levelboard update */ }

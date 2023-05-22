@@ -165,6 +165,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 
 							{ /* Delete header element should ONLY render if the current user is a moderator */ }
 							{ user && user.is_mod && <th>Delete</th> }
+							
 						</tr>
 					</thead>
 

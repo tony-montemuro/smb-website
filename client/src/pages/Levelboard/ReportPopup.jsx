@@ -24,7 +24,7 @@ function ReportPopup({ submission, setSubmission }) {
       <div className="levelboard-popup-inner">
 
         { /* Close popup button */ }
-        <div className="levelboard-report-close">
+        <div className="levelboard-popup-close-btn">
           <button onClick={ () => closePopup(setSubmission) } disabled={ form.submitting }>Close</button>
         </div>
 

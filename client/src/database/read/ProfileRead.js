@@ -24,7 +24,8 @@ const ProfileRead = () => {
                     discord,
                     featured_video,
                     video_description
-                `);
+                `)
+                .order("username");
 
             // error handling
             if (error && status !== 406) {

@@ -27,6 +27,7 @@ const NotificationUpdate = () => {
                 console.log(error);
                 alert(error.message);
             }
+            
             // special case #2: report notification attempted to be sent to an unauthenticated user. this is actually expected behavior,
             // so do not throw an error; just return
             else if (notification.notif_type === "report" && error.code === "42501" && error.message === 'new row violates row-level security policy "Enforce receiving profile exists [RESTRICTIVE]" for table "notification"') {

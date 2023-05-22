@@ -50,8 +50,8 @@ function InsertPopup({ popup, setPopup, submissions }) {
       <div className="levelboard-popup-inner">
         
         { /* Close popup button */ }
-        <div className="report-levelboard-popup">
-          <button onClick={ () => closePopup(setPopup) }>Close</button>
+        <div className="levelboard-popup-close-btn">
+          <button onClick={ () => closePopup(setPopup) } disabled={ form.submitting }>Close</button>
         </div>
 
         { /* Levelboard submit - contains the form header and form for submitting submissions to the database */ }
