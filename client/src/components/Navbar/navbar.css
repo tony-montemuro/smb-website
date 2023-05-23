@@ -1,19 +1,18 @@
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
+.nav-wrapper {
+    display: flex;
+    align-items: stretch;
+    height: 5vh;
 }
 
 .nav {
-    background-color: #333;
-    color: white;
     display: flex;
     justify-content: space-between;
     align-items: stretch;
     gap: 2rem;
     padding: 0 1rem;
+    width: 100%;
+    background-color: #333;
+    color: white;
 }
 
 .site-title {

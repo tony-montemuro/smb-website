@@ -1,0 +1,27 @@
+.message-popup {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  z-index: 100;
+  width: 85%;
+}
+  
+.message-popup-content {
+  display: flex;
+  align-items: center;
+}
+
+.message-popup p {
+  margin: 0;
+}
+  
+.message-popup-close {
+  margin-left: auto;
+  background-color: transparent;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}

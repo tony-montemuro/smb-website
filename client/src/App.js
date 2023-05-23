@@ -26,6 +26,7 @@ const App = () => {
   /* ===== STATES & REDUCERS ===== */
   const [user, setUser] = useState(defaultUser);
   const [staticCache, setStaticCache] = useState(defaultStaticCache);
+  const [messages, setMessages] = useState([{ message: "test", type: "error" }, { message: "success test", type: "success" }]);
   const [submissions, dispatchSubmissions] = useReducer((state, action) => {
     const submissionAbb = state[action.abb] || {};
     const submissionCategory = submissionAbb[action.category] || {};
@@ -160,15 +161,27 @@ const App = () => {
     });
   };
 
+  // FUNCTION 4: handleMessageClose - function that is executed when the user closes a message popup
+  // PRECONDITIONS (1 parameter):
+  // 1.) index: the index-th element to be removed from the messages array, causing it to immediately unrender
+  // POSTCONDITIONS (1 possible outcome):
+  // the message popup is closed
+  const handleMessageClose = index => {
+    setMessages(messages.filter((_, i) => i !== index));
+  };
+
   return { 
     user, 
     staticCache, 
+    messages,
     submissions,
     images,
+    setMessages,
     dispatchSubmissions,
     dispatchImages,
     callSessionListener, 
-    loadData
+    loadData,
+    handleMessageClose
   };
 };
 
