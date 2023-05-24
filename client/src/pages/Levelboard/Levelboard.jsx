@@ -161,13 +161,15 @@ function Levelboard({ imageReducer, submissionReducer }) {
 							<th>Proof</th>
 							<th>Comment</th>
 							<th>Approved</th>
-							<th>Report</th>
+
+							{ /* Report header element should ONLY render if the current user is authenticated */ }
+							{ user.id && <th>Report</th> }
 
 							{ /* Update header element should ONLY render if the current user is a moderator */ }
-							{ user && user.is_mod && <th>Update</th> }
+							{ user.is_mod && <th>Update</th> }
 
 							{ /* Delete header element should ONLY render if the current user is a moderator */ }
-							{ user && user.is_mod && <th>Delete</th> }
+							{ user.is_mod && <th>Delete</th> }
 							
 						</tr>
 					</thead>

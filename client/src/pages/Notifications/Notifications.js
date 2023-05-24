@@ -1,13 +1,20 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { MessageContext } from "../../Contexts";
+import { useContext, useState } from "react";
 import NotificationDelete from "../../database/delete/NotificationDelete";
 
 const Notifications = () => {
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     /* ===== STATES ===== */
     const [notifications, setNotifications] = useState({
         all: [],
         selected: [],
-        current: null
+        current: null,
+        submitting: false
     });
 
     /* ===== FUNCTIONS ===== */
@@ -63,12 +70,20 @@ const Notifications = () => {
     // a concurrent call to the database is made to remove all notifications by notif_date. this function
     // will await all calls, and once they have all been resolved, the page reloads.
     const removeSelected = async () => {
-        // make concurrent delete calls to database
+        // create array of promises
+        setNotifications({ ...notifications, submitting: true });
         const promises = notifications.selected.map(notif_date => deleteNotification(notif_date));
-        await Promise.all(promises);
 
-        // once all deletes have occurred successfully, reload the page
-        window.location.reload();
+        try {
+            // attempt to delete all notifications
+            await Promise.all(promises);
+
+            // once all deletes have occurred successfully, reload the page
+            window.location.reload();
+
+        } catch (error) {
+            addMessage("One or more notifications failed to delete. Refresh the page and try again.", "error");
+        }
     };
 
     return { 

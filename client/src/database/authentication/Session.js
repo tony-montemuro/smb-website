@@ -8,7 +8,7 @@ const Session = () => {
     // PRECONDITIONS: none
     // POSTCONDITIONS (1 returns, 2 possible outcomes):
     // if successful, we the session object for the current user
-    // if failure, we handle the error, and return null
+    // if failure, error is handled by caller function
     const getSession = async () => {
         try {
             // grab the session object from the database
@@ -23,9 +23,8 @@ const Session = () => {
             return session.session;
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
-            return null;
+            // error is handled by caller function
+           throw error;
         }
     };
 

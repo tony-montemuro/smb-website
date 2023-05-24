@@ -8,7 +8,7 @@ const ProfileRead = () => {
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the list of profiles is simply returned
-    // otherwise, the user is alerted of the error, and an empty array is returned
+    // otherwise, this function throws an error, which should be handled by caller function
     const queryProfiles = async () => {
         try {
             const { data: profiles, error, status } = await supabase
@@ -36,9 +36,8 @@ const ProfileRead = () => {
             return profiles;
 
         } catch(error) {
-            console.log(error);
-            alert(error.message);
-            return [];
+            // throw error to be handled by caller
+            throw error;
         }
     };
 
@@ -47,7 +46,7 @@ const ProfileRead = () => {
     // 1.) userId - a string corresponding to the uuid of a user, typically the currently signed-in user
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the profile object is simply returned
-    // otherwise, the user is alerted of the error, and null is returned
+    // otherwise, an error is thrown to be handled by the caller function
     const queryUserProfile = async (userId) => {
         try {
             const { data: profile, error } = await supabase
@@ -79,11 +78,13 @@ const ProfileRead = () => {
             // special case: user is authenticated, but has not created a profile yet
             if (error.code === "PGRST116") {
                 alert("Welcome to SMBElite! Please create your profile to get started!");
-            } else {
-                console.log(error);
-                alert(error.message);
+                return null;
+            } 
+            
+            // general case: throw error, which will be handled by caller function
+            else {
+                throw error;
             }
-            return null;
         }
     };
 

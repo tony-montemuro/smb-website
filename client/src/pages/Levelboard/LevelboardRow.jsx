@@ -60,7 +60,7 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
 
       { /* Report button: when pressed, a report popup will appear, which will allow the user to report the submission. Users can report
       any submission other than their own submission. */ }
-      { user &&
+      { user.id &&
         <td>
           <button 
             onClick={ () => reportFunc(submission) }

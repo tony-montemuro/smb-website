@@ -11,7 +11,7 @@ const NotificationRead = () => {
     // database
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the list of notifications is simply returned
-    // otherwise, the user is alerted of the error, and an empty array is returned
+    // otherwise, an error is thrown to be handled by the caller function
     const queryUserNotifications = async () => {
         try {
             const { data: notificationsList, error, status } = await supabase
@@ -54,9 +54,8 @@ const NotificationRead = () => {
             return notificationsList;
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
-            return [];
+            // handle error in caller function
+            throw error;
         }
     };
 

@@ -8,7 +8,7 @@ const CountriesRead = () => {
     // PRECONDTIONS: NONE
     // POSTCONDTIONS (2 possible outcomes):
     // if the query is successful, the list of countries is simply returned
-    // otherwise, the user is alerted of the error, and an empty array is returned
+    // otherwise, this function throws an error, which should be handled by caller function
     const queryCountries = async () => {
         try {
             const { data: countries, error, status } = await supabase
@@ -25,9 +25,8 @@ const CountriesRead = () => {
             return countries;
 
         } catch(error) {
-            console.log(error);
-            alert(error.message);
-            return [];
+            // throw error to be handled by caller
+            throw error;
         }
     };
 

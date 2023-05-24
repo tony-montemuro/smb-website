@@ -8,7 +8,7 @@ const ModeratorRead = () => {
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the list of moderators is simply returned
-    // otherwise, the user is alerted of the error, and an empty array is returned
+    // otherwise, this function throws an error, which should be handled by caller function
     const queryModerators = async () => {
         try {
             const { data: moderatorList, error, status } = await supabase
@@ -24,9 +24,8 @@ const ModeratorRead = () => {
             return moderatorList;
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
-            return [];
+            // throw error to be handled by caller
+            throw error;
         }
     };
 
@@ -35,7 +34,7 @@ const ModeratorRead = () => {
     // 1.) userId - a string corresponding to the uuid of a user, typically the currently signed-in user
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, return a boolean value: true if the user is a moderator, and false otherwise
-    // otherwise, the user is alerted of the error, and false is returned
+    // otherwise, an error is thrown to be handled by the caller function
     const isModerator = async (userId) => {
         try {
             const { data: moderator, error } = await supabase
@@ -53,9 +52,8 @@ const ModeratorRead = () => {
             return moderator ? true : false;
         
         } catch (error) {
-            console.log(error);
-            alert(error.message);
-            return false;
+            // error to be handled by caller function
+            throw error;
         }
     };
 

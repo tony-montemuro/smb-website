@@ -23,8 +23,8 @@ const NotificationDelete = () => {
             }
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            // error to be handled by caller function
+            throw error;
         }
     };
 

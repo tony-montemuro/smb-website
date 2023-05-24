@@ -1,7 +1,14 @@
 /* ===== IMPORTS ===== */
+import { MessageContext } from "../../Contexts";
 import { supabase } from "../SupabaseClient";
+import { useContext } from "react";
 
 const Download = () => {
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     /* ===== FUNCTIONS ===== */
 
     // FUNCTION 1: downloadBoxArt - function that takes the abb string parameter, and uses it to download box art for abb's game
@@ -13,7 +20,7 @@ const Download = () => {
     const downloadBoxArt = async (abb) => {
         try {
             // query supabase games storage for the image
-            const { data, error } = await supabase.storage.from('games').download(`${ abb }.png`);
+            const { data, error } = await supabase.storage.from("games").download(`${ "binkey" }.png`);
 
             // error handling
             if (error) {
@@ -24,8 +31,7 @@ const Download = () => {
             return URL.createObjectURL(data);
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            addMessage("Resource(s) failed to load.", "error");
             return null;
         }
     };

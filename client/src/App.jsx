@@ -38,9 +38,9 @@ function App() {
     images,
     dispatchSubmissions,
     dispatchImages,
+    addMessage,
     callSessionListener,
     loadData,
-    addMessage,
     handleMessageClose
   } = AppLogic();
 

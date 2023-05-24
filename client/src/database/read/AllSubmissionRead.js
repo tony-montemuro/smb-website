@@ -1,7 +1,14 @@
 /* ===== IMPORTS ===== */
+import { MessageContext } from "../../Contexts";
 import { supabase } from "../SupabaseClient";
+import { useContext } from "react";
 
 const AllSubmissionRead = () => {
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     /* ===== FUNCTIONS ===== */
 
     // FUNCTION 1: queryRecentSubmissions - function that retrieves the 5 most recent submissions in the database, and returns them
@@ -11,7 +18,7 @@ const AllSubmissionRead = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the 5 most recent submissions from the database are returned, sorted from most recent to least recent
     // if the query is a failure, the user is alerted of the error, and an empty array is returned
-    const queryRecentSubmissions = async (abb) => {
+    const queryRecentSubmissions = async abb => {
         // first, we define our query
         let query = supabase
             .from("all_submission")
@@ -55,8 +62,7 @@ const AllSubmissionRead = () => {
             return submissions;
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            addMessage("Recent submissions failed to load.", "error");
             return [];
         };
     };
@@ -103,8 +109,7 @@ const AllSubmissionRead = () => {
             return submissions;
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            addMessage("Submission history failed to load.", "error");
             return [];
         }
     };

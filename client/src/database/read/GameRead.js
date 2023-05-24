@@ -8,7 +8,7 @@ const GameRead = () => {
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the list of games is simply returned
-    // otherwise, the user is alerted of the error, and an empty array is returned
+    // otherwise, this function throws an error, which should be handled by caller function
     const queryGames = async () => {
         try {
             const { data: games, error, status } = await supabase
@@ -55,9 +55,8 @@ const GameRead = () => {
             return games;
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
-            return [];
+            // throw error to be handled by caller
+            throw error;
         }
     };
 
