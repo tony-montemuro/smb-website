@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { UserContext } from "../../Contexts";
+import { MessageContext, UserContext } from "../../Contexts";
 import AllSubmissionDelete from "../../database/delete/AllSubmissionDelete";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
@@ -19,6 +19,9 @@ const DeletePopup = () => {
 
     // user state from user context
     const { user } = useContext(UserContext);
+
+    // add message function from the message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
     const [form, setForm] = useState(formInit);
@@ -48,8 +51,7 @@ const DeletePopup = () => {
             window.location.reload();
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            addMessage(error.message, "error");
         }
     };
 
@@ -69,6 +71,7 @@ const DeletePopup = () => {
         // if there is an error, update the error field of the form state, and return the function early
         if (error) {
             setForm({ ...form, error: error });
+            addMessage(error, "error");
             return;
         }
 
@@ -102,8 +105,7 @@ const DeletePopup = () => {
                 window.location.reload();
             } else {
                 // general case: display error to user
-                console.log(error);
-                alert(error.message);
+                addMessage(error.message, "error");
             }
         }
     };

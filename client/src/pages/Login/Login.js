@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { MessageContext } from "../../Contexts";
+import { useContext, useState } from "react";
 import EmailLogin from "../../database/authentication/EmailLogin";
 import ValidationHelper from "../../helper/ValidationHelper";
 
@@ -7,6 +8,11 @@ const Login = () => {
     /* ===== STATES  ===== */
     const [email, setEmail] = useState({ name: "", error: undefined });
     const [userState, setUserState] = useState("idle");
+
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -45,6 +51,7 @@ const Login = () => {
         const error = validateEmail(email.name);
         if (error) {
             setEmail({ ...email, error: error });
+            addMessage(error, "error");
             setUserState("idle");
             return;
         }
@@ -58,8 +65,7 @@ const Login = () => {
             setEmail({ ...email, error: undefined });
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            addMessage(error.message, "error");
             setUserState("idle");
         }
     };

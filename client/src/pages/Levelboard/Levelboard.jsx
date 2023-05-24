@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./Levelboard.css";
-import { GameContext, UserContext } from "../../Contexts";
+import { GameContext, MessageContext, UserContext } from "../../Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import DeletePopup from "../../components/DeletePopup/DeletePopup.jsx";
@@ -30,6 +30,9 @@ function Levelboard({ imageReducer, submissionReducer }) {
 
 	// game state from game context
   const { game } = useContext(GameContext);
+
+	// add message function from message context
+	const { addMessage } = useContext(MessageContext);
 
 	/* ===== STATES & FUNCTIONS ===== */
 	const [level, setLevel] = useState(undefined);
@@ -61,7 +64,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			
 			// if not, we will print an error message, and navigate to the home screen
 			if (!level) {
-				console.log("Error: Invalid level.");
+				addMessage("Chart does not exist.", "error");
 				navigate("/");
 				return;
 			}

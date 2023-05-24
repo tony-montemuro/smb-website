@@ -5,7 +5,7 @@ import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import SubmissionsLogic from "./Submissions.js";
 import SubmissionsTable from "./SubmissionsTable.jsx";
-import { StaticCacheContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
 
 function Submissions({ submissionReducer }) {
   /* ===== VARIABLES ===== */
@@ -18,6 +18,9 @@ function Submissions({ submissionReducer }) {
 
   // static cache state from static cache context
   const { staticCache } = useContext(StaticCacheContext);
+
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
 
   /* ===== FUNCTIONS ===== */
 
@@ -43,7 +46,7 @@ function Submissions({ submissionReducer }) {
 
       // if not, let's log an error, navigate back to the homepage, and return early
       if (!isMod) {
-        console.log("Error: Forbidden access.");
+        addMessage("Forbidden access.", "error");
         navigate("/");
         return;
       }

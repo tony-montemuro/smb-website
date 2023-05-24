@@ -38,7 +38,7 @@ function InsertPopup({ popup, setPopup, submissions }) {
 
   // code that is executed when the component mounts, and when the popup state is changed
   useEffect(() => {
-  if (popup) {
+    if (popup) {
       fillForm();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

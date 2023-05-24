@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
-import { UserContext } from "../../Contexts";
+import { MessageContext, UserContext } from "../../Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import LevelboardUtils from "./LevelboardUtils";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
@@ -23,6 +23,9 @@ const InsertPopup = () => {
 
     // user state from user context
     const { user } = useContext(UserContext);
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ====== STATES & REDUCERS ===== */
     const [form, dispatchForm] = useReducer((state, action) => {
@@ -176,6 +179,7 @@ const InsertPopup = () => {
         dispatchForm({ field: "error", value: error });
 		if (Object.values(error).some(e => e !== undefined)) {
             dispatchForm({ field: "submitting", value: false });
+            addMessage("One or more form fields had errors.", "error");
             return;
         }
 
@@ -205,8 +209,7 @@ const InsertPopup = () => {
 
             } else {
                 // general case: if there is an error, inform the user
-                console.log(error);
-                alert(error.message);
+                addMessage(error.message, "error");
                 dispatchForm({ field: "submitting", value: false });
             }
         };

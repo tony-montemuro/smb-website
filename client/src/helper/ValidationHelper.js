@@ -12,12 +12,12 @@ const ValidationHelper = () => {
 
         // first, validate that the email exists
         if (!email || email.length === 0) {
-            return "Error: Email is required.";
+            return "Email is required.";
         }
 
         // next, validate that email is well-formatted
         if (!emailRegex.test(email)) {
-            return "Error: Invalid email format.";
+            return "Invalid email format.";
         }
 
         return undefined;

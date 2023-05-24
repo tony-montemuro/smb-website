@@ -168,12 +168,12 @@ const ProfileUtils = () => {
     const validateAvatar = (avatarRef, firstTimeUser) => {
         // first, check if the user has created a profile. if they have not, return an error message
         if (firstTimeUser) {
-            return "Error: Please edit your profile information before choosing an avatar.";
+            return "Please edit your profile information before choosing an avatar.";
         }
 
         // next, check if the user actually chose a file. cannot upload a non-existant image as an avatar
         if (!avatarRef.current.files || avatarRef.current.files.length === 0) {
-            return "Error: You must select an image to upload.";
+            return "You must select an image to upload.";
         }
 
         // get information about the file from the avatar ref hook
@@ -182,12 +182,12 @@ const ProfileUtils = () => {
         // next, we need to check the file extension
         const validExtensions = ["png", "jpg", "jpeg"];
         if (!validExtensions.includes(fileExt)) {
-            return "Error: Invalid file type.";
+            return "Invalid file type.";
         }
 
         // finally, we need to check the file size. if the file exceeds 5mb, return an error
         if (file.size > 5000000) {
-            return "Error: File size too big.";
+            return "File size too big.";
         }
 
         return undefined;

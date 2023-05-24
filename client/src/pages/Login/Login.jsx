@@ -41,7 +41,7 @@ function Login() {
             </div>
 
             { /* If there was an error logging in, render it here. */ }
-            { email.error && <p>{ email.error }</p> }
+            { email.error && <p>Error: { email.error }</p> }
 
             { /* Form button: When pressed, the application will attempt to log the user in.
             If the application is in the processing of logging in, the button will be disabled. */ }

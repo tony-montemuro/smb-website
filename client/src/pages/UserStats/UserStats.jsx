@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./UserStats.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import { StaticCacheContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext } from "../../Contexts";
 import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import UserStatsLogic from "./UserStats.js";
@@ -23,6 +23,9 @@ function UserStats({ submissionReducer }) {
 
   // static cache state from static cache context
   const { staticCache } = useContext(StaticCacheContext);
+
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES & FUNCTIONS ===== */
   const [game, setGame] = useState(undefined);
@@ -48,7 +51,7 @@ function UserStats({ submissionReducer }) {
 
       // if either do not match, handle the error, and navigate to the home screen
       if (!game) {
-        console.log("Error: Invalid game.");
+        addMessage("Invalid game.", "error");
         navigate("/");
         return;
       }

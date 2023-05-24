@@ -1,15 +1,16 @@
 /* ===== IMPORTS ===== */
 import { useContext, useReducer } from "react";
-import { UserContext } from "../../Contexts";
+import { MessageContext, UserContext } from "../../Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import LevelboardUtils from "./LevelboardUtils";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
+import ValidationHelper from "../../helper/ValidationHelper";
 
 const UpdatePopup = () => {
     /* ===== VARIABLES ===== */
     const formInit = {
 		values: null,
-		error: { proof: null, comment: null },
+		error: { proof: null, comment: null, message: null },
         submitting: false
 	};
 
@@ -17,6 +18,9 @@ const UpdatePopup = () => {
 
     // user state from user context
     const { user } = useContext(UserContext);
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES & REDUCERS ===== */
     const [form, dispatchForm] = useReducer((state, action) => {
@@ -49,6 +53,7 @@ const UpdatePopup = () => {
         validateProof, 
         getDateOfSubmission
     } = LevelboardUtils();
+    const { validateMessage } = ValidationHelper();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
     // PRECONDITIONS (3 parameters):
@@ -168,11 +173,13 @@ const UpdatePopup = () => {
         // perform form validation
 		error.proof = validateProof(form.values.proof);
 		error.comment = validateComment(form.values.comment);
+        error.message = validateMessage(form.values.message, false);
 
         // if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
 		if (Object.values(error).some(row => row !== undefined)) {
             dispatchForm({ field: "submitting", value: false });
+            addMessage("One or more form fields had errors.", "error");
             return;
         }
 
@@ -201,8 +208,7 @@ const UpdatePopup = () => {
 
             } else {
                 // general case: if there is an error, inform the user
-                console.log(error);
-                alert(error.message);
+                addMessage(error.message, "error");
                 dispatchForm({ field: "submitting", value: false });
             }
         };

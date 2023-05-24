@@ -23,7 +23,6 @@ const User = () => {
             const startIndex = url.indexOf(substr)+2;
             const endIndex = startIndex+11;
             const id = url.substring(startIndex, endIndex);
-            console.log(id);
             return id;
 
         // Case 2: URL does not include the '=v' substring. when this is the case, the video id is just the last 11 characters.

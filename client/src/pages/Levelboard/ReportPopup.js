@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { StaticCacheContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
@@ -21,6 +21,9 @@ const ReportPopup = () => {
 
     // user state from user context
     const { user } = useContext(UserContext);
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
     const [form, setForm] = useState(formInit);
@@ -47,6 +50,7 @@ const ReportPopup = () => {
         const error = validateMessage(form.message, true);
         if (error) {
             setForm({ ...form, error: error, submitting: false });
+            addMessage(error, "error");
             return;
         }
     
@@ -85,10 +89,10 @@ const ReportPopup = () => {
             // finally, update form submitting & submitted fields. this will ensure the form does not allow resubmits, and render a success
             // message to the user
             setForm({ ...form, submitting: false, submitted: true });
+            addMessage("Report successfully submitted.", "success");
     
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            addMessage(error.message, "error");
         }
     };
 

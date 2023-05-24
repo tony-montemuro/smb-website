@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./Profile.css";
 import { Link } from "react-router-dom";
-import { StaticCacheContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileLogic from "./Profile.js";
@@ -16,7 +16,12 @@ function Profile({ imageReducer }) {
 
     // static cache state from static cache context & user state from user context 
     const { staticCache } = useContext(StaticCacheContext);
+
+    // user state from user context
     const { user } = useContext(UserContext);
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -39,7 +44,7 @@ function Profile({ imageReducer }) {
           // if not user.id (meaning user is null), current user is not authenticated. thus, deny
           // access to this page.
           if (!user.id) {
-            console.log("Error: Invalid access.");
+            addMessage("You cannot access this page.", "error");
             navigate("/");
             return;
           }

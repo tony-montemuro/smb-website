@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { StaticCacheContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
 import { useContext, useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileUtils from "./ProfileUtils.js";
@@ -15,7 +15,12 @@ const Profile = () => {
 
     // static cache state from static cache context & user state from user context 
     const { staticCache } = useContext(StaticCacheContext);
+
+    // user state from user context
     const { user } = useContext(UserContext);
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES AND REDUCERS ===== */
     const [firstTimeUser, setFirstTimeUser] = useState(false);
@@ -94,7 +99,6 @@ const Profile = () => {
     const handleChange = e => {
         const { id, value } = e.target;
         dispatchUserForm({ field: "user", value: { [id]: value } });
-        console.log(userForm);
     };
 
     // FUNCTION 3: updateUserInfo - function that processes a submitted userForm
@@ -125,6 +129,7 @@ const Profile = () => {
         dispatchUserForm({ field: "error", value: error });
         if (Object.values(error).some(e => e !== undefined)) {
             dispatchUserForm( { field: "updating", value: false });
+            addMessage("One or more form fields had errors.", "error");
             return;
         }
 
@@ -136,9 +141,9 @@ const Profile = () => {
 
             // if successful, reload the page
             window.location.reload();
+
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            addMessage(error.message, "error");
             dispatchUserForm({ field: "updating", value: false });
         }
     };
@@ -165,6 +170,7 @@ const Profile = () => {
         dispatchAvatarForm({ field: "error", value: error });
         if (error) {
             dispatchAvatarForm({ field: "updating", value: false });
+            addMessage(error, "error");
             return;
         }
 
@@ -173,14 +179,13 @@ const Profile = () => {
         try {
             // convert file and upload
             const convertedFile = await convertToPNG(file);
-            await uploadAvatar(convertedFile, `${profileId}.png`);
+            await uploadAvatar(convertedFile, `${ profileId }.png`);
 
             // if successful, reload the page
             window.location.reload();
             
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            addMessage(error.message, "error");
             dispatchAvatarForm({ field: "updating", value: false });
         }
     };
@@ -200,8 +205,7 @@ const Profile = () => {
             navigate("/");
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            addMessage(error.message, "error");
         }
     };
 

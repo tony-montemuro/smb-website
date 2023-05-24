@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
-import { StaticCacheContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import SubmissionUpdate from "../../database/update/SubmissionUpdate";
@@ -13,6 +13,9 @@ const Submissions = () => {
 
     // static cache state from static cache context
     const { staticCache } = useContext(StaticCacheContext);
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
     const [game, setGame] = useState(null);
@@ -66,7 +69,6 @@ const Submissions = () => {
             const merged = unorderedMerged.sort((a, b) => a.details.id.localeCompare(b.details.id));
 
             // finally, update the submissions state
-            console.log(merged);
             setSubmissions( { ...submissions, [abb]: merged } );
         }
     };
@@ -84,8 +86,6 @@ const Submissions = () => {
         setApproved([...approved, { ...submission, game: gameObj }]);
         const filtered = submissions[game].filter(row => row !== submission);
         setSubmissions({ ...submissions, [game]: filtered });
-        console.log(submissions);
-        console.log(approved);
     };
 
     // FUNCTION 3: removeFromApproved - given a submission object from the approved array, move it from there back to the submission object
@@ -101,7 +101,6 @@ const Submissions = () => {
         const sorted = [...submissions[submissionAbb], submission].sort((a, b) => a.submitted_at < b.submitted_at ? -1 : a.submitted_at > b.submitted_at ? 1 : 0);
         setSubmissions({ ...submissions, [submissionAbb]: sorted });
         setApproved(approved.filter(row => row !== submission));
-        console.log(submissions);
     };
 
     // FUNCTION 4: approveAll - approve all submissions in the approved array in the database
@@ -144,8 +143,7 @@ const Submissions = () => {
             window.location.reload();
 
         } catch(error) {
-            console.log(error);
-            alert(error.message);
+            addMessage(error.message, "error");
             setApproving(false);
         }
     };

@@ -1,11 +1,17 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { MessageContext } from "../../Contexts";
+import { useContext, useState } from "react";
 import EmailLogin from "../../database/authentication/EmailLogin";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const EmailUpdate = () => {
     /* ===== VARIABLES ===== */
     const defaultEmailState = { name: "", error: undefined };
+
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES  ===== */
     const [email, setEmail] = useState({ name: "", error: undefined });
@@ -54,6 +60,7 @@ const EmailUpdate = () => {
         if (error) {
             setEmail({ ...email, error: error });
             setUserState("idle");
+            addMessage(error, "error");
             return;
         }
 
@@ -66,8 +73,7 @@ const EmailUpdate = () => {
             setEmail({ ...email, error: undefined });
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
+            addMessage(error.message, "error");
             setUserState("idle");
         }
     };

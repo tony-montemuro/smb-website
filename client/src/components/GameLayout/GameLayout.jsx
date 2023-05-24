@@ -1,6 +1,6 @@
 /* ===== IMPORTS ====== */
 import "./GameLayout.css";
-import { GameContext, StaticCacheContext } from "../../Contexts";
+import { GameContext, MessageContext, StaticCacheContext } from "../../Contexts";
 import { Link } from "react-router-dom";
 import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
@@ -21,6 +21,9 @@ function GameLayout({ imageReducer }) {
   // static cache state from static cache context
   const { staticCache } = useContext(StaticCacheContext);
 
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
+
   /* ===== STATES ===== */
   const [game, setGame] = useState(undefined);
 
@@ -35,7 +38,7 @@ function GameLayout({ imageReducer }) {
 
       // if not, we will print an error message, and navigate to the home screen
       if (!game) {
-        console.log("Error: Invalid game.");
+        addMessage("Game does not exist.", "error");
         navigate("/");
         return;
       }

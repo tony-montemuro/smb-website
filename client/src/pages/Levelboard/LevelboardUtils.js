@@ -93,7 +93,7 @@ const LevelboardUtils = () => {
         const recordStr = String(recordField);
 
         // let's check for invalid characters; specifically, the 'e' character
-        if (recordStr.includes('e')) {
+        if (recordStr.includes("e")) {
             return "Invalid character detected in submission. Please ensure submission has no letters.";
         }
 
@@ -108,14 +108,14 @@ const LevelboardUtils = () => {
         }
 
         // make sure scores are integers
-        if (type === 'score') {
+        if (type === "score") {
             if (!Number.isInteger(record)) {
                 return "Score must be an integer value.";
             }
         }
 
         // make sure time has two decimal places
-        if (type === 'time') {
+        if (type === "time") {
             let decimalCount = 0;
             if (recordStr.includes('.')) {
                 decimalCount = recordStr.split('.')[1].length;

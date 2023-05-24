@@ -26,7 +26,7 @@ const App = () => {
   /* ===== STATES & REDUCERS ===== */
   const [user, setUser] = useState(defaultUser);
   const [staticCache, setStaticCache] = useState(defaultStaticCache);
-  const [messages, setMessages] = useState([{ message: "test", type: "error" }, { message: "success test", type: "success" }]);
+  const [messages, setMessages] = useState([]);
   const [submissions, dispatchSubmissions] = useReducer((state, action) => {
     const submissionAbb = state[action.abb] || {};
     const submissionCategory = submissionAbb[action.category] || {};
@@ -161,7 +161,18 @@ const App = () => {
     });
   };
 
-  // FUNCTION 4: handleMessageClose - function that is executed when the user closes a message popup
+  // FUNCTION 4: addMessage - function that takes a message, and it's type, and adds it to the array of messages
+  // PRECONDITIONS (2 parameters):
+  // 1.) message: a string value, representing a message to be rendered as a message popup to the client
+  // 2.) type: a string value specifying the type of message, which has impacts on styling. either "error" or "success"
+  // POSTCONDITIONS (1 possible outcome):
+  // a new object is greated using the two parameters, and the object is pushed into the messages state array
+  const addMessage = (message, type) => {
+    const newMessage = { message: message, type: type };
+    setMessages([...messages, newMessage]);
+  };
+
+  // FUNCTION 5: handleMessageClose - function that is executed when the user closes a message popup
   // PRECONDITIONS (1 parameter):
   // 1.) index: the index-th element to be removed from the messages array, causing it to immediately unrender
   // POSTCONDITIONS (1 possible outcome):
@@ -176,11 +187,11 @@ const App = () => {
     messages,
     submissions,
     images,
-    setMessages,
     dispatchSubmissions,
     dispatchImages,
     callSessionListener, 
     loadData,
+    addMessage,
     handleMessageClose
   };
 };

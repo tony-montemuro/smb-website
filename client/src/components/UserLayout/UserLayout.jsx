@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./UserLayout.css";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
-import { ProfileContext, StaticCacheContext } from "../../Contexts";
+import { MessageContext, ProfileContext, StaticCacheContext } from "../../Contexts";
 import { useContext, useEffect, useState } from "react";
 import Avatar from "../Avatar/Avatar.jsx";
 import UserStatsDirectory from "./UserStatsDirectory";
@@ -17,6 +17,9 @@ function UserLayout({ imageReducer }) {
 
   // static cache state from static cache context
   const { staticCache } = useContext(StaticCacheContext);
+
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
   
   /* ===== STATES ===== */
   const [profile, setProfile] = useState(undefined);
@@ -32,7 +35,7 @@ function UserLayout({ imageReducer }) {
 
       // if not, we will print an error message, and navigate to the home screen
       if (!profile) {
-        console.log("Error: Invalid user.");
+        addMessage("User does not exist.", "error");
         navigate("/");
         return;
       }

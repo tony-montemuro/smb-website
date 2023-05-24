@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./SubmissionHistory.css";
-import { GameContext, StaticCacheContext, UserContext } from "../../Contexts";
+import { GameContext, MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
 import { Link } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -34,6 +34,9 @@ function SubmissionHistory() {
   // game state from game context
   const { game } = useContext(GameContext);
 
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
+
   /* ===== STATES & FUNCTIONS ====== */
 
   // states and functions from the js file
@@ -56,7 +59,7 @@ function SubmissionHistory() {
 			
 			// if not, we will print an error message, and navigate to the home screen
 			if (!level) {
-				console.log("Error: Invalid level.");
+				addMessage("Level does not exist.", "error");
 				navigate("/");
 				return;
 			}
@@ -66,7 +69,7 @@ function SubmissionHistory() {
 
       // if not, we will print an error message, and navigate to the home screen
 			if (!profile) {
-				console.log("Error: Invalid user.");
+				addMessage("User does not exist.", "error");
 				navigate("/");
 				return;
 			}

@@ -36,11 +36,11 @@ function App() {
     messages,
     submissions,
     images,
-    setMessages,
     dispatchSubmissions,
     dispatchImages,
     callSessionListener,
     loadData,
+    addMessage,
     handleMessageClose
   } = AppLogic();
 
@@ -59,7 +59,7 @@ function App() {
 
   /* ===== APP COMPONENT ===== */
   return (
-    <MessageContext.Provider value={ { setMessages } }>
+    <MessageContext.Provider value={ { addMessage } }>
       <StaticCacheContext.Provider value={ { staticCache } }>
         <UserContext.Provider value={ { user } }>
           { /* Render the navbar at the top of the application */ }

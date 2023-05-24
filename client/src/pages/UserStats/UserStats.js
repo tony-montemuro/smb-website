@@ -166,7 +166,6 @@ const UserStats = () => {
         };
         
         // update the stats state hook
-        console.log(stats);
         setStats(stats);
     };
 
