@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
+import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import SubmissionUpdate from "../../database/update/SubmissionUpdate";
@@ -26,6 +27,9 @@ const Submissions = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
+    const { cleanLevelName, recordB2F } = FrontendHelper();
+
+    // database functions
     const { insertNotification } = NotificationUpdate();
     const { getSubmissions } = SubmissionRead();
     const { approveSubmission } = SubmissionUpdate();
@@ -36,40 +40,48 @@ const Submissions = () => {
     // 2.) submissionReducer: an object with two fields:
         // a.) reducer: the submission reducer itself (state)
         // b.) dispatchSubmissions: the reducer function used to update the reducer
-    // POSTCONDITIONS (2 possible outcomes):
+    // POSTCONDITIONS (3 possible outcomes):
     // if the submissions have already been loaded for abb, all this function needs to do is update the game hook by calling
     // the setGame() hook with the abb argument
-    // if the submissions have not been loaded yet for abb, we need to retrieve them from the database, filter, and order them. finally,
-    // we need to call the setSubmissions() object to update the submission state with the submissions for abb [note: setGame is also called
-    // in this outcome]
+    // if the submissions have not been loaded yet for abb, we need to retrieve them from the database, filter, and order them. 
+        // if the query is a success, we need to call the setSubmissions() object to update the submission state with the submissions 
+        // for abb
+        // if the query is a failure, an error message is rendered to the user, and the submissions state is NOT updated.
     const swapGame = async (abb, submissionReducer) => {
         // update the game state hook with the abb parameter
         setGame(abb);
 
         // if we have not already loaded and merged the submissions for abb, we do so here
         if (!(abb in submissions)) {
-            // retrive all submissions for abb concurrently
-            const [allMainScoreSubmissions, allMiscScoreSubmissions, allMainTimeSubmissions, allMiscTimeSubmissions] = await Promise.all(
-                [
-                    getSubmissions(abb, "main", "score", submissionReducer), 
-                    getSubmissions(abb, "misc", "score", submissionReducer), 
-                    getSubmissions(abb, "main", "time", submissionReducer),
-                    getSubmissions(abb, "misc", "time", submissionReducer)
-                ]
-            );
+            try {
+                // retrive all submissions for abb concurrently
+                const [allMainScoreSubmissions, allMiscScoreSubmissions, allMainTimeSubmissions, allMiscTimeSubmissions] = await Promise.all(
+                    [
+                        getSubmissions(abb, "main", "score", submissionReducer), 
+                        getSubmissions(abb, "misc", "score", submissionReducer), 
+                        getSubmissions(abb, "main", "time", submissionReducer),
+                        getSubmissions(abb, "misc", "time", submissionReducer)
+                    ]
+                );
+    
+                // filter each list of levels by the "approved" field
+                const mainScoreSubmissions = allMainScoreSubmissions.filter(row => !row.approved);
+                const miscScoreSubmissions = allMiscScoreSubmissions.filter(row => !row.approved);
+                const mainTimeSubmissions = allMainTimeSubmissions.filter(row => !row.approved);
+                const miscTimeSubmissions = allMiscTimeSubmissions.filter(row => !row.approved);
+    
+                // now, concatenate all arrays into a single array, and sort it by the id field
+                const unorderedMerged = mainScoreSubmissions.concat(miscScoreSubmissions, mainTimeSubmissions, miscTimeSubmissions);
+                const merged = unorderedMerged.sort((a, b) => a.details.id.localeCompare(b.details.id));
+    
+                // finally, update the submissions state
+                setSubmissions( { ...submissions, [abb]: merged } );
 
-            // filter each list of levels by the "approved" field
-            const mainScoreSubmissions = allMainScoreSubmissions.filter(row => !row.approved);
-            const miscScoreSubmissions = allMiscScoreSubmissions.filter(row => !row.approved);
-            const mainTimeSubmissions = allMainTimeSubmissions.filter(row => !row.approved);
-            const miscTimeSubmissions = allMiscTimeSubmissions.filter(row => !row.approved);
-
-            // now, concatenate all arrays into a single array, and sort it by the id field
-            const unorderedMerged = mainScoreSubmissions.concat(miscScoreSubmissions, mainTimeSubmissions, miscTimeSubmissions);
-            const merged = unorderedMerged.sort((a, b) => a.details.id.localeCompare(b.details.id));
-
-            // finally, update the submissions state
-            setSubmissions( { ...submissions, [abb]: merged } );
+            } catch (error) {
+                // if the submissions fail to be fetched, let's render an error specifying the issue
+                const gameName = staticCache.games.find(row => row.abb === abb).name;
+			    addMessage(`Failed to fetch submission data for ${ gameName }. If refreshing the page does not work, the database may be experiencing some issues.`, "error");
+            }
         }
     };
 
@@ -113,38 +125,74 @@ const Submissions = () => {
         // prepare approval process
         setApproving(true);
 
-        try {
-            // first, let's approve all submissions in the submission table
-            const approvePromises = approved.map(e => approveSubmission({ 
-                profile_id: e.profile.id, 
-                game_id: e.game.abb, 
+        // first, let's generate our array of approved submission functions
+        const approvePromises = approved.map(e =>
+            approveSubmission({
+                profile_id: e.profile.id,
+                game_id: e.game.abb,
                 level_id: e.level.name,
                 score: e.score
-            }));
-            await Promise.all(approvePromises);
+            }).catch(error => {
+                // Handle individual approval error
+                const rejectionReason = {
+                    submission: {
+                        id: e.details.id,
+                        record: e.details.record,
+                        profile: e.profile,
+                        game: e.game,
+                        level_id: e.level.name,
+                        score: e.score
+                    },
+                    error
+                };
+                return Promise.reject(rejectionReason); // Propagate the error further
+            })
+        );
 
-            // once all submissions have been approved, let's notify each user other than the current user that the approval was successful
-            const filteredApproved = approved.filter(row => row.profile.id !== user.profile.id);
-            const notifPromises = filteredApproved.map(e => {
-                return insertNotification({
-                    notif_type: "approve",
-                    profile_id: e.profile.id, 
-                    game_id: e.game.abb, 
-                    creator_id: user.profile.id,
-                    level_id: e.level.name,
-                    score: e.score,
-                    record: e.details.record,
-                    submission_id: e.details.id
-                });
+        // concurrently approve all submissions
+        const approveResults = await Promise.allSettled(approvePromises);
+
+        // based on the results of each query, filter out any approvals that failed to approve, as well as any submissions that
+        // belong to the user, so we do not send any false notifications
+        const failedApprovals = approveResults.filter(result => result.status === "rejected");
+        const failedSubmissionIds = failedApprovals.map(row => row.reason.submission.id);
+        const filteredApproved = approved.filter(submission => {
+            return !failedSubmissionIds.includes(submission.details.id) && submission.profile.id !== user.profile.id
+        });
+
+        // next, let's generate our array of notification creation functions
+        const notifPromises = filteredApproved.map(e =>
+            insertNotification({
+                notif_type: "approve",
+                profile_id: e.profile.id, 
+                game_id: e.game.abb, 
+                creator_id: user.profile.id,
+                level_id: e.level.name,
+                score: e.score,
+                record: e.details.record,
+                submission_id: e.details.id
+            }).catch(error => {
+                // Handle individual notification error
+                return Promise.reject(error); // Propagate the error further
+            })
+        );
+
+        // concurrently handle notifications
+        await Promise.allSettled(notifPromises);
+
+        // if any of the approvals failed, now is the time to inform the user
+        if (failedApprovals.length > 0) {
+            const messages = failedApprovals.map(row => {
+                const submission = row.reason.submission;
+                const type = submission.score ? "Score" : "Time";
+                return `The following submission failed to approve: ${ submission.game.name }: ${ cleanLevelName(submission.level_id) } (${ type }) - ${ recordB2F(submission.record, type) } by ${ submission.profile.username }. Reload the page and try again.`;
             });
-            await Promise.all(notifPromises);
-
-            // once all notifications have been sent, reload the page
+            addMessage(messages, "error");
+        } 
+        
+        // otherwise, just reload the page
+        else {
             window.location.reload();
-
-        } catch(error) {
-            addMessage(error.message, "error");
-            setApproving(false);
         }
     };
 

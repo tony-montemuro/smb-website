@@ -1,9 +1,15 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { MessageContext } from "../../Contexts";
+import { useContext, useState } from "react";
 import MedalsHelper from "../../helper/MedalsHelper";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Medals = () => {
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     /* ===== STATES ===== */
     const [medalTable, setMedalTable] = useState(undefined);
 
@@ -41,20 +47,31 @@ const Medals = () => {
     // 4.) submissionReducer: an object with two fields:
         // a.) reducer: the submission reducer itself (state)
         // b.) dispatchSubmissions: the reducer function used to update the reducer
-    // POSTCONDITIONS (1 possible outcome):
-    // 1.) both the time and score medal tables are generated, and the setMedals() function is called
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the submission query is a success, both the time and score medal tables are generated, and the setMedals() function is called
     // to update the medals state with the medalTable object. the medalTable object has two fields:
         // a.) score: this field stores the score medal table
         // b.) time: this field stores the time medal table
+    // if the submissions fail to be retrieved, an error message is rendered to the user, and the medal table state is NOT updated, 
+    // leaving the Medals component stuck loading
     const fetchMedals = async (abb, category, type, submissionReducer) => {
-        // get all submissions, and filter based on the details.live field
-        const allSubmissions = await getSubmissions(abb, category, type, submissionReducer);
-        
-        // generate medal table
-        const table = generateMedalTable(allSubmissions);
+        // first, reset medal table state to undefined
+        setMedalTable(undefined);
 
-        // update the medals state
-        setMedalTable(table);
+        try {
+            // get all submissions, and filter based on the details.live field
+            const allSubmissions = await getSubmissions(abb, category, type, submissionReducer);
+            
+            // generate medal table
+            const table = generateMedalTable(allSubmissions);
+
+            // update the medals state
+            setMedalTable(table);
+
+        } catch (error) {
+            // if the submissions fail to be fetched, let's render an error specifying the issue
+			addMessage("Failed to fetch submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+        }
     };
 
     return { 

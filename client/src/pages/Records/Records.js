@@ -1,8 +1,14 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { MessageContext } from "../../Contexts";
+import { useContext, useState } from "react";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Records = () => {
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     /* ===== STATES ===== */
     const [recordTable, setRecordTable] = useState(undefined);
 
@@ -99,25 +105,36 @@ const Records = () => {
         // a.) reducer: the submission reducer itself (state)
         // b.) dispatchSubmissions: the reducer function used to update the reducer
     // POSTCONDITIONS (1 possible outcome):
-    // 1.) a recordTable object is generated. records has two fields: all and live. each field maps to a recordTable object.
-    // each recordTable object has a field for each mode belonging to { game }, { category }, and { type }
-    // each field is mapped to an array of record objects, each of which has 3 fields: level, record, and names
-    // once this object is generated, call the setRecordTable() function to update the recordTable state
+    // if the submission query is a success, a recordTable object is generated. records has two fields: all and live. each field maps
+    // to a recordTable object. each recordTable object has a field for each mode belonging to { game }, { category }, and { type }
+    // each field is mapped to an array of record objects, each of which has 3 fields: level, record, and names. once this object is
+    // generated, call the setRecordTable() function to update the recordTable state
+    // if the submissions fail to be retrieved, an error message is rendered to the user, and the record table state is NOT updated, 
+    // leaving the Records component stuck loading
     const fetchRecords = async (game, category, type, submissionReducer) => {
-        // get submissions, and also generate a filtered array of submissions based on the details.live field
-        const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
-        const submissions = allSubmissions.filter(row => row.details.live);
+        // first, reset record table state to default value (undefined)
+        setRecordTable(undefined);
 
-        // generate two record tables: 1 for all submissions, and 1 for live submissions
-        const allRecordTable = generateRecordTable(game, category, type, allSubmissions);
-        const liveRecordTable = generateRecordTable(game, category, type, submissions);
+        try {
+            // get submissions, and also generate a filtered array of submissions based on the details.live field
+            const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
+            const submissions = allSubmissions.filter(row => row.details.live);
 
-        // create a records object that stores both tables, and update recordTable
-        const records = {
-            all: allRecordTable,
-            live: liveRecordTable
-        };
-        setRecordTable(records);
+            // generate two record tables: 1 for all submissions, and 1 for live submissions
+            const allRecordTable = generateRecordTable(game, category, type, allSubmissions);
+            const liveRecordTable = generateRecordTable(game, category, type, submissions);
+
+            // create a records object that stores both tables, and update recordTable
+            const records = {
+                all: allRecordTable,
+                live: liveRecordTable
+            };
+            setRecordTable(records);
+
+        } catch (error) {
+            // if the submissions fail to be fetched, let's render an error specifying the issue
+			addMessage("Failed to fetch submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+        }
     };
 
     // FUNCTION 4: allGreater - given a mode and index, determine if the "all" record is better than the live record

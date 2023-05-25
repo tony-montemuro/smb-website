@@ -12,7 +12,7 @@ const SubmissionRead = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is a success, an array of submissions belonging to the game (specified by abb) category and type,
     // ordered by level id, then record, then submission date
-    // if the query is unsuccessful, an empty array is returned, and the user is informed of the error
+    // if the query is unsuccessful, the error is thrown to be handled by the caller function
     const query = async (abb, category, type) => {
         try {
             const { data: submissions, error, status } = await supabase
@@ -59,9 +59,8 @@ const SubmissionRead = () => {
             return submissions;
 
         } catch (error) {
-            console.log(error);
-            alert(error.message);
-            return [];
+            // error to be handled by caller function
+            throw error;
         }
     };
 
@@ -73,9 +72,10 @@ const SubmissionRead = () => {
     // 4.) submissionReducer: an object with two fields:
 		// a.) reducer: the submission reducer itself (state)
 		// b.) dispatchSubmissions: the reducer function used to update the reducer
-    // POSTCONDITIONS (2 possible outcomes):
+    // POSTCONDITIONS (3 possible outcomes):
     // if user is accessing already cached submissions, we can fetch this information from submissionReducer.
-    // otherwise, we need to query, and update the submission reducer
+    // if not, we query, and if the query is successful, we update the submission reducer, and return the array of submissions
+    // if not, we query, and if the query is unsuccessful, this function throws an error to be handled by the caller function
     const getSubmissions = async (abb, category, type, submissionReducer) => {
         // initialize submissions object
         let submissions = {};
@@ -84,11 +84,19 @@ const SubmissionRead = () => {
         if (abb in submissionReducer.state && category in submissionReducer.state[abb] && type in submissionReducer.state[abb][category]) {
             submissions = submissionReducer.state[abb][category][type];
         } else {
-            submissions = await query(abb, category, type);
-            submissionReducer.dispatchSubmissions({ abb: abb, category: category, type: type, data: submissions });
+            // attempt to query submissions. if the query is successful, we must also update the submissionReducer cache
+            try {
+                submissions = await query(abb, category, type);
+                submissionReducer.dispatchSubmissions({ abb: abb, category: category, type: type, data: submissions });
+            } 
+            
+            // in the event of an error, it will be thrown by the function to be handled by the caller function
+            catch (error) {
+                throw error;
+            }
         }
         return submissions;
-    }
+    };
 
     return { getSubmissions };
 };

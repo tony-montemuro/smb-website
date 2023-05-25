@@ -1,17 +1,17 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { GameContext } from "../../Contexts";
+import { GameContext, MessageContext } from "../../Contexts";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Levelboard = () => {
-	/* ===== DATABASE FUNCTIONS ===== */
-	const { getSubmissions } = SubmissionRead();
-
 	/* ===== CONTEXTS ===== */
 
 	// game state from game context
 	const { game } = useContext(GameContext);
+
+	// add message function from message context
+	const { addMessage } = useContext(MessageContext);
 
 	/* ===== VARIABLES ===== */
 	const location = useLocation();
@@ -26,6 +26,9 @@ const Levelboard = () => {
 	const [deleteSubmission, setDeleteSubmission] = useState(undefined);
 
 	/* ===== FUNCTIONS ===== */
+	
+	// database functions
+	const { getSubmissions } = SubmissionRead();
 
 	// FUNCTION 1: getPrevAndNext - get the previous and next level names
     // PRECONDTIONS (2 parameters):
@@ -114,26 +117,35 @@ const Levelboard = () => {
 	// 1.) submissionReducer: an object with two fields:
 		// a.) reducer: the submission reducer itself (state)
 		// b.) dispatchSubmissions: the reducer function used to update the reducer
-	// POSTCONDITIONS (1 possible outcome):
-	// the list of submissions are generated, which is then split into two arrays: all and live. these arrays
-	// are used to set the records field of the board state, which is updated by calling the setBoard() function
+	// POSTCONDITIONS (2 possible outcome):
+	// if the submissions successfully are retrieved, the list of submissions are generated, which is then split into two arrays: 
+	// all and live. these arrays are used to set the records field of the board state, which is updated by calling the setBoard() function
+	// if the submissions fail to be retrieved, an error message is rendered to the user, and the board state is NOT updated, leaving the
+	// Levelboard component stuck loading
 	const setupBoard = async (submissionReducer) => {
-		// first, let's get the names of the previous and next level
+		// first, set board to default values, and get the names of the previous and next level
+		setBoard(boardInit);
 		const { prev, next } = getPrevAndNext(category, levelName);
 
-		// get submissions, and filter based on the levelId
-		let allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
-		const submissions = allSubmissions.filter(row => row.level.name === levelName).map(row => Object.assign({}, row));
+		try {
+			// get submissions, and filter based on the levelId
+			const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
+			const submissions = allSubmissions.filter(row => row.level.name === levelName).map(row => Object.assign({}, row));
 
-		// split submissions into two arrays: all and live. [NOTE: this function will also update the form!]
-		const { all, live } = splitSubmissions(submissions, game, type, levelName);
+			// split submissions into two arrays: all and live. [NOTE: this function will also update the form!]
+			const { all, live } = splitSubmissions(submissions, game, type, levelName);
 
-		// now, let's add the position field to each submission in both arrays
-		insertPositionToLevelboard(all);
-		insertPositionToLevelboard(live);
+			// now, let's add the position field to each submission in both arrays
+			insertPositionToLevelboard(all);
+			insertPositionToLevelboard(live);
 
-		// finally, update board state hook
-		setBoard({ ...board, records: { all: all, live: live }, adjacent: { prev: prev, next: next } });
+			// finally, update board state hook
+			setBoard({ ...board, records: { all: all, live: live }, adjacent: { prev: prev, next: next } });
+
+		} catch (error) {
+			// if the submissions fail to be fetched, let's render an error specifying the issue
+			addMessage("Failed to fetch submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+		}
 	};
 
 	return {

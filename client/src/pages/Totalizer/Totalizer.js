@@ -1,9 +1,15 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { MessageContext } from "../../Contexts"; 
+import { useContext, useState } from "react";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import TotalizerHelper from "../../helper/TotalizerHelper";
 
 const Totalizer = () => {
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     /* ===== STATES & REDUCERS ===== */
     const [totals, setTotals] = useState(undefined);
 
@@ -50,26 +56,35 @@ const Totalizer = () => {
     // 4.) submissionReducer: an object with two fields:
         // a.) reducer: the submission reducer itself (state)
         // b.) dispatchSubmissions: the reducer function used to update the reducer
-    // POSTCONDITIONS (1 possible outcome):
-    // 1.) total: a totals object is generated. totals has two fields, all and live. each of these fields is mapped to a 
-    // totalizer array. once this object is generated, call the setTotals() function to update the totals state
+    // POSTCONDITIONS (2 possible outcome):
+    // if the submission query is successful, a totals object is generated. totals has two fields, all and live. each of these fields 
+    // is mapped to a totalizer array. once this object is generated, call the setTotals() function to update the totals state
+    // if the submissions fail to be retrieved, an error message is rendered to the user, and the totals state is NOT updated, 
+    // leaving the Totalizer component stuck loading
     const fetchTotals = async (game, category, type, submissionReducer) => {
-        // first, let's compute the total time of the game
+        // first, reset totals state to default state (undefined), & compute the total time of the game
+        setTotals(undefined);
         const isMisc = category === "misc" ? true : false;
         const totalTime = calculateTotalTime(game, isMisc);
 
-        // get the { type } submissions that are a part of the { category } of { game.abb }
-        const submissions = await getSubmissions(game.abb, category, type, submissionReducer);
+        try {
+            // get the { type } submissions that are a part of the { category } of { game.abb }
+            const submissions = await getSubmissions(game.abb, category, type, submissionReducer);
 
-        // generate totalizer object
-        const { all, live } = generateTotalizer(submissions, type, totalTime);
-        
-        // update the totals state
-        const totals = {
-            all: all,
-            live: live
+            // generate totalizer object
+            const { all, live } = generateTotalizer(submissions, type, totalTime);
+            
+            // update the totals state
+            const totals = {
+                all: all,
+                live: live
+            };
+            setTotals(totals);
+
+        } catch (error) {
+            // if the submissions fail to be fetched, let's render an error specifying the issue
+			addMessage("Failed to fetch submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
         };
-        setTotals(totals);
     };
 
     return { 

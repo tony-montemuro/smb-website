@@ -20,7 +20,7 @@ const Download = () => {
     const downloadBoxArt = async (abb) => {
         try {
             // query supabase games storage for the image
-            const { data, error } = await supabase.storage.from("games").download(`${ "binkey" }.png`);
+            const { data, error } = await supabase.storage.from("games").download(`${ abb }.png`);
 
             // error handling
             if (error) {

@@ -57,18 +57,28 @@ const App = () => {
   // database function used to retrieve the current session
   const { getSession } = Session();
 
-  // FUNCTION 1: addMessage - function that takes a message, and it's type, and adds it to the array of messages
+  // FUNCTION 1: toArray - takes a parameter, and converts it to an array
+  // PRECONDITIONS (1 parameter):
+  // 1.) e: some element; typically, it's either a string, or an array of strings
+  // POSTCONDITIONS (1 possible outcome):
+  // an array is returned. if e is just a string, it is wrapped in an array, and if e is already an array, it is simply returned
+  const toArray = (e) => {
+    return Array.isArray(e) ? e : [e];
+  };
+
+  // FUNCTION 2: addMessage - function that takes a message, and it's type, and adds it to the array of messages
   // PRECONDITIONS (2 parameters):
-  // 1.) message: a string value, representing a message to be rendered as a message popup to the client
+  // 1.) messageArr: either an erray of messages, or a string value, representing the message(s) to be rendered as a message popup 
+  // to the client
   // 2.) type: a string value specifying the type of message, which has impacts on styling. either "error" or "success"
   // POSTCONDITIONS (1 possible outcome):
   // a new object is greated using the two parameters, and the object is pushed into the messages state array
-  const addMessage = (message, type) => {
-    const newMessage = { message: message, type: type };
-    setMessages([...messages, newMessage]);
+  const addMessage = (messageArr, type) => {
+    const newMessageArr = toArray(messageArr).map(message => ({ message, type }));
+    setMessages(messages.concat(newMessageArr));
   };
 
-  // FUNCTION 2: updateUserData - async function that loads user data based on a session object
+  // FUNCTION 3: updateUserData - async function that loads user data based on a session object
   // PRECONDITIONS (1 parameter):
   // 1.) session: an object that is returned by the database containing information about the current user's session
   // this value also might be null if no user is currently signed in
@@ -108,7 +118,7 @@ const App = () => {
     }
   };
 
-  // FUNCTION 3: callSessionListener - this function is called once just to run the supabase session listener function, which will be called
+  // FUNCTION 4: callSessionListener - this function is called once just to run the supabase session listener function, which will be called
   // each time a change in session occurs
   // PRECONDITIONS (1 condition):
   // this function should be run exactly once: when the application is first loaded. the listener function defined within this function,
@@ -145,7 +155,7 @@ const App = () => {
     });
   };
 
-  // FUNCTION 4: loadData - async function that will make concurrent api calls to the database
+  // FUNCTION 5: loadData - async function that will make concurrent api calls to the database
   // PRECONDITIONS (1 condition):
   // this function should be run exactly once: when the application is first loaded
   // POSTCONDTIONS (1 possible outcome):
@@ -195,7 +205,7 @@ const App = () => {
     }
   };
 
-  // FUNCTION 5: handleMessageClose - function that is executed when the user closes a message popup
+  // FUNCTION 6: handleMessageClose - function that is executed when the user closes a message popup
   // PRECONDITIONS (1 parameter):
   // 1.) index: the index-th element to be removed from the messages array, causing it to immediately unrender
   // POSTCONDITIONS (1 possible outcome):

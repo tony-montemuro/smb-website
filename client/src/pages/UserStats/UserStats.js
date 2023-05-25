@@ -1,10 +1,16 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { MessageContext } from "../../Contexts";
+import { useContext, useState } from "react";
 import MedalsHelper from "../../helper/MedalsHelper";
 import TotalizerHelper from "../../helper/TotalizerHelper";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const UserStats = () => {
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     /* ===== STATES ===== */
     const [stats, setStats] = useState(undefined);
 
@@ -113,60 +119,69 @@ const UserStats = () => {
         // a.) reducer: the submission reducer itself (state)
         // b.) dispatchSubmissions: the reducer function used to update the reducer
     // POSTCONDITIONS (1 possible outcome):
-    // 1.) given this information, we are able to first generate two submission arrays: one for all, and one for live only. 
+    // if the submission query is successful, we are able to first generate two submission arrays: one for all, and one for live only. 
     // from these arrays, we generate two separate userStats objects. these two objects are then combined to form 'stats',
     // a single object which contains both user stats objects. the setStats() function is called to update the stats object
+    // if the submissions fail to be retrieved, an error message is rendered to the user, and the stats state is NOT updated, 
+    // leaving the UserStats component stuck loading
     const fetchUserStats = async (path, game, submissionReducer) => {
-        // unpack path parameter
+        // first, reset stats state to default value (undefined), and unpack path parameter
+        setStats(undefined);
         const profileId = parseInt(path[2]), category = path[4], type = path[5];
 
-        // first, let's compute the total time of the game
+        // next, let's compute the total time of the game
         const isMisc = category === "misc" ? true : false;
         const totalTime = calculateTotalTime(game, isMisc);
 
-        // fetch submissions
-        const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
+        try {
+            // fetch submissions
+            const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
 
-        // let's start with the totalizer
-        const { allTotalsMap, liveTotalsMap } = getTotalMaps(allSubmissions, type, totalTime);
-        const { allTotals, liveTotals } = sortTotals(allTotalsMap, liveTotalsMap, type);
-        insertPositionToTotals(allTotals, type);
-        insertPositionToTotals(liveTotals, type);
+            // let's start with the totalizer
+            const { allTotalsMap, liveTotalsMap } = getTotalMaps(allSubmissions, type, totalTime);
+            const { allTotals, liveTotals } = sortTotals(allTotalsMap, liveTotalsMap, type);
+            insertPositionToTotals(allTotals, type);
+            insertPositionToTotals(liveTotals, type);
 
-        // we can filter the allTotals & liveTotals array looking for the profileId's object
-        const allTotal = allTotals.find(obj => obj.profile.id === profileId);
-        const liveTotal = liveTotals.find(obj => obj.profile.id === profileId);
+            // we can filter the allTotals & liveTotals array looking for the profileId's object
+            const allTotal = allTotals.find(obj => obj.profile.id === profileId);
+            const liveTotal = liveTotals.find(obj => obj.profile.id === profileId);
 
-        // now, it's time to do the medal table
-        const submissions = allSubmissions.filter(row => row.details.live);
-        const userMap = getUserMap(submissions);
-        const medalTable = getMedalTable(userMap, submissions);
-        insertPositionToMedals(medalTable);
+            // now, it's time to do the medal table
+            const submissions = allSubmissions.filter(row => row.details.live);
+            const userMap = getUserMap(submissions);
+            const medalTable = getMedalTable(userMap, submissions);
+            insertPositionToMedals(medalTable);
 
-        // we can filter the medalTable looking for the profileId's object. [note: medal tables are the same for all and live!]
-        const allMedals = medalTable.find(obj => obj.profile.id === profileId);
-        const liveMedals = allMedals;
+            // we can filter the medalTable looking for the profileId's object. [note: medal tables are the same for all and live!]
+            const allMedals = medalTable.find(obj => obj.profile.id === profileId);
+            const liveMedals = allMedals;
 
-        // now, it's time to do player rankings
-        const allRankings = generateRankings(path, game, allSubmissions);
-        const liveRankings = generateRankings(path, game, submissions);
+            // now, it's time to do player rankings
+            const allRankings = generateRankings(path, game, allSubmissions);
+            const liveRankings = generateRankings(path, game, submissions);
 
-        // create our stats object
-        const stats = {
-            all: {
-                medals: allMedals,
-                rankings: allRankings,
-                total: allTotal
-            },
-            live: {
-                medals: liveMedals,
-                rankings: liveRankings,
-                total: liveTotal
-            }
+            // create our stats object
+            const stats = {
+                all: {
+                    medals: allMedals,
+                    rankings: allRankings,
+                    total: allTotal
+                },
+                live: {
+                    medals: liveMedals,
+                    rankings: liveRankings,
+                    total: liveTotal
+                }
+            };
+            
+            // update the stats state hook
+            setStats(stats);
+
+        } catch (error) {
+            // if the submissions fail to be fetched, let's render an error specifying the issue
+			addMessage("Failed to fetch submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
         };
-        
-        // update the stats state hook
-        setStats(stats);
     };
 
     return { 
