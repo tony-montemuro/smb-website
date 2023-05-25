@@ -86,13 +86,23 @@ const Notifications = () => {
         }
     };
 
+    // FUNCTION 5: handleRowClick - code that is executed when the user clicks on a notification
+    // PRECONDITIONS (1 parameter)
+    // 1.) notification: a notification object corresponding to the clicked row
+    // POSTCONDITIONS (1 possible outcome):
+    // a popup will immediately be rendered once the setNotification() function is called
+    const handleRowClick = (notification) => {
+        setNotifications({ ...notifications, current: notification });
+    }
+
     return { 
         notifications, 
         setNotifications,
         init, 
         toggleSelectionAll, 
         toggleSelection,
-        removeSelected
+        removeSelected,
+        handleRowClick
     };
 };
 

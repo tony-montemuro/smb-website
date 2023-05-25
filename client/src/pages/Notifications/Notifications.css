@@ -35,6 +35,7 @@
 .notifications-body td {
     border: 1px solid black;
     text-align: center;
+    cursor: pointer;
 }
 
 .notification-body p {

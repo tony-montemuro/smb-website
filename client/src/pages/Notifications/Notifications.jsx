@@ -24,7 +24,8 @@ function Notifications() {
     setNotifications,
     toggleSelection,
     toggleSelectionAll,
-    removeSelected
+    removeSelected,
+    handleRowClick
   } = NotificationsLogic();
 
   /* ===== EFFECTS ===== */
@@ -46,15 +47,16 @@ function Notifications() {
 
           { /* Render name of the page, and a message introducing the page. */ }
           <h1>Notifications</h1>
-          <p><i>Below is the list of all your notifications. There are 4 types of notifications:</i></p>
+          <p><i>Below is the list of all your notifications. There are 5 types of notifications:</i></p>
         </div>
 
         { /* Notification type list - render a list element describing each notification type. */ }
         <ol>
-          <li><b>Approvals:</b> A moderator has approved of your submission.</li>
-          <li><b>Inserts:</b> A moderator has submitted a submission on your behalf.</li>
-          <li><b>Deletes:</b> A moderator has deleted your submission.</li>
+          <li><b>Approve:</b> A moderator has approved one of your submission.</li>
+          <li><b>Insert:</b> A moderator has submitted a score or time on your behalf.</li>
+          <li><b>Delete:</b> A moderator has deleted one of your submissions.</li>
           <li><b>Report:</b> A user has reported { user.is_mod ? "a submission." : "one of your submissions." }</li>
+          <li><b>Update:</b> A moderator has updated one of you submissions.</li>
         </ol>
       </div>
 
@@ -82,12 +84,11 @@ function Notifications() {
                 />
               </th>
 
-              <th>Details</th>
+              <th>Time Ago</th>
               <th>Type</th>
               <th>Game</th>
               <th>Level</th>
               <th>Record</th>
-              <th>Notification Date</th>
             </tr>
           </thead>
 
@@ -100,7 +101,7 @@ function Notifications() {
                 return <NotificationTableRow 
                   row={ row } 
                   notifications= { notifications } 
-                  setNotifications={ setNotifications } 
+                  handleRowClick={ handleRowClick } 
                   toggleSelection={ toggleSelection } 
                   key={ row.notif_date }
                 />;
