@@ -70,14 +70,19 @@ function Submissions({ submissionReducer }) {
         <p><i>Below is the list of recent submissions. Please go through and review each submission for each game.</i></p>
 
         { /* Instructions on how to operate this page. */ }
-        <p>To select a game, use the <b>Select Game</b> selection tool.</p>
-        <p>If a submission is <b>valid</b>, add it to the list of approved records by pressing the <b>Approve</b> button
-        for that submission. <b>NOTE:</b> In order to finalize the approval process, you <i>must</i> press
-        the <b>Approve All</b> button under the <b>Approved Submissions</b> list. Remember, if you accidently add an invalid
-        run to the <b>Approved Submissions</b> list, you can always remove it by pressing the <b>Unapprove</b> button. </p>
-        <p>If you suspect a submission is <b>invalid</b>, first navigate to the board with the invalid
-        submission by clicking on the <b>Level Name</b>. If you still are suspicious, remove the record
-        by clicking the <b>Delete</b> button.</p>
+        <p>
+          To select a game, use the <b>Select Game</b> selection tool.
+        </p>
+        <p>
+          If a submission is <b>valid</b>, add it to the list of approved records by selecting the submission.
+          In order to finalize the approval process, you <i>must</i> press the <b>Approve All</b> button under the&nbsp;
+          <b>Approved Submissions</b> list. Remember, if you accidently add an invalid run to the <b>Approved Submissions</b>
+          list, you can always remove it by selecting the submission.
+        </p>
+        <p>
+          If you suspect a submission is <b>invalid</b>, first navigate to the board with the invalid submission by clicking on the&nbsp;
+          <b>Level</b>. If you still are suspicious, remove the record by clicking the <b>Delete</b> button.
+        </p>
 
       </div> 
 
@@ -112,8 +117,7 @@ function Submissions({ submissionReducer }) {
               submissions={ approved }
               isApproved={ true } 
               game={ game }
-              buttonIsDisabled={ approving } 
-              buttonFunc={ removeFromApproved }
+              handleClick={ removeFromApproved }
             />
           :
 
@@ -136,9 +140,8 @@ function Submissions({ submissionReducer }) {
               <SubmissionsTable 
                 submissions={ submissions[game] }
                 isApproved={ false }
-                game={ game }
-                buttonIsDisabled={ approving } 
-                buttonFunc={ addToApproved } 
+                game={ game } 
+                handleClick={ addToApproved } 
               />
             :
 

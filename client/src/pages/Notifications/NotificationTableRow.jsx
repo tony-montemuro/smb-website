@@ -24,7 +24,7 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
         />
       </td>
 
-      { /* Render the date of the notification */ }
+      { /* Render how long ago the notification was receieved. */ }
       <td onClick={ () => handleRowClick(row) }>{ getTimeDifference(row.notif_date) }</td>
 
       { /* Render the type of notification */ }

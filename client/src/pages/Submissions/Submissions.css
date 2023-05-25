@@ -52,6 +52,7 @@
 .submissions-list td {
     border: 1px solid black;
     padding: 4px 8px;
+    cursor: pointer;
 }
 
 .submissions-list a {

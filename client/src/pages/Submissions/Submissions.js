@@ -93,11 +93,13 @@ const Submissions = () => {
     // with the approved array as argument, with the submission object appended to the end. finally, the setSubmission() function is called,
     // with an identical submissions object as argument, minus the submission passed as parameter to the function
     const addToApproved = (submission) => {
-        const games = staticCache.games;
-        const gameObj = games.find(row => row.abb === game);
-        setApproved([...approved, { ...submission, game: gameObj }]);
-        const filtered = submissions[game].filter(row => row !== submission);
-        setSubmissions({ ...submissions, [game]: filtered });
+        if (!approving) {
+            const games = staticCache.games;
+            const gameObj = games.find(row => row.abb === game);
+            setApproved([...approved, { ...submission, game: gameObj }]);
+            const filtered = submissions[game].filter(row => row !== submission);
+            setSubmissions({ ...submissions, [game]: filtered });
+        }
     };
 
     // FUNCTION 3: removeFromApproved - given a submission object from the approved array, move it from there back to the submission object
@@ -108,11 +110,13 @@ const Submissions = () => {
     // as argument, including the submission object placed back in the proper, ordered place. funally, the setApproved() function is called,
     // with the approved array as argument, minus the submission object
     const removeFromApproved = (submission) => {
-        const submissionAbb = submission.game.abb;
-        delete submission.game;
-        const sorted = [...submissions[submissionAbb], submission].sort((a, b) => a.submitted_at < b.submitted_at ? -1 : a.submitted_at > b.submitted_at ? 1 : 0);
-        setSubmissions({ ...submissions, [submissionAbb]: sorted });
-        setApproved(approved.filter(row => row !== submission));
+        if (!approving) {
+            const submissionAbb = submission.game.abb;
+            delete submission.game;
+            const sorted = [...submissions[submissionAbb], submission].sort((a, b) => a.submitted_at < b.submitted_at ? -1 : a.submitted_at > b.submitted_at ? 1 : 0);
+            setSubmissions({ ...submissions, [submissionAbb]: sorted });
+            setApproved(approved.filter(row => row !== submission));
+        }
     };
 
     // FUNCTION 4: approveAll - approve all submissions in the approved array in the database
