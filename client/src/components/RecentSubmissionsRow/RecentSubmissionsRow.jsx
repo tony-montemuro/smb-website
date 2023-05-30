@@ -24,7 +24,7 @@ function RecentSubmissionsRow({ submission, renderGame }) {
       { renderGame && <td><Link to={ `/games/${ game.abb }` }>{ game.name }</Link></td> }
       <td><Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>{ cleanLevelName(level.name) }</Link></td>
       <td>{ capitalize(type) }</td>
-      <td>{ recordB2F(submission.record) }</td>
+      <td>{ recordB2F(submission.record, type) }</td>
       <td>{ submission.all_position }</td>
     </tr>
   );

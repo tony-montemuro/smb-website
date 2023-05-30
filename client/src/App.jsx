@@ -63,7 +63,7 @@ function App() {
       <StaticCacheContext.Provider value={ { staticCache } }>
         <UserContext.Provider value={ { user } }>
           { /* Render the navbar at the top of the application */ }
-          <Navbar />
+          <Navbar imageReducer={ imageReducer } />
 
           { /* The app div is a set of routes, as well as any messages. Each route corresponds to a page. */ }
           <div className="app">

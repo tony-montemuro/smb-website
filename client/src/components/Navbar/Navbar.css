@@ -1,7 +1,7 @@
 .nav-wrapper {
     display: flex;
     align-items: stretch;
-    height: 5vh;
+    height: 8vh;
 }
 
 .nav {
@@ -38,4 +38,21 @@
 
 .nav li:hover {
     background-color: #777;
+}
+
+.nav-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 8vh;
+}
+
+.nav-profile img {
+    vertical-align: middle;
+}
+
+.nav-profile span {
+    align-self: flex-start;
+    margin-top: 10px;
+    margin-left: 10px;
 }

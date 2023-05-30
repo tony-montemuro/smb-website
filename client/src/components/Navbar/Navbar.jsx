@@ -1,10 +1,11 @@
 /* ===== IMPORTS ===== */
-import './navbar.css';
-import React, { useContext } from "react";
+import "./Navbar.css";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
 import { UserContext } from "../../Contexts";
+import NavProfile from "./NavProfile";
 
-function Navbar() {  
+function Navbar({ imageReducer }) {  
   /* ===== CONTEXTS ===== */
 
   // user state from user context
@@ -63,6 +64,10 @@ function Navbar() {
               { /* Link to the profile page */ }
               <li>
                 <Link to="/profile">Edit Profile</Link>
+              </li>
+
+              <li>
+                <NavProfile imageReducer={ imageReducer } />
               </li>
 
             </>
