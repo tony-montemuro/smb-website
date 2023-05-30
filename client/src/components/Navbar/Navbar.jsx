@@ -66,10 +66,6 @@ function Navbar({ imageReducer }) {
                 <Link to="/profile">Edit Profile</Link>
               </li>
 
-              <li>
-                <NavProfile imageReducer={ imageReducer } />
-              </li>
-
             </>
           : 
             // If not an authenticated user, render a link to the login page
@@ -79,6 +75,10 @@ function Navbar({ imageReducer }) {
             
           }
         </ul>
+
+        { /* Display profile information if user is authenticated. */ }
+        { user.id && <NavProfile imageReducer={ imageReducer } /> }
+        
       </nav>
     </div>
   );

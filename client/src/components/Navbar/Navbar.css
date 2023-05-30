@@ -51,8 +51,24 @@
     vertical-align: middle;
 }
 
-.nav-profile span {
-    align-self: flex-start;
-    margin-top: 10px;
-    margin-left: 10px;
+.nav-profile-details {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.nav-profile-details span {
+    padding: 5px;
+}
+
+.nav-profile-details a {
+    display: inline-block;
+}
+
+#signout-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    padding: 4px;
 }
