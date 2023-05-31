@@ -50,7 +50,7 @@ function Profile({ imageReducer }) {
 
             { /* Profile header */ }
             <div className="profile-header">
-                <h1>Edit Your Profile</h1>
+                <h1>Profile Settings</h1>
             </div>
 
             { /* Profile body - render user info form, avatar info form, and email info form */ }

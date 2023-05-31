@@ -26,7 +26,7 @@ function UserInfoForm() {
     <div className="profile-user-info">
 
       { /* Form header */ }
-      <h2>Edit User Information</h2>
+      <h2>Update Profile Information</h2>
 
       { /* User form */ }
       <form className="profile-info-form" onSubmit={ uploadUserInfo }>

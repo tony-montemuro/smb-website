@@ -57,6 +57,19 @@
     flex-direction: column;
 }
 
+.nav-profile-username {
+    padding: 5px;
+}
+
+.nav-profile-username .username {
+    display: flex;
+    align-items: center;
+}
+
+.nav-profile-username .username a {
+    padding: 0;
+}
+
 .nav-profile-link {
     display: inline-block;
 }
@@ -65,12 +78,13 @@
     vertical-align: text-top;
 }
 
-#nav-login:hover {
-    background-color: #777;
+#nav-logo {
+    height: 100%;
+    width: auto;
 }
 
-#nav-profile-username {
-    padding: 5px;
+#nav-login:hover {
+    background-color: #777;
 }
 
 #nav-profile-signout-btn {

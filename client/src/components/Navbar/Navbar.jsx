@@ -3,6 +3,7 @@ import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../Contexts";
+import Logo from "../../img/logo.png";
 import NavProfile from "./NavProfile";
 
 function Navbar({ imageReducer }) {  
@@ -17,7 +18,9 @@ function Navbar({ imageReducer }) {
       <nav className="nav">
 
         { /* Link to the homepage - left side of navbar */ }
-        <Link to="/" className="nav-title">Home</Link>
+        <Link to="/" className="nav-title" title="Home">
+          <img id="nav-logo" src={ Logo } alt="SMBElite"></img>
+        </Link>
 
         <ul>
 
