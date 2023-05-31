@@ -1,13 +1,16 @@
 /* ===== IMPORTS ===== */
 import "./Medals.css";
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { GameContext, MessageContext } from "../../Contexts";
+import { useContext, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
+import GameHelper from "../../helper/GameHelper";
 import MedalsLogic from "./Medals.js";
 import MedalTable from "./MedalTable";
 
 function Medals({ submissionReducer, imageReducer }) {
   /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
   const abb = path[2];
@@ -15,10 +18,19 @@ function Medals({ submissionReducer, imageReducer }) {
   const type = path[5];
   const isMisc = category === "misc" ? true : false;
 
+  /* ===== CONTEXTS ===== */
+
+  // game state from game context
+  const { game } = useContext(GameContext);
+  
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
+
   /* ===== STATES AND FUNCTIONS ===== */
 
   // helper functions
   const { capitalize } = FrontendHelper();
+  const { hasMiscCategory } = GameHelper();
 
   // states and functions from the js file
   const { 
@@ -30,6 +42,14 @@ function Medals({ submissionReducer, imageReducer }) {
 
   // code that is executed when the component mounts, or when the user switches between miscellaneous and main
   useEffect(() => {
+    // special case: we are at the path "/games/{abb}/misc/medals/{type}", but the game has no misc charts
+    if (category === "misc" && !hasMiscCategory(game)) {
+      addMessage("The page you requested does not exist.", "error");
+      navigate("/");
+      return;
+    }
+
+    // if we made it past the special case, let's go ahead and fetch the medal table
     fetchMedals(abb, category, type, submissionReducer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);

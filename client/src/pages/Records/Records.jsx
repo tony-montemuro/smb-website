@@ -1,14 +1,16 @@
 /* ===== IMPORTS ====== */
 import "./Records.css";
-import { GameContext } from "../../Contexts";
-import { useLocation } from "react-router-dom";
+import { GameContext, MessageContext } from "../../Contexts";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
+import GameHelper from "../../helper/GameHelper";
 import RecordsLogic from "./Records.js";
 import RecordTable from "./RecordTable";
 
 function Records({ submissionReducer }) {
   /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
   const category = path[3];
@@ -19,6 +21,9 @@ function Records({ submissionReducer }) {
 
   // game state from game context
   const { game } = useContext(GameContext);
+
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES AND FUNCTIONS ===== */
   const [allLiveFilter, setAllLiveFilter] = useState("live");
@@ -32,11 +37,20 @@ function Records({ submissionReducer }) {
 
   // helper functions
   const { capitalize } = FrontendHelper();
+  const { hasMiscCategory } = GameHelper();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts, or when the user switches between score and time
   useEffect(() => {
+    // special case: we are at the path "/games/{abb}/misc/{type}", but the game has no misc charts
+    if (category === "misc" && !hasMiscCategory(game)) {
+      addMessage("The page you requested does not exist.", "error");
+      navigate("/");
+      return;
+    } 
+
+    // if we made it past the special case, let's go ahead and fetch all records
     fetchRecords(game, category, type, submissionReducer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);

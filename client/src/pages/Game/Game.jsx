@@ -45,7 +45,7 @@ function Game() {
   /* ===== EFFECTS ====== */
   useEffect(() => {
     // special case: we are at the path "/games/{abb}/misc", but the game has no misc charts
-    if (category === "misc") {
+    if (category === "misc" && !hasMiscCategory(game)) {
       addMessage("The page you requested does not exist.", "error");
       navigate("/");
       return;
