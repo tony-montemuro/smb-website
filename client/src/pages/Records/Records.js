@@ -24,17 +24,17 @@ const Records = () => {
     // 3.) submissions: submissions: an array containing unfiltered submissions for a particular game. the submissions must be
     // ordered by type in descending order, then by level id in ascending order
     // POSTCONDITIONS (1 possible outcome, 2 returns):
-    // 1.) record: a record object is generated, which has 3 fields: level, record, and names
+    // 1.) record: a record object is generated, which has 3 fields: level, record, and profiles
         // level - the string name of a level
         // record - a floating point value that represents the world record, or null if there is no record
-        // names - an array of profile objects (users that have the record), which is a simple object with a username and id field 
+        // profiles - an array of profile objects (users that have the record), which is a simple object with a username and id field 
     // 2.) index: the updated submissionIndex is returned, since JS passes integers by value, and this value is changed in this function
     const generateRecord = (submissionIndex, levelName, submissions) => {
         // initialize variables used in the function
         const start = submissionIndex;
         const record = {
             level: levelName,
-            names: [],
+            profiles: [],
             record: null
         };
 
@@ -46,7 +46,7 @@ const Records = () => {
             if (submissions[submissionIndex].details.record === submissions[start].details.record) {
                 const profile = submissions[submissionIndex].profile;
                 record.record = submissions[submissionIndex].details.record;
-                record.names.push({ username: profile.username, id: profile.id });
+                record.profiles.push(profile);
             }
             submissionIndex++;
         }
@@ -64,7 +64,7 @@ const Records = () => {
     // be ordered by type in descending order, then by level id in ascending order
     // POSTCONDITIONS (1 possible outcome, 1 return):
     // 1.) recordTable: recordTable has a field for each mode belonging to { game }, { category }, and { type }
-    // each field is mapped to an array of record objects, each of which has 3 fields: level, record, and names
+    // each field is mapped to an array of record objects, each of which has 3 fields: level, record, and profiles
     // once this object is generated, call the setRecordTable() function to update the recordTable state
     const generateRecordTable = (game, category, type, submissions) => {
         // initialize variables used in the function
@@ -107,7 +107,7 @@ const Records = () => {
     // POSTCONDITIONS (1 possible outcome):
     // if the submission query is a success, a recordTable object is generated. records has two fields: all and live. each field maps
     // to a recordTable object. each recordTable object has a field for each mode belonging to { game }, { category }, and { type }
-    // each field is mapped to an array of record objects, each of which has 3 fields: level, record, and names. once this object is
+    // each field is mapped to an array of record objects, each of which has 3 fields: level, record, and profiles. once this object is
     // generated, call the setRecordTable() function to update the recordTable state
     // if the submissions fail to be retrieved, an error message is rendered to the user, and the record table state is NOT updated, 
     // leaving the Records component stuck loading

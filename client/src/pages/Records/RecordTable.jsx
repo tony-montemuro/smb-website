@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import { Link, useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import RecordsLogic from "./Records.js";
+import Username from "../../components/Username/Username.jsx";
 
 function RecordTable({ mode, allLiveFilter, recordTable }) {
   /* ===== VARIABLES ===== */
@@ -54,14 +55,14 @@ function RecordTable({ mode, allLiveFilter, recordTable }) {
               { /* Second element is the record */ }
               <td>{ level.record && recordB2F(level.record, type) }</td>
 
-              { /* Third element is the names of each user who has record. This is a list of links, as each name will link to their
+              { /* Third element is the profiles of each user who has record. This is a list of links, as each name will link to their
               user profile. */ }
               <td>
-                { level.names.map((user, index) => {
+                { level.profiles.map((profile, index) => {
                   return (
-                    <Fragment key={ user.id }>
-                      <Link to={ `/user/${ user.id }` }>{ user.username }</Link>
-                      { index < level.names.length-1 ? ", " : null }
+                    <Fragment key={ profile.id }>
+                      <Username country={ profile.country } profileId={ profile.id } username={ profile.username } />
+                      { index < level.profiles.length-1 ? ", " : null }
                     </Fragment>
                   );
                 })}
