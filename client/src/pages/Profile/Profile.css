@@ -6,19 +6,16 @@
     display: flex;
 }
 
-.profile-body form button {
-    margin-top: 5px;
-    margin-bottom: 10px;
-}
-
 .profile-body h2 {
     text-align: center;
 }
 
-.profile-user-info {
+.profile-left {
     flex: 1;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 10px;
+}
+
+.profile-user-info {
     border: 1px solid black;
     border-radius: 10px;
     padding: 10px;
@@ -38,11 +35,13 @@
     width: 300px;
 }
 
-.profile-avatar-info {
+.profile-right {
     flex: 1;
+    margin: 10px;
+}
+
+.profile-avatar-info {
     box-sizing: border-box;
-    margin-left: 10px;
-    margin-right: 10px;
     border: 1px solid black;
     border-radius: 10px;
     padding: 10px;
@@ -62,11 +61,14 @@
     margin-top: 10px;
 }
 
-.profile-footer {
-    margin-left: 10px;
-    margin-right: 10px;
+.profile-email-info {
+    box-sizing: border-box;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
 }
 
-.profile-footer button {
-    margin-right: 5px;
+.profile-email-info button {
+    margin-top: 10px;
 }

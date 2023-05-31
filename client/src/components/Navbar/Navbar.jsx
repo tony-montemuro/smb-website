@@ -17,18 +17,9 @@ function Navbar({ imageReducer }) {
       <nav className="nav">
 
         { /* Link to the homepage - left side of navbar */ }
-        <Link to="/" className="site-title">Home</Link>
+        <Link to="/" className="nav-title">Home</Link>
 
         <ul>
-          { /* LINKS FOR MODERATORS */ }
-          { user.id && user.is_mod &&
-
-            // For moderators, render a link to the Recent Submissions page
-            <li>
-              <Link to="/submissions">Recent Submissions</Link>
-            </li>
-
-          }
 
           { /* Link to the games page */ }
           <li>
@@ -45,40 +36,15 @@ function Navbar({ imageReducer }) {
             <Link to="/support">Support</Link>
           </li>
 
-          { /* LINKS FOR AUTHENTICATED USERS */ }
-          { user.id ? 
-            <>
-
-              { /* Link to the notifications page */ }
-              <li>
-                  <Link to="/notifications">
-                    { user.notifications.length > 0 ? user.notifications.length : null } Notifications
-                  </Link>
-              </li>
-
-              { /* Link to the email update page */ }
-              <li>
-                <Link to="/email-update">Update Email</Link>
-              </li>
-
-              { /* Link to the profile page */ }
-              <li>
-                <Link to="/profile">Edit Profile</Link>
-              </li>
-
-            </>
-          : 
-            // If not an authenticated user, render a link to the login page
-            <li>
-              <Link to="/login">Login / Sign Up</Link>
-            </li>
-            
-          }
         </ul>
 
-        { /* Display profile information if user is authenticated. */ }
-        { user.id && <NavProfile imageReducer={ imageReducer } /> }
-        
+        { /* Render an authenticated user's profile information, if they are logged in. Otherwise, render the login / signup button. */ }
+        { user.id ? 
+          <NavProfile imageReducer={ imageReducer } />
+        :
+          <Link id="nav-login" to="/login">Login / Sign Up</Link>
+        }
+
       </nav>
     </div>
   );

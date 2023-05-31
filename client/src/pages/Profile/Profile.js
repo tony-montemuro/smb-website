@@ -1,16 +1,11 @@
 /* ===== IMPORTS ===== */
 import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
 import { useContext, useReducer, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ProfileUtils from "./ProfileUtils.js";
 import ProfilesUpdate from "../../database/update/ProfilesUpdate";
-import Signout from "../../database/authentication/Signout";
 import Upload from "../../database/storage/Upload";
 
 const Profile = () => {
-    /* ===== VARIABLES ===== */
-    const navigate = useNavigate();
-
     /* ===== CONTEXTS ===== */
 
     // static cache state from static cache context & user state from user context 
@@ -64,7 +59,6 @@ const Profile = () => {
         convertToPNG
     } = ProfileUtils();
     const { upsertUserInfo } = ProfilesUpdate();
-    const { signOut } = Signout();
     const { uploadAvatar } = Upload();
 
     // FUNCTION 1: initForms - initialize both the user form and the avatar form
@@ -190,33 +184,13 @@ const Profile = () => {
         }
     };
 
-    // FUNCTION 5: signOutUser - function that signs a user out
-    // PRECONDITIONS (1 condition):
-    // the application should have a currently signed-in user when this function is called
-    // POSTCONDITIONS (2 possible outcomes):
-    // if successful, the user will be signed out, and navigated back to the home page
-    // if unsuccessful, we handle the error here
-    const signOutUser = async () => {
-        try {
-            // attempt to sign the user out
-            await signOut();
-
-            // if successful, let's navigate back to the home page
-            navigate("/");
-
-        } catch (error) {
-            addMessage(error.message, "error");
-        }
-    };
-
     return { 
         userForm,
         avatarForm,
         initForms,
         handleChange,
         updateUserInfo,
-        avatarSubmit,
-        signOutUser
+        avatarSubmit
     };
 };
 

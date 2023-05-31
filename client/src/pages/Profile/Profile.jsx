@@ -1,12 +1,12 @@
 /* ===== IMPORTS ===== */
 import "./Profile.css";
-import { Link } from "react-router-dom";
 import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AvatarInfoForm from "./AvatarInfoForm";
+import EmailInfoForm from "./EmailInfoForm.jsx";
 import ProfileLogic from "./Profile.js";
 import UserInfoForm from "./UserInfoForm";
-import AvatarInfoForm from "./AvatarInfoForm";
 
 function Profile({ imageReducer }) {
     /* ===== VARIABLES ===== */
@@ -32,8 +32,7 @@ function Profile({ imageReducer }) {
         initForms,
         handleChange,
         updateUserInfo,
-        avatarSubmit,
-        signOutUser
+        avatarSubmit
     } = ProfileLogic();
 
     /* ===== EFFECTS ===== */
@@ -58,6 +57,7 @@ function Profile({ imageReducer }) {
     /* ===== PROFILE COMPONENT ===== */
     return userForm.user && userForm.countries ?
         <>
+
             { /* Profile header */ }
             <div className="profile-header">
                 <h1>Edit Your Profile</h1>
@@ -65,24 +65,15 @@ function Profile({ imageReducer }) {
 
             { /* Profile body - render the two profile forms */ }
             <div className="profile-body"> 
-                <UserInfoForm form={ userForm } handleChange={ handleChange } formSubmit={ updateUserInfo } />
-                <AvatarInfoForm profileId={ userForm.user.id } form={ avatarForm } formSubmit={ avatarSubmit } imageReducer={ imageReducer } />
+                <div className="profile-left">
+                    <UserInfoForm form={ userForm } handleChange={ handleChange } formSubmit={ updateUserInfo } />
+                </div>
+                <div className="profile-right">
+                    <AvatarInfoForm profileId={ userForm.user.id } form={ avatarForm } formSubmit={ avatarSubmit } imageReducer={ imageReducer } />
+                    <EmailInfoForm />
+                </div>
             </div>
 
-            {/* Profile footer */}
-            <div className="profile-footer">
-
-                { /* Footer header */ }
-                <h2>Options</h2>
-
-                { /* Button to navigate to the user's page */ }
-                <Link to={ `/user/${ userForm.user.id }` }>
-                    <button>View Profile</button>
-                </Link>
-
-                { /* Button to sign the user out */ }
-                <button onClick={ signOutUser }> Sign Out</button>
-            </div>
       </>
     :
         

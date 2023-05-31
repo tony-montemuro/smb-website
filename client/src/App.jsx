@@ -12,7 +12,7 @@ import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Medals from "./pages/Medals/Medals.jsx";
-import MessagePopup from "./components/ErrorPopup/MessagePopup.jsx";
+import MessagePopup from "./components/MessagePopup/MessagePopup.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
 import Notifications from "./pages/Notifications/Notifications.jsx";
 import Profile from "./pages/Profile/Profile.jsx";

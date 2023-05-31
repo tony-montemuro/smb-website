@@ -7,6 +7,7 @@ import ChecklistIcon from "@mui/icons-material/Checklist";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import Signout from "../../database/authentication/Signout";
 
 function NavProfile({ imageReducer }) {
@@ -29,22 +30,37 @@ function NavProfile({ imageReducer }) {
         </Link>
       </div>
       <div className="nav-profile-details">
-        <span>{ user.profile.username }</span>
+        <span id="nav-profile-username">{ user.profile.username }</span>
         <div className="nav-profile-links">
-          <Link to="/profile">
-            <ManageAccountsIcon titleAccess="Edit Profile" />
-          </Link>
-          <Link to="/notifications">
-            <NotificationsIcon titleAccess="Notifications" />
-          </Link>
-          { user.is_mod &&
-            <Link to="/submissions">
-              <ChecklistIcon titleAccess="Recent Submissions" />
+          <div className="nav-profile-link">
+            <Link to="/profile">
+              <ManageAccountsIcon titleAccess="Edit Profile" />
             </Link>
+          </div>
+          <div id="nav-profile-notifications" className="nav-profile-link">
+            { user.notifications.length > 0 ?
+              <Link to="/notifications">
+                <span>{ user.notifications.length }</span>
+                <NotificationsIcon titleAccess="Notifications" />
+              </Link>
+            :
+              <Link to="/notifications">
+                <NotificationsNoneOutlinedIcon titleAccess="Notifications" />
+              </Link>
+            }
+          </div>
+          { user.is_mod &&
+            <div className="nav-profile-link">
+              <Link to="/submissions">
+                <ChecklistIcon titleAccess="Recent Submissions" />
+              </Link>
+            </div>
           }
-          <button id="signout-btn" onClick={ signOut }>
-            <LogoutIcon titleAccess="Sign Out" />
-          </button>
+          <div className="nav-profile-link">
+            <button id="nav-profile-signout-btn" onClick={ signOut }>
+              <LogoutIcon titleAccess="Sign Out" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
