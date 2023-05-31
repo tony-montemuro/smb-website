@@ -1,20 +1,35 @@
 /* ===== IMPORTS ===== */
 import "./Profile.css";
+import { useEffect } from "react";
+import UserInfoFormLogic from "./UserInfoForm.js";
 
-function UserInfoForm({ form, handleChange, formSubmit }) {
+function UserInfoForm() {
   /* ===== VARIABLES ===== */
   const BIO_WIDTH = 50;
   const BIO_HEIGHT = 4;
 
+  /* ===== STATES & FUNCTIONS ===== */
+
+  // states and functions from the js file
+  const { form, initForm, handleChange, uploadUserInfo } = UserInfoFormLogic();
+
+  /* ===== EFFECTS ===== */
+
+  // code that is executed when the component first mounts
+  useEffect(() => {
+    initForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /* ===== USER INFO FORM COMPONENT ===== */
-  return (
+  return form.user && form.countries &&
     <div className="profile-user-info">
 
       { /* Form header */ }
       <h2>Edit User Information</h2>
 
       { /* User form */ }
-      <form className="profile-info-form" onSubmit={ formSubmit }>
+      <form className="profile-info-form" onSubmit={ uploadUserInfo }>
 
         <h3>Profile</h3>
 
@@ -37,11 +52,7 @@ function UserInfoForm({ form, handleChange, formSubmit }) {
         { /* Country field: an optional dropdown of countries that the user can select from. */ }
         <div className="profile-info-entry">
           <label htmlFor="country">Country (optional): </label>
-          <select 
-            id="country"
-            value= { form.user.country }
-            onChange={ handleChange }
-          >
+          <select id="country" value= { form.user.country } onChange={ handleChange }>
             <option key={ "null" } value={ "" }>--</option>
             { form.countries.map(country => (
               <option key={ country.iso2 } value={ country.iso2 }>{ country.name }</option>
@@ -158,12 +169,10 @@ function UserInfoForm({ form, handleChange, formSubmit }) {
         </div>
 
         { /* Form button: button user uses to complete the form. Will disable while application processes form. */ }
-        <button disabled={ form.updating }>Update Profile</button>
+        <button disabled={ form.uploading }>Update Profile</button>
 
       </form>
     </div>
-  );
-  
 };
 
 /* ===== EXPORTS ===== */

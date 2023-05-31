@@ -1,12 +1,11 @@
 /* ===== IMPORTS ===== */
 import "./Profile.css";
 import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AvatarInfoForm from "./AvatarInfoForm.jsx";
 import EmailInfoForm from "./EmailInfoForm.jsx";
-import ProfileLogic from "./Profile.js";
-import UserInfoForm from "./UserInfoForm";
+import UserInfoForm from "./UserInfoForm.jsx";
 
 function Profile({ imageReducer }) {
     /* ===== VARIABLES ===== */
@@ -23,15 +22,8 @@ function Profile({ imageReducer }) {
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
-    /* ===== FUNCTIONS ===== */
-
-    // states and functions from the init file
-    const { 
-        userForm,
-        initForms,
-        handleChange,
-        updateUserInfo
-    } = ProfileLogic();
+    /* ===== STATES ===== */
+    const [validated, setValidated] = useState(false);
 
     /* ===== EFFECTS ===== */
 
@@ -46,14 +38,14 @@ function Profile({ imageReducer }) {
             return;
           }
     
-          // call function to initialize both forms
-          initForms();
+          // if we made it past error check, validate that component can load
+          setValidated(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [staticCache, user]);
 
     /* ===== PROFILE COMPONENT ===== */
-    return userForm.user && userForm.countries ?
+    return validated ?
         <>
 
             { /* Profile header */ }
@@ -61,10 +53,10 @@ function Profile({ imageReducer }) {
                 <h1>Edit Your Profile</h1>
             </div>
 
-            { /* Profile body - render the two profile forms */ }
+            { /* Profile body - render user info form, avatar info form, and email info form */ }
             <div className="profile-body"> 
                 <div className="profile-left">
-                    <UserInfoForm form={ userForm } handleChange={ handleChange } formSubmit={ updateUserInfo } />
+                    <UserInfoForm />
                 </div>
                 <div className="profile-right">
                     <AvatarInfoForm imageReducer={ imageReducer } />
