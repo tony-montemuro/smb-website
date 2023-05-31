@@ -1,9 +1,10 @@
 /* ===== IMPORTS ===== */
 import "./Game.css";
-import { GameContext } from "../../Contexts";
+import { GameContext, MessageContext } from "../../Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
+import GameHelper from "../../helper/GameHelper";
 import GameLogic from "./Game.js";
 import ModeBody from "./ModeBody";
 import RecentSubmissionsRow from "../../components/RecentSubmissionsRow/RecentSubmissionsRow";
@@ -21,6 +22,9 @@ function Game() {
   // game state from game context
   const { game } = useContext(GameContext);
 
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
+
   /* ===== STATES AND FUNCTIONS ===== */
   const [selectedRadioBtn, setSelectedRadioBtn] = useState(category ? category : "main");
 
@@ -29,6 +33,7 @@ function Game() {
 
   // helper functions
   const { capitalize } = FrontendHelper();
+  const { hasMiscCategory } = GameHelper();
 
   // simple function that handles the radio button change
   const handleChange = (e) => {
@@ -39,6 +44,14 @@ function Game() {
 
   /* ===== EFFECTS ====== */
   useEffect(() => {
+    // special case: we are at the path "/games/{abb}/misc", but the game has no misc charts
+    if (category === "misc") {
+      addMessage("The page you requested does not exist.", "error");
+      navigate("/");
+      return;
+    }
+
+    // otherwise, let's get submissions
     getSubmissions(game.abb);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -100,9 +113,10 @@ function Game() {
       { /* Game Level List - Specifies the category of levels, and renders a list of levels to select. */ }
       <div className="game-level-list">
 
-        { /* Two radio buttons to toggle between two category modes: main and misc. */ }
+        { /* Two radio buttons to toggle between two category modes: main and misc. Only render these buttons if the game
+        has any miscellaneous charts. */ }
         <div className="game-radio-btns">
-          {[{ name: "main", alias: "Main" }, { name: "misc", alias: "Miscellaneous" }].map(category => {
+          { hasMiscCategory(game) && [{ name: "main", alias: "Main" }, { name: "misc", alias: "Miscellaneous" }].map(category => {
             return (
               <div key={ category.name } className={ `game-radio-btn` }>
                 <label htmlFor={ category.name }>{ category.alias } Levels:</label>

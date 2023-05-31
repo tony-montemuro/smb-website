@@ -6,8 +6,9 @@ import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BoxArt from "../BoxArt/BoxArt.jsx";
-import SearchBar from "../SearchBar/SearchBar.jsx";
+import GameHelper from "../../helper/GameHelper";
 import GameLayoutInfo from "./GameLayoutInfo";
+import SearchBar from "../SearchBar/SearchBar.jsx";
 
 function GameLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -26,6 +27,11 @@ function GameLayout({ imageReducer }) {
 
   /* ===== STATES ===== */
   const [game, setGame] = useState(undefined);
+
+  /* ===== FUNCTIONS ===== */
+
+  // helper functions
+  const { hasMiscCategory } = GameHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -87,7 +93,7 @@ function GameLayout({ imageReducer }) {
         { /* Game Layout Sidebar - a set of links used to navigate various game pages. */ }
         <div className="game-layout-body-sidebar">
           <GameLayoutInfo abb={ game.abb } category={ "main" } />
-          <GameLayoutInfo abb={ game.abb } category={ "misc" } />
+          { hasMiscCategory(game) && <GameLayoutInfo abb={ game.abb } category={ "misc" } /> }
         </div>
         
       </div>
