@@ -3,7 +3,7 @@ import "./Profile.css";
 import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import AvatarInfoForm from "./AvatarInfoForm";
+import AvatarInfoForm from "./AvatarInfoForm.jsx";
 import EmailInfoForm from "./EmailInfoForm.jsx";
 import ProfileLogic from "./Profile.js";
 import UserInfoForm from "./UserInfoForm";
@@ -28,11 +28,9 @@ function Profile({ imageReducer }) {
     // states and functions from the init file
     const { 
         userForm,
-        avatarForm,
         initForms,
         handleChange,
-        updateUserInfo,
-        avatarSubmit
+        updateUserInfo
     } = ProfileLogic();
 
     /* ===== EFFECTS ===== */
@@ -69,7 +67,7 @@ function Profile({ imageReducer }) {
                     <UserInfoForm form={ userForm } handleChange={ handleChange } formSubmit={ updateUserInfo } />
                 </div>
                 <div className="profile-right">
-                    <AvatarInfoForm profileId={ userForm.user.id } form={ avatarForm } formSubmit={ avatarSubmit } imageReducer={ imageReducer } />
+                    <AvatarInfoForm imageReducer={ imageReducer } />
                     <EmailInfoForm />
                 </div>
             </div>

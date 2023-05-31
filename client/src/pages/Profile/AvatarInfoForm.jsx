@@ -1,11 +1,21 @@
 /* ===== IMPORTS ===== */
 import "./Profile.css";
-import { useRef } from "react";
+import { useContext, useRef } from "react";
+import { UserContext } from "../../Contexts";
 import Avatar from "../../components/Avatar/Avatar.jsx";
+import AvatarInfoFormLogic from "./AvatarInfoForm.js";
 
-function AvatarInfoForm({ profileId, form, formSubmit, imageReducer }) {
+function AvatarInfoForm({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const IMG_LENGTH = 150;
+
+  /* ===== CONTEXTS ===== */
+
+  // user state from user context
+  const { user } = useContext(UserContext);
+  
+  /* ===== STATES & VARIABLES ===== */
+  const { form, submitAvatar } = AvatarInfoFormLogic();
 
   /* ===== REFS ===== */
   const avatarRef = useRef(null);
@@ -19,10 +29,10 @@ function AvatarInfoForm({ profileId, form, formSubmit, imageReducer }) {
       <p><b>Note:</b> Must be JPEG or PNG, and cannot exceed 5 MB. If your avatar does not update immediately, give it some time.</p>
 
       { /* Avatar form */ }
-      <form className="profile-avatar-form" onSubmit={ (e) => formSubmit(e, avatarRef) }>
+      <form className="profile-avatar-form" onSubmit={ (e) => submitAvatar(e, avatarRef) }>
 
         { /* Render the user's current avatar */ }
-        <Avatar profileId={ profileId } size={ IMG_LENGTH } imageReducer={ imageReducer } />
+        <Avatar profileId={ user.profile.id } size={ IMG_LENGTH } imageReducer={ imageReducer } />
 
         { /* Avatar field - a optional file field, where the user can upload their avatar */ }
         <label htmlFor="avatar-update"></label>
@@ -34,10 +44,10 @@ function AvatarInfoForm({ profileId, form, formSubmit, imageReducer }) {
         />
 
         { /* Form button: button users uses to complete the form. Will disable while the application processes the form. */ }
-        <button disabled={ form.updating }>Save</button>
+        <button disabled={ form.uploading }>Save</button>
 
         { /* If form.error is defined, there was an issue with the avatar the user uploaded. Render it here.  */ }
-        { form.error && <p> { form.error }</p> }
+        { form.error && <p>{ form.error }</p> }
 
       </form>
     </div>

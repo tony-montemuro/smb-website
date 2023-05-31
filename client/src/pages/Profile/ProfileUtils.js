@@ -1,4 +1,3 @@
-// additional profile utility functions
 const ProfileUtils = () => {
     /* ===== FUNCTIONS ===== */
 
@@ -161,13 +160,14 @@ const ProfileUtils = () => {
     // FUNCTION 8: validateAvatar - determine if user has uploaded a valid avatar
     // PRECONDITIONS (2 parameters):
     // 1.) avatarRef: a ref to the image input for avatar form
-    // 2.) firstTimeUser: a boolean flag, whether or not the current user has profile created or not
+    // 2.) profile: a profile object that is either defined or undefined. if undefined, this indicates that the user has not yet
+    // created their profile
     // POSTCONDTIONS (1 parameter):
     // 1.) error: error: a string that gives information as to why their image is problematic, if there is any problems.
     // if this string returns undefined, it means no errors were detected
-    const validateAvatar = (avatarRef, firstTimeUser) => {
+    const validateAvatar = (avatarRef, profile) => {
         // first, check if the user has created a profile. if they have not, return an error message
-        if (firstTimeUser) {
+        if (!profile) {
             return "Please edit your profile information before choosing an avatar.";
         }
 

@@ -1,9 +1,8 @@
 /* ===== IMPORTS ===== */
 import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
-import { useContext, useReducer, useState } from "react";
+import { useContext, useReducer } from "react";
 import ProfileUtils from "./ProfileUtils.js";
 import ProfilesUpdate from "../../database/update/ProfilesUpdate";
-import Upload from "../../database/storage/Upload";
 
 const Profile = () => {
     /* ===== CONTEXTS ===== */
@@ -17,14 +16,7 @@ const Profile = () => {
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
-    /* ===== STATES AND REDUCERS ===== */
-    const [firstTimeUser, setFirstTimeUser] = useState(false);
-    const [avatarForm, dispatchAvatarForm] = useReducer((state, action) => {
-        return { ...state, [action.field]: action.value };
-    }, { 
-        error: null,
-        updating: false
-    });
+    /* ===== REDUCERS ===== */
     const [userForm, dispatchUserForm] = useReducer((state, action) => {
         if (action.field === "user" || action.field === "error") {
             return {
@@ -54,12 +46,8 @@ const Profile = () => {
         validateDiscord, 
         validateFeaturedVideo,
         validateVideoDescription,
-        getFileInfo,
-        validateAvatar,
-        convertToPNG
     } = ProfileUtils();
     const { upsertUserInfo } = ProfilesUpdate();
-    const { uploadAvatar } = Upload();
 
     // FUNCTION 1: initForms - initialize both the user form and the avatar form
     // PRECONDITIONS (1 condition):
@@ -74,11 +62,6 @@ const Profile = () => {
         const userId = user.id;
         const profile = user.profile;
         dispatchUserForm({ field: "user", value: generateFormVals(profile, userId) });
-
-        // if user has no profile, they are a first time user. set the firstTimeUser flag to true
-        if (!profile) {
-            setFirstTimeUser(true);
-        }
 
         // finally, let's update user form with countries data
         const countries = staticCache.countries;
@@ -142,55 +125,11 @@ const Profile = () => {
         }
     };
 
-    // FUNCTION 4: avatarSubmit - function that processes a submitted avatarForm
-    // PRECONDITIONS (2 parameters):
-    // 1.) e: an event object that is generated when the user submits the form
-    // 2.) avatarRef: a ref hook that is assigned to the avatar input
-    // POSTCONDITIONS (2 possible outcomes): 
-    // if the avatar form is validated, we upload the image and update the user's profile in the database, 
-    // and reload the page.
-    // if the form fails to validate, we update the error field of the avatar form with the validation error,
-    // and return from the function early
-    const avatarSubmit = async (e, avatarRef) => {
-        // initialize update
-        e.preventDefault();
-        dispatchAvatarForm({ field: "updating", value: true });
-        const profileId = user.profile.id;
-
-        // validate the user uploaded avatar
-        const error = validateAvatar(avatarRef, firstTimeUser);
-
-        // if there is an error, return early
-        dispatchAvatarForm({ field: "error", value: error });
-        if (error) {
-            dispatchAvatarForm({ field: "updating", value: false });
-            addMessage(error, "error");
-            return;
-        }
-
-        // if we made it this far, we have no errors. let's update the backend
-        const { file } = getFileInfo(avatarRef);
-        try {
-            // convert file and upload
-            const convertedFile = await convertToPNG(file);
-            await uploadAvatar(convertedFile, `${ profileId }.png`);
-
-            // if successful, reload the page
-            window.location.reload();
-            
-        } catch (error) {
-            addMessage(error.message, "error");
-            dispatchAvatarForm({ field: "updating", value: false });
-        }
-    };
-
     return { 
         userForm,
-        avatarForm,
         initForms,
         handleChange,
-        updateUserInfo,
-        avatarSubmit
+        updateUserInfo
     };
 };
 
