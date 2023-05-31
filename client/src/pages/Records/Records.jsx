@@ -36,7 +36,7 @@ function Records({ submissionReducer }) {
   } = RecordsLogic();
 
   // helper functions
-  const { capitalize } = FrontendHelper();
+  const { capitalize, categoryB2F } = FrontendHelper();
   const { hasMiscCategory } = GameHelper();
 
   /* ===== EFFECTS ===== */
@@ -62,7 +62,7 @@ function Records({ submissionReducer }) {
       <div className="records-header">
 
         { /* Game Title */ }
-        <h1>{ isMisc && "Miscellaneous" } { capitalize(type) } World Records</h1>
+        <h1>{ isMisc && categoryB2F(category) } { capitalize(type) } World Records</h1>
 
       </div>
 

@@ -5,19 +5,18 @@ import FrontendHelper from "../../helper/FrontendHelper";
 function GameLayoutInfo({ category, abb }) {
   /* ===== VARIABLES ===== */
   const types = ["score", "time"];
-  const frontendCategory = category === "misc" ? "Miscellaneous" : "Main";
 
   /* ===== FUNCTIONS ===== */
   
   // helper functions
-  const { capitalize } = FrontendHelper();
+  const { capitalize, categoryB2F } = FrontendHelper();
 
   /* ===== GAME LAYOUT INFO COMPONENT ===== */
   return (
     <div className="game-layout-body-info">
 
       { /* Header - Render the category of rankings */ }
-      <h2>{ frontendCategory } Rankings</h2>
+      <h2>{ categoryB2F(category) } Rankings</h2>
       
       <hr />
 

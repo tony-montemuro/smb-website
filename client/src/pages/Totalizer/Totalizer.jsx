@@ -28,7 +28,7 @@ function Totalizer({ imageReducer, submissionReducer }) {
   /* ===== STATES AND FUNCTIONS ===== */
 
   // helper functions
-  const { capitalize } = FrontendHelper();
+  const { capitalize, categoryB2F } = FrontendHelper();
   const { hasMiscCategory } = GameHelper();
 
   // states and functions from the js file
@@ -59,7 +59,7 @@ function Totalizer({ imageReducer, submissionReducer }) {
 
     { /* Totalizer Header - Render the title of the totalizer, based on category and type. */ }
       <div className="totalizer-header">
-        <h1>{ isMisc && "Miscellaneous" } { capitalize(type) } Totalizer</h1>
+        <h1>{ isMisc && categoryB2F(category) } { capitalize(type) } Totalizer</h1>
       </div>
 
       { /* Totalizer Body - Render the { type } totalizer table. */ }

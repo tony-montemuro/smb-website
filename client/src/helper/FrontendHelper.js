@@ -46,7 +46,7 @@ const FrontendHelper = () => {
         return `${year}-${month}-${day}`;
     };
 
-    // FUNCTION 4: recordB2F - convert record from back-end format to front-end format
+    // FUNCTION 4: recordB2F - ("record backend-to-frontend") convert record from back-end format to front-end format
     // PRECONDITION (2 parameters): 
     // 1.) record is a float number with at most two decimal places (should only have decimals if the type is "score")
     // 2.) type is either "score" or "time"
@@ -124,7 +124,16 @@ const FrontendHelper = () => {
         }
     };
 
-    return { capitalize, cleanLevelName, dateB2F, recordB2F, secondsToHours, getTimeDifference };
+    // FUNCTION 8: categoryB2F - ("category backend-to-frontend") convert category from back-end format to front-end format
+    // PRECONDITIONS (1 parameter):
+    // 1.) category: a string representing a category, either "main" or "misc"
+    // POSTCONDITIONS (1 possible outcome):
+    // the category is transformed into the readable name
+    const categoryB2F = category => {
+        return category === "misc" ? "Miscellaneous" : "Main";
+    };
+
+    return { capitalize, cleanLevelName, dateB2F, recordB2F, secondsToHours, getTimeDifference, categoryB2F };
 };
 
 export default FrontendHelper;

@@ -32,7 +32,7 @@ function Game() {
   const { submissions, getSubmissions } = GameLogic();
 
   // helper functions
-  const { capitalize } = FrontendHelper();
+  const { categoryB2F } = FrontendHelper();
   const { hasMiscCategory } = GameHelper();
 
   // simple function that handles the radio button change
@@ -116,14 +116,14 @@ function Game() {
         { /* Two radio buttons to toggle between two category modes: main and misc. Only render these buttons if the game
         has any miscellaneous charts. */ }
         <div className="game-radio-btns">
-          { hasMiscCategory(game) && [{ name: "main", alias: "Main" }, { name: "misc", alias: "Miscellaneous" }].map(category => {
+          { hasMiscCategory(game) && ["main", "misc"].map(category => {
             return (
-              <div key={ category.name } className={ `game-radio-btn` }>
-                <label htmlFor={ category.name }>{ category.alias } Levels:</label>
+              <div key={ category } className={ `game-radio-btn` }>
+                <label htmlFor={ category }>{ categoryB2F(category) } Levels:</label>
                 <input 
                   type="radio" 
-                  value={ category.name }
-                  checked={ selectedRadioBtn === category.name }
+                  value={ category }
+                  checked={ selectedRadioBtn === category }
                   onChange={ handleChange }>
                 </input>
               </div>
@@ -132,7 +132,7 @@ function Game() {
         </div>
 
         { /* Level select title */ }
-        <h2>{ category === "misc" ? "Miscellaneous" : capitalize(selectedRadioBtn) } Levels</h2>
+        <h2>{ categoryB2F(category) } Levels</h2>
 
         { /* Level select table - Render a table of modes, each of which expands to a selection of levels */ }
         <table>

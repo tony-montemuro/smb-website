@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { MessageContext, StaticCacheContext } from "../../Contexts";
 import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
+import GameHelper from "../../helper/GameHelper";
 import UserStatsLogic from "./UserStats.js";
 import UserStatsMedals from "./UserStatsMedals";
 import UserStatsTotal from "./UserStatsTotal";
@@ -38,7 +39,8 @@ function UserStats({ submissionReducer }) {
   } = UserStatsLogic();
 
   // helper functions
-  const { capitalize } = FrontendHelper();
+  const { capitalize, categoryB2F } = FrontendHelper();
+  const { hasMiscCategory } = GameHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -56,6 +58,13 @@ function UserStats({ submissionReducer }) {
         return;
       }
 
+      // special case: we are at the path "/user/{profileId}/{abb}/misc/{type}", but the game has no misc charts
+      if (category === "misc" && !hasMiscCategory(game)) {
+        addMessage("The page you requested does not exist.", "error");
+        navigate("/");
+        return;
+      } 
+
       // otherwise, update the game & user state hooks, and fetch user stats
       setGame(game);
       fetchUserStats(path, game, submissionReducer);
@@ -69,7 +78,7 @@ function UserStats({ submissionReducer }) {
       <div className="stats-header">
 
         { /* User and game title */ }
-        <h1>{ isMisc && "Miscellaneous" } { game.name }: { capitalize(type) }</h1>
+        <h1>{ isMisc && categoryB2F(category) } { game.name }: { capitalize(type) }</h1>
 
         { /* Live-input: Toggle records page between rendering all records and just live records */ }
         <div className="records-input">

@@ -29,7 +29,7 @@ function Medals({ submissionReducer, imageReducer }) {
   /* ===== STATES AND FUNCTIONS ===== */
 
   // helper functions
-  const { capitalize } = FrontendHelper();
+  const { capitalize, categoryB2F } = FrontendHelper();
   const { hasMiscCategory } = GameHelper();
 
   // states and functions from the js file
@@ -61,7 +61,7 @@ function Medals({ submissionReducer, imageReducer }) {
       <div className="medals-header">
 
         { /* Game Title */ }
-        <h1>{ isMisc && "Miscellaneous" } { capitalize(type) } Medal Table</h1>
+        <h1>{ isMisc && categoryB2F(category) } { capitalize(type) } Medal Table</h1>
 
       </div>
 

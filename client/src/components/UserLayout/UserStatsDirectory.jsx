@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { StaticCacheContext } from "../../Contexts";
 import { useContext } from "react";
+import GameHelper from "../../helper/GameHelper";
 import UserStatsCategory from "./UserStatsCategory";
 
 function UserStatsDirectory() {
@@ -11,6 +12,11 @@ function UserStatsDirectory() {
 
   // static cache state from static cache context
   const { staticCache } = useContext(StaticCacheContext);
+
+  /* ===== FUNCTIONS ===== */
+
+  // helper functions
+  const { hasMiscCategory } = GameHelper();
 
   /* ===== USER STATS DIRECTORY COMPONENT ===== */
   return (
@@ -36,11 +42,12 @@ function UserStatsDirectory() {
             <tbody>
               { staticCache.games.filter(game => type === "Custom" ? game.custom : !game.custom).map(game => {
                 return (
-                  // Each row contains: the name of the game, a link to main stats, and a link to misc stats
+                  // Each row contains: the name of the game, a link to main stats, and a link to misc stats (ONLY render misc stats links
+                  // if the game has any misc charts!)
                   <tr key={ game.name }>
                     <td className="user-layout-game-element">{ game.name }</td>
                     <td><UserStatsCategory game={ game } category={ "main" } /></td>
-                    <td><UserStatsCategory game={ game } category={ "misc" } /></td>
+                    { hasMiscCategory(game) && <td><UserStatsCategory game={ game } category={ "misc" } /></td> }
                   </tr>
                 );
               })}

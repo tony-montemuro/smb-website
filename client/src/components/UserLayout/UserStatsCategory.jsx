@@ -10,12 +10,12 @@ function UserStatsCategory({ game, category }) {
   /* ===== FUNCTIONS ===== */
   
   // helper functions
-  const { capitalize } = FrontendHelper();
+  const { categoryB2F } = FrontendHelper();
 
   /* ===== USER STATS CATEGORY COMPONENT ===== */
   return (
     <div className="user-layout-category">
-      <h2>{ capitalize(category) }</h2>
+      <h2>{ categoryB2F(category) }</h2>
       <Link className="user-stats-link" to={ `/user/${ profileId }/${ game.abb }/${ category }/score` }>Score</Link>
       <Link className="user-stats-link" to={ `/user/${ profileId }/${ game.abb }/${ category }/time` }>Time</Link>
     </div>
