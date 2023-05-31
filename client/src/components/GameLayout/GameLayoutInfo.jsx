@@ -5,6 +5,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 function GameLayoutInfo({ category, abb }) {
   /* ===== VARIABLES ===== */
   const types = ["score", "time"];
+  const frontendCategory = category === "misc" ? "Miscellaneous" : "Main";
 
   /* ===== FUNCTIONS ===== */
   
@@ -16,7 +17,9 @@ function GameLayoutInfo({ category, abb }) {
     <div className="game-layout-body-info">
 
       { /* Header - Render the category of rankings */ }
-      <h2>{ capitalize(category) } Rankings</h2>
+      <h2>{ frontendCategory } Rankings</h2>
+      
+      <hr />
 
       { /* World Records - Render links to each World Record page of a category */ }
       <h3>World Records</h3>

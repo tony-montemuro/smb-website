@@ -117,8 +117,8 @@ function Game() {
           })}
         </div>
 
-        { /* Level title */ }
-        <h2>{ capitalize(selectedRadioBtn) } Levels</h2>
+        { /* Level select title */ }
+        <h2>{ category === "misc" ? "Miscellaneous" : capitalize(selectedRadioBtn) } Levels</h2>
 
         { /* Level select table - Render a table of modes, each of which expands to a selection of levels */ }
         <table>

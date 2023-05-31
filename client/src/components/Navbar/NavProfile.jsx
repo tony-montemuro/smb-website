@@ -82,7 +82,9 @@ function NavProfile({ imageReducer }) {
               <LogoutIcon titleAccess="Sign Out" />
             </button>
           </div>
+
         </div>
+        
       </div>
     </div>
   );
