@@ -45,7 +45,7 @@ function UserInfoForm() {
           />
 
           { /* If error.username is defined, username field had an issue. Render it here. */ }
-          { form.error.username && <p>{ form.error.username }</p> }
+          { form.error.username && <p>Error: { form.error.username }</p> }
 
         </div>
 
@@ -73,7 +73,7 @@ function UserInfoForm() {
           />
 
           { /* If error.bio is defined, bio field had an issue. Render it here. */ }
-          { form.error.bio && <p>{ form.error.bio }</p> }
+          { form.error.bio && <p>Error: { form.error.bio }</p> }
 
         </div>
 
@@ -129,7 +129,7 @@ function UserInfoForm() {
           />
 
           { /* If error.discord is defined, discord field had an issue. Render it here. */ }
-          { form.error.discord && <p>{ form.error.discord }</p> }
+          { form.error.discord && <p>Error: { form.error.discord }</p> }
 
           <h3>Featured Video</h3>
 
@@ -139,7 +139,7 @@ function UserInfoForm() {
             <label htmlFor="featured_video">Featured YouTube Video URL (optional): </label>
             <input 
               id="featured_video"
-              type="text"
+              type="url"
               placeholder="Any YouTube video you like!"
               value={ form.user.featured_video }
               onChange={ handleChange }
@@ -147,7 +147,7 @@ function UserInfoForm() {
           </div>
 
           { /* If error.featured_video is defined, featured video field had an issue. Render it here. */ }
-          { form.error.featured_video && <p>{ form.error.featured_video }</p> }
+          { form.error.featured_video && <p>Error: { form.error.featured_video }</p> }
 
           { /* Video Description: an optional text field that allows the user to include a description with the
           featured video of their choice on their page. */ }
@@ -164,7 +164,7 @@ function UserInfoForm() {
           </div>
 
           { /* If error.video_description is defined, video description field had an issue. Render it here. */ }
-          { form.error.video_description && <p>{ form.error.video_description }</p> }
+          { form.error.video_description && <p>Error: { form.error.video_description }</p> }
 
         </div>
 

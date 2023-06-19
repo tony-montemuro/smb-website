@@ -1,3 +1,6 @@
+/* ===== IMPORTS ===== */
+import { emailPattern } from "../utils/RegexPatterns";
+
 const ValidationHelper = () => {
     /* ===== FUNCTIONS ===== */
 
@@ -7,16 +10,13 @@ const ValidationHelper = () => {
     // POSTCONDITIONS (1 possible outcome, 1 return):
     // 1.) error: a string that gives information as to why their is an issue with the email
     const validateEmail = email => {
-        // initialize variables used in validation process
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-
         // first, validate that the email exists
         if (!email || email.length === 0) {
             return "Email is required.";
         }
 
         // next, validate that email is well-formatted
-        if (!emailRegex.test(email)) {
+        if (!emailPattern.test(email)) {
             return "Invalid email format.";
         }
 

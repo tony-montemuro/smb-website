@@ -1,3 +1,6 @@
+/* ===== IMPORTS ===== */
+import { discordPattern, usernamePattern, youtubePattern } from "../../utils/RegexPatterns";
+
 const ProfileUtils = () => {
     /* ===== FUNCTIONS ===== */
 
@@ -48,27 +51,24 @@ const ProfileUtils = () => {
     // 1.) error: a string that gives information as to why their username is problematic, if there is any problems.
     // if this string returns undefined, it means no errors were detected
     const validateUsername = (username, id, profiles) => {
-        // regex used to validate username
-        const regex = new RegExp('^[A-Za-z0-9_]*$');
-
         // first, check that the username exists
         if (!username) {
-            return "Error: Username is required to create a profile!";
+            return "Username is required to create a profile!";
         }
         
         // now, check that the length of the username is valid
         if (username.length < 4 || username.length > 25) {
-            return "Error: Username must be between 4 and 25 characters long.";
+            return "Username must be between 4 and 25 characters long.";
         }
 
         // now, ensure the username is well-formatted (alphanumeric and underscores)
-        if (!regex.test(username)) {
-            return "Error: Username must consist only of letters, numbers, and/or underscores.";
+        if (!usernamePattern.test(username)) {
+            return "Username must consist only of letters, numbers, and/or underscores.";
         }
 
         // now, ensure that the username is unique among all usernames
         if (profiles.some(row => row.username === username && row.id !== id)) {
-            return "Error: This username is already taken. Please try another username.";
+            return "This username is already taken. Please try another username.";
         }
 
         return undefined;
@@ -83,7 +83,7 @@ const ProfileUtils = () => {
     const validateBio = bio => {
         // check that the bio is within the character limit of 200 characters
         if (bio.length > 200) {
-            return "Error: About Me section must be 200 characters or less.";
+            return "About Me section must be 200 characters or less.";
         }
 
         return undefined;
@@ -96,12 +96,9 @@ const ProfileUtils = () => {
     // 1.) error: a string that gives information as to why their discord username is problematic, if there is any problems.
     // if this string returns undefined, it means no errors were detected
     const validateDiscord = discord => {
-        // regex used to validate the discord username
-        const regex = /^(?!.*\.{2})[a-z0-9_.]{2,32}$/;
-
-        // now, ensure the string conforms to the formatted expressed in the regex expression
-        if (discord && !regex.test(discord)) {
-            return "Error: Discord username is not properly formatted.";
+        // ensure the string conforms to the formatted expressed in the regex expression
+        if (discord && !discordPattern.test(discord)) {
+            return "Discord username is not properly formatted.";
         }
 
         return undefined;
@@ -114,12 +111,9 @@ const ProfileUtils = () => {
     // 1.) error: a string that gives information as to why their video URL is problematic, if there is any problems.
     // if this string returns undefined, it means no errors were detected
     const validateFeaturedVideo = featuredVideo => {
-        // regex used to validate the featured video
-        const regex = new RegExp('(?:https?://)?(?:www\\.)?youtu(?:\\.be/|be\\.com/\\S*(?:watch|embed)(?:(?:(?=/[-a-zA-Z0-9_]{11,}(?!\\S))/)|(?:\\S*v=|v/)))([-a-zA-Z0-9_]{11,})');
-    
-        // now, ensure the string conforms to the formatted expressed in the regex expression
-        if (featuredVideo && !regex.test(featuredVideo)) {
-            return "Error: Video URL is not properly formatted. Please make sure it is a YouTube video.";
+        // ensure the string, if it exists, conforms to the formatted expressed in the regex expression
+        if (featuredVideo && !youtubePattern.test(featuredVideo)) {
+            return "Video URL is not properly formatted. Please make sure it is a YouTube video.";
         }
 
         return undefined;
@@ -135,12 +129,12 @@ const ProfileUtils = () => {
     const validateVideoDescription = (description, featuredVideo) => {
         // if the description exists, it is necessary that a featured video must also exist
         if (description && !featuredVideo) {
-            return "Error: Featured YouTube Video URL is required to fill out this field.";
+            return "Featured YouTube Video URL is required to fill out this field.";
         }
 
         // check that the description is within the character limit of 200 characters
         if (description.length > 200) {
-            return "Error: Video Description must be 200 characters or less.";
+            return "Video Description must be 200 characters or less.";
         }
 
         return undefined;

@@ -2,6 +2,7 @@
 import { GameContext } from "../../Contexts";
 import { useContext } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
+import { twitchPattern, youtubePattern } from "../../utils/RegexPatterns";
 
 const LevelboardUtils = () => {
     /* ===== CONTEXTS ===== */
@@ -139,6 +140,11 @@ const LevelboardUtils = () => {
         // check if the proof field is non-null
         if (!proof) {
             return "Proof is required.";
+        }
+
+        // check if proof is a valid youtube or twitch url
+        if (!twitchPattern.test(proof) && !youtubePattern.test(proof)) {
+            return "Proof must be a valid YouTube or Twitch URL.";
         }
 
         // if we made it this far, the comment is valid! return undefined, since there is no error
