@@ -7,7 +7,7 @@ const User = () => {
     // POSTCONDITIONS (1 possible outcome):
     // an alert popup is thrown by the browser, containing a message that displays the discord username
     const alertDiscord = discord => {
-        alert(`Discord username: ${ discord }.`);
+        alert(`Discord username: ${ discord }`);
     };
 
     // FUNCTION 2: getVideoId - given a video url, fetch the video id

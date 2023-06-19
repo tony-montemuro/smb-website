@@ -123,7 +123,7 @@ function UserInfoForm() {
           <input 
             id="discord"
             type="text"
-            placeholder="Username#0000"
+            placeholder="username"
             value={ form.user.discord }
             onChange={ handleChange }
           />

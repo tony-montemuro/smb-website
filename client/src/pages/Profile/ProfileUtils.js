@@ -97,7 +97,7 @@ const ProfileUtils = () => {
     // if this string returns undefined, it means no errors were detected
     const validateDiscord = discord => {
         // regex used to validate the discord username
-        const regex = new RegExp('^.{2,32}#\\d{4}$');
+        const regex = /^(?!.*\.{2})[a-z0-9_.]{2,32}$/;
 
         // now, ensure the string conforms to the formatted expressed in the regex expression
         if (discord && !regex.test(discord)) {
