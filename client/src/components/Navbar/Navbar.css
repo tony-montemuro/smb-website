@@ -33,7 +33,8 @@
     text-decoration: none;
     display: flex;
     align-items: center;
-    padding: .25rem;
+    padding-left: .25rem;
+    padding-right: .25rem;
     height: 100%;
 }
 
@@ -71,6 +72,11 @@
     padding: 0;
 }
 
+.nav-profile-links {
+    display: flex;
+    align-items: center;
+}
+
 .nav-profile-link {
     display: inline-block;
 }
@@ -97,5 +103,6 @@
 }
 
 #nav-profile-notifications {
-    vertical-align: top;
+    margin-bottom: auto;
+    margin-top: auto;
 }
