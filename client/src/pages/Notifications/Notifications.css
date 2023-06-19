@@ -7,14 +7,31 @@
     text-align: center
 }
 
-.notifications-header ol {
-    list-style-position: inside;
-    padding: 0px;
+.notifications-header-list {
+    text-align: center;
+}
+
+.notifications-header-list ul {
+    margin: 0;
+    list-style-type: none;
+    display: inline-block;
+    text-align: left;
+}
+
+.notifications-header-list-element {
+    display: flex;
+    align-items: center;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 .notifications-body {
     width: 75%;
     margin: auto;
+}
+
+.notifications-body input {
+    cursor: pointer;
 }
 
 .notifications-body a:visited {
@@ -38,8 +55,14 @@
     cursor: pointer;
 }
 
-.notification-body p {
-    text-align: center;
+td.notifications-select-element {
+    cursor: auto;
+}
+
+.notifications-type {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .notifications-popup {
@@ -78,7 +101,7 @@
     text-align: center;
 }
 
-.notification-details {
+.notifications-details {
     display: inline-block
 }
 

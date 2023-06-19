@@ -37,7 +37,7 @@ function ReportPopup({ notifications, setNotifications }) {
         </h2>
 
         { /* Notification details */ }
-        <div className="notification-details">
+        <div className="notifications-details">
           <ul>
 
             { /* Render the owner of the reported submission. If the report is for the current user, we do not need to render. */ }

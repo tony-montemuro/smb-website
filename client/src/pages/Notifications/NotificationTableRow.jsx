@@ -2,6 +2,7 @@
 import "./Notifications.css";
 import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
+import TypeSymbol from "./TypeSymbol";
 
 function NotificationTableRow({ row, notifications, handleRowClick, toggleSelection }) {
   /* ===== VARIABLES ===== */
@@ -16,7 +17,7 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
     <tr key={ row.notif_date }>
 
       { /* Notification selector - render a checkbox that allows the user to select a notification for deletion */ }
-      <td>
+      <td className="notifications-select-element">
         <input
           type="checkbox"
           checked={ notifications.selected.includes(row.notif_date) }
@@ -28,7 +29,11 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
       <td onClick={ () => handleRowClick(row) }>{ getTimeDifference(row.notif_date) }</td>
 
       { /* Render the type of notification */ }
-      <td onClick={ () => handleRowClick(row) }>{ capitalize(row.notif_type) }</td>
+      <td onClick={ () => handleRowClick(row) }>
+        <div className="notifications-type">
+          <TypeSymbol type={ row.notif_type } />
+        </div>
+      </td>
 
       { /* Render the game associated with the notification as a link */ }
       <td onClick={ () => handleRowClick(row) }>
@@ -45,7 +50,7 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
       </td>
 
       { /* Render the record associated with the notification */ }
-      <td onClick={ () => handleRowClick(row) }>{ recordB2F(row.record, row.type) }</td>
+      <td onClick={ () => handleRowClick(row) }>{ recordB2F(row.record, type) }</td>
 
     </tr>
   );

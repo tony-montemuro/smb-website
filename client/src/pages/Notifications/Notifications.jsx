@@ -5,15 +5,23 @@ import { UserContext } from "../../Contexts";
 import NotificationsLogic from "./Notifications.js";
 import NotificationPopup from "./NotificationPopup";
 import NotificationTableRow from "./NotificationTableRow";
+import TypeSymbol from "./TypeSymbol";
 
 function Notifications() {
-  /* ===== VARIABLES ===== */
-  const TABLE_WIDTH = 7;
-
   /* ===== CONTEXTS ===== */
   
   // user state from user context
   const { user } = useContext(UserContext);
+
+  /* ===== VARIABLES ===== */
+  const TABLE_WIDTH = 7;
+  const messages = {
+    approve: "A moderator has approved one of your submission.",
+    report: `A user has reported ${ user.is_mod ? "a submission." : "one of your submissions." }`,
+    insert: "A moderator has inserted a new submission on your behalf.",
+    update: "A moderator has updated one of you submissions.",
+    delete: "A moderator has deleted one of your submissions."
+  };
 
   /* ===== FUNCTIONS ===== */
 
@@ -47,17 +55,24 @@ function Notifications() {
 
           { /* Render name of the page, and a message introducing the page. */ }
           <h1>Notifications</h1>
-          <p><i>Below is the list of all your notifications. There are 5 types of notifications:</i></p>
         </div>
 
         { /* Notification type list - render a list element describing each notification type. */ }
-        <ol>
-          <li><b>Approve:</b> A moderator has approved one of your submission.</li>
-          <li><b>Insert:</b> A moderator has submitted a score or time on your behalf.</li>
-          <li><b>Delete:</b> A moderator has deleted one of your submissions.</li>
-          <li><b>Report:</b> A user has reported { user.is_mod ? "a submission." : "one of your submissions." }</li>
-          <li><b>Update:</b> A moderator has updated one of you submissions.</li>
-        </ol>
+        <div className="notifications-header-list">
+          <ul>
+            { Object.keys(messages).map(type => {
+              return (
+                <li key={ type }>
+                  <div className="notifications-header-list-element">
+                    <TypeSymbol type={ type } />&emsp;
+                    <span>{ messages[type] }</span>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
       </div>
 
       { /* Notification body */ }

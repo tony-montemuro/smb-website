@@ -29,7 +29,7 @@ function DeletePopup({ notifications, setNotifications }) {
         </h2>
 
         { /* Notification details */ }
-        <div className="notification-details">
+        <div className="notifications-details">
           <ul>
 
             { /* Render basic information about submission - includes the game, as well as level */ }
