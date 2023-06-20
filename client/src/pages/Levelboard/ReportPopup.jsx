@@ -38,8 +38,6 @@ function ReportPopup({ submission, setSubmission }) {
         as well as the moderation team.</span>
 
         <p><b>Note:</b> <i>Please only report once! Repeatedly reporting a single submission can result in a permanent account ban!</i></p>
-
-        <p><i>You will know that a report was successful if you get a little message below the 'Yes' and 'No' buttons.</i></p>
         
         { /* Report form */ }
         <form>
@@ -58,20 +56,25 @@ function ReportPopup({ submission, setSubmission }) {
 
         </form>
 
-        { /* Button that, when pressed, reports the submission */ }
-        <button onClick={ () => handleReport(submission) } disabled={ form.submitting || form.submitted }>Yes</button>
+        { /* Report popup buttons */ }
+        <div className="levelboard-report-btns">
+          { /* Button that, when pressed, reports the submission */ }
+          <button onClick={ () => handleReport(submission, setSubmission) } disabled={ form.submitting || form.submitted }>Yes</button>
 
-        { /* Button that, when pressed, closes the popup */ }
-        <button onClick={ () => closePopup(setSubmission) } disabled={ form.submitting || form.submitted }>No</button>
+          { /* Button that, when pressed, closes the popup */ }
+          <button onClick={ () => closePopup(setSubmission) } disabled={ form.submitting || form.submitted }>No</button>
+        </div>
 
         { /* If the report was successfully submitted, render a success message at the bottom of the popup */ }
-        { form.submitted && <div className="levelboard-report-message">
-          <span>
-            Report was successful. All moderators, as well as&nbsp;
-            <Username country={ submission.profile.country } profileId={ submission.profile.id } username={ submission.profile.username } />,&nbsp;
-            have been notified.
-          </span> 
-        </div> }
+        { form.submitted && 
+          <div className="levelboard-report-message">
+            <span>
+              Report was successful. All moderators, as well as&nbsp;
+              <Username country={ submission.profile.country } profileId={ submission.profile.id } username={ submission.profile.username } />,&nbsp;
+              have been notified.
+            </span> 
+          </div> 
+        }
 
       </div>
     </div>

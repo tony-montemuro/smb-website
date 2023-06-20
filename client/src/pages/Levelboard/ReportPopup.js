@@ -7,7 +7,7 @@ import ValidationHelper from "../../helper/ValidationHelper";
 
 const ReportPopup = () => {
     /* ===== VARIABLES ===== */
-    const formInit = { message: "", error: null, submitting: false, submitted: false };
+    const formInit = { message: "", error: null, submitting: false };
     const location = useLocation();
 	const path = location.pathname.split("/");
 	const abb = path[2];
@@ -36,13 +36,15 @@ const ReportPopup = () => {
 
     // FUNCTION 1 - handleReport: given the report object, send an array of reports to all moderators, and the owner
     // of the submission
-    // PRECONDITIONS (1 parameter):
+    // PRECONDITIONS (2 parameters):
     // 1.) submission: a submission object that contains information about the reported submission
+    // 2.) setSubmission: function used to update the reportSubmission state in Levelboard.jsx. used to close popup if report
+    // is successfully submitted
     // POSTCONDITIONS (3 possible outcomes):
     // if the message is not validated, the error field of form is updated by calling setForm() function, and the function returns early
     // if the message is validated, and at least one notification fails to insert, user is alerted of the error
-    // if the message is validated, and all notifications insert, reportMessage is updated by calling the setReportMessage function
-    const handleReport = async (submission) => {
+    // if the message is validated, and all notifications insert, the user is alerted of the success, and the popup is closed
+    const handleReport = async (submission, setSubmission) => {
         // first, update the form to prevent multiple submissions
         setForm({ ...form, submitting: true });
 
@@ -86,10 +88,9 @@ const ReportPopup = () => {
             // await promises to complete
             await Promise.all(notifPromises);
         
-            // finally, update form submitting & submitted fields. this will ensure the form does not allow resubmits, and render a success
-            // message to the user
-            setForm({ ...form, submitting: false, submitted: true });
+            // now, simply add a success message, and close the form
             addMessage("Report successfully submitted.", "success");
+            closePopup(setSubmission);
     
         } catch (error) {
             addMessage(error.message, "error");
