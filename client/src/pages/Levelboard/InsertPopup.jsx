@@ -159,13 +159,13 @@ function InsertPopup({ popup, setPopup, submissions }) {
                 <label htmlFor="comment">Comment (optional): </label>
                 <textarea 
                   id="comment"
-                  type="text"
-                  value={ form.values.comment }
                   onChange={ (e) => handleChange(e) }
                   disabled={ user.profile.id !== form.values.profile_id }
                   rows={ TEXT_AREA_ROWS }
                   cols={ TEXT_AREA_COLS }
-                />
+                >
+                  { form.values.comment }
+                </textarea>
 
                 { /* If the error.comment field is defined, render that underneath the proof field. */ }
                 { form.error.proof && <p>{ form.error.comment }</p> }
@@ -180,12 +180,12 @@ function InsertPopup({ popup, setPopup, submissions }) {
                   <label htmlFor="message">Leave a message (optional): </label>
                   <textarea 
                     id="message"
-                    type="text"
-                    value={ form.values.message }
                     onChange={ (e) => handleChange(e) }
                     rows={ TEXT_AREA_ROWS }
                     cols={ TEXT_AREA_COLS }
-                  />
+                  >
+                    { form.values.message }
+                  </textarea>
 
                   { /* If the error.message field is defined, render that underneath the proof field. */ }
                   { form.error.message  && <p>{ form.error.message }</p> }

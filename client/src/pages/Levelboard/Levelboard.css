@@ -120,7 +120,16 @@
     margin-top: 5px;
 }
 
+.levelboard-update-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
 .levelboard-update {
+    display: inline-block;
+}
+
+.levelboard-update h2 {
     text-align: center;
 }
 

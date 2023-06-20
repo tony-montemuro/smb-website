@@ -68,9 +68,10 @@ function UserInfoForm() {
             rows={ BIO_HEIGHT }
             cols={ BIO_WIDTH } 
             placeholder="About Me"
-            value={ form.user.bio }
             onChange={ handleChange }
-          />
+          >
+            { form.user.bio }
+          </textarea>
 
           { /* If error.bio is defined, bio field had an issue. Render it here. */ }
           { form.error.bio && <p>Error: { form.error.bio }</p> }
@@ -149,7 +150,7 @@ function UserInfoForm() {
           { /* If error.featured_video is defined, featured video field had an issue. Render it here. */ }
           { form.error.featured_video && <p>Error: { form.error.featured_video }</p> }
 
-          { /* Video Description: an optional text field that allows the user to include a description with the
+          { /* Video Description: an optional textarea that allows the user to include a description with the
           featured video of their choice on their page. */ }
           <div className="profile-info-entry">
             <label htmlFor="video_description">Video Description (optional): </label>
@@ -158,9 +159,10 @@ function UserInfoForm() {
               rows={ BIO_HEIGHT }
               cols={ BIO_WIDTH } 
               placeholder="Include a description"
-              value={ form.user.video_description }
               onChange={ handleChange }
-            />
+            >
+              { form.user.video_description }
+            </textarea>
           </div>
 
           { /* If error.video_description is defined, video description field had an issue. Render it here. */ }
