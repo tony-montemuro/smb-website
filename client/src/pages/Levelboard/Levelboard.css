@@ -59,8 +59,28 @@
     margin-bottom: 8px;
 }
 
+.levelboard-textarea-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+}
+
+.levelboard-submit-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
 .levelboard-submit {
+    display: inline-block;
+}
+
+.levelboard-submit h2 {
     text-align: center;
+}
+
+.levelboard-submit button {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .levelboard-popup {
@@ -79,21 +99,21 @@
     position: relative;
     padding: 32px;
     width: 100%;
-    max-width: 640px;
+    max-width: 30%;
     background-color: #fff;
+    border-radius: 10px;
 }
 
 .levelboard-popup form {
     margin-bottom: 8px;
 }
 
-.levelboard-popup button {
-    margin-left: 2.5px;
-    margin-right: 2.5px;
-}
-
 .levelboard-popup-close-btn {
     text-align: right;
+}
+
+.levelboard-submit-record {
+    width: 30%;
 }
 
 .levelboard-report-message {
@@ -102,4 +122,9 @@
 
 .levelboard-update {
     text-align: center;
+}
+
+.levelboard-submit-btn-wrapper {
+    display: flex;
+    justify-content: center;
 }
