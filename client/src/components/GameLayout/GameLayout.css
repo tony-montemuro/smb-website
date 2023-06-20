@@ -4,8 +4,17 @@
     align-items: center;
 }
 
-.game-layout-header-title {
+.game-layout-header-info {
     margin-left: 10px;
+}
+
+.game-layout-header-info ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.game-layout-header-info ul li {
+    margin-bottom: 12px;
 }
 
 .game-layout-body {
@@ -35,4 +44,14 @@
 .game-layout-body-links {
     display: flex;
     justify-content: space-around;
+}
+
+#game-layout-header-download {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#game-layout-header-download a {
+    display: inline-flex;
 }

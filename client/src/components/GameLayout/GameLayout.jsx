@@ -6,6 +6,7 @@ import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BoxArt from "../BoxArt/BoxArt.jsx";
+import GameHeaderInfo from "./GameHeaderInfo";
 import GameHelper from "../../helper/GameHelper";
 import GameLayoutInfo from "./GameLayoutInfo";
 import SearchBar from "../SearchBar/SearchBar.jsx";
@@ -66,14 +67,8 @@ function GameLayout({ imageReducer }) {
           <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
         </Link>
 
-        { /* Render information about the game: title, whether it's a main or custom pack, and the release date */ }
-        <div className="game-layout-header-title">
-          <Link to={ `/games/${ game.abb }` }>
-            <h1>{ game.name }</h1>
-          </Link>
-          <p>Release Date: { game.release_date } </p>
-          <p> { game.custom ? "Custom Pack" : "Main Game" } </p>
-        </div>
+        { /* Render information about the game: */ }
+        <GameHeaderInfo game={ game } />
 
         { /* Render the level search bar */ }
         <SearchBar abb={ game.abb } />

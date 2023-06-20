@@ -71,9 +71,9 @@ function Game() {
 
           { /* Ordered list of rules */ }
           <ol>
-            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo, quisquam veniam ipsam nulla ullam sint quam explicabo dolores labore, tempora perspiciatis quos delectus facere sapiente?</li>
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, ullam dolore eum voluptates maiores ad!</li>
-            <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quisquam vel alias ratione beatae molestias recusandae omnis, cum voluptates numquam delectus, voluptatum odit deserunt aliquid enim? Accusantium facere nihil deleniti iure!</li>
+            { game.rule.map(row => {
+              return <li key={ row.id }>{ row.rule_name }</li>
+            })}
           </ol>
 
         </div>

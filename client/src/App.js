@@ -180,8 +180,14 @@ const App = () => {
         game.region = [];
         game.game_region.forEach(row => game.region.push(row.region));
         delete game.game_region;
+
+        // finally, handle the game <==> rule relationship
+        game.rule = [];
+        game.game_rule.forEach(row => game.rule.push(row.rule));
+        delete game.game_rule;
       });
 
+      console.log(games);
       // add the mod field to each profile object
       profiles.forEach(profile => {
         profile.mod = false;

@@ -15,7 +15,13 @@ const GameRead = () => {
                 .from("game")
                 .select(`
                     abb,
+                    creator (
+                        country,
+                        id,
+                        username
+                    ),
                     custom, 
+                    download,
                     game_monkey (
                         monkey (
                             id,
@@ -26,6 +32,12 @@ const GameRead = () => {
                         region (
                             id,
                             region_name
+                        )
+                    ),
+                    game_rule (
+                        rule (
+                            id,
+                            rule_name
                         )
                     ),
                     mode (
