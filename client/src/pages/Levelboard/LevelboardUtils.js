@@ -2,7 +2,7 @@
 import { GameContext } from "../../Contexts";
 import { useContext } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
-import { twitchPattern, youtubePattern } from "../../utils/RegexPatterns";
+import { twitterPatttern, twitchPattern, youtubePattern } from "../../utils/RegexPatterns";
 
 const LevelboardUtils = () => {
     /* ===== CONTEXTS ===== */
@@ -142,8 +142,8 @@ const LevelboardUtils = () => {
             return "Proof is required.";
         }
 
-        // check if proof is a valid youtube or twitch url
-        if (!twitchPattern.test(proof) && !youtubePattern.test(proof)) {
+        // check if proof is a valid youtube, twitch, or twitter url
+        if (!twitchPattern.test(proof) && !youtubePattern.test(proof) && !twitterPatttern.test(proof)) {
             return "Proof must be a valid YouTube or Twitch URL.";
         }
 
