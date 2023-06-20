@@ -1,8 +1,7 @@
 /* ===== IMPORTS ===== */
-import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 
-function LevelboardButton({ abb, category, type, levelName }) {
+function LevelboardButton({ abb, category, type, levelName, onClickFunc }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
@@ -10,9 +9,7 @@ function LevelboardButton({ abb, category, type, levelName }) {
 
   /* ===== LEVELBOARD BUTTON COMPONENT ===== */
   return (
-    <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }` }>
-      <button>{ capitalize(type) }</button>
-    </Link>
+    <button onClick={ () => onClickFunc(abb, category, type, levelName) }>{ capitalize(type) }</button>
   );
 };
 

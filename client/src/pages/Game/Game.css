@@ -35,6 +35,10 @@
     flex: 1;
 }
 
+.game-level-list button {
+    cursor: pointer;
+}
+
 .game-radio-btns {
     display: flex;
     flex-direction: row;
@@ -45,6 +49,10 @@
 
 .game-radio-btn {
     margin: 5px;
+}
+
+.game-radio-btn input[type="radio"]:not(:checked) {
+    cursor: pointer;
 }
 
 .game-level-list h2 {
@@ -60,10 +68,14 @@
 }
 
 .game-mode-name {
-    background-color: blue;
+    background-color: grey;
     cursor: pointer;
     width: 100%;
     line-height: 12px;
+}
+
+.game-mode-name h3 {
+    margin-left: 5px;
 }
 
 .game-mode-name td {
@@ -71,7 +83,7 @@
 }
 
 .game-level {
-    background-color: aqua;
+    background-color: lightgray;
     line-height: 1px;
 }
 
@@ -81,4 +93,8 @@
 
 .game-level-name {
     width: 80%;
+}
+
+.game-level-name p {
+    margin-left: 5px;
 }

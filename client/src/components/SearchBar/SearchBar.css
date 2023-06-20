@@ -79,8 +79,9 @@
     line-height: 30px;
 }
 
-.searchbar-item a {
-    width: 15%;
+.searchbar-item button {
+    margin: 5px;
+    cursor: pointer;
 }
 
 .searchbar-item-empty {

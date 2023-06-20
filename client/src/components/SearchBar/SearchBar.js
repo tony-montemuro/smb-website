@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { StaticCacheContext } from "../../Contexts";
 import { useContext, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 
 const SearchBar = abb => {
@@ -11,6 +12,7 @@ const SearchBar = abb => {
 
     /* ===== VARIABLES ===== */
     const game = staticCache.games.find(row => row.abb === abb);
+    const navigate = useNavigate();
 
     /* ===== REFS ===== */
     const searchRef = useRef(null);
@@ -55,7 +57,20 @@ const SearchBar = abb => {
         handleFilter("");
     };
 
-    return { searchRef, filtered, handleFilter, clearSearch };
+    // FUNCTION 3: onResultClick - function that is called when the user clicks a search result
+    // PRECONDITIONS (4 parameters):
+    // 1.) abb: a string representing the unique identifier for a game
+    // 2.) category: a string, either "main" or "misc"
+    // 3.) type: a string, either "score" or "time"
+    // 4.) levelName: a string representing the name of a level belonging to abb's game
+    // POSTCONDITIONS (1 possible outcome):
+    // the user is navigated to the levelboard given the parameters, and the search is cleared
+    const onResultClick = (abb, category, type, levelName) => {
+        navigate(`/games/${ abb }/${ category }/${ type }/${ levelName }`);
+        clearSearch();
+    };
+
+    return { searchRef, filtered, handleFilter, clearSearch, onResultClick };
 };
 
 /* ===== EXPORTS ===== */

@@ -18,7 +18,7 @@ function SearchBar({ abb }) {
   /* ===== FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { filtered, searchRef, handleFilter, clearSearch } = SearchBarLogic(abb);
+  const { filtered, searchRef, handleFilter, clearSearch, onResultClick } = SearchBarLogic(abb);
 
   // helper functions
   const { cleanLevelName } = FrontendHelper();
@@ -73,7 +73,7 @@ function SearchBar({ abb }) {
                 chart, we want to render a button that will allow the user to navigate to the corresponding level score chart.
                 However, if it is a time chart, an empty span element will be rendered. */ }
                 { level.chart_type === "both" || level.chart_type === "score" ?
-                  <LevelboardButton abb={ game.abb } category={ category } type={ "score" } levelName={ level.name } />
+                  <LevelboardButton abb={ game.abb } category={ category } type={ "score" } levelName={ level.name } onClickFunc={ onResultClick } />
                 :
                   <span className="searchbar-item-empty"></span>
                 }
@@ -82,7 +82,7 @@ function SearchBar({ abb }) {
                 chart, we want to render a button that will allow the user to navigate to the corresponding level time chart.
                 However, if it is a score chart, an empty span element will be rendered. */ }
                 { level.chart_type === "time" || level.chart_type === "both" ?
-                  <LevelboardButton abb={ game.abb } category={ category } type={ "time" } levelName={ level.name } />
+                  <LevelboardButton abb={ game.abb } category={ category } type={ "time" } levelName={ level.name } onClickFunc={ onResultClick } />
                 :
                   <span className="searchbar-item-empty"></span>
                 }

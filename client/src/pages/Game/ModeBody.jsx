@@ -3,6 +3,7 @@ import "./Game.css";
 import { GameContext } from "../../Contexts";
 import { useContext, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
+import GameLogic from "./Game.js";
 import LevelboardButton from "../../components/LevelboardButton/LevelboardButton";
 
 function ModeBody({ category, modeName }) {
@@ -23,6 +24,9 @@ function ModeBody({ category, modeName }) {
     
   // helper functions
   const { cleanLevelName } = FrontendHelper();
+
+  // function from js file
+  const { onLevelClick } = GameLogic();
 
   /* ===== MODE BODY COMPONENT ===== */
   return (
@@ -56,7 +60,7 @@ function ModeBody({ category, modeName }) {
               However, if it is a time chart, an empty table element will be rendered. */ }
               <td>
                 { (level.chart_type === "both" || level.chart_type === "score") &&
-                  <LevelboardButton abb={ game.abb } category={ category } type={ "score" } levelName={ level.name } />
+                  <LevelboardButton abb={ game.abb } category={ category } type={ "score" } levelName={ level.name } onClickFunc={ onLevelClick } />
                 }
               </td>
 
@@ -65,7 +69,7 @@ function ModeBody({ category, modeName }) {
               However, if it is a score chart, an empty table element will be rendered. */ }
               <td>
                 { (level.chart_type === "both" || level.chart_type === "time") &&
-                  <LevelboardButton abb={ game.abb } category={ category } type={ "time" } levelName={ level.name } />
+                  <LevelboardButton abb={ game.abb } category={ category } type={ "time" } levelName={ level.name } onClickFunc={ onLevelClick } />
                 }
               </td>
 
