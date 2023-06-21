@@ -1,3 +1,7 @@
+.game-select-header {
+    text-align: center;
+}
+
 .game-select-cards {
     display: flex;
     display: grid;

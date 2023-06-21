@@ -14,7 +14,6 @@ function UserStatsDirectory({ imageReducer }) {
 
   // static cache state from static cache context
   const { staticCache } = useContext(StaticCacheContext);
-  console.log(staticCache);
 
   /* ===== FUNCTIONS ===== */
 
@@ -64,7 +63,7 @@ function UserStatsDirectory({ imageReducer }) {
 
                     { /* Finally, access to the misc score & time stats, if the game has misc category */ }
                     { hasMiscCategory(game) && <td><UserStatsCategory game={ game } category={ "misc" } /></td> }
-                    
+
                   </tr>
                 );
               })}

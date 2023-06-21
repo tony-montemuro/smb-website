@@ -18,7 +18,9 @@ function GameSelect({ imageReducer }) {
   return (
     <>
       { /* Page Header */ }
-      <h1>Select a Game</h1>
+      <div className="game-select-header">
+        <h1>Games</h1>
+      </div>
 
       { /* Render two separate game select menus: one for main games, and one for custom games. */ }
       { ["Main", "Custom"].map(type => {

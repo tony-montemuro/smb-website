@@ -16,8 +16,8 @@ function UserStatsCategory({ game, category }) {
   return (
     <div className="user-layout-category">
       <h3>{ categoryB2F(category) }</h3>
-      <Link className="user-stats-link" to={ `/user/${ profileId }/${ game.abb }/${ category }/score` }>Score</Link>
-      <Link className="user-stats-link" to={ `/user/${ profileId }/${ game.abb }/${ category }/time` }>Time</Link>
+      <Link to={ `/user/${ profileId }/${ game.abb }/${ category }/score` }>Score</Link>
+      <Link to={ `/user/${ profileId }/${ game.abb }/${ category }/time` }>Time</Link>
     </div>
   );
 };

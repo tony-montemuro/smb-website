@@ -34,10 +34,6 @@
     cursor: pointer;
 }
 
-.notifications-body a:visited {
-    color: blue;
-}
-
 .notifications-body table {
     border-collapse: collapse;
     border: 1px solid black;
@@ -75,10 +71,6 @@ td.notifications-select-element {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.notifications-popup a:visited {
-    color: blue;
 }
 
 .notifications-popup-inner {
