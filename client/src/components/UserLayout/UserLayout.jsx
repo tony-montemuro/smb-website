@@ -73,7 +73,7 @@ function UserLayout({ imageReducer }) {
         </div>
 
         { /* Render navigation directory */ }
-        <UserStatsDirectory />
+        <UserStatsDirectory imageReducer={ imageReducer } />
 
       </div>
 

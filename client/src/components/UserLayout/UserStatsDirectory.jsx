@@ -1,10 +1,12 @@
 /* ===== IMPORTS ===== */
+import { Link } from "react-router-dom";
 import { StaticCacheContext } from "../../Contexts";
 import { useContext } from "react";
+import BoxArt from "../BoxArt/BoxArt.jsx";
 import GameHelper from "../../helper/GameHelper";
 import UserStatsCategory from "./UserStatsCategory";
 
-function UserStatsDirectory() {
+function UserStatsDirectory({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 3;
 
@@ -12,6 +14,7 @@ function UserStatsDirectory() {
 
   // static cache state from static cache context
   const { staticCache } = useContext(StaticCacheContext);
+  console.log(staticCache);
 
   /* ===== FUNCTIONS ===== */
 
@@ -42,12 +45,26 @@ function UserStatsDirectory() {
             <tbody>
               { staticCache.games.filter(game => type === "Custom" ? game.custom : !game.custom).map(game => {
                 return (
-                  // Each row contains: the name of the game, a link to main stats, and a link to misc stats (ONLY render misc stats links
-                  // if the game has any misc charts!)
+                  // Each row contains: a game and it's box art, a link to main stats, and a link to misc stats 
+                  // (ONLY render misc stats links if the game has any misc charts!)
                   <tr key={ game.name }>
-                    <td className="user-layout-game-element">{ game.name }</td>
+                    <td>
+
+                      { /* First, render the game and it's box art. */ }
+                      <Link to={ `/games/${ game.abb }` }>
+                        <div className="user-layout-game-element">
+                          <BoxArt game={ game } imageReducer={ imageReducer } width={ 75 } />
+                          <span>{ game.name }</span>
+                        </div>
+                      </Link>
+                    </td>
+
+                    { /* Next, access to the main score & time stats */ }
                     <td><UserStatsCategory game={ game } category={ "main" } /></td>
+
+                    { /* Finally, access to the misc score & time stats, if the game has misc category */ }
                     { hasMiscCategory(game) && <td><UserStatsCategory game={ game } category={ "misc" } /></td> }
+                    
                   </tr>
                 );
               })}

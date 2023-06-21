@@ -37,6 +37,8 @@
     border: 2px solid #808080;
     border-radius: 5px;
     align-self: flex-start;
+    max-height: 90vh;
+    overflow: auto;
 }
 
 .user-layout-stats h1 {
@@ -52,8 +54,15 @@
     border-bottom: 10px solid transparent;
 }
 
+.user-layout-stats td {
+    width: 33.33%;
+}
+
 .user-layout-game-element {
-    font-size: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
 }
 
@@ -68,5 +77,4 @@
 
 .user-layout-category a {
     margin: 5px;
-    font-size: 20px;
 }

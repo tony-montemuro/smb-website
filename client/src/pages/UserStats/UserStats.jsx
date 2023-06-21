@@ -78,11 +78,11 @@ function UserStats({ submissionReducer }) {
       <div className="stats-header">
 
         { /* User and game title */ }
-        <h1>{ isMisc && categoryB2F(category) } { game.name }: { capitalize(type) }</h1>
+        <h1>{ game.name }: { isMisc && categoryB2F(category) } { capitalize(type) }</h1>
 
         { /* Live-input: Toggle records page between rendering all records and just live records */ }
         <div className="records-input">
-          <label htmlFor="live">Live-records only: </label>
+          <label htmlFor="live">Live-{ type }s only: </label>
           <input
             id="live"
             type="checkbox"
