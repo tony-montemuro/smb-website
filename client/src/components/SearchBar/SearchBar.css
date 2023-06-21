@@ -43,7 +43,6 @@
     border: none;
     background-color: transparent;
     height: 100%;
-    cursor: pointer;
 }
 
 .searchbar-results {
@@ -53,7 +52,7 @@
     border: none;
     margin-top: 5px;
     width: 400px;
-    height: 200px;
+    height: 180px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     overflow: hidden;
     overflow-y: auto;
@@ -81,7 +80,6 @@
 
 .searchbar-item button {
     margin: 5px;
-    cursor: pointer;
 }
 
 .searchbar-item-empty {

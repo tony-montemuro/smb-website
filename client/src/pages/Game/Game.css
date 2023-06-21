@@ -35,10 +35,6 @@
     flex: 1;
 }
 
-.game-level-list button {
-    cursor: pointer;
-}
-
 .game-radio-btns {
     display: flex;
     flex-direction: row;

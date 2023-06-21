@@ -5,3 +5,7 @@ body {
 a {
     color: blue;
 }
+
+button {
+    cursor: pointer;
+}
