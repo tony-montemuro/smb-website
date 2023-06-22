@@ -46,6 +46,23 @@
     padding: 4px 8px;
 }
 
+.levelboard-container td a {
+    display: inline-flex;
+}
+
+.levelboard-svg-wrapper {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    width: 100%;
+}
+
+.levelboard-svg-wrapper button {
+    display: inline-flex;
+    background-color: transparent;
+    border: none;
+}
+
 .levelboard-container a {
     text-decoration: none;
     text-align: center;

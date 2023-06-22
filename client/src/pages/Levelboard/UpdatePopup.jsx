@@ -124,6 +124,17 @@ function UpdatePopup({ submission, setSubmission }) {
 
               </div>
 
+              { /* Submission live checkbox: allows the user to specify whether or not the submission proof was live or not. */ }
+              <div className="levelboard-input-group">
+                <label htmlFor="live">Live Proof: </label>
+                <input
+                  id="live"
+                  type="checkbox"
+                  checked={ form.values.live }
+                  onChange={ (e) => handleChange(e) }
+                />
+              </div>
+
               { /* Submission comment input: allows the user to modify their submission comment. */ }
               <div className="levelboard-textarea-group">
                 <label htmlFor="comment">Comment (optional): </label>
@@ -141,29 +152,19 @@ function UpdatePopup({ submission, setSubmission }) {
 
               </div>
 
-              { /* Submission live checkbox: allows the user to specify whether or not the submission was live or not. */ }
-              <div className="levelboard-input-group">
-                <label htmlFor="live">Live Run: </label>
-                <input
-                  id="live"
-                  type="checkbox"
-                  checked={ form.values.live }
-                  onChange={ (e) => handleChange(e) }
-                />
-              </div>
-
               { /* Submission message input: allows a moderator to include a message for the submission, since users will recieve a
               notification when a moderator submits or updates a submission on behalf of them. The message is included in this.
               NOTE: This input form should only render if the current user is a moderator, and the form user is different than the mod. */ }
               { user.is_mod && user.profile.id !== form.values.profile_id &&
-                <div className="levelboard-input-group">
+                <div className="levelboard-textarea-group">
                   <label htmlFor="message">Leave a message (optional): </label>
-                  <input 
+                  <textarea 
                     id="message"
-                    type="text"
                     value={ form.values.message }
                     onChange={ (e) => handleChange(e) }
-                  />
+                    rows={ TEXT_AREA_ROWS }
+                  >
+                  </textarea>
 
                   { /* If the error.message field is defined, render that underneath the proof field. */ }
                   { form.error.message  && <p>{ form.error.message }</p> }
