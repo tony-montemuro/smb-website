@@ -1,8 +1,12 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
+import ClearIcon from "@mui/icons-material/Clear";
 import FrontendHelper from "../../helper/FrontendHelper";
-import NotificationBasicInfo from "./NotificationBasicInfo";
+import LaunchIcon from "@mui/icons-material/Launch";
 import NotificationMessage from "./NotificationMessage";
+import NotificationProof from "./NotificationProof";
+import Username from "../../components/Username/Username";
+import LiveSymbol from "./LiveSymbol";
 
 function UpdatePopup({ notifications, setNotifications }) {
   /* ===== VARIABLES ===== */
@@ -10,7 +14,7 @@ function UpdatePopup({ notifications, setNotifications }) {
   const type = notification.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
-  const { capitalize, recordB2F, dateB2F } = FrontendHelper();
+  const { capitalize, cleanLevelName, recordB2F, dateB2F } = FrontendHelper();
 
   /* ===== UPDATE POPUP COMPONENT ===== */
   return (
@@ -22,108 +26,130 @@ function UpdatePopup({ notifications, setNotifications }) {
 
         { /* Popup header - includes a link to the moderator's user page */ }
         <h2>
-          <Link to={`/user/${ notification.creator.id }`}>{ notification.creator.username }</Link> has updated the following submission: 
+          <Username country={ notification.creator.country } profileId={ notification.creator.id } username={ notification.creator.username } />
+          &nbsp;has updated the following submission: 
         </h2>
 
         { /* Notification details */ }
-        <div className="notifications-details">
-          <ul>
+        <div className="notifications-details-wrapper">
+          <div className="notifications-details">
+            <ul>
 
-            { /* Render basic information about submission - includes the game, as well as level */ }
-            <NotificationBasicInfo notification={ notification } />
-
-            { /* Render the record */ }
+            { /* Link to the game corresponding to the notification prop */ }
             <li>
-              { capitalize(type) }: { recordB2F(notification.record, type) }
+              <span>
+                Game:&nbsp;<Link to={`/games/${ notification.level.mode.game.abb }`}>{ notification.level.mode.game.name }</Link> 
+              </span>
             </li>
 
-            { /* Render the submission date. If the submission date was updated, render both the old submission date, and the new
-            submission date. */ }
-            { notification.submitted_at !== notification.submission.submitted_at ?
-              <div className="notifications-updated">
-                <li>
-                  Date: { dateB2F(notification.submitted_at) } → { dateB2F(notification.submission.submitted_at) }
-                </li>
-              </div>
-            :
-              <li>
-                Date: { dateB2F(notification.submitted_at) }
-              </li>
-            }
+            { /* Link to the level corresponding to the notification prop */ }
+            <li>
+              <span>
+                Chart:&nbsp;<Link to={`/games/${ notification.level.mode.game.abb }/${ notification.level.misc ? "misc" : "main" }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
+                  { cleanLevelName(notification.level.name) } ({ capitalize(notification.score ? "score" : "time") })
+                </Link>
+              </span>
+            </li>
 
-            { /* Render the submission region. If the submission region was updated, render both the old region, and the new region. */ }
-            { notification.region.id !== notification.submission.region.id ?
-              <div className="notifications-updated">
-                <li>
-                  Region: { notification.region.region_name } → { notification.submission.region.region_name }
-                </li>
-              </div>
-            :
+              { /* Render the record */ }
               <li>
-                Region: { notification.region.region_name }
+                <span>{ capitalize(type) }: { recordB2F(notification.record, type) }</span>
               </li>
-            }
 
-            { /* Render the submission monkey. If the submission monkey was updated, render both the old monkey, and the new monkey. */ }
-            { notification.monkey.id !== notification.submission.monkey.id ?
-              <div className="notifications-updated">
-                <li>
-                  Monkey: { notification.monkey.monkey_name } → { notification.submission.monkey.monkey_name }
+              { /* Render the submission date. If the submission date was updated, render both the old submission date, and the new
+              submission date. */ }
+              { notification.submitted_at !== notification.submission.submitted_at ?
+                <li className="notifications-updated">
+                  <span>
+                    Date: { dateB2F(notification.submitted_at) } → { dateB2F(notification.submission.submitted_at) }
+                  </span>
                 </li>
-              </div>
-            :
-              <li>
-                Monkey: { notification.monkey.monkey_name }
-              </li>
-            }
-
-            { /* Render the submission proof. If the submission proof was updated, render both the old proof, and the new proof. */ }
-            { notification.proof !== notification.submission.proof ?
-              <div className="notifications-updated">
+              :
                 <li>
-                  Proof:&nbsp;
-                  <a href={ notification.proof } target="_blank" rel="noopener noreferrer">Old</a>
-                  &nbsp;→&nbsp;
-                  <a href={ notification.submission.proof } target="_blank" rel="noopener noreferrer">New</a>
+                  <span>Date: { dateB2F(notification.submitted_at) }</span>
                 </li>
-              </div>
-            :
-              <li>
-                Proof: <a href={ notification.proof } target="_blank" rel="noopener noreferrer">☑️</a>
-              </li>
-            }
+              }
 
-            { /* Render the submission comment. If the submission comment was updated, render both the old comment, and the new comment. */ }
-            { notification.comment !== notification.submission.comment ?
-              <div className="notifications-updated">
+              { /* Render the submission region. If the submission region was updated, render both the old region, and the new region. */ }
+              { notification.region.id !== notification.submission.region.id ?
+                <li className="notifications-updated">
+                  <span>
+                    Region: { notification.region.region_name } → { notification.submission.region.region_name }
+                  </span>
+                </li>
+              :
                 <li>
-                  Comment:&nbsp;
-                  { notification.comment ? notification.comment : <i>None</i> } 
-                  &nbsp;→&nbsp;
-                  { notification.submission.comment ? notification.submission.comment : <i>None</i> }
+                  <span>Region: { notification.region.region_name }</span>
                 </li>
-              </div>
-            :
-              <li>
-                Comment: { notification.comment ? notification.comment : <i>None</i> }
-              </li>
-            }
+              }
 
-            { /* Render the submission live status. If the submission live status was updated, render both the old status, and 
-            the new status. */ }
-            { notification.live !== notification.submission.live ?
-              <div className="notifications-updated">
+              { /* Render the submission monkey. If the submission monkey was updated, render both the old monkey, and the new monkey. */ }
+              { notification.monkey.id !== notification.submission.monkey.id ?
+                <li className="notifications-updated">
+                  <span>
+                    Monkey: { notification.monkey.monkey_name } → { notification.submission.monkey.monkey_name }
+                  </span>
+                </li>
+              :
                 <li>
-                  Live Status: { notification.live ? "Live" : "Not Live" } → { notification.submission.live ? "Live" : "Not Live" }
+                  <span>Monkey: { notification.monkey.monkey_name }</span>
                 </li>
-              </div>
-            :
-              <li>
-                Live Status: { notification.live ? "Live" : "Not Live" }
-              </li>
-            }
+              }
 
-          </ul>
+              { /* Render the submission proof. If the submission proof was updated, render both the old proof, and the new proof. */ }
+              { notification.proof !== notification.submission.proof ?
+                <li className="notifications-updated">
+                  <span>
+                    Proof:&nbsp;
+                    { notification.proof ?
+                      <a href={ notification.proof } target="_blank" rel="noopener noreferrer"><LaunchIcon /></a>
+                    :
+                      <ClearIcon />
+                    }
+                    &nbsp;→&nbsp;
+                    <a href={ notification.submission.proof } target="_blank" rel="noopener noreferrer"><LaunchIcon /></a>
+                  </span>
+                </li>
+              :
+                <li>
+                  <span>
+                    <NotificationProof proof={ notification.submission.proof } />
+                  </span>
+                </li>
+              }
+
+              { /* Render the submission live proof status. If the submission live status was updated, render both the old status, and 
+              the new status. */ }
+              { notification.live !== notification.submission.live ?
+                <li className="notifications-updated">
+                  <span>
+                    Live Proof: <LiveSymbol liveStatus={ notification.live } /> → <LiveSymbol liveStatus={ notification.submission.live } />
+                  </span>
+                </li>          
+              :
+                <li>
+                  <span>Live Status: <LiveSymbol liveStatus={ notification.submission.live } /></span>
+                </li>
+              }
+
+              { /* Render the submission comment. If the submission comment was updated, render both the old comment, and the new comment. */ }
+              { notification.comment !== notification.submission.comment ?
+                <li className="notifications-updated">
+                  <span>
+                    Comment:&nbsp;
+                    { notification.comment ? notification.comment : <i>None</i> } 
+                    &nbsp;→&nbsp;
+                    { notification.submission.comment ? notification.submission.comment : <i>None</i> }
+                  </span>
+                </li>
+              :
+                <li>
+                  <span>Comment:&nbsp;{ notification.comment ? notification.comment : <i>None</i> }</span>
+                </li>
+              }
+
+            </ul>
+          </div>
         </div>
 
         { /* Render the message associated with the submission, if there is one. */ }

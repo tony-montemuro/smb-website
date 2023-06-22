@@ -23,7 +23,6 @@ function GameHeaderInfo({ game }) {
             <a href={ game.download } target="_blank" rel="noopener noreferrer">
               <DownloadIcon />
             </a>
-            
           </li>
         </ul>
       :  

@@ -1,10 +1,11 @@
 /* ===== IMPORTS ===== */
 import "./Notifications.css";
-import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
 import NotificationMessage from "./NotificationMessage";
 import NotificationProof from "./NotificationProof";
+import Username from "../../components/Username/Username";
+import LiveSymbol from "./LiveSymbol";
 
 function InsertPopup({ notifications, setNotifications }) {
   /* ===== VARIABLES ===== */
@@ -26,37 +27,40 @@ function InsertPopup({ notifications, setNotifications }) {
 
         { /* Popup header - includes a link to the moderator's user page */ }
         <h2>
-          <Link to={`/user/${ notification.creator.id }`}>{ notification.creator.username }</Link> has submitted the following submission on your behalf: 
+          <Username country={ notification.creator.country } profileId={ notification.creator.id } username={ notification.creator.username } />
+          &nbsp;has submitted the following submission on your behalf: 
         </h2>
 
         { /* Notification details */ }
-        <div className="notifications-details">
-          <ul>
+        <div className="notifications-details-wrapper">
+          <div className="notifications-details">
+            <ul>
 
-            { /* Render basic information about submission - includes the game, as well as level */ }
-            <NotificationBasicInfo notification={ notification } />
+              { /* Render basic information about submission - includes the game, as well as level */ }
+              <NotificationBasicInfo notification={ notification } />
 
-            { /* Render the record */ }
-            <li>
-              { capitalize(type) }: { recordB2F(notification.record, type) }
-            </li>
-            
-            { /* Render the submission date */ }
-            <li>Date: { dateB2F(notification.submission.submitted_at) }</li>
+              { /* Render the record */ }
+              <li>
+                { capitalize(type) }: { recordB2F(notification.record, type) }
+              </li>
+              
+              { /* Render the submission date */ }
+              <li>Date: { dateB2F(notification.submission.submitted_at) }</li>
 
-            { /* Render the region of the submission */ }
-            <li>Region: { notification.submission.region.region_name }</li>
+              { /* Render the region of the submission */ }
+              <li>Region: { notification.submission.region.region_name }</li>
 
-            { /* Render the monkey used in the submission */ }
-            <li>Monkey: { notification.submission.monkey.monkey_name }</li>
+              { /* Render the monkey used in the submission */ }
+              <li>Monkey: { notification.submission.monkey.monkey_name }</li>
 
-            { /* Render the proof of the submission */ }
-            <li>Proof: <NotificationProof proof={ notification.submission.proof } /></li>
+              { /* Render the proof of the submission */ }
+              <li><NotificationProof proof={ notification.submission.proof } /></li>
 
-            { /* Render whether or not the submission was live */ }
-            <li>Live: { notification.submission.live ? "Yes" : "No" }</li>
+              { /* Render whether or not the submission was live */ }
+              <li>Live Proof: <LiveSymbol liveStatus={ notification.submission.live } /></li>
 
-          </ul>
+            </ul>
+          </div>
         </div>
 
         { /* Render the message associated with the submission, if there is one. */ }

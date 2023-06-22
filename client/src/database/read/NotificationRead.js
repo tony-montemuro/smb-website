@@ -19,7 +19,7 @@ const NotificationRead = () => {
                 .select(`
                     notif_date,
                     notif_type,
-                    creator:profile!notification_creator_id_fkey (id, username),
+                    creator:profile!notification_creator_id_fkey (country, id, username),
                     message,
                     submission:all_submission (
                         profile (id, username),

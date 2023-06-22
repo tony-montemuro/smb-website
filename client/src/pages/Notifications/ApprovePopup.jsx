@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import "./Notifications.css";
-import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
+import Username from "../../components/Username/Username.jsx";
 
 function ApprovePopup({ notifications, setNotifications }) {
   /* ===== VARIABLES ===== */
@@ -12,7 +12,7 @@ function ApprovePopup({ notifications, setNotifications }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { capitalize, dateB2F, recordB2F } = FrontendHelper()
+  const { capitalize, recordB2F } = FrontendHelper()
 
   /* ===== APPROVE POPUP COMPONENT ===== */
   return (
@@ -24,25 +24,25 @@ function ApprovePopup({ notifications, setNotifications }) {
 
         { /* Popup header - includes a link to the moderator's user page */ }
         <h2>
-          <Link to={`/user/${ notification.creator.id }`}>{ notification.creator.username }</Link> has approved the following submission: 
+          <Username country={ notification.creator.country } profileId={ notification.creator.id } username={ notification.creator.username } />
+          &nbsp;has approved the following submission: 
         </h2>
 
         { /* Notification details */ }
-        <div className="notifications-details">
-          <ul>
+        <div className="notifications-details-wrapper">
+          <div className="notifications-details">
+            <ul>
 
-            { /* Render basic information about submission - includes the game, as well as level */ }
-            <NotificationBasicInfo notification={ notification } />
+              { /* Render basic information about submission - includes the game, as well as level */ }
+              <NotificationBasicInfo notification={ notification } />
 
-            { /* Render the record */ }
-            <li>
-              { capitalize(type) }: { recordB2F(notification.record, type) }
-            </li>
-            
-            { /* Render the submission approval date */ }
-            <li>Approval Date: { dateB2F(notification.notif_date) }</li>
+              { /* Render the record */ }
+              <li>
+                { capitalize(type) }: { recordB2F(notification.record, type) }
+              </li>
 
-          </ul>
+            </ul>
+          </div>
         </div>
 
       </div>

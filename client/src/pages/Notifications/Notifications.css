@@ -41,6 +41,14 @@
     width: 100%;
 }
 
+.notifications-body table tbody tr:hover, .notifications-body table tbody tr:nth-child(odd):hover {
+    background-color: lightgray;
+}
+
+.notifications-body table tbody tr:nth-child(odd) {
+    background-color: #f1f1f1; /* Set the background color for odd rows */
+}
+
 .notifications-body th {
     border: 1px solid black;
 }
@@ -79,6 +87,7 @@ td.notifications-select-element {
     width: 100%;
     max-width: 640px;
     background-color: #fff;
+    border-radius: 10px;
 }
 
 .notifications-popup-inner button {
@@ -93,11 +102,39 @@ td.notifications-select-element {
     text-align: center;
 }
 
-.notifications-details {
-    display: inline-block
+.notifications-details-wrapper {
+    display: flex;
+    justify-content: center;
 }
 
-.notifications-updated {
+.notifications-details {
+    display: inline-block;
+    align-items: left;
+}
+
+.notifications-details ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.notifications-details li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 5px;
+    min-height: 26px;
+}
+
+.notifications-details span {
+    padding: 3px;
+    display: flex;
+    align-items: center;
+}
+
+.notifications-details li a {
+    display: inline-flex;
+}
+
+.notifications-updated span {
     background-color: yellow;
-    display: block;
 }

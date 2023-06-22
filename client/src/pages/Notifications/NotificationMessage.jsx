@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { Link } from "react-router-dom";
+import Username from "../../components/Username/Username";
 
 function NotificationMessage({ message, notification }) {
   /* ===== NOTIFICATION MESSAGE COMPONENT ===== */
@@ -8,7 +8,8 @@ function NotificationMessage({ message, notification }) {
     <>
       { /* Message header */ }
       <h2>
-        <Link to={`/user/${ notification.creator.id }`}>{ notification.creator.username }</Link> also left a message:
+        <Username country={ notification.creator.country } profileId={ notification.creator.id } username={ notification.creator.username } />
+        &nbsp;also left a message:
       </h2>
 
       { /* Render the message in quotations */ }
