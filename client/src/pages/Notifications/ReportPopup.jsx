@@ -47,7 +47,7 @@ function ReportPopup({ notifications, setNotifications }) {
 
               { /* Render the owner of the reported submission. If the report is for the current user, we do not need to render. */ }
               { user.profile.id !== notification.submission.profile.id && 
-                <li>User: <Link to={ `/user/${ notification.submission.profile.id }`}>{ notification.submission.profile.username }</Link></li>
+                <li>User:&nbsp;<Link to={ `/user/${ notification.submission.profile.id }`}>{ notification.submission.profile.username }</Link></li>
               }
 
               { /* Render basic information about submission - includes the game, as well as level */ }

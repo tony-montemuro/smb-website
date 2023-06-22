@@ -32,7 +32,7 @@
     margin-bottom: 5px;
 }
 
-.submissions-list table {
+.submissions-table table {
     margin-top: 7px;
     table-layout: fixed;
     border-collapse: collapse;
@@ -40,24 +40,32 @@
     margin-right: auto;
 }
 
-.submissions-list th {
+.submissions-list tr:nth-child(even) {
+    background-color: #eaeaea;
+}
+
+.submissions-table table tbody tr:hover, .submissions-table table tbody tr:nth-child(odd):hover {
+    background-color: lightgray;
+}
+
+.submissions-table th {
     border: 1px solid black;
     padding: 4px 8px;
 }
 
-.submissions-list td {
+.submissions-table td {
     border: 1px solid black;
     padding: 4px 8px;
     cursor: pointer;
 }
 
-.submissions-list a {
-    text-decoration: none;
-    text-align: center;
+.submissions-table td a {
+    display: inline-flex;
 }
 
-.submissions-list tr:nth-child(even) {
-    background-color: #d3d3d3;
+.submissions-svg-wrapper {
+    display: flex;
+    align-items: center;
 }
 
 .submissions-user-info {

@@ -64,12 +64,11 @@
 }
 
 .levelboard-container a {
-    text-decoration: none;
     text-align: center;
 }
 
 .levelboard-container tr:nth-child(even) {
-    background-color: #d3d3d3;
+    background-color: #eaeaea;
 }
 
 .levelboard-input-group {

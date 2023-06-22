@@ -113,7 +113,7 @@ const Submissions = () => {
         if (!approving) {
             const submissionAbb = submission.game.abb;
             delete submission.game;
-            const sorted = [...submissions[submissionAbb], submission].sort((a, b) => a.submitted_at < b.submitted_at ? -1 : a.submitted_at > b.submitted_at ? 1 : 0);
+            const sorted = [...submissions[submissionAbb], submission].sort((a, b) => a.details.id.localeCompare(b.details.id));
             setSubmissions({ ...submissions, [submissionAbb]: sorted });
             setApproved(approved.filter(row => row !== submission));
         }

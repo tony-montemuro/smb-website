@@ -1,6 +1,8 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
+import CheckIcon from "@mui/icons-material/Check";
 import FrontendHelper from "../../helper/FrontendHelper";
+import LaunchIcon from "@mui/icons-material/Launch";
 import Username from "../../components/Username/Username";
 
 function SubmissionsTable({ submissions, isApproved, game, handleClick }) {
@@ -11,7 +13,7 @@ function SubmissionsTable({ submissions, isApproved, game, handleClick }) {
 
   /* ===== SUBMISSIONS TABLE COMPONENT ===== */
   return (
-    <div>
+    <div className="submissions-table">
       <table>
 
         { /* Table header: specifies the information displayed in each cell of the table*/ }
@@ -27,8 +29,9 @@ function SubmissionsTable({ submissions, isApproved, game, handleClick }) {
             <th>Record</th>
             <th>Date</th>
             <th>Region</th>
-            <th>Live Status</th>
+            <th>Monkey</th>
             <th>Proof</th>
+            <th>Live</th>
             <th>Comment</th>
 
           </tr>
@@ -75,11 +78,26 @@ function SubmissionsTable({ submissions, isApproved, game, handleClick }) {
             { /* Region data: Render the region associated with the submission. */ }
             <td>{ row.details.region.region_name }</td>
 
-            { /* If the details.live boolean is set to true, render Live. Otherwise, render Non-live. */ }
-            { row.details.live ? <td>Live</td> : <td>Non-live</td> }
+            { /* Monkey data: Render the monkey associated with the submission. */ }
+            <td>{ row.details.monkey.monkey_name }</td>
 
-            { /* Proof data: If a proof exists, render an a tag that links to the proof. Otherwise, do not render anything. */ }
-            <td>{ row.details.proof ? <a href={ row.details.proof } target="_blank" rel="noopener noreferrer">☑️</a> : null }</td>
+            { /* Proof data: If a proof exists, render a launch icon that links to the proof. */ }
+            <td>
+              { row.details.proof && 
+                <div className="submissions-svg-wrapper">
+                  <a href={ row.details.proof } target="_blank" rel="noopener noreferrer"><LaunchIcon fontSize="small" /></a>
+                </div>
+              }
+            </td>
+
+            { /* If the details.live boolean is set to true, render a checkmark. */ }
+            <td>
+              { row.details.live &&
+                <div className="submissions-svg-wrapper">
+                  <CheckIcon />
+                </div>
+              }
+            </td>
 
             {/* Comment data: Render the comment associated with the submission. */}
             <td>{ row.details.comment }</td>
