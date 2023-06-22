@@ -2,11 +2,11 @@
 import { Link } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import FrontendHelper from "../../helper/FrontendHelper";
-import LaunchIcon from "@mui/icons-material/Launch";
+import LiveSymbol from "./LiveSymbol";
 import NotificationMessage from "./NotificationMessage";
 import NotificationProof from "./NotificationProof";
 import Username from "../../components/Username/Username";
-import LiveSymbol from "./LiveSymbol";
+import VideocamIcon from "@mui/icons-material/Videocam";
 
 function UpdatePopup({ notifications, setNotifications }) {
   /* ===== VARIABLES ===== */
@@ -102,12 +102,16 @@ function UpdatePopup({ notifications, setNotifications }) {
                   <span>
                     Proof:&nbsp;
                     { notification.proof ?
-                      <a href={ notification.proof } target="_blank" rel="noopener noreferrer"><LaunchIcon /></a>
+                      <a href={ notification.proof } target="_blank" rel="noopener noreferrer">
+                        <VideocamIcon sx={{ color: "black" }} />
+                      </a>
                     :
                       <ClearIcon />
                     }
                     &nbsp;→&nbsp;
-                    <a href={ notification.submission.proof } target="_blank" rel="noopener noreferrer"><LaunchIcon /></a>
+                    <a href={ notification.submission.proof } target="_blank" rel="noopener noreferrer">
+                      <VideocamIcon sx={{ color: "black" }} />
+                    </a>
                   </span>
                 </li>
               :

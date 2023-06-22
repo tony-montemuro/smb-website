@@ -7,8 +7,8 @@ import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
-import LaunchIcon from "@mui/icons-material/Launch";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import VideocamIcon from "@mui/icons-material/Videocam";
 
 function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, deleteFunc }) {
   /* ===== VARIABLES ===== */
@@ -53,11 +53,13 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
       { /* Render the name of the monkey */ }
       <td>{ submission.details.monkey.monkey_name }</td>
 
-      { /* Render an a tag that links to the proof of the submission, if one exists */ }
+      { /* Render a camera svg tag that links to the proof of the submission, if one exists */ }
       <td>
         { submission.details.proof && 
           <div className="levelboard-svg-wrapper">
-            <a href={ submission.details.proof } target="_blank" rel="noopener noreferrer"><LaunchIcon fontSize="small" /></a>
+            <a href={ submission.details.proof } target="_blank" rel="noopener noreferrer">
+              <VideocamIcon sx={{ color: "black" }} />
+            </a>
           </div>
         }
       </td>

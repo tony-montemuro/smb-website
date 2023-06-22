@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import ClearIcon from "@mui/icons-material/Clear";
-import LaunchIcon from "@mui/icons-material/Launch";
+import VideocamIcon from '@mui/icons-material/Videocam';
 
 function NotificationProof({ proof }) {
   /* ===== NOTIFICATION PROOF COMPONENT ===== */
@@ -11,7 +11,7 @@ function NotificationProof({ proof }) {
       { /* If the proof exists, create a link to it. */ }
       { proof ?
         <a href={ proof } target="_blank" rel="noopener noreferrer">
-          <LaunchIcon fontSize="small" />
+          <VideocamIcon sx={{ color: "black" }} />
         </a>
       :
       

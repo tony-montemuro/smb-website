@@ -2,8 +2,8 @@
 import { Link } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 import FrontendHelper from "../../helper/FrontendHelper";
-import LaunchIcon from "@mui/icons-material/Launch";
 import Username from "../../components/Username/Username";
+import VideocamIcon from "@mui/icons-material/Videocam";
 
 function SubmissionsTable({ submissions, isApproved, game, handleClick }) {
   /* ===== FUNCTIONS ===== */
@@ -85,7 +85,9 @@ function SubmissionsTable({ submissions, isApproved, game, handleClick }) {
             <td>
               { row.details.proof && 
                 <div className="submissions-svg-wrapper">
-                  <a href={ row.details.proof } target="_blank" rel="noopener noreferrer"><LaunchIcon fontSize="small" /></a>
+                  <a href={ row.details.proof } target="_blank" rel="noopener noreferrer">
+                    <VideocamIcon sx={{ color: "black" }} />
+                  </a>
                 </div>
               }
             </td>

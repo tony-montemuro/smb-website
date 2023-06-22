@@ -5,7 +5,7 @@ import { UserContext } from "../../Contexts";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import FrontendHelper from "../../helper/FrontendHelper";
-import LaunchIcon from "@mui/icons-material/Launch";
+import VideocamIcon from "@mui/icons-material/Videocam";
 
 function FilteredSubmissionRow({ submission, deleteFunc }) {
   /* ===== VARIABLES ===== */
@@ -40,11 +40,13 @@ function FilteredSubmissionRow({ submission, deleteFunc }) {
       { /* Monkey name - render the monkey of the submission */ }
       <td>{ submission.monkey.monkey_name }</td>
 
-      { /* Proof - render a link to the proof, if there is any */ }
+      { /* Proof - render a videocam svg that links to the proof, if there is any */ }
       <td>
         { submission.proof && 
           <div className="record-history-svg-wrapper">
-            <a href={ submission.proof } target="_blank" rel="noopener noreferrer"><LaunchIcon fontSize="small" /></a>
+            <a href={ submission.proof } target="_blank" rel="noopener noreferrer">
+              <VideocamIcon sx={{ color: "black" }} />
+            </a>
           </div>
         }
       </td>
