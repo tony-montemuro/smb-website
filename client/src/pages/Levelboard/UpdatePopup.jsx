@@ -129,10 +129,10 @@ function UpdatePopup({ submission, setSubmission }) {
                 <label htmlFor="comment">Comment (optional): </label>
                 <textarea 
                   id="comment"
+                  value={ form.values.comment }
                   onChange={ (e) => handleChange(e) }
                   rows={ TEXT_AREA_ROWS }
                 >
-                  { form.values.comment }
                 </textarea>
 
 

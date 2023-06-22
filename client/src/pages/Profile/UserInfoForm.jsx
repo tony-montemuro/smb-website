@@ -65,12 +65,12 @@ function UserInfoForm() {
           <label htmlFor="bio">About Me (optional): </label>
           <textarea
             id="bio"
+            value={ form.user.bio }
             rows={ BIO_HEIGHT }
             cols={ BIO_WIDTH } 
             placeholder="About Me"
             onChange={ handleChange }
           >
-            { form.user.bio }
           </textarea>
 
           { /* If error.bio is defined, bio field had an issue. Render it here. */ }
@@ -156,12 +156,12 @@ function UserInfoForm() {
             <label htmlFor="video_description">Video Description (optional): </label>
             <textarea
               id="video_description"
+              value={ form.user.video_description }
               rows={ BIO_HEIGHT }
               cols={ BIO_WIDTH } 
               placeholder="Include a description"
               onChange={ handleChange }
             >
-              { form.user.video_description }
             </textarea>
           </div>
 
