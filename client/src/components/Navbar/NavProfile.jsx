@@ -78,7 +78,7 @@ function NavProfile({ imageReducer }) {
 
           { /* Logout button - button that allows the user to log out of their account */ }
           <div className="nav-profile-link">
-            <button id="nav-profile-signout-btn" onClick={ signOut }>
+            <button type="button" id="nav-profile-signout-btn" onClick={ signOut }>
               <LogoutIcon titleAccess="Sign Out" />
             </button>
           </div>

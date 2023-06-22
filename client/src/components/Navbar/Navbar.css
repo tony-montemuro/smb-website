@@ -78,7 +78,11 @@
 }
 
 .nav-profile-link {
-    display: inline-block;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
 }
 
 .nav-profile-notification-link {
