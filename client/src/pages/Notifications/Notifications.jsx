@@ -1,7 +1,8 @@
 /* ===== IMPORTS ===== */
 import "./Notifications.css";
+import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
-import { UserContext } from "../../Contexts";
+import { MessageContext, UserContext } from "../../Contexts";
 import NotificationsLogic from "./Notifications.js";
 import NotificationPopup from "./NotificationPopup";
 import NotificationTableRow from "./NotificationTableRow";
@@ -13,6 +14,9 @@ function Notifications() {
   // user state from user context
   const { user } = useContext(UserContext);
 
+  // addMessage function from message context
+  const { addMessage } = useContext(MessageContext);
+
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 7;
   const messages = {
@@ -22,6 +26,7 @@ function Notifications() {
     update: "A moderator has updated one of you submissions.",
     delete: "A moderator has deleted one of your submissions."
   };
+  const navigate = useNavigate();
 
   /* ===== FUNCTIONS ===== */
 
@@ -40,8 +45,17 @@ function Notifications() {
 
   // code that is executed when the page first loads
   useEffect(() => {
-    if (user.notifications) {
-      init(user.notifications)
+    if (user.id !== undefined) {
+      // if not user.id (meaning user is null), current user is not authenticated. thus, deny
+      // access to this page.
+      if (!user.id) {
+        addMessage("You cannot access this page.", "error");
+        navigate("/");
+        return;
+      }
+
+      // if we made it past this check, we can go ahead and initialize the page
+      init(user.notifications);
     }
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);

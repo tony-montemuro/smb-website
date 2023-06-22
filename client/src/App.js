@@ -187,7 +187,6 @@ const App = () => {
         delete game.game_rule;
       });
 
-      console.log(games);
       // add the mod field to each profile object
       profiles.forEach(profile => {
         profile.mod = false;
