@@ -10,7 +10,6 @@ import GameLayout from "./components/GameLayout/GameLayout";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
-import Login from "./pages/Login/Login.jsx";
 import Medals from "./pages/Medals/Medals.jsx";
 import MessagePopup from "./components/MessagePopup/MessagePopup.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
@@ -89,7 +88,6 @@ function App() {
               <Route path="/resources" element={<Resources />}></Route>
               <Route path="/support" element={ <Support /> }/>
               <Route path="/notifications" element={ <Notifications /> } />
-              <Route path="/login" element={ <Login /> }/>
               <Route path="/email-update" element={ <EmailUpdate /> } />
               <Route path="/profile" element={ <Profile imageReducer={ imageReducer } /> }/>
               <Route path="/games/:abb" element={ <GameLayout imageReducer={ imageReducer } /> } >

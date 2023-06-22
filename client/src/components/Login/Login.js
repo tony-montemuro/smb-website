@@ -6,8 +6,8 @@ import ValidationHelper from "../../helper/ValidationHelper";
 
 const Login = () => {
     /* ===== STATES  ===== */
-    const [email, setEmail] = useState({ name: "", error: undefined });
-    const [userState, setUserState] = useState("idle");
+    const [email, setEmail] = useState({ name: "" });
+    const [submitting, setSubmitting] = useState(false);
 
     /* ===== CONTEXTS ===== */
 
@@ -26,53 +26,50 @@ const Login = () => {
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object generated when the user makes a change to the email form
     // POSTCONDITIONS (1 possible outcome):
-    // the `name` field of the email state hook is updated based on e.value. then, the setUserState() function is called to
-    // set the userState to "idle"
+    // the `name` field of the email state hook is updated based on e.value
     const handleChange = (e) => {
         const { value } = e.target;
         setEmail({ ...email, name: value });
-        setUserState("idle");
     };
 
     // FUNCTION 2: handleLogin - handles an attempt at logging in
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object generated when the user makes a change to the email form
-    // POSTCONDITIONS (1 possible outcome):
-    // if the email is not valid, the function will terminate early, and the error field of the email state hook will update. 
-    // if the function successfully begins the login process, the user state is updated to complete by calling the
-    // setUserState() function with the "complete" argument, and any email error is removed.
-    // if the function fails to begin the login process, the user is alerted of the error.
+    // POSTCONDITIONS (3 possible outcome):
+    // if the email is not valid, the function will terminate early, and an error message will be rendered to the user. 
+    // if the function successfully logs in, the user is informed to check their email inbox
+    // if the function fails to login, the user is informed of the error
     const handleLogin = async (e) => {
         // initialize login process
         e.preventDefault();
-        setUserState("logging");
 
         // validate that the email is correct
         const error = validateEmail(email.name);
         if (error) {
-            setEmail({ ...email, error: error });
             addMessage(error, "error");
-            setUserState("idle");
             return;
         }
 
         // if we made it past validation, we can complete the login
         try {
+            // set the submitting flag to true, and attempt to log in
+            setSubmitting(true);
             await login(email.name);
 
-            // if there are no errors, we can complete the function
-            setUserState("complete");
-            setEmail({ ...email, error: undefined });
+            // if login was successful, render a success message
+            addMessage("Please check your email inbox to proceed.", "success");
 
         } catch (error) {
+            // if there was an error, render it
             addMessage(error.message, "error");
-            setUserState("idle");
+        } finally {
+            setSubmitting(false);
         }
     };
 
     return { 
         email,
-        userState,
+        submitting,
         handleChange, 
         handleLogin 
     };
