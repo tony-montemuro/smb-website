@@ -21,7 +21,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
-	const otherType = type === "score" ? "time" : "score";
 
 	/* ===== CONTEXTS ===== */
 
@@ -46,7 +45,8 @@ function Levelboard({ imageReducer, submissionReducer }) {
 		board,
 		deleteSubmission,
 		setupBoard,
-		setDeleteSubmission
+		setDeleteSubmission,
+		handleTabClick
 	} = LevelboardLogic();
 
 	// helper functions
@@ -88,21 +88,27 @@ function Levelboard({ imageReducer, submissionReducer }) {
 				<div className="levelboard-title">
 
 					{ /* Previous level button */ }
-					{ board.adjacent.prev && 
-						<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.prev }` }>
-							<button>←Prev</button>
-						</Link>
-					}
+					<div className="levelboard-title-btn">
+						{ board.adjacent.prev && 
+							<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.prev }` }>
+								<button>←Prev</button>
+							</Link>
+						}
+					</div>
 
 					{ /* Levelboard title */ }
-					<h1>{ capitalize(type) }: { cleanLevelName(level.name) }</h1>
+					<div className="levelboard-title-name">
+						<h1>{ cleanLevelName(level.name) }</h1>
+					</div>
 
 					{ /* Next level button */ }
-					{ board.adjacent.next &&
-					<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.next }` }>
-						<button>Next→</button>
-					</Link>
-					}
+					<div className="levelboard-title-btn">
+						{ board.adjacent.next &&
+							<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.next }` }>
+								<button>Next→</button>
+							</Link>
+						}
+					</div>
 					
 				</div>
 
@@ -118,14 +124,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 						<button onClick={ () => setUpdateSubmission(board.records.all.find(row => row.profile.id === user.profile.id)) }>
 							Update Submission
 						</button>
-					}
-
-					{ /* Button to navigate to the levelboard of the other type. NOTE: this only will be rendered if the
-					chart_type field in the level state is set to "both" */ }
-					{ level.chart_type === "both" &&
-						<Link to={ `/games/${ abb }/${ category }/${ otherType }/${ level.name }` }>
-							<button>{ capitalize(otherType) } Board</button>
-						</Link>
 					}
 
 				</div>
@@ -145,50 +143,81 @@ function Levelboard({ imageReducer, submissionReducer }) {
 				</div>
 			</div>
 
-			{ /* Levelboard container - div container wrapping the levelboard table */ }
+			{ /* Levelboard container - div container wrapping the levelboard table, as well as the type tabs. */ }
 			<div className="levelboard-container">
-				<table>
 
-					{ /* Table header information: specifies the information displayed in each cell of the board */ }
-					<thead>
-						<tr>
-							<th>Position</th>
-							<th>Name</th>
-							<th>{ capitalize(type) }</th>
-							<th>Date</th>
-							<th>Region</th>
-							<th>Monkey</th>
-							<th>Proof</th>
-							<th>Comment</th>
-							<th>Approved</th>
+				{ /* Levelboard tabs: The type tabs for the levelboard. Will only render a tab if the level has a board for it. */ }
+				<div className="levelboard-tabs-wraper">
+					<div className="levelboard-tabs">
 
-							{ /* Report header element should ONLY render if the current user is authenticated */ }
-							{ user.id && <th>Report</th> }
+						{ /* Render a score tab if the chart type is score or both */ }
+						{ level.chart_type !== "time" &&
+							<div
+								className={`levelboard-tab ${ type === "score" ? "levelboard-tab-active" : "" }`}
+								onClick={ () => handleTabClick("score") }
+							>
+								Score
+							</div>
+						}
 
-							{ /* Update header element should ONLY render if the current user is a moderator */ }
-							{ user.is_mod && <th>Update</th> }
+						{ /* Render a time tab if the chart type is time or both */ }
+						{ level.chart_type !== "score" && 
+							<div
+								className={`levelboard-tab ${ type === "time" ? "levelboard-tab-active" : "" }`}
+								onClick={ () => handleTabClick("time") }
+							>
+								Time
+							</div>
+						}
 
-							{ /* Delete header element should ONLY render if the current user is a moderator */ }
-							{ user.is_mod && <th>Delete</th> }
-							
-						</tr>
-					</thead>
+					</div>
+				</div>
 
-					{ /* Table body information - the submission data */ }
-					<tbody>
-						{ board.records[levelboardState].map((val) => {
-							return <LevelboardRow 
-								submission={ val } 
-								imageReducer={ imageReducer } 
-								reportFunc={ setReportSubmission } 
-								deleteFunc={ setDeleteSubmission }
-								updateFunc={ setUpdateSubmission }
-								key={ val.details.id } 
-							/>
-						})}
-					</tbody>
+				{ /* Levelboard content: render the levelboard itself. */ }
+				<div className="levelboard-content">
+					<table>
 
-				</table>
+						{ /* Table header information: specifies the information displayed in each cell of the board */ }
+						<thead>
+							<tr>
+								<th>Position</th>
+								<th>Name</th>
+								<th>{ capitalize(type) }</th>
+								<th>Date</th>
+								<th>Region</th>
+								<th>Monkey</th>
+								<th>Proof</th>
+								<th>Comment</th>
+								<th>Approved</th>
+
+								{ /* Report header element should ONLY render if the current user is authenticated */ }
+								{ user.id && <th>Report</th> }
+
+								{ /* Update header element should ONLY render if the current user is a moderator */ }
+								{ user.is_mod && <th>Update</th> }
+
+								{ /* Delete header element should ONLY render if the current user is a moderator */ }
+								{ user.is_mod && <th>Delete</th> }
+								
+							</tr>
+						</thead>
+
+						{ /* Table body information - the submission data */ }
+						<tbody>
+							{ board.records[levelboardState].map((val) => {
+								return <LevelboardRow 
+									submission={ val } 
+									imageReducer={ imageReducer } 
+									reportFunc={ setReportSubmission } 
+									deleteFunc={ setDeleteSubmission }
+									updateFunc={ setUpdateSubmission }
+									key={ val.details.id } 
+								/>
+							})}
+						</tbody>
+
+					</table>
+				</div>
 			</div>
 
 			{ /* Popups */ }

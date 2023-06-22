@@ -8,6 +8,14 @@
     justify-content: center;
 }
 
+.levelboard-title-btn {
+    width: 20%;
+}
+
+.levelboard-title-name {
+    width: 60%;
+}
+
 .levelboard-title h1 {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -29,25 +37,70 @@
     margin: 5px;
 }
 
-.levelboard-container table {
+.levelboard-container {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+}
+
+.levelboard-tabs-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.levelboard-tabs {
+    display: flex;
+}
+
+.levelboard-tab {
+    flex: 1;
+    text-align: center;
+    background-color: #f1f1f1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    max-width: 80px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+  
+.levelboard-tab-active {
+    background-color: #ffffff;
+    cursor: default;
+}
+  
+.levelboard-tab:not(.levelboard-tab-active):hover {
+    cursor: pointer;
+}
+
+.levelboard-content table {
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
+    min-width: 100%;
 }
   
-.levelboard-container th {
+.levelboard-content th {
     border: 1px solid black;
     text-align: center;
     padding: 4px 8px;
 }
 
-.levelboard-container td {
+.levelboard-content td {
     border: 1px solid black;
     padding: 4px 8px;
 }
 
-.levelboard-container td a {
+.levelboard-content td a {
     display: inline-flex;
+}
+
+.levelboard-content a {
+    text-align: center;
+}
+
+.levelboard-content tr:nth-child(even) {
+    background-color: #eaeaea;
 }
 
 .levelboard-svg-wrapper {
@@ -61,14 +114,6 @@
     display: inline-flex;
     background-color: transparent;
     border: none;
-}
-
-.levelboard-container a {
-    text-align: center;
-}
-
-.levelboard-container tr:nth-child(even) {
-    background-color: #eaeaea;
 }
 
 .levelboard-input-group {

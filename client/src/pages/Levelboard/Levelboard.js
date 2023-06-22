@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { GameContext, MessageContext } from "../../Contexts";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
@@ -16,10 +16,12 @@ const Levelboard = () => {
 	/* ===== VARIABLES ===== */
 	const location = useLocation();
 	const path = location.pathname.split("/");
+	const abb = path[2];
 	const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
 	const boardInit = { records: null, report: null };
+	const navigate = useNavigate();
 
 	/* ===== STATES ===== */
 	const [board, setBoard] = useState(boardInit);
@@ -34,34 +36,53 @@ const Levelboard = () => {
     // PRECONDTIONS (2 parameters):
     // 1.) category: the current category, either "main" or "misc", also defined in the path
     // 2.) levelName: a string corresponding to the name of a level, also defined in the path
-    // POSTCONDITIONS (2 returns):
-    // 1.) prev: the name of the previous level. if it does not exist, value will be null 
-    // 2.) next: the name of the next level. if it does not exist, value will be null
+    // POSTCONDITIONS (1 possible outcome, 1 return):
+	// the levelLink object is returned, which contains two fields:
+    	// a.) prev: the name of the previous level. if it does not exist, value will be null 
+    	// b.) next: the name of the next level. if it does not exist, value will be null
     const getPrevAndNext = (category, levelName) => {
         // first, let's get the array of mode objects belonging to category
         const isMisc = category === "misc" ? true : false;
         const modes = game.mode.filter(row => row.misc === isMisc);
+		let found = false, prev = null;
 
         // define our obj containing the prev and next variables
-        const obj = { prev: null, next: null };
+        const levelLink = { prev: null, next: null };
 
         // iterate through each level to find the match, so we can determine previous and next
         for (let i = 0; i < modes.length; i++) {
             const levelArr = modes[i].level;
 
             for (let j = 0; j < levelArr.length; j++) {
-                const name = levelArr[j].name;
-                if (name === levelName) {
-                    // if the next element exists in the level array, set next to that.
-                    // if NOT, now need to check if level array exists after current one. if so, set next to next array[0]
-                    // if NOT EITHER, then next will remain set to null
-                    obj.next = j+1 < levelArr.length ? levelArr[j+1].name : (i+1 < modes.length ? modes[i+1].level[0].name : null);
-                    return obj;
-                } else {
-                    obj.prev = name;
-                }
+				// extract information from level object
+				const level = levelArr[j];
+                const name = level.name, chartType = level.chart_type;
+
+				// Special case #1: we found the match. set the found flag to true, and update the prev field in our
+				// levelLink object
+				if (name === levelName) {
+					found = true;
+					levelLink.prev = prev;
+				}
+
+				// Special case #2: we already found the level, and the current level has the chart type equal to { type } or "both"
+				// in this case, update the next field in our levelLink object, and return it
+				else if (found && (chartType === type || chartType === "both")) {
+					levelLink.next = name;
+					return levelLink;
+				} 
+
+				// General case: the level has not been found yet, and the current level is not a match. Update the prev variable
+				// to the current level if the chart type is equal to { type } or "both".
+				else {
+					if (chartType === type || chartType === "both") {
+						prev = name;
+					}
+				}
             }
         }
+		// if the levelLink object has not been returned by this point, do it
+		return levelLink;
     };
 
 	// FUNCTION 2: insertPositionToLevelboard - for each submission, add the position field
@@ -148,11 +169,24 @@ const Levelboard = () => {
 		}
 	};
 
+	// FUNCTION 5: handleTabClick - function that switches leaderboards based on the otherType parameter
+	// PRECONDITIONS (1 parameter):
+	// 1.) otherType: a string, either "score" or "time"
+	// POSTCONDITIONS (2 possible outcome):
+	// if otherType and type are the same, this function does nothing
+	// otherwise, the user is navigated to the current level's other board
+	const handleTabClick = otherType => {
+		if (otherType !== type) {
+			navigate(`/games/${ abb }/${ category }/${ otherType }/${ levelName }`);
+		}
+	};
+
 	return {
 		board,
 		deleteSubmission,
 		setupBoard,
-		setDeleteSubmission
+		setDeleteSubmission,
+		handleTabClick
 	};
 };  
 
