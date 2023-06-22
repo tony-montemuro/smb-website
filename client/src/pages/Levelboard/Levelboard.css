@@ -137,7 +137,11 @@
     margin-top: 5px;
 }
 
-.levelboard-report-btns button {
+.levelboard-decision-btns {
+    text-align: center;
+}
+
+.levelboard-decision-btns button {
     margin-top: 5px;
     margin-right: 5px;
 }

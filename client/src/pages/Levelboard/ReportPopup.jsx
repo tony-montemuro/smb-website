@@ -9,6 +9,7 @@ function ReportPopup({ submission, setSubmission }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
 	const type = location.pathname.split("/")[4];
+  const TEXT_AREA_ROWS = 2;
 
   /* ===== STATES AND FUNCTIONS ===== */
 
@@ -43,21 +44,24 @@ function ReportPopup({ submission, setSubmission }) {
         <form>
 
           { /* Message input - a text field where the user must include a message with their report */ }
-          <label>Message: </label>
-          <input 
-            type="text"
-            value={ form.message }
-            onChange={ handleChange }
-            disabled={ form.submitted }
-          />
+          <div className="levelboard-textarea-group">
+            <label>Message: </label>
+            <textarea 
+              value={ form.message }
+              onChange={ handleChange }
+              disabled={ form.submitted }
+              rows={ TEXT_AREA_ROWS }
+            >
+            </textarea>
+          </div>
 
           { /* Render the form error under this input, if an error is defined */ }
-          { form.error ? <p>{ form.error }</p> : null }
+          { form.error && <p>{ form.error }</p> }
 
         </form>
 
         { /* Report popup buttons */ }
-        <div className="levelboard-report-btns">
+        <div className="levelboard-decision-btns">
           { /* Button that, when pressed, reports the submission */ }
           <button onClick={ () => handleReport(submission, setSubmission) } disabled={ form.submitting || form.submitted }>Yes</button>
 

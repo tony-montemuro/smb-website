@@ -10,6 +10,7 @@ function DeletePopup({ submission, setSubmission }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const type = location.pathname.split("/")[4];
+  const TEXT_AREA_ROWS = 2;
 
   /* ===== CONTEXTS ===== */
 
@@ -36,8 +37,12 @@ function DeletePopup({ submission, setSubmission }) {
           <>
             { /* Simple popup that gives the user the choice of removing the submission, or closing the popup. */ }
             <h2>Are you sure you want to remove your submission?</h2>
-            <button onClick={ () => handleOwnDelete(submission.details.id) }>Yes</button>
-            <button onClick={ () => closePopup(setSubmission) }>No</button>
+
+            { /* Button to delete the submission, and a button to close the popup */ }
+            <div className="levelboard-decision-btns">
+              <button onClick={ () => handleOwnDelete(submission.details.id) }>Yes</button>
+              <button onClick={ () => closePopup(setSubmission) }>No</button>
+            </div>
           </>
         :
 
@@ -50,22 +55,26 @@ function DeletePopup({ submission, setSubmission }) {
               { /* Delete form */ }
               <form>
 
-              { /* Message input - a text field where the user must include a message with their delete */ }
-                <label>Leave a message: </label>
-                <input 
-                  type="text"
-                  value={ form.message }
-                  onChange={ (e) => handleChange(e) }
-                />
+                { /* Message input - a text field where the user must include a message with their delete */ }
+                <div className="levelboard-textarea-group">
+                  <label>Leave a message: </label>
+                  <textarea 
+                    value={ form.message }
+                    onChange={ (e) => handleChange(e) }
+                    rows={ TEXT_AREA_ROWS }
+                  >
+                  </textarea>
+                </div>                
 
                 { /* Render the form error under this input, if an error is defined */ }
                 { form.error && <p>{ form.error }</p> }
 
               </form>
 
-              { /* Button to delete the submission, and a button to close the popup */ }
-              <button onClick={ () => handleDelete(submission) }>Yes</button>
-              <button onClick={ () => closePopup(setSubmission) }>No</button>
+              <div className="levelboard-decision-btns">
+                <button onClick={ () => handleDelete(submission) }>Yes</button>
+                <button onClick={ () => closePopup(setSubmission) }>No</button>
+              </div>
           </>
 
         }
