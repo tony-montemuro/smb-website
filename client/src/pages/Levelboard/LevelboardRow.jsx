@@ -3,12 +3,12 @@ import { useContext } from "react";
 import { UserContext } from "../../Contexts";
 import { Link, useLocation } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
-import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
-import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
+import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LaunchIcon from "@mui/icons-material/Launch";
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 
 function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, deleteFunc }) {
   /* ===== VARIABLES ===== */

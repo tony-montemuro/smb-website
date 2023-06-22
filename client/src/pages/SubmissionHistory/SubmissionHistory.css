@@ -20,6 +20,27 @@
     padding: 4px 8px;
 }
 
+.record-history-body td a {
+    display: inline-flex;
+}
+
 .record-history-empty {
     text-align: center;
+}
+
+.record-history-svg-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.record-history-svg-wrapper button {
+    display: inline-flex;
+    background-color: transparent;
+    border: none;
+}
+
+.record-history-svg-wrapper button {
+    display: inline-flex;
+    background-color: transparent;
+    border: none;
 }

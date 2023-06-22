@@ -2,7 +2,10 @@
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { UserContext } from "../../Contexts";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import FrontendHelper from "../../helper/FrontendHelper";
+import LaunchIcon from "@mui/icons-material/Launch";
 
 function FilteredSubmissionRow({ submission, deleteFunc }) {
   /* ===== VARIABLES ===== */
@@ -38,22 +41,34 @@ function FilteredSubmissionRow({ submission, deleteFunc }) {
       <td>{ submission.monkey.monkey_name }</td>
 
       { /* Proof - render a link to the proof, if there is any */ }
-      <td>{ submission.proof ? <a href={ submission.proof } target="_blank" rel="noopener noreferrer">☑️</a> : null }</td>
+      <td>
+        { submission.proof && 
+          <div className="record-history-svg-wrapper">
+            <a href={ submission.proof } target="_blank" rel="noopener noreferrer"><LaunchIcon fontSize="small" /></a>
+          </div>
+        }
+      </td>
 
       { /* Comment - render submission comment, if there is one */ }
       <td>{ submission.comment }</td>
 
-      { /* Live status - Render "Live" if true, otherwise "Non-live" */ }
-      <td>{ submission.live ? "Live" : "Non-live" }</td>
+      { /* Live status - Render checkbox if live */ }
+      <td>{ submission.live && <div className="record-history svg-wrapper"><CheckIcon /></div>  }</td>
 
       { /* Position - Render the position of the submission (live only) */ }
-      <td>{ submission.position ? submission.position : null }</td>
+      <td>{ submission.position ? submission.position : "-" }</td>
 
       { /* All Position - Render the overall position of the submission */ }
       <td>{ submission.all_position }</td>
 
       { /* Delete Button - Render delete button for moderators only so that they can delete a submission. */ }
-      { user.is_mod && <td><button onClick={ () => deleteFunc(submission) }>❌</button></td> }
+      { user.is_mod && 
+        <td>
+          <div className="record-history-svg-wrapper">
+            <button onClick={ () => deleteFunc(submission) }><ClearRoundedIcon /></button>
+          </div>
+        </td> 
+      }
       
     </tr>
   );
