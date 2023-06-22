@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./Profile.css";
 import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AvatarInfoForm from "./AvatarInfoForm.jsx";
 import EmailInfoForm from "./EmailInfoForm.jsx";
@@ -22,9 +22,6 @@ function Profile({ imageReducer }) {
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
-    /* ===== STATES ===== */
-    const [validated, setValidated] = useState(false);
-
     /* ===== EFFECTS ===== */
 
     // code that is executed when the page loads, or when the staticCache object is updated
@@ -37,15 +34,12 @@ function Profile({ imageReducer }) {
             navigate("/");
             return;
           }
-    
-          // if we made it past error check, validate that component can load
-          setValidated(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [staticCache, user]);
 
     /* ===== PROFILE COMPONENT ===== */
-    return validated ?
+    return user.id ?
         <>
 
             { /* Profile header */ }
@@ -55,13 +49,18 @@ function Profile({ imageReducer }) {
 
             { /* Profile body - render user info form, avatar info form, and email info form */ }
             <div className="profile-body"> 
+
+                { /* Profile left - render the user info form */ }
                 <div className="profile-left">
                     <UserInfoForm />
                 </div>
+
+                { /* Profile right - render the avatar info form, and email info form */ }
                 <div className="profile-right">
                     <AvatarInfoForm imageReducer={ imageReducer } />
                     <EmailInfoForm />
                 </div>
+                
             </div>
 
       </>
