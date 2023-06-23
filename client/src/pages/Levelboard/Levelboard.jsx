@@ -60,7 +60,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	useEffect(() => {
 		if (user !== undefined) {
 			// see if levelName corresponds to a level stored in the game object
-			const level = fetchLevelFromGame(game, levelName, category);
+			const level = fetchLevelFromGame(game, levelName, category, type);
 			
 			// if not, we will print an error message, and navigate to the home screen
 			if (!level) {
