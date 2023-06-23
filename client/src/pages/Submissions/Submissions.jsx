@@ -3,11 +3,12 @@ import "./Submissions.css";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import BoxArt from "../../components/BoxArt/BoxArt.jsx";
 import SubmissionsLogic from "./Submissions.js";
 import SubmissionsTable from "./SubmissionsTable.jsx";
 import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
 
-function Submissions({ submissionReducer }) {
+function Submissions({ imageReducer, submissionReducer }) {
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
 
@@ -27,7 +28,7 @@ function Submissions({ submissionReducer }) {
   // states and functions from the init file
   const { 
     submissions, 
-    game, 
+    selectedGame, 
     approved,
     approving,
     swapGame,
@@ -59,105 +60,110 @@ function Submissions({ submissionReducer }) {
 
   /* ===== SUBMISSIONS COMPONENT [ONLY loads for moderators] ===== */
   return user.is_mod &&
-    <>
-      { /* Submissions header - introduce moderator to the page */ }
-      <div className="submissions-header">
-
-        { /* Header - display the title of the page */ }
-        <h1>Recent Submissions</h1>
-
-        { /* Brief introduction to the page */ }
-        <p><i>Below is the list of recent submissions. Please go through and review each submission for each game.</i></p>
-
-        { /* Instructions on how to operate this page. */ }
-        <p>
-          To select a game, use the <b>Select Game</b> selection tool.
-        </p>
-        <p>
-          If a submission is <b>valid</b>, add it to the list of approved records by selecting the submission.
-          In order to finalize the approval process, you <i>must</i> press the <b>Approve All</b> button under the&nbsp;
-          <b>Approved Submissions</b> list. Remember, if you accidently add an invalid run to the <b>Approved Submissions</b>
-          list, you can always remove it by selecting the submission.
-        </p>
-        <p>
-          If you suspect a submission is <b>invalid</b>, first navigate to the board with the invalid submission by clicking on the&nbsp;
-          <b>Level</b>. If you still are suspicious, remove the record by clicking the <b>Delete</b> button.
-        </p>
-
-      </div> 
-
-      { /* Submissions body - render the game selector, approved submissions list, and submissions list */ }
-      <div className="submissions-body">
-
-        { /* Only render the game selector when games are loaded into cache, and the game state is defined */ }
-        { staticCache.games.length > 0 && game && 
-          <div className="submissions-select">
-            <h3>Select Game:</h3>
-
-            { /* Game select component: allows user to select one of the games loaded in cache from the dropdown */ }
-            <select
-              onChange={ (e) => swapGame(e.target.value, submissionReducer) }
-              value={ game }
-            >
-              { staticCache.games.map(val => {
-                return <option key={ val.abb } value={ val.abb }>{ val.name }</option>
-              })}
-            </select>
-
+    <div className="submissions">
+      { /* Submissions select: Allows moderator to select a game. Only render the game selector when games are loaded into cache, 
+      and the game state is defined */ }
+      { staticCache.games.length > 0 && selectedGame && 
+        <div className="submissions-select">
+          <div className="submissions-tabs">
+            { staticCache.games.map(game => {
+              return <div
+                className={ `submissions-tab ${ game.abb === selectedGame ? "submissions-tab-active" : "" }` }
+                onClick={ () => swapGame(game.abb, submissionReducer) }
+                key={ game.abb }
+              >
+                <BoxArt game={ game } imageReducer={ imageReducer } width={ 50 } />
+                <span>{ game.name }</span>
+              </div>
+            })}
           </div>
-        }
+        </div>
+      }
 
-        { /* Submissions list component - contains both the approved submission list, and unapproved submissions list */ }
-        <div className="submissions-list">
-          <h3>Approved Submissions:</h3>
+      { /* Submissions content - Includes the header and boy content for the submissinos page. */ }
+      <div className="submissions-content">
+      
+        { /* Submissions header - introduce moderator to the page */ }
+        <div className="submissions-header">
 
-          { /* If there are any approved submissions, render a submission table that renders them all */ }
-          { approved.length > 0 ?
-            <SubmissionsTable 
-              submissions={ approved }
-              isApproved={ true } 
-              game={ game }
-              handleClick={ removeFromApproved }
-            />
-          :
+          { /* Header - display the title of the page */ }
+          <h1>Recent Submissions</h1>
 
-            // Otherwise, render a message instructing the moderator how to add approved submissions to the approved list
-            <p><i>Approve a submission to add it to the list!</i></p>
-          }
+          { /* Brief introduction to the page */ }
+          <p><i>Below is the list of recent submissions. Please go through and review each submission for each game.</i></p>
 
-          { /* Approve all button - When pressed, all submissions in the approved list will be approved in the database, and page
-          is reloaded. */ }
-          <button onClick={ () => approveAll(user) } disabled={ approved.length === 0 || approving }>Approve All</button>
+          { /* Instructions on how to operate this page. */ }
+          <p>
+            To select a game, use the game selection tool on the <b>left</b>.
+          </p>
+          <p>
+            If a submission is <b>valid</b>, add it to the list of approved records by selecting the submission.
+            In order to finalize the approval process, you <i>must</i> press the <b>Approve All</b> button under the&nbsp;
+            <b>Approved Submissions</b> list. Remember, if you accidently add an invalid run to the <b>Approved Submissions</b>
+            &nbsp;list, you can always remove it by selecting the submission.
+          </p>
+          <p>
+            If you suspect a submission is <b>invalid</b>, first navigate to the board with the invalid submission by clicking on the&nbsp;
+            <b>Level</b>. If you still are suspicious, remove the record by clicking the <b>Delete</b> button.
+          </p>
 
-          { /* Unapproved submissions list: renders all the submissions in game that have not been approved */ }
-          <h3>Submissions:</h3>
+        </div> 
 
-          { /* If the submissions[game] has been defined, we can attempt to render the submission table. */ }
-          { submissions[game] ? 
+        { /* Submissions body - render the game selector, approved submissions list, and submissions list */ }
+        <div className="submissions-body">
 
-            // If the array of all unapproved submissions is greater than 0, we can render the submission table
-            submissions[game].length > 0 ?
+          { /* Submissions list component - contains both the approved submission list, and unapproved submissions list */ }
+          <div className="submissions-list">
+            <h3>Approved Submissions:</h3>
+
+            { /* If there are any approved submissions, render a submission table that renders them all */ }
+            { approved.length > 0 ?
               <SubmissionsTable 
-                submissions={ submissions[game] }
-                isApproved={ false }
-                game={ game } 
-                handleClick={ addToApproved } 
+                submissions={ approved }
+                isApproved={ true } 
+                game={ selectedGame }
+                handleClick={ removeFromApproved }
               />
             :
 
-              // Otherwise, render a message stating that there do not exist any unapproved submissions for game.
-              <p><i>This game has no unapproved submissions!</i></p>
+              // Otherwise, render a message instructing the moderator how to add approved submissions to the approved list
+              <p><i>Approve a submission to add it to the list!</i></p>
+            }
 
-          :
+            { /* Approve all button - When pressed, all submissions in the approved list will be approved in the database, and page
+            is reloaded. */ }
+            <button onClick={ () => approveAll(user) } disabled={ approved.length === 0 || approving }>Approve All</button>
 
-            // Loading component while we await the submissions to be loaded
-            <p>Loading...</p>
-            
-          }
+            { /* Unapproved submissions list: renders all the submissions in game that have not been approved */ }
+            <h3>Submissions:</h3>
 
+            { /* If the submissions[game] has been defined, we can attempt to render the submission table. */ }
+            { submissions[selectedGame] ? 
+
+              // If the array of all unapproved submissions is greater than 0, we can render the submission table
+              submissions[selectedGame].length > 0 ?
+                <SubmissionsTable 
+                  submissions={ submissions[selectedGame] }
+                  isApproved={ false }
+                  game={ selectedGame } 
+                  handleClick={ addToApproved } 
+                />
+              :
+
+                // Otherwise, render a message stating that there do not exist any unapproved submissions for game.
+                <p><i>This game has no unapproved submissions!</i></p>
+
+            :
+
+              // Loading component while we await the submissions to be loaded
+              <p>Loading...</p>
+              
+            }
+
+          </div>
         </div>
       </div>
-    </>
+    </div>
 };
 
 /* ===== EXPORTS ===== */

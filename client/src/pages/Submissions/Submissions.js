@@ -19,7 +19,7 @@ const Submissions = () => {
     const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
-    const [game, setGame] = useState(null);
+    const [selectedGame, setSelectedGame] = useState(null);
     const [submissions, setSubmissions] = useState({});
     const [approved, setApproved] = useState([]);
     const [approving, setApproving] = useState(false);
@@ -42,14 +42,14 @@ const Submissions = () => {
         // b.) dispatchSubmissions: the reducer function used to update the reducer
     // POSTCONDITIONS (3 possible outcomes):
     // if the submissions have already been loaded for abb, all this function needs to do is update the game hook by calling
-    // the setGame() hook with the abb argument
+    // the setSelectedGame() hook with the abb argument
     // if the submissions have not been loaded yet for abb, we need to retrieve them from the database, filter, and order them. 
         // if the query is a success, we need to call the setSubmissions() object to update the submission state with the submissions 
         // for abb
         // if the query is a failure, an error message is rendered to the user, and the submissions state is NOT updated.
     const swapGame = async (abb, submissionReducer) => {
-        // update the game state hook with the abb parameter
-        setGame(abb);
+        // update the selectedGame state hook with the abb parameter
+        setSelectedGame(abb);
 
         // if we have not already loaded and merged the submissions for abb, we do so here
         if (!(abb in submissions)) {
@@ -95,10 +95,10 @@ const Submissions = () => {
     const addToApproved = (submission) => {
         if (!approving) {
             const games = staticCache.games;
-            const gameObj = games.find(row => row.abb === game);
-            setApproved([...approved, { ...submission, game: gameObj }]);
-            const filtered = submissions[game].filter(row => row !== submission);
-            setSubmissions({ ...submissions, [game]: filtered });
+            const game = games.find(row => row.abb === selectedGame);
+            setApproved([...approved, { ...submission, game: game }]);
+            const filtered = submissions[selectedGame].filter(row => row !== submission);
+            setSubmissions({ ...submissions, [selectedGame]: filtered });
         }
     };
 
@@ -202,7 +202,7 @@ const Submissions = () => {
 
     return { 
         submissions, 
-        game, 
+        selectedGame, 
         approved,
         approving,
         swapGame,

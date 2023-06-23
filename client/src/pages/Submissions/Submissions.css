@@ -1,3 +1,45 @@
+.submissions {
+    display: flex;
+}
+
+.submissions-select {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-basis: 12%;
+    max-height: 92vh; 
+    overflow-y: auto;
+    position: sticky;
+    top: 8vh;
+    z-index: 1;
+}
+  
+.submissions-tabs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.submissions-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color: #f1f1f1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.submissions-tab-active {
+    background-color: #ffffff;
+    cursor: default;
+}
+
+.submissions-content {
+    flex-basis: 88%;
+}
+
 .submissions-header {
     text-align: center;
     margin-left: 10px;
@@ -6,6 +48,7 @@
 
 .submissions-body {
     display: flex;
+    justify-content: center;
 }
 
 .submissions-body h3 {
@@ -13,18 +56,11 @@
     margin-bottom: 5px;
 }
 
-.submissions-select {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-basis: 20%;
-}
-
 .submissions-list {
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex-basis: 80%;
+    flex-basis: 85%;
 }
 
 .submissions-list button {
