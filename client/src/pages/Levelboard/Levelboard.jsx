@@ -136,7 +136,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 					<input
 						id="showLive"
 						type="checkbox"
-						checked={ levelboardState === "live" ? true : false }
+						checked={ levelboardState === "live" }
 						onChange={ () => setLevelboardState(levelboardState === "live" ? "all" : "live") }
 					/>
 

@@ -86,7 +86,7 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
               onClick={ () => reportFunc(submission) }
               disabled={ user.profile && user.profile.id === submission.profile.id }
             >
-              <WarningAmberRoundedIcon titleAccess="Report Submission" />
+              <WarningAmberRoundedIcon titleAccess="Report" />
             </button>
           </div>
         </td>
@@ -99,7 +99,7 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
           authenticated user is a moderator */ }
           <td>
             <div className="levelboard-svg-wrapper">
-              <button type="button" onClick={ () => updateFunc(submission) }><CreateRoundedIcon titleAccess="Update Submission" /></button>
+              <button type="button" onClick={ () => updateFunc(submission) }><CreateRoundedIcon titleAccess="Update" /></button>
             </div>
           </td>
 
@@ -107,7 +107,7 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
           authenticated user is a moderator. */ }
           <td>
             <div className="levelboard-svg-wrapper">
-              <button type="button" onClick={ () => deleteFunc(submission) }><ClearRoundedIcon /></button>
+              <button type="button" onClick={ () => deleteFunc(submission) }><ClearRoundedIcon titleAccess="Delete" /></button>
             </div>
           </td>
         </>
