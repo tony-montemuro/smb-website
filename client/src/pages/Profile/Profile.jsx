@@ -39,7 +39,7 @@ function Profile({ imageReducer }) {
       }, [staticCache, user]);
 
     /* ===== PROFILE COMPONENT ===== */
-    return user.id ?
+    return user.id && staticCache.countries.length > 0 ?
         <>
 
             { /* Profile header */ }

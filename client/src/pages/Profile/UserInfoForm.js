@@ -108,11 +108,20 @@ const UserInfoForm = () => {
 
         // if we made it this far, no errors were deteched, so we can go ahead and update the user profile
         try {
-            // set the uploading flag to true, fix form for upload, and begin upload
+            // set the uploading flag to true, fix form info for upload
             dispatchForm({ field: "uploading", value: true });
-            form.user.birthday = form.user.birthday.length > 0 ? form.user.birthday : null;
-            form.user.country = form.user.country !== "" ? form.user.country : null;
-            await upsertUserInfo({ ...form.user });
+            const userInfo = { ...form.user };
+            userInfo.birthday = userInfo.birthday.length > 0 ? userInfo.birthday : null;
+            userInfo.country = userInfo.country !== "" ? userInfo.country : null;
+
+            // special case: user has not set up profile. in this case, we want to remove the id field entirely from the userInfo
+            // object, since the user has not been assigned an id yet. they will get one once their profile is created
+            if (!user.profile) {
+                delete userInfo.id;
+            }
+
+            // attempt to upload user info
+            await upsertUserInfo(userInfo);
 
             // if successful, reload the page
             window.location.reload();

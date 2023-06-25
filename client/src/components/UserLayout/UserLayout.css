@@ -26,6 +26,11 @@
     margin-top: 5px;
 }
 
+.user-layout-profile > a {
+    display: block;
+    margin-bottom: 10px;
+}
+
 .user-layout-country {
     display: flex;
     justify-content: center;

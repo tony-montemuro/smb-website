@@ -38,7 +38,7 @@ function NavProfile({ imageReducer }) {
 
         { /* Username: render the user's username */ }
         <div className="nav-profile-username">
-          <Username country={ user.profile.country.iso2 } profileId={ user.profile.id } username={ user.profile.username } />
+          <Username country={ user.profile.country ? user.profile.country.iso2 : null } profileId={ user.profile.id } username={ user.profile.username } />
         </div>
 
         { /* Links: all the user's different links */ }
@@ -78,8 +78,8 @@ function NavProfile({ imageReducer }) {
 
           { /* Logout button - button that allows the user to log out of their account */ }
           <div className="nav-profile-link">
-            <button type="button" id="nav-profile-signout-btn" onClick={ signOut }>
-              <LogoutIcon titleAccess="Sign Out" />
+            <button type="button" className="nav-button" onClick={ signOut }>
+              <LogoutIcon titleAccess="Sign Out" fontSize="small" />
             </button>
           </div>
 

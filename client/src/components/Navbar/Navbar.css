@@ -41,6 +41,13 @@
     height: 100%;
 }
 
+.nav-button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 4px;
+}
+
 .nav li:hover {
     background-color: #777;
 }
@@ -88,6 +95,12 @@
     min-width: 40px;
 }
 
+.nav-profile-link button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .nav-profile-notification-link {
     vertical-align: text-top;
 }
@@ -98,6 +111,10 @@
 }
 
 #nav-login:hover {
+    background-color: #777;
+}
+
+#nav-create-btn:hover {
     background-color: #777;
 }
 

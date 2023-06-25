@@ -1,12 +1,18 @@
 /* ===== IMPORTS ===== */
 import "./Profile.css";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import UserInfoFormLogic from "./UserInfoForm.js";
+import { UserContext } from "../../Contexts";
 
 function UserInfoForm() {
   /* ===== VARIABLES ===== */
   const BIO_WIDTH = 50;
   const BIO_HEIGHT = 4;
+
+  /* ===== CONTEXTS ===== */
+
+  // user state from user context
+  const { user } = useContext(UserContext);
 
   /* ===== STATES & FUNCTIONS ===== */
 
@@ -26,7 +32,7 @@ function UserInfoForm() {
     <div className="profile-user-info">
 
       { /* Form header */ }
-      <h2>Update Profile Information</h2>
+      <h2>{ user.profile && "Update " }Profile Information</h2>
 
       { /* User form */ }
       <form className="profile-info-form" onSubmit={ uploadUserInfo }>
@@ -171,7 +177,7 @@ function UserInfoForm() {
         </div>
 
         { /* Form button: button user uses to complete the form. Will disable while application processes form. */ }
-        <button disabled={ form.uploading }>Update Profile</button>
+        <button disabled={ form.uploading }>{ user.profile ? "Update " : "Create " }Profile</button>
 
       </form>
     </div>

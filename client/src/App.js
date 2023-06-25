@@ -95,7 +95,7 @@ const App = () => {
       try {
         // concurrently make all necessary database calls
         const [notifs, profile, is_mod] = await Promise.all(
-          [queryUserNotifications(), queryUserProfile(userId), isModerator(userId)]
+          [queryUserNotifications(), queryUserProfile(userId, addMessage), isModerator(userId)]
         );
 
         // update the user state

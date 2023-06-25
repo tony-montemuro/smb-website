@@ -32,7 +32,7 @@ function AvatarInfoForm({ imageReducer }) {
       <form className="profile-avatar-form" onSubmit={ (e) => submitAvatar(e, avatarRef) }>
 
         { /* Render the user's current avatar */ }
-        <Avatar profileId={ user.profile.id } size={ IMG_LENGTH } imageReducer={ imageReducer } />
+        <Avatar profileId={ user.profile ? user.profile.id : null } size={ IMG_LENGTH } imageReducer={ imageReducer } />
 
         { /* Avatar field - a optional file field, where the user can upload their avatar */ }
         <label htmlFor="avatar-update"></label>

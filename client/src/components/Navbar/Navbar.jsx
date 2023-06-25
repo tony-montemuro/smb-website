@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { UserContext } from "../../Contexts";
 import Login from "../Login/Login.jsx";
 import Logo from "../../img/logo.png";
+import NavCreateProfile from "./NavCreateProfile";
 import NavProfile from "./NavProfile";
 
 function Navbar({ imageReducer }) {  
@@ -42,9 +43,16 @@ function Navbar({ imageReducer }) {
 
         </ul>
 
-        { /* Render an authenticated user's profile information, if they are logged in. Otherwise, render the login / signup button. */ }
+        {/* 3 cases:
+          1.) User is authenticated and has a profile: render the NavProfile component.
+          2.) User is authenticated, but has not created a profile: Render a simple button that navigates to the profile page. 
+          3.) User is not authenticatged: Render the Login component. 
+        */}
         { user.id ? 
-          <NavProfile imageReducer={ imageReducer } />
+          user.profile ?
+            <NavProfile imageReducer={ imageReducer } />
+          :
+            <NavCreateProfile />
         :
           <Login />
         }
