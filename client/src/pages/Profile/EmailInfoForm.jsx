@@ -35,7 +35,7 @@ function EmailInfoForm() {
 
         { /* Form button: When pressed, the application will attempt to log the user in.
         If the application is in the processing of logging in, the button will be disabled. */ }
-        <button disabled={ email.submitting }>Update Email</button>
+        <button type="submit" disabled={ email.submitting }>Update Email</button>
 
       </form>
 

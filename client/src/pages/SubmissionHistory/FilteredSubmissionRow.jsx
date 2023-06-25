@@ -67,7 +67,7 @@ function FilteredSubmissionRow({ submission, deleteFunc }) {
       { user.is_mod && 
         <td>
           <div className="record-history-svg-wrapper">
-            <button onClick={ () => deleteFunc(submission) }><ClearRoundedIcon /></button>
+            <button type="button" onClick={ () => deleteFunc(submission) }><ClearRoundedIcon /></button>
           </div>
         </td> 
       }

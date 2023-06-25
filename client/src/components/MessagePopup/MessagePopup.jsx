@@ -19,7 +19,7 @@ function MessagePopup({ message, type, index, onClose }) {
     <div className="message-popup" style={ typeStyle }>
       <div className="message-popup-content">
         <span>{ capitalize(type) }: { message }</span>
-        <button className="message-popup-close" onClick={ () => onClose(index) }>
+        <button type="button" className="message-popup-close" onClick={ () => onClose(index) }>
           Close
         </button>
       </div>

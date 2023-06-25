@@ -26,7 +26,7 @@ function ReportPopup({ submission, setSubmission }) {
 
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">
-          <button onClick={ () => closePopup(setSubmission) } disabled={ form.submitting }>Close</button>
+          <button type="button" onClick={ () => closePopup(setSubmission) } disabled={ form.submitting }>Close</button>
         </div>
 
         { /* Report popup header */ }
@@ -63,10 +63,12 @@ function ReportPopup({ submission, setSubmission }) {
         { /* Report popup buttons */ }
         <div className="levelboard-decision-btns">
           { /* Button that, when pressed, reports the submission */ }
-          <button onClick={ () => handleReport(submission, setSubmission) } disabled={ form.submitting || form.submitted }>Yes</button>
+          <button type="submit" onClick={ () => handleReport(submission, setSubmission) } disabled={ form.submitting || form.submitted }>
+            Yes
+          </button>
 
           { /* Button that, when pressed, closes the popup */ }
-          <button onClick={ () => closePopup(setSubmission) } disabled={ form.submitting || form.submitted }>No</button>
+          <button type="button" onClick={ () => closePopup(setSubmission) } disabled={ form.submitting || form.submitted }>No</button>
         </div>
 
         { /* If the report was successfully submitted, render a success message at the bottom of the popup */ }

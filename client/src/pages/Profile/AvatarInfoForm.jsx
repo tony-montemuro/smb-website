@@ -44,7 +44,7 @@ function AvatarInfoForm({ imageReducer }) {
         />
 
         { /* Form button: button users uses to complete the form. Will disable while the application processes the form. */ }
-        <button disabled={ form.uploading }>Save</button>
+        <button type="submit" disabled={ form.uploading }>Save</button>
 
         { /* If form.error is defined, there was an issue with the avatar the user uploaded. Render it here.  */ }
         { form.error && <p>{ form.error }</p> }

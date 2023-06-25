@@ -94,7 +94,9 @@ function Notifications() {
 
         { /* Delete button - when pressed, will remove all notifications the user has selected. This button
         is disabled if no notifications are selected. */ }
-        <button onClick={ removeSelected } disabled={ notifications.selected.length === 0 || notifications.submitting }>Delete</button>
+        <button type="button" onClick={ removeSelected } disabled={ notifications.selected.length === 0 || notifications.submitting }>
+          Delete
+        </button>
 
         { /* Notification table */ }
         <table>

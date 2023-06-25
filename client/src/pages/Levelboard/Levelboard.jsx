@@ -116,12 +116,12 @@ function Levelboard({ imageReducer, submissionReducer }) {
 				<div className="levelboard-buttons">
 
 					{ /* Button that pulls up the submission popup. NOTE: this button should only render if the user has a profile. */ }
-					{ user.profile && <button onClick={ () => setInsertPopup(true) }>Submit { capitalize(type) }</button> }
+					{ user.profile && <button type="button" onClick={ () => setInsertPopup(true) }>Submit { capitalize(type) }</button> }
 
 					{ /* Button that pulls up the update submission popup. NOTE: this button should only render if the user has a profile,
 					and a submission on the current levelboard. */ }
 					{ user.profile && board.records.all.some(row => row.profile.id === user.profile.id) &&
-						<button onClick={ () => setUpdateSubmission(board.records.all.find(row => row.profile.id === user.profile.id)) }>
+						<button type="button" onClick={ () => setUpdateSubmission(board.records.all.find(row => row.profile.id === user.profile.id)) }>
 							Update Submission
 						</button>
 					}

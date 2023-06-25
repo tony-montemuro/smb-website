@@ -41,7 +41,7 @@ function User() {
               Only render discord information if it exists */ }
               { profile.discord &&
                 <div className="user-info-social">
-                  <button className="user-discord-button" onClick={ () => alertDiscord(profile.discord) }>
+                  <button type="button" className="user-discord-button" onClick={ () => alertDiscord(profile.discord) }>
                     <img className="social-media-logo" alt="discord-logo" src={ Discord }></img>
                   </button>
                 </div>

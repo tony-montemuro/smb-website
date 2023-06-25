@@ -48,7 +48,7 @@ function UpdatePopup({ submission, setSubmission }) {
 
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">
-          <button onClick={ () => closePopup(setSubmission) } disabled={ form.submitting }>Close</button>
+           <button type="button" onClick={ () => closePopup(setSubmission) } disabled={ form.submitting }>Close</button>
         </div>
 
         { /* Levelboard update */ }
@@ -173,7 +173,7 @@ function UpdatePopup({ submission, setSubmission }) {
 
               { /* Form submission button: submits the form. NOTE: button is disabled if the submitting field of form is true. */ }
               <div className="levelboard-submit-btn-wrapper">
-                <button disabled={ form.submitting }>Update</button>
+                <button type="submit" disabled={ form.submitting }>Update</button>
               </div>
 
             </form>

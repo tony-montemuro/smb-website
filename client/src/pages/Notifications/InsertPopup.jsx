@@ -23,7 +23,7 @@ function InsertPopup({ notifications, setNotifications }) {
       <div className="notifications-popup-inner">
 
         { /* Button to exit the popup */ }
-        <button onClick={ () => setNotifications({ ...notifications, current: null }) }>Close</button>
+         <button type="button" onClick={ () => setNotifications({ ...notifications, current: null }) }>Close</button>
 
         { /* Popup header - includes a link to the moderator's user page */ }
         <h2>

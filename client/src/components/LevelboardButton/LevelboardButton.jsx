@@ -9,7 +9,7 @@ function LevelboardButton({ abb, category, type, levelName, onClickFunc }) {
 
   /* ===== LEVELBOARD BUTTON COMPONENT ===== */
   return (
-    <button onClick={ () => onClickFunc(abb, category, type, levelName) }>{ capitalize(type) }</button>
+    <button type="button" onClick={ () => onClickFunc(abb, category, type, levelName) }>{ capitalize(type) }</button>
   );
 };
 

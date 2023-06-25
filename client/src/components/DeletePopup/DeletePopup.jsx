@@ -40,8 +40,8 @@ function DeletePopup({ submission, setSubmission }) {
 
             { /* Button to delete the submission, and a button to close the popup */ }
             <div className="levelboard-decision-btns">
-              <button onClick={ () => handleOwnDelete(submission.details.id) }>Yes</button>
-              <button onClick={ () => closePopup(setSubmission) }>No</button>
+              <button type="button" onClick={ () => handleOwnDelete(submission.details.id) }>Yes</button>
+              <button type="button" onClick={ () => closePopup(setSubmission) }>No</button>
             </div>
           </>
         :
@@ -72,8 +72,8 @@ function DeletePopup({ submission, setSubmission }) {
               </form>
 
               <div className="levelboard-decision-btns">
-                <button onClick={ () => handleDelete(submission) }>Yes</button>
-                <button onClick={ () => closePopup(setSubmission) }>No</button>
+                <button type="button" onClick={ () => handleDelete(submission) }>Yes</button>
+                <button type="button" onClick={ () => closePopup(setSubmission) }>No</button>
               </div>
           </>
 

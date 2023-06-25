@@ -42,7 +42,7 @@ function SearchBar({ abb }) {
         { /* SearchBar icon: an icon, which is initially just for decoration, turns into a clickable icon when user enters any text. */ }
         <div className="searchbar-icon">
           { searchRef.current && searchRef.current.value.length > 0 ?
-            <button className="searchbar-clear" onClick={ clearSearch }>❌</button> 
+            <button type="button" className="searchbar-clear" onClick={ clearSearch }>❌</button> 
           : 
             <>🔍</> 
           }

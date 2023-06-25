@@ -177,7 +177,7 @@ function UserInfoForm() {
         </div>
 
         { /* Form button: button user uses to complete the form. Will disable while application processes form. */ }
-        <button disabled={ form.uploading }>{ user.profile ? "Update " : "Create " }Profile</button>
+        <button type="submit" disabled={ form.uploading }>{ user.profile ? "Update " : "Create " }Profile</button>
 
       </form>
     </div>

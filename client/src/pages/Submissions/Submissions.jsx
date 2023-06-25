@@ -132,7 +132,7 @@ function Submissions({ imageReducer, submissionReducer }) {
 
             { /* Approve all button - When pressed, all submissions in the approved list will be approved in the database, and page
             is reloaded. */ }
-            <button onClick={ () => approveAll(user) } disabled={ approved.length === 0 || approving }>Approve All</button>
+            <button type="button" onClick={ () => approveAll(user) } disabled={ approved.length === 0 || approving }>Approve All</button>
 
             { /* Unapproved submissions list: renders all the submissions in game that have not been approved */ }
             <h3>Submissions:</h3>

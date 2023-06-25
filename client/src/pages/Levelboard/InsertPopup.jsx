@@ -53,7 +53,7 @@ function InsertPopup({ popup, setPopup, submissions }) {
         
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">
-          <button onClick={ () => closePopup(setPopup) } disabled={ form.submitting }>Close</button>
+          <button type="button" onClick={ () => closePopup(setPopup) } disabled={ form.submitting }>Close</button>
         </div>
 
         { /* Levelboard submit - contains the form header and form for submitting submissions to the database */ }
@@ -194,7 +194,7 @@ function InsertPopup({ popup, setPopup, submissions }) {
 
               { /* Form submission button: submits the form. NOTE: button is disabled if the submitting field of form is true. */ }
               <div className="levelboard-submit-btn-wrapper">
-                <button disabled={ form.submitting }>Submit</button>
+                <button type="submit" disabled={ form.submitting }>Submit</button>
               </div>
 
             </form>
