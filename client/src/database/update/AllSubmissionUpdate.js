@@ -8,18 +8,22 @@ const AllSubmissionUpdate = () => {
      // PRECONDITIONS (1 parameter):
      // 1.) submission: a submission object, which has all fields matching the all_submission table
      // POSTCONDITIONS (2 possible outcomes):
-     // if the query is successful, the function will simply return
+     // if the query is successful, the function will simply return the id of the submission
      // if the query is unsuccessful, the function will throw an error, which will be handled by the caller function
      const insertSubmission = async submission => {
         try {
-            const { error } = await supabase
+            const { data: submissionData, error } = await supabase
                 .from("all_submission")
-                .insert(submission);
+                .insert(submission)
+                .select("id");
 
             // error handling
             if (error) {
                 throw error;
             }
+
+            // if we made it this far, return the submission id
+            return submissionData[0].id;
             
         } catch (error) {
             // handle error in caller function

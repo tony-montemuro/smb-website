@@ -52,7 +52,7 @@ const InsertPopup = () => {
     const { insertNotification } = NotificationUpdate();
 
     // helper functions
-    const { submission2Form, validateComment, validateProof, validateRecord, getDateOfSubmission, dateF2B, getPosition } = LevelboardUtils();
+    const { submission2Form, validateComment, validateProof, validateRecord, getDateOfSubmission, getPosition } = LevelboardUtils();
     const { validateMessage } = ValidationHelper();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
@@ -99,20 +99,18 @@ const InsertPopup = () => {
     // 1.) formVals: an object containing data generated from the submission form
     // 2.) date: a string representing the date of the submission. this is different from the `submitted_at` field already
     // present in the formVals object; it's converted to a backend format
-    // 3.) id: a string that uniquely idenfies the current submission
-    // 4.) allSubmissions: an array of all submissions, regardless of live status, ordered by position
-    // 5.) liveSubmissions: an array of live-only submissions, ordered by position
+    // 3.) allSubmissions: an array of all submissions, regardless of live status, ordered by position
+    // 4.) liveSubmissions: an array of live-only submissions, ordered by position
     // POSTCONDITION (1 possible outcome, 1 return):
     // 1.) submission: an object containing mostly the same information from formValues parameter, but with
     // additional field values, as well as removing the `message` field
-    const getSubmissionFromForm = (formVals, date, id, allSubmissions, liveSubmissions) => {
+    const getSubmissionFromForm = (formVals, date, allSubmissions, liveSubmissions) => {
         // create our new submission object, which is equivelent to formVals minus the message field
         const { message, ...submission } = formVals;
         const record = parseFloat(submission.record);
 
         // add additional fields to submission object
         submission.submitted_at = date;
-        submission.id = id;
         submission.all_position = getPosition(record, allSubmissions);
 		submission.position = submission.live ? getPosition(record, liveSubmissions) : null;
 
@@ -188,12 +186,11 @@ const InsertPopup = () => {
 		const backendDate = getDateOfSubmission(form.values.submitted_at, oldSubmission);
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
-		const id = dateF2B();
-		const submission = getSubmissionFromForm(form.values, backendDate, id, allSubmissions, liveSubmissions);
+		const submission = getSubmissionFromForm(form.values, backendDate, allSubmissions, liveSubmissions);
         
         try {
-            // attempt to submit the submission
-            await insertSubmission(submission);
+            // attempt to submit the submission, and grab submission id from db response
+            const id = await insertSubmission(submission);
 
             // next, handle notification
             await handleNotification(form.values, id);
