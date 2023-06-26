@@ -55,7 +55,7 @@ function SubmissionHistory() {
     
 		if (profiles.length > 0) {
 			// see if levelName corresponds to a level stored in the game array
-			const level = fetchLevelFromGame(game, levelName, category);
+			const level = fetchLevelFromGame(game, levelName, category, type);
 			
 			// if not, we will print an error message, and navigate to the home screen
 			if (!level) {
