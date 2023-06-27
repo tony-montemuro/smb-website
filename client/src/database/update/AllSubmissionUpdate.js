@@ -31,19 +31,20 @@ const AllSubmissionUpdate = () => {
         }
     };
 
-    // FUNCTION 2: updateSubmission - function that takes submission data and updates an already existing submission in the
-    // all_submission table
-    // PRECONDITIONS (1 parameter):
+    // FUNCTION 2: updateSubmission - function that takes submission data, as well as it's id, and updates an already existing
+    // submission in the all_submission table
+    // PRECONDITIONS (2 parameter):
     // 1.) submission: a submission object, which has all fields matching the all_submission table
+    // 2.) id: a string formatted in the timestamptz postgreSQL format, which represents the unique id of a submission
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the function will simply return
     // if the query is unsuccessful, the function will throw an error, which will be handled by the caller function
-    const updateSubmission = async submission => {
+    const updateSubmission = async (submission, id) => {
         try {
             const { error } = await supabase
                 .from("all_submission")
                 .update(submission)
-                .eq("id", submission.id);
+                .eq("id", id);
             
             // error handling
             if (error) {

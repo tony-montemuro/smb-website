@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useContext, useReducer } from "react";
-import { MessageContext, UserContext } from "../../Contexts";
+import { GameContext, MessageContext, UserContext } from "../../Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import LevelboardUtils from "./LevelboardUtils";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
@@ -15,6 +15,9 @@ const UpdatePopup = () => {
 	};
 
     /* ===== CONTEXTS ===== */
+
+    // game state from game context
+    const { game } = useContext(GameContext);
 
     // user state from user context
     const { user } = useContext(UserContext);
@@ -87,42 +90,47 @@ const UpdatePopup = () => {
 		};
     };
 
-    // FUNCTION 3: getSubmissionFromForm - takes form data, and converts to a submission object
+    // FUNCTION 3: getUpdateFromForm - takes form data, and extracts only the updatable information
     // PRECONDITIONS (4 parameters):
     // 1.) formVals: an object that stores the updated submission form values
     // 2.) date: a string representing the backend date of a submission
-    // 3.) id: a string representing the id of the submission
-    // 4.) oldSubmission: a submission object, which represents the submission pre-update
     // POSTCONDITIONS (1 possible outcome):
-    // the parameters are used to transform form data into a submission object which the database can accept 
-    const getSubmissionFromForm = (formVals, date, id, oldSubmission) => {
-        // create our new submission object, which is equivelent to formVals minus the message field
-        const { message, ...submission } = formVals;
+    // unnecessary form data is shaved off, returning only the attributes that are "updatable" according to the db
+    // the date parameter is also used to determine the "submitted_at" field
+    const getUpdateFromForm = (formVals, date) => {
+        // create our new updatedData object, which is equivelent to formVals minus the following fields:
+        // id, game_id, level_id, score, record, position, all_position, profile_id, message
+        const { 
+            id,
+            game_id,
+            level_id,
+            score,
+            record,
+            position,
+            all_position,
+            profile_id,
+            message,
+            ...updatedData 
+        } = formVals;
 
         // add additional fields to submission object
-        submission.submitted_at = date;
-        submission.id = id;
+        updatedData.submitted_at = date;
 
-        // position fields are NOT updated when a submission is updated!
-        submission.all_position = oldSubmission.details.all_position;
-		submission.position = oldSubmission.details.position;
-
-        return submission;
+        return updatedData;
     };
 
     // FUNCTION 4: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
     // to backend
     // PRECONDITIONS (2 parameters):
-    // 1.) formVals: an object that contains data from the submission form
-    // 2.) oldSubmission: a submission object containing information on the un-updated submission
-    // 3.) id: a string representing the unique id assigned to the current submission
+    // 1.) oldSubmission: a submission object containing information on the un-updated submission
+    // 2.) message: a string representing the message created by the moderator to be sent in the notification
     // POSTCONDITION (2 possible outcomes):
     // if the current user does not own the submission, this function will generate a notification object and make a call to 
     // insert it into the database
     // if the current user does own the submission, this function returns early
-    const handleNotification = async (formVals, oldSubmission, id) => {
+    const handleNotification = async (oldSubmission, message) => {
         // initialize variables
-        const submissionProfileId = formVals.profile_id;
+        const submissionProfileId = oldSubmission.profile.id;
         const submissionDetails = oldSubmission.details;
 
         // if these two ids are not equal, it means a moderator is updating a submission, so we need to notify the owner
@@ -132,12 +140,12 @@ const UpdatePopup = () => {
 				notif_type: "update",
 				profile_id: submissionProfileId,
 				creator_id: user.profile.id,
-				message: formVals.message,
-                game_id: formVals.game_id,
-                level_id: formVals.level_id,
-                score: formVals.score,
-                record: formVals.record,
-				submission_id: id,
+				message: message,
+                game_id: game.abb,
+                level_id: oldSubmission.level.name,
+                score: oldSubmission.score,
+                submission_id: submissionDetails.id,
+                record: submissionDetails.record,
                 submitted_at: submissionDetails.submitted_at,
                 region_id: submissionDetails.region.id,
                 monkey_id: submissionDetails.monkey.id,
@@ -186,16 +194,16 @@ const UpdatePopup = () => {
         // finally, let's convert the date from the front-end format, to the backend format.
 		const backendDate = getDateOfSubmission(form.values.submitted_at, submission);
 
-        // if we made it this far, no errors were detected, so we can go ahead and submit
+        // if we made it this far, no errors were detected, generate our submission data
 		const id = submission.details.id;
-		const updatedSubmission = getSubmissionFromForm(form.values, backendDate, id, submission);
+		const updatedData = getUpdateFromForm(form.values, backendDate);
 
         try {
-            // attempt to update the submission
-            await updateSubmission(updatedSubmission);
+            // attempt to update the submission using updated data
+            await updateSubmission(updatedData, id);
 
             // now, handle the notification
-            await handleNotification(form.values, submission, id);
+            await handleNotification(submission, form.values.message);
 
             // reload the page
             window.location.reload();
