@@ -23,8 +23,6 @@ function InsertPopup({ popup, setPopup, submissions }) {
   const path = location.pathname.split("/");
   const type = path[4];
   const profiles = staticCache.profiles;
-  const allSubmissions = submissions.all;
-  const liveSubmissions = submissions.live;
   const TEXT_AREA_ROWS = 5;
   const TEXT_AREA_COLS = 20;
 
@@ -64,7 +62,7 @@ function InsertPopup({ popup, setPopup, submissions }) {
             <h2>Submit a { capitalize(type) }:</h2>
 
             { /* Submission form - allows users to submit a record to the database */ }
-            <form onSubmit={ (e) => handleSubmit(e, allSubmissions, liveSubmissions) }>
+            <form onSubmit={ (e) => handleSubmit(e, submissions) }>
 
               { /* User input: allows a moderator to select which user they want to submit on behalf of from a dropdown menu. 
               NOTE: this form input is reserved for moderators only! */ }

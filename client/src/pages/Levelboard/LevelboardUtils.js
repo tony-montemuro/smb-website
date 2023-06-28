@@ -202,36 +202,13 @@ const LevelboardUtils = () => {
         return dateF2B(submittedAt);
     };
 
-    // FUNCTION 7: getPosition - determine the posititon of a new submission
-    // PRECONDITIONS (2 parameters):
-    // 1.) record: a string representing a floating-point value that corresponds to a record
-    // 2.) submissions: an array of submissions, ordered by position
-    // POSTCONDITIONS (1 possible outcome, 1 return):
-    // 1.) position: an integer value that describes the position of the new record in the submission list
-    const getPosition = (record, submissions) => {
-        // perform a while loop to find the first submission whose record is less than or equal to record param
-        let i = 0;
-        while (i < submissions.length && submissions[i].details.record > record) {
-            ++i;
-        }
-
-        // if a submission was not found, we want to return one greater than the length of the submissions array
-        if (i === submissions.length) {
-            return submissions.length+1;
-        }
-
-        // otherwise, just return the position of the submission found by the loop
-        return submissions[i].position;
-    };
-
     return {
         submission2Form, 
         dateF2B, 
         validateRecord,
         validateProof,
         validateComment,
-        getDateOfSubmission,
-        getPosition
+        getDateOfSubmission
     };
 };
 

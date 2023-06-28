@@ -52,7 +52,7 @@ const InsertPopup = () => {
     const { insertNotification } = NotificationUpdate();
 
     // helper functions
-    const { submission2Form, validateComment, validateProof, validateRecord, getDateOfSubmission, getPosition } = LevelboardUtils();
+    const { submission2Form, validateComment, validateProof, validateRecord, getDateOfSubmission } = LevelboardUtils();
     const { validateMessage } = ValidationHelper();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
@@ -99,20 +99,15 @@ const InsertPopup = () => {
     // 1.) formVals: an object containing data generated from the submission form
     // 2.) date: a string representing the date of the submission. this is different from the `submitted_at` field already
     // present in the formVals object; it's converted to a backend format
-    // 3.) allSubmissions: an array of all submissions, regardless of live status, ordered by position
-    // 4.) liveSubmissions: an array of live-only submissions, ordered by position
     // POSTCONDITION (1 possible outcome, 1 return):
     // 1.) submission: an object containing mostly the same information from formValues parameter, but with
-    // additional field values, as well as removing the `message` field
-    const getSubmissionFromForm = (formVals, date, allSubmissions, liveSubmissions) => {
+    // fixed date value (backend format), as well as removing the `message` field
+    const getSubmissionFromForm = (formVals, date) => {
         // create our new submission object, which is equivelent to formVals minus the message field
         const { message, ...submission } = formVals;
-        const record = parseFloat(submission.record);
 
         // add additional fields to submission object
         submission.submitted_at = date;
-        submission.all_position = getPosition(record, allSubmissions);
-		submission.position = submission.live ? getPosition(record, liveSubmissions) : null;
 
         return submission;
     };
@@ -151,13 +146,15 @@ const InsertPopup = () => {
     };
 
     // FUNCTION 5: handleSubmit - function that validates and submits a record to the database
-	// PRECONDITIONS (1 parameter):
+	// PRECONDITIONS (2 parameters):
 	// 1.) e: an event object generated when the user submits the submission form
+    // 2.) allSubmissions: an array of submissions for the current levelboard, sorted in descending order by the
+    // details.record field
 	// POSTCONDITIONS (3 possible outcomes):
 	// if the submission is validated, it is submitted to the database, as well as a notification, if necessary
 	// and the page is reloaded
 	// if not, the function will update the error field of the form state with any new form errors, and return early
-	const handleSubmit = async (e, allSubmissions, liveSubmissions) => {
+	const handleSubmit = async (e, allSubmissions) => {
 		// initialize submission
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
@@ -186,7 +183,7 @@ const InsertPopup = () => {
 		const backendDate = getDateOfSubmission(form.values.submitted_at, oldSubmission);
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
-		const submission = getSubmissionFromForm(form.values, backendDate, allSubmissions, liveSubmissions);
+		const submission = getSubmissionFromForm(form.values, backendDate);
         
         try {
             // attempt to submit the submission, and grab submission id from db response
