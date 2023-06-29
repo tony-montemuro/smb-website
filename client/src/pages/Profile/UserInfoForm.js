@@ -37,6 +37,7 @@ const UserInfoForm = () => {
             bio: undefined,
             youtube_handle: undefined, 
             twitch_username: undefined,
+            twitter_handle: undefined,
             discord: undefined, 
             featured_video: undefined, 
             video_description: undefined
@@ -53,6 +54,7 @@ const UserInfoForm = () => {
         validateBio, 
         validateYoutubeHandle,
         validateTwitchUsername,
+        validateTwitterHandle,
         validateDiscord, 
         validateFeaturedVideo,
         validateVideoDescription,
@@ -107,6 +109,7 @@ const UserInfoForm = () => {
         error.bio = validateBio(form.user.bio);
         error.youtube_handle = validateYoutubeHandle(form.user.youtube_handle);
         error.twitch_username = validateTwitchUsername(form.user.twitch_username);
+        error.twitter_handle = validateTwitterHandle(form.user.twitter_handle);
         error.discord = validateDiscord(form.user.discord);
         error.featured_video = validateFeaturedVideo(form.user.featured_video);
         error.video_description = validateVideoDescription(form.user.video_description, form.user.featured_video);

@@ -5,6 +5,7 @@ import { useContext } from "react";
 import Discord from "../../img/discord-logo.png";
 import SocialLink from "./SocialLink";
 import Twitch from "../../img/twitch-logo.png";
+import Twitter from "../../img/twitter-logo.png";
 import UserLogic from "./User.js";
 import YouTube from "react-youtube";
 import YT from "../../img/yt-logo.png";
@@ -32,10 +33,11 @@ function User() {
           <h2>Socials</h2>
 
           { /* Render socials if any exist. */ }
-          { profile.youtube_handle || profile.twitch_username || profile.discord ?
+          { profile.youtube_handle || profile.twitch_username || profile.twitter_handle || profile.discord ?
             <div className="user-info-socials">
               <SocialLink name="youtube" username={ profile.youtube_handle } logo={ YT } />
               <SocialLink name="twitch" username={ profile.twitch_username } logo={ Twitch } />
+              <SocialLink name="twitter" username={ profile.twitter_handle } logo={ Twitter } />
 
               { /* Discord is not a link, but a button. So, it is handled here. User is not required to have a discord.
               Only render discord information if it exists */ }

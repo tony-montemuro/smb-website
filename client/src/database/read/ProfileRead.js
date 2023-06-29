@@ -21,6 +21,7 @@ const ProfileRead = () => {
                     country (iso2, name), 
                     youtube_handle, 
                     twitch_username,
+                    twitter_handle,
                     discord,
                     featured_video,
                     video_description
@@ -59,6 +60,7 @@ const ProfileRead = () => {
                     country (iso2, name),
                     youtube_handle,
                     twitch_username,
+                    twitter_handle,
                     discord,
                     bio,
                     birthday,

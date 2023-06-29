@@ -4,7 +4,8 @@ import {
     usernamePattern, 
     youtubeHandlePattern, 
     youtubePattern, 
-    twitchUsernamePattern 
+    twitchUsernamePattern,
+    twitterHandlePattern
 } from "../../utils/RegexPatterns";
 
 const ProfileUtils = () => {
@@ -27,6 +28,7 @@ const ProfileUtils = () => {
                 country: userInfo.country ? userInfo.country.iso2 : "",
                 youtube_handle: userInfo.youtube_handle ? userInfo.youtube_handle : "",
                 twitch_username: userInfo.twitch_username ? userInfo.twitch_username : "",
+                twitter_handle: userInfo.twitter_handle ? userInfo.twitter_handle : "",
                 discord: userInfo.discord ? userInfo.discord : "",
                 featured_video: userInfo.featured_video ? userInfo.featured_video : "",
                 video_description: userInfo.video_description ? userInfo.video_description : ""
@@ -41,6 +43,7 @@ const ProfileUtils = () => {
                 country: "",
                 youtube_handle: "",
                 twitch_username: "",
+                twitter_handle: "",
                 discord: "",
                 featured_video: "",
                 video_description: ""
@@ -114,7 +117,7 @@ const ProfileUtils = () => {
     // PRECONDITIONS (1 parameter):
     // 1.) username: a string representing the twitch username the user has entered
     // POSTCONDITIONS (1 returns):
-    // 1.) error: a string that gives information as to why their twitch handle is problematic, if there is any problems.
+    // 1.) error: a string that gives information as to why their twitch username is problematic, if there is any problems.
     // if this value returns undefined, it means no errors were detected
     const validateTwitchUsername = username => {
         // ensure that the username is well-formatted
@@ -125,7 +128,21 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 6: validateDiscord - determine if user has entered a valid discord username
+    // FUNCTION 6: validateTwitterHandle - determine if user has entered a valid twitter handle
+    // PRECONDITIONS (1 parameter):
+    // 1.) handle: a string representing the twitter username the user has entered
+    // POSTCONDITIONS (1 returns):
+    // 1.) error: a string that gives information as to why their twitter handle is problematic, if there is any problems.
+    // if this value returns undefined, it means no errors were detected
+    const validateTwitterHandle = handle => {
+        if (handle.length > 0 && !twitterHandlePattern.test(handle)) {
+            return "Twitter handle is not properly formatted.";
+        }
+
+        return undefined;
+    };
+
+    // FUNCTION 7: validateDiscord - determine if user has entered a valid discord username
     // PRECONDITINOS (1 parameter):
     // 1.) discord: a string that the user has entered for their discord username
     // POSTCONDITIONS (1 returns):
@@ -140,7 +157,7 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 7: validateFeaturedVideo - determine if the featured video has a valid format
+    // FUNCTION 8: validateFeaturedVideo - determine if the featured video has a valid format
     // PRECONDITIONS (1 parameter):
     // 1.) featuredVideo: a string that the user has entered for their featured video
     // POSTCONDITIONS (1 returns):
@@ -155,7 +172,7 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 8: validateVideoDescription - determine if the video description has a valid format
+    // FUNCTION 9: validateVideoDescription - determine if the video description has a valid format
     // PRECONDITIONS (2 parameters):
     // 1.) description: a string that the user has entered for their video description
     // 2.) featuredVideo: a string that the user has entered for their featured video
@@ -176,7 +193,7 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 9: getFileInfo - determine the file information from an image form ref
+    // FUNCTION 10: getFileInfo - determine the file information from an image form ref
     // PRECONDITIONS (1 parameter):
     // 1.) avatarRef: a ref to the image input for avatar form
     // POSTCONDITIONS (2 returns):
@@ -187,7 +204,7 @@ const ProfileUtils = () => {
         return { file: file, fileExt: file.name.split(".").pop() };
     };
 
-    // FUNCTION 10: validateAvatar - determine if user has uploaded a valid avatar
+    // FUNCTION 11: validateAvatar - determine if user has uploaded a valid avatar
     // PRECONDITIONS (2 parameters):
     // 1.) avatarRef: a ref to the image input for avatar form
     // 2.) profile: a profile object that is either defined or undefined. if undefined, this indicates that the user has not yet
@@ -223,7 +240,7 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 11: convertToPNG - async function that takes a file object, and converts it to a PNG, if necessary
+    // FUNCTION 12: convertToPNG - async function that takes a file object, and converts it to a PNG, if necessary
     // PRECONDITIONS (1 parameter):
     // 1.) file: a File object of one of the three types: PNG, JPG, or JPEG
     // POSTCONDITIONS (3 possible outcomes):
@@ -278,6 +295,7 @@ const ProfileUtils = () => {
         validateBio, 
         validateYoutubeHandle,
         validateTwitchUsername,
+        validateTwitterHandle,
         validateDiscord, 
         validateFeaturedVideo, 
         validateVideoDescription,

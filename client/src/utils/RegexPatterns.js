@@ -23,3 +23,6 @@ export const youtubeHandlePattern = /^@[A-Za-z0-9_.-]{3,30}$/;
 
 // Twitch Username Regex
 export const twitchUsernamePattern = /^[a-zA-Z0-9][\w]{0,24}$/;
+
+// Twitter Handle Regex
+export const twitterHandlePattern = /^@[\w]{4,15}$/;

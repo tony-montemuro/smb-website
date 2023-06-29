@@ -53,9 +53,9 @@ const GameRead = () => {
                     name,
                     release_date
                 `)
+                .order("custom")
                 .order("id")
                 .order("id", { foreignTable: "mode", ascending: true })
-                .order("name", { foreignTable: "mode", ascending: true })
                 .order("id", { foreignTable: "mode.level", ascending: true });
 
             // error handling

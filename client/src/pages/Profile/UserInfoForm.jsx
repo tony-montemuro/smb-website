@@ -97,7 +97,7 @@ function UserInfoForm() {
 
         <h3>Socials</h3>
 
-        { /* Youtube URL field: an optional text field where the user can enter their youtube URL. */ }
+        { /* Youtube Handle field: an optional text field where the user can enter their youtube handle. */ }
         <div className="profile-info-entry">
           <label htmlFor="youtube_handle">YouTube Handle (optional): </label>
           <input
@@ -113,7 +113,7 @@ function UserInfoForm() {
         { /* If error.youtube_handle is defined, youtube handle field had an issue. Render it here. */ }
         { form.error.youtube_handle && <p>Error: { form.error.youtube_handle }</p> }
 
-        { /* Twitch URL field: an optional text field where the user can enter their twitch URL. */ }
+        { /* Twitch Username field: an optional text field where the user can enter their twitch username. */ }
         <div className="profile-info-entry">
           <label htmlFor="twitch_username">Twitch Username (optional): </label>
           <input 
@@ -128,6 +128,22 @@ function UserInfoForm() {
 
         { /* If error.twitch_username is defined, twitch username field had an issue. Render it here. */ }
         { form.error.twitch_username && <p>Error: { form.error.twitch_username }</p> }
+
+        { /* Twitter Username field: an optional text field where the user can enter their twitter handle. */ }
+        <div className="profile-info-entry">
+          <label htmlFor="twitter_handle">Twitter Handle (optional): </label>
+          <input
+            id="twitter_handle"
+            type="text"
+            placeholder="@username"
+            value={ form.user.twitter_handle }
+            onChange={ handleChange }
+            className="profile-url-text"
+          />
+        </div>
+
+        { /* If error.twitter_handle is defined, twitter handle field had an issue. Render it here. */ }
+        { form.error.twitter_handle && <p>Error: { form.error.twitter_handle }</p> }
 
         { /* Discord field: an optional text field where the user can enter their discord username.
         If the user does choose to enter a discord username, it's form will be validated. */ }
