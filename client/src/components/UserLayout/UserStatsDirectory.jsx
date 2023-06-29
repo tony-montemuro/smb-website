@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import { Link } from "react-router-dom";
 import { StaticCacheContext } from "../../Contexts";
 import { useContext } from "react";
 import BoxArt from "../BoxArt/BoxArt.jsx";
@@ -50,12 +49,10 @@ function UserStatsDirectory({ imageReducer }) {
                     <td>
 
                       { /* First, render the game and it's box art. */ }
-                      <Link to={ `/games/${ game.abb }` }>
-                        <div className="user-layout-game-element">
-                          <BoxArt game={ game } imageReducer={ imageReducer } width={ 75 } />
-                          <span>{ game.name }</span>
-                        </div>
-                      </Link>
+                      <div className="user-layout-game-element">
+                        <BoxArt game={ game } imageReducer={ imageReducer } width={ 75 } />
+                        <span>{ game.name }</span>
+                      </div>
                     </td>
 
                     { /* Next, access to the main score & time stats */ }
