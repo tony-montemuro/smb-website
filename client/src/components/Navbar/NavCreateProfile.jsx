@@ -7,7 +7,13 @@ function NavCreateProfile() {
 
   /* ===== NAV CREATE PROFILE ===== */
   return (
-    <button type="button" id="nav-create-btn" className="nav-button" onClick={ () => navigate("/profile") }>
+    <button 
+      type="button" 
+      id="nav-create-btn" 
+      className="nav-button" 
+      title="Create Profile"
+      onClick={ () => navigate("/profile")
+    }>
       Create Profile
     </button>
   );

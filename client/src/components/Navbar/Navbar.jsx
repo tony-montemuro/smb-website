@@ -20,28 +20,31 @@ function Navbar({ imageReducer }) {
       <nav className="nav">
 
         { /* Link to the homepage - left side of navbar */ }
-        <Link to="/" className="nav-title" title="Home">
+        <Link to="/" title="Home">
           <img id="nav-logo" src={ Logo } alt="SMBElite"></img>
         </Link>
 
-        <ul>
+        { /* Nav list - various links, including games, resources, and support page. */ }
+        <div className="nav-list">
+          <ul>
 
-          { /* Link to the games page */ }
-          <li>
-            <Link to="/games">Games</Link>
-          </li>
+            { /* Link to the games page */ }
+            <li>
+              <Link to="/games" title="Games">Games</Link>
+            </li>
 
-          { /* Link to the resources page */ }
-          <li>
-            <Link to="/resources">Resources</Link>
-          </li>
+            { /* Link to the resources page */ }
+            <li>
+              <Link to="/resources" title="Resources">Resources</Link>
+            </li>
 
-          { /* Link to the support page */ }
-          <li>
-            <Link to="/support">Support</Link>
-          </li>
+            { /* Link to the support page */ }
+            <li>
+              <Link to="/support" title="Support">Support</Link>
+            </li>
 
-        </ul>
+          </ul>
+        </div>
 
         {/* 3 cases:
           1.) User is authenticated and has a profile: render the NavProfile component.
