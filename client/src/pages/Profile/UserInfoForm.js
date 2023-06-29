@@ -32,7 +32,15 @@ const UserInfoForm = () => {
     }, {
         user: null,
         uploading: false,
-        error: { username: undefined, bio: undefined, discord: undefined, featured_video: undefined, video_description: undefined },
+        error: { 
+            username: undefined, 
+            bio: undefined,
+            youtube_handle: undefined, 
+            twitch_username: undefined,
+            discord: undefined, 
+            featured_video: undefined, 
+            video_description: undefined
+        },
         countries: []
     });
 
@@ -43,6 +51,8 @@ const UserInfoForm = () => {
         generateFormVals, 
         validateUsername, 
         validateBio, 
+        validateYoutubeHandle,
+        validateTwitchUsername,
         validateDiscord, 
         validateFeaturedVideo,
         validateVideoDescription,
@@ -95,6 +105,8 @@ const UserInfoForm = () => {
         // validate form fields
         error.username = validateUsername(form.user.username, form.user.id, profiles);
         error.bio = validateBio(form.user.bio);
+        error.youtube_handle = validateYoutubeHandle(form.user.youtube_handle);
+        error.twitch_username = validateTwitchUsername(form.user.twitch_username);
         error.discord = validateDiscord(form.user.discord);
         error.featured_video = validateFeaturedVideo(form.user.featured_video);
         error.video_description = validateVideoDescription(form.user.video_description, form.user.featured_video);

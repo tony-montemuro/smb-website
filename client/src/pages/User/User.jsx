@@ -32,10 +32,10 @@ function User() {
           <h2>Socials</h2>
 
           { /* Render socials if any exist. */ }
-          { profile.youtube_url || profile.twitch_url || profile.discord ?
+          { profile.youtube_handle || profile.twitch_username || profile.discord ?
             <div className="user-info-socials">
-              <SocialLink name="youtube" link={ profile.youtube_url } logo={ YT } />
-              <SocialLink name="twitch" link={ profile.twitch_url } logo={ Twitch } />
+              <SocialLink name="youtube" username={ profile.youtube_handle } logo={ YT } />
+              <SocialLink name="twitch" username={ profile.twitch_username } logo={ Twitch } />
 
               { /* Discord is not a link, but a button. So, it is handled here. User is not required to have a discord.
               Only render discord information if it exists */ }

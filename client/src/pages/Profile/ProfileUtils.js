@@ -1,5 +1,11 @@
 /* ===== IMPORTS ===== */
-import { discordPattern, usernamePattern, youtubePattern } from "../../utils/RegexPatterns";
+import { 
+    discordPattern, 
+    usernamePattern, 
+    youtubeHandlePattern, 
+    youtubePattern, 
+    twitchUsernamePattern 
+} from "../../utils/RegexPatterns";
 
 const ProfileUtils = () => {
     /* ===== FUNCTIONS ===== */
@@ -19,8 +25,8 @@ const ProfileUtils = () => {
                 bio: userInfo.bio ? userInfo.bio : "",
                 birthday: userInfo.birthday ? userInfo.birthday : "",
                 country: userInfo.country ? userInfo.country.iso2 : "",
-                youtube_url: userInfo.youtube_url ? userInfo.youtube_url : "",
-                twitch_url: userInfo.twitch_url ? userInfo.twitch_url : "",
+                youtube_handle: userInfo.youtube_handle ? userInfo.youtube_handle : "",
+                twitch_username: userInfo.twitch_username ? userInfo.twitch_username : "",
                 discord: userInfo.discord ? userInfo.discord : "",
                 featured_video: userInfo.featured_video ? userInfo.featured_video : "",
                 video_description: userInfo.video_description ? userInfo.video_description : ""
@@ -33,8 +39,8 @@ const ProfileUtils = () => {
                 bio: "",
                 birthday: "",
                 country: "",
-                youtube_url: "",
-                twitch_url: "",
+                youtube_handle: "",
+                twitch_username: "",
                 discord: "",
                 featured_video: "",
                 video_description: ""
@@ -89,7 +95,37 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 4: validateDiscord - determine if user has entered a valid discord username
+    // FUNCTION 4: validateYoutubeHandle - determine if user has entered a valid youtube handle
+    // PRECONDITIONS (1 parameter):
+    // 1.) handle: a string representing the youtube handle the user has entered
+    // POSTCONDITIONS (1 returns):
+    // 1.) error: a string that gives information as to why their youtube handle is problematic, if there is any problems.
+    // if this value returns undefined, it means no errors were detected
+    const validateYoutubeHandle = handle => {
+        // ensure that the handle is well-formatted
+        if (handle.length > 0 && !youtubeHandlePattern.test(handle)) {
+            return "YouTube handle is not properly formatted.";
+        }
+
+        return undefined;
+    };
+
+    // FUNCTION 5: validateTwitchUsername - determine if user has entered a valid twitch username
+    // PRECONDITIONS (1 parameter):
+    // 1.) username: a string representing the twitch username the user has entered
+    // POSTCONDITIONS (1 returns):
+    // 1.) error: a string that gives information as to why their twitch handle is problematic, if there is any problems.
+    // if this value returns undefined, it means no errors were detected
+    const validateTwitchUsername = username => {
+        // ensure that the username is well-formatted
+        if (username.length > 0 && !twitchUsernamePattern.test(username)) {
+            return "Twitch username is not properly formatted.";
+        }
+
+        return undefined;
+    };
+
+    // FUNCTION 6: validateDiscord - determine if user has entered a valid discord username
     // PRECONDITINOS (1 parameter):
     // 1.) discord: a string that the user has entered for their discord username
     // POSTCONDITIONS (1 returns):
@@ -104,7 +140,7 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 5: validateFeaturedVideo - determine if the featured video has a valid format
+    // FUNCTION 7: validateFeaturedVideo - determine if the featured video has a valid format
     // PRECONDITIONS (1 parameter):
     // 1.) featuredVideo: a string that the user has entered for their featured video
     // POSTCONDITIONS (1 returns):
@@ -119,7 +155,7 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 6: validateVideoDescription - determine if the video description has a valid format
+    // FUNCTION 8: validateVideoDescription - determine if the video description has a valid format
     // PRECONDITIONS (2 parameters):
     // 1.) description: a string that the user has entered for their video description
     // 2.) featuredVideo: a string that the user has entered for their featured video
@@ -140,7 +176,7 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 7: getFileInfo - determine the file information from an image form ref
+    // FUNCTION 9: getFileInfo - determine the file information from an image form ref
     // PRECONDITIONS (1 parameter):
     // 1.) avatarRef: a ref to the image input for avatar form
     // POSTCONDITIONS (2 returns):
@@ -151,7 +187,7 @@ const ProfileUtils = () => {
         return { file: file, fileExt: file.name.split(".").pop() };
     };
 
-    // FUNCTION 8: validateAvatar - determine if user has uploaded a valid avatar
+    // FUNCTION 10: validateAvatar - determine if user has uploaded a valid avatar
     // PRECONDITIONS (2 parameters):
     // 1.) avatarRef: a ref to the image input for avatar form
     // 2.) profile: a profile object that is either defined or undefined. if undefined, this indicates that the user has not yet
@@ -187,7 +223,7 @@ const ProfileUtils = () => {
         return undefined;
     };
 
-    // FUNCTION 9: convertToPNG - async function that takes a file object, and converts it to a PNG, if necessary
+    // FUNCTION 11: convertToPNG - async function that takes a file object, and converts it to a PNG, if necessary
     // PRECONDITIONS (1 parameter):
     // 1.) file: a File object of one of the three types: PNG, JPG, or JPEG
     // POSTCONDITIONS (3 possible outcomes):
@@ -240,6 +276,8 @@ const ProfileUtils = () => {
         generateFormVals, 
         validateUsername, 
         validateBio, 
+        validateYoutubeHandle,
+        validateTwitchUsername,
         validateDiscord, 
         validateFeaturedVideo, 
         validateVideoDescription,

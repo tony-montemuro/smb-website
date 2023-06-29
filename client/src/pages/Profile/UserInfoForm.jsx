@@ -99,31 +99,37 @@ function UserInfoForm() {
 
         { /* Youtube URL field: an optional text field where the user can enter their youtube URL. */ }
         <div className="profile-info-entry">
-          <label htmlFor="youtube_url">YouTube URL (optional): </label>
+          <label htmlFor="youtube_handle">YouTube Handle (optional): </label>
           <input
-            id="youtube_url"
-            type="url"
-            placeholder="https://www.youtube.com/ChannelUrl"
-            value={ form.user.youtube_url }
+            id="youtube_handle"
+            type="text"
+            placeholder="@username"
+            value={ form.user.youtube_handle }
             onChange={ handleChange }
             className="profile-url-text"
           />
         </div>
+
+        { /* If error.youtube_handle is defined, youtube handle field had an issue. Render it here. */ }
+        { form.error.youtube_handle && <p>Error: { form.error.youtube_handle }</p> }
 
         { /* Twitch URL field: an optional text field where the user can enter their twitch URL. */ }
         <div className="profile-info-entry">
-          <label htmlFor="twitch_url">Twitch URL (optional): </label>
+          <label htmlFor="twitch_username">Twitch Username (optional): </label>
           <input 
-            id="twitch_url"
-            type="url"
-            placeholder="https://www.twitch.tv/Username"
-            value={ form.user.twitch_url }
+            id="twitch_username"
+            type="text"
+            placeholder="username"
+            value={ form.user.twitch_username }
             onChange={ handleChange }
             className="profile-url-text"
           />
         </div>
 
-        { /* Discord URL field: an optional text field where the user can enter their discord username.
+        { /* If error.twitch_username is defined, twitch username field had an issue. Render it here. */ }
+        { form.error.twitch_username && <p>Error: { form.error.twitch_username }</p> }
+
+        { /* Discord field: an optional text field where the user can enter their discord username.
         If the user does choose to enter a discord username, it's form will be validated. */ }
         <div className="profile-info-entry">
           <label htmlFor="discord">Discord Username (optional): </label>
