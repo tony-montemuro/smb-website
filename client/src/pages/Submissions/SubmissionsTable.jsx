@@ -9,7 +9,7 @@ function SubmissionsTable({ submissions, isApproved, game, handleClick }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { capitalize, cleanLevelName, dateB2F, recordB2F, getTimeDifference } = FrontendHelper();
+  const { capitalize, cleanLevelName, dateB2F, recordB2F, getTimeAgo } = FrontendHelper();
 
   /* ===== SUBMISSIONS TABLE COMPONENT ===== */
   return (
@@ -48,7 +48,7 @@ function SubmissionsTable({ submissions, isApproved, game, handleClick }) {
           return <tr key={ row.details.submitted_at } onClick={ () => handleClick(row) }>
 
             { /* Time ago: Render how long ago the submission occured. */ }
-            <td>{ getTimeDifference(row.details.id) }</td>
+            <td>{ getTimeAgo(row.details.id) }</td>
 
             { /* User data: Render the user's country and username */ }
             <td><Username country={ row.profile.country } profileId={ row.profile.id } username={ row.profile.username } /></td>

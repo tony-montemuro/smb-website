@@ -65,7 +65,8 @@ const ProfileRead = () => {
                     bio,
                     birthday,
                     featured_video,
-                    video_description
+                    video_description,
+                    report_token
                 `)
                 .eq("user_id", userId)
                 .single();

@@ -10,7 +10,7 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
   const type = row.score ? "score" : "time";
 
   // helper functions
-  const { cleanLevelName, capitalize, recordB2F, getTimeDifference } = FrontendHelper();
+  const { cleanLevelName, capitalize, recordB2F, getTimeAgo } = FrontendHelper();
 
   /* ===== NOTIFICATION TABLE ROW COMPONENT ===== */
   return (
@@ -26,7 +26,7 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
       </td>
 
       { /* Render how long ago the notification was receieved. */ }
-      <td onClick={ () => handleRowClick(row) }>{ getTimeDifference(row.notif_date) }</td>
+      <td onClick={ () => handleRowClick(row) }>{ getTimeAgo(row.notif_date) }</td>
 
       { /* Render the type of notification */ }
       <td onClick={ () => handleRowClick(row) }>

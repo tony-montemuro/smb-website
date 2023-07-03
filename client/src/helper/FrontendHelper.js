@@ -1,5 +1,11 @@
+/* ===== IMPORTS ===== */
+import TimeHelper from "./TimeHelper";
+
 const FrontendHelper = () => {
     /* ===== FUNCTIONS ===== */
+
+    // helper functions
+    const { getTimeDifference } = TimeHelper();
 
     // FUNCTION 1: capitalize
     // PRECONDITIONS (1 parameter):
@@ -92,7 +98,7 @@ const FrontendHelper = () => {
         return n > 1 ? "s" : "";
     };
 
-    // FUNCTION 7: getTimeDifference - given a timestamp, determine how long ago the timestamp occured given the current time
+    // FUNCTION 7: getTimeAgo - given a timestamp, determine how long ago the timestamp occured given the current time
     // PRECONDITIONS (1 parameter):
     // 1.) timestamp: a string representing a timestamp, typically formatted in the PostgreSQL `timestamptz` format
     // POSTCONDITIONS (4 possible outcomes):
@@ -100,27 +106,27 @@ const FrontendHelper = () => {
     // If the time between now and the timestamp is less than an hour, return string describing time difference in minutes
     // If the time between now and the timestamp is less than a day, return string describing time difference in hours
     // Otherwise, return string describing time difference in days
-    const getTimeDifference = timestamp => {
-        // first, use the current time to compute the difference in time in seconds
+    const getTimeAgo = timestamp => {
+        // convert both the current time and the timestamp to the Data format
         const current = new Date();
         const submissionDate = new Date(timestamp);
-        const secondsAgo = Math.floor((current-submissionDate)/1000);
 
-        if (secondsAgo < 60) {
-            // less than a minute ago, return time in seconds
-            return `${ secondsAgo } second${ makePlural(secondsAgo) } ago`;
-        } else if (secondsAgo < 3600) {
-            // less than an hour ago, show minutes
-            const minutesAgo = Math.floor(secondsAgo/60);
-            return `${ minutesAgo } minute${ makePlural(minutesAgo) } ago`; 
-        } else if (secondsAgo < 86400) {
-            // less than a day ago, show hours
-            const hoursAgo = Math.floor(secondsAgo/3600);
-            return `${ hoursAgo } hour${ makePlural(hoursAgo) } ago`;
+        // get the difference between the two
+        const timeDifference = getTimeDifference(submissionDate.getTime(), current.getTime());
+        const days = timeDifference.days; 
+        const hours = timeDifference.hours;
+        const minutes = timeDifference.minutes;
+        const seconds = timeDifference.seconds;
+
+        // finally, return the appropriate string depending on the timeDifference object field values
+        if (days > 0) {
+            return `${ days } day${ makePlural(days) } ago`;
+        } else if (hours > 0) {
+            return `${ hours } hour${ makePlural(hours) } ago`;
+        } else if (minutes > 0) {
+            return `${ minutes } minute${ makePlural(minutes) } ago`; 
         } else {
-            // more than a day ago, show days
-            const daysAgo = Math.floor(secondsAgo/86400);
-            return `${ daysAgo } day${ makePlural(daysAgo) } ago`;
+            return `${ seconds } second${ makePlural(seconds) } ago`;
         }
     };
 
@@ -133,7 +139,7 @@ const FrontendHelper = () => {
         return category === "misc" ? "Miscellaneous" : "Main";
     };
 
-    return { capitalize, cleanLevelName, dateB2F, recordB2F, secondsToHours, getTimeDifference, categoryB2F };
+    return { capitalize, cleanLevelName, dateB2F, recordB2F, secondsToHours, getTimeAgo, categoryB2F };
 };
 
 export default FrontendHelper;

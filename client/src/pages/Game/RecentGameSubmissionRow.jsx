@@ -18,12 +18,12 @@ function RecentGameSubmissionRow({ submission }) {
   const { game } = useContext(GameContext);
 
   /* ===== FUNCTIONS ====== */
-  const { capitalize, cleanLevelName, getTimeDifference } = FrontendHelper();
+  const { capitalize, cleanLevelName, getTimeAgo } = FrontendHelper();
 
   /* ===== RECENT GAME SUBMISSION ROW COMPONENT ===== */
   return (
     <tr>
-      <td>{ getTimeDifference(submission.id) }</td>
+      <td>{ getTimeAgo(submission.id) }</td>
       <td><Username country={ profile.country } profileId={ profile.id } username={ profile.username } /></td>
       <td><Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>{ cleanLevelName(level.name) }</Link></td>
       <td>{ capitalize(type) }</td>

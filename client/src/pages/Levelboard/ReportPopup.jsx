@@ -1,6 +1,9 @@
 /* ===== IMPORTS ===== */
 import "./Levelboard.css";
+import { useContext } from "react";
 import { useLocation } from "react-router-dom";
+import { UserContext } from "../../Contexts";
+import CountdownTimer from "../../components/CountdownTimer/CountdownTimer.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import ReportPopupLogic from "./ReportPopup.js";
 import Username from "../../components/Username/Username";
@@ -10,6 +13,11 @@ function ReportPopup({ submission, setSubmission }) {
   const location = useLocation();
 	const type = location.pathname.split("/")[4];
   const TEXT_AREA_ROWS = 2;
+
+  /* ===== CONTEXTS ===== */
+
+  // user state from user context
+  const { user } = useContext(UserContext);
 
   /* ===== STATES AND FUNCTIONS ===== */
 
@@ -34,11 +42,9 @@ function ReportPopup({ submission, setSubmission }) {
         <Username country={ submission.profile.country } profileId={ submission.profile.id } username={ submission.profile.username } />?</h2>
 
         { /* Report popup description */ }
-        <span>In your message, please explain your reasoning for reporting the submission. This message will be delivered to&nbsp;
-        <Username country={ submission.profile.country } profileId={ submission.profile.id } username={ submission.profile.username } />,
-        as well as the moderation team.</span>
+        <span>In your message, please explain your reasoning for reporting the submission. Be specific!</span>
 
-        <p><b>Note:</b> <i>Please only report once! Repeatedly reporting a single submission can result in a permanent account ban!</i></p>
+        <p>You have <b>{ user.profile.report_token }</b> reports left. Report counts reset in <CountdownTimer />.</p>
         
         { /* Report form */ }
         <form>

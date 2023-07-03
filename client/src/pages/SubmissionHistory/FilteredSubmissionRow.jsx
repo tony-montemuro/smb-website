@@ -20,13 +20,13 @@ function FilteredSubmissionRow({ submission, deleteFunc }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { dateB2F, recordB2F, getTimeDifference } = FrontendHelper();
+  const { dateB2F, recordB2F, getTimeAgo } = FrontendHelper();
 
   /* ===== FILTERED SUBMISSION ROW COMPONENT ===== */
   return (
     <tr>
       { /* Submitted - render how long ago the submission was posted. */ }
-      <td>{ getTimeDifference(submission.id) }</td>
+      <td>{ getTimeAgo(submission.id) }</td>
 
       { /* Record - render the record itself */ }
       <td>{ recordB2F(submission.record, type) }</td>
