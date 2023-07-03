@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import "./CountdownTimer.css";
 import { useEffect } from "react";
 import CountdownTimerLogic from "./CountdownTimer.js";
 

@@ -32,6 +32,9 @@ const SubmissionRead = () => {
                         comment,
                         live
                     ),
+                    report (
+                        creator_id
+                    ),
                     score,
                     approved
                 `)

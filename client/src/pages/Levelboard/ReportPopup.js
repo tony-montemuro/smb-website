@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
-import NotificationUpdate from "../../database/update/NotificationUpdate";
+import { MessageContext, UserContext } from "../../Contexts";
+import ReportUpdate from "../../database/update/ReportUpdates";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const ReportPopup = () => {
@@ -16,9 +16,6 @@ const ReportPopup = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // static cache state from static cache context
-    const { staticCache } = useContext(StaticCacheContext);
-
     // user state from user context
     const { user } = useContext(UserContext);
 
@@ -30,9 +27,11 @@ const ReportPopup = () => {
 
     /* ===== FUNCTIONS ===== */
 
+    // database functions
+    const { insertReport } = ReportUpdate();
+
     // helper functions
     const { validateMessage } = ValidationHelper();
-    const { insertNotification } = NotificationUpdate();
 
     // FUNCTION 1 - handleReport: given the report object, send an array of reports to all moderators, and the owner
     // of the submission
@@ -56,44 +55,28 @@ const ReportPopup = () => {
             return;
         }
     
-        // now, let's get the list of mods that DOES NOT include the current user if they are a moderator
-        const moderators = staticCache.moderators;
-        const relevantMods = moderators.filter(row => row.profile_id !== user.profile.id && row.profile_id !== submission.profile.id);
-    
-        // define our base notifObject
-        const notifObject = {
-            notif_type: "report",
-            creator_id: user.profile.id,
+        // define our report object
+        const report = {
             game_id: abb,
             level_id: levelName,
             score: type === "score" ? true : false,
-            record: submission.details.record,
-            submission_id: submission.details.id,
+            profile_id: submission.profile.id,
+            creator_id: user.profile.id,
             message: form.message
         };
-
-        // create an array of functions, each of which corresponds to a function call to inserting a notification to the database
-        // this is for moderators
-        const notifPromises = relevantMods.map(e => {
-            return insertNotification({ ...notifObject, profile_id: e.profile_id });
-        });
-
-        // finally, push the function that inserts a notification to the database for the user being reported
-        notifPromises.push(
-            insertNotification({ ...notifObject, profile_id: submission.profile.id })
-        );
           
-        // now, let's actually perform all the queries
+        // now, let's add the report to the database
         try {
             // await promises to complete
-            await Promise.all(notifPromises);
+            await insertReport(report);
         
-            // now, simply add a success message, and close the form
-            addMessage("Report successfully submitted.", "success");
-            closePopup(setSubmission);
+            // reload the page if the query is successful
+            window.location.reload();
     
         } catch (error) {
+            // otherwise, render an error message, and set the submitting state back to false
             addMessage(error.message, "error");
+            setForm({ ...form, submitting: false });
         }
     };
 

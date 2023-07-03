@@ -21,7 +21,7 @@ function Notifications() {
   const TABLE_WIDTH = 7;
   const messages = {
     approve: "A moderator has approved one of your submission.",
-    report: `A user has reported ${ user.is_mod ? "a submission." : "one of your submissions." }`,
+    report: "A user has reported one of your submissions.",
     insert: "A moderator has inserted a new submission on your behalf.",
     update: "A moderator has updated one of you submissions.",
     delete: "A moderator has deleted one of your submissions."

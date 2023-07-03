@@ -2,12 +2,14 @@
 import { useContext } from "react";
 import { UserContext } from "../../Contexts";
 import { Link, useLocation } from "react-router-dom";
+import { red } from "@mui/material/colors";
 import CheckIcon from "@mui/icons-material/Check";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
 import VideocamIcon from "@mui/icons-material/Videocam";
 
 function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, deleteFunc }) {
@@ -42,7 +44,19 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
       </td>
 
       { /* Render the record */ }
-      <td><Link to={ `${submission.profile.id}` }>{ recordB2F(submission.details.record, type) }</Link></td>
+      <td>
+        <div className="levelboard-svg-wrapper">
+          { submission.report && 
+            <>
+              <WarningRoundedIcon titleAccess="This submission has been reported." sx={{ color: red[500] }} />
+              &nbsp;
+            </>
+          }
+          <Link to={ `${ submission.profile.id }` }>
+            { recordB2F(submission.details.record, type) }
+          </Link>
+        </div>
+      </td>
 
       { /* Render the submission date */ }
       <td>{ dateB2F(submission.details.submitted_at) }</td>
@@ -84,7 +98,7 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
             <button 
               type="button"
               onClick={ () => reportFunc(submission) }
-              disabled={ user.profile && user.profile.id === submission.profile.id }
+              disabled={ (user.profile && user.profile.id === submission.profile.id) || submission.report }
             >
               <WarningAmberRoundedIcon titleAccess="Report" />
             </button>
@@ -107,7 +121,16 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
           authenticated user is a moderator. */ }
           <td>
             <div className="levelboard-svg-wrapper">
-              <button type="button" onClick={ () => deleteFunc(submission) }><ClearRoundedIcon titleAccess="Delete" /></button>
+              <button 
+                type="button" 
+                onClick={ () => deleteFunc(submission) } 
+                disabled={ 
+                  submission.approved || 
+                  (submission.report && (submission.profile.id === user.profile.id || submission.report.creator_id === user.profile.id))
+                }
+              >
+                <ClearRoundedIcon titleAccess="Delete" />
+              </button>
             </div>
           </td>
         </>
