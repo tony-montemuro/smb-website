@@ -1,12 +1,10 @@
 /* ===== IMPORTS ===== */
 import "./Notifications.css";
-import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import TypeSymbol from "./TypeSymbol";
 
 function NotificationTableRow({ row, notifications, handleRowClick, toggleSelection }) {
   /* ===== VARIABLES ===== */
-  const category = row.level.misc ? "misc" : "main";
   const type = row.score ? "score" : "time";
 
   // helper functions
@@ -35,18 +33,14 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
         </div>
       </td>
 
-      { /* Render the game associated with the notification as a link */ }
+      { /* Render the game associated with the notification */ }
       <td onClick={ () => handleRowClick(row) }>
-        <Link to={`/games/${ row.level.mode.game.abb }`}>
-          { row.level.mode.game.name }
-        </Link>
+        { row.level.mode.game.name }
       </td>
 
-      { /* Render the level associated with the notification as a link */ }
+      { /* Render the level associated with the notification */ }
       <td onClick={ () => handleRowClick(row) }>
-        <Link to={`/games/${ row.level.mode.game.abb }/${ category }/${ type }/${ row.level.name }`}>
-          { cleanLevelName(row.level.name) } ({ capitalize(type) })
-        </Link>
+        { cleanLevelName(row.level.name) } ({ capitalize(type) })
       </td>
 
       { /* Render the record associated with the notification */ }
