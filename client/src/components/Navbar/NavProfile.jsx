@@ -2,8 +2,8 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../Contexts";
+import AbcIcon from "@mui/icons-material/Abc";
 import Avatar from "../Avatar/Avatar.jsx";
-import ChecklistIcon from "@mui/icons-material/Checklist";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -67,11 +67,11 @@ function NavProfile({ imageReducer }) {
             }
           </div>
 
-          { /* Recent submissions link - list icon that links to the recent submissions page (for moderators only) */ }
+          { /* Moderator link - icon that links to the moderation hub page (for moderators only) */ }
           { user.is_mod &&
             <div className="nav-profile-link">
-              <Link to="/submissions">
-                <ChecklistIcon titleAccess="Recent Submissions" />
+              <Link to="/moderator">
+                <AbcIcon titleAccess="Moderator Hub" />
               </Link>
             </div>
           }

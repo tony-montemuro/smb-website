@@ -1,0 +1,30 @@
+.moderator-layout-header {
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 8vh;
+}
+
+.moderator-layout-tabs {
+    display: flex;
+    width: 100%;
+}
+
+.moderator-layout-tab {
+    text-align: center;
+    background-color: #f1f1f1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-bottom: none;
+    width: 25%;
+}
+
+.moderator-layout-tab-active {
+    background-color: #ffffff;
+    cursor: default;
+}
+  
+.moderator-layout-tab:not(.moderator-layout-tab-active):hover {
+    cursor: pointer;
+}

@@ -161,7 +161,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 						{ /* Render a score tab if the chart type is score or both */ }
 						{ level.chart_type !== "time" &&
 							<div
-								className={`levelboard-tab ${ type === "score" ? "levelboard-tab-active" : "" }`}
+								className={ `levelboard-tab ${ type === "score" ? "levelboard-tab-active" : "" }` }
 								onClick={ () => handleTabClick("score") }
 							>
 								Score
@@ -171,7 +171,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 						{ /* Render a time tab if the chart type is time or both */ }
 						{ level.chart_type !== "score" && 
 							<div
-								className={`levelboard-tab ${ type === "time" ? "levelboard-tab-active" : "" }`}
+								className={ `levelboard-tab ${ type === "time" ? "levelboard-tab-active" : "" }` }
 								onClick={ () => handleTabClick("time") }
 							>
 								Time

@@ -12,6 +12,7 @@ import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
 import Medals from "./pages/Medals/Medals.jsx";
 import MessagePopup from "./components/MessagePopup/MessagePopup.jsx";
+import Moderator from "./pages/Moderator/Moderator.jsx";
 import ModeratorLayout from "./components/ModeratorLayout/ModeratorLayout.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
 import Notifications from "./pages/Notifications/Notifications.jsx";
@@ -173,6 +174,7 @@ function App() {
                 }/>
               </Route>
               <Route path="moderator" element={ <ModeratorLayout /> } >
+                <Route index element={ <Moderator /> } />
                 <Route path="approvals" element={
                   <Approvals />
                 }/>
