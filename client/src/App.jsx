@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { MessageContext, StaticCacheContext, UserContext } from "./Contexts";
 import AppLogic from "./App.js";
+import Approvals from "./pages/Approvals/Approvals.jsx";
 import Game from "./pages/Game/Game.jsx";
 import GameLayout from "./components/GameLayout/GameLayout";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
@@ -11,10 +12,13 @@ import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
 import Medals from "./pages/Medals/Medals.jsx";
 import MessagePopup from "./components/MessagePopup/MessagePopup.jsx";
+import ModeratorLayout from "./components/ModeratorLayout/ModeratorLayout.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
 import Notifications from "./pages/Notifications/Notifications.jsx";
+import Post from "./pages/Post/Post.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import Records from "./pages/Records/Records.jsx";
+import Reports from "./pages/Reports/Reports.jsx";
 import Resources from "./pages/Resources/Resources.jsx";
 import SubmissionHistory from "./pages/SubmissionHistory/SubmissionHistory.jsx";
 import Submissions from "./pages/Submissions/Submissions.jsx";
@@ -166,6 +170,17 @@ function App() {
                 }/>
                 <Route path=":game/misc/time" element={
                   <UserStats submissionReducer={ submissionReducer } />
+                }/>
+              </Route>
+              <Route path="moderator" element={ <ModeratorLayout /> } >
+                <Route path="approvals" element={
+                  <Approvals />
+                }/>
+                <Route path="reports" element={
+                  <Reports />
+                }/>
+                <Route path="post" element={
+                  <Post />
                 }/>
               </Route>
             </Routes>
