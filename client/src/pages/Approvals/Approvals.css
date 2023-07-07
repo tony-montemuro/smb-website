@@ -1,5 +1,6 @@
 .approvals {
     display: flex;
+    flex: 1;
 }
 
 .approvals-header {
@@ -7,4 +8,35 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.approvals-content {
+    flex-basis: 80%;
+}
+
+.approvals-body h2 {
+    text-align: center;
+}
+
+.approval-submission-row {
+    display: flex;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 88%;
+    flex-direction: row;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.approval-submission-row:hover {
+    background-color: #f1f1f1;
+}
+
+.approval-submission-row-element {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

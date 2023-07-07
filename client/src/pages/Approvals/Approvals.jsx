@@ -3,8 +3,8 @@ import "./Approvals.css";
 import { SubmissionContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import ApprovalLogic from "./Approvals.js";
-import FrontendHelper from "../../helper/FrontendHelper";
 import GameSelect from "../../components/GameSelect/GameSelect";
+import SubmissionRow from "./SubmissionRow";
 
 function Approvals({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -16,9 +16,6 @@ function Approvals({ imageReducer }) {
 
   // states & functions from the js file
   const { game, recent, setGame, setRecent, setDefaultGame } = ApprovalLogic();
-
-  // helper functions
-  const { recordB2F } = FrontendHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -40,21 +37,26 @@ function Approvals({ imageReducer }) {
 
       { /* Game select - Render a column of games to choose from */ }
       <GameSelect recent={ recent } gameAbb={ game } setGameAbb={ setGame } imageReducer={ imageReducer } />
-
+      
+      { /* Approvals content - the bulk of this page */ }
       <div className="approvals-content">
+
         { /* Approvals header - render the header info here. */ }
         <div className="approvals-header">
-          <h1>New Submissions</h1>
+          <h1>Approve Submissions</h1>
           <p>Please go through the new submissions listed below. You can either <b>Approve</b> the submission, or <b>Delete</b> it.</p>
         </div>
 
         { /* Approvals body - render new submissions here */ }
         <div className="approvals-body">
+          <h2>New Submissions</h2>
           { recent[game].map(submission => {
-            return <p key={ submission.details.id }>{ recordB2F(submission.details.record, submission.score ? "score" : "time") }</p>
+            return <SubmissionRow submission={ submission } key={ submission.details.id } />
           })}
         </div>
+
       </div>
+    
     </div>
   :
     <p>Loading...</p>;

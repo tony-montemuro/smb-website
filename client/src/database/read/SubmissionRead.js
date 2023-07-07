@@ -148,16 +148,18 @@ const SubmissionRead = () => {
                     ),
                     score
                 `)
-                .eq("approved", false)
-                .order("id", { foreignTable: "all_submission", ascending: true });
+                .eq("approved", false);
 
             // error handling
             if (error) {
                 throw error;
             }
 
-            // if the query was a success, simply return the array of unapproved submissions
-            return unapproved;
+            // next, order the submissions in ascending order by the `details.id` field
+            const ordered = unapproved.sort((a, b) => a.details.id.localeCompare(b.details.id));
+
+            // return the ordered array of unapproved submissions
+            return ordered;
 
         } catch (error) {
             // error will be handled by caller function
