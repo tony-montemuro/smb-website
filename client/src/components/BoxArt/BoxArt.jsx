@@ -15,7 +15,7 @@ function BoxArt({ game, imageReducer, width }) {
   }, []);
 
   /* ===== BOX ART COMPONENT ===== */
-  return <img style={ { width: width, height: 'auto' } } src={ box } alt={ `${ game.name } Box Art` }></img>;
+  return <img style={ { width: width, height: "auto" } } src={ box } alt={ `${ game.name } Box Art` }></img>;
 };
 
 /* ===== EXPORTS ===== */

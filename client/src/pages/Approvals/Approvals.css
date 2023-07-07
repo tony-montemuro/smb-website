@@ -1,0 +1,10 @@
+.approvals {
+    display: flex;
+}
+
+.approvals-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

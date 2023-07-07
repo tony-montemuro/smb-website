@@ -176,7 +176,7 @@ function App() {
               <Route path="moderator" element={ <ModeratorLayout /> } >
                 <Route index element={ <Moderator /> } />
                 <Route path="approvals" element={
-                  <Approvals />
+                  <Approvals imageReducer={ imageReducer } />
                 }/>
                 <Route path="reports" element={
                   <Reports />
