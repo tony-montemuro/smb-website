@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { GameContext, MessageContext } from "../../Contexts";
+import { GameContext, MessageContext } from "../../utils/Contexts";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Levelboard = () => {

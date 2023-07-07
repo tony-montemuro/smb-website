@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { MessageContext, UserContext } from "../../Contexts";
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import ReportUpdate from "../../database/update/ReportUpdates";
 import ValidationHelper from "../../helper/ValidationHelper";
 

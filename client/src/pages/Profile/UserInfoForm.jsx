@@ -2,7 +2,7 @@
 import "./Profile.css";
 import { useContext, useEffect } from "react";
 import UserInfoFormLogic from "./UserInfoForm.js";
-import { UserContext } from "../../Contexts";
+import { UserContext } from "../../utils/Contexts";
 
 function UserInfoForm() {
   /* ===== VARIABLES ===== */

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { StaticCacheContext } from "../../Contexts";
+import { StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SubmissionRead from "../../database/read/SubmissionRead";

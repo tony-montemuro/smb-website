@@ -1,6 +1,6 @@
 /* ===== IMPORTS ====== */
 import "./Records.css";
-import { GameContext, MessageContext } from "../../Contexts";
+import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";

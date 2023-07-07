@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
-import { UserContext } from "../../Contexts";
+import { UserContext } from "../../utils/Contexts";
 import DeletePopupLogic from "./DeletePopup.js";
 import FrontendHelper from "../../helper/FrontendHelper";
 import Username from "../Username/Username";

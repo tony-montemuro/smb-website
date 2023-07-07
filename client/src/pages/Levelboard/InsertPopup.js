@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
-import { MessageContext, UserContext } from "../../Contexts";
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import LevelboardUtils from "./LevelboardUtils";
 import NotificationUpdate from "../../database/update/NotificationUpdate";

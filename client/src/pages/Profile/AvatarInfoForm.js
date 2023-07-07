@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, UserContext } from "../../Contexts";
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import ProfileUtils from "./ProfileUtils";
 import Upload from "../../database/storage/Upload";

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../Contexts";
+import { MessageContext } from "../../utils/Contexts";
 import { supabase } from "../SupabaseClient";
 import { useContext } from "react";
 

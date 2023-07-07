@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext } from "../../Contexts";
+import { GameContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import { twitterPatttern, twitchPattern, youtubePattern } from "../../utils/RegexPatterns";

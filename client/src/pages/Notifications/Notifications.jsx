@@ -2,7 +2,7 @@
 import "./Notifications.css";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
-import { MessageContext, UserContext } from "../../Contexts";
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import NotificationsLogic from "./Notifications.js";
 import NotificationPopup from "./NotificationPopup";
 import NotificationTableRow from "./NotificationTableRow";

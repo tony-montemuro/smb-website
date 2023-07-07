@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./Reports.css";
-import { SubmissionContext } from "../../Contexts";
+import { SubmissionContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import ReportLogic from "./Reports.js";
 

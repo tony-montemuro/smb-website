@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./GameSelect.css";
 import { Link } from "react-router-dom";
-import { StaticCacheContext } from "../../Contexts";
+import { StaticCacheContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import BoxArt from "../../components/BoxArt/BoxArt.jsx";
 

@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./Profile.css";
 import { useContext, useRef } from "react";
-import { UserContext } from "../../Contexts";
+import { UserContext } from "../../utils/Contexts";
 import Avatar from "../../components/Avatar/Avatar.jsx";
 import AvatarInfoFormLogic from "./AvatarInfoForm.js";
 

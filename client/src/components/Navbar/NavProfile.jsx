@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { UserContext } from "../../Contexts";
+import { UserContext } from "../../utils/Contexts";
 import AbcIcon from "@mui/icons-material/Abc";
 import Avatar from "../Avatar/Avatar.jsx";
 import LogoutIcon from "@mui/icons-material/Logout";

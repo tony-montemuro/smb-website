@@ -1,6 +1,6 @@
 /* ===== IMPORTS ====== */
 import "./GameLayout.css";
-import { GameContext, MessageContext, StaticCacheContext } from "../../Contexts";
+import { GameContext, MessageContext, StaticCacheContext } from "../../utils/Contexts";
 import { Link } from "react-router-dom";
 import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";

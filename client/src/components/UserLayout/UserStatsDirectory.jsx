@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { StaticCacheContext } from "../../Contexts";
+import { StaticCacheContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 import GameHelper from "../../helper/GameHelper";

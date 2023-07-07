@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./SearchBar.css";
-import { StaticCacheContext } from "../../Contexts";
+import { StaticCacheContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardButton from "../LevelboardButton/LevelboardButton";

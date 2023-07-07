@@ -2,7 +2,7 @@
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { UserContext } from "../../Contexts";
+import { UserContext } from "../../utils/Contexts";
 import Login from "../Login/Login.jsx";
 import Logo from "../../img/logo.png";
 import NavCreateProfile from "./NavCreateProfile";

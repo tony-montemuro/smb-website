@@ -3,7 +3,7 @@ import "./ModeratorLayout.css";
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { MessageContext, StaticCacheContext, SubmissionContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, SubmissionContext, UserContext } from "../../utils/Contexts";
 import ModeratorLogic from "./ModeratorLayout.js";
 
 function ModeratorLayout() {

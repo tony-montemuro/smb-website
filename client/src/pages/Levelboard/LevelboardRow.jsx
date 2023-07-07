@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useContext } from "react";
-import { UserContext } from "../../Contexts";
+import { UserContext } from "../../utils/Contexts";
 import { Link, useLocation } from "react-router-dom";
 import { red } from "@mui/material/colors";
 import CheckIcon from "@mui/icons-material/Check";

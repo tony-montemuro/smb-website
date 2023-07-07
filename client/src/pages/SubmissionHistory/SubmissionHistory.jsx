@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./SubmissionHistory.css";
-import { GameContext, MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
+import { GameContext, MessageContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
 import { Link } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";

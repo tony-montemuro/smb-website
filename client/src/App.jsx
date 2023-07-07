@@ -2,7 +2,7 @@
 import "./App.css";
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import { MessageContext, StaticCacheContext, UserContext } from "./Contexts";
+import { MessageContext, StaticCacheContext, UserContext } from "./utils/Contexts";
 import AppLogic from "./App.js";
 import Approvals from "./pages/Approvals/Approvals.jsx";
 import Game from "./pages/Game/Game.jsx";

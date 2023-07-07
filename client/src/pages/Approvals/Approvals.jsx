@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./Approvals.css";
-import { SubmissionContext } from "../../Contexts";
+import { SubmissionContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import ApprovalLogic from "./Approvals.js";
 

@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./Game.css";
-import { GameContext } from "../../Contexts";
+import { GameContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameLogic from "./Game.js";

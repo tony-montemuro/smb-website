@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./Profile.css";
-import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AvatarInfoForm from "./AvatarInfoForm.jsx";

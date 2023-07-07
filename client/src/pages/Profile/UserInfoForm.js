@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import ProfileUtils from "./ProfileUtils.js";
 import ProfilesUpdate from "../../database/update/ProfilesUpdate";

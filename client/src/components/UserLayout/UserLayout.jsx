@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./UserLayout.css";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
-import { MessageContext, ProfileContext, StaticCacheContext } from "../../Contexts";
+import { MessageContext, ProfileContext, StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import Avatar from "../Avatar/Avatar.jsx";
 import UserStatsDirectory from "./UserStatsDirectory";

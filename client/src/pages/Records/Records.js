@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../Contexts";
+import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import SubmissionRead from "../../database/read/SubmissionRead";
 

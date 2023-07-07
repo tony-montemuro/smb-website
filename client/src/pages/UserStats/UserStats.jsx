@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./UserStats.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import { MessageContext, StaticCacheContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";

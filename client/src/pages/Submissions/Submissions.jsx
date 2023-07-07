@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import BoxArt from "../../components/BoxArt/BoxArt.jsx";
 import SubmissionsLogic from "./Submissions.js";
 import SubmissionsTable from "./SubmissionsTable.jsx";
-import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
 
 function Submissions({ imageReducer, submissionReducer }) {
   /* ===== VARIABLES ===== */

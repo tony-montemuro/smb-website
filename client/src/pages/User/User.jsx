@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./User.css";
-import { ProfileContext } from "../../Contexts";
+import { ProfileContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import Discord from "../../img/discord-logo.png";
 import SocialLink from "./SocialLink";

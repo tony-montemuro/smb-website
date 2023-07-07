@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useContext, useReducer } from "react";
-import { GameContext, MessageContext, UserContext } from "../../Contexts";
+import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import LevelboardUtils from "./LevelboardUtils";
 import NotificationUpdate from "../../database/update/NotificationUpdate";

@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
-import { UserContext } from "../../Contexts";
+import { UserContext } from "../../utils/Contexts";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import FrontendHelper from "../../helper/FrontendHelper";

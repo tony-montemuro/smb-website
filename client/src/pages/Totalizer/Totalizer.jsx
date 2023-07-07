@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./Totalizer.css";
-import { GameContext, MessageContext } from "../../Contexts";
+import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";

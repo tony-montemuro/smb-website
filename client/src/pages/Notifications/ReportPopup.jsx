@@ -2,7 +2,7 @@
 import "./Notifications.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { UserContext } from "../../Contexts";
+import { UserContext } from "../../utils/Contexts";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
 import NotificationMessage from "./NotificationMessage";

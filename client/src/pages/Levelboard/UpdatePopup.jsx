@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, UserContext } from "../../Contexts";
+import { GameContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";

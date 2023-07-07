@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
-import { MessageContext, StaticCacheContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import SubmissionRead from "../../database/read/SubmissionRead";

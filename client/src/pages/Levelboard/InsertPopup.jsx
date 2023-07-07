@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./Levelboard.css";
-import { GameContext, StaticCacheContext, UserContext } from "../../Contexts";
+import { GameContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";

@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./Levelboard.css";
-import { GameContext, MessageContext, UserContext } from "../../Contexts";
+import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import DeletePopup from "../../components/DeletePopup/DeletePopup.jsx";
