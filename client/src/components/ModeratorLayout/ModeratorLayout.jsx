@@ -3,7 +3,7 @@ import "./ModeratorLayout.css";
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { MessageContext, UserContext } from "../../Contexts";
+import { MessageContext, StaticCacheContext, SubmissionContext, UserContext } from "../../Contexts";
 import ModeratorLogic from "./ModeratorLayout.js";
 
 function ModeratorLayout() {
@@ -19,16 +19,19 @@ function ModeratorLayout() {
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
 
-  /* ===== FUNCTIONS ===== */
+  // static cache state from static cache context
+  const { staticCache } = useContext(StaticCacheContext);
 
-  // functions from the js file
-  const { handleTabClick } = ModeratorLogic();
+  /* ===== STATES & FUNCTIONS ===== */
+
+  // states & functions from the js file
+  const { submissions, handleTabClick, fetchSubmissions, getNumberOfSubmissions } = ModeratorLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the page loads, or when cache fields are updated
   useEffect(() => {
-    if (user.id !== undefined) {
+    if (staticCache.games.length > 0 && user.id !== undefined) {
       // ensure current user is a moderator
       const isMod = user && user.is_mod;
 
@@ -38,9 +41,12 @@ function ModeratorLayout() {
         navigate("/");
         return;
       }
+
+      // if we made it this far, fetch the submissions
+      fetchSubmissions();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [staticCache, user]);
 
   /* ===== MODERATOR LAYOUT COMPONENT ===== */
   return (
@@ -66,7 +72,8 @@ function ModeratorLayout() {
             className={ `moderator-layout-tab ${ pageType === "approvals" ? "moderator-layout-tab-active" : "" }` }
             onClick={ () => handleTabClick("approvals") }
           >
-            New Submissions
+            { getNumberOfSubmissions(submissions.recent) > 0 && `(${ getNumberOfSubmissions(submissions.recent) })` } 
+            &nbsp;New Submissions
           </div>
 
           { /* Reported Submissions tab - Brings moderator to the list of report submissions */ }
@@ -74,7 +81,8 @@ function ModeratorLayout() {
             className={ `moderator-layout-tab ${ pageType === "reports" ? "moderator-layout-tab-active" : "" }` }
             onClick={ () => handleTabClick("reports") }
           >
-            Reported Submissions
+            { getNumberOfSubmissions(submissions.reported) > 0 && `(${ getNumberOfSubmissions(submissions.reported) })` }
+            &nbsp;Reported Submissions
           </div>
 
           { /* Create Post tab - Brings moderator to the post page */ }
@@ -91,7 +99,9 @@ function ModeratorLayout() {
 
       { /* Moderation Layout Content: renders the contents of the page based on the URL */ }
       <div className="moderator-layout-content">
-        <Outlet />
+        <SubmissionContext.Provider value={ { submissions } }>
+          <Outlet />
+        </SubmissionContext.Provider>
       </div>
 
     </div>

@@ -22,15 +22,15 @@ const SubmissionRead = () => {
                     profile (id, username, country),
                     details:all_submission (
                         all_position,
+                        comment,
                         id,
+                        live,
+                        monkey (id, monkey_name),
+                        position,
+                        proof,
                         record,
                         region (id, region_name),
-                        submitted_at,
-                        monkey (id, monkey_name),
-                        proof,
-                        position,
-                        comment,
-                        live
+                        submitted_at
                     ),
                     report (
                         creator_id
@@ -101,7 +101,71 @@ const SubmissionRead = () => {
         return submissions;
     };
 
-    return { getSubmissions };
+    // FUNCTION 3: getUnapproved - function that grabs all submissions that have not yet been approved [note: this function does NOT
+    // cache submissions]
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes, 1 return):
+    // if the query is a success, an array containing all of the unapproved submissions will be returned
+    // otherwise, this function will throw an error, which should be handled by the caller function
+    const getUnapproved = async () => {
+        try {
+            const { data: unapproved, error } = await supabase
+                .from("submission")
+                .select(`
+                    details:all_submission (
+                        all_position,
+                        comment,
+                        id,
+                        live,
+                        monkey (id, monkey_name),
+                        position,
+                        proof,
+                        record,
+                        region (id, region_name),
+                        submitted_at
+                    ),
+                    level (
+                        misc,
+                        mode (
+                            game (
+                                abb
+                            )
+                        ),
+                        name
+                    ),
+                    profile (
+                        country,
+                        id,
+                        username
+                    ),
+                    report (
+                        creator:profile (
+                            country,
+                            id,
+                            username
+                        ),
+                        profile_id
+                    ),
+                    score
+                `)
+                .eq("approved", false)
+                .order("id", { foreignTable: "all_submission", ascending: true });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            // if the query was a success, simply return the array of unapproved submissions
+            return unapproved;
+
+        } catch (error) {
+            // error will be handled by caller function
+            throw error;
+        }
+    };
+
+    return { getSubmissions, getUnapproved };
 };
 
 /* ===== EXPORTS ===== */
