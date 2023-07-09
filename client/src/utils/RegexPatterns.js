@@ -26,3 +26,6 @@ export const twitchUsernamePattern = /^[a-zA-Z0-9][\w]{0,24}$/;
 
 // Twitter Handle Regex
 export const twitterHandlePattern = /^@[\w]{4,15}$/;
+
+// YouTube Timestamp Regex
+export const youtubeTimestampPattern = /[?&]t=(\d+)/;
