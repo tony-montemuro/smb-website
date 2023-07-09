@@ -2,7 +2,7 @@
 import FrontendHelper from "../../helper/FrontendHelper";
 import Username from "../../components/Username/Username.jsx"
 
-function SubmissionRow({ submission }) {
+function SubmissionRow({ submission, onClick }) {
   /* ===== VARIABLES ===== */
   const details = submission.details;
   const profile = submission.profile;
@@ -15,15 +15,15 @@ function SubmissionRow({ submission }) {
 
   /* ===== SUBMISSION ROW ===== */
   return (
-    <div className="approval-submission-row">
+    <div className="approvals-submission-row" onClick={ () => onClick(submission) }>
 
       { /* Render how long ago the submission was submitted */ }
-      <div className="approval-submission-row-element">
+      <div className="approvals-submission-row-element">
         <div>{ getTimeAgo(details.id) }</div>
       </div>
 
       { /* Render the username of the person who submitted it */ }
-      <div className="approval-submission-row-element">
+      <div className="approvals-submission-row-element">
         <div>
           <Username 
             country={ profile.country } 
@@ -34,14 +34,14 @@ function SubmissionRow({ submission }) {
       </div>
 
       { /* Render the name of the level, as well as the type of submission */ }
-      <div className="approval-submission-row-element">
+      <div className="approvals-submission-row-element">
         <div>
           { `${ cleanLevelName(submission.level.name) } (${ capitalize(type) })` }
         </div>
       </div>
 
       { /* Render the record */ }
-      <div className="approval-submission-row-element">
+      <div className="approvals-submission-row-element">
         <div>{ recordB2F(details.record, type) }</div>
       </div>
       

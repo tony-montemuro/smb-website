@@ -1,4 +1,4 @@
-.game-select {
+.game-select-list {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,13 +10,13 @@
     z-index: 1;
 }
   
-.game-select-tabs {
+.game-select-list-tabs {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
-.game-select-tab {
+.game-select-list-tab {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -27,11 +27,11 @@
     cursor: pointer;
 }
 
-.game-select-tab span {
+.game-select-list-tab span {
     padding: 5px;
 }
 
-.game-select-tab-active {
+.game-select-list-tab-active {
     background-color: #ffffff;
     cursor: default;
 }

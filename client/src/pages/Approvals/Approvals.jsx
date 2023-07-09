@@ -1,9 +1,10 @@
 /* ===== IMPORTS ===== */
 import "./Approvals.css";
 import { SubmissionContext } from "../../utils/Contexts";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import ApprovalLogic from "./Approvals.js";
-import GameSelect from "../../components/GameSelect/GameSelect";
+import GameSelect from "../../components/GameSelectList/GameSelectList.jsx";
+import SubmissionPopup from "./SubmissionPopup.jsx";
 import SubmissionRow from "./SubmissionRow";
 
 function Approvals({ imageReducer }) {
@@ -13,6 +14,7 @@ function Approvals({ imageReducer }) {
   const { submissions } = useContext(SubmissionContext);
 
   /* ===== STATES & FUNCTIONS ===== */
+  const [submission, setSubmission] = useState(null);
 
   // states & functions from the js file
   const { game, recent, setGame, setRecent, setDefaultGame } = ApprovalLogic();
@@ -51,12 +53,13 @@ function Approvals({ imageReducer }) {
         <div className="approvals-body">
           <h2>New Submissions</h2>
           { recent[game].map(submission => {
-            return <SubmissionRow submission={ submission } key={ submission.details.id } />
+            return <SubmissionRow submission={ submission } key={ submission.details.id } onClick={ () => setSubmission(submission) } />
           })}
         </div>
 
       </div>
     
+    <SubmissionPopup popup={ submission } setPopup={ setSubmission } abb={ game } />
     </div>
   :
     <p>Loading...</p>;

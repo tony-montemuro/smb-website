@@ -1,19 +1,19 @@
 /* ===== IMPORTS ===== */
-import "./GameSelect.css";
+import "./GameSelectList.css";
 import { StaticCacheContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 
-function GameSelect({ recent, gameAbb, setGameAbb, imageReducer }) {
+function GameSelectList({ recent, gameAbb, setGameAbb, imageReducer }) {
   /* ===== CONTEXTS ===== */
 
   // static cache from static cache context
   const { staticCache } = useContext(StaticCacheContext);
 
-  /* ===== GAME SELECT COMPONENT ===== */
+  /* ===== GAME SELECT LIST COMPONENT ===== */
   return (
-    <div className="game-select">
-      <div className="game-select-tabs">
+    <div className="game-select-list">
+      <div className="game-select-list-tabs">
         { Object.entries(recent)
           .sort((a, b) => b[1].length - a[1].length)
           .map(row => {
@@ -22,7 +22,7 @@ function GameSelect({ recent, gameAbb, setGameAbb, imageReducer }) {
             const game = staticCache.games.find(row => row.abb === abb);
             return ( 
               <div
-                className={ `game-select-tab ${ abb === gameAbb ? "game-select-tab-active" : "" }` }
+                className={ `game-select-list-tab ${ abb === gameAbb ? "game-select-list-tab-active" : "" }` }
                 onClick={ () => setGameAbb(abb) }
                 key={ abb }
               >
@@ -37,4 +37,4 @@ function GameSelect({ recent, gameAbb, setGameAbb, imageReducer }) {
 };
 
 /* ===== EXPORTS ===== */
-export default GameSelect;
+export default GameSelectList;
