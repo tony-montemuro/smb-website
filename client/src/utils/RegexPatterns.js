@@ -4,7 +4,7 @@
 export const youtubePattern = /(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be\.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})/;
 
 // Twitch Regex
-export const twitchPattern = /^(?:https?:\/\/)?(?:www\.)?(?:twitch\.tv\/(?:videos\/\d{7,11}(?:\?[\w=&-]*)?|[a-zA-Z0-9][\w]{2,24}\/clip\/[a-zA-Z0-9_-]+(?:\?[\w=&-]*)?)|clips\.twitch\.tv\/[a-zA-Z0-9_-]+)$/;
+export const twitchPattern = /^(?:https?:\/\/)?(?:www\.)?(?:twitch\.tv\/(?:videos\/(\d{7,11})(?:\?t=([\dhms]+))?[^\s&]*(?:\?[\w=&-]*)?|[a-zA-Z0-9][\w]{2,24}\/clip\/([a-zA-Z0-9_-]+)(?:\?[\w=&-]*)?)|clips\.twitch\.tv\/([a-zA-Z0-9_-]+))(?:\?[\w=&-]*)?$/;
 
 // Discord Username Regex
 export const discordPattern = /^(?!.*\.{2})[a-z0-9_.]{2,32}$/;

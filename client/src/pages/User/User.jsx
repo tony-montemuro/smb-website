@@ -3,12 +3,11 @@ import "./User.css";
 import { ProfileContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import Discord from "../../img/discord-logo.png";
-import EmbedHelper from "../../helper/EmbedHelper";
+import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import SocialLink from "./SocialLink";
 import Twitch from "../../img/twitch-logo.png";
 import Twitter from "../../img/twitter-logo.png";
 import UserLogic from "./User.js";
-import YouTube from "react-youtube";
 import YT from "../../img/yt-logo.png";
 
 function User() {
@@ -21,9 +20,6 @@ function User() {
 
   // functions from user js file
   const { alertDiscord } = UserLogic();
-
-  // helper functions
-  const { getYoutubeVideoId, getYoutubeVideoOpts } = EmbedHelper();
 
   /* ===== USER COMPONENT ===== */
   return (
@@ -92,11 +88,9 @@ function User() {
       { profile.featured_video &&
           <div className="user-featured-video">
             <h1>Featured Video</h1>
-            <YouTube 
-              className="user-featured-video-player" 
-              videoId={ getYoutubeVideoId(profile.featured_video) } 
-              opts={ getYoutubeVideoOpts(profile.featured_video) } 
-            />
+            <div className="user-featured-video-wrapper">
+              <EmbededVideo url={ profile.featured_video } />
+            </div>
             { profile.video_description &&
               <p>{ profile.video_description }</p>
             }

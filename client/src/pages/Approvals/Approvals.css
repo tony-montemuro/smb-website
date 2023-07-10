@@ -66,3 +66,36 @@
 .approvals-popup-close-btn {
     text-align: right;
 }
+
+.approvals-popup-body {
+    display: flex;
+}
+
+.approvals-popup-left {
+    display: flex;
+    align-items: center;
+    flex-basis: 70%;
+}
+
+.approvals-popup-left {
+    text-align: center;
+}
+
+.approvals-popup-right {
+    flex-basis: 30%;
+    text-align: center;
+}
+
+.approvals-popup-form {
+    display: inline-block;
+    text-align: left;
+}
+
+.approvals-popup-input {
+    margin: 10px;
+}
+
+.approvals-popup-textarea {
+    display: flex;
+    flex-direction: column;
+}
