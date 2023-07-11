@@ -9,7 +9,7 @@ import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
-import WarningRoundedIcon from '@mui/icons-material/WarningRounded';
+import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
 function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, deleteFunc }) {

@@ -14,10 +14,6 @@
     flex-basis: 80%;
 }
 
-.approvals-body h2 {
-    text-align: center;
-}
-
 .approvals-body table {
     border-collapse: collapse;
     margin-left: auto;
@@ -36,9 +32,32 @@
     padding: 5px;
 }
 
-.approvals-body tbody tr:hover {
+.approvals-body tbody tr:not(.approvals-empty-row):hover {
     background-color: #f1f1f1;
     cursor: pointer;
+}
+
+.approvals-empty-row {
+    text-align: center;
+}
+
+.approvals-checked-header {
+    text-align: center;
+}
+
+.approvals-new-header {
+    text-align: center;
+}
+
+.approvals-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.approvals-action-symbol {
+    display: flex;
+    align-items: center;
 }
 
 .approvals-popup {

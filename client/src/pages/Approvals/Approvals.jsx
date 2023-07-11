@@ -17,7 +17,7 @@ function Approvals({ imageReducer }) {
   const [submission, setSubmission] = useState(null);
 
   // states & functions from the js file
-  const { game, recent, checked, setGame, dispatchRecent, setRecent, setDefaultGame } = ApprovalLogic();
+  const { game, recent, checked, setGame, dispatchRecent, setRecent, setDefaultGame, addToRecent } = ApprovalLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -46,20 +46,45 @@ function Approvals({ imageReducer }) {
         { /* Approvals header - render the header info here. */ }
         <div className="approvals-header">
           <h1>Approve Submissions</h1>
-          <p>Please go through the new submissions listed below. You can either <b>Approve</b> the submission, or <b>Delete</b> it.</p>
+          <p>Please go through and approve or reject each new submission.</p>
         </div>
 
         { /* Approvals body - render checked & submissions here */ }
         <div className="approvals-body">
-          <h2>Checked Submissions</h2>
-          <SubmissionTable submissions={ checked } onRowClick={ null } isChecked={ true } />
-          <h2>New Submissions</h2>
-          <SubmissionTable submissions={ recent[game] } onRowClick={ setSubmission } isChecked={ false } />
+
+          { /* Approvals checked - render the list of checked submissions */ }
+          <div className="approvals-checked">
+
+            { /* Checked header - render information regarding the checked list of submissions */ }
+            <div className="approvals-checked-header">
+              <h2>Checked Submissions</h2>
+              <p><b>Note: </b>If you mistakenly added a submission to the list of checked submissions, you can remove it by simply
+              clicking the submission!</p>
+            </div>
+
+            <SubmissionTable submissions={ checked } onRowClick={ addToRecent } isChecked={ true } />
+            <div className="approvals-btn-wrapper">
+              <button type="button" disabled={ checked.length === 0 }>Make Changes</button>
+            </div>
+          </div>
+
+          { /* Approvals new - render the list of new submissions */ }
+          <div className="approvals-new">
+
+            { /* Approvals new header - render information about the new submissions list of submissions */ }
+            <div className="approvals-new-header">
+              <h2>New Submissions</h2>
+            </div>
+            <SubmissionTable submissions={ recent[game] } onRowClick={ setSubmission } isChecked={ false } />
+          </div>
+
         </div>
 
       </div>
     
+    { /* Popup elements */ }
     <SubmissionPopup popup={ submission } setPopup={ setSubmission } abb={ game } dispatchRecent={ dispatchRecent } />
+
     </div>
   :
     <p>Loading...</p>;

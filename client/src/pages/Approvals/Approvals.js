@@ -109,7 +109,18 @@ const Approvals = () => {
         setGame(game);
     };
 
-    return { game, recent, checked, setGame, dispatchRecent, setRecent, setDefaultGame };
+    // FUNCTION 3: addToRecent - a wrapper function that calls the recent dispatcher function to add a submission to
+    // the recent reducer (and consequently, remove it from the checked array)
+    // PRECONDITIONS (1 parameter):
+    // 1.) submission: a submission object currently stored in the checked array, which should be transferred over to the recent
+    // reducder
+    // POSTCONDITIONS (1 possible outcome):
+    // the reducer function is called, which does the bulk of the work. see the documentation for this function higher in this file
+    const addToRecent = submission => {
+        dispatchRecent({ type: "add", payload: submission });
+    };
+
+    return { game, recent, checked, setGame, dispatchRecent, setRecent, setDefaultGame, addToRecent };
 };
 
 /* ===== EXPORTS ===== */

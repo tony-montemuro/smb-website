@@ -1,12 +1,9 @@
 /* ===== IMPORTS ===== */
-import FrontendHelper from "../../helper/FrontendHelper";
-import Username from "../../components/Username/Username";
+import SubmissionRow from "./SubmissionRow";
 
 function SubmissionTable({ submissions, onRowClick, isChecked }) {
-  /* ===== FUNCTIONS ===== */
-
-  // helper functions
-  const { getTimeAgo, capitalize, cleanLevelName, recordB2F } = FrontendHelper();
+  /* ===== VARIABLES ===== */
+  const NUM_ROWS = isChecked ? 6 : 4;
 
   /* ===== SUBMISSION TABLE COMPONENT ===== */
   return (
@@ -27,60 +24,22 @@ function SubmissionTable({ submissions, onRowClick, isChecked }) {
 
       { /* Submission table body - Render information about each submission in submissions array */ }
       <tbody>
-        { submissions.map(submission => {
-          // declare variables
-          const details = submission.details;
-          const profile = submission.profile;
-          const type = submission.score ? "score" : "time";
-
-          return (
-            <tr onClick={ () => onRowClick(submission) }>
-
-              { /* If isChecked is true, render the action for the submission */ }
-              { isChecked && 
-                 <td>
-                  <div>{ submission.action }</div>
-                </td>
+        { submissions.length > 0 ?
+          submissions.map(submission => {
+            return <SubmissionRow submission={ submission } onClick={ onRowClick } isChecked={ isChecked } key={ submission.details.id } />
+          })
+        :
+          <tr className="approvals-empty-row">
+            <td colSpan={ NUM_ROWS }>
+              { isChecked ?
+                <i>No submissions have been checked yet.</i>
+              :
+                <i>This game has no more new submissions.</i>
               }
-
-              { /* Render how long ago the submission was submitted */ }
-              <td>
-                <div>{ getTimeAgo(details.id) }</div>
-              </td>
-
-              { /* Render the username of the person who submitted it */ }
-              <td>
-                <div>
-                  <Username 
-                    country={ profile.country } 
-                    profileId={ profile.id } 
-                    username={ profile.username } 
-                  />
-                </div>
-              </td>
-
-              { /* If isChecked is true, render the name of the game. */ }
-              { isChecked &&
-                <td>
-                  <div>{ submission.level.mode.game.name }</div>
-                </td>
-              }
-
-              { /* Render the name of the level, as well as the type of submission */ }
-              <td>
-                <div>
-                  { `${ cleanLevelName(submission.level.name) } (${ capitalize(type) })` }
-                </div>
-              </td>
-
-              { /* Render the record */ }
-              <td>
-                <div>{ recordB2F(details.record, type) }</div>
-              </td>
-            
-            </tr>
-          );
-        })}
+            </td>
+          </tr>
+        }
+        
       </tbody>
 
     </table>

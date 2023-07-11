@@ -128,7 +128,8 @@ const SubmissionRead = () => {
                         misc,
                         mode (
                             game (
-                                abb
+                                abb,
+                                name
                             )
                         ),
                         name

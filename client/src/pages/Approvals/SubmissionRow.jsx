@@ -1,8 +1,9 @@
 /* ===== IMPORTS ===== */
+import ActionSymbol from "./ActionSymbol";
 import FrontendHelper from "../../helper/FrontendHelper";
 import Username from "../../components/Username/Username.jsx"
 
-function SubmissionRow({ submission, onClick }) {
+function SubmissionRow({ submission, onClick, isChecked }) {
   /* ===== VARIABLES ===== */
   const details = submission.details;
   const profile = submission.profile;
@@ -16,6 +17,13 @@ function SubmissionRow({ submission, onClick }) {
   /* ===== SUBMISSION ROW ===== */
   return (
     <tr onClick={ () => onClick(submission) }>
+
+      { /* If isChecked is true, render the action for the submission */ }
+      { isChecked && 
+        <td>
+          <ActionSymbol action={ submission.action } />
+        </td>
+      }
 
       { /* Render how long ago the submission was submitted */ }
       <td>
@@ -32,6 +40,13 @@ function SubmissionRow({ submission, onClick }) {
           />
         </div>
       </td>
+
+      { /* If isChecked is true, render the name of the game. */ }
+      { isChecked &&
+        <td>
+          <div>{ submission.level.mode.game.name }</div>
+        </td>
+      }
 
       { /* Render the name of the level, as well as the type of submission */ }
       <td>
