@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import ApprovalLogic from "./Approvals.js";
 import GameSelect from "../../components/GameSelectList/GameSelectList.jsx";
 import SubmissionPopup from "./SubmissionPopup.jsx";
-import SubmissionRow from "./SubmissionRow";
+import SubmissionTable from "./SubmissionTable";
 
 function Approvals({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -17,7 +17,7 @@ function Approvals({ imageReducer }) {
   const [submission, setSubmission] = useState(null);
 
   // states & functions from the js file
-  const { game, recent, setGame, dispatchRecent, setRecent, setDefaultGame } = ApprovalLogic();
+  const { game, recent, checked, setGame, dispatchRecent, setRecent, setDefaultGame } = ApprovalLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -49,28 +49,12 @@ function Approvals({ imageReducer }) {
           <p>Please go through the new submissions listed below. You can either <b>Approve</b> the submission, or <b>Delete</b> it.</p>
         </div>
 
-        { /* Approvals body - render new submissions here */ }
+        { /* Approvals body - render checked & submissions here */ }
         <div className="approvals-body">
+          <h2>Checked Submissions</h2>
+          <SubmissionTable submissions={ checked } onRowClick={ null } isChecked={ true } />
           <h2>New Submissions</h2>
-          <table>
-
-            { /* Submission table header - Render the description of what's contained in each row */ }
-            <thead>
-              <tr>
-                <th>Time Ago</th>
-                <th>User</th>
-                <th>Level</th>
-                <th>Record</th>
-              </tr>
-            </thead>
-
-            { /* Submission table body - Render information about each submission in recent[game] */ }
-            <tbody>
-              { recent[game].map(submission => {
-                return <SubmissionRow submission={ submission } key={ submission.details.id } onClick={ () => setSubmission(submission) } />
-              })}
-            </tbody>
-          </table>
+          <SubmissionTable submissions={ recent[game] } onRowClick={ setSubmission } isChecked={ false } />
         </div>
 
       </div>
