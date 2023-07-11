@@ -14,6 +14,14 @@
     flex-basis: 80%;
 }
 
+.approvals-checked-wrapper {
+    max-height: 30vh;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+}
+
 .approvals-body table {
     border-collapse: collapse;
     margin-left: auto;

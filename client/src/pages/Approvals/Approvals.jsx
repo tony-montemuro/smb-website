@@ -45,7 +45,7 @@ function Approvals({ imageReducer }) {
 
         { /* Approvals header - render the header info here. */ }
         <div className="approvals-header">
-          <h1>Approve Submissions</h1>
+          <h1>Check New Submissions</h1>
           <p>Please go through and approve or reject each new submission.</p>
         </div>
 
@@ -59,7 +59,7 @@ function Approvals({ imageReducer }) {
             <div className="approvals-checked-header">
               <h2>Checked Submissions</h2>
               <p><b>Note: </b>If you mistakenly added a submission to the list of checked submissions, you can remove it by simply
-              clicking the submission!</p>
+              clicking the submission.</p>
             </div>
 
             <SubmissionTable submissions={ checked } onRowClick={ addToRecent } isChecked={ true } />

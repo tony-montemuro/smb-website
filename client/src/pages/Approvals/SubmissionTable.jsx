@@ -7,7 +7,8 @@ function SubmissionTable({ submissions, onRowClick, isChecked }) {
 
   /* ===== SUBMISSION TABLE COMPONENT ===== */
   return (
-    <table>
+    <div className={ isChecked ? "approvals-checked-wrapper" : "" }>
+      <table>
 
       { /* Submission table header - Render the description of what's contained in each row. If the isChecked
       parameter is true, a few extra headers will be rendered. */ }
@@ -42,7 +43,8 @@ function SubmissionTable({ submissions, onRowClick, isChecked }) {
         
       </tbody>
 
-    </table>
+      </table>
+    </div>
   );
 };
 

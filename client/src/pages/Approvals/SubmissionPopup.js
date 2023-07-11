@@ -115,7 +115,14 @@ const SubmissionPopup = () => {
         // if the action is delete, or the action is approve and the form is unchanged, we can essentially just remove the
         // submission from recent (which adds the submission to checked array)
         if (action === "delete" || (action === "approve" && isFormUnchanged(submission))) {
-            dispatchRecent({ type: "delete", payload: { ...submission, action: action } });
+            dispatchRecent({ 
+                type: "delete", 
+                payload: {
+                    ...submission, 
+                    action: action,
+                    message: form.values.message
+                } 
+            });
         }
 
         // otherwise, we need to validate the form values. if the validation is a success, we can remove the submission
