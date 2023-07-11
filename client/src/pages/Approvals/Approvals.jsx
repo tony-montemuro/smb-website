@@ -17,7 +17,7 @@ function Approvals({ imageReducer }) {
   const [submission, setSubmission] = useState(null);
 
   // states & functions from the js file
-  const { game, recent, setGame, setRecent, setDefaultGame } = ApprovalLogic();
+  const { game, recent, setGame, dispatchRecent, setRecent, setDefaultGame } = ApprovalLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -59,7 +59,7 @@ function Approvals({ imageReducer }) {
 
       </div>
     
-    <SubmissionPopup popup={ submission } setPopup={ setSubmission } abb={ game } />
+    <SubmissionPopup popup={ submission } setPopup={ setSubmission } abb={ game } dispatchRecent={ dispatchRecent } />
     </div>
   :
     <p>Loading...</p>;

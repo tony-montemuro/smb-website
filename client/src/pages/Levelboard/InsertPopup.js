@@ -3,6 +3,7 @@ import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
+import DateHelper from "../../helper/DateHelper";
 import LevelboardUtils from "./LevelboardUtils";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
@@ -52,8 +53,9 @@ const InsertPopup = () => {
     const { insertNotification } = NotificationUpdate();
 
     // helper functions
-    const { submission2Form, validateComment, validateProof, validateRecord, getDateOfSubmission } = LevelboardUtils();
-    const { validateMessage } = ValidationHelper();
+    const { getDateOfSubmission } = DateHelper();
+    const { submission2Form, validateRecord } = LevelboardUtils();
+    const { validateMessage, validateProof, validateComment } = ValidationHelper();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
     // PRECONDITIONS: NONE

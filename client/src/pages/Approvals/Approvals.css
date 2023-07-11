@@ -58,7 +58,7 @@
     position: relative;
     padding: 32px;
     width: 100%;
-    max-width: 60%;
+    max-width: 70%;
     background-color: #fff;
     border-radius: 10px;
 }
@@ -93,9 +93,36 @@
 
 .approvals-popup-input {
     margin: 10px;
+    white-space: nowrap;
 }
 
 .approvals-popup-textarea {
     display: flex;
     flex-direction: column;
+    white-space: nowrap;
+}
+
+.approvals-popup-notice {
+    cursor: default;
+}
+
+.approvals-popup-buttons {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.approvals-popup-buttons button {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.approvals-popup-notice {
+    margin: 10px;
+}
+
+#approvals-comment-wrapper {
+    display: flex;
+    flex-direction: row;
 }

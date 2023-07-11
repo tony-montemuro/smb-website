@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import { emailPattern } from "../utils/RegexPatterns";
+import { twitterPatttern, twitchPattern, youtubePattern } from "../utils/RegexPatterns";
 
 const ValidationHelper = () => {
     /* ===== FUNCTIONS ===== */
@@ -46,7 +47,44 @@ const ValidationHelper = () => {
         return undefined;
     };
 
-    return { validateEmail, validateMessage };
+    // FUNCTION 3: validateProof - given a proof string, validate the proof
+    // PRECONDITIONS (1 parameter):
+    // 1.) proof: a string value representing the proof of the submission
+    // POSTCONDITIONS (1 return, 2 possible outcomes):
+    // if the proof is determined to be invalid, return a string that contains the error message
+    // if the proof is determined to be valid, return undefined
+    const validateProof = proof => {
+        // check if the proof field is non-null
+        if (!proof) {
+            return "Proof is required.";
+        }
+
+        // check if proof is a valid youtube, twitch, or twitter url
+        if (!twitchPattern.test(proof) && !youtubePattern.test(proof) && !twitterPatttern.test(proof)) {
+            return "Proof must be a valid YouTube or Twitch URL.";
+        }
+
+        // if we made it this far, the comment is valid! return undefined, since there is no error
+        return undefined;
+    };
+
+    // FUNCTION 4: validateComment - given a comment string, validate the comment
+    // PRECONDITIONS (1 parameter):
+    // 1.) comment: a string value representing the comment of the submission
+    // POSTCONDITIONS (1 return, 2 possible outcomes):
+    // if the comment is determined to be invalid, return a string that contains the error message
+    // if the comment is determined to be valid, return undefined
+    const validateComment = comment => {
+        // check if the comment is greater than 100 characters long
+        if (comment.length > 100) {
+            return "Comment must be 100 characters or less.";
+        }
+
+        // if we made it this far, the comment is valid! return undefined, since there is no error
+        return undefined;
+    };
+
+    return { validateEmail, validateMessage, validateProof, validateComment };
 };
 
 /* ===== EXPORTS ===== */

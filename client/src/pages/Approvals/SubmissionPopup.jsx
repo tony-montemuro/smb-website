@@ -5,9 +5,10 @@ import { useContext, useEffect } from "react";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import SubmissionPopupLogic from "./SubmissionPopup.js";
+import UpdatedFieldSymbol from "./UpdatedFieldSymbol";
 import Username from "../../components/Username/Username";
 
-function SubmissionPopup({ popup, setPopup }) {
+function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
   /* ===== CONTEXTS ===== */
 
   // static cache from static cache object
@@ -24,7 +25,7 @@ function SubmissionPopup({ popup, setPopup }) {
   /* ===== FUNCTIONS ===== */
 
   // states & functions from the js file
-  const { form, fillForm, handleChange, handleClose } = SubmissionPopupLogic();
+  const { form, showMessage, setShowMessage, fillForm, handleChange, handleClose, handleSubmit } = SubmissionPopupLogic();
 
   // helper functions
   const { capitalize, cleanLevelName, recordB2F, dateB2F } = FrontendHelper();
@@ -61,8 +62,8 @@ function SubmissionPopup({ popup, setPopup }) {
           <div className="approvals-popup-right">
             
             { /* Submission popup form - allows moderator to make edits to the submission, if necessary */ }
-            <div className="approvals-popup-form">
-              <form>
+            <form>
+              <div className="approvals-popup-form">
 
                 { /* User: Render the username of the user who submitted the submission (not-editable) */ }
                 <div className="approvals-popup-input">
@@ -97,6 +98,9 @@ function SubmissionPopup({ popup, setPopup }) {
                     value={ form.values.submitted_at }
                     onChange={ (e) => handleChange(e) }
                   />
+
+                  { /* Render an updated field symbol if the submitted at value has been modified */ }
+                  <UpdatedFieldSymbol oldVal={ dateB2F(submission.details.submitted_at) } newVal={ form.values.submitted_at } />
                 </div>
 
                 { /* Region: Render a dropdown allowing the user to select a region if necessary */ }
@@ -107,6 +111,9 @@ function SubmissionPopup({ popup, setPopup }) {
                       <option key={ region.id } value={ region.id }>{ region.region_name }</option>
                     ))}
                   </select>
+
+                  { /* Render an updated field symbol if the region_id value has been modified */ }
+                  <UpdatedFieldSymbol oldVal={ submission.details.region.id } newVal={ parseInt(form.values.region_id) } />
                 </div>
 
                 { /* Monkey: Render a dropdown allowing the user to select a monkey if necessary */ }
@@ -117,6 +124,9 @@ function SubmissionPopup({ popup, setPopup }) {
                         <option key={ monkey.id } value={ monkey.id }>{ monkey.monkey_name }</option>
                       ))}
                     </select>
+
+                    { /* Render an updated field symbol if the monkey_id value has been modified */ }
+                    <UpdatedFieldSymbol oldVal={ submission.details.monkey.id } newVal={ parseInt(form.values.monkey_id) } />
                 </div>
 
                 { /* Proof: Render a textbox allowing the user to edit the proof if necessary */ }
@@ -128,6 +138,9 @@ function SubmissionPopup({ popup, setPopup }) {
                     value={ form.values.proof }
                     onChange={ (e) => handleChange(e) }
                   />
+
+                  { /* Render an updated field symbol if the proof value has been modified */ }
+                  <UpdatedFieldSymbol oldVal={ submission.details.proof } newVal={ form.values.proof } />
                 </div>
 
                 { /* Live Proof: Render a checkbox allowing the user to specify if the proof is live or not, if necessary */ }
@@ -139,22 +152,78 @@ function SubmissionPopup({ popup, setPopup }) {
                     checked={ form.values.live }
                     onChange={ (e) => handleChange(e) }
                   />
+
+                  { /* Render an updated field symbol if the live value has been modified */ }
+                  <UpdatedFieldSymbol oldVal={ submission.details.live } newVal={ form.values.live } />
                 </div>
 
                 { /* Comment: Render a textbox allowing the user to change the comment, if necessary */ }
                 <div className="approvals-popup-input approvals-popup-textarea">
                   <label htmlFor="comment">Comment (optional): </label>
-                  <textarea 
-                    id="comment"
-                    value={ form.values.comment }
-                    onChange={ (e) => handleChange(e) }
-                    rows={ TEXT_AREA_ROWS }
-                  >
-                  </textarea>
-                </div>
+                  <div id="approvals-comment-wrapper">
+                    <textarea 
+                      id="comment"
+                      value={ form.values.comment }
+                      onChange={ (e) => handleChange(e) }
+                      rows={ TEXT_AREA_ROWS }
+                    >
+                    </textarea>
 
-              </form>
-            </div>
+                    { /* Render an updated field symbol if the comment value has been modified */ }
+                    <UpdatedFieldSymbol oldVal={ submission.details.comment } newVal={ form.values.comment } />
+                  </div>
+                </div>
+              </div>
+
+              { /* Button used to reset the form back to it's original values */ }
+              <div className="approvals-popup-buttons">
+                <button type="button" onClick={ () => fillForm(submission) }>Reset Values</button>
+              </div>
+
+              { /* Two buttons: one for approving the submission, and one for deleting. */ }
+              <div className="approvals-popup-buttons">
+                <button type="submit" disabled={ showMessage } onClick={ (e) => handleSubmit(e, "approve", submission, dispatchRecent, setPopup) }>Approve Submission</button>
+                <button type="button" disabled={ showMessage } onClick={ () => setShowMessage(true) }>Reject Submission</button>
+              </div>
+
+              { /* Render the message input if the showMessage state is set to true. */ }
+              { showMessage &&
+                <>
+                  <div className="approvals-popup-form">
+
+                    { /* Render information about rejections */ }
+                    <div className="approvals-popup-notice">
+                      <h3>Are you sure you want to reject this submission?</h3>
+                    </div>
+                    <div className="approvals-popup-notice">
+                      <span><b>Note: </b>Rejecting a submission also deletes it!</span>
+                    </div>
+
+                    { /* Message: Render a textbox allowing the user to change the comment, if necessary */ }
+                    <div className="approvals-popup-input approvals-popup-textarea">
+                      <label htmlFor="message">Message (optional): </label>
+                      <textarea 
+                        id="message"
+                        value={ form.values.message }
+                        onChange={ (e) => handleChange(e) }
+                        rows={ TEXT_AREA_ROWS }
+                      >
+                      </textarea>
+                    </div>
+
+                    { /* Two buttons: one for yes, and one for no. */ }
+                    <div className="approvals-popup-buttons">
+                      <button type="submit" onClick={ (e) => handleSubmit(e, "delete", submission, dispatchRecent, setPopup) }>
+                        Yes, Reject
+                      </button>
+                      <button type="button" onClick={ () => setShowMessage(false) }>No, Cancel</button>
+                    </div>
+                  </div>
+                </>
+                
+              }
+
+            </form>
           
           </div>
         </div>

@@ -1,6 +1,9 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { MessageContext } from "../../utils/Contexts";
+import { useContext, useState } from "react";
+import DateHelper from "../../helper/DateHelper";
 import FrontendHelper from "../../helper/FrontendHelper";
+import ValidationHelper from "../../helper/ValidationHelper";
 
 const SubmissionPopup = () => {
     /* ===== VARIABLES ===== */
@@ -13,13 +16,21 @@ const SubmissionPopup = () => {
         }
     };
 
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     /* ===== STATES ===== */
     const [form, setForm] = useState(defaultForm);
+    const [showMessage, setShowMessage] = useState(false);
 
     /* ===== FUNCTIONS ===== */
     
     // helper functions
     const { dateB2F } = FrontendHelper();
+    const { validateProof, validateComment, validateMessage } = ValidationHelper();
+    const { getDateOfSubmission } = DateHelper();
 
     // FUNCTION 1: fillForm - function that fills the form with values from the submission object
     // PRECONDITIONS (1 parameter):
@@ -29,11 +40,12 @@ const SubmissionPopup = () => {
     const fillForm = submission => {
         setForm({ ...form, values: {
             submitted_at: dateB2F(submission.details.submitted_at),
-            region_id: submission.details.region.id,
-            monkey_id: submission.details.monkey.id,
+            region_id: submission.details.region.id.toString(),
+            monkey_id: submission.details.monkey.id.toString(),
             proof: submission.details.proof,
             live: submission.details.live,
-            message: null
+            comment: submission.details.comment,
+            message: ""
         }});
     };
 
@@ -66,10 +78,96 @@ const SubmissionPopup = () => {
     // the form is set back to it's default values, and the popup is closed
     const handleClose = setPopup => {
         setForm(defaultForm);
+        setShowMessage(false);
         setPopup(null);
     };
 
-    return { form, fillForm, handleChange, handleClose };
+    // FUNCTION 4: isFormUnchanged - function that checks whether or not the form was unchanged
+    // PRECONDITIONS (1 parameter):
+    // 1.) submission - our original submission object
+    // POSTCONDITIONS (2 possible outcomes):
+    // if not a single form value is different than the value in submission, we return true
+    // otherwise, return false
+    const isFormUnchanged = (submission) => {
+        return form.values.submitted_at === dateB2F(submission.details.submitted_at)
+            && form.values.region_id === submission.details.region.id.toString()
+            && form.values.monkey_id === submission.details.monkey.id.toString()
+            && form.values.proof === submission.details.proof
+            && form.values.live === submission.details.live
+            && form.values.comment === submission.details.comment;
+    };
+
+    // FUNCTION 5: handleSubmit - function that runs when the user submits the approval form
+    // PRECONDITIONS (5 parameters):
+    // 1.) e: an event object generated when the user submits the form
+    // 2.) action: a string, either "approve" or "delete"
+    // 3.) submission - our original submission object, which we will potentially have to update using the form values
+    // 4.) dispatchRecent - a function used to update the recent reducer in `Approvals.jsx`
+    // 5.) setPopup - a state function used to close the popup
+    // POSTCONDITIONS (2 possible outcome):
+    // if the form values are validated, than the recent reducer is updated with a new submission object, which includes
+    // an `action` field, which specifies what should be done to the submission object, as well as potentially other updated fields
+    // otherwise, the function will return early, and update the error field of the 
+    const handleSubmit = (e, action, submission, dispatchRecent, setPopup) => {
+        // first, prevent default action when a form submits (page reload)
+        e.preventDefault();
+
+        // if the action is delete, or the action is approve and the form is unchanged, we can essentially just remove the
+        // submission from recent (which adds the submission to checked array)
+        if (action === "delete" || (action === "approve" && isFormUnchanged(submission))) {
+            dispatchRecent({ type: "delete", payload: { ...submission, action: action } });
+        }
+
+        // otherwise, we need to validate the form values. if the validation is a success, we can remove the submission
+        // from recent, with updated fields
+        else {
+            // create an error object that will store error messages for each field value that needs to
+            // be validated
+            const error = {};
+            Object.keys(form.error).forEach(field => error[field] = undefined);
+
+            // validate necessary fields
+            error.proof = validateProof(form.values.proof);
+            error.comment = validateComment(form.values.comment);
+            error.message = validateMessage(form.values.message, false);
+
+            // if any fields returned an error, let's render a message, update the `error.fields` object by calling the setForm() function,
+            // and return early
+            if (Object.values(error).some(row => row !== undefined)) {
+                setForm({ ...form, error: error });
+                addMessage("One or more form fields had errors.", "error");
+                return;
+            }
+
+            // finally, if the fields were successfully validated, we can call the dispatchRecent function, and update any necessary
+            // fields
+            const checkedSubmission = {
+                ...submission,
+                action: "update",
+                details: {
+                    ...submission.details,
+                    comment: form.values.comment,
+                    live: form.values.live,
+                    monkey: {
+                        ...submission.details.monkey,
+                        id: parseInt(form.values.monkey_id)
+                    },
+                    proof: form.values.proof,
+                    region: {
+                        ...submission.details.region,
+                        id: parseInt(form.values.region_id)
+                    },
+                    submitted_at: getDateOfSubmission(form.values.submitted_at, submission)
+                }
+            };
+            dispatchRecent({ type: "delete", payload: checkedSubmission });
+        }
+
+        // finally, close the popup
+        handleClose(setPopup);
+    };
+
+    return { form, showMessage, setShowMessage, fillForm, handleChange, handleClose, handleSubmit };
 };
 
 /* ===== EXPORTS ===== */

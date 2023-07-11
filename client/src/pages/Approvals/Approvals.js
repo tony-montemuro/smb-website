@@ -1,7 +1,17 @@
 /* ===== IMPORTS ===== */
-import { useReducer, useState } from "react";
+import { SubmissionContext } from "../../utils/Contexts";
+import { useContext, useReducer, useState } from "react";
 
 const Approvals = () => {
+    /* ===== STATES ===== */
+    const [game, setGame] = useState(undefined);
+    const [checked, setChecked] = useState([]);
+
+    /* ===== CONTEXTS ===== */
+
+    // submissions state from submission context
+    const { submissions } = useContext(SubmissionContext);
+
     /* ===== REDUCER FUNCTIONS ===== */
 
     // REDUCER FUNCTION 1: reducer - function that will be the reducer function for the recent reducer
@@ -12,7 +22,7 @@ const Approvals = () => {
         // b.) payload: an object that stores information used in the operations
     // POSTCONDITIONS (3 possible outcomes):
     // if type is set, the function will return the payload, which defines the recent state
-    // if type is remove, the function will remove a submission object based on payload values
+    // if type is delete, the function will remove a submission object based on payload values
     // if type is add, the function will add a submission object based on payload values
     const reducer = (state, action) => {
         switch (action.type) {
@@ -21,26 +31,41 @@ const Approvals = () => {
                 return action.payload;
             }
 
-            // case 2: remove - using the key and id from the payload, remove a submission object, and return the updated state 
-            case "remove": {
-                const { key, id } = action.payload;
-                const newArr = state[key].filter(submission => submission.details.id !== id);
+            // case 2: delete - using the key and submission from the payload, remove a submission object, update the checked
+            // array state, and return the updated state 
+            case "delete": {
+                // first, we add the submission object to the checked array
+                const submission = action.payload;
+                setChecked(oldChecked => [...oldChecked, submission]);
+
+                // then, we can update the recent state
+                const id = submission.details.id, abb = submission.level.mode.game.abb;
+                const newArr = state[abb].filter(row => row.details.id !== id);
                 return {
                     ...state,
-                    [key]: newArr
+                    [abb]: newArr
                 };
             }
 
             // case 3: add - using the key and id from the payload, add a submission object while maintaining the order of the
             // array, and return the updated state
             case "add": {
-                const { key, submission } = action.payload;
-                const newArr = [...state[key], submission].sort((a, b) => {
+                // first, we remove the submission from the checked state
+                const submission = action.payload;
+                setChecked(oldChecked => oldChecked.filter(row => row !== submission));
+
+                // then, we use the details from the submission to fetch a hard copy of the original submission found in the
+                // submissions.recent array
+                const id = submission.details.id, abb = submission.level.mode.game.abb;
+                const originalSubmission = JSON.parse(JSON.stringify(submissions.recent[abb].find(row => row.details.id === id)));
+
+                // finally, we can update the recent state
+                const newArr = [...state[abb], originalSubmission].sort((a, b) => {
                     return a.details.id.localeCompare(b.details.id);
                 });
                 return {
                     ...state,
-                    [key]: newArr
+                    [abb]: newArr
                 };
             }
 
@@ -51,8 +76,7 @@ const Approvals = () => {
         };
     };
 
-    /* ===== STATES ===== */
-    const [game, setGame] = useState(undefined);
+    /* ===== REDUCERS ===== */
     const [recent, dispatchRecent] = useReducer(reducer, undefined);
 
     /* ===== FUNCTIONS ===== */
@@ -64,10 +88,10 @@ const Approvals = () => {
     // POSTCONDITIONS (1 possible outcome):
     // a deep clone of recent is created, and the state of recent is updated using the dispatchRecent function
     const setRecent = recentSubmissions => {
-        // create a deep copy
+        // create two deep copies
         const recentDeepCopy = JSON.parse(JSON.stringify(recentSubmissions));
 
-        // update our recent reducer
+        // update our recent reducer, as well as the recent copy
         dispatchRecent({ type: "set", payload: recentDeepCopy });
     };
 
@@ -85,7 +109,7 @@ const Approvals = () => {
         setGame(game);
     };
 
-    return { game, recent, setGame, setRecent, setDefaultGame };
+    return { game, recent, checked, setGame, dispatchRecent, setRecent, setDefaultGame };
 };
 
 /* ===== EXPORTS ===== */

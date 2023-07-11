@@ -11,7 +11,6 @@ const ProfilesUpdate = () => {
     // if failure, this function will throw an error, which will be handled in the caller function
     const upsertUserInfo = async (userInfo) => {
         try {
-            console.log(userInfo);
             let { error } = await supabase
                 .from("profile")
                 .upsert(userInfo,

@@ -1,5 +1,7 @@
 const TimeHelper = () => {
     /* ===== FUNCTIONS ===== */
+
+    // FUNCTION 1: getTimeDifference - given a lower and upper timestamp, find the difference in time between the two
     // PRECONDITIONS (2 parameters):
     // 1.) lower: an integer representing a timestamp in miliseconds. must be less or equal to upper
     // 2.) upper: an integer representing a timestamp in miliseconds. must be greater than or equal to lower

@@ -2,6 +2,7 @@
 import { useContext, useReducer } from "react";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
+import DateHelper from "../../helper/DateHelper";
 import LevelboardUtils from "./LevelboardUtils";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
@@ -50,13 +51,9 @@ const UpdatePopup = () => {
     const { insertNotification } = NotificationUpdate();
 
     // helper functions
-    const { 
-        submission2Form, 
-        validateComment, 
-        validateProof, 
-        getDateOfSubmission
-    } = LevelboardUtils();
-    const { validateMessage } = ValidationHelper();
+    const { getDateOfSubmission } = DateHelper();
+    const { submission2Form } = LevelboardUtils();
+    const { validateMessage, validateProof, validateComment } = ValidationHelper();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
     // PRECONDITIONS (3 parameters):
