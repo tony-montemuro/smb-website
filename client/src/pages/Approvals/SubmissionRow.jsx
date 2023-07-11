@@ -15,15 +15,15 @@ function SubmissionRow({ submission, onClick }) {
 
   /* ===== SUBMISSION ROW ===== */
   return (
-    <div className="approvals-submission-row" onClick={ () => onClick(submission) }>
+    <tr onClick={ () => onClick(submission) }>
 
       { /* Render how long ago the submission was submitted */ }
-      <div className="approvals-submission-row-element">
+      <td>
         <div>{ getTimeAgo(details.id) }</div>
-      </div>
+      </td>
 
       { /* Render the username of the person who submitted it */ }
-      <div className="approvals-submission-row-element">
+      <td>
         <div>
           <Username 
             country={ profile.country } 
@@ -31,21 +31,21 @@ function SubmissionRow({ submission, onClick }) {
             username={ profile.username } 
           />
         </div>
-      </div>
+      </td>
 
       { /* Render the name of the level, as well as the type of submission */ }
-      <div className="approvals-submission-row-element">
+      <td>
         <div>
           { `${ cleanLevelName(submission.level.name) } (${ capitalize(type) })` }
         </div>
-      </div>
+      </td>
 
       { /* Render the record */ }
-      <div className="approvals-submission-row-element">
+      <td>
         <div>{ recordB2F(details.record, type) }</div>
-      </div>
+      </td>
       
-    </div>
+    </tr>
   );
 };
 

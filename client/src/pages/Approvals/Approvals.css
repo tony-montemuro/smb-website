@@ -18,27 +18,27 @@
     text-align: center;
 }
 
-.approvals-submission-row {
-    display: flex;
-    margin-top: 4px;
-    margin-bottom: 4px;
+.approvals-body table {
+    border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
-    max-width: 88%;
-    flex-direction: row;
+    min-width: 70%;
+}
+
+.approvals-body th {
+    border: 1px solid black;
+    text-align: center;
     padding: 5px;
-    cursor: pointer;
 }
 
-.approvals-submission-row:hover {
+.approvals-body td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.approvals-body tbody tr:hover {
     background-color: #f1f1f1;
-}
-
-.approvals-submission-row-element {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    cursor: pointer;
 }
 
 .approvals-popup {

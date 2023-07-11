@@ -52,9 +52,25 @@ function Approvals({ imageReducer }) {
         { /* Approvals body - render new submissions here */ }
         <div className="approvals-body">
           <h2>New Submissions</h2>
-          { recent[game].map(submission => {
-            return <SubmissionRow submission={ submission } key={ submission.details.id } onClick={ () => setSubmission(submission) } />
-          })}
+          <table>
+
+            { /* Submission table header - Render the description of what's contained in each row */ }
+            <thead>
+              <tr>
+                <th>Time Ago</th>
+                <th>User</th>
+                <th>Level</th>
+                <th>Record</th>
+              </tr>
+            </thead>
+
+            { /* Submission table body - Render information about each submission in recent[game] */ }
+            <tbody>
+              { recent[game].map(submission => {
+                return <SubmissionRow submission={ submission } key={ submission.details.id } onClick={ () => setSubmission(submission) } />
+              })}
+            </tbody>
+          </table>
         </div>
 
       </div>
