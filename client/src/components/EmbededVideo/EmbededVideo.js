@@ -55,7 +55,7 @@ const EmbededVideo = () => {
         const match = url.match(youtubeTimestampPattern);
         const opts = {
             width: "100%",
-            heigth: "100%"
+            height: "100%"
         }
 
         // if there is, we add it to the opts object, and return.
