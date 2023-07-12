@@ -14,9 +14,12 @@ const EmailLogin = () => {
     const login = async email => {
         try {
             // attempt to login
-            const { error } = await supabase
-                .auth
-                .signInWithOtp({ email });
+            const { error } = await supabase.auth.signInWithOtp({ 
+                email: email,
+                options: {
+                    emailRedirectTo: `${ window.location.origin }/profile`
+                }
+            });
 
             // error handling
             if (error) {
