@@ -22,7 +22,6 @@ import Records from "./pages/Records/Records.jsx";
 import Reports from "./pages/Reports/Reports.jsx";
 import Resources from "./pages/Resources/Resources.jsx";
 import SubmissionHistory from "./pages/SubmissionHistory/SubmissionHistory.jsx";
-import Submissions from "./pages/Submissions/Submissions.jsx";
 import Support from "./pages/Support/Support.jsx";
 import Totalizer from "./pages/Totalizer/Totalizer.jsx";
 import User from "./pages/User/User.jsx";
@@ -85,9 +84,6 @@ function App() {
             { /* App routes */ }
             <Routes>
               <Route path="/" element={ <Home /> }/>
-              <Route path="/submissions" element={
-                <Submissions imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
-              } />
               <Route path="/games" element={<GameSelect imageReducer={ imageReducer } />}/>
               <Route path="/resources" element={<Resources />}></Route>
               <Route path="/support" element={ <Support /> }/>
