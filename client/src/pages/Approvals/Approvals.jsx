@@ -75,6 +75,7 @@ function Approvals({ imageReducer }) {
             <div className="approvals-new-header">
               <h2>New Submissions</h2>
             </div>
+            
             <SubmissionTable submissions={ recent[game] } onRowClick={ setSubmission } isChecked={ false } />
           </div>
 

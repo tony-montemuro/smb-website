@@ -36,7 +36,7 @@ const Approvals = () => {
             case "delete": {
                 // first, we add the submission object to the checked array
                 const submission = action.payload;
-                setChecked(oldChecked => [...oldChecked, submission]);
+                setChecked(oldChecked => [submission, ...oldChecked]);
 
                 // then, we can update the recent state
                 const id = submission.details.id, abb = submission.level.mode.game.abb;
