@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
-import { StaticCacheContext } from "../../utils/Contexts";
+import { StaticCacheContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
@@ -14,18 +14,22 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
   // static cache from static cache object
   const { staticCache } = useContext(StaticCacheContext);
 
+  // user state from user context
+  const { user } = useContext(UserContext);
+
   /* ===== VARIABLES ===== */
   const submission = popup;
   const games = staticCache.games;
   const game = submission && games.find(row => row.abb === submission.level.mode.game.abb);
   const category = submission && (submission.level.misc ? "misc" : "main");
   const type = submission && submission.score ? "score" : "time";
+  const isOwn = submission && submission.profile.id === user.profile.id;
   const TEXT_AREA_ROWS = 5;
 
   /* ===== FUNCTIONS ===== */
 
   // states & functions from the js file
-  const { form, showMessage, setShowMessage, fillForm, handleChange, handleClose, handleSubmit } = SubmissionPopupLogic();
+  const { form, showReject, setShowReject, fillForm, handleChange, handleClose, handleSubmit } = SubmissionPopupLogic();
 
   // helper functions
   const { capitalize, cleanLevelName, recordB2F, dateB2F } = FrontendHelper();
@@ -182,41 +186,50 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
 
               { /* Two buttons: one for approving the submission, and one for deleting. */ }
               <div className="approvals-popup-buttons">
-                <button type="submit" disabled={ showMessage } onClick={ (e) => handleSubmit(e, "approve", submission, dispatchRecent, setPopup) }>Approve Submission</button>
-                <button type="button" disabled={ showMessage } onClick={ () => setShowMessage(true) }>Reject Submission</button>
+                <button type="submit" disabled={ showReject } onClick={ (e) => handleSubmit(e, "approve", submission, dispatchRecent, setPopup) }>Approve Submission</button>
+                <button type="button" disabled={ showReject } onClick={ () => setShowReject(true) }>Reject Submission</button>
               </div>
 
-              { /* Render the message input if the showMessage state is set to true. */ }
-              { showMessage &&
+              { /* Render the message input if the showReject state is set to true. */ }
+              { showReject &&
                 <>
                   <div className="approvals-popup-form">
 
                     { /* Render information about rejections */ }
                     <div className="approvals-popup-notice">
-                      <h3>Are you sure you want to reject this submission?</h3>
+                      <h3>
+                        { isOwn ?
+                          `Are you sure you want to reject your own submission?`
+                        :
+                          `Are you sure you want to reject this submission?`
+                        }
+                      </h3>
                     </div>
                     <div className="approvals-popup-notice">
                       <span><b>Note: </b>Rejecting a submission also deletes it!</span>
                     </div>
 
-                    { /* Message: Render a textbox allowing the user to change the comment, if necessary */ }
-                    <div className="approvals-popup-input approvals-popup-textarea">
-                      <label htmlFor="message">Message (optional): </label>
-                      <textarea 
-                        id="message"
-                        value={ form.values.message }
-                        onChange={ (e) => handleChange(e) }
-                        rows={ TEXT_AREA_ROWS }
-                      >
-                      </textarea>
-                    </div>
+                    { /* Message: Render a textbox allowing the user to add a message, if necessary. Note: this should only
+                    render for submissions not belonging to the current user */ }
+                    { !isOwn &&
+                      <div className="approvals-popup-input approvals-popup-textarea">
+                        <label htmlFor="message">Message (optional): </label>
+                        <textarea 
+                          id="message"
+                          value={ form.values.message }
+                          onChange={ (e) => handleChange(e) }
+                          rows={ TEXT_AREA_ROWS }
+                        >
+                        </textarea>
+                      </div>
+                    }
 
                     { /* Two buttons: one for yes, and one for no. */ }
                     <div className="approvals-popup-buttons">
+                      <button type="button" onClick={ () => setShowReject(false) }>No, Cancel</button>
                       <button type="submit" onClick={ (e) => handleSubmit(e, "delete", submission, dispatchRecent, setPopup) }>
                         Yes, Reject
                       </button>
-                      <button type="button" onClick={ () => setShowMessage(false) }>No, Cancel</button>
                     </div>
                   </div>
                 </>

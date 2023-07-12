@@ -23,7 +23,7 @@ const SubmissionPopup = () => {
 
     /* ===== STATES ===== */
     const [form, setForm] = useState(defaultForm);
-    const [showMessage, setShowMessage] = useState(false);
+    const [showReject, setShowReject] = useState(false);
 
     /* ===== FUNCTIONS ===== */
     
@@ -78,7 +78,7 @@ const SubmissionPopup = () => {
     // the form is set back to it's default values, and the popup is closed
     const handleClose = setPopup => {
         setForm(defaultForm);
-        setShowMessage(false);
+        setShowReject(false);
         setPopup(null);
     };
 
@@ -174,7 +174,7 @@ const SubmissionPopup = () => {
         handleClose(setPopup);
     };
 
-    return { form, showMessage, setShowMessage, fillForm, handleChange, handleClose, handleSubmit };
+    return { form, showReject, setShowReject, fillForm, handleChange, handleClose, handleSubmit };
 };
 
 /* ===== EXPORTS ===== */
