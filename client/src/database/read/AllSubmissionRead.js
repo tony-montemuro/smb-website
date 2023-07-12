@@ -92,6 +92,7 @@ const AllSubmissionRead = () => {
                     proof,
                     record,
                     region (id, region_name),
+                    submission (approved),
                     submitted_at
                 `)
                 .eq("level_id", levelName)

@@ -4,15 +4,13 @@ import { UserContext } from "../../utils/Contexts";
 import { Link, useLocation } from "react-router-dom";
 import { red } from "@mui/material/colors";
 import CheckIcon from "@mui/icons-material/Check";
-import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
-function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, deleteFunc }) {
+function LevelboardRow({ submission, imageReducer, reportFunc }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
 	const type = location.pathname.split("/")[4];
@@ -104,36 +102,6 @@ function LevelboardRow({ submission, imageReducer, reportFunc, updateFunc, delet
             </button>
           </div>
         </td>
-      }
-
-      { /* Moderator exclusive buttons */ }
-      { user && user.is_mod &&
-        <>
-          { /* Update button: a button that allows moderators to update a submission. This butotn should only render if the current
-          authenticated user is a moderator */ }
-          <td>
-            <div className="levelboard-svg-wrapper">
-              <button type="button" onClick={ () => updateFunc(submission) }><CreateRoundedIcon titleAccess="Update" /></button>
-            </div>
-          </td>
-
-          { /* Delete button: a button that allows moderators to delete a submission. This button should only render if the current
-          authenticated user is a moderator. */ }
-          <td>
-            <div className="levelboard-svg-wrapper">
-              <button 
-                type="button" 
-                onClick={ () => deleteFunc(submission) } 
-                disabled={ 
-                  submission.approved || 
-                  (submission.report && (submission.profile.id === user.profile.id || submission.report.creator_id === user.profile.id))
-                }
-              >
-                <ClearRoundedIcon titleAccess="Delete" />
-              </button>
-            </div>
-          </td>
-        </>
       }
 
     </tr>

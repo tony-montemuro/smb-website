@@ -11,6 +11,7 @@ function FilteredSubmissionRow({ submission, deleteFunc }) {
   /* ===== VARIABLES ===== */
 	const location = useLocation();
 	const type = location.pathname.split("/")[4];
+  const cantModify = submission.submission.length > 0 && submission.submission[0].approved;
 
   /* ===== CONTEXTS ===== */
   
@@ -67,9 +68,16 @@ function FilteredSubmissionRow({ submission, deleteFunc }) {
       { user.is_mod && 
         <td>
           <div className="record-history-svg-wrapper">
-            <button type="button" onClick={ () => deleteFunc(submission) }><ClearRoundedIcon /></button>
+            <button 
+              type="button" 
+              onClick={ () => deleteFunc(submission) } 
+              disabled={ cantModify }
+              title={ cantModify ? "Unable to delete the user's current, approved submission." : undefined }
+            >
+              <ClearRoundedIcon />
+            </button>
           </div>
-        </td> 
+        </td>
       }
       
     </tr>

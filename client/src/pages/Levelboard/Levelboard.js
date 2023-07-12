@@ -25,7 +25,6 @@ const Levelboard = () => {
 
 	/* ===== STATES ===== */
 	const [board, setBoard] = useState(boardInit);
-	const [deleteSubmission, setDeleteSubmission] = useState(undefined);
 
 	/* ===== FUNCTIONS ===== */
 	
@@ -183,9 +182,7 @@ const Levelboard = () => {
 
 	return {
 		board,
-		deleteSubmission,
 		setupBoard,
-		setDeleteSubmission,
 		handleTabClick
 	};
 };  

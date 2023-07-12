@@ -3,7 +3,6 @@ import "./Levelboard.css";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import DeletePopup from "../../components/DeletePopup/DeletePopup.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
@@ -43,9 +42,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	// states and functions from js file
 	const { 
 		board,
-		deleteSubmission,
 		setupBoard,
-		setDeleteSubmission,
 		handleTabClick
 	} = LevelboardLogic();
 
@@ -200,12 +197,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 
 								{ /* Report header element should ONLY render if the current user is authenticated */ }
 								{ user.id && <th>Report</th> }
-
-								{ /* Update header element should ONLY render if the current user is a moderator */ }
-								{ user.is_mod && <th>Update</th> }
-
-								{ /* Delete header element should ONLY render if the current user is a moderator */ }
-								{ user.is_mod && <th>Delete</th> }
 								
 							</tr>
 						</thead>
@@ -217,8 +208,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 									submission={ val } 
 									imageReducer={ imageReducer } 
 									reportFunc={ setReportSubmission } 
-									deleteFunc={ setDeleteSubmission }
-									updateFunc={ setUpdateSubmission }
 									key={ val.details.id } 
 								/>
 							})}
@@ -229,7 +218,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			</div>
 
 			{ /* Popups */ }
-			<DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } />
 			<ReportPopup submission={ reportSubmission } setSubmission={ setReportSubmission } />
 			<InsertPopup 
 				popup={ insertPopup } 
