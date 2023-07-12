@@ -17,7 +17,7 @@ function Approvals({ imageReducer }) {
   const [submission, setSubmission] = useState(null);
 
   // states & functions from the js file
-  const { game, recent, checked, setGame, dispatchRecent, setRecent, setDefaultGame, addToRecent } = ApprovalLogic();
+  const { game, recent, checked, setGame, dispatchRecent, setRecent, setDefaultGame, addToRecent, handleChanges } = ApprovalLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -64,7 +64,7 @@ function Approvals({ imageReducer }) {
 
             <SubmissionTable submissions={ checked } onRowClick={ addToRecent } isChecked={ true } />
             <div className="approvals-btn-wrapper">
-              <button type="button" disabled={ checked.length === 0 }>Make Changes</button>
+              <button type="button" disabled={ checked.length === 0 } onClick={ handleChanges }>Make Changes</button>
             </div>
           </div>
 
@@ -75,7 +75,7 @@ function Approvals({ imageReducer }) {
             <div className="approvals-new-header">
               <h2>New Submissions</h2>
             </div>
-            
+
             <SubmissionTable submissions={ recent[game] } onRowClick={ setSubmission } isChecked={ false } />
           </div>
 
