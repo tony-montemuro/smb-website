@@ -42,6 +42,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	// states and functions from js file
 	const { 
 		board,
+		userSubmission,
 		setupBoard,
 		handleTabClick
 	} = LevelboardLogic();
@@ -117,7 +118,12 @@ function Levelboard({ imageReducer, submissionReducer }) {
 						<button 
 							type="button" 
 							onClick={ () => setInsertPopup(true) }
-							disabled={ board.records.all.some(row => row.profile.id === user.profile.id && row.report) }
+							disabled={ userSubmission && userSubmission.report }
+							title={ userSubmission && userSubmission.report ? 
+								"Please wait for a moderator to review your current submission before submitting." 
+							: 
+								undefined
+							}
 						>
 							Submit { capitalize(type) }
 						</button>
@@ -125,8 +131,13 @@ function Levelboard({ imageReducer, submissionReducer }) {
 
 					{ /* Button that pulls up the update submission popup. NOTE: this button should only render if the user has a profile,
 					and a submission on the current levelboard. */ }
-					{ user.profile && board.records.all.some(row => row.profile.id === user.profile.id) &&
-						<button type="button" onClick={ () => setUpdateSubmission(board.records.all.find(row => row.profile.id === user.profile.id)) }>
+					{ user.profile && userSubmission &&
+						<button 
+							type="button" 
+							onClick={ () => setUpdateSubmission(board.records.all.find(row => row.profile.id === user.profile.id))}
+							disabled={ userSubmission && userSubmission.approved }
+							title={ userSubmission && userSubmission.approved ? "Approved submissions cannot be updated." : undefined }
+						>
 							Update Submission
 						</button>
 					}

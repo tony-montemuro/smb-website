@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { GameContext, MessageContext } from "../../utils/Contexts";
+import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Levelboard = () => {
@@ -12,6 +12,9 @@ const Levelboard = () => {
 
 	// add message function from message context
 	const { addMessage } = useContext(MessageContext);
+
+	// user state from user context
+	const { user } = useContext(UserContext);
 
 	/* ===== VARIABLES ===== */
 	const location = useLocation();
@@ -25,6 +28,7 @@ const Levelboard = () => {
 
 	/* ===== STATES ===== */
 	const [board, setBoard] = useState(boardInit);
+	const [userSubmission, setUserSubmission] = useState(undefined);
 
 	/* ===== FUNCTIONS ===== */
 	
@@ -159,8 +163,9 @@ const Levelboard = () => {
 			insertPositionToLevelboard(all);
 			insertPositionToLevelboard(live);
 
-			// finally, update board state hook
+			// finally, update board state hook, as well as the userSubmission state hook
 			setBoard({ ...board, records: { all: all, live: live }, adjacent: { prev: prev, next: next } });
+			setUserSubmission(all.find(row => row.profile.id === user.profile.id));
 
 		} catch (error) {
 			// if the submissions fail to be fetched, let's render an error specifying the issue
@@ -182,6 +187,7 @@ const Levelboard = () => {
 
 	return {
 		board,
+		userSubmission,
 		setupBoard,
 		handleTabClick
 	};
