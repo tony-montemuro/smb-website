@@ -8,15 +8,19 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
 function FilteredSubmissionRow({ submission, deleteFunc }) {
-  /* ===== VARIABLES ===== */
-	const location = useLocation();
-	const type = location.pathname.split("/")[4];
-  const cantModify = submission.submission.length > 0 && submission.submission[0].approved;
-
   /* ===== CONTEXTS ===== */
   
   // user state from user context
   const { user } = useContext(UserContext);
+
+  /* ===== VARIABLES ===== */
+	const location = useLocation();
+	const type = location.pathname.split("/")[4];
+  const current = submission.submission ? submission.submission[0] : undefined;
+  // cannot delete a submission if:
+  // a.) a current submission exists where it's approved, or 
+  // b.) a current submission exists where it has a report that was created by the moderator, or is on a submission by the moderator 
+  const cantDelete = current && (current.approved || (current.report && (current.profile_id !== user.profile.id || current.creator_id !== user.profile.id)));
 
   /* ===== FUNCTIONS ===== */
 
@@ -71,8 +75,8 @@ function FilteredSubmissionRow({ submission, deleteFunc }) {
             <button 
               type="button" 
               onClick={ () => deleteFunc(submission) } 
-              disabled={ cantModify }
-              title={ cantModify ? "Unable to delete the user's current, approved submission." : undefined }
+              disabled={ cantDelete }
+              title={ cantDelete ? "Unable to delete this submission." : undefined }
             >
               <ClearRoundedIcon />
             </button>

@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { MessageContext, UserContext } from "../../utils/Contexts";
 import AllSubmissionDelete from "../../database/delete/AllSubmissionDelete";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
@@ -35,14 +35,14 @@ const DeletePopup = () => {
     const { deleteSubmission } = AllSubmissionDelete();
     const { insertNotification } = NotificationUpdate();
 
-    // FUNCTION 1: handleOwnDelete - function that is called when a moderator deletes their own run
+    // FUNCTION 1: handleDelete - function that is called when a moderator deletes a "historic" record, or belongs to the moderator
     // PRECONDITIONS (1 parameter, 1 condition):
     // 1.) submission_id: a string representing the id of the submission being deleted
     // this submission must belong to the current user
     // POSTCONDITIONS (2 possible outcomes):
     // if the submission is successfully removed from the database, the page is reloaded
     // otherwise, the user is alerted of the error that has occured, and the page is not reloaded
-    const handleOwnDelete = async (submission_id) => {
+    const handleDelete = async submission_id => {
         try {
             // await the removal of the submission
             await deleteSubmission(submission_id);
@@ -55,16 +55,18 @@ const DeletePopup = () => {
         }
     };
 
-    // FUNCTION 2: handleDelete - general function called when a moderator deletes a run (NOT belonging to themselves)
+    // FUNCTION 2: handleDeleteAndNotify - function called when a moderator deletes a "current", unapproved run 
+    // that does NOT belong to themselves
     // PRECONDITIONS (1 parameter, 1 condition):
     // 1.) submission: a submission object that contains information about the submission to be deleted
+    // 2.) profile: a profile object, which is associtaed with the submission object
     // POSTCONDITIONS (3 possible outcomes):
     // if the message field in form is not validated, this function will update the error state in the setForm field by calling the
     // setForm() function, and return early
     // if the message field in form is validated, and the database queries are successful, the function will simply reload the page
     // if the message field in form is validated, but the database queries are unsuccessful, the user will be informed of the error
     // that caused the queries to fail, and the page is NOT reloaded
-    const handleDelete = async (submission) => {
+    const handleDeleteAndNotify = async (submission, profile) => {
         // first, verify that the message is valid
         const error = validateMessage(form.message, false);
 
@@ -78,13 +80,13 @@ const DeletePopup = () => {
         // notification object
         const notification = { 
             notif_type: "delete",
-            profile_id: submission.profile.id,
+            profile_id: profile.id,
             creator_id: user.profile.id,
             message: form.message,
             game_id: abb,
             level_id: levelName,
-            score: type === "score" ? true : false,
-            record: submission.details.record
+            score: type === "score",
+            record: submission.record
         };
 
         // perform database queries
@@ -116,22 +118,34 @@ const DeletePopup = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the error and message fields of the form state are updated by calling the setForm() function. the error field is
     // set to null (default value), and the message field is set to the current value of the form field
-    const handleChange = (e) => {
+    const handleChange = e => {
         setForm({ error: null, message: e.target.value });
     };
 
-    // FUNCTION 4 - closePopup: given the setSubmission function, close the popup
+    // FUNCTION 4 - isNotifyable: function that determines whether or not a submission should recieve a notification
+    // when deleted
+    // PRECONDITIONS (2 parameters):
+    // 1.) submission - the submission object in question
+    // 2.) profile - a profile object, containing the profile info of the current submission
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the submission belongs to the user, or is a "current" submission, return false
+    // otherwise, return true
+    const isNotifyable = (submission, profile) => {
+        return parseInt(profile.id) !== user.profile.id && submission.submission.length === 0;
+    };
+
+    // FUNCTION 5 - closePopup: given the setSubmission function, close the popup
     // PRECONDITIONS (1 parameter):
     // 1.) setBoard: the function that allows you to update the submission state, which will close the popup
     // POSTCONDITIONS (1 possible outcome):
     // the form is set to it's default value by calling setForm(formInit), and the delete popup is closed by calling
     // the setSubmission() function with a null value
-    const closePopup = (setSubmission) => {
+    const closePopup = setSubmission => {
         setForm(formInit);
         setSubmission(null);
     };
     
-    return { form, handleOwnDelete, handleDelete, handleChange, closePopup };
+    return { form, handleDelete, handleDeleteAndNotify, handleChange, isNotifyable, closePopup };
 };
 
 /* ===== EXPORTS ===== */

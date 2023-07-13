@@ -150,7 +150,7 @@ function SubmissionHistory() {
       </div>
 
       { /* Delete Popup */ }
-      <DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } />
+      <DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } profile={ profile } />
     </>
    
   ;

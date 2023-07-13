@@ -1,13 +1,8 @@
 /* ===== IMPORTS ===== */
-import { useLocation } from "react-router-dom";
 import { useState } from "react"; 
 import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 
 const SubmissionHistory = () => {
-    /* ===== VARIABLES ===== */
-    const location = useLocation();
-    const profileId = location.pathname.split("/")[6];
-
     /* ===== STATES ===== */
     const [submissions, setSubmissions] = useState(undefined);
     const [deleteSubmission, setDeleteSubmission] = useState(undefined);
@@ -28,9 +23,8 @@ const SubmissionHistory = () => {
     // given our parameters, we get a filtered list of submissions from the database, and update the submissions state by calling the
     // setSubmissions() function
     const getSubmissions = async (abb, levelName, profileId, type) => {
-        const isScore = type === "score" ? true : false;
+        const isScore = type === "score";
         const submissions = await queryFilteredSubmissions(abb, levelName, profileId, isScore);
-        console.log(submissions);
         setSubmissions(submissions);
     };
 
@@ -41,10 +35,7 @@ const SubmissionHistory = () => {
     // combining data from the submission object, as well as path information, set the delete submission by calling the
     // setDeleteSubmission() function
     const setDelete = (submission) => {
-        setDeleteSubmission({
-            details: { id: submission.id, record: submission.record },
-            profile: { id: profileId, username: profile.username, country: profile.country.iso2 }
-        });
+        setDeleteSubmission(submission);
     };
 
     return { submissions, deleteSubmission, profile, setDeleteSubmission, setProfile, getSubmissions, setDelete };

@@ -266,7 +266,6 @@ const Approvals = () => {
             // render error string
             let errorString = `The following submission failed to ${ submission.action }: ${ submission.level.mode.game.name }: ${ cleanLevelName(submission.level.name) } (${ type }) - ${ recordB2F(submission.details.record, type) } by ${ submission.profile.username }. Reload the page and try again.`;
             addMessage(errorString, "error");
-            console.log(query.reason.error);
         });
 
         failedLevel2Queries.forEach(query => {
