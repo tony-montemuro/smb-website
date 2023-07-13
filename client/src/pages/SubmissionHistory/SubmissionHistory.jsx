@@ -4,11 +4,12 @@ import { GameContext, MessageContext, StaticCacheContext, UserContext } from "..
 import { Link } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import DeletePopup from "../../components/DeletePopup/DeletePopup.jsx";
+import DeletePopup from "./DeletePopup.jsx";
 import FilteredSubmissionRow from "./FilteredSubmissionRow";
 import FrontendHelper from "../../helper/FrontendHelper";
 import PathHelper from "../../helper/PathHelper";
 import SubmissionHistoryLogic from "./SubmissionHistory";
+import UpdatePopup from "./UpdatePopup.jsx";
 import Username from "../../components/Username/Username";
 
 function SubmissionHistory() {
@@ -40,7 +41,16 @@ function SubmissionHistory() {
   /* ===== STATES & FUNCTIONS ====== */
 
   // states and functions from the js file
-  const { submissions, deleteSubmission, profile, setDeleteSubmission, setProfile, getSubmissions, setDelete } = SubmissionHistoryLogic();
+  const { 
+    submissions,
+    updateSubmission, 
+    deleteSubmission, 
+    profile, 
+    setUpdateSubmission,
+    setDeleteSubmission, 
+    setProfile, 
+    getSubmissions
+  } = SubmissionHistoryLogic();
 
   // helper functions
   const { capitalize, cleanLevelName } = FrontendHelper();
@@ -119,7 +129,12 @@ function SubmissionHistory() {
               <th>Live</th>
               <th>Position</th>
               <th>All Position</th>
-              { user.is_mod && <th>Delete</th> }
+              { user.is_mod && 
+                <>
+                  <th>Update</th>
+                  <th>Delete</th>
+                </>
+              }
             </tr>
           </thead>
 
@@ -130,8 +145,9 @@ function SubmissionHistory() {
               // If any submissions exist, render them using the submission data.
               submissions.map(submission => {
                 return <FilteredSubmissionRow 
-                  submission={ submission } 
-                  deleteFunc={ setDelete }
+                  submission={ submission }
+                  updateFunc={ setUpdateSubmission }
+                  deleteFunc={ setDeleteSubmission }
                   key={ submission.id }
                 />;
               })
@@ -149,8 +165,9 @@ function SubmissionHistory() {
         </table>
       </div>
 
-      { /* Delete Popup */ }
+      { /* Popups */ }
       <DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } profile={ profile } />
+      <UpdatePopup submission={ updateSubmission } setSubmission={ setUpdateSubmission } profile={ profile } />
     </>
    
   ;

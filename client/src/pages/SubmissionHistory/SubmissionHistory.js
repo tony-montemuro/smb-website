@@ -1,10 +1,17 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react"; 
+import { useContext, useState } from "react";
+import { UserContext } from "../../utils/Contexts";
 import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 
 const SubmissionHistory = () => {
+    /* ===== CONTEXTS ===== */
+
+    // user state from user context
+    const { user } = useContext(UserContext);
+
     /* ===== STATES ===== */
     const [submissions, setSubmissions] = useState(undefined);
+    const [updateSubmission, setUpdateSubmission] = useState(undefined);
     const [deleteSubmission, setDeleteSubmission] = useState(undefined);
     const [profile, setProfile] = useState(undefined);
 
@@ -28,17 +35,40 @@ const SubmissionHistory = () => {
         setSubmissions(submissions);
     };
 
-    // FUNCTION 2: setDelete - given a submission object, update the delete submission state (which will pull up the delete popup)
+    // FUNCTION 2: cantUpdate - function that returns false if a submission is updatable, true otherwise
     // PRECONDITIONS (1 parameter):
-    // 1.) submission: a submission object, corresponding to one of the submissions rendered on-screen
-    // POSTCONDITIONS (1 possible outcome):
-    // combining data from the submission object, as well as path information, set the delete submission by calling the
-    // setDeleteSubmission() function
-    const setDelete = (submission) => {
-        setDeleteSubmission(submission);
+    // 1.) submission - a submission object
+    // POSTCONDITIONS (2 possible outcome):
+    // if a submission is a "current" submission that's approved, this function returns true (CANNOT update)
+    // otherwise, false is returned
+    const cantUpdate = submission => {
+        const current = submission.submission ? submission.submission[0] : undefined;
+        return current && (current.approved);
     };
 
-    return { submissions, deleteSubmission, profile, setDeleteSubmission, setProfile, getSubmissions, setDelete };
+    // FUNCTION 3: cantDelete - function that returns false if a submission is deleteable, true otherwise
+    // PRECONDITIONS (1 parameter):
+    // 1.) submission - a submission object
+    // POSTCONDITIONS (2 possible outcome):
+    // if a submission is a "current" AND is approved OR has a "relevant" report submission, this function returns true (CANNOT update)
+    // otherwise, false is returned
+    const cantDelete = submission => {
+        const current = submission.submission ? submission.submission[0] : undefined;
+        return current && (current.approved || (current.report && (current.profile_id !== user.profile.id || current.creator_id !== user.profile.id)));
+    };
+
+    return { 
+        submissions,
+        updateSubmission, 
+        deleteSubmission, 
+        profile, 
+        setUpdateSubmission,
+        setDeleteSubmission, 
+        setProfile, 
+        getSubmissions,
+        cantUpdate,
+        cantDelete
+    };
 };
 
 /* ===== EXPORTS ===== */

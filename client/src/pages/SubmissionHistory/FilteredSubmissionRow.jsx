@@ -4,10 +4,12 @@ import { useLocation } from "react-router-dom";
 import { UserContext } from "../../utils/Contexts";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import FrontendHelper from "../../helper/FrontendHelper";
+import SubmissionHistoryLogic from "./SubmissionHistory.js";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
-function FilteredSubmissionRow({ submission, deleteFunc }) {
+function FilteredSubmissionRow({ submission, updateFunc, deleteFunc }) {
   /* ===== CONTEXTS ===== */
   
   // user state from user context
@@ -16,16 +18,14 @@ function FilteredSubmissionRow({ submission, deleteFunc }) {
   /* ===== VARIABLES ===== */
 	const location = useLocation();
 	const type = location.pathname.split("/")[4];
-  const current = submission.submission ? submission.submission[0] : undefined;
-  // cannot delete a submission if:
-  // a.) a current submission exists where it's approved, or 
-  // b.) a current submission exists where it has a report that was created by the moderator, or is on a submission by the moderator 
-  const cantDelete = current && (current.approved || (current.report && (current.profile_id !== user.profile.id || current.creator_id !== user.profile.id)));
 
   /* ===== FUNCTIONS ===== */
 
   // helper functions
   const { dateB2F, recordB2F, getTimeAgo } = FrontendHelper();
+
+  // functions from the js file
+  const { cantUpdate, cantDelete } = SubmissionHistoryLogic();
 
   /* ===== FILTERED SUBMISSION ROW COMPONENT ===== */
   return (
@@ -68,20 +68,39 @@ function FilteredSubmissionRow({ submission, deleteFunc }) {
       { /* All Position - Render the overall position of the submission */ }
       <td>{ submission.all_position }</td>
 
-      { /* Delete Button - Render delete button for moderators only so that they can delete a submission. */ }
+      { /* Moderator-only columns */ }
       { user.is_mod && 
-        <td>
-          <div className="record-history-svg-wrapper">
-            <button 
-              type="button" 
-              onClick={ () => deleteFunc(submission) } 
-              disabled={ cantDelete }
-              title={ cantDelete ? "Unable to delete this submission." : undefined }
-            >
-              <ClearRoundedIcon />
-            </button>
-          </div>
-        </td>
+        <>
+
+          {/* Update button - Render a button that allows the moderator to update a submission */}
+          <td>
+            <div className="record-history-svg-wrapper">
+              <button
+                type="button" 
+                onClick={ () => updateFunc(submission) } 
+                disabled={ cantUpdate(submission) }
+                title={ cantUpdate(submission) ? "Unable to update this submission." : undefined }
+              >
+                <EditRoundedIcon />
+              </button>
+            </div>
+          </td>
+
+          { /* Delete button - Render a button that allows the moderator to delete a submission. */ }
+          <td>
+            <div className="record-history-svg-wrapper">
+              <button 
+                type="button" 
+                onClick={ () => deleteFunc(submission) } 
+                disabled={ cantDelete(submission) }
+                title={ cantDelete(submission) ? "Unable to delete this submission." : undefined }
+              >
+                <ClearRoundedIcon />
+              </button>
+            </div>
+          </td>
+
+        </>
       }
       
     </tr>

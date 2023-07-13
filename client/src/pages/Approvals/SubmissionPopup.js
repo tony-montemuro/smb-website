@@ -164,7 +164,7 @@ const SubmissionPopup = () => {
                         ...submission.details.region,
                         id: parseInt(form.values.region_id)
                     },
-                    submitted_at: getDateOfSubmission(form.values.submitted_at, submission)
+                    submitted_at: getDateOfSubmission(form.values.submitted_at, submission.details.submitted_at)
                 }
             };
             dispatchRecent({ type: "delete", payload: checkedSubmission });

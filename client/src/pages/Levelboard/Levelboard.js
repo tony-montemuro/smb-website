@@ -165,9 +165,10 @@ const Levelboard = () => {
 
 			// finally, update board state hook, as well as the userSubmission state hook
 			setBoard({ ...board, records: { all: all, live: live }, adjacent: { prev: prev, next: next } });
-			setUserSubmission(all.find(row => row.profile.id === user.profile.id));
+			setUserSubmission(user.profile ? all.find(row => row.profile.id === user.profile.id) : undefined);
 
 		} catch (error) {
+			console.log(error);
 			// if the submissions fail to be fetched, let's render an error specifying the issue
 			addMessage("Failed to fetch submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
 		}

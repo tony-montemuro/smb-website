@@ -131,7 +131,7 @@ const DeletePopup = () => {
     // if the submission belongs to the user, or is a "current" submission, return false
     // otherwise, return true
     const isNotifyable = (submission, profile) => {
-        return parseInt(profile.id) !== user.profile.id && submission.submission.length === 0;
+        return parseInt(profile.id) !== user.profile.id && submission.submission.length !== 0;
     };
 
     // FUNCTION 5 - closePopup: given the setSubmission function, close the popup

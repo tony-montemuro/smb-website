@@ -23,23 +23,23 @@ const DateHelper = () => {
     // date
     // PRECONDITIONS (4 parameters):
     // 1.) submittedAt: a string representing a date with a front-end format
-    // 2.) oldSubmission: either a submission object belonging to a user, or undefined, depending on whether the current
-    // user has submitted to this chart
+    // 2.) oldSubmittedAt: either a backend-formatted submitted at string associated with the "old" submission, or undefined, 
+    // if there is no "old" submission
     // POSTCONDITIONS (1 return, 2 possible outcomes):
     // special case: if the submission date of the new submission is the same as that of the previous submission, but the records 
     // are different, the user will be notified that they likely made an error. if the user rejects the confirmation message, 
     // undefined returned
     // in all other cases, a string representing a date with the back-end format is returned
-    const getDateOfSubmission = (submittedAt, oldSubmission) => {
+    const getDateOfSubmission = (submittedAt, oldSubmittedAt) => {
         // first, we need to handle defining the date differently if the user has a previous submissions
-        if (oldSubmission) {
+        if (oldSubmittedAt) {
             // convert 
-			const prevDate = dateB2F(oldSubmission.details.submitted_at);
+			const prevDate = dateB2F(oldSubmittedAt);
 
-			// CASE 1: the submission date from the form is equal to the submission date in the backend. in this case, just return
+			// CASE 1: the submission date from the form is equal to the "old" submission date. in this case, just return
             // the details.submitted_at field from the oldSubmission object
 			if (submittedAt === prevDate) {
-				return oldSubmission.details.submitted_at;
+				return oldSubmittedAt;
 			}
 		}
 

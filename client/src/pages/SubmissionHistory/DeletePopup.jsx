@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import { useLocation } from "react-router-dom";
 import DeletePopupLogic from "./DeletePopup.js";
-import FrontendHelper from "../../helper/FrontendHelper";
-import Username from "../Username/Username";
+import FrontendHelper from "../../helper/FrontendHelper.js";
+import Username from "../../components/Username/Username.jsx";
 
 function DeletePopup({ submission, setSubmission, profile }) {
   /* ===== VARIABLES ===== */
@@ -52,12 +52,12 @@ function DeletePopup({ submission, setSubmission, profile }) {
 
         { /* Button to delete the submission, and a button to close the popup */ }
         <div className="levelboard-decision-btns">
-          <button type="button" onClick={ () => closePopup(setSubmission) }>No</button>
+          <button type="button" onClick={ () => closePopup(setSubmission) }>Cancel</button>
           <button 
             type="button" 
             onClick={ isNotifyable(submission, profile) ? () => handleDeleteAndNotify(submission, profile) : () => handleDelete(submission.id) }
           >
-            Yes
+            Remove
           </button>
         </div>
 
