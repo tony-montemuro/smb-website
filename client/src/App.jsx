@@ -21,6 +21,7 @@ import Profile from "./pages/Profile/Profile.jsx";
 import Records from "./pages/Records/Records.jsx";
 import Reports from "./pages/Reports/Reports.jsx";
 import Resources from "./pages/Resources/Resources.jsx";
+import SignIn from "./pages/SignIn/SignIn.jsx";
 import SubmissionHistory from "./pages/SubmissionHistory/SubmissionHistory.jsx";
 import Support from "./pages/Support/Support.jsx";
 import Totalizer from "./pages/Totalizer/Totalizer.jsx";
@@ -89,6 +90,7 @@ function App() {
               <Route path="/support" element={ <Support /> }/>
               <Route path="/notifications" element={ <Notifications /> } />
               <Route path="/profile" element={ <Profile imageReducer={ imageReducer } /> }/>
+              <Route path="/signin" element={ <SignIn /> } />
               <Route path="/games/:abb" element={ <GameLayout imageReducer={ imageReducer } /> } >
                 <Route index element={ <Game /> } />
                 <Route path="main" element={ <Game /> }/>

@@ -3,10 +3,10 @@ import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../utils/Contexts";
-import Login from "../Login/Login.jsx";
 import Logo from "../../img/logo.png";
 import NavCreateProfile from "./NavCreateProfile";
 import NavProfile from "./NavProfile";
+import NavSignIn from "./NavSignIn";
 
 function Navbar({ imageReducer }) {  
   /* ===== CONTEXTS ===== */
@@ -57,7 +57,7 @@ function Navbar({ imageReducer }) {
           :
             <NavCreateProfile />
         :
-          <Login />
+          <NavSignIn />
         }
 
       </nav>
