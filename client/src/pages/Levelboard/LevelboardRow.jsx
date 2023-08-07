@@ -1,20 +1,13 @@
 /* ===== IMPORTS ===== */
 import { useContext } from "react";
 import { UserContext } from "../../utils/Contexts";
-import { Link, useLocation } from "react-router-dom";
-import { red } from "@mui/material/colors";
-import CheckIcon from "@mui/icons-material/Check";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
+import LevelboardRecord from "./LevelboardRecord";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
-import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
-function LevelboardRow({ submission, imageReducer, reportFunc }) {
-  /* ===== VARIABLES ===== */
-  const location = useLocation();
-	const type = location.pathname.split("/")[4];
-
+function LevelboardRow({ submission, imageReducer, reportFunc, onClickFunc }) {
   /* ===== CONTEXTS ===== */
 
   // user state from user context
@@ -23,11 +16,11 @@ function LevelboardRow({ submission, imageReducer, reportFunc }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { recordB2F, dateB2F } = FrontendHelper();
+  const { dateB2F } = FrontendHelper();
 
   /* ===== LEVELBOARD ROW COMPONENT ===== */
   return (
-    <tr>
+    <tr onClick={ () => onClickFunc(submission) }>
       { /* Render the position */ }
       <td>{ submission.position }</td>
 
@@ -43,17 +36,7 @@ function LevelboardRow({ submission, imageReducer, reportFunc }) {
 
       { /* Render the record */ }
       <td>
-        <div className="levelboard-svg-wrapper">
-          { submission.report && 
-            <>
-              <WarningRoundedIcon titleAccess="This submission has been reported." sx={{ color: red[500] }} />
-              &nbsp;
-            </>
-          }
-          <Link to={ `${ submission.profile.id }` }>
-            { recordB2F(submission.details.record, type) }
-          </Link>
-        </div>
+        <LevelboardRecord submission={ submission } iconSize={ "medium" } />
       </td>
 
       { /* Render the submission date */ }
@@ -78,15 +61,6 @@ function LevelboardRow({ submission, imageReducer, reportFunc }) {
 
       { /* Render the comment */ }
       <td>{ submission.details.comment }</td>
-
-      { /* Render checkmark if the submission has been approved */ }
-      <td>
-        { submission.approved && 
-          <div className="levelboard-svg-wrapper">
-            <CheckIcon />
-          </div>
-        }
-      </td>
 
       { /* Report button: when pressed, a report popup will appear, which will allow the user to report the submission. Users can report
       any submission other than their own submission. */ }

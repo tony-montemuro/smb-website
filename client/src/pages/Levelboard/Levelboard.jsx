@@ -10,6 +10,7 @@ import InsertPopup from "./InsertPopup.jsx";
 import PathHelper from "../../helper/PathHelper";
 import ReportPopup from "./ReportPopup.jsx";
 import UpdatePopup from "./UpdatePopup.jsx";
+import DetailPopup from "./DetailPopup";
 
 function Levelboard({ imageReducer, submissionReducer }) {
 	/* ===== VARIABLES ===== */
@@ -35,6 +36,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	/* ===== STATES & FUNCTIONS ===== */
 	const [level, setLevel] = useState(undefined);
 	const [levelboardState, setLevelboardState] = useState("live");
+	const [detailSubmission, setDetailSubmission] = useState(undefined);
 	const [insertPopup, setInsertPopup] = useState(false);
 	const [reportSubmission, setReportSubmission] = useState(undefined);
 	const [updateSubmission, setUpdateSubmission] = useState(undefined);
@@ -204,7 +206,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 								<th>Monkey</th>
 								<th>Proof</th>
 								<th>Comment</th>
-								<th>Approved</th>
 
 								{ /* Report header element should ONLY render if the current user is authenticated */ }
 								{ user.id && <th>Report</th> }
@@ -219,6 +220,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 									submission={ val } 
 									imageReducer={ imageReducer } 
 									reportFunc={ setReportSubmission } 
+									onClickFunc={ setDetailSubmission }
 									key={ val.details.id } 
 								/>
 							})}
@@ -229,6 +231,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			</div>
 
 			{ /* Popups */ }
+			<DetailPopup submission={ detailSubmission } setSubmission={ setDetailSubmission } />
 			<ReportPopup submission={ reportSubmission } setSubmission={ setReportSubmission } />
 			<InsertPopup 
 				popup={ insertPopup } 
