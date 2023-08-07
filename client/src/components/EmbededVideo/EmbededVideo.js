@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { youtubePattern, twitchPattern, youtubeTimestampPattern } from "../../utils/RegexPatterns";
+import { youtubePattern, twitchPattern, twitterPatttern, youtubeTimestampPattern } from "../../utils/RegexPatterns";
 
 const EmbededVideo = () => {
     /* ===== VARIABLES ===== */
@@ -27,6 +27,11 @@ const EmbededVideo = () => {
             if (match[3] || match[4]) {
                 return "twitch-clip";
             }
+        }
+
+        // next, check if it's a tweet
+        if (twitterPatttern.test(url)) {
+            return "twitter";
         }
 
         // otherwise, just return a null object
@@ -94,8 +99,19 @@ const EmbededVideo = () => {
         clipId = match[3] ? clipId : match[4];
         return `https://clips.twitch.tv/embed?clip=${ clipId }&parent=${ hostName }`;
     };
+    
+    // FUNCTION 6: getTweetId - function that gets the tweet ID from a url for embeds
+    // PRECONDITIONS (1 parameter):
+    // 1.) url: a string representing the url of a tweet
+    // POSTCONDITIONS (1 possible outcome):
+    // a string is returned representing the id of the tweet, which is necessary for embeds
+    const getTweetId = url => {
+        const match = url.match(twitterPatttern);
+        const id = match[2];
+        return id;
+    };
 
-    return { getUrlType, getYoutubeVideoId, getYoutubeVideoOpts, getTwitchVodSource, getTwitchClipSource };
+    return { getUrlType, getYoutubeVideoId, getYoutubeVideoOpts, getTwitchVodSource, getTwitchClipSource, getTweetId };
 };
 
 /* ===== EXPORTS ===== */

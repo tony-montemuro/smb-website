@@ -104,10 +104,8 @@
 .approvals-popup-left {
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-basis: 70%;
-}
-
-.approvals-popup-left {
     text-align: center;
 }
 
