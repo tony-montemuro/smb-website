@@ -39,17 +39,17 @@ function UpdatePopup({ submission, setSubmission, profile }) {
   
   /* ===== UPDATE POPUP ===== */
   return submission && form.values &&
-    <div className="levelboard-popup">
-      <div className="levelboard-popup-inner">
+    <div className="submission-history-popup">
+      <div className="submission-history-popup-inner">
 
         { /* Close popup button */ }
-        <div className="levelboard-popup-close-btn">
+        <div className="submission-history-popup-close-btn">
            <button type="button" onClick={ () => closePopup(setSubmission) } disabled={ form.submitting }>Close</button>
         </div>
 
         { /* Levelboard update */ }
-        <div className="levelboard-update-wrapper">
-          <div className="levelboard-update">
+        <div className="submission-history-update-wrapper">
+          <div className="submission-history-update">
 
             { /* Form header */ }
             <h2>Update Submission</h2>
@@ -58,19 +58,19 @@ function UpdatePopup({ submission, setSubmission, profile }) {
             <form onSubmit={ (e) => handleSubmit(e, submission, profile) }>
 
               { /* Submission user: display the username of the person who submitted the submission. */ }
-              <div className="levelboard-input-group">
+              <div className="submission-history-input-group">
                 <span>User:&nbsp;
                   <Username country={ profile.country.iso2 } profileId={ profile.id } username={ profile.username } />
                 </span>
               </div>
 
               { /* Submission record: simply display the record, which is not able to be changed in this input. */ }
-              <div className="levelboard-input-group">
+              <div className="submission-history-input-group">
                 <span>{ capitalize(type) }: { recordB2F(submission.record, type) }</span>
               </div>
 
               { /* Submission date input: allows the user to modify the date the submission was achieved. */ }
-              <div className="levelboard-input-group">
+              <div className="submission-history-input-group">
                 <label htmlFor="submitted_at">Date: </label>
                 <input 
                   id="submitted_at" 
@@ -83,7 +83,7 @@ function UpdatePopup({ submission, setSubmission, profile }) {
               </div>
 
               { /* Submission region input: allows the user to select the region of the submission from a dropdown. */ }
-              <div className="levelboard-input-group">
+              <div className="submission-history-input-group">
                 <label htmlFor="region_id">Region: </label>
                 <select id="region_id" value={ form.values.region_id } onChange={ (e) => handleChange(e) }>
                   { game.region.map(region => (
@@ -93,7 +93,7 @@ function UpdatePopup({ submission, setSubmission, profile }) {
               </div>
 
               { /* Submission monkey input: allows the user to select the monkey of the submission from a dropdown. */ }
-              <div className="levelboard-input-group">
+              <div className="submission-history-input-group">
                 <label htmlFor="monkey_id">Monkey: </label>
                 <select id="monkey_id" value={ form.values.monkey_id } onChange={ (e) => handleChange(e) }>
                   { game.monkey.map((monkey) => (
@@ -103,7 +103,7 @@ function UpdatePopup({ submission, setSubmission, profile }) {
               </div>
 
               { /* Submission proof input: allows the user to modify the proof of submission. */ }
-              <div className="levelboard-input-group">
+              <div className="submission-history-input-group">
                 <label htmlFor="proof">Proof: </label>
                 <input 
                   id="proof"
@@ -118,7 +118,7 @@ function UpdatePopup({ submission, setSubmission, profile }) {
               </div>
 
               { /* Submission live checkbox: allows the user to specify whether or not the submission proof was live or not. */ }
-              <div className="levelboard-input-group">
+              <div className="submission-history-input-group">
                 <label htmlFor="live">Live Proof: </label>
                 <input
                   id="live"
@@ -129,7 +129,7 @@ function UpdatePopup({ submission, setSubmission, profile }) {
               </div>
 
               { /* Submission comment input: allows the user to modify the submission comment. */ }
-              <div className="levelboard-textarea-group">
+              <div className="submission-history-textarea-group">
                 <label htmlFor="comment">Comment (optional): </label>
                 <textarea 
                   id="comment"
@@ -149,7 +149,7 @@ function UpdatePopup({ submission, setSubmission, profile }) {
               notification when a moderator updates a submission on behalf of them. The message is included in this.
               NOTE: This input form should only render if the submission is "notifyable". */ }
               { isNotifyable(submission, profile) &&
-                <div className="levelboard-textarea-group">
+                <div className="submission-history-textarea-group">
                   <label htmlFor="message">Leave a message (optional): </label>
                   <textarea 
                     id="message"
@@ -165,7 +165,7 @@ function UpdatePopup({ submission, setSubmission, profile }) {
               }
 
               { /* Form submission button: submits the form. NOTE: button is disabled if the submitting field of form is true. */ }
-              <div className="levelboard-submit-btn-wrapper">
+              <div className="submission-history-submit-btn-wrapper">
                 <button type="submit" disabled={ form.submitting }>Update</button>
               </div>
 

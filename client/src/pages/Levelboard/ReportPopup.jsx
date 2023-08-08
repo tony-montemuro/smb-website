@@ -4,7 +4,6 @@ import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { UserContext } from "../../utils/Contexts";
 import CountdownTimer from "../../components/CountdownTimer/CountdownTimer.jsx";
-import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardRecord from "./LevelboardRecord";
 import ReportPopupLogic from "./ReportPopup.js";
 import Username from "../../components/Username/Username";
@@ -24,9 +23,6 @@ function ReportPopup({ submission, setSubmission }) {
 
   // states and functions from js file
   const { form, handleReport, handleChange, closePopup } = ReportPopupLogic();
-
-  // helper functions
-  const { recordB2F } = FrontendHelper();
 
   /* ===== REPORT POPUP COMPONENT ===== */
   return submission &&

@@ -22,8 +22,8 @@ function DeletePopup({ submission, setSubmission, profile }) {
   return (
     submission &&
     
-    <div className="levelboard-popup">
-      <div className="levelboard-popup-inner">
+    <div className="submission-history-popup">
+      <div className="submission-history-popup-inner">
 
         { /* Display information about the submission being deleted. */ }
         <h2>Are you sure you want to remove the following { type }: { recordB2F(submission.record, type) } by&nbsp; 
@@ -34,7 +34,7 @@ function DeletePopup({ submission, setSubmission, profile }) {
           <form>
 
             { /* Message input - a text field where the user must include a message with their delete */ }
-            <div className="levelboard-textarea-group">
+            <div className="submission-history-textarea-group">
               <label>Leave a message: </label>
               <textarea 
                 value={ form.message }
@@ -51,7 +51,7 @@ function DeletePopup({ submission, setSubmission, profile }) {
         }
 
         { /* Button to delete the submission, and a button to close the popup */ }
-        <div className="levelboard-decision-btns">
+        <div className="submission-history-decision-btns">
           <button type="button" onClick={ () => closePopup(setSubmission) }>Cancel</button>
           <button 
             type="button" 

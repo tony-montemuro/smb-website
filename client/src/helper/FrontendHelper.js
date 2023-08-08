@@ -1,12 +1,8 @@
 /* ===== IMPORTS ===== */
 import { formatDistanceToNowStrict } from 'date-fns';
-import TimeHelper from "./TimeHelper";
 
 const FrontendHelper = () => {
     /* ===== FUNCTIONS ===== */
-
-    // helper functions
-    const { getTimeDifference } = TimeHelper();
 
     // FUNCTION 1: capitalize
     // PRECONDITIONS (1 parameter):

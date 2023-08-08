@@ -93,3 +93,41 @@
     list-style: none;
     padding: 0;
 }
+
+
+.submission-history-update-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.submission-history-update {
+    display: inline-block;
+}
+
+.submission-history-update h2 {
+    text-align: center;
+}
+
+.submission-history-input-group {
+    margin-bottom: 8px;
+}
+
+.submission-history-textarea-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+}
+
+.submission-history-submit-btn-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.submission-history-decision-btns {
+    text-align: center;
+}
+
+.submission-history-decision-btns button {
+    margin-top: 5px;
+    margin-right: 5px;
+}
