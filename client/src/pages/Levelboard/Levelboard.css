@@ -243,3 +243,7 @@
     display: flex;
     justify-content: center;
 }
+
+.levelboard-record {
+    white-space: nowrap;
+}

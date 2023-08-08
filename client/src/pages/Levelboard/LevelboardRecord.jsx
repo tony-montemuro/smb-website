@@ -19,7 +19,7 @@ function LevelboardRecord({ submission, iconSize }) {
 
   /* ===== LEVELBOARD RECORD COMPONENT ===== */
   return (
-    <span>
+    <span className="levelboard-record">
 
       { /* If submission is approved, render a checkbox next to the record */ }
       { submission.approved ? 
