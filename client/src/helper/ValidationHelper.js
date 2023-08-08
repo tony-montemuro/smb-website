@@ -61,7 +61,7 @@ const ValidationHelper = () => {
 
         // check if proof is a valid youtube, twitch, or twitter url
         if (!twitchPattern.test(proof) && !youtubePattern.test(proof) && !twitterPatttern.test(proof)) {
-            return "Proof must be a valid YouTube or Twitch URL.";
+            return "Proof must be a valid YouTube, Twitch, or X (Twitter) URL.";
         }
 
         // if we made it this far, the comment is valid! return undefined, since there is no error
