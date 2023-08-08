@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext } from "react";
 import { UserContext } from "../../utils/Contexts";
+import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardRecord from "./LevelboardRecord";
@@ -16,7 +17,7 @@ function LevelboardRow({ submission, imageReducer, reportFunc, onClickFunc }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { dateB2F } = FrontendHelper();
+  const { getTimeAgo } = FrontendHelper();
 
   /* ===== LEVELBOARD ROW COMPONENT ===== */
   return (
@@ -40,27 +41,31 @@ function LevelboardRow({ submission, imageReducer, reportFunc, onClickFunc }) {
       </td>
 
       { /* Render the submission date */ }
-      <td>{ dateB2F(submission.details.submitted_at) }</td>
-
-      { /* Render the name of the region */ }
-      <td>{ submission.details.region.region_name }</td>
+      <td>{ getTimeAgo(submission.details.submitted_at) }</td>
 
       { /* Render the name of the monkey */ }
       <td>{ submission.details.monkey.monkey_name }</td>
+
+      { /* Render the name of the region */ }
+      <td>{ submission.details.region.region_name }</td>
 
       { /* Render a camera svg tag that links to the proof of the submission, if one exists */ }
       <td>
         { submission.details.proof && 
           <div className="levelboard-svg-wrapper">
-            <a href={ submission.details.proof } target="_blank" rel="noopener noreferrer">
-              <VideocamIcon sx={{ color: "black" }} />
-            </a>
+            <VideocamIcon titleAccess="Has proof" sx={{ color: "black" }} />
           </div>
         }
       </td>
 
       { /* Render the comment */ }
-      <td>{ submission.details.comment }</td>
+      <td>
+        { submission.details.comment && 
+          <div className="levelboard-svg-wrapper">
+            <ChatBubbleRoundedIcon titleAccess={ submission.details.comment } fontSize="small" />
+          </div>
+        }
+      </td>
 
       { /* Report button: when pressed, a report popup will appear, which will allow the user to report the submission. Users can report
       any submission other than their own submission. */ }
@@ -69,7 +74,10 @@ function LevelboardRow({ submission, imageReducer, reportFunc, onClickFunc }) {
           <div className="levelboard-svg-wrapper">
             <button 
               type="button"
-              onClick={ () => reportFunc(submission) }
+              onClick={ (e) => {
+                e.stopPropagation();
+                reportFunc(submission) 
+              }}
               disabled={ (user.profile && user.profile.id === submission.profile.id) || submission.report }
             >
               <WarningAmberRoundedIcon titleAccess="Report" />

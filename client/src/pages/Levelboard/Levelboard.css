@@ -74,20 +74,23 @@
 }
 
 .levelboard-content table {
+    border: 1px solid black;
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
     min-width: 100%;
 }
+
+.levelboard-content thead {
+    border: 1px solid black;
+}
   
 .levelboard-content th {
-    border: 1px solid black;
-    text-align: center;
+    text-align: left;
     padding: 4px 8px;
 }
 
 .levelboard-content td {
-    border: 1px solid black;
     padding: 4px 8px;
 }
 

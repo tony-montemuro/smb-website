@@ -198,14 +198,14 @@ function Levelboard({ imageReducer, submissionReducer }) {
 						{ /* Table header information: specifies the information displayed in each cell of the board */ }
 						<thead>
 							<tr>
-								<th>Position</th>
+								<th>#</th>
 								<th>Name</th>
 								<th>{ capitalize(type) }</th>
 								<th>Date</th>
-								<th>Region</th>
 								<th>Monkey</th>
-								<th>Proof</th>
-								<th>Comment</th>
+								<th>Region</th>
+								<th></th>
+								<th></th>
 
 								{ /* Report header element should ONLY render if the current user is authenticated */ }
 								{ user.id && <th>Report</th> }

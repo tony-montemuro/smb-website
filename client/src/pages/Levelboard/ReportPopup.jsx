@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { UserContext } from "../../utils/Contexts";
 import CountdownTimer from "../../components/CountdownTimer/CountdownTimer.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
+import LevelboardRecord from "./LevelboardRecord";
 import ReportPopupLogic from "./ReportPopup.js";
 import Username from "../../components/Username/Username";
 
@@ -38,8 +39,8 @@ function ReportPopup({ submission, setSubmission }) {
         </div>
 
         { /* Report popup header */ }
-        <h2>Are you sure you want to report the following { type }: { recordB2F(submission.details.record, type) } by&nbsp; 
-        <Username country={ submission.profile.country } profileId={ submission.profile.id } username={ submission.profile.username } />?</h2>
+        <h2>Are you sure you want to report the following { type }: <LevelboardRecord submission={ submission } iconSize={ "large" } /> 
+        &nbsp;by <Username country={ submission.profile.country } profileId={ submission.profile.id } username={ submission.profile.username } />?</h2>
 
         { /* Report popup description */ }
         <span>In your message, please explain your reasoning for reporting the submission. Be specific!</span>

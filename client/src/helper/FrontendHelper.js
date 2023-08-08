@@ -1,4 +1,5 @@
 /* ===== IMPORTS ===== */
+import { formatDistanceToNowStrict } from 'date-fns';
 import TimeHelper from "./TimeHelper";
 
 const FrontendHelper = () => {
@@ -88,49 +89,23 @@ const FrontendHelper = () => {
         return record.toLocaleString("en-US");
     };
 
-    // FUNCTION 6: makePlural - given a number, determine what character should end a string
-    // PRECONDITIONS (1 parameter):
-    // 1.) n: an integer value, at least 1
-    // POSTCONDITIONS (2 possible outcomes):
-    // if n is any value greater than 1, we return 's' to make the caller string plural
-    // otherwise, return an empty string
-    const makePlural = n => {
-        return n > 1 ? "s" : "";
-    };
-
-    // FUNCTION 7: getTimeAgo - given a timestamp, determine how long ago the timestamp occured given the current time
+    // FUNCTION 6: getTimeAgo - given a timestamp, determine how long ago the timestamp occured given the current time
     // PRECONDITIONS (1 parameter):
     // 1.) timestamp: a string representing a timestamp, typically formatted in the PostgreSQL `timestamptz` format
     // POSTCONDITIONS (4 possible outcomes):
     // If the time between now and the timestamp is less than a minute, return string describing time difference in seconds
     // If the time between now and the timestamp is less than an hour, return string describing time difference in minutes
     // If the time between now and the timestamp is less than a day, return string describing time difference in hours
-    // Otherwise, return string describing time difference in days
+    // If the time between now and the timestamp is less than a month, return string describing time difference in days
+    // If the time between now and the timestamp is less than a year, return the string describing the time difference in months
+    // Otherwise, return the string describing the time difference in years
     const getTimeAgo = timestamp => {
-        // convert both the current time and the timestamp to the Data format
-        const current = new Date();
         const submissionDate = new Date(timestamp);
-
-        // get the difference between the two
-        const timeDifference = getTimeDifference(submissionDate.getTime(), current.getTime());
-        const days = timeDifference.days; 
-        const hours = timeDifference.hours;
-        const minutes = timeDifference.minutes;
-        const seconds = timeDifference.seconds;
-
-        // finally, return the appropriate string depending on the timeDifference object field values
-        if (days > 0) {
-            return `${ days } day${ makePlural(days) } ago`;
-        } else if (hours > 0) {
-            return `${ hours } hour${ makePlural(hours) } ago`;
-        } else if (minutes > 0) {
-            return `${ minutes } minute${ makePlural(minutes) } ago`; 
-        } else {
-            return `${ seconds } second${ makePlural(seconds) } ago`;
-        }
+        const formattedTimeAgo = formatDistanceToNowStrict(submissionDate, { addSuffix: true });
+        return formattedTimeAgo;
     };
 
-    // FUNCTION 8: categoryB2F - ("category backend-to-frontend") convert category from back-end format to front-end format
+    // FUNCTION 7: categoryB2F - ("category backend-to-frontend") convert category from back-end format to front-end format
     // PRECONDITIONS (1 parameter):
     // 1.) category: a string representing a category, either "main" or "misc"
     // POSTCONDITIONS (1 possible outcome):
