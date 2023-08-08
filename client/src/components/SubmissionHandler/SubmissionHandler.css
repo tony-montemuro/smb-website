@@ -1,77 +1,77 @@
-.approvals {
+.submission-handler {
     display: flex;
     flex: 1;
 }
 
-.approvals-header {
+.submission-handler-header {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.approvals-content {
+.submission-handler-content {
     flex-basis: 80%;
 }
 
-.approvals-submission-table {
+.submission-handler-submission-table {
     width: 80%;
     margin: 0 auto;
 }
 
-.approvals-checked {
+.submission-handler-checked {
     max-height: 30vh;
     overflow-y: auto;
     overflow-anchor: initial;
 }
 
-.approvals-body table {
+.submission-handler-body table {
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
     min-width: 100%;
 }
 
-.approvals-body th {
+.submission-handler-body th {
     border: 1px solid black;
     text-align: center;
     padding: 5px;
 }
 
-.approvals-body td {
+.submission-handler-body td {
     border: 1px solid black;
     padding: 5px;
 }
 
-.approvals-body tbody tr:not(.approvals-empty-row):hover {
+.submission-handler-body tbody tr:not(.submission-handler-empty-row):hover {
     background-color: #f1f1f1;
     cursor: pointer;
 }
 
-.approvals-empty-row {
+.submission-handler-empty-row {
     text-align: center;
 }
 
-.approvals-checked-header {
+.submission-handler-checked-header {
     text-align: center;
 }
 
-.approvals-new-header {
+.submission-handler-new-header {
     text-align: center;
 }
 
-.approvals-btn-wrapper {
+.submission-handler-btn-wrapper {
     display: flex;
     justify-content: center;
     margin: 10px;
 }
 
-.approvals-action-symbol {
+.submission-handler-action-symbol {
     display: flex;
     align-items: center;
 }
 
-.approvals-popup {
+.submission-handler-popup {
     position: fixed;
     top: 0;
     left: 0;
@@ -84,24 +84,26 @@
     z-index: 100;
 }
 
-.approvals-popup-inner {
+.submission-handler-popup-inner {
     position: relative;
     padding: 32px;
     width: 100%;
     max-width: 70%;
+    max-height: 75vh;
+    overflow-y: auto;
     background-color: #fff;
     border-radius: 10px;
 }
 
-.approvals-popup-close-btn {
+.submission-handler-popup-close-btn {
     text-align: right;
 }
 
-.approvals-popup-body {
+.submission-handler-popup-body {
     display: flex;
 }
 
-.approvals-popup-left {
+.submission-handler-popup-left {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -109,48 +111,48 @@
     text-align: center;
 }
 
-.approvals-popup-right {
+.submission-handler-popup-right {
     flex-basis: 30%;
     text-align: center;
 }
 
-.approvals-popup-form {
+.submission-handler-popup-form {
     display: inline-block;
     text-align: left;
 }
 
-.approvals-popup-input {
+.submission-handler-popup-input {
     margin: 10px;
     white-space: nowrap;
 }
 
-.approvals-popup-textarea {
+.submission-handler-popup-textarea {
     display: flex;
     flex-direction: column;
     white-space: nowrap;
 }
 
-.approvals-popup-notice {
+.submission-handler-popup-notice {
     cursor: default;
 }
 
-.approvals-popup-buttons {
+.submission-handler-popup-buttons {
     margin: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.approvals-popup-buttons button {
+.submission-handler-popup-buttons button {
     margin-left: 5px;
     margin-right: 5px;
 }
 
-.approvals-popup-notice {
-    margin: 10px;
+.submission-handler-popup-notice {
+    cursor: default;
 }
 
-#approvals-comment-wrapper {
+#submission-handler-comment-wrapper {
     display: flex;
     flex-direction: row;
 }

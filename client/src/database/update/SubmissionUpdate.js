@@ -11,7 +11,7 @@ const SubmissionUpdate = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, this function will simply return
     // if the query is a failure, this function will throw the error, where it should be handled by the caller function
-    const approveSubmission = async (submission) => {
+    const approveSubmission = async submission => {
         try {
             const { error } = await supabase
                 .from("submission")

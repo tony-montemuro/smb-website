@@ -2,13 +2,14 @@
 import { Link } from "react-router-dom";
 import { StaticCacheContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
+import EmbedHelper from "../../helper/EmbedHelper";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import SubmissionPopupLogic from "./SubmissionPopup.js";
 import UpdatedFieldSymbol from "./UpdatedFieldSymbol";
 import Username from "../../components/Username/Username";
 
-function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
+function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
   /* ===== CONTEXTS ===== */
 
   // static cache from static cache object
@@ -25,6 +26,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
   const type = submission && submission.score ? "score" : "time";
   const isOwn = submission && submission.profile.id === user.profile.id;
   const TEXT_AREA_ROWS = 5;
+  const creator = submission && submission.report && submission.report.creator;
 
   /* ===== FUNCTIONS ===== */
 
@@ -33,6 +35,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
 
   // helper functions
   const { capitalize, cleanLevelName, recordB2F, dateB2F } = FrontendHelper();
+  const { getUrlType } = EmbedHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -46,53 +49,67 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
 
   /* ===== SUBMISSION POPUP COMPONENT ===== */ 
   return popup && form.values ?
-    <div className="approvals-popup">
-      <div className="approvals-popup-inner">
+    <div className="submission-handler-popup">
+      <div className="submission-handler-popup-inner">
 
         { /* Close button - a button that allows user to close the popup */ }
-        <div className="approvals-popup-close-btn">
+        <div className="submission-handler-popup-close-btn">
           <button type="button" onClick={ () => handleClose(setPopup) }>Close</button>
         </div>
 
+        { !isNew &&
+          <div className="submission-handler-report">
+            <h1>
+              The following submission was reported by&nbsp;
+              <Username country={ creator.country } profileId={ creator.id } username={ creator.username } />.
+            </h1>
+            <p>They left the following message with the report: "{ submission.report.message }"</p>
+          </div>
+        }
+
         { /* Approvals popup body: the main content of the popup */ }
-        <div className="approvals-popup-body">
+        <div className="submission-handler-popup-body">
 
           { /* Approvals body left side */ }
-          <div className="approvals-popup-left">
+          <div className="submission-handler-popup-left" style={ getUrlType(submission.details.proof) !== "twitter" ? { height: "50vh" } : null }>
             <EmbededVideo url={ submission.details.proof } />
           </div>
 
           { /* Approvals body right side */ }
-          <div className="approvals-popup-right">
+          <div className="submission-handler-popup-right">
             
             { /* Submission popup form - allows moderator to make edits to the submission, if necessary */ }
             <form>
-              <div className="approvals-popup-form">
+              <div className="submission-handler-popup-form">
 
                 { /* User: Render the username of the user who submitted the submission (not-editable) */ }
-                <div className="approvals-popup-input">
+                <div className="submission-handler-popup-input">
                   User:&nbsp;
                   <Username country={ submission.profile.country } profileId={ submission.profile.id } username={ submission.profile.username } /> 
                 </div>
 
                 { /* Level: Render the name of the level as a link tag (not-editable) */ }
-                <div className="approvals-popup-input">Level:&nbsp;
+                <div className="submission-handler-popup-input">Level:&nbsp;
                   <Link to={ `/games/${ game.abb }/${ category }/${ type }/${ submission.level.name }` }>
                     { cleanLevelName(submission.level.name) }
                   </Link> 
                 </div>
 
                 { /* Record: render the user's record (not-editable) */ }
-                <div className="approvals-popup-input">{ capitalize(type) }: { recordB2F(submission.details.record, type) }</div>
+                <div className="submission-handler-popup-input">{ capitalize(type) }: { recordB2F(submission.details.record, type) }</div>
 
                 { /* Position: render the user's position (not-editable) */ }
-                <div className="approvals-popup-input">Position: { submission.details.all_position }</div>
+                <div className="submission-handler-popup-input">Position: { submission.details.all_position }</div>
 
                 { /* Live Position: render the user's position calculated using only LIVE submissions (not-editable) */ }
-                <div className="approvals-popup-input">Live Position: { submission.details.position }</div>
+                <div className="submission-handler-popup-input">Live Position: { submission.details.position }</div>
 
                 { /* Date: render the date of the submission in the form of a date picker */ }
-                <div className="approvals-popup-input">
+                <div className="submission-handler-popup-input">
+
+                  { /* Render an updated field symbol if the submitted at value has been modified */ }
+                  <UpdatedFieldSymbol oldVal={ dateB2F(submission.details.submitted_at) } newVal={ form.values.submitted_at } />
+
                   <label htmlFor="submitted_at">Date: </label>
                   <input 
                     id="submitted_at" 
@@ -102,13 +119,10 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
                     value={ form.values.submitted_at }
                     onChange={ (e) => handleChange(e) }
                   />
-
-                  { /* Render an updated field symbol if the submitted at value has been modified */ }
-                  <UpdatedFieldSymbol oldVal={ dateB2F(submission.details.submitted_at) } newVal={ form.values.submitted_at } />
                 </div>
 
                 { /* Region: Render a dropdown allowing the user to select a region if necessary */ }
-                <div className="approvals-popup-input">
+                <div className="submission-handler-popup-input">
                   <label htmlFor="region_id">Region: </label>
                   <select id="region_id" value={ form.values.region_id } onChange={ (e) => handleChange(e) }>
                     { game.region.map(region => (
@@ -121,7 +135,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
                 </div>
 
                 { /* Monkey: Render a dropdown allowing the user to select a monkey if necessary */ }
-                <div className="approvals-popup-input">
+                <div className="submission-handler-popup-input">
                   <label htmlFor="monkey_id">Monkey: </label>
                     <select id="monkey_id" value={ form.values.monkey_id } onChange={ (e) => handleChange(e) }>
                       { game.monkey.map((monkey) => (
@@ -134,7 +148,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
                 </div>
 
                 { /* Proof: Render a textbox allowing the user to edit the proof if necessary */ }
-                <div className="approvals-popup-input">
+                <div className="submission-handler-popup-input">
                   <label htmlFor="proof">Proof: </label>
                   <input 
                     id="proof"
@@ -148,7 +162,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
                 </div>
 
                 { /* Live Proof: Render a checkbox allowing the user to specify if the proof is live or not, if necessary */ }
-                <div className="approvals-popup-input">
+                <div className="submission-handler-popup-input">
                   <label htmlFor="live">Live Proof: </label>
                   <input
                     id="live"
@@ -162,9 +176,9 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
                 </div>
 
                 { /* Comment: Render a textbox allowing the user to change the comment, if necessary */ }
-                <div className="approvals-popup-input approvals-popup-textarea">
+                <div className="submission-handler-popup-input submission-handler-popup-textarea">
                   <label htmlFor="comment">Comment (optional): </label>
-                  <div id="approvals-comment-wrapper">
+                  <div id="submission-handler-comment-wrapper">
                     <textarea 
                       id="comment"
                       value={ form.values.comment }
@@ -180,12 +194,12 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
               </div>
 
               { /* Button used to reset the form back to it's original values */ }
-              <div className="approvals-popup-buttons">
+              <div className="submission-handler-popup-buttons">
                 <button type="button" onClick={ () => fillForm(submission) }>Reset Values</button>
               </div>
 
               { /* Two buttons: one for approving the submission, and one for deleting. */ }
-              <div className="approvals-popup-buttons">
+              <div className="submission-handler-popup-buttons">
                 <button type="submit" disabled={ showReject } onClick={ (e) => handleSubmit(e, "approve", submission, dispatchRecent, setPopup) }>Approve Submission</button>
                 <button type="button" disabled={ showReject } onClick={ () => setShowReject(true) }>Reject Submission</button>
               </div>
@@ -193,10 +207,10 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
               { /* Render the message input if the showReject state is set to true. */ }
               { showReject &&
                 <>
-                  <div className="approvals-popup-form">
+                  <div className="submission-handler-popup-form">
 
                     { /* Render information about rejections */ }
-                    <div className="approvals-popup-notice">
+                    <div className="submission-handler-popup-notice">
                       <h3>
                         { isOwn ?
                           `Are you sure you want to reject your own submission?`
@@ -205,14 +219,14 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
                         }
                       </h3>
                     </div>
-                    <div className="approvals-popup-notice">
+                    <div className="submission-handler-popup-notice">
                       <span><b>Note: </b>Rejecting a submission also deletes it!</span>
                     </div>
 
                     { /* Message: Render a textbox allowing the user to add a message, if necessary. Note: this should only
                     render for submissions not belonging to the current user */ }
                     { !isOwn &&
-                      <div className="approvals-popup-input approvals-popup-textarea">
+                      <div className="submission-handler-popup-input submission-handler-popup-textarea">
                         <label htmlFor="message">Message (optional): </label>
                         <textarea 
                           id="message"
@@ -225,7 +239,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent }) {
                     }
 
                     { /* Two buttons: one for yes, and one for no. */ }
-                    <div className="approvals-popup-buttons">
+                    <div className="submission-handler-popup-buttons">
                       <button type="button" onClick={ () => setShowReject(false) }>No, Cancel</button>
                       <button type="submit" onClick={ (e) => handleSubmit(e, "delete", submission, dispatchRecent, setPopup) }>
                         Yes, Reject

@@ -1,21 +1,15 @@
 /* ===== IMPORTS ===== */
-import "./Reports.css";
-import { SubmissionContext } from "../../utils/Contexts";
-import { useContext } from "react";
 import ReportLogic from "./Reports.js";
+import SubmissionHandler from "../../components/SubmissionHandler/SubmissionHandler.jsx";
 
-function Reports() {
-  /* ===== CONTEXTS ===== */
+function Reports({ imageReducer }) {
+  /* ===== FUNCTIONS ===== */
 
-  // submissions state from submissions context
-  const { submissions } = useContext(SubmissionContext);
+  // functions from the js file
+  const { handleChanges } = ReportLogic();
 
   /* ===== REPORTS COMPONENT ===== */
-  return (
-    <div className="reports">
-      <h1>Reports</h1>
-    </div>
-  );
+  return <SubmissionHandler imageReducer={ imageReducer } isNew={ false } handleChanges={ handleChanges } />;
 };
 
 /* ===== EXPORTS ===== */

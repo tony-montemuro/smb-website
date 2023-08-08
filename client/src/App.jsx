@@ -177,7 +177,7 @@ function App() {
                   <Approvals imageReducer={ imageReducer } />
                 }/>
                 <Route path="reports" element={
-                  <Reports />
+                  <Reports imageReducer={ imageReducer } />
                 }/>
                 <Route path="post" element={
                   <Post />

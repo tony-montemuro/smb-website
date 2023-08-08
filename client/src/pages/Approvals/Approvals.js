@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, SubmissionContext, UserContext } from "../../utils/Contexts";
-import { useContext, useReducer, useState } from "react";
+import { MessageContext, UserContext } from "../../utils/Contexts";
+import { useContext } from "react";
 import AllSubmissionDelete from "../../database/delete/AllSubmissionDelete";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import FrontendHelper from "../../helper/FrontendHelper";
@@ -8,87 +8,13 @@ import NotificationUpdate from "../../database/update/NotificationUpdate";
 import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 
 const Approvals = () => {
-    /* ===== STATES ===== */
-    const [game, setGame] = useState(undefined);
-    const [checked, setChecked] = useState([]);
-
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
-    // submissions state from submission context
-    const { submissions } = useContext(SubmissionContext);
-
     // user state from user context
     const { user } = useContext(UserContext);
-
-    /* ===== REDUCER FUNCTIONS ===== */
-
-    // REDUCER FUNCTION 1: reducer - function that will be the reducer function for the recent reducer
-    // PRECONDITIONS (2 parameters):
-    // 1.) state: stores the information of the recent state stored in the reducer hook
-    // 2.) action: an object that typically has two parameters:
-        // a.) type: specifies what operations this function should perform
-        // b.) payload: an object that stores information used in the operations
-    // POSTCONDITIONS (3 possible outcomes):
-    // if type is set, the function will return the payload, which defines the recent state
-    // if type is delete, the function will remove a submission object based on payload values
-    // if type is add, the function will add a submission object based on payload values
-    const reducer = (state, action) => {
-        switch (action.type) {
-            // case 1: set - simply return the payload
-            case "set": {
-                return action.payload;
-            }
-
-            // case 2: delete - using the key and submission from the payload, remove a submission object, update the checked
-            // array state, and return the updated state 
-            case "delete": {
-                // first, we add the submission object to the checked array
-                const submission = action.payload;
-                setChecked(oldChecked => [submission, ...oldChecked]);
-
-                // then, we can update the recent state
-                const id = submission.details.id, abb = submission.level.mode.game.abb;
-                const newArr = state[abb].filter(row => row.details.id !== id);
-                return {
-                    ...state,
-                    [abb]: newArr
-                };
-            }
-
-            // case 3: add - using the key and id from the payload, add a submission object while maintaining the order of the
-            // array, and return the updated state
-            case "add": {
-                // first, we remove the submission from the checked state
-                const submission = action.payload;
-                setChecked(oldChecked => oldChecked.filter(row => row !== submission));
-
-                // then, we use the details from the submission to fetch a hard copy of the original submission found in the
-                // submissions.recent array
-                const id = submission.details.id, abb = submission.level.mode.game.abb;
-                const originalSubmission = JSON.parse(JSON.stringify(submissions.recent[abb].find(row => row.details.id === id)));
-
-                // finally, we can update the recent state
-                const newArr = [...state[abb], originalSubmission].sort((a, b) => {
-                    return a.details.id.localeCompare(b.details.id);
-                });
-                return {
-                    ...state,
-                    [abb]: newArr
-                };
-            }
-
-            // default case: simply return the state unchanged
-            default: {
-                return state;
-            }
-        };
-    };
-
-    /* ===== REDUCERS ===== */
-    const [recent, dispatchRecent] = useReducer(reducer, undefined);
 
     /* ===== FUNCTIONS ===== */
 
@@ -101,51 +27,13 @@ const Approvals = () => {
     // helper functions
     const { cleanLevelName, recordB2F } = FrontendHelper();
 
-    // FUNCTION 1: setRecent - a wrapper function that will set the recent reducer
+    // FUNCTION 1: generateLevel1Promises - a function that returns an array of promises, which should be executed concurrently
     // PRECONDITIONS (1 parameter):
-    // 1.) recentSubmissions: an object containing keys for each game, and the value of each key being an array of all 
-    // the recent submissions
-    // POSTCONDITIONS (1 possible outcome):
-    // a deep clone of recent is created, and the state of recent is updated using the dispatchRecent function
-    const setRecent = recentSubmissions => {
-        // create two deep copies
-        const recentDeepCopy = JSON.parse(JSON.stringify(recentSubmissions));
-
-        // update our recent reducer, as well as the recent copy
-        dispatchRecent({ type: "set", payload: recentDeepCopy });
-    };
-
-    // FUNCTION 2: setDefaultGame - function that sets the game state hook using the setGame() function with a default value
-    // PRECONDITIONS (1 parameter):
-    // 1.) recent: an object with a key for each game, where the value of each key is an array of submission objects
-    // POSTCONDITIONS (1 possible outcome):
-    // the name of the game who has the most submissions is used as the argument for the setGame() function
-    const setDefaultGame = recent => {
-        // determine the game with the most submissions
-        const game = Object.keys(recent)
-            .reduce((a, b) => recent[a].length > recent[b].length ? a : b);
-
-        // update the game state hooks with default value
-        setGame(game);
-    };
-
-    // FUNCTION 3: addToRecent - a wrapper function that calls the recent dispatcher function to add a submission to
-    // the recent reducer (and consequently, remove it from the checked array)
-    // PRECONDITIONS (1 parameter):
-    // 1.) submission: a submission object currently stored in the checked array, which should be transferred over to the recent
-    // reducder
-    // POSTCONDITIONS (1 possible outcome):
-    // the reducer function is called, which does the bulk of the work. see the documentation for this function higher in this file
-    const addToRecent = submission => {
-        dispatchRecent({ type: "add", payload: submission });
-    };
-
-    // FUNCTION 4: generateLevel1Promises - a function that returns an array of promises, which should be executed concurrently
-    // PRECONDITIONS (1 condition):
-    // this function should only be called after the user has selected the `makeChanges` button
+    // 1.) checked: an array of submissions, which should only be called after the user has selected the `Make Changes` button
+    // of the submission handler component
     // POSTCONDITIONS (1 possible outcome):
     // an array of promises is generated, and returned
-    const generateLevel1Promises = () => {
+    const generateLevel1Promises = checked => {
         const level1Promises = checked.map(submission => {
             let promiseFunc;
             switch (submission.action) {
@@ -201,7 +89,7 @@ const Approvals = () => {
         return level1Promises;
     };
 
-    // FUNCTION 5: generateLevel2Promises - a function that returns an array of promises, which should be executed concurrently
+    // FUNCTION 2: generateLevel2Promises - a function that returns an array of promises, which should be executed concurrently
     // PRECONDITIONS (1 parameter):
     // 1.) filteredChecked - a filtered version of `checked` which only includes submissions that should have a level 2 query
     // POSTCONDITIONS (1 possible outcome):
@@ -251,7 +139,7 @@ const Approvals = () => {
         return level2Promises;
     };
 
-    // FUNCTION 6: renderErrorMessages - given two arrays of failed queries, render a unique error message for each
+    // FUNCTION 3: renderErrorMessages - given two arrays of failed queries, render a unique error message for each
     // PRECONDITIONS (2 parameters):
     // 1.) failedLevel1Queries - the array of all failed level 1 queries
     // 2.) failedLevel2Queries - the array of all failed level 2 queries
@@ -279,16 +167,17 @@ const Approvals = () => {
         });
     };
 
-    // FUNCTION 7: handleChanges - code that executes when the user clicks the `make changes` button
+    // FUNCTION 4: handleChanges - code that executes when the user clicks the `make changes` button
     // PRECONDITIONS (1 condition):
-    // 1.) the `checked` array should have at least one element
+    // 1.) checked: an array of submissions, which should have at least one element
     // POSTCONDITIONS (2 possible outcomes):
     // 1.) if all queries are successful (should be nearly always), the function will do it's thing, and simply reload
     // 2.) if even just one query fails, the page will render an error message that is specific to the failed query, and not reload
-    const handleChanges = async () => {
+    const handleChanges = async checked => {
         // first, generate our promises, and run them concurrently
-        const level1Promises = generateLevel1Promises();
+        const level1Promises = generateLevel1Promises(checked);
         const level1QueryResults = await Promise.allSettled(level1Promises);
+        console.log(level1QueryResults);
 
         // next, create an array containing all the failed queries
         const failedLevel1Queries = level1QueryResults.filter(result => result.status === "rejected");
@@ -331,7 +220,7 @@ const Approvals = () => {
         }
     };
 
-    return { game, recent, checked, setGame, dispatchRecent, setRecent, setDefaultGame, addToRecent, handleChanges };
+    return { handleChanges };
 };
 
 /* ===== EXPORTS ===== */

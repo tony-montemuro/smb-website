@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
 import SubmissionRow from "./SubmissionRow";
 
-function SubmissionTable({ submissions, onRowClick, isChecked }) {
+function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
   /* ===== VARIABLES ===== */
   const NUM_ROWS = isChecked ? 6 : 4;
 
   /* ===== SUBMISSION TABLE COMPONENT ===== */
   return (
-    <div className={ `approvals-submission-table ${ isChecked ? "approvals-checked" : "" }` }>
+    <div className={ `submission-handler-submission-table ${ isChecked ? "submission-handler-checked" : "" }` }>
       <table>
 
       { /* Submission table header - Render the description of what's contained in each row. If the isChecked
@@ -30,12 +30,12 @@ function SubmissionTable({ submissions, onRowClick, isChecked }) {
             return <SubmissionRow submission={ submission } onClick={ onRowClick } isChecked={ isChecked } key={ submission.details.id } />
           })
         :
-          <tr className="approvals-empty-row">
+          <tr className="submission-handler-empty-row">
             <td colSpan={ NUM_ROWS }>
               { isChecked ?
                 <i>No submissions have been checked yet.</i>
               :
-                <i>This game has no more new submissions.</i>
+                <i>This game has no more { isNew ? "new" : "reported" } submissions.</i>
               }
             </td>
           </tr>

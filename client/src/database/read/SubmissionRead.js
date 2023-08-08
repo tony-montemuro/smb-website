@@ -145,6 +145,7 @@ const SubmissionRead = () => {
                             id,
                             username
                         ),
+                        message,
                         profile_id
                     ),
                     score

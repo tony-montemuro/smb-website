@@ -8,19 +8,19 @@ function ActionSymbol({ action }) {
   switch (action) {
     case "approve":
       return (
-        <div className="approvals-action-symbol">
+        <div className="submission-handler-action-symbol">
           <CheckIcon titleAccess="Approve" />
         </div>
       );
     case "delete":
       return (
-        <div className="approvals-action-symbol">
+        <div className="submission-handler-action-symbol">
           <DeleteRoundedIcon titleAccess="Reject" />
         </div>
       );
     case "update":
       return (
-        <div className="approvals-action-symbol" title="Update & Approve">
+        <div className="submission-handler-action-symbol" title="Update & Approve">
           <EditRoundedIcon /> <b>+</b> <CheckIcon />
         </div>
       );
