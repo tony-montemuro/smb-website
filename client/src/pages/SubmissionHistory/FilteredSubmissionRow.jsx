@@ -2,6 +2,7 @@
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { UserContext } from "../../utils/Contexts";
+import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -9,7 +10,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import SubmissionHistoryLogic from "./SubmissionHistory.js";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
-function FilteredSubmissionRow({ submission, updateFunc, deleteFunc }) {
+function FilteredSubmissionRow({ submission, updateFunc, deleteFunc, onClickFunc }) {
   /* ===== CONTEXTS ===== */
   
   // user state from user context
@@ -29,7 +30,7 @@ function FilteredSubmissionRow({ submission, updateFunc, deleteFunc }) {
 
   /* ===== FILTERED SUBMISSION ROW COMPONENT ===== */
   return (
-    <tr>
+    <tr onClick={ () => onClickFunc(submission) }>
       { /* Submitted - render how long ago the submission was posted. */ }
       <td>{ getTimeAgo(submission.id) }</td>
 
@@ -39,34 +40,44 @@ function FilteredSubmissionRow({ submission, updateFunc, deleteFunc }) {
       { /* Date - render the submission date provided by the submitter */ }
       <td>{ dateB2F(submission.submitted_at) }</td>
 
-      { /* Region - render the region of the submission */ }
-      <td>{ submission.region.region_name }</td>
-
       { /* Monkey name - render the monkey of the submission */ }
       <td>{ submission.monkey.monkey_name }</td>
+
+      { /* Region - render the region of the submission */ }
+      <td>{ submission.region.region_name }</td>
 
       { /* Proof - render a videocam svg that links to the proof, if there is any */ }
       <td>
         { submission.proof && 
-          <div className="record-history-svg-wrapper">
-            <a href={ submission.proof } target="_blank" rel="noopener noreferrer">
-              <VideocamIcon sx={{ color: "black" }} />
-            </a>
+          <div className="submission-history-svg-wrapper">
+            <VideocamIcon titleAccess="Has proof" sx={{ color: "black" }} />
           </div>
         }
       </td>
 
       { /* Comment - render submission comment, if there is one */ }
-      <td>{ submission.comment }</td>
+      <td>
+        { submission.comment &&
+          <div className="submission-history-svg-wrapper">
+            <ChatBubbleRoundedIcon titleAccess={ submission.comment } fontSize="small" />
+          </div>
+        }
+      </td>
 
       { /* Live status - Render checkbox if live */ }
-      <td>{ submission.live && <div className="record-history svg-wrapper"><CheckIcon /></div>  }</td>
+      <td>
+        { submission.live && 
+          <div className="submission-history svg-wrapper">
+            <CheckIcon titleAccess="Live proof" />
+          </div>
+        }
+      </td>
 
-      { /* Position - Render the position of the submission (live only) */ }
-      <td>{ submission.position ? submission.position : "-" }</td>
-
-      { /* All Position - Render the overall position of the submission */ }
+      { /* Position - Render the overall position of the submission */ }
       <td>{ submission.all_position }</td>
+
+      { /* Live Position - Render the position of the submission (live only) */ }
+      <td>{ submission.position ? submission.position : "-" }</td>
 
       { /* Moderator-only columns */ }
       { user.is_mod && 
@@ -74,10 +85,13 @@ function FilteredSubmissionRow({ submission, updateFunc, deleteFunc }) {
 
           {/* Update button - Render a button that allows the moderator to update a submission */}
           <td>
-            <div className="record-history-svg-wrapper">
+            <div className="submission-history-svg-wrapper">
               <button
                 type="button" 
-                onClick={ () => updateFunc(submission) } 
+                onClick={ (e) => {
+                  e.stopPropagation();
+                  updateFunc(submission);
+                 }} 
                 disabled={ cantUpdate(submission) }
                 title={ cantUpdate(submission) ? "Unable to update this submission." : undefined }
               >
@@ -88,10 +102,13 @@ function FilteredSubmissionRow({ submission, updateFunc, deleteFunc }) {
 
           { /* Delete button - Render a button that allows the moderator to delete a submission. */ }
           <td>
-            <div className="record-history-svg-wrapper">
+            <div className="submission-history-svg-wrapper">
               <button 
                 type="button" 
-                onClick={ () => deleteFunc(submission) } 
+                onClick={ (e) => {
+                  e.stopPropagation();
+                  deleteFunc(submission);
+                 }} 
                 disabled={ cantDelete(submission) }
                 title={ cantDelete(submission) ? "Unable to delete this submission." : undefined }
               >

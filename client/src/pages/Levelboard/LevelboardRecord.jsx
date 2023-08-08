@@ -23,23 +23,23 @@ function LevelboardRecord({ submission, iconSize }) {
 
       { /* If submission is approved, render a checkbox next to the record */ }
       { submission.approved ? 
-        <span className="levelboard-aligned-span">
+        <div className="levelboard-aligned-span">
           <CheckIcon 
             fontSize={ iconSize }
             titleAccess="This submission has been approved by a moderator."
           />
-        </span>
+        </div>
       :
 
         // If submission has a report, render a warning icon next to the record 
         submission.report ?
-          <span className="levelboard-aligned-span">
+          <div className="levelboard-aligned-span">
             <WarningRoundedIcon 
               fontSize={ iconSize }
               titleAccess="This submission has been reported." 
               sx={{ color: red[500] }} 
             />
-          </span>
+          </div>
         :
 
           // Otherwise, render no icon

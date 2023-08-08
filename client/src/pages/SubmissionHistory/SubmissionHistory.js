@@ -32,6 +32,7 @@ const SubmissionHistory = () => {
     const getSubmissions = async (abb, levelName, profileId, type) => {
         const isScore = type === "score";
         const submissions = await queryFilteredSubmissions(abb, levelName, profileId, isScore);
+        console.log(submissions);
         setSubmissions(submissions);
     };
 

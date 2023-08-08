@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useLocation } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import EmbedHelper from "../../helper/EmbedHelper";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
@@ -47,12 +47,12 @@ function DetailPopup({ submission, setSubmission }) {
         <ul className="levelboard-detail-popup-info">
           <li>Position: { submission.position }</li>
           <li>Date: { dateB2F(details.submitted_at) }</li>
-          <li>Region: { details.region.region_name }</li>
           <li>Monkey: { details.monkey.monkey_name }</li>
+          <li>Region: { details.region.region_name }</li>
           <li>Live:&nbsp;
-            <span className="levelboard-aligned-span">
+            <div className="levelboard-svg-wrapper">
               { details.live ? <CheckIcon /> : <CloseRoundedIcon /> }
-            </span>
+            </div>
           </li>
           { details.comment && <li>Comment: "{ details.comment }"</li> }
         </ul>

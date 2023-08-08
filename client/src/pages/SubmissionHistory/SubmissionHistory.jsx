@@ -2,9 +2,10 @@
 import "./SubmissionHistory.css";
 import { GameContext, MessageContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
 import { Link } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DeletePopup from "./DeletePopup.jsx";
+import DetailPopup from "./DetailPopup";
 import FilteredSubmissionRow from "./FilteredSubmissionRow";
 import FrontendHelper from "../../helper/FrontendHelper";
 import PathHelper from "../../helper/PathHelper";
@@ -39,6 +40,9 @@ function SubmissionHistory() {
   const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES & FUNCTIONS ====== */
+
+  // states
+  const [detailSubmission, setDetailSubmission] = useState(undefined);
 
   // states and functions from the js file
   const { 
@@ -98,7 +102,7 @@ function SubmissionHistory() {
     <>
 
       { /* Record History Header - Render information about the page. */ }
-      <div className="record-history-header">
+      <div className="submission-history-header">
         <h1>Submission History</h1>
 
         { /* Render a custom message, depending on the path. */ }
@@ -113,7 +117,7 @@ function SubmissionHistory() {
       </div>
 
       { /* Record History Body - The actual content of the page: a table of submissions */ }
-      <div className="record-history-body">
+      <div className="submission-history-body">
         <table>
 
           { /* Table header: specifies the information displayed in each cell of the table */ }
@@ -122,13 +126,13 @@ function SubmissionHistory() {
               <th>Submitted</th>
               <th>{ capitalize(type) }</th>
               <th>Date</th>
-              <th>Region</th>
               <th>Monkey</th>
-              <th>Proof</th>
-              <th>Comment</th>
-              <th>Live</th>
+              <th>Region</th>
+              <th></th>
+              <th></th>
+              <th></th>
               <th>Position</th>
-              <th>All Position</th>
+              <th>Live Position</th>
               { user.is_mod && 
                 <>
                   <th>Update</th>
@@ -148,6 +152,7 @@ function SubmissionHistory() {
                   submission={ submission }
                   updateFunc={ setUpdateSubmission }
                   deleteFunc={ setDeleteSubmission }
+                  onClickFunc={ setDetailSubmission }
                   key={ submission.id }
                 />;
               })
@@ -156,7 +161,7 @@ function SubmissionHistory() {
 
               // Otherwise, render a message to the client stating that the user specified in the path has not submitted to the level.
               <tr>
-                <td className="record-history-empty" colSpan={ user.is_mod ? TABLE_WIDTH+1 : TABLE_WIDTH }><i>This user has never submitted to this chart.</i></td>
+                <td className="submission-history-empty" colSpan={ user.is_mod ? TABLE_WIDTH+1 : TABLE_WIDTH }><i>This user has never submitted to this chart.</i></td>
               </tr>
 
             }
@@ -166,6 +171,7 @@ function SubmissionHistory() {
       </div>
 
       { /* Popups */ }
+      <DetailPopup submission={ detailSubmission } setSubmission={ setDetailSubmission } profile={ profile } />
       <DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } profile={ profile } />
       <UpdatePopup submission={ updateSubmission } setSubmission={ setUpdateSubmission } profile={ profile } />
     </>
