@@ -74,7 +74,7 @@ const SubmissionHandler = (isNew) => {
 
                 // finally, we can update the recent state
                 const newArr = [...state[abb], originalSubmission].sort((a, b) => {
-                    return a.details.id.localeCompare(b.details.id);
+                    return isNew ? a.details.id.localeCompare(b.details.id) : a.report.report_date.localeCompare(b.report.report_date);
                 });
                 return {
                     ...state,

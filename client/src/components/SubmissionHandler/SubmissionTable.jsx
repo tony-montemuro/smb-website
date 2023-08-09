@@ -15,7 +15,7 @@ function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
       <thead>
         <tr>
           { isChecked && <th>Action</th> }
-          <th>Time Ago</th>
+          <th>{ isNew ? "Submitted" : "Reported" }</th>
           <th>User</th>
           { isChecked && <th>Game</th> }
           <th>Level</th>
@@ -27,7 +27,13 @@ function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
       <tbody>
         { submissions.length > 0 ?
           submissions.map(submission => {
-            return <SubmissionRow submission={ submission } onClick={ onRowClick } isChecked={ isChecked } key={ submission.details.id } />
+            return <SubmissionRow 
+              submission={ submission } 
+              onClick={ onRowClick } 
+              isChecked={ isChecked } 
+              isNew={ isNew }
+              key={ submission.details.id } 
+            />
           })
         :
           <tr className="submission-handler-empty-row">

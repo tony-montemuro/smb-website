@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SubmissionRead from "../../database/read/SubmissionRead";
@@ -13,9 +13,6 @@ const ModeratorLayout = () => {
 
     // addMessage function from message context
     const { addMessage } = useContext(MessageContext);
-
-    // user state from user context
-    const { user } = useContext(UserContext);
 
     // static cache state from static cache context
     const { staticCache } = useContext(StaticCacheContext);
@@ -55,7 +52,7 @@ const ModeratorLayout = () => {
         // fill the two arrays
         allSubmissions.forEach(submission => {
             // if submission has a report, and that report is not associated with the current moderator, add it to reported array
-            if (submission.report && submission.report.creator.id !== user.profile.id && submission.report.profile_id !== user.profile.id) {
+            if (submission.report) {
                 reportedSubmissions.push(submission);
             }
 
@@ -68,7 +65,22 @@ const ModeratorLayout = () => {
         return { recentSubmissions, reportedSubmissions };
     };
 
-    // FUNCTION 3: getCategorizedObject - a function that takes an array of submissions, and returns an object that categorizes
+    // FUNCTION 3: getSortedSubmissions - a function that returns a sorted copy of array of submissions based on the type of submission
+    // PRECONDITIONS (2 parameters):
+    // 1.) submissions: an array of submission objects
+    // 2.) isNew: a boolean variable which controls the sort style
+    // POSTCONDITIONS (2 possible outcomes):
+    // in both cases, the same array is returned, but sorted according to the `isNew` parameter
+    // if `isNew` it's set to true, we treat the array as "recent submissions", and sort them based on the
+    // details.submission_id field.
+    // otherwise, we treat the array as "reported submissions", and sort them based on the report.report_date field
+    const getSortedSubmissions = (submissions, isNew) => {
+        return submissions.sort((a, b) => {
+            return isNew ? a.details.id.localeCompare(b.details.id) : a.report.report_date.localeCompare(b.report.report_date);
+        });
+    };
+
+    // FUNCTION 4: getCategorizedObject - a function that takes an array of submissions, and returns an object that categorizes
     // each submission by game
     // PRECONDITIONS (1 parameter):
     // 1.) submissions: an array of submission objects
@@ -93,7 +105,7 @@ const ModeratorLayout = () => {
         return categorized;
     };
 
-    // FUNCTION 4: fetchSubmissions - function that gets all relevant submissions for moderator hub
+    // FUNCTION 5: fetchSubmissions - function that gets all relevant submissions for moderator hub
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the query successfully returns submissions, filter them into two distinct arrays: recent and reports
@@ -109,9 +121,14 @@ const ModeratorLayout = () => {
             // partition all submissions into two arrays
             const { recentSubmissions, reportedSubmissions } = partitionByType(allSubmissions);
 
+            // sort both arrays. the recent submissions are ordered by details.submission_id, while the reported
+            // submissions are sorted by report_date
+            const sortedRecentSubmissions = getSortedSubmissions(recentSubmissions, true);
+            const sortedReportedSubmissions = getSortedSubmissions(reportedSubmissions, false);
+
             // generate an object that categorize each submissions by game
-            const recent = getCategorizedObject(recentSubmissions);
-            const reported = getCategorizedObject(reportedSubmissions);
+            const recent = getCategorizedObject(sortedRecentSubmissions);
+            const reported = getCategorizedObject(sortedReportedSubmissions);
 
             // finally, update the submissions state hook
             setSubmissions({

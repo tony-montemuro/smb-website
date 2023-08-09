@@ -158,11 +158,8 @@ const SubmissionRead = () => {
                 throw error;
             }
 
-            // next, order the submissions in ascending order by the `details.id` field
-            const ordered = unapproved.sort((a, b) => a.details.id.localeCompare(b.details.id));
-
-            // return the ordered array of unapproved submissions
-            return ordered;
+            // return the array of unapproved submissions
+            return unapproved;
 
         } catch (error) {
             // error will be handled by caller function

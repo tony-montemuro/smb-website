@@ -3,7 +3,7 @@ import ActionSymbol from "./ActionSymbol";
 import FrontendHelper from "../../helper/FrontendHelper";
 import Username from "../../components/Username/Username.jsx"
 
-function SubmissionRow({ submission, onClick, isChecked }) {
+function SubmissionRow({ submission, onClick, isChecked, isNew }) {
   /* ===== VARIABLES ===== */
   const details = submission.details;
   const profile = submission.profile;
@@ -27,7 +27,7 @@ function SubmissionRow({ submission, onClick, isChecked }) {
 
       { /* Render how long ago the submission was submitted */ }
       <td>
-        <div>{ getTimeAgo(details.id) }</div>
+        <div>{ getTimeAgo(isNew ? details.id : submission.report.report_date) }</div>
       </td>
 
       { /* Render the username of the person who submitted it */ }
