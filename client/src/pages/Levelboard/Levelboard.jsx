@@ -3,14 +3,13 @@ import "./Levelboard.css";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
+import DetailPopup from "./DetailPopup.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
 import InsertPopup from "./InsertPopup.jsx";
 import PathHelper from "../../helper/PathHelper";
-import ReportPopup from "./ReportPopup.jsx";
 import UpdatePopup from "./UpdatePopup.jsx";
-import DetailPopup from "./DetailPopup";
 
 function Levelboard({ imageReducer, submissionReducer }) {
 	/* ===== VARIABLES ===== */
@@ -38,7 +37,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	const [levelboardState, setLevelboardState] = useState("live");
 	const [detailSubmission, setDetailSubmission] = useState(undefined);
 	const [insertPopup, setInsertPopup] = useState(false);
-	const [reportSubmission, setReportSubmission] = useState(undefined);
 	const [updateSubmission, setUpdateSubmission] = useState(undefined);
 
 	// states and functions from js file
@@ -91,7 +89,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 					<div className="levelboard-title-btn">
 						{ board.adjacent.prev && 
 							<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.prev }` }>
-								<button>←Prev</button>
+								<button type="button">←Prev</button>
 							</Link>
 						}
 					</div>
@@ -105,7 +103,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 					<div className="levelboard-title-btn">
 						{ board.adjacent.next &&
 							<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.next }` }>
-								<button>Next→</button>
+								<button type="button">Next→</button>
 							</Link>
 						}
 					</div>
@@ -206,9 +204,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 								<th>Region</th>
 								<th></th>
 								<th></th>
-
-								{ /* Report header element should ONLY render if the current user is authenticated */ }
-								{ user.id && <th>Report</th> }
 								
 							</tr>
 						</thead>
@@ -219,7 +214,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 								return <LevelboardRow 
 									submission={ val } 
 									imageReducer={ imageReducer } 
-									reportFunc={ setReportSubmission } 
 									onClickFunc={ setDetailSubmission }
 									key={ val.details.id } 
 								/>
@@ -232,7 +226,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 
 			{ /* Popups */ }
 			<DetailPopup submission={ detailSubmission } setSubmission={ setDetailSubmission } />
-			<ReportPopup submission={ reportSubmission } setSubmission={ setReportSubmission } />
 			<InsertPopup 
 				popup={ insertPopup } 
 				setPopup={ setInsertPopup } 

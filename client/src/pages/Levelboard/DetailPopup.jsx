@@ -6,6 +6,7 @@ import EmbedHelper from "../../helper/EmbedHelper";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import LevelboardRecord from "./LevelboardRecord";
+import ReportForm from "./ReportForm.jsx";
 import Username from "../../components/Username/Username.jsx";
 
 function DetailPopup({ submission, setSubmission }) {
@@ -56,6 +57,11 @@ function DetailPopup({ submission, setSubmission }) {
           </li>
           { details.comment && <li>Comment: "{ details.comment }"</li> }
         </ul>
+
+        { /* Horizontal rule to break the "submission" from the "report" form */ }
+        <hr />
+
+        <ReportForm submission={ submission } />
 
       </div>
     </div>;

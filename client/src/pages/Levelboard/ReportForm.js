@@ -5,7 +5,7 @@ import { MessageContext, UserContext } from "../../utils/Contexts";
 import ReportUpdate from "../../database/update/ReportUpdates";
 import ValidationHelper from "../../helper/ValidationHelper";
 
-const ReportPopup = () => {
+const ReportForm = () => {
     /* ===== VARIABLES ===== */
     const formInit = { message: "", error: null, submitting: false };
     const location = useLocation();
@@ -35,15 +35,13 @@ const ReportPopup = () => {
 
     // FUNCTION 1 - handleReport: given the report object, send an array of reports to all moderators, and the owner
     // of the submission
-    // PRECONDITIONS (2 parameters):
+    // PRECONDITIONS (1 parameter):
     // 1.) submission: a submission object that contains information about the reported submission
-    // 2.) setSubmission: function used to update the reportSubmission state in Levelboard.jsx. used to close popup if report
-    // is successfully submitted
     // POSTCONDITIONS (3 possible outcomes):
     // if the message is not validated, the error field of form is updated by calling setForm() function, and the function returns early
     // if the message is validated, and at least one notification fails to insert, user is alerted of the error
-    // if the message is validated, and all notifications insert, the user is alerted of the success, and the popup is closed
-    const handleReport = async (submission, setSubmission) => {
+    // if the message is validated, and all notifications insert, the page will reload
+    const handleReport = async submission => {
         // first, update the form to prevent multiple submissions
         setForm({ ...form, submitting: true });
 
@@ -90,19 +88,8 @@ const ReportPopup = () => {
         setForm({ error: null, message: e.target.value });
     };
 
-    // FUNCTION 3 - closePopup: given the setSubmission function, reset & close the popup
-    // PRECONDITIONS (1 parameter):
-    // 1.) setSubmission - function used to update the reportSubmission state in Levelboard.jsx. when set to null, the popup will close
-    // POSTCONDITIONS (1 possible outcome):
-    // the form is set to it's default value by calling setForm() with formInit argument, and the report popup is closed by calling 
-    // setSubmission() with a null argument
-    const closePopup = (setSubmission) => {
-        setForm(formInit);
-        setSubmission(null);
-    };
-
-    return { form, handleReport, handleChange, closePopup };
+    return { form, handleReport, handleChange };
 };
 
 /* ===== EXPORTS ===== */
-export default ReportPopup;
+export default ReportForm;

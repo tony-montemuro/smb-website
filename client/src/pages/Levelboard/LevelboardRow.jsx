@@ -1,19 +1,11 @@
 /* ===== IMPORTS ===== */
-import { useContext } from "react";
-import { UserContext } from "../../utils/Contexts";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardRecord from "./LevelboardRecord";
-import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
-function LevelboardRow({ submission, imageReducer, reportFunc, onClickFunc }) {
-  /* ===== CONTEXTS ===== */
-
-  // user state from user context
-  const { user } = useContext(UserContext);
-
+function LevelboardRow({ submission, imageReducer, onClickFunc }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
@@ -66,25 +58,6 @@ function LevelboardRow({ submission, imageReducer, reportFunc, onClickFunc }) {
           </div>
         }
       </td>
-
-      { /* Report button: when pressed, a report popup will appear, which will allow the user to report the submission. Users can report
-      any submission other than their own submission. */ }
-      { user.id &&
-        <td>
-          <div className="levelboard-svg-wrapper">
-            <button 
-              type="button"
-              onClick={ (e) => {
-                e.stopPropagation();
-                reportFunc(submission) 
-              }}
-              disabled={ (user.profile && user.profile.id === submission.profile.id) || submission.report }
-            >
-              <WarningAmberRoundedIcon titleAccess="Report" />
-            </button>
-          </div>
-        </td>
-      }
 
     </tr>
   );
