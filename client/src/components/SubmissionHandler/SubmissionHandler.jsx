@@ -7,7 +7,7 @@ import SubmissionHandlerLogic from "./SubmissionHandler.js";
 import SubmissionPopup from "./SubmissionPopup.jsx";
 import SubmissionTable from "./SubmissionTable";
 
-function SubmissionHandler({ imageReducer, isNew, handleChanges }) {
+function SubmissionHandler({ imageReducer, isNew }) {
   /* ===== CONTEXTS ===== */
 
   // submissions state from submission context
@@ -25,7 +25,8 @@ function SubmissionHandler({ imageReducer, isNew, handleChanges }) {
     dispatchRecent, 
     setRecent, 
     setDefaultGame, 
-    addToRecent
+    addToRecent,
+    handleChanges
   } = SubmissionHandlerLogic(isNew);
 
   /* ===== EFFECTS ===== */
