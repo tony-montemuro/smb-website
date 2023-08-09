@@ -138,11 +138,6 @@
     white-space: nowrap;
 }
 
-.submission-handler-popup-notice {
-    cursor: default;
-    margin: 10px;
-}
-
 .submission-handler-popup-buttons {
     margin: 10px;
     display: flex;

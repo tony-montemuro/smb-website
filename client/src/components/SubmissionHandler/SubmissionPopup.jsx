@@ -31,7 +31,17 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
   /* ===== FUNCTIONS ===== */
 
   // states & functions from the js file
-  const { form, showReject, setShowReject, fillForm, handleChange, handleClose, handleSubmit } = SubmissionPopupLogic();
+  const { 
+    form, 
+    showReject, 
+    clearToggle, 
+    setShowReject, 
+    fillForm, 
+    handleChange, 
+    handleToggle, 
+    handleClose, 
+    handleSubmit 
+  } = SubmissionPopupLogic();
 
   // helper functions
   const { capitalize, cleanLevelName, recordB2F, dateB2F } = FrontendHelper();
@@ -175,21 +185,32 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                   <UpdatedFieldSymbol oldVal={ submission.details.live } newVal={ form.values.live } />
                 </div>
 
-                { /* Comment: Render a textbox allowing the user to change the comment, if necessary */ }
+                { /* Comment: Render a read-only textbox that allows the user to see the comment */ }
                 <div className="submission-handler-popup-input submission-handler-popup-textarea">
                   <label htmlFor="comment">Comment (optional): </label>
                   <div id="submission-handler-comment-wrapper">
                     <textarea 
                       id="comment"
-                      value={ form.values.comment }
+                      value={ !clearToggle ? form.values.comment : "" }
                       onChange={ (e) => handleChange(e) }
                       rows={ TEXT_AREA_ROWS }
+                      readOnly={ true }
                     >
                     </textarea>
 
                     { /* Render an updated field symbol if the comment value has been modified */ }
                     <UpdatedFieldSymbol oldVal={ submission.details.comment } newVal={ form.values.comment } />
                   </div>
+                </div>
+
+                { /* Comment toggle: a button that allows the moderator to clear the comment, if necessary */ }
+                <div className="submission-handler-popup-input">
+                  <label htmlFor="comment-toggle">Clear Comment: </label>
+                  <input 
+                    type="checkbox"
+                    checked={ clearToggle }
+                    onChange={ () => handleToggle(submission) }
+                  />
                 </div>
               </div>
 

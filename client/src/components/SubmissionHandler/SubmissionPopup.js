@@ -24,6 +24,7 @@ const SubmissionPopup = () => {
     /* ===== STATES ===== */
     const [form, setForm] = useState(defaultForm);
     const [showReject, setShowReject] = useState(false);
+    const [clearToggle, setClearToggle] = useState(false);
 
     /* ===== FUNCTIONS ===== */
     
@@ -36,7 +37,7 @@ const SubmissionPopup = () => {
     // PRECONDITIONS (1 parameter):
     // 1.) submission: an object containing lots of information about a submission
     // POSTCONDITIONS (1 possible outcome):
-    // using data from the submission object, we fill the form values
+    // using data from the submission object, we fill the form values, and also set the clearForm value back to false
     const fillForm = submission => {
         setForm({ ...form, values: {
             submitted_at: dateB2F(submission.details.submitted_at),
@@ -47,6 +48,7 @@ const SubmissionPopup = () => {
             comment: submission.details.comment,
             message: ""
         }});
+        setClearToggle(false);
     };
 
     // FUNCTION 2: handleChange - code that executes each time the user makes a change to the form
@@ -70,7 +72,18 @@ const SubmissionPopup = () => {
         }
     };
 
-    // FUNCTION 3: handleClose - function that runs to close the component
+    // FUNCTION 3: handleToggle - code that executes each time the user toggles the "Clear Comment" option
+    // PRECONDITIONS (1 parameter):
+    // 1.) submission: a submission object
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the toggle is not activated before this function runs, the toggle will enable, and the comment will clear
+    // if the toggle is activated before this function runs, the toggle will disable, and the comment will reappear
+    const handleToggle = submission => {
+        setForm({ ...form, values: { ...form.values, comment: clearToggle ? submission.details.comment : "" } })
+        setClearToggle(!clearToggle);
+    };
+
+    // FUNCTION 4: handleClose - function that runs to close the component
     // PRECONDITIONS (1 parameter):
     // 1.) setPopup - a state function that we can use to close the popup, since a popup will only render if the popup
     // state is defined
@@ -82,7 +95,7 @@ const SubmissionPopup = () => {
         setPopup(null);
     };
 
-    // FUNCTION 4: isFormUnchanged - function that checks whether or not the form was unchanged
+    // FUNCTION 5: isFormUnchanged - function that checks whether or not the form was unchanged
     // PRECONDITIONS (1 parameter):
     // 1.) submission - our original submission object
     // POSTCONDITIONS (2 possible outcomes):
@@ -97,7 +110,7 @@ const SubmissionPopup = () => {
             && form.values.comment === submission.details.comment;
     };
 
-    // FUNCTION 5: handleSubmit - function that runs when the user submits the approval form
+    // FUNCTION 6: handleSubmit - function that runs when the user submits the approval form
     // PRECONDITIONS (5 parameters):
     // 1.) e: an event object generated when the user submits the form
     // 2.) action: a string, either "approve" or "delete"
@@ -174,7 +187,17 @@ const SubmissionPopup = () => {
         handleClose(setPopup);
     };
 
-    return { form, showReject, setShowReject, fillForm, handleChange, handleClose, handleSubmit };
+    return { 
+        form, 
+        showReject, 
+        clearToggle,
+        setShowReject, 
+        fillForm, 
+        handleChange, 
+        handleToggle,
+        handleClose, 
+        handleSubmit 
+    };
 };
 
 /* ===== EXPORTS ===== */
