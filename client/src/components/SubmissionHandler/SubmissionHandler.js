@@ -143,7 +143,19 @@ const SubmissionHandler = (isNew) => {
         dispatchRecent({ type: "add", payload: submission });
     };
 
-    // FUNCTION 4: generateLevel1Promises - a function that returns an array of promises, which should be executed concurrently
+    // FUNCTION 4: isClickable - a function that determines whether or not a submission can be clicked
+    // PRECONDITIONS (3 parameters):
+    // 1.) submission: a submission object
+    // POSTCONDITIONS (2 possible outcomes):
+    // in general, this function will return true
+    // however, if the submission is NOT new, and the report that exists is either on a submission belonging to the current user,
+    // or was created by the current user, we want to return false
+    const isClickable = (submission) => {
+        const report = submission.report;
+        return !(!isNew && (report.profile_id === user.profile.id || report.creator.id === user.profile.id));
+    }
+
+    // FUNCTION 5: generateLevel1Promises - a function that returns an array of promises, which should be executed concurrently
     // PRECONDITIONS (1 parameter):
     // 1.) checked: an array of submissions, which should only be called after the user has selected the `Make Changes` button
     // of the submission handler component
@@ -219,7 +231,7 @@ const SubmissionHandler = (isNew) => {
         return level1Promises;
     };
 
-    // FUNCTION 5: generateLevel2Promises - a function that returns an array of promises, which should be executed concurrently
+    // FUNCTION 6: generateLevel2Promises - a function that returns an array of promises, which should be executed concurrently
     // PRECONDITIONS (1 parameter):
     // 1.) filteredChecked - a filtered version of `checked` which only includes submissions that should have a level 2 query
     // POSTCONDITIONS (1 possible outcome):
@@ -284,7 +296,7 @@ const SubmissionHandler = (isNew) => {
         return level2Promises;
     };
 
-    // FUNCTION 6: renderErrorMessages - given two arrays of failed queries, render a unique error message for each
+    // FUNCTION 7: renderErrorMessages - given two arrays of failed queries, render a unique error message for each
     // PRECONDITIONS (2 parameters):
     // 1.) failedLevel1Queries - the array of all failed level 1 queries
     // 2.) failedLevel2Queries - the array of all failed level 2 queries
@@ -312,7 +324,7 @@ const SubmissionHandler = (isNew) => {
         });
     };
 
-    // FUNCTION 7: handleChanges - code that executes when the user clicks the `make changes` button in the SubmissionHandler
+    // FUNCTION 8: handleChanges - code that executes when the user clicks the `make changes` button in the SubmissionHandler
     // component (for new submissions!)
     // PRECONDITIONS (1 parameter):
     // 1.) checked: an array of submissions with actions, which should have at least one element
@@ -365,7 +377,18 @@ const SubmissionHandler = (isNew) => {
         }
     };
 
-    return { game, recent, checked, setGame, dispatchRecent, setRecent, setDefaultGame, addToRecent, handleChanges };
+    return { 
+        game, 
+        recent, 
+        checked, 
+        setGame, 
+        dispatchRecent, 
+        setRecent, 
+        setDefaultGame, 
+        addToRecent, 
+        isClickable, 
+        handleChanges 
+    };
 };
 
 /* ===== EXPORTS ===== */

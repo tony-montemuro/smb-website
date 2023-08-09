@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import ActionSymbol from "./ActionSymbol";
 import FrontendHelper from "../../helper/FrontendHelper";
+import SubmissionHandlerLogic from "./SubmissionHandler.js";
 import Username from "../../components/Username/Username.jsx"
 
 function SubmissionRow({ submission, onClick, isChecked, isNew }) {
@@ -13,10 +14,15 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
 
   // helper functions
   const { getTimeAgo, capitalize, cleanLevelName, recordB2F } = FrontendHelper();
+  const { isClickable } = SubmissionHandlerLogic(isNew);
 
   /* ===== SUBMISSION ROW ===== */
   return (
-    <tr onClick={ () => onClick(submission) }>
+    <tr 
+      className={ !isClickable(submission) ? "submission-handler-not-clickable" : "" } 
+      onClick={ () => onClick(submission) } 
+      disabled={ true }
+    >
 
       { /* If isChecked is true, render the action for the submission */ }
       { isChecked && 

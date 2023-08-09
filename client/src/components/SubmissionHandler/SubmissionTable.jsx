@@ -1,9 +1,15 @@
 /* ===== IMPORTS ===== */
+import SubmissionHandlerLogic from "./SubmissionHandler.js";
 import SubmissionRow from "./SubmissionRow";
 
 function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
   /* ===== VARIABLES ===== */
   const NUM_ROWS = isChecked ? 6 : 4;
+
+  /* ===== FUNCTIONS ===== */
+
+  // functions from the js file
+  const { isClickable } = SubmissionHandlerLogic(isNew);
 
   /* ===== SUBMISSION TABLE COMPONENT ===== */
   return (
@@ -29,7 +35,7 @@ function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
           submissions.map(submission => {
             return <SubmissionRow 
               submission={ submission } 
-              onClick={ onRowClick } 
+              onClick={ isClickable(submission) ? onRowClick : null } 
               isChecked={ isChecked } 
               isNew={ isNew }
               key={ submission.details.id } 

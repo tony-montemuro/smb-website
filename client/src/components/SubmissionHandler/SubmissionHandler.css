@@ -43,9 +43,15 @@
     padding: 5px;
 }
 
-.submission-handler-body tbody tr:not(.submission-handler-empty-row):hover {
+.submission-handler-body tbody tr:not(.submission-handler-empty-row):not(.submission-handler-not-clickable):hover {
     background-color: #f1f1f1;
     cursor: pointer;
+}
+
+.submission-handler-body tbody tr.submission-handler-not-clickable {
+    background-color: #f0f0f0;
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 .submission-handler-empty-row {
