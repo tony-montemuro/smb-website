@@ -3,7 +3,7 @@ import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../utils/Contexts";
-import Logo from "../../img/logo.png";
+import Logo from "../../img/Logo";
 import NavCreateProfile from "./NavCreateProfile";
 import NavProfile from "./NavProfile";
 import NavSignIn from "./NavSignIn";
@@ -20,9 +20,11 @@ function Navbar({ imageReducer }) {
       <nav className="nav">
 
         { /* Link to the homepage - left side of navbar */ }
-        <Link to="/" title="Home">
-          <img id="nav-logo" src={ Logo } alt="SMBElite"></img>
-        </Link>
+        <div className="nav-logo-container">
+          <Link to="/" title="Home">
+            <Logo />
+          </Link>
+        </div>
 
         { /* Nav list - various links, including games, resources, and support page. */ }
         <div className="nav-list">

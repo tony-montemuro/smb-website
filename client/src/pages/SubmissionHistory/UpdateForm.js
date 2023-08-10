@@ -150,7 +150,7 @@ const UpdateForm = () => {
     };
 
     // FUNCTION 6: handleSubmit - function that is called when the user submits the form
-    // PRECONDITIONS (3 parameters):
+    // PRECONDITIONS (2 parameters):
     // 1.) e: an event object which is generated when the user submits the update submission form
     // 2.) submission: a submission object, which represents the submission pre-update
     // POSTCONDITIONS (3 possible outcomes):
