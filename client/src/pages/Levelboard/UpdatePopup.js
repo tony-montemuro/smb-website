@@ -1,27 +1,20 @@
 /* ===== IMPORTS ===== */
 import { useContext, useReducer } from "react";
-import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
+import { MessageContext } from "../../utils/Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import DateHelper from "../../helper/DateHelper";
 import LevelboardUtils from "./LevelboardUtils";
-import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const UpdatePopup = () => {
     /* ===== VARIABLES ===== */
     const formInit = {
 		values: null,
-		error: { proof: null, comment: null, message: null },
+		error: { proof: null, comment: null },
         submitting: false
 	};
 
     /* ===== CONTEXTS ===== */
-
-    // game state from game context
-    const { game } = useContext(GameContext);
-
-    // user state from user context
-    const { user } = useContext(UserContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -48,12 +41,11 @@ const UpdatePopup = () => {
 
     // database functions
     const { updateSubmission } = AllSubmissionUpdate(); 
-    const { insertNotification } = NotificationUpdate();
 
     // helper functions
     const { getDateOfSubmission } = DateHelper();
     const { submission2Form } = LevelboardUtils();
-    const { validateMessage, validateProof, validateComment } = ValidationHelper();
+    const { validateProof, validateComment } = ValidationHelper();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
     // PRECONDITIONS (3 parameters):
@@ -116,47 +108,7 @@ const UpdatePopup = () => {
         return updatedData;
     };
 
-    // FUNCTION 4: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
-    // to backend
-    // PRECONDITIONS (2 parameters):
-    // 1.) oldSubmission: a submission object containing information on the un-updated submission
-    // 2.) message: a string representing the message created by the moderator to be sent in the notification
-    // POSTCONDITION (2 possible outcomes):
-    // if the current user does not own the submission, this function will generate a notification object and make a call to 
-    // insert it into the database
-    // if the current user does own the submission, this function returns early
-    const handleNotification = async (oldSubmission, message) => {
-        // initialize variables
-        const submissionProfileId = oldSubmission.profile.id;
-        const submissionDetails = oldSubmission.details;
-
-        // if these two ids are not equal, it means a moderator is updating a submission, so we need to notify the owner
-        // of the submission of this action. if this condition is not met, the function will return early
-        if (user.profile.id !== submissionProfileId) {
-			const notification = {
-				notif_type: "update",
-				profile_id: submissionProfileId,
-				creator_id: user.profile.id,
-				message: message,
-                game_id: game.abb,
-                level_id: oldSubmission.level.name,
-                score: oldSubmission.score,
-                submission_id: submissionDetails.id,
-                record: submissionDetails.record,
-                submitted_at: submissionDetails.submitted_at,
-                region_id: submissionDetails.region.id,
-                monkey_id: submissionDetails.monkey.id,
-                proof: submissionDetails.proof,
-                live: submissionDetails.live,
-                comment: submissionDetails.comment
-			};
-			
-			// insert the notification into the database
-			await insertNotification(notification);
-		}
-    };
-
-    // FUNCTION 5: handleSubmit - function that is called when the user submits the form
+    // FUNCTION 4: handleSubmit - function that is called when the user submits the form
     // PRECONDITIONS (2 parameters):
     // 1.) e: an event object which is generated when the user submits the update submission form
     // 2.) submission: a submission object, which represents the submission pre-update
@@ -178,7 +130,6 @@ const UpdatePopup = () => {
         // perform form validation
 		error.proof = validateProof(form.values.proof);
 		error.comment = validateComment(form.values.comment);
-        error.message = validateMessage(form.values.message, false);
 
         // if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
@@ -199,23 +150,12 @@ const UpdatePopup = () => {
             // attempt to update the submission using updated data
             await updateSubmission(updatedData, id);
 
-            // now, handle the notification
-            await handleNotification(submission, form.values.message);
-
             // reload the page
             window.location.reload();
 
         } catch (error) {
-            if (error.code === "42501" && error.message === 'new row violates row-level security policy "Enforce receiving profile exists [RESTRICTIVE]" for table "notification"') {
-                // special case: moderator attempted to update a submission for a profile who is unauthenticated. this is actually
-                // expected behavior, so let's proceed as if there were not issues
-                window.location.reload();
-
-            } else {
-                // general case: if there is an error, inform the user
-                addMessage(error.message, "error");
-                dispatchForm({ field: "submitting", value: false });
-            }
+            addMessage(error.message, "error");
+            dispatchForm({ field: "submitting", value: false });
         };
     };
 

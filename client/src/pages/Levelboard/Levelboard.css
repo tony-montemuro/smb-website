@@ -215,6 +215,10 @@
     padding-bottom: 10px;
 }
 
+.levelboard-update h2 {
+    text-align: center;
+}
+
 .levelboard-popup form {
     margin-bottom: 8px;
 }

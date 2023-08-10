@@ -135,8 +135,6 @@ function Levelboard({ imageReducer, submissionReducer }) {
 						<button 
 							type="button" 
 							onClick={ () => setUpdateSubmission(board.records.all.find(row => row.profile.id === user.profile.id))}
-							disabled={ userSubmission && userSubmission.approved }
-							title={ userSubmission && userSubmission.approved ? "Approved submissions cannot be updated." : undefined }
 						>
 							Update Submission
 						</button>

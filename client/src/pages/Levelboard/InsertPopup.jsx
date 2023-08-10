@@ -59,7 +59,7 @@ function InsertPopup({ popup, setPopup, submissions }) {
           <div className="levelboard-submit">
 
             { /* Form header - specifies the type of submission */ }
-            <h2>Submit a { capitalize(type) }:</h2>
+            <h2>Submit a New { capitalize(type) }</h2>
 
             { /* Submission form - allows users to submit a record to the database */ }
             <form onSubmit={ (e) => handleSubmit(e, submissions) }>

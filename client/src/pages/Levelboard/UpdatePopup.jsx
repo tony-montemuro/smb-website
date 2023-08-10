@@ -4,7 +4,6 @@ import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import UpdatePopupLogic from "./UpdatePopup.js";
-import Username from "../../components/Username/Username";
 
 function UpdatePopup({ submission, setSubmission }) {
   /* ===== VARIABLES ===== */
@@ -12,7 +11,6 @@ function UpdatePopup({ submission, setSubmission }) {
   const path = location.pathname.split("/");
   const type = path[4];
   const levelName = path[5];
-  const profile = submission ? submission.profile : null;
   const TEXT_AREA_ROWS = 5;
 
   /* ===== CONTEXTS ===== */
@@ -56,20 +54,11 @@ function UpdatePopup({ submission, setSubmission }) {
           <div className="levelboard-update">
 
             { /* Form header */ }
-            <h2>Update Submission</h2>
+            <h2>Update Current Submission</h2>
+            { submission.approved && <p><b>Note:</b> Since this submission has been approved by a moderator, any updates will revoke it's approval.</p> }
 
             { /* Update submission form */ }
             <form onSubmit={ (e) => handleSubmit(e, submission) }>
-
-              { /* Submission user: display the username of the submission, if the owner of the submission is NOT the same
-              as the current user. this will only ever show up for moderators. */ }
-              { user.profile.id !== profile.id && 
-                <div className="levelboard-input-group">
-                  <span>User:&nbsp;
-                    <Username country={ profile.country } profileId={ profile.id } username={ profile.username } />
-                  </span>
-                </div>
-              }
 
               { /* Submission record: simply display the record, which is not able to be changed in this input. */ }
               <div className="levelboard-input-group">
