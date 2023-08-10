@@ -1,10 +1,15 @@
 /* ===== IMPORTS ===== */
+import { useContext } from "react";
 import { useLocation } from "react-router-dom";
+import { UserContext } from "../../utils/Contexts";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import DeleteForm from "./DeleteForm.jsx";
 import EmbedHelper from "../../helper/EmbedHelper";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
+import SubmissionHistoryLogic from "./SubmissionHistory.js";
+import UpdateForm from "./UpdateForm.jsx";
 import Username from "../../components/Username/Username";
 
 function DetailPopup({ submission, setSubmission, profile }) {
@@ -14,7 +19,15 @@ function DetailPopup({ submission, setSubmission, profile }) {
   const type = path[4];
   const level = path[5];
   
+  /* ===== CONTEXTS ===== */
+
+  // user state from user context
+  const { user } = useContext(UserContext);
+  
   /* ===== FUNCTIONS ===== */
+
+  // functions from the js file
+  const { cantModify, getUpdateReasoning, getDeleteReasoning } = SubmissionHistoryLogic();
 
   // helper functions
   const { cleanLevelName, recordB2F, dateB2F, getTimeAgo } = FrontendHelper();
@@ -43,7 +56,7 @@ function DetailPopup({ submission, setSubmission, profile }) {
         </div>
 
         { /* Submission history popup info - render the submission details within this unordered list */ }
-        <ul className="levelboard-detail-popup-info">
+        <ul className="submission-history-popup-info">
           <li>Submitted: { getTimeAgo(submission.id) }</li>
           <li>Position: { submission.all_position }</li>
           { submission.live && <li>Live Position: { submission.position }</li> }
@@ -57,6 +70,29 @@ function DetailPopup({ submission, setSubmission, profile }) {
           </li>
           { submission.comment && <li>Comment: "{ submission.comment }"</li> }
         </ul>
+
+        { /* Everything from here on out is moderator-only content */ }
+        { user.is_mod &&
+          <>
+
+            { /* First, render the update form, if the submission can be modified */ }
+            <hr />
+            { cantModify(submission) ?
+              <h2>{ getUpdateReasoning(submission) }</h2>
+            :
+              <UpdateForm submission={ submission } profile={ profile } />
+            }
+
+            { /* Next, render the delete form, if the submission can be modified */ }
+            <hr />
+            { cantModify(submission) ?
+              <h2>{ getDeleteReasoning(submission) }</h2>
+            :
+              <DeleteForm submission={ submission } profile={ profile } />
+            }
+            
+          </>
+        }
 
       </div>
     </div>;

@@ -94,28 +94,29 @@
     padding: 0;
 }
 
+.submission-history-popup-info {
+    list-style: none;
+    padding: 0;
+}
 
-.submission-history-update-wrapper {
+.submission-history-popup-info li {
     display: flex;
-    justify-content: center;
-}
-
-.submission-history-update {
-    display: inline-block;
-}
-
-.submission-history-update h2 {
-    text-align: center;
+    align-items: center;
+    height: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .submission-history-input-group {
-    margin-bottom: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .submission-history-textarea-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .submission-history-submit-btn-wrapper {

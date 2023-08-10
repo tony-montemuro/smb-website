@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useLocation } from "react-router-dom";
-import { useContext, useReducer } from "react";
+import { useContext, useReducer, useState } from "react";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import DateHelper from "../../helper/DateHelper";
@@ -8,11 +8,11 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
-const UpdatePopup = () => {
+const UpdateForm = () => {
     /* ===== VARIABLES ===== */
     const formInit = {
 		values: null,
-		error: { proof: null, comment: null, message: null },
+		error: { proof: null, comment: null },
         submitting: false
 	};
     const location = useLocation();
@@ -48,6 +48,7 @@ const UpdatePopup = () => {
 				return { ...state, [action.field]: action.value };
 		}
 	}, formInit);
+    const [clearToggle, setClearToggle] = useState(false);
 
     /* ===== FUNCTIONS ===== */
 
@@ -58,7 +59,7 @@ const UpdatePopup = () => {
     // helper functions
     const { getDateOfSubmission } = DateHelper();
     const { recordB2F, dateB2F } = FrontendHelper();
-    const { validateMessage, validateProof, validateComment } = ValidationHelper();
+    const { validateProof, validateComment } = ValidationHelper();
 
     // FUNCTION 1: submission2Form ("submission to form")
     // PRECONDITIONS (4 parameters):
@@ -83,7 +84,6 @@ const UpdatePopup = () => {
             game_id: game.abb,
             level_id: levelName,
             submitted_at: dateB2F(submission.submitted_at),
-            message: ""
         };
     };
 
@@ -131,7 +131,18 @@ const UpdatePopup = () => {
 		};
     };
 
-    // FUNCTION 5: getUpdateFromForm - takes form data, and extracts only the updatable information
+    // FUNCTION 5: handleToggle - code that executes each time the user toggles the "Clear Comment" option
+    // PRECONDITIONS (1 parameter):
+    // 1.) submission: a submission object
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the toggle is not activated before this function runs, the toggle will enable, and the comment will clear
+    // if the toggle is activated before this function runs, the toggle will disable, and the comment will reappear
+    const handleToggle = submission => {
+        dispatchForm({ field: "values", value: { comment: clearToggle ? submission.comment : "" } });
+        setClearToggle(!clearToggle);
+    };
+
+    // FUNCTION 6: getUpdateFromForm - takes form data, and extracts only the updatable information
     // PRECONDITIONS (4 parameters):
     // 1.) formVals: an object that stores the updated submission form values
     // 2.) date: a string representing the backend date of a submission
@@ -140,7 +151,7 @@ const UpdatePopup = () => {
     // the date parameter is also used to determine the "submitted_at" field
     const getUpdateFromForm = (formVals, date) => {
         // create our new updatedData object, which is equivelent to formVals minus the following fields:
-        // id, game_id, level_id, score, record, position, all_position, profile_id, message
+        // id, game_id, level_id, score, record, position, all_position, profile_id
         const { 
             id,
             game_id,
@@ -150,7 +161,6 @@ const UpdatePopup = () => {
             position,
             all_position,
             profile_id,
-            message,
             ...updatedData 
         } = formVals;
 
@@ -160,17 +170,16 @@ const UpdatePopup = () => {
         return updatedData;
     };
 
-    // FUNCTION 6: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
+    // FUNCTION 7: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
     // to backend
-    // PRECONDITIONS (3 parameters):
+    // PRECONDITIONS (2 parameters):
     // 1.) oldSubmission: a submission object containing information on the un-updated submission
     // 2.) profile: the profile object associated with the submission
-    // 3.) message: a string representing the message created by the moderator to be sent in the notification
     // POSTCONDITION (2 possible outcomes):
     // if the submissions is "notifyable", this function will generate a notification object and make a call to 
     // insert it into the database
     // otherwise, this function returns early
-    const handleNotification = async (oldSubmission, profile, message) => {
+    const handleNotification = async (oldSubmission, profile) => {
         // if these two ids are not equal, it means a moderator is updating a submission, so we need to notify the owner
         // of the submission of this action. if this condition is not met, the function will return early
         if (isNotifyable(oldSubmission, profile)) {
@@ -178,7 +187,6 @@ const UpdatePopup = () => {
 				notif_type: "update",
 				profile_id: profile.id,
 				creator_id: user.profile.id,
-				message: message,
                 game_id: game.abb,
                 level_id: levelId,
                 score: type === "score",
@@ -197,7 +205,7 @@ const UpdatePopup = () => {
 		}
     };
 
-    // FUNCTION 7: handleSubmit - function that is called when the user submits the form
+    // FUNCTION 8: handleSubmit - function that is called when the user submits the form
     // PRECONDITIONS (3 parameters):
     // 1.) e: an event object which is generated when the user submits the update submission form
     // 2.) submission: a submission object, which represents the submission pre-update
@@ -220,7 +228,6 @@ const UpdatePopup = () => {
         // perform form validation
 		error.proof = validateProof(form.values.proof);
 		error.comment = validateComment(form.values.comment);
-        error.message = validateMessage(form.values.message, false);
 
         // if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
@@ -242,7 +249,7 @@ const UpdatePopup = () => {
             await updateSubmission(updatedData, id);
 
             // now, handle the notification
-            await handleNotification(submission, profile, form.values.message);
+            await handleNotification(submission, profile);
 
             // reload the page
             window.location.reload();
@@ -261,19 +268,8 @@ const UpdatePopup = () => {
         };
     };
 
-    // FUNCTION 8: closePopup - function that is activated when the user attempts to close the popup
-    // PRECONDITIONS (1 parameter):
-    // 1.) setSubmission - function used to update the updateSubmission state in Levelboard.jsx. when set to null, the popup will close
-    // POSTCONDITIONS (1 possible outcomes):
-    // the form is set to default values by calling the dispatchForm() function with the { field: "all" } argument, and the popup
-    // is set to false
-    const closePopup = (setPopup) => {
-        dispatchForm({ field: "all" });
-        setPopup(null);
-    };
-
-    return { form, fillForm, handleChange, isNotifyable, handleSubmit, closePopup };
+    return { form, clearToggle, fillForm, handleChange, handleToggle, isNotifyable, handleSubmit };
 };
 
 /* ===== EXPORTS ===== */
-export default UpdatePopup;
+export default UpdateForm;

@@ -11,8 +11,6 @@ const SubmissionHistory = () => {
 
     /* ===== STATES ===== */
     const [submissions, setSubmissions] = useState(undefined);
-    const [updateSubmission, setUpdateSubmission] = useState(undefined);
-    const [deleteSubmission, setDeleteSubmission] = useState(undefined);
     const [profile, setProfile] = useState(undefined);
 
     /* ===== FUNCTIONS ===== */
@@ -35,39 +33,69 @@ const SubmissionHistory = () => {
         setSubmissions(submissions);
     };
 
-    // FUNCTION 2: cantUpdate - function that returns false if a submission is updatable, true otherwise
-    // PRECONDITIONS (1 parameter):
-    // 1.) submission - a submission object
-    // POSTCONDITIONS (2 possible outcome):
-    // if a submission is a "current" submission that's approved, this function returns true (CANNOT update)
-    // otherwise, false is returned
-    const cantUpdate = submission => {
-        const current = submission.submission ? submission.submission[0] : undefined;
-        return current && (current.approved);
-    };
-
-    // FUNCTION 3: cantDelete - function that returns false if a submission is deleteable, true otherwise
+    // FUNCTION 2: cantModify - function that returns false if a submission is modifyable, true otherwise
     // PRECONDITIONS (1 parameter):
     // 1.) submission - a submission object
     // POSTCONDITIONS (2 possible outcome):
     // if a submission is a "current" AND is approved OR has a "relevant" report submission, this function returns true (CANNOT update)
     // otherwise, false is returned
-    const cantDelete = submission => {
+    const cantModify = submission => {
         const current = submission.submission ? submission.submission[0] : undefined;
-        return current && (current.approved || (current.report && (current.profile_id !== user.profile.id || current.creator_id !== user.profile.id)));
+        return current && (current.approved || (current.report && (current.report.profile_id === user.profile.id || current.report.creator_id === user.profile.id)));
+    };
+
+    // FUNCTION 3: getUpdateReasoning - function that returns a string explaining why a submission cannot be updated
+    // PRECONDITIONS (1 parameter):
+    // 1.) submission - a submission object that is NOT able to be updated
+    // POSTCONDITIONS (1 possible outcome):
+    // depending on different factors of the submission, a reasoning is returned in the form of a string
+    const getUpdateReasoning = submission => {
+        const current = submission.submission[0];
+
+        // CASE 1: Submission is approved
+        if (current.approved) {
+            return "This submission cannot be updated since it has been approved by a moderator.";
+        }
+
+        // CASE 2: Submission has been reported, and the submission belongs to the user
+        if (current.report.profile_id === user.profile.id) {
+            return "This submission cannot be updated since you own it, and it has a report. Allow a different moderator to handle it.";
+        }
+
+        // CASE 3: Submission has been reported, and the report was put out by the curent user
+        return "This submission cannot be updated since it was reported by yourself. Allow a different moderator to handle it.";
+    };
+
+    // FUNCTION 4: getDeleteReasoning - function that returns a string explaining why a submission cannot be deleted
+    // PRECONDITIONS (1 parameter):
+    // 1.) submission - a submission object that is NOT able to be deleted
+    // POSTCONDITIONS (1 possible outcome):
+    // depending on different factors of the submission, a reasoning is returned in the form of a string
+    const getDeleteReasoning = submission => {
+        const current = submission.submission[0];
+
+        // CASE 1: Submission is approved
+        if (current.approved) {
+            return "This submission cannot be deleted since it has been approved by a moderator.";
+        }
+
+        // CASE 2: Submission has been reported, and the submission belongs to the user
+        if (current.report.profile_id === user.profile.id) {
+            return "This submission cannot be deleted since you own it, and it has a report. Allow a different moderator to handle it.";
+        }
+
+        // CASE 3: Submission has been reported, and the report was put out by the curent user
+        return "This submission cannot be deleted since it was reported by yourself. Allow a different moderator to handle it.";
     };
 
     return { 
         submissions,
-        updateSubmission, 
-        deleteSubmission, 
         profile, 
-        setUpdateSubmission,
-        setDeleteSubmission, 
         setProfile, 
         getSubmissions,
-        cantUpdate,
-        cantDelete
+        cantModify,
+        getDeleteReasoning,
+        getUpdateReasoning
     };
 };
 

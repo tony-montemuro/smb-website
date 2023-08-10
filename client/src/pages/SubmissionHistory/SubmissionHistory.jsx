@@ -4,13 +4,11 @@ import { GameContext, MessageContext, StaticCacheContext, UserContext } from "..
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import DeletePopup from "./DeletePopup.jsx";
 import DetailPopup from "./DetailPopup";
 import FilteredSubmissionRow from "./FilteredSubmissionRow";
 import FrontendHelper from "../../helper/FrontendHelper";
 import PathHelper from "../../helper/PathHelper";
 import SubmissionHistoryLogic from "./SubmissionHistory";
-import UpdatePopup from "./UpdatePopup.jsx";
 import Username from "../../components/Username/Username";
 
 function SubmissionHistory() {
@@ -47,11 +45,7 @@ function SubmissionHistory() {
   // states and functions from the js file
   const { 
     submissions,
-    updateSubmission, 
-    deleteSubmission, 
     profile, 
-    setUpdateSubmission,
-    setDeleteSubmission, 
     setProfile, 
     getSubmissions
   } = SubmissionHistoryLogic();
@@ -133,12 +127,6 @@ function SubmissionHistory() {
               <th></th>
               <th>Position</th>
               <th>Live Position</th>
-              { user.is_mod && 
-                <>
-                  <th>Update</th>
-                  <th>Delete</th>
-                </>
-              }
             </tr>
           </thead>
 
@@ -150,8 +138,6 @@ function SubmissionHistory() {
               submissions.map(submission => {
                 return <FilteredSubmissionRow 
                   submission={ submission }
-                  updateFunc={ setUpdateSubmission }
-                  deleteFunc={ setDeleteSubmission }
                   onClickFunc={ setDetailSubmission }
                   key={ submission.id }
                 />;
@@ -170,10 +156,8 @@ function SubmissionHistory() {
         </table>
       </div>
 
-      { /* Popups */ }
+      { /* Detail popup */ }
       <DetailPopup submission={ detailSubmission } setSubmission={ setDetailSubmission } profile={ profile } />
-      <DeletePopup submission={ deleteSubmission } setSubmission={ setDeleteSubmission } profile={ profile } />
-      <UpdatePopup submission={ updateSubmission } setSubmission={ setUpdateSubmission } profile={ profile } />
     </>
    
   ;

@@ -1,21 +1,11 @@
 /* ===== IMPORTS ===== */
-import { useContext } from "react";
 import { useLocation } from "react-router-dom";
-import { UserContext } from "../../utils/Contexts";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import CheckIcon from "@mui/icons-material/Check";
-import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import FrontendHelper from "../../helper/FrontendHelper";
-import SubmissionHistoryLogic from "./SubmissionHistory.js";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
-function FilteredSubmissionRow({ submission, updateFunc, deleteFunc, onClickFunc }) {
-  /* ===== CONTEXTS ===== */
-  
-  // user state from user context
-  const { user } = useContext(UserContext);
-
+function FilteredSubmissionRow({ submission, onClickFunc }) {
   /* ===== VARIABLES ===== */
 	const location = useLocation();
 	const type = location.pathname.split("/")[4];
@@ -24,9 +14,6 @@ function FilteredSubmissionRow({ submission, updateFunc, deleteFunc, onClickFunc
 
   // helper functions
   const { dateB2F, recordB2F, getTimeAgo } = FrontendHelper();
-
-  // functions from the js file
-  const { cantUpdate, cantDelete } = SubmissionHistoryLogic();
 
   /* ===== FILTERED SUBMISSION ROW COMPONENT ===== */
   return (
@@ -78,47 +65,6 @@ function FilteredSubmissionRow({ submission, updateFunc, deleteFunc, onClickFunc
 
       { /* Live Position - Render the position of the submission (live only) */ }
       <td>{ submission.position ? submission.position : "-" }</td>
-
-      { /* Moderator-only columns */ }
-      { user.is_mod && 
-        <>
-
-          {/* Update button - Render a button that allows the moderator to update a submission */}
-          <td>
-            <div className="submission-history-svg-wrapper">
-              <button
-                type="button" 
-                onClick={ (e) => {
-                  e.stopPropagation();
-                  updateFunc(submission);
-                 }} 
-                disabled={ cantUpdate(submission) }
-                title={ cantUpdate(submission) ? "Unable to update this submission." : undefined }
-              >
-                <EditRoundedIcon />
-              </button>
-            </div>
-          </td>
-
-          { /* Delete button - Render a button that allows the moderator to delete a submission. */ }
-          <td>
-            <div className="submission-history-svg-wrapper">
-              <button 
-                type="button" 
-                onClick={ (e) => {
-                  e.stopPropagation();
-                  deleteFunc(submission);
-                 }} 
-                disabled={ cantDelete(submission) }
-                title={ cantDelete(submission) ? "Unable to delete this submission." : undefined }
-              >
-                <ClearRoundedIcon />
-              </button>
-            </div>
-          </td>
-
-        </>
-      }
       
     </tr>
   );

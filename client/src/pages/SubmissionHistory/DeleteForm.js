@@ -6,7 +6,7 @@ import AllSubmissionDelete from "../../database/delete/AllSubmissionDelete";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
-const DeletePopup = () => {
+const DeleteForm = () => {
     /* ===== VARIABLES ===== */
     const location = useLocation();
 	const path = location.pathname.split("/");
@@ -133,20 +133,9 @@ const DeletePopup = () => {
     const isNotifyable = (submission, profile) => {
         return parseInt(profile.id) !== user.profile.id && submission.submission.length !== 0;
     };
-
-    // FUNCTION 5 - closePopup: given the setSubmission function, close the popup
-    // PRECONDITIONS (1 parameter):
-    // 1.) setBoard: the function that allows you to update the submission state, which will close the popup
-    // POSTCONDITIONS (1 possible outcome):
-    // the form is set to it's default value by calling setForm(formInit), and the delete popup is closed by calling
-    // the setSubmission() function with a null value
-    const closePopup = setSubmission => {
-        setForm(formInit);
-        setSubmission(null);
-    };
     
-    return { form, handleDelete, handleDeleteAndNotify, handleChange, isNotifyable, closePopup };
+    return { form, handleDelete, handleDeleteAndNotify, handleChange, isNotifyable };
 };
 
 /* ===== EXPORTS ===== */
-export default DeletePopup;
+export default DeleteForm;
