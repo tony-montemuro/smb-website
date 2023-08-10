@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LiveSymbol from "./LiveSymbol";
-import NotificationMessage from "./NotificationMessage";
 import NotificationProof from "./NotificationProof";
 import Username from "../../components/Username/Username";
 import VideocamIcon from "@mui/icons-material/Videocam";
@@ -11,6 +10,7 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 function UpdatePopup({ notifications, setNotifications }) {
   /* ===== VARIABLES ===== */
   const notification = notifications.current;
+  console.log(notification);
   const type = notification.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
@@ -155,9 +155,6 @@ function UpdatePopup({ notifications, setNotifications }) {
             </ul>
           </div>
         </div>
-
-        { /* Render the message associated with the submission, if there is one. */ }
-        <NotificationMessage message={ notification.message } notification={ notification } />
 
       </div>
     </div>

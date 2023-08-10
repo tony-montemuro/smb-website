@@ -1,11 +1,9 @@
 /* ===== IMPORTS ===== */
-import { useLocation } from "react-router-dom";
 import { useContext, useReducer, useState } from "react";
-import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
+import { GameContext, MessageContext } from "../../utils/Contexts";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import DateHelper from "../../helper/DateHelper";
 import FrontendHelper from "../../helper/FrontendHelper";
-import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const UpdateForm = () => {
@@ -15,18 +13,11 @@ const UpdateForm = () => {
 		error: { proof: null, comment: null },
         submitting: false
 	};
-    const location = useLocation();
-    const path = location.pathname.split("/");
-    const type = path[4];
-    const levelId = path[5];
 
     /* ===== CONTEXTS ===== */
 
     // game state from game context
     const { game } = useContext(GameContext);
-
-    // user state from user context
-    const { user } = useContext(UserContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -54,7 +45,6 @@ const UpdateForm = () => {
 
     // database functions
     const { updateSubmission } = AllSubmissionUpdate(); 
-    const { insertNotification } = NotificationUpdate();
 
     // helper functions
     const { getDateOfSubmission } = DateHelper();
@@ -100,18 +90,7 @@ const UpdateForm = () => {
 		dispatchForm({ field: "values", value: formVals });
 	};
 
-    // FUNCTION 3: isNotifyable - function that determines whether or not a submission should be sent a notification
-    // PRECONDITIONS (2 parameters):
-    // 1.) submission - the submission object in question
-    // 2.) profile - a profile object, containing the profile info of the current submission
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the submission belongs to the user, or is a "current" submission, return false
-    // otherwise, return true
-    const isNotifyable = (submission, profile) => {
-        return parseInt(profile.id) !== user.profile.id && submission.submission.length !== 0;
-    };
-
-    // FUNCTION 4: handleChange - function that is called whenever the user makes any change to the form
+    // FUNCTION 3: handleChange - function that is called whenever the user makes any change to the form
     // PRECONDITIONS (1 parameter)
 	// 1.) e: an event object generated when the user makes a change to the form
 	// POSTCONDITIONS (2 possible outcomes):
@@ -131,7 +110,7 @@ const UpdateForm = () => {
 		};
     };
 
-    // FUNCTION 5: handleToggle - code that executes each time the user toggles the "Clear Comment" option
+    // FUNCTION 4: handleToggle - code that executes each time the user toggles the "Clear Comment" option
     // PRECONDITIONS (1 parameter):
     // 1.) submission: a submission object
     // POSTCONDITIONS (2 possible outcomes):
@@ -142,7 +121,7 @@ const UpdateForm = () => {
         setClearToggle(!clearToggle);
     };
 
-    // FUNCTION 6: getUpdateFromForm - takes form data, and extracts only the updatable information
+    // FUNCTION 5: getUpdateFromForm - takes form data, and extracts only the updatable information
     // PRECONDITIONS (4 parameters):
     // 1.) formVals: an object that stores the updated submission form values
     // 2.) date: a string representing the backend date of a submission
@@ -170,42 +149,7 @@ const UpdateForm = () => {
         return updatedData;
     };
 
-    // FUNCTION 7: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
-    // to backend
-    // PRECONDITIONS (2 parameters):
-    // 1.) oldSubmission: a submission object containing information on the un-updated submission
-    // 2.) profile: the profile object associated with the submission
-    // POSTCONDITION (2 possible outcomes):
-    // if the submissions is "notifyable", this function will generate a notification object and make a call to 
-    // insert it into the database
-    // otherwise, this function returns early
-    const handleNotification = async (oldSubmission, profile) => {
-        // if these two ids are not equal, it means a moderator is updating a submission, so we need to notify the owner
-        // of the submission of this action. if this condition is not met, the function will return early
-        if (isNotifyable(oldSubmission, profile)) {
-			const notification = {
-				notif_type: "update",
-				profile_id: profile.id,
-				creator_id: user.profile.id,
-                game_id: game.abb,
-                level_id: levelId,
-                score: type === "score",
-                submission_id: oldSubmission.id,
-                record: oldSubmission.record,
-                submitted_at: oldSubmission.submitted_at,
-                region_id: oldSubmission.region.id,
-                monkey_id: oldSubmission.monkey.id,
-                proof: oldSubmission.proof,
-                live: oldSubmission.live,
-                comment: oldSubmission.comment
-			};
-			
-			// insert the notification into the database
-			await insertNotification(notification);
-		}
-    };
-
-    // FUNCTION 8: handleSubmit - function that is called when the user submits the form
+    // FUNCTION 6: handleSubmit - function that is called when the user submits the form
     // PRECONDITIONS (3 parameters):
     // 1.) e: an event object which is generated when the user submits the update submission form
     // 2.) submission: a submission object, which represents the submission pre-update
@@ -248,27 +192,16 @@ const UpdateForm = () => {
             // attempt to update the submission using updated data
             await updateSubmission(updatedData, id);
 
-            // now, handle the notification
-            await handleNotification(submission, profile);
-
             // reload the page
             window.location.reload();
 
         } catch (error) {
-            if (error.code === "42501" && error.message === 'new row violates row-level security policy "Enforce receiving profile exists [RESTRICTIVE]" for table "notification"') {
-                // special case: moderator attempted to update a submission for a profile who is unauthenticated. this is actually
-                // expected behavior, so let's proceed as if there were not issues
-                window.location.reload();
-
-            } else {
-                // general case: if there is an error, inform the user
-                addMessage(error.message, "error");
-                dispatchForm({ field: "submitting", value: false });
-            }
+            addMessage(error.message, "error");
+            dispatchForm({ field: "submitting", value: false });
         };
     };
 
-    return { form, clearToggle, fillForm, handleChange, handleToggle, isNotifyable, handleSubmit };
+    return { form, clearToggle, fillForm, handleChange, handleToggle, handleSubmit };
 };
 
 /* ===== EXPORTS ===== */
