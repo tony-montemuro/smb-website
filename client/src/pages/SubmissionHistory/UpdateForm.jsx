@@ -31,6 +31,7 @@ function UpdateForm({ submission, profile }) {
   // code that is executed when the component mounts, or when updatePopup is modified
   useEffect(() => {
     if (submission) {
+      console.log(submission);
       fillForm(submission, profile, type, levelName); 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,7 +46,7 @@ function UpdateForm({ submission, profile }) {
       <p>Make changes to any modifiable fields here.</p>
 
       { /* Update submission form */ }
-      <form onSubmit={ (e) => handleSubmit(e, submission, profile) }>
+      <form onSubmit={ (e) => handleSubmit(e, submission) }>
 
         { /* Submission date input: allows the user to modify the date the submission was achieved. */ }
         <div className="submission-history-input-group">

@@ -153,13 +153,12 @@ const UpdateForm = () => {
     // PRECONDITIONS (3 parameters):
     // 1.) e: an event object which is generated when the user submits the update submission form
     // 2.) submission: a submission object, which represents the submission pre-update
-    // 3.) profile: the profile object associated with the submission
     // POSTCONDITIONS (3 possible outcomes):
     // if the form fails to validate, the function will return early, and the user will be shown the errors
     // if the form successfully validates, but the data fails to submit, the submission process is halted, and the user is displayed an
     // error message
     // if the form successfully validates, and the data successfully submits, then the page is reloaded
-    const handleSubmit = async (e, submission, profile) => {
+    const handleSubmit = async (e, submission) => {
         // initialize submission
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
@@ -182,7 +181,7 @@ const UpdateForm = () => {
         }
 
         // finally, let's convert the date from the front-end format, to the backend format.
-		const backendDate = getDateOfSubmission(form.values.submitted_at, submission);
+		const backendDate = getDateOfSubmission(form.values.submitted_at, submission.submitted_at);
 
         // if we made it this far, no errors were detected, generate our submission data
 		const id = submission.id;
