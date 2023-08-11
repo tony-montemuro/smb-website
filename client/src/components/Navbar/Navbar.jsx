@@ -35,6 +35,11 @@ function Navbar({ imageReducer }) {
               <Link to="/games" title="Games">Games</Link>
             </li>
 
+            { /* Link to the news page */ }
+            <li>
+              <Link to="/news" title="News">News</Link>
+            </li>
+
             { /* Link to the resources page */ }
             <li>
               <Link to="/resources" title="Resources">Resources</Link>

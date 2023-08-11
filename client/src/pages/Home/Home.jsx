@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./Home.css";
+import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import HomeLogic from "./Home.js";
 import NewsPost from "./NewsPost";
@@ -64,7 +65,7 @@ function Home() {
 
           { /* Home posts header - render the header information above the posts */ }
           <div className="home-posts-header">
-            <h2>News</h2>
+            <h2><Link to="/news">News</Link></h2>
             <hr />
           </div>
 

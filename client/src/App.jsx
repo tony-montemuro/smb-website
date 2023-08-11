@@ -15,6 +15,7 @@ import MessagePopup from "./components/MessagePopup/MessagePopup.jsx";
 import Moderator from "./pages/Moderator/Moderator.jsx";
 import ModeratorLayout from "./components/ModeratorLayout/ModeratorLayout.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
+import News from "./pages/News/News.jsx";
 import Notifications from "./pages/Notifications/Notifications.jsx";
 import Post from "./pages/Post/Post.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
@@ -86,6 +87,7 @@ function App() {
             <Routes>
               <Route path="/" element={ <Home /> }/>
               <Route path="/games" element={<GameSelect imageReducer={ imageReducer } />}/>
+              <Route path="/news" element={ <News /> } />
               <Route path="/resources" element={<Resources />}></Route>
               <Route path="/support" element={ <Support /> }/>
               <Route path="/notifications" element={ <Notifications /> } />
