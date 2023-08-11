@@ -111,7 +111,7 @@ const Post = () => {
 
         // validate that if the link does exist, the link description also must exist
         if (link.length > 0 && description.length === 0) {
-            return "Link description is required.";
+            return "Link description is required when a link is provided.";
         }
 
         // validate that the link description length is 100 characters or less

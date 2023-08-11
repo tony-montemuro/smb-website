@@ -2,29 +2,30 @@
 import "./Home.css";
 import { useEffect } from "react";
 import HomeLogic from "./Home.js";
+import NewsPost from "./NewsPost";
 import RecentSubmissionsRow from "../../components/RecentSubmissionsRow/RecentSubmissionsRow";
 
 function Home() {
   /* ===== STATES & FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { submissions, getSubmissions } = HomeLogic();
+  const { submissions, posts, getSubmissions, getPosts } = HomeLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the home component mounts
   useEffect(() => {
     getSubmissions();
+    getPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* ===== HOME COMPONENT ===== */
-  return submissions &&
-    <>
+  return submissions && posts &&
+    <div className="home">
       { /* Home Header - Display most general information about the website */ }
       <div className="home-header">
-        <h1>Welcome to SMBElite!</h1>
-        <i>The website for all things Monkey Ball ILs</i>
+        <h1>Super Monkey Ball Elite</h1>
       </div>
 
       { /* Home Body - Contains various home page items */ }
@@ -58,8 +59,24 @@ function Home() {
           </table>
         </div>
 
+        {/* Home posts - render the 3 most recent posts */}
+        <div className="home-posts">
+
+          { /* Home posts header - render the header information above the posts */ }
+          <div className="home-posts-header">
+            <h2>News</h2>
+            <hr />
+          </div>
+
+          <div className="home-posts-body">
+            { posts.map(post => {
+              return <NewsPost post={ post } key={ post.id } />;
+            })}
+          </div>
+        </div>
+
       </div>
-    </>
+    </div>
 };
 
 /* ===== EXPORTS ===== */
