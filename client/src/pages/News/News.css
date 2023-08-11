@@ -1,0 +1,21 @@
+.news {
+    width: 75%;
+    margin: 10px auto;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.news-header {
+    padding: 10px;
+}
+
+.news-post {
+    margin: 10px 1px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+.news-post-header h2 {
+    margin: 18px 0;
+}

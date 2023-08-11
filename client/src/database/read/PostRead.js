@@ -50,7 +50,45 @@ const PostRead = () => {
         };
     };
 
-    return { queryRecentPosts };
+    // FUNCTION 2: queryPosts - function that retrieves posts ordered from most recent to least recent
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, the list of posts is returned
+    // if the query is a failure, the user is alerted of the error, and an empty array is returned
+    const queryPosts = async () => {
+        try {
+            const { data: posts, error } = await supabase
+                .from("post")
+                .select(`
+                    body,
+                    id,
+                    link,
+                    link_description,
+                    posted_at,
+                    profile (
+                        country,
+                        id,
+                        username
+                    ),
+                    title
+                `)
+                .order("id", { ascending: false });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            // if we made it this far, simply return the posts
+            return posts;
+
+        } catch (error) {
+            addMessage("News posts failed to load. Please reload the page to try again.", "error");
+            return [];
+        };
+    };
+
+    return { queryRecentPosts, queryPosts };
 };
 
 /* ===== EXPORTS ===== */
