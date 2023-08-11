@@ -69,6 +69,7 @@ function Home() {
             <hr />
           </div>
 
+          { /* Home posts body - render each post in the list */ }
           <div className="home-posts-body">
             { posts.map(post => {
               return <NewsPost post={ post } key={ post.id } />;

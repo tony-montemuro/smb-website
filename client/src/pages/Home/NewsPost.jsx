@@ -15,13 +15,19 @@ function NewsPost({ post }) {
   /* ===== POST COMPONENT ===== */
   return (
     <div className="home-news-post">
+
+      { /* Post title */ }
       <h2 onClick={ () => setViewPost(!viewPost) }>
         <span className="home-news-post-aligned-span">{ viewPost ? <ExpandLessRoundedIcon /> : <ExpandMoreRoundedIcon /> }</span> { post.title }
       </h2>
+
+      { /* Post information */ }
       <span className="home-news-post-info">
-        posted by { getTimeAgo(post.posted_at) } by&nbsp; 
+        posted { getTimeAgo(post.posted_at) } by&nbsp; 
         <Username country={ post.profile.country } profileId={ post.profile.id } username={ post.profile.username } />
       </span>
+
+      { /* If the viewPost state is set to true, render the body and link of the post (if it exists!) */ }
       { viewPost &&
         <div className="home-news-post-body">
           { post.body.map((line, index) => {
@@ -32,6 +38,7 @@ function NewsPost({ post }) {
           }
         </div>
       }
+      
     </div>
   );
 };
