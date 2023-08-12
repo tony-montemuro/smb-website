@@ -51,13 +51,15 @@ const PostRead = () => {
     };
 
     // FUNCTION 2: queryPosts - function that retrieves posts ordered from most recent to least recent
-    // PRECONDITIONS: NONE
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, the list of posts is returned
-    // if the query is a failure, the user is alerted of the error, and an empty array is returned
-    const queryPosts = async () => {
+    // PRECONDITIONS (2 parameters):
+    // 1.) start: an integer representing the index of the first post we should query
+    // 2.) end: an integer representing the index of the last post we should query
+    // POSTCONDITIONS (2 possible outcomes, 2 returns):
+    // if the query is successful, the list of posts, as well as the number of total posts, is returned
+    // if the query is a failure, the user is alerted of the error, and an empty array, as well as a count of 0, are returned
+    const queryPosts = async (start, end) => {
         try {
-            const { data: posts, error } = await supabase
+            const { data: postList, count, error } = await supabase
                 .from("post")
                 .select(`
                     body,
@@ -71,7 +73,10 @@ const PostRead = () => {
                         username
                     ),
                     title
-                `)
+                `,
+                { count: "exact" }
+                )
+                .range(start, end)
                 .order("id", { ascending: false });
 
             // error handling
@@ -80,11 +85,11 @@ const PostRead = () => {
             }
 
             // if we made it this far, simply return the posts
-            return posts;
+            return { postList: postList, count: count };
 
         } catch (error) {
             addMessage("News posts failed to load. Please reload the page to try again.", "error");
-            return [];
+            return { postList: [], count: 0 };
         };
     };
 
