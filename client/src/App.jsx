@@ -27,6 +27,7 @@ import SubmissionHistory from "./pages/SubmissionHistory/SubmissionHistory.jsx";
 import Support from "./pages/Support/Support.jsx";
 import Totalizer from "./pages/Totalizer/Totalizer.jsx";
 import User from "./pages/User/User.jsx";
+import Users from "./pages/Users/Users.jsx";
 import UserLayout from "./components/UserLayout/UserLayout.jsx";
 import UserStats from "./pages/UserStats/UserStats.jsx";
 
@@ -87,6 +88,7 @@ function App() {
             <Routes>
               <Route path="/" element={ <Home /> }/>
               <Route path="/games" element={<GameSelect imageReducer={ imageReducer } />}/>
+              <Route path="/users" element={ <Users /> } />
               <Route path="/news" element={ <News /> } />
               <Route path="/resources" element={<Resources />}></Route>
               <Route path="/support" element={ <Support /> }/>
