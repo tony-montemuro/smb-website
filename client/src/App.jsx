@@ -88,7 +88,7 @@ function App() {
             <Routes>
               <Route path="/" element={ <Home /> }/>
               <Route path="/games" element={<GameSelect imageReducer={ imageReducer } />}/>
-              <Route path="/users" element={ <Users /> } />
+              <Route path="/users" element={ <Users imageReducer={ imageReducer } /> } />
               <Route path="/news" element={ <News /> } />
               <Route path="/resources" element={<Resources />}></Route>
               <Route path="/support" element={ <Support /> }/>
