@@ -8,6 +8,7 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
   /* ===== VARIABLES ===== */
   const details = submission.details;
   const profile = submission.profile;
+  const creator = !isNew ? submission.report.creator : undefined;
   const type = submission.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
@@ -35,6 +36,19 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
       <td>
         <div>{ getTimeAgo(isNew ? details.id : submission.report.report_date) }</div>
       </td>
+
+      { /* Render the username of the person who made the report, assuming `isNew` is false (report submission) */ }
+      { !isNew &&
+        <td>
+          <div>
+            <Username
+              country={ creator.country }
+              profileId={ creator.id }
+              username={ creator.username }
+            />
+          </div>
+        </td>
+      }
 
       { /* Render the username of the person who submitted it */ }
       <td>

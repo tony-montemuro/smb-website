@@ -4,7 +4,8 @@ import SubmissionRow from "./SubmissionRow";
 
 function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
   /* ===== VARIABLES ===== */
-  const NUM_ROWS = isChecked ? 6 : 4;
+  let NUM_ROWS = isChecked ? 6 : 4;
+  NUM_ROWS = isNew ? NUM_ROWS : NUM_ROWS+1;
 
   /* ===== FUNCTIONS ===== */
 
@@ -17,11 +18,13 @@ function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
       <table>
 
       { /* Submission table header - Render the description of what's contained in each row. If the isChecked
-      parameter is true, a few extra headers will be rendered. */ }
+      parameter is true, a few extra headers will be rendered. If the isNew parameter is true, an additional column will
+      be rendered. */ }
       <thead>
         <tr>
           { isChecked && <th>Action</th> }
           <th>{ isNew ? "Submitted" : "Reported" }</th>
+          { !isNew && <th>Reported By</th> }
           <th>User</th>
           { isChecked && <th>Game</th> }
           <th>Level</th>
@@ -32,6 +35,8 @@ function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
       { /* Submission table body - Render information about each submission in submissions array */ }
       <tbody>
         { submissions.length > 0 ?
+
+          // If any submissions exist, render a submission row for each submission in the array.
           submissions.map(submission => {
             return <SubmissionRow 
               submission={ submission } 
@@ -42,6 +47,8 @@ function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
             />
           })
         :
+
+          // Otherwise, render a message to the user. The user will depend on whether or not `isChecked` is true or false.
           <tr className="submission-handler-empty-row">
             <td colSpan={ NUM_ROWS }>
               { isChecked ?
@@ -51,6 +58,7 @@ function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
               }
             </td>
           </tr>
+          
         }
         
       </tbody>
