@@ -20,7 +20,18 @@ const Users = () => {
     const prepareUsers = profiles => {
         // first, sort users
         const sortedUsers = profiles.sort((a, b) => {
-            return a.username > b.username;
+            // convert to lowercase
+            const usernameA = a.username.toLowerCase();
+            const usernameB = b.username.toLowerCase();
+
+            // now, do comparisons
+            if (usernameA < usernameB) {
+                return -1;
+            }
+            if (usernameA > usernameB) {
+                return 1;
+            }
+            return 0;
         });
         
         // then, we can update the users state
