@@ -4,7 +4,7 @@ import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import { MessageContext, ProfileContext, StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import Avatar from "../Avatar/Avatar.jsx";
-import UserStatsDirectory from "./UserStatsDirectory";
+import UserStatsDirectory from "./UserStatsDirectory.jsx";
 
 function UserLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -73,7 +73,7 @@ function UserLayout({ imageReducer }) {
         </div>
 
         { /* Render navigation directory */ }
-        <UserStatsDirectory imageReducer={ imageReducer } />
+        <UserStatsDirectory imageReducer={ imageReducer } profile={ profile } />
 
       </div>
 

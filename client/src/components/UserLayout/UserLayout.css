@@ -43,7 +43,10 @@
     border-radius: 5px;
     align-self: flex-start;
     max-height: 88vh;
-    overflow: auto;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .user-layout-stats h1 {
@@ -61,6 +64,10 @@
 
 .user-layout-stats td {
     width: 33.33%;
+}
+
+.user-layout-stats span {
+    text-align: center;
 }
 
 .user-layout-game-element {
