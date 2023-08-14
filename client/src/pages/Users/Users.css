@@ -3,3 +3,75 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+.users-header {
+    margin: 12px 0;
+}
+
+.users-header h1 {
+    margin: 0;
+}
+
+.users-searchbar-container {
+    width: 50%;
+    height: 30px;
+    display: flex;
+    margin-left: 0;
+    margin-right: 0;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+.users-searchbar-container input {
+    border: none;
+    background-color: transparent;
+    font-size: 18px;
+    width: 95%;
+    height: 100%;
+    min-width: 0;
+    padding: 0px;
+    padding-left: 5px;
+}
+
+.users-searchbar-container input:focus {
+    outline: none;
+}
+
+.users-searchbar-icon {
+    display: flex;
+    align-items: center;
+}
+
+.users-searchbar-clear {
+    min-width: 0;
+    width: auto;
+    border: none;
+    background-color: transparent;
+    height: 100%;
+}
+
+.users-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.users-row-socials {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.users-row-socials a {
+    margin: 0 3px;
+}
+
+.users-row-discord button {
+    padding: 0;
+    border: none;
+    background-color: white;
+    text-align: center;
+    margin: 0 3px;
+}

@@ -1,20 +1,64 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const Users = () => {
+    /* ===== REFS ===== */
+    const searchRef = useRef(null);
+
     /* ===== STATES ===== */
     const [users, setUsers] = useState(undefined);
 
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1
+    // FUNCTION 1: prepareUsers - function that sets the users state with the appropriate data
+    // PRECONDITIONS (1 parameter):
+    // 1.) profiles - an array of all profile objects
+    // POSTCONDITIONS (1 posssible outcome):
+    // the users array is sorted in ascending order by the `username` field, and both the `all` and `filtered` fields of the
+    // user state are set equal to this sorted array, by calling the setUsers() function
     const prepareUsers = profiles => {
-        setUsers(profiles.sort((a, b) => {
+        // first, sort users
+        const sortedUsers = profiles.sort((a, b) => {
             return a.username > b.username;
-        }));
+        });
+        console.log(sortedUsers);
+        
+        // then, we can update the users state
+        setUsers({
+            all: sortedUsers,
+            filtered: sortedUsers
+        });
     };
 
-    return { users, prepareUsers };
+    // FUNCTION 2: handleFilter - function that filters the list of users each time the user updates the search form
+    // PRECONDITIONS (1 parameter):
+    // 1.) word: a string representing the user's input from the search form (can also be an empty string)
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the word is a non-empty string, the "all" user list will be filtered according to the word parameter, and that value will
+    // be used to updated the filtered user list
+    // if the word is an empty string, the filtered user list is set back to the all user list
+    const handleFilter = word => {
+        let filtered = users.all;
+        if (word.length > 0) {
+            filtered = users.all.filter(user => {
+                return user.username.toLowerCase().includes(word.toLowerCase());
+            });
+        };
+        setUsers({ ...users, filtered: filtered });
+    };
+
+    // FUNCTION 3: clearSearch - code that is executed when the user selects the "clear" button
+    // PRECONDITIONS (1 condition):
+    // this function should only run if the search bar has content already in it
+    // POSTCONDITIONS (1 possible outcome):
+    // the search bar will be cleared, and the `handleFilter` function will be executed with an empty word, resetting the search
+    // results back to all users
+    const clearSearch = () => {
+        searchRef.current.value = "";
+        handleFilter("");
+    };
+
+    return { searchRef, users, prepareUsers, handleFilter, clearSearch };
 };
 
 /* ===== EXPORTS ===== */
