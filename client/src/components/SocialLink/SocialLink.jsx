@@ -1,4 +1,5 @@
 /* ===== IMPORTS ===== */
+import "./SocialLink.css";
 import SocialLinkLogic from "./SocialLink.js";
 
 function SocialLink({ name, username, logo }) {

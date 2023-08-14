@@ -28,15 +28,16 @@
     margin-right: 50px;
 }
 
-.user-info-social {
+.user-info-socials .social-link {
     flex: 1;
     display: flex;
     align-items: center;
 }
 
-.social-media-logo {
-    width: 40px;
-    height: auto;
+.user-info-discord {
+    flex: 1;
+    display: flex;
+    align-items: center;
 }
 
 .user-discord-button {

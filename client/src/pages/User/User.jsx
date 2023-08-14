@@ -4,11 +4,11 @@ import { ProfileContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import Discord from "../../img/discord-logo.png";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
-import SocialLink from "./SocialLink";
+import SocialLink from "../../components/SocialLink/SocialLink.jsx";
 import Twitch from "../../img/twitch-logo.png";
 import Twitter from "../../img/twitter-logo.png";
-import UserLogic from "./User.js";
 import YT from "../../img/yt-logo.png";
+import UserHelper from "../../helper/UserHelper";
 
 function User() {
   /* ===== CONTEXTS ===== */
@@ -19,7 +19,7 @@ function User() {
   /* ===== FUNCTIONS ===== */
 
   // functions from user js file
-  const { alertDiscord } = UserLogic();
+  const { alertDiscord } = UserHelper();
 
   /* ===== USER COMPONENT ===== */
   return (
@@ -42,7 +42,7 @@ function User() {
               { /* Discord is not a link, but a button. So, it is handled here. User is not required to have a discord.
               Only render discord information if it exists */ }
               { profile.discord &&
-                <div className="user-info-social">
+                <div className="user-info-discord">
                   <button type="button" className="user-discord-button" onClick={ () => alertDiscord(profile.discord) }>
                     <img className="social-media-logo" alt="discord-logo" src={ Discord }></img>
                   </button>
