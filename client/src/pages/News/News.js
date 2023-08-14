@@ -13,7 +13,7 @@ const News = () => {
 
     // FUNCTION 1: getStartAndEnd - given the number of posts and page number, retrieve the start and end post indicies
     // PRECONDITIONS (2 parameters):
-    // 1.) num: an integer representing the max number of pages that should exist on each page 
+    // 1.) num: an integer representing the max number of posts that should exist on each page 
     // 2.) pageNumber: the page number the user is currently on
     // POSTCONDITIONS (2 possible returns, 1 possible outcome):
     // two variables are returned

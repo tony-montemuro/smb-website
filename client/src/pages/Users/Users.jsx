@@ -6,13 +6,16 @@ import UserRow from "./UserRow";
 import UsersLogic from "./Users.js";
 
 function Users({ imageReducer }) {
+  /* ===== VARIABLES ===== */
+  const USERS_PER_PAGE = 3;
+
   /* ===== CONTEXTS ===== */
   const { staticCache } = useContext(StaticCacheContext);
 
   /* ===== STATES & FUNCTIONS ===== */
-
+ 
   // states & functions from the js file
-  const { searchRef, users, prepareUsers, handleFilter, clearSearch } = UsersLogic();
+  const { searchRef, users, pageNum, setPageNum, prepareUsers, handleFilter, clearSearch, getStartAndEnd, getMaxPage } = UsersLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -60,9 +63,33 @@ function Users({ imageReducer }) {
 
       { /* Render the list of users */ }
       <div className="users-body">
-        { users.filtered.map(user => {
-          return <UserRow imageReducer={ imageReducer } user={ user } id={ user.id } />
+        { users.filtered.slice((pageNum-1)*USERS_PER_PAGE, pageNum*USERS_PER_PAGE).map(user => {
+          return <UserRow imageReducer={ imageReducer } user={ user } key={ user.id } />
         })}
+
+        { /* Users body bottom - render the page viewer, as well as page controls, within this container */ }
+        <div className="users-body-bottom">
+
+          { /* Users body page viewer - render the set of pages shown on the current page */ }
+          <div className="users-body-page-viewer">
+            Showing { getStartAndEnd(USERS_PER_PAGE).start } to&nbsp;
+            { getStartAndEnd(USERS_PER_PAGE).end } of { users.filtered.length } Users
+          </div>
+
+          { /* Users body page control - render buttons to navigate to the previous and next page, as well as a dropdown for the
+          user to select any valid page */ }
+          <div className="users-body-page-control">
+            <button onClick={ () => setPageNum(pageNum-1) } disabled={ pageNum <= 1 }>Previous Page</button>
+            <select value={ pageNum } onChange={ (e) => setPageNum(parseInt(e.target.value)) }>
+              { [...Array(getMaxPage(USERS_PER_PAGE)).keys()].map(num => {
+                return <option value={ num+1 } key={ num+1 }>{ num+1 }</option>;
+              })}
+            </select>
+            <button onClick={ () => setPageNum(pageNum+1) } disabled={ pageNum >= getMaxPage(USERS_PER_PAGE) }>Next Page</button>
+          </div>
+
+        </div>
+
       </div>
 
     </div>

@@ -50,12 +50,17 @@
     height: 100%;
 }
 
+.users-body {
+    border: 1px solid black;
+}
+
 .users-row {
     display: flex;
     justify-content: space-between;
     margin: 10px 0;
     border: 1px solid black;
     border-radius: 5px;
+    padding: 1px;
 }
 
 .users-row-socials {
@@ -74,4 +79,19 @@
     background-color: white;
     text-align: center;
     margin: 0 3px;
+}
+
+.users-body-bottom {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.users-body-bottom button {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.users-body-bottom select {
+    width: 50px;
 }

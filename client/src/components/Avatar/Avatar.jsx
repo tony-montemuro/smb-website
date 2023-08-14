@@ -11,11 +11,11 @@ function Avatar( { profileId, size, imageReducer } ) {
 
     /* ===== EFFECTS ===== */
 
-    // code that is executed when the component mounts
+    // code that is executed when the component mounts, or when the `profileId` parameter is changed
     useEffect(() => {
         fetchAvatar(profileId, imageReducer);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []);
+      }, [profileId]);
 
     /* ===== AVATAR COMPONENT ===== */
 
