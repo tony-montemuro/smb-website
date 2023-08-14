@@ -12,21 +12,7 @@ const ProfileRead = () => {
     const queryProfiles = async () => {
         try {
             const { data: profiles, error, status } = await supabase
-                .from("profile")
-                .select(`
-                    id,
-                    username,
-                    bio,
-                    birthday,
-                    country (iso2, name), 
-                    youtube_handle, 
-                    twitch_username,
-                    twitter_handle,
-                    discord,
-                    featured_video,
-                    video_description
-                `)
-                .order("username");
+                .rpc("get_profiles");
 
             // error handling
             if (error && status !== 406) {

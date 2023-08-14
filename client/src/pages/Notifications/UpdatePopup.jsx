@@ -10,7 +10,6 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 function UpdatePopup({ notifications, setNotifications }) {
   /* ===== VARIABLES ===== */
   const notification = notifications.current;
-  console.log(notification);
   const type = notification.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */

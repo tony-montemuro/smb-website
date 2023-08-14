@@ -31,7 +31,6 @@ function UpdateForm({ submission, profile }) {
   // code that is executed when the component mounts, or when updatePopup is modified
   useEffect(() => {
     if (submission) {
-      console.log(submission);
       fillForm(submission, profile, type, levelName); 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
