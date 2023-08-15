@@ -10,8 +10,8 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    background-color: #333;
     color: white;
+    background-color: #3a1344;
     position: relative;
 }
 
@@ -53,7 +53,7 @@
 }
 
 .nav-list li:hover {
-    background-color: #777;
+    background-color: #4d2a56;
 }
 
 .nav-button {
@@ -106,11 +106,11 @@
 }
 
 #nav-login:hover {
-    background-color: #777;
+    background-color: #4d2a56;
 }
 
 #nav-create-btn:hover {
-    background-color: #777;
+    background-color: #4d2a56;
 }
 
 #nav-profile-signout-btn {
