@@ -26,7 +26,7 @@ function Records({ submissionReducer }) {
   const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES AND FUNCTIONS ===== */
-  const [allLiveFilter, setAllLiveFilter] = useState("live");
+  const [allLiveFilter, setAllLiveFilter] = useState(game.live_preference ? "live" : "all");
 
   // states and functions from js file
   const {

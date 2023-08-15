@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./Totalizer.css";
-import { useState } from "react";
+import { GameContext } from "../../utils/Contexts";
+import { useContext, useState } from "react";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
 
@@ -8,8 +9,13 @@ function TotalizerTable({ type, totals, imageReducer }) {
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 3;
 
+  /* ===== CONTEXTS ===== */
+
+  // game state from game context
+  const { game } = useContext(GameContext);
+
   /* ===== STATES ===== */
-  const [tableState, setTableState] = useState("live");
+  const [tableState, setTableState] = useState(game.live_preference ? "live" : "all");
 
   /* ===== FUNCTIONS ===== */
   const { capitalize, secondsToHours } = FrontendHelper();

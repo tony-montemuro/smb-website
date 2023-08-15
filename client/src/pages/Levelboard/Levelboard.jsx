@@ -34,7 +34,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 
 	/* ===== STATES & FUNCTIONS ===== */
 	const [level, setLevel] = useState(undefined);
-	const [levelboardState, setLevelboardState] = useState("live");
+	const [levelboardState, setLevelboardState] = useState(game.live_preference ? "live" : "all");
 	const [detailSubmission, setDetailSubmission] = useState(undefined);
 	const [insertPopup, setInsertPopup] = useState(false);
 	const [updateSubmission, setUpdateSubmission] = useState(undefined);

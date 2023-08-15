@@ -40,6 +40,7 @@ const GameRead = () => {
                             rule_name
                         )
                     ),
+                    live_preference,
                     mode (
                         level (
                             chart_type,

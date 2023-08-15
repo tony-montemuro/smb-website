@@ -65,8 +65,9 @@ function UserStats({ submissionReducer }) {
         return;
       } 
 
-      // otherwise, update the game & user state hooks, and fetch user stats
+      // otherwise, update the game, filter, & user state hooks, and fetch user stats
       setGame(game);
+      setAllLiveFilter(game.live_preference ? "live" : "all");
       fetchUserStats(path, game, submissionReducer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
