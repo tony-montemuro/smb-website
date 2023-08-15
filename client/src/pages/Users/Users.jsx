@@ -63,9 +63,13 @@ function Users({ imageReducer }) {
 
       { /* Render the list of users */ }
       <div className="users-body">
-        { users.filtered.slice((pageNum-1)*USERS_PER_PAGE, pageNum*USERS_PER_PAGE).map(user => {
-          return <UserRow imageReducer={ imageReducer } user={ user } key={ user.id } />
-        })}
+        { users.filtered.length > 0 ?
+          users.filtered.slice((pageNum-1)*USERS_PER_PAGE, pageNum*USERS_PER_PAGE).map(user => {
+            return <UserRow imageReducer={ imageReducer } user={ user } key={ user.id } />
+          })
+        :
+          <div className="users-empty">No users match your search.</div>
+        }
 
         { /* Users body bottom - render the page viewer, as well as page controls, within this container. NOTE: This part of the
         component should only render if there are more filtered users than the max number of users per page. */ }
