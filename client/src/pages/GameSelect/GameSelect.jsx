@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { StaticCacheContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import BoxArt from "../../components/BoxArt/BoxArt.jsx";
+import GameSearchBar from "./GameSearchBar.jsx";
 
 function GameSelect({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -17,9 +18,11 @@ function GameSelect({ imageReducer }) {
   /* ===== GAME SELECT COMPONENT ===== */
   return (
     <div className="game-select">
-      { /* Page Header */ }
+
+      { /* Page Header - render the name of the page, and the game search bar component */ }
       <div className="game-select-header">
         <h1>Games</h1>
+        <GameSearchBar imageReducer={ imageReducer } />
       </div>
 
       { /* Render two separate game select menus: one for main games, and one for custom games. */ }
