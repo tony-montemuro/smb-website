@@ -1,16 +1,23 @@
+.game-select {
+    width: 90%;
+    margin: 0 auto;
+}
+
 .game-select-header {
-    text-align: center;
+    text-align: left;
+}
+
+.game-select-body {
+    width: 85%;
 }
 
 .game-select-cards {
     display: grid;
-    place-items: center;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 400px));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
 }
 
-.game-select h2 {
-    text-align: center;
-    margin: 25px;
+.game-select-card {
+    justify-self: start;
 }
 
 .game-select-card p {

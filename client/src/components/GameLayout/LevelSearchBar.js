@@ -4,7 +4,7 @@ import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 
-const SearchBar = abb => {
+const LevelSearchBar = abb => {
     /* ===== CONTEXTS ===== */
 
     // static cache state from static cache context
@@ -74,4 +74,4 @@ const SearchBar = abb => {
 };
 
 /* ===== EXPORTS ===== */
-export default SearchBar;
+export default LevelSearchBar;

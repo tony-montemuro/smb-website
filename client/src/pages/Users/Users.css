@@ -12,42 +12,8 @@
     margin: 0;
 }
 
-.users-searchbar-container {
-    width: 50%;
-    height: 30px;
-    display: flex;
-    margin-left: 0;
-    margin-right: 0;
-    border: 2px solid black;
-    border-radius: 5px;
-}
-
-.users-searchbar-container input {
-    border: none;
-    background-color: transparent;
-    font-size: 18px;
-    width: 95%;
-    height: 100%;
-    min-width: 0;
-    padding: 0px;
-    padding-left: 5px;
-}
-
-.users-searchbar-container input:focus {
-    outline: none;
-}
-
-.users-searchbar-icon {
-    display: flex;
-    align-items: center;
-}
-
-.users-searchbar-clear {
-    min-width: 0;
-    width: auto;
-    border: none;
-    background-color: transparent;
-    height: 100%;
+.users-header .searchbar-input {
+    width: 40%;
 }
 
 .users-body {

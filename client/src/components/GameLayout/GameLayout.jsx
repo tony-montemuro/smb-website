@@ -9,7 +9,7 @@ import BoxArt from "../BoxArt/BoxArt.jsx";
 import GameHeaderInfo from "./GameHeaderInfo";
 import GameHelper from "../../helper/GameHelper";
 import GameLayoutInfo from "./GameLayoutInfo";
-import SearchBar from "../SearchBar/SearchBar.jsx";
+import LevelSearchBar from "./LevelSearchBar.jsx";
 
 function GameLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -71,7 +71,7 @@ function GameLayout({ imageReducer }) {
         <GameHeaderInfo game={ game } />
 
         { /* Render the level search bar */ }
-        <SearchBar abb={ game.abb } />
+        <LevelSearchBar abb={ game.abb } />
 
       </div>
 

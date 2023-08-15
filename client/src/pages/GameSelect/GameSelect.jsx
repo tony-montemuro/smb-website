@@ -16,7 +16,7 @@ function GameSelect({ imageReducer }) {
 
   /* ===== GAME SELECT COMPONENT ===== */
   return (
-    <>
+    <div className="game-select">
       { /* Page Header */ }
       <div className="game-select-header">
         <h1>Games</h1>
@@ -25,7 +25,7 @@ function GameSelect({ imageReducer }) {
       { /* Render two separate game select menus: one for main games, and one for custom games. */ }
       { ["Main", "Custom"].map(type => {
         return (
-          <div key={ type } className="game-select">
+          <div key={ type } className="game-select-body">
             <h2>{ type } Games</h2>
             <div className="game-select-cards">
 
@@ -46,7 +46,7 @@ function GameSelect({ imageReducer }) {
             </div>
           </div>
       )})}
-    </>
+    </div>
   );
 };
 
