@@ -79,7 +79,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	/* ===== LEVELBOARD COMPONENT ===== */
 	return level && board.records ?
 		// Levelboard header - Contains general information about them game and board
-		<>
+		<div className="levelboard">
 			<div className="levelboard-header">
 
 				{ /* Levelboard title - name of levelboard, as well as previous and next buttons */ }
@@ -234,7 +234,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 				setSubmission={ setUpdateSubmission }
 			/>
 
-		</>
+		</div>
 	:
 
 		// Loading component

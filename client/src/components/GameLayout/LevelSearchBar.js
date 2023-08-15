@@ -18,7 +18,7 @@ const LevelSearchBar = abb => {
     const searchRef = useRef(null);
 
     /* ===== STATES ===== */
-    const [filtered, setFiltered] = useState([]);
+    const [filtered, setFiltered] = useState({ main: [], misc: [] });
 
     /* ===== FUNCTIONS ===== */
 
@@ -34,16 +34,23 @@ const LevelSearchBar = abb => {
     // if a match is found, it is pushed into the array. once each level has been searched, the setFiltered() function
     // is run to update the filtered state array with our new array of filtered elements
     const handleFilter = word => {
+        // define the new filtered object
+        const newFiltered = { main: [], misc: [] };
+
+        // if the word is defined, we add all levels whose name match the word parameter (add to the array that
+        // matches whether or not the game is main or misc)
         if (word.length > 0) {
-            const newFilter = game.mode.map(mode => {   // for each mode
-                return mode.level.filter(level => {     // for each level
-                    return cleanLevelName(level.name).toLowerCase().includes(word.toLowerCase());
+            game.mode.forEach(mode => {                 // for each mode
+                mode.level.forEach(level => {           // for each level
+                    if (cleanLevelName(level.name).toLowerCase().includes(word.toLowerCase())) {
+                        mode.misc ? newFiltered.misc.push(level) : newFiltered.main.push(level);
+                    }
                 });
-            }).flat();
-            setFiltered(newFilter);
-        } else {
-            setFiltered([]);
+            });
         }
+
+        // finally, we update the filtered state by calling the setFiltered() function
+        setFiltered(newFiltered);
     };
 
     // FUNCTION 2: clearSearch - clear the search bar

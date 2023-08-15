@@ -1,16 +1,12 @@
 /* ===== IMPORTS ===== */
 import { StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const GameSearchBar = () => {
     /* ===== CONTEXTS ===== */
 
     // static cache state from static cache context
     const { staticCache } = useContext(StaticCacheContext);
-
-    /* ===== VARIABLES ===== */
-    const navigate = useNavigate();
 
     /* ===== REFS ===== */
     const searchRef = useRef(null);
@@ -57,17 +53,7 @@ const GameSearchBar = () => {
         handleFilter("");
     };
 
-    // FUNCTION 3: onResultClick - function that is called when the user clicks a search result
-    // PRECONDITIONS (4 parameters):
-    // 1.) abb: a string representing the unique identifier for a game
-    // POSTCONDITIONS (1 possible outcome):
-    // the user is navigated to the game page given the abb parameter, and the search is cleared
-    const onResultClick = (abb, category, type, levelName) => {
-        navigate(`/games/${ abb }/${ category }/${ type }/${ levelName }`);
-        clearSearch();
-    };
-
-    return { searchRef, filtered, handleFilter, clearSearch, onResultClick };
+    return { searchRef, filtered, handleFilter, clearSearch };
 };
 
 /* ===== EXPORTS ===== */
