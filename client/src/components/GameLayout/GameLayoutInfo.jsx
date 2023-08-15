@@ -28,14 +28,6 @@ function GameLayoutInfo({ category, abb }) {
         })}
       </div>
 
-      { /* Medal Tables - Render links to each Medal Table page of a category */ }
-      <h3>Medal Tables</h3>
-      <div className="game-layout-body-links">
-        { types.map(type => {
-          return <Link to={ `/games/${ abb }/${ category }/medals/${ type }` } key={ type }>{ capitalize(type) }</Link>
-        })}
-      </div>
-
       { /* Totalizers - Render links to each Totalizer page of a category */ }
       <h3>Totalizers</h3>
       <div className="game-layout-body-links">
@@ -43,6 +35,15 @@ function GameLayoutInfo({ category, abb }) {
           return <Link to={ `/games/${ abb }/${ category }/totalizer/${ type }` } key={ type }>{ capitalize(type) }</Link>
         })}
       </div>
+
+      { /* Medal Tables - Render links to each Medal Table page of a category */ }
+      <h3>Medal Tables</h3>
+      <div className="game-layout-body-links">
+        { types.map(type => {
+          return <Link to={ `/games/${ abb }/${ category }/medals/${ type }` } key={ type }>{ capitalize(type) }</Link>
+        })}
+      </div>
+      
     </div>
   );
 };
