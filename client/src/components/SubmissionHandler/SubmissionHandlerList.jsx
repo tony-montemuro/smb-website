@@ -1,19 +1,21 @@
 /* ===== IMPORTS ===== */
-import "./GameSelectList.css";
 import { StaticCacheContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 
-function GameSelectList({ recent, gameAbb, setGameAbb, imageReducer }) {
+function SubmissionHandlerList({ recent, gameAbb, setGameAbb, imageReducer }) {
   /* ===== CONTEXTS ===== */
 
   // static cache from static cache context
   const { staticCache } = useContext(StaticCacheContext);
 
-  /* ===== GAME SELECT LIST COMPONENT ===== */
+  /* ===== SUBMISSION HANDLER LIST COMPONENT ===== */
   return (
-    <div className="game-select-list">
-      <div className="game-select-list-tabs">
+    <div className="submission-handler-list">
+      <div className="submission-handler-list-title">
+        <h2>Select a Game:</h2>
+      </div>
+      <div className="submission-handler-list-tabs">
         { Object.entries(recent)
           .sort((a, b) => b[1].length - a[1].length)
           .map(row => {
@@ -22,7 +24,7 @@ function GameSelectList({ recent, gameAbb, setGameAbb, imageReducer }) {
             const game = staticCache.games.find(row => row.abb === abb);
             return ( 
               <div
-                className={ `game-select-list-tab ${ abb === gameAbb ? "game-select-list-tab-active" : "" }` }
+                className={ `submission-handler-list-tab ${ abb === gameAbb ? "submission-handler-list-tab-active" : "" }` }
                 onClick={ () => setGameAbb(abb) }
                 key={ abb }
               >
@@ -37,4 +39,4 @@ function GameSelectList({ recent, gameAbb, setGameAbb, imageReducer }) {
 };
 
 /* ===== EXPORTS ===== */
-export default GameSelectList;
+export default SubmissionHandlerList;

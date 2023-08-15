@@ -2,7 +2,7 @@
 import "./SubmissionHandler.css";
 import { SubmissionContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
-import GameSelectList from "./GameSelectList.jsx";
+import SubmissionHandlerList from "./SubmissionHandlerList";
 import SubmissionHandlerLogic from "./SubmissionHandler.js";
 import SubmissionPopup from "./SubmissionPopup.jsx";
 import SubmissionTable from "./SubmissionTable";
@@ -47,8 +47,8 @@ function SubmissionHandler({ imageReducer, isNew }) {
   return recent && game ?
     <div className="submission-handler">
 
-      { /* Game select - Render a column of games to choose from */ }
-      <GameSelectList recent={ recent } gameAbb={ game } setGameAbb={ setGame } imageReducer={ imageReducer } />
+      { /* Submission handler list - Render a column of games to choose from */ }
+      <SubmissionHandlerList recent={ recent } gameAbb={ game } setGameAbb={ setGame } imageReducer={ imageReducer } />
       
       { /* Submission handler content - the bulk of this page */ }
       <div className="submission-handler-content">

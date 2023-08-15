@@ -1,6 +1,7 @@
 .submission-handler {
-    display: flex;
-    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 20px;
 }
 
 .submission-handler-header {
@@ -10,8 +11,52 @@
     align-items: center;
 }
 
-.submission-handler-content {
-    flex-basis: 80%;
+.submission-handler-list {
+    margin: 2vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid black;
+    border-radius: 4px;
+}
+
+.submission-handler-list-title {
+    line-height: 5vh;
+}
+
+.submission-handler-list-title h2 {
+    margin: 0;
+}
+  
+.submission-handler-list-tabs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 78vh;
+    overflow-y: auto;
+    position: sticky;
+    top: 19vh;
+    z-index: 1;
+}
+
+.submission-handler-list-tab {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    background-color: #f1f1f1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.submission-handler-list-tab span {
+    padding: 5px;
+}
+
+.submission-handler-list-tab-active {
+    background-color: #ffffff;
+    cursor: default;
 }
 
 .submission-handler-submission-table {

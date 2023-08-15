@@ -13,11 +13,11 @@
 .moderator-layout-tab {
     text-align: center;
     background-color: #f1f1f1;
-    padding: 8px;
     border: 1px solid #ccc;
     border-top: none;
     border-bottom: none;
     width: 25%;
+    line-height: 4vh;
 }
 
 .moderator-layout-tab-active {
