@@ -77,7 +77,7 @@ function UserStatsDirectory({ imageReducer, profile }) {
                       <td><UserStatsCategory game={ game } category={ "main" } /></td>
   
                       { /* Finally, access to the misc score & time stats, if the game has misc category */ }
-                      { hasMiscCategory(game) && <td><UserStatsCategory game={ game } category={ "misc" } /></td> }
+                      <td>{ hasMiscCategory(game) && <UserStatsCategory game={ game } category={ "misc" } /> }</td>
   
                     </tr>
                   );
