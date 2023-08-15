@@ -342,13 +342,15 @@ const SubmissionHandler = (isNew) => {
         // now, create a filtered checked array, which exclues submissions that should not have a level 2 query
         // associated with them
         const filteredChecked = checked.filter(submission => {
+            console.log(submission);
+            console.log(user.profile.id);
             // exclude submissions whose action is "approve"
             if (submission.action === "approve") {
                 return false;
             }
 
-            // exclude submissions with action "delete" and where submission.details.id matches the current user's id
-            if (submission.action === "delete" && submission.details.id === user.profile.id) {
+            // exclude submissions with action "delete" and where submission.profile.id matches the current user's id
+            if (submission.action === "delete" && submission.profile.id === user.profile.id) {
                 return false;
             }
 
