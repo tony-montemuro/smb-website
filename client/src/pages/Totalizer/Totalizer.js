@@ -51,7 +51,7 @@ const Totalizer = () => {
     // FUNCTION 2: fetchTotals - given a game, category, & type, use the submissions to generate a totals object
     // PRECONDITIONS (3 parameters):
     // 1.) game: an object containing information about the game defined in the path
-    // 2.) category: the current category, either "main" or "misc". category is fetched from the URL
+    // 2.) category: the current category. category is fetched from the URL
     // 3.) type: the type of medal table, either "score" or "time". type is fetched from the URL
     // 4.) submissionReducer: an object with two fields:
         // a.) reducer: the submission reducer itself (state)
@@ -64,8 +64,7 @@ const Totalizer = () => {
     const fetchTotals = async (game, category, type, submissionReducer) => {
         // first, reset totals state to default state (undefined), & compute the total time of the game
         setTotals(undefined);
-        const isMisc = category === "misc" ? true : false;
-        const totalTime = calculateTotalTime(game, isMisc);
+        const totalTime = calculateTotalTime(game, category);
 
         try {
             // get the { type } submissions that are a part of the { category } of { game.abb }

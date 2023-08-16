@@ -4,10 +4,10 @@ const TotalizerHelper = () => {
     // FUNCTION 1: calculateTotalTime - calculate the sum of all times for every level in a game with a time chart
     // PRECONDITIONS (2 parameters):
     // 1.) game: an object containing information about the game defined in the path
-    // 2.) isMisc: a boolean value. true when category is misc, false when category is main
+    // 2.) category: a string representing a valid category
     // POSTCONDITIONS (1 return):
     // 1.) total: a floating point value that is the sum of each level with a time chart
-    const calculateTotalTime = (game, isMisc) => {
+    const calculateTotalTime = (game, category) => {
         // define a variable to store the total
         let total = 0;
         
@@ -15,7 +15,7 @@ const TotalizerHelper = () => {
         game.mode.forEach(mode => {
 
             // we only want to consider levels that are part of the category defined by the isMisc parameter
-            if (mode.misc === isMisc) {
+            if (mode.category === category) {
 
                 // for each mode
                 mode.level.forEach(level => {
@@ -25,6 +25,7 @@ const TotalizerHelper = () => {
                 });
             }
         });
+        
         return total;
     };
 

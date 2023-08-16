@@ -9,14 +9,6 @@ import TotalizerLogic from "./Totalizer.js";
 import TotalizerTable from "./TotalizerTable";
 
 function Totalizer({ imageReducer, submissionReducer }) {
-  /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
-  const location = useLocation();
-  const path = location.pathname.split("/");
-  const category = path[3];
-  const type = path[5];
-  const isMisc = category === "misc" ? true : false;
-
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -25,11 +17,20 @@ function Totalizer({ imageReducer, submissionReducer }) {
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
 
-  /* ===== STATES AND FUNCTIONS ===== */
-
-  // helper functions
+  /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
-  const { hasMiscCategory } = GameHelper();
+  const { getGameCategories } = GameHelper();
+  
+
+  /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
+  const location = useLocation();
+  const path = location.pathname.split("/");
+  const category = path[3];
+  const type = path[5];
+  const categories = getGameCategories(game);
+
+  /* ===== STATES AND FUNCTIONS ===== */
 
   // states and functions from the js file
   const {
@@ -39,10 +40,10 @@ function Totalizer({ imageReducer, submissionReducer }) {
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component mounts, or when the user switches between miscellaneous and main
+  // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
-    // special case: we are at the path "/games/{abb}/misc/totalizer/{type}", but the game has no misc charts
-    if (category === "misc" && !hasMiscCategory(game)) {
+    // special case: we are attempting to access a totalizer page with a non-valid category
+    if (!(categories.includes(category))) {
       addMessage("The page you requested does not exist.", "error");
       navigate("/");
       return;
@@ -50,6 +51,7 @@ function Totalizer({ imageReducer, submissionReducer }) {
 
     // if we made it past the special case, let's go ahead and compute the totals
     fetchTotals(game, category, type, submissionReducer);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
@@ -57,9 +59,9 @@ function Totalizer({ imageReducer, submissionReducer }) {
   return totals ? 
     <>
 
-    { /* Totalizer Header - Render the title of the totalizer, based on category and type. */ }
+    { /* Totalizer Header - Render the title of the totalizer. */ }
       <div className="totalizer-header">
-        <h1>{ isMisc && categoryB2F(category) } { capitalize(type) } Totalizer</h1>
+        <h1>{ categoryB2F(category) } { capitalize(type) } Totalizer</h1>
       </div>
 
       { /* Totalizer Body - Render the { type } totalizer table. */ }
