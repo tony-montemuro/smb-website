@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useState } from "react";
-import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
-import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
+import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import FrontendHelper from "../../helper/FrontendHelper";
 import Username from "../../components/Username/Username";
 

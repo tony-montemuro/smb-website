@@ -6,7 +6,7 @@ import Username from "../../components/Username/Username.jsx";
 function RecentSubmissionsRow({ submission, renderGame }) {
   /* ===== VARIABLES ===== */
   const level = submission.level;
-  const category = level.misc ? "misc" : "main";
+  const category = level.category;
   const game = submission.level.mode.game;
   const type = submission.score ? "score" : "time";
   const profile = submission.profile;
