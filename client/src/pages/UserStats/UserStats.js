@@ -84,14 +84,13 @@ const UserStats = () => {
         // initialize variables used in the function
         const profileId = parseInt(path[2]), category = path[4], type = path[5];
         const rankings = {};
-        const isMisc = category === "misc" ? true : false;
         let submissionIndex = 0;
 
         // generate the rankings table
         game.mode.forEach(mode => {
 
             // only consider modes belonging to { category }
-            if (mode.misc === isMisc) {
+            if (mode.category === category) {
                 const records = [];
                 mode.level.forEach(level => {
 
@@ -130,8 +129,7 @@ const UserStats = () => {
         const profileId = parseInt(path[2]), category = path[4], type = path[5];
 
         // next, let's compute the total time of the game
-        const isMisc = category === "misc" ? true : false;
-        const totalTime = calculateTotalTime(game, isMisc);
+        const totalTime = calculateTotalTime(game, category);
 
         try {
             // fetch submissions

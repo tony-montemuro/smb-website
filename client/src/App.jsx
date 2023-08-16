@@ -134,7 +134,7 @@ function App() {
                 <Route path=":game/:category/score" element={
                   <UserStats submissionReducer={ submissionReducer } />
                 }/>
-                <Route path=":game/:category/score" element={
+                <Route path=":game/:category/time" element={
                   <UserStats submissionReducer={ submissionReducer } />
                 }/>
               </Route>

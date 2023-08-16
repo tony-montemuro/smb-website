@@ -22,7 +22,7 @@ function UserStatsDirectory({ imageReducer, profile }) {
   const { userGames, initUserGames } = UserStatsDirectoryLogic();
 
   // helper functions
-  const { hasMiscCategory } = GameHelper();
+  const { getGameCategories } = GameHelper();
   const { capitalize } = FrontendHelper();
 
   /* ===== EFFECTS ===== */
@@ -61,8 +61,7 @@ function UserStatsDirectory({ imageReducer, profile }) {
               <tbody>
                 { userGames[type].map(game => {
                   return (
-                    // Each row contains: a game and it's box art, a link to main stats, and a link to misc stats 
-                    // (ONLY render misc stats links if the game has any misc charts!)
+                    // Each row contains: a game, it's box art, and links to stats for each game category
                     <tr key={ game.name }>
                       <td>
   
@@ -73,11 +72,10 @@ function UserStatsDirectory({ imageReducer, profile }) {
                         </div>
                       </td>
   
-                      { /* Next, access to the main score & time stats */ }
-                      <td><UserStatsCategory game={ game } category={ "main" } /></td>
-  
-                      { /* Finally, access to the misc score & time stats, if the game has misc category */ }
-                      <td>{ hasMiscCategory(game) && <UserStatsCategory game={ game } category={ "misc" } /> }</td>
+                      { /* Now, render the user stats category component for each game's category */ }
+                      { getGameCategories(game).map(category => {
+                        return <td><UserStatsCategory game={ game } category={ category } /></td>
+                      })}
   
                     </tr>
                   );

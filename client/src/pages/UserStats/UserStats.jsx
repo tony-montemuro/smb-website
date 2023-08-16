@@ -11,15 +11,6 @@ import UserStatsTotal from "./UserStatsTotal";
 import UserStatsRecords from "./UserStatsRecords";
 
 function UserStats({ submissionReducer }) {
-  /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
-  const location = useLocation();
-  const path = location.pathname.split("/");
-  const abb = path[3];
-  const category = path[4];
-  const type = path[5];
-  const isMisc = category === "misc" ? true : false;
-
   /* ===== CONTEXTS ===== */
 
   // static cache state from static cache context
@@ -27,6 +18,18 @@ function UserStats({ submissionReducer }) {
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
+
+  /* ===== HELPER FUNCTIONS ===== */
+  const { capitalize, categoryB2F } = FrontendHelper();
+  const { getGameCategories } = GameHelper();
+
+  /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
+  const location = useLocation();
+  const path = location.pathname.split("/");
+  const abb = path[3];
+  const category = path[4];
+  const type = path[5];
 
   /* ===== STATES & FUNCTIONS ===== */
   const [game, setGame] = useState(undefined);
@@ -37,10 +40,6 @@ function UserStats({ submissionReducer }) {
     stats,
     fetchUserStats
   } = UserStatsLogic();
-
-  // helper functions
-  const { capitalize, categoryB2F } = FrontendHelper();
-  const { hasMiscCategory } = GameHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -58,12 +57,13 @@ function UserStats({ submissionReducer }) {
         return;
       }
 
-      // special case: we are at the path "/user/{profileId}/{abb}/misc/{type}", but the game has no misc charts
-      if (category === "misc" && !hasMiscCategory(game)) {
+      // special case: we are attempting to access a user stats page with a non-valid category
+      const categories = getGameCategories(game);
+      if (!(categories.includes(category))) {
         addMessage("The page you requested does not exist.", "error");
         navigate("/");
         return;
-      } 
+      }
 
       // otherwise, update the game, filter, & user state hooks, and fetch user stats
       setGame(game);
@@ -79,7 +79,7 @@ function UserStats({ submissionReducer }) {
       <div className="stats-header">
 
         { /* User and game title */ }
-        <h1>{ game.name }: { isMisc && categoryB2F(category) } { capitalize(type) }</h1>
+        <h1>{ game.name }: { categoryB2F(category) } { capitalize(type) }</h1>
 
         { /* Live-input: Toggle records page between rendering all records and just live records */ }
         <div className="records-input">
