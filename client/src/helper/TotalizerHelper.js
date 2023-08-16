@@ -14,7 +14,7 @@ const TotalizerHelper = () => {
         // for each game
         game.mode.forEach(mode => {
 
-            // we only want to consider levels that are part of the category defined by the isMisc parameter
+            // we only want to consider levels that are part of the category defined by the category parameter
             if (mode.category === category) {
 
                 // for each mode

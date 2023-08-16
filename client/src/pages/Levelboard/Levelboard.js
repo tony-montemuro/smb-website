@@ -37,7 +37,7 @@ const Levelboard = () => {
 
 	// FUNCTION 1: getPrevAndNext - get the previous and next level names
     // PRECONDTIONS (2 parameters):
-    // 1.) category: the current category, either "main" or "misc", also defined in the path
+    // 1.) category: the current category, also defined in the path
     // 2.) levelName: a string corresponding to the name of a level, also defined in the path
     // POSTCONDITIONS (1 possible outcome, 1 return):
 	// the levelLink object is returned, which contains two fields:
@@ -45,8 +45,7 @@ const Levelboard = () => {
     	// b.) next: the name of the next level. if it does not exist, value will be null
     const getPrevAndNext = (category, levelName) => {
         // first, let's get the array of mode objects belonging to category
-        const isMisc = category === "misc" ? true : false;
-        const modes = game.mode.filter(row => row.misc === isMisc);
+        const modes = game.mode.filter(mode => mode.category === category);
 		let found = false, prev = null;
 
         // define our obj containing the prev and next variables
@@ -121,7 +120,7 @@ const Levelboard = () => {
 	// the function always has the same two returns:
 	// 1.) all: the sorted array of submission objects that has all submission objects in the `submissions` array
 	// 2.) live: the sorted array of submission objects that has only has objects whose details.live field are set to true
-	const splitSubmissions = (submissions) => {
+	const splitSubmissions = submissions => {
 		// initialize variables used to split the submissions
 		const live = [], all = [];
 
@@ -146,7 +145,7 @@ const Levelboard = () => {
 	// all and live. these arrays are used to set the records field of the board state, which is updated by calling the setBoard() function
 	// if the submissions fail to be retrieved, an error message is rendered to the user, and the board state is NOT updated, leaving the
 	// Levelboard component stuck loading
-	const setupBoard = async (submissionReducer) => {
+	const setupBoard = async submissionReducer => {
 		// first, set board to default values, and get the names of the previous and next level
 		setBoard(boardInit);
 		const { prev, next } = getPrevAndNext(category, levelName);
