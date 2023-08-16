@@ -3,6 +3,7 @@ import { StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
+import GameHelper from "../../helper/GameHelper";
 
 const LevelSearchBar = abb => {
     /* ===== CONTEXTS ===== */
@@ -10,20 +11,22 @@ const LevelSearchBar = abb => {
     // static cache state from static cache context
     const { staticCache } = useContext(StaticCacheContext);
 
+    /* ===== HELPER FUNCTIONS ===== */
+    const { cleanLevelName } = FrontendHelper();
+    const { getGameCategories } = GameHelper();
+
     /* ===== VARIABLES ===== */
     const game = staticCache.games.find(row => row.abb === abb);
+    const categories = getGameCategories(game);
     const navigate = useNavigate();
 
     /* ===== REFS ===== */
     const searchRef = useRef(null);
 
     /* ===== STATES ===== */
-    const [filtered, setFiltered] = useState({ main: [], misc: [] });
+    const [filtered, setFiltered] = useState(undefined);
 
     /* ===== FUNCTIONS ===== */
-
-    // helper functions
-    const { cleanLevelName } = FrontendHelper();
 
     // FUNCTION 1: handleFilter - given a word, find all level names that could be results
     // PRECONDITIONS (1 parameter):
@@ -35,15 +38,16 @@ const LevelSearchBar = abb => {
     // is run to update the filtered state array with our new array of filtered elements
     const handleFilter = word => {
         // define the new filtered object
-        const newFiltered = { main: [], misc: [] };
+        const newFiltered = {};
+        categories.forEach(category => newFiltered[category] = []);
 
         // if the word is defined, we add all levels whose name match the word parameter (add to the array that
-        // matches whether or not the game is main or misc)
+        // matches the mode category)
         if (word.length > 0) {
             game.mode.forEach(mode => {                 // for each mode
                 mode.level.forEach(level => {           // for each level
                     if (cleanLevelName(level.name).toLowerCase().includes(word.toLowerCase())) {
-                        mode.misc ? newFiltered.misc.push(level) : newFiltered.main.push(level);
+                        newFiltered[mode.category].push(level);
                     }
                 });
             });
@@ -53,7 +57,22 @@ const LevelSearchBar = abb => {
         setFiltered(newFiltered);
     };
 
-    // FUNCTION 2: clearSearch - clear the search bar
+    // FUNCTION 2: hasElements - function that determines if the filtered object has any elements in it
+    // PRECONDITIONS (1 condition):
+    // this function should be run each time the LevelSearchBar component is rerendered, to determine if search results should render
+    // POSTCONDITIONS (2 possible outcomes):
+    // if one or more elements exists in the object, TRUE is returned
+    // otherwise, FALSE is returned
+    const hasElements = () => {
+        for (const category in filtered) {
+            if (filtered[category].length > 0) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    // FUNCTION 3: clearSearch - clear the search bar
     // PRECONDITIONS (1 condition):
     // this function can only be run if the search bar currently has any text stored inside of it
     // POSTCONDITIONS (1 possible outcome):
@@ -64,10 +83,10 @@ const LevelSearchBar = abb => {
         handleFilter("");
     };
 
-    // FUNCTION 3: onResultClick - function that is called when the user clicks a search result
+    // FUNCTION 4: onResultClick - function that is called when the user clicks a search result
     // PRECONDITIONS (4 parameters):
     // 1.) abb: a string representing the unique identifier for a game
-    // 2.) category: a string, either "main" or "misc"
+    // 2.) category: a string representing a valid category
     // 3.) type: a string, either "score" or "time"
     // 4.) levelName: a string representing the name of a level belonging to abb's game
     // POSTCONDITIONS (1 possible outcome):
@@ -77,7 +96,7 @@ const LevelSearchBar = abb => {
         clearSearch();
     };
 
-    return { searchRef, filtered, handleFilter, clearSearch, onResultClick };
+    return { searchRef, filtered, handleFilter, hasElements, clearSearch, onResultClick };
 };
 
 /* ===== EXPORTS ===== */

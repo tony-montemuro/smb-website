@@ -10,13 +10,6 @@ import ModeBody from "./ModeBody";
 import RecentSubmissionsRow from "../../components/RecentSubmissionsRow/RecentSubmissionsRow";
 
 function Game() {
-  /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
-  const location = useLocation();
-  const path = location.pathname.split("/");
-  const abb = path[2];
-  const category = path[3];
-
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -25,16 +18,24 @@ function Game() {
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
 
+  /* ===== HELPER FUNCTIONS ===== */
+  const { categoryB2F } = FrontendHelper();
+  const { getGameCategories } = GameHelper();
+
+  /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
+  const location = useLocation();
+  const path = location.pathname.split("/");
+  const abb = path[2];
+  const category = path[3];
+  const categories = getGameCategories(game);
+
   /* ===== STATES AND FUNCTIONS ===== */
   const [selectedRadioBtn, setSelectedRadioBtn] = useState(category ? category : "main");
 
   // states and functions from js file
   const { submissions, getSubmissions } = GameLogic();
-
-  // helper functions
-  const { categoryB2F } = FrontendHelper();
-  const { hasMiscCategory } = GameHelper();
-
+  
   // simple function that handles the radio button change
   const handleChange = (e) => {
     const category = e.target.value;
@@ -44,8 +45,8 @@ function Game() {
 
   /* ===== EFFECTS ====== */
   useEffect(() => {
-    // special case: we are at the path "/games/{abb}/misc", but the game has no misc charts
-    if (category === "misc" && !hasMiscCategory(game)) {
+    // special case: we are attempting to access a game page with a non-valid category
+    if (category && !(categories.includes(category))) {
       addMessage("The page you requested does not exist.", "error");
       navigate("/");
       return;
@@ -113,10 +114,10 @@ function Game() {
       { /* Game Level List - Specifies the category of levels, and renders a list of levels to select. */ }
       <div className="game-level-list">
 
-        { /* Two radio buttons to toggle between two category modes: main and misc. Only render these buttons if the game
-        has any miscellaneous charts. */ }
+        { /* Radio buttons to toggle between the categories. Only render these buttons if the game
+        has more than 1 category. */ }
         <div className="game-radio-btns">
-          { hasMiscCategory(game) && ["main", "misc"].map(category => {
+          { categories.length > 1 && categories.map(category => {
             return (
               <div key={ category } className={ `game-radio-btn` }>
                 <label htmlFor={ category }>{ categoryB2F(category) } Levels:</label>
@@ -136,7 +137,7 @@ function Game() {
 
         { /* Level select table - Render a table of modes, each of which expands to a selection of levels */ }
         <table>
-          { game.mode.filter(mode => selectedRadioBtn === "misc" ? mode.misc : !mode.misc).map(mode => {
+          { game.mode.filter(mode => mode.category === selectedRadioBtn).map(mode => {
             return <ModeBody category={ selectedRadioBtn } modeName={ mode.name } key={ `${ selectedRadioBtn }_${ mode.name }` } />;
           })}
         </table>

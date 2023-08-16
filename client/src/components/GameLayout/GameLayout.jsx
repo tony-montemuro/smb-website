@@ -32,7 +32,7 @@ function GameLayout({ imageReducer }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { hasMiscCategory } = GameHelper();
+  const { getGameCategories } = GameHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -87,8 +87,9 @@ function GameLayout({ imageReducer }) {
 
         { /* Game Layout Sidebar - a set of links used to navigate various game pages. */ }
         <div className="game-layout-body-sidebar">
-          <GameLayoutInfo abb={ game.abb } category={ "main" } />
-          { hasMiscCategory(game) && <GameLayoutInfo abb={ game.abb } category={ "misc" } /> }
+          { getGameCategories(game).map(category => {
+            return <GameLayoutInfo abb={ game.abb } category={ "main" } key={ category } />
+          })}
         </div>
         
       </div>

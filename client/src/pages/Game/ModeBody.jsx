@@ -14,8 +14,7 @@ function ModeBody({ category, modeName }) {
 
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 3;
-  const misc = category === "misc" ? true : false;
-  const mode = game.mode.find(row => row.misc === misc && row.name === modeName);
+  const mode = game.mode.find(row => row.category === category && row.name === modeName);
 
   /* ===== STATES ===== */
   const [show, setShow] = useState(false);
