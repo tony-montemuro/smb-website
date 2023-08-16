@@ -58,7 +58,7 @@ const Records = () => {
     // FUNCTION 2: generateRecordTable - given a game, category, type, and submissions, generate the record table
     // PRECONDITIONS (4 parameters):
     // 1.) game: an object containing information about the game defined in the path
-    // 2.) category: the current category, either "main" or "misc". category is fetched from the URL
+    // 2.) category: the current category. category is fetched from the URL
     // 3.) type: the current type, either "time" or "score". type is fetched from the URL
     // 4.) submissions: an array containing submissions for a particular game. the submissions must
     // be ordered by type in descending order, then by level id in ascending order
@@ -69,14 +69,13 @@ const Records = () => {
     const generateRecordTable = (game, category, type, submissions) => {
         // initialize variables used in the function
         const recordTable = {};
-        const isMisc = category === "misc" ? true : false;
         let submissionIndex = 0;
 
         // generate the record table
         game.mode.forEach(mode => {                             // for each mode
 
             // only consider modes belonging to { category }
-            if (mode.misc === isMisc) {
+            if (mode.category === category) {
                 const records = [];
                 mode.level.forEach(level => {                   // for each level
 
@@ -99,7 +98,7 @@ const Records = () => {
     // FUNCTION 3: fetchRecords - given a game, category, type, fetch submissions and create the record table
     // PRECONDITIONS (4 parameters):
     // 1.) game: an object containing information about the game defined in the path
-    // 2.) category: the current category, either "main" or "misc". category is fetched from the URL
+    // 2.) category: the current category. category is fetched from the URL
     // 3.) type: the current type, either "time" or "score". type is fetched from the URL
     // 4.) submissionReducer: an object with two fields:
         // a.) reducer: the submission reducer itself (state)

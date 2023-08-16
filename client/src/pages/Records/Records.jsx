@@ -9,14 +9,6 @@ import RecordsLogic from "./Records.js";
 import RecordTable from "./RecordTable";
 
 function Records({ submissionReducer }) {
-  /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
-  const location = useLocation();
-  const path = location.pathname.split("/");
-  const category = path[3];
-  const type = path[4];
-  const isMisc = category === "misc" ? true : false;
-
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -24,6 +16,18 @@ function Records({ submissionReducer }) {
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
+
+  /* ===== HELPER FUNCTIONS ===== */
+  const { capitalize, categoryB2F } = FrontendHelper();
+  const { getGameCategories } = GameHelper();
+
+  /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
+  const location = useLocation();
+  const path = location.pathname.split("/");
+  const category = path[3];
+  const type = path[4];
+  const categories = getGameCategories(game);
 
   /* ===== STATES AND FUNCTIONS ===== */
   const [allLiveFilter, setAllLiveFilter] = useState(game.live_preference ? "live" : "all");
@@ -35,20 +39,16 @@ function Records({ submissionReducer }) {
     numNotLive
   } = RecordsLogic();
 
-  // helper functions
-  const { capitalize, categoryB2F } = FrontendHelper();
-  const { hasMiscCategory } = GameHelper();
-
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts, or when the user switches between score and time
   useEffect(() => {
-    // special case: we are at the path "/games/{abb}/misc/{type}", but the game has no misc charts
-    if (category === "misc" && !hasMiscCategory(game)) {
+    // special case: we are attempting to access a records page with a non-valid category
+    if (!(categories.includes(category))) {
       addMessage("The page you requested does not exist.", "error");
       navigate("/");
       return;
-    } 
+    }
 
     // if we made it past the special case, let's go ahead and fetch all records
     fetchRecords(game, category, type, submissionReducer);
@@ -62,7 +62,7 @@ function Records({ submissionReducer }) {
       <div className="records-header">
 
         { /* Game Title */ }
-        <h1>{ isMisc && categoryB2F(category) } { capitalize(type) } World Records</h1>
+        <h1>{ categoryB2F(category) } { capitalize(type) } World Records</h1>
 
       </div>
 
