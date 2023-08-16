@@ -103,11 +103,27 @@ const FrontendHelper = () => {
 
     // FUNCTION 7: categoryB2F - ("category backend-to-frontend") convert category from back-end format to front-end format
     // PRECONDITIONS (1 parameter):
-    // 1.) category: a string representing a category, either "main" or "misc"
-    // POSTCONDITIONS (1 possible outcome):
-    // the category is transformed into the readable name
+    // 1.) category: a string representing a valid category [main, misc, normal, story, challenge, or party]
+    // POSTCONDITIONS (2 possible outcome):
+    // if category is a valid category, the category is transformed into the readable name
+    // otherwise, an empty string is returned
     const categoryB2F = category => {
-        return category === "misc" ? "Miscellaneous" : "Main";
+        switch (category) {
+            case "main":
+                return "Practice Mode - Main";
+            case "misc":
+                return "Practice Mode - Miscellaneous";
+            case "normal":
+                return "Normal Mode";
+            case "story":
+                return "Story Mode";
+            case "challenge":
+                return "Challenge Mode";
+            case "party":
+                return "Party Games";
+            default:
+                return "";
+        };
     };
 
     return { capitalize, cleanLevelName, dateB2F, recordB2F, secondsToHours, getTimeAgo, categoryB2F };
