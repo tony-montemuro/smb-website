@@ -9,15 +9,6 @@ import MedalsLogic from "./Medals.js";
 import MedalTable from "./MedalTable";
 
 function Medals({ submissionReducer, imageReducer }) {
-  /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
-  const location = useLocation();
-  const path = location.pathname.split("/");
-  const abb = path[2];
-  const category = path[3];
-  const type = path[5];
-  const isMisc = category === "misc" ? true : false;
-
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -26,11 +17,20 @@ function Medals({ submissionReducer, imageReducer }) {
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
 
-  /* ===== STATES AND FUNCTIONS ===== */
-
-  // helper functions
+  /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
-  const { hasMiscCategory } = GameHelper();
+  const { getGameCategories } = GameHelper();
+
+  /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
+  const location = useLocation();
+  const path = location.pathname.split("/");
+  const abb = path[2];
+  const category = path[3];
+  const type = path[5];
+  const categories = getGameCategories(game);
+
+  /* ===== STATES AND FUNCTIONS ===== */
 
   // states and functions from the js file
   const { 
@@ -40,10 +40,10 @@ function Medals({ submissionReducer, imageReducer }) {
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component mounts, or when the user switches between miscellaneous and main
+  // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
-    // special case: we are at the path "/games/{abb}/misc/medals/{type}", but the game has no misc charts
-    if (category === "misc" && !hasMiscCategory(game)) {
+    // special case: we are attempting to access a medals page with a non-valid category
+    if (!(categories.includes(category))) {
       addMessage("The page you requested does not exist.", "error");
       navigate("/");
       return;
@@ -51,6 +51,7 @@ function Medals({ submissionReducer, imageReducer }) {
 
     // if we made it past the special case, let's go ahead and fetch the medal table
     fetchMedals(abb, category, type, submissionReducer);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
       
@@ -61,7 +62,7 @@ function Medals({ submissionReducer, imageReducer }) {
       <div className="medals-header">
 
         { /* Game Title */ }
-        <h1>{ isMisc && categoryB2F(category) } { capitalize(type) } Medal Table</h1>
+        <h1>{ categoryB2F(category) } { capitalize(type) } Medal Table</h1>
 
       </div>
 

@@ -42,7 +42,7 @@ const Medals = () => {
     // PRECONDITIONS (3 parameter):
     // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it. abb is fetched from
     // the URL
-    // 2.) category: the current category, either "main" or "misc". category is fetched from the URL
+    // 2.) category: the current category. category is fetched from the URL
     // 3.) type: the type of medal table, either "score" or "time". type is fetched from the URL 
     // 4.) submissionReducer: an object with two fields:
         // a.) reducer: the submission reducer itself (state)
