@@ -33,7 +33,15 @@ const NotificationRead = () => {
                         position,
                         all_position
                     ),
-                    level (name, misc, mode (game (abb, name))),
+                    level (
+                        category, 
+                        mode (
+                            game (
+                                abb, name
+                            )
+                        ), 
+                        name
+                    ),
                     score,
                     record,
                     submitted_at,

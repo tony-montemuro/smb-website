@@ -43,12 +43,12 @@ const GameRead = () => {
                     live_preference,
                     mode (
                         level (
+                            category,
                             chart_type,
-                            misc,
                             name,
                             time
                         ),
-                        misc,
+                        category,
                         name
                     ),
                     name,

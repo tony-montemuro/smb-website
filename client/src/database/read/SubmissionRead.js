@@ -7,7 +7,7 @@ const SubmissionRead = () => {
     // FUNCTION 1: query - an internal module function that actually performs query to get submissions
     // PRECONDITIONS (3 parameters):
     // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.
-    // 2.) category: a string value, either "main" or "misc".
+    // 2.) category: a string value representing a valid category
     // 3.) type: a string value, either "score" or "time".
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is a success, an array of submissions belonging to the game (specified by abb) category and type,
@@ -18,7 +18,7 @@ const SubmissionRead = () => {
             const { data: submissions, error, status } = await supabase
                 .from("submission")
                 .select(`
-                    level!inner (name, misc, chart_type, time, id),
+                    level!inner (name, category, chart_type, time, id),
                     profile (id, username, country),
                     details:all_submission (
                         all_position,
@@ -39,7 +39,7 @@ const SubmissionRead = () => {
                     approved
                 `)
                 .eq("game_id", abb)
-                .eq("level.misc", category === "misc" ? true : false)
+                .eq("level.category", category)
                 .eq("score", type === "score" ? true : false);
 
             // error handling
@@ -70,7 +70,7 @@ const SubmissionRead = () => {
     // FUNCTION 2: getSubmissions - the public facing function used to get a list of submissions given some parameters
     // PRECONDITIONS (4 parameters):
     // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.
-    // 2.) category: a string value, either "main" or "misc".
+    // 2.) category: a string value representing a valid category
     // 3.) type: a string value, either "score" or "time".
     // 4.) submissionReducer: an object with two fields:
 		// a.) reducer: the submission reducer itself (state)
@@ -125,7 +125,7 @@ const SubmissionRead = () => {
                         submitted_at
                     ),
                     level (
-                        misc,
+                        category,
                         mode (
                             game (
                                 abb,

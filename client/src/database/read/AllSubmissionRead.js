@@ -26,7 +26,7 @@ const AllSubmissionRead = () => {
                 all_position,
                 id,
                 level (
-                    misc,
+                    category,
                     mode (
                         game (
                             abb,
