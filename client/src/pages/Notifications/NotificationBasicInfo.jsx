@@ -21,7 +21,7 @@ function NotificationBasicInfo({ notification }) {
       { /* Link to the level corresponding to the notification prop */ }
       <li>
         Chart:&nbsp;
-        <Link to={`/games/${ notification.level.mode.game.abb }/${ notification.level.misc ? "misc" : "main" }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
+        <Link to={`/games/${ notification.level.mode.game.abb }/${ notification.level.category }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
           { cleanLevelName(notification.level.name) } ({ capitalize(notification.score ? "score" : "time") })
         </Link>
       </li>
