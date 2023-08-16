@@ -22,7 +22,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
   const submission = popup;
   const games = staticCache.games;
   const game = submission && games.find(row => row.abb === submission.level.mode.game.abb);
-  const category = submission && (submission.level.misc ? "misc" : "main");
+  const category = submission && submission.level.category;
   const type = submission && submission.score ? "score" : "time";
   const isOwn = submission && submission.profile.id === user.profile.id;
   const TEXT_AREA_ROWS = 5;
