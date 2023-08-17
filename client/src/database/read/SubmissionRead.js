@@ -39,7 +39,7 @@ const SubmissionRead = () => {
                     approved
                 `)
                 .eq("game_id", abb)
-                .eq("level.category", category)
+                .eq("category", category)
                 .eq("score", type === "score" ? true : false);
 
             // error handling
