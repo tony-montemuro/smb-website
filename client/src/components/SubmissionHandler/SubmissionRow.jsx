@@ -14,7 +14,7 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { getTimeAgo, capitalize, cleanLevelName, recordB2F } = FrontendHelper();
+  const { getTimeAgo, capitalize, cleanLevelName, recordB2F, categoryB2F } = FrontendHelper();
   const { isClickable } = SubmissionHandlerLogic(isNew);
 
   /* ===== SUBMISSION ROW ===== */
@@ -67,6 +67,11 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
           <div>{ submission.level.mode.game.name }</div>
         </td>
       }
+
+      { /* Render the category of the level */ }
+      <td>
+        <div>{ categoryB2F(submission.level.category) }</div>
+      </td>
 
       { /* Render the name of the level, as well as the type of submission */ }
       <td>

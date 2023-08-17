@@ -4,7 +4,7 @@ import SubmissionRow from "./SubmissionRow";
 
 function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
   /* ===== VARIABLES ===== */
-  let NUM_ROWS = isChecked ? 6 : 4;
+  let NUM_ROWS = isChecked ? 7 : 5;
   NUM_ROWS = isNew ? NUM_ROWS : NUM_ROWS+1;
 
   /* ===== FUNCTIONS ===== */
@@ -27,6 +27,7 @@ function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
           { !isNew && <th>Reported By</th> }
           <th>User</th>
           { isChecked && <th>Game</th> }
+          <th>Category</th>
           <th>Level</th>
           <th>Record</th>
         </tr>
