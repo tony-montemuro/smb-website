@@ -18,6 +18,10 @@
     align-items: center;
     border: 2px solid black;
     border-radius: 4px;
+    height: 78vh;
+    top: 14vh;
+    z-index: 1;
+    position: sticky;
 }
 
 .submission-handler-list-title {
@@ -32,11 +36,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 78vh;
     overflow-y: auto;
-    position: sticky;
-    top: 19vh;
-    z-index: 1;
 }
 
 .submission-handler-list-tab {
@@ -59,22 +59,32 @@
     cursor: default;
 }
 
-.submission-handler-submission-table {
-    width: 80%;
-    margin: 0 auto;
+.submission-handler-checked {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
-.submission-handler-checked {
+.submission-handler-checked-header {
+    text-align: center;
+}
+
+.submission-handler-submission-table {
+    margin-left: auto;
+    margin-right: auto;
+    width: 85%;
+}
+
+.submission-handler-checked-table {
     max-height: 30vh;
     overflow-y: auto;
+    margin: 0 auto;
     overflow-anchor: initial;
 }
 
 .submission-handler-body table {
     border-collapse: collapse;
-    margin-left: auto;
-    margin-right: auto;
-    min-width: 100%;
+    width: 100%;
 }
 
 .submission-handler-body th {
@@ -103,8 +113,10 @@
     text-align: center;
 }
 
-.submission-handler-checked-header {
-    text-align: center;
+.submission-handler-new {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .submission-handler-new-header {

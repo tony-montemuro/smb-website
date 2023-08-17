@@ -149,7 +149,8 @@ const SubmissionRead = () => {
                         profile_id,
                         report_date
                     ),
-                    score
+                    score,
+                    approved
                 `)
                 .eq("approved", false);
 

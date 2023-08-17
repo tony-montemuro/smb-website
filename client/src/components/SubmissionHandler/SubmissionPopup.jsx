@@ -26,7 +26,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
   const type = submission && submission.score ? "score" : "time";
   const isOwn = submission && submission.profile.id === user.profile.id;
   const TEXT_AREA_ROWS = 5;
-  const creator = submission && submission.report && submission.report.creator;
+  const creator = submission && submission.report[0] && submission.report[0].creator;
 
   /* ===== FUNCTIONS ===== */
 
@@ -73,7 +73,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
               The following submission was reported by&nbsp;
               <Username country={ creator.country } profileId={ creator.id } username={ creator.username } />.
             </h1>
-            <p>They left the following message with the report: "{ submission.report.message }"</p>
+            <p>They left the following message with the report: "{ submission.report[0].message }"</p>
           </div>
         }
 

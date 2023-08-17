@@ -45,19 +45,19 @@ const ModeratorLayout = () => {
     // the array is filtered into two arrays, both of which are returned:
     // 1.) recent: the subset of submissions where there is no report
     // 2.) reported: the subset of submissions who have a report unrelated to the current moderator
-    const partitionByType = (allSubmissions) => {
+    const partitionByType = allSubmissions => {
         // define two separate arrays: one for new submissions, and one for reported ones
         const recentSubmissions = [], reportedSubmissions = [];
 
         // fill the two arrays
         allSubmissions.forEach(submission => {
             // if submission has a report, and that report is not associated with the current moderator, add it to reported array
-            if (submission.report) {
+            if (submission.report.length > 0) {
                 reportedSubmissions.push(submission);
             }
 
             // if submission has no report, add it to the recent array
-            if (!submission.report) {
+            if (submission.report.length === 0) {
                 recentSubmissions.push(submission);
             }
         });
@@ -75,8 +75,9 @@ const ModeratorLayout = () => {
     // details.submission_id field.
     // otherwise, we treat the array as "reported submissions", and sort them based on the report.report_date field
     const getSortedSubmissions = (submissions, isNew) => {
+        console.log(submissions);
         return submissions.sort((a, b) => {
-            return isNew ? a.details.id.localeCompare(b.details.id) : a.report.report_date.localeCompare(b.report.report_date);
+            return isNew ? a.details.id.localeCompare(b.details.id) : a.report[0].report_date.localeCompare(b.report.report_date);
         });
     };
 
@@ -139,6 +140,7 @@ const ModeratorLayout = () => {
         } catch (error) {
             // render an error message to the user explaining what happened
             addMessage("Submission data failed to load. Please try again later.", "error");
+            console.log(error);
         };
     };
 

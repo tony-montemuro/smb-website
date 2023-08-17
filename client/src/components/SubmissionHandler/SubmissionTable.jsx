@@ -14,7 +14,7 @@ function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
 
   /* ===== SUBMISSION TABLE COMPONENT ===== */
   return (
-    <div className={ `submission-handler-submission-table ${ isChecked ? "submission-handler-checked" : "" }` }>
+    <div className={ `submission-handler-submission-table ${ isChecked ? "submission-handler-checked-table" : "" }` }>
       <table>
 
       { /* Submission table header - Render the description of what's contained in each row. If the isChecked

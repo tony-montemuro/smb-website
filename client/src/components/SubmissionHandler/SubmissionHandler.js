@@ -74,7 +74,7 @@ const SubmissionHandler = (isNew) => {
 
                 // finally, we can update the recent state
                 const newArr = [...state[abb], originalSubmission].sort((a, b) => {
-                    return isNew ? a.details.id.localeCompare(b.details.id) : a.report.report_date.localeCompare(b.report.report_date);
+                    return isNew ? a.details.id.localeCompare(b.details.id) : a.report[0].report_date.localeCompare(b.report[0].report_date);
                 });
                 return {
                     ...state,
@@ -151,7 +151,7 @@ const SubmissionHandler = (isNew) => {
     // however, if the submission is NOT new, and the report that exists is either on a submission belonging to the current user,
     // or was created by the current user, we want to return false
     const isClickable = (submission) => {
-        const report = submission.report;
+        const report = submission.report[0];
         return !(!isNew && (report.profile_id === user.profile.id || report.creator.id === user.profile.id));
     }
 
@@ -180,7 +180,7 @@ const SubmissionHandler = (isNew) => {
 
                     // otherwise, we delete the report, which will THEN approve as a db trigger function
                     else {
-                        promiseFunc = deleteReport(submission.report.report_date).catch(error => {
+                        promiseFunc = deleteReport(submission.report[0].report_date).catch(error => {
                             const rejectionReason = {
                                 submission: submission,
                                 error
@@ -276,7 +276,7 @@ const SubmissionHandler = (isNew) => {
                     
                     // otherwise, we delete the report, which will THEN approve as a db trigger function
                     else {
-                        promiseFunc = deleteReport(submission.report.report_date).catch(error => {
+                        promiseFunc = deleteReport(submission.report[0].report_date).catch(error => {
                             const rejectionReason = {
                                 submission: submission,
                                 error
