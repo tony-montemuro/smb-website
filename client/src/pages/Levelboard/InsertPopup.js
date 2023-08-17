@@ -12,6 +12,7 @@ const InsertPopup = () => {
     /* ===== VARIABLES ===== */
     const location = useLocation();
     const path = location.pathname.split("/");
+    const category = path[3];
     const type = path[4];
     const levelName = path[5];
     const formInit = { 
@@ -63,7 +64,7 @@ const InsertPopup = () => {
     // default form values are generated using the type and levelName parameters, and the form is updated by calling the 
     // dispatchForm() function
 	const fillForm = () => {
-		const formVals = submission2Form(null, type, levelName, user.profile.id);
+		const formVals = submission2Form(null, type, levelName, category, user.profile.id);
 		dispatchForm({ field: "values", value: formVals });
 	};
 
@@ -86,7 +87,7 @@ const InsertPopup = () => {
 			// a record from a user that has already submitted to the chart, the form will be loaded with that user's submission data. 
 			// otherwise, the form is set to the default values
 			case "profile_id":
-				const formData = submission2Form(null, type, levelName, parseInt(value));
+				const formData = submission2Form(null, type, levelName, category, parseInt(value));
 				dispatchForm({ field: "values", value: formData });
 				break;
 

@@ -22,7 +22,7 @@ function ReportForm({ submission }) {
   return (
     <div className="levelboard-detail-popup-report">
 
-      { submission.report ?
+      { submission.report[0] ?
 
         // If the submission is already reported, render a message letting the user know they are unable to report it again
         <h2>This submission has already been reported, so it cannot be reported again.

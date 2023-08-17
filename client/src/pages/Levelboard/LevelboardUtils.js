@@ -15,16 +15,17 @@ const LevelboardUtils = () => {
     const { capitalize, dateB2F, recordB2F } = FrontendHelper();
 
     // FUNCTION 1: submission2Form ("submission to form")
-    // PRECONDITIONS (4 parameters):
+    // PRECONDITIONS (5 parameters):
     // 1.) submission: a submission object, or undefined
     // 2.) type: a string, either "score" or "time"
     // 3.) levelName: a valid name of a level
-    // 4.) profile: a profile integer that belongs to some profile, or is null
+    // 4.) category: a string representing a valid category
+    // 5.) profile: a profile integer that belongs to some profile, or is null
     // POSTCONDITIONS (2 possible outcomes, 1 return):
     // if submission is defined, we use the information from this object to define the return object
     // if not, we set many of the form values to their default values
     // the object returned is compatible with the submission form
-    const submission2Form = (submission, type, levelName, profileId) => {
+    const submission2Form = (submission, type, levelName, category, profileId) => {
         // if a submission exists, we can use the data to form our formData object
         if (submission) {
             const details = submission.details;
@@ -39,6 +40,7 @@ const LevelboardUtils = () => {
                 profile_id: parseInt(profileId),
                 game_id: game.abb,
                 level_id: levelName,
+                category: category,
                 submitted_at: dateB2F(details.submitted_at),
                 message: ""
             };
@@ -56,6 +58,7 @@ const LevelboardUtils = () => {
                 profile_id: profileId,
                 game_id: game.abb,
                 level_id: levelName,
+                category: category,
                 submitted_at: dateB2F(),
                 message: ""
             };

@@ -48,14 +48,15 @@ const UpdatePopup = () => {
     const { validateProof, validateComment } = ValidationHelper();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
-    // PRECONDITIONS (3 parameters):
+    // PRECONDITIONS (4 parameters):
     // 1.) submission: a submission object, which contains information about the current submission
     // 2.) type: a string, either "score" or "time", which is defined in the URL
     // 3.) levelName: a valid level name string, which is defined in the URL
+    // 4.) category: a string representing a valid category
     // POSTCONDITIONS (1 possible outcome)
     // the submission is transformed into a format compatible with the form, and is updated by calling the dispatchForm() function
-	const fillForm = (submission, type, levelName) => {
-		const formVals = submission2Form(submission, type, levelName, submission.profile.id);
+	const fillForm = (submission, type, levelName, category) => {
+		const formVals = submission2Form(submission, type, levelName, category, submission.profile.id);
 		dispatchForm({ field: "values", value: formVals });
 	};
 
@@ -93,6 +94,7 @@ const UpdatePopup = () => {
             id,
             game_id,
             level_id,
+            category,
             score,
             record,
             position,
@@ -145,6 +147,7 @@ const UpdatePopup = () => {
         // if we made it this far, no errors were detected, generate our submission data
 		const id = submission.details.id;
 		const updatedData = getUpdateFromForm(form.values, backendDate);
+        console.log(updatedData);
 
         try {
             // attempt to update the submission using updated data
@@ -154,6 +157,7 @@ const UpdatePopup = () => {
             window.location.reload();
 
         } catch (error) {
+            console.log(error);
             addMessage(error.message, "error");
             dispatchForm({ field: "submitting", value: false });
         };

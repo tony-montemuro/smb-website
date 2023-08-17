@@ -118,8 +118,8 @@ function Levelboard({ imageReducer, submissionReducer }) {
 						<button 
 							type="button" 
 							onClick={ () => setInsertPopup(true) }
-							disabled={ userSubmission && userSubmission.report }
-							title={ userSubmission && userSubmission.report ? 
+							disabled={ userSubmission && userSubmission.report[0] }
+							title={ userSubmission && userSubmission.report[0] ? 
 								"Please wait for a moderator to review your current submission before submitting." 
 							: 
 								undefined
@@ -134,7 +134,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 					{ user.profile && userSubmission &&
 						<button 
 							type="button" 
-							onClick={ () => setUpdateSubmission(board.records.all.find(row => row.profile.id === user.profile.id))}
+							onClick={ () => setUpdateSubmission(userSubmission)}
 						>
 							Update Submission
 						</button>

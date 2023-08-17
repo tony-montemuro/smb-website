@@ -32,7 +32,7 @@ function LevelboardRecord({ submission, iconSize }) {
       :
 
         // If submission has a report, render a warning icon next to the record 
-        submission.report && submission.report > 0 ?
+        submission.report[0] ?
           <div className="levelboard-aligned-span">
             <WarningRoundedIcon 
               fontSize={ iconSize }

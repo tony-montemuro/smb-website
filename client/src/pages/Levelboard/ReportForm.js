@@ -11,6 +11,7 @@ const ReportForm = () => {
     const location = useLocation();
 	const path = location.pathname.split("/");
 	const abb = path[2];
+    const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
 
@@ -57,6 +58,7 @@ const ReportForm = () => {
         const report = {
             game_id: abb,
             level_id: levelName,
+            category: category,
             score: type === "score" ? true : false,
             profile_id: submission.profile.id,
             creator_id: user.profile.id,
