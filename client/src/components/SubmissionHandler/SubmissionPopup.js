@@ -147,7 +147,6 @@ const SubmissionPopup = () => {
             Object.keys(form.error).forEach(field => error[field] = undefined);
 
             // validate necessary fields
-            console.log(form);
             error.proof = validateProof(form.values.proof);
             error.comment = validateComment(form.values.comment);
             error.message = validateMessage(form.values.message, false);

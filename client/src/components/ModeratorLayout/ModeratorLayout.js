@@ -75,7 +75,6 @@ const ModeratorLayout = () => {
     // details.submission_id field.
     // otherwise, we treat the array as "reported submissions", and sort them based on the report.report_date field
     const getSortedSubmissions = (submissions, isNew) => {
-        console.log(submissions);
         return submissions.sort((a, b) => {
             return isNew ? a.details.id.localeCompare(b.details.id) : a.report[0].report_date.localeCompare(b.report.report_date);
         });
@@ -140,7 +139,6 @@ const ModeratorLayout = () => {
         } catch (error) {
             // render an error message to the user explaining what happened
             addMessage("Submission data failed to load. Please try again later.", "error");
-            console.log(error);
         };
     };
 

@@ -9,6 +9,7 @@ function UpdateForm({ submission, profile }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const path = location.pathname.split("/");
+  const category = path[3];
   const type = path[4];
   const levelName = path[5];
   const TEXT_AREA_ROWS = 2;
@@ -31,7 +32,7 @@ function UpdateForm({ submission, profile }) {
   // code that is executed when the component mounts, or when updatePopup is modified
   useEffect(() => {
     if (submission) {
-      fillForm(submission, profile, type, levelName); 
+      fillForm(submission, profile, type, levelName, category); 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submission]); 

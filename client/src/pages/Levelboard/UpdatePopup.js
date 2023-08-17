@@ -147,7 +147,6 @@ const UpdatePopup = () => {
         // if we made it this far, no errors were detected, generate our submission data
 		const id = submission.details.id;
 		const updatedData = getUpdateFromForm(form.values, backendDate);
-        console.log(updatedData);
 
         try {
             // attempt to update the submission using updated data
@@ -157,7 +156,6 @@ const UpdatePopup = () => {
             window.location.reload();
 
         } catch (error) {
-            console.log(error);
             addMessage(error.message, "error");
             dispatchForm({ field: "submitting", value: false });
         };

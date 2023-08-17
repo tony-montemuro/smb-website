@@ -41,7 +41,7 @@ const SubmissionHistory = () => {
     // otherwise, false is returned
     const cantModify = submission => {
         const current = submission.submission ? submission.submission[0] : undefined;
-        return current && (current.approved || (current.report && (current.report.profile_id === user.profile.id || current.report.creator_id === user.profile.id)));
+        return current && (current.approved || (current.report[0] && (current.report[0].profile_id === user.profile.id || current.report[0].creator_id === user.profile.id)));
     };
 
     // FUNCTION 3: getUpdateReasoning - function that returns a string explaining why a submission cannot be updated
@@ -58,7 +58,7 @@ const SubmissionHistory = () => {
         }
 
         // CASE 2: Submission has been reported, and the submission belongs to the user
-        if (current.report.profile_id === user.profile.id) {
+        if (current.report[0].profile_id === user.profile.id) {
             return "This submission cannot be updated since you own it, and it has a report. Allow a different moderator to handle it.";
         }
 
@@ -80,7 +80,7 @@ const SubmissionHistory = () => {
         }
 
         // CASE 2: Submission has been reported, and the submission belongs to the user
-        if (current.report.profile_id === user.profile.id) {
+        if (current.report[0].profile_id === user.profile.id) {
             return "This submission cannot be deleted since you own it, and it has a report. Allow a different moderator to handle it.";
         }
 

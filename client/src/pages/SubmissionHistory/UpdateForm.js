@@ -52,16 +52,17 @@ const UpdateForm = () => {
     const { validateProof, validateComment } = ValidationHelper();
 
     // FUNCTION 1: submission2Form ("submission to form")
-    // PRECONDITIONS (4 parameters):
+    // PRECONDITIONS (5 parameters):
     // 1.) submission: a submission object, or undefined
     // 2.) type: a string, either "score" or "time"
     // 3.) levelName: a valid name of a level
-    // 4.) profileId: a profile integer that belongs to some profile, or is null
+    // 4.) category: a string representing a valid category
+    // 5.) profileId: a profile integer that belongs to some profile, or is null
     // POSTCONDITIONS (2 possible outcomes, 1 return):
     // if submission is defined, we use the information from this object to define the return object
     // if not, we set many of the form values to their default values
     // the object returned is compatible with the submission form
-    const submission2Form = (submission, type, levelName, profileId) => {
+    const submission2Form = (submission, type, levelName, category, profileId) => {
         return {
             record: type === "time" ? recordB2F(submission.record, type) : submission.record,
             score: submission.score,
@@ -73,20 +74,22 @@ const UpdateForm = () => {
             profile_id: parseInt(profileId),
             game_id: game.abb,
             level_id: levelName,
+            category: category,
             submitted_at: dateB2F(submission.submitted_at),
         };
     };
 
     // FUNCTION 2 - fillForm - function that is called when the popup activates
-    // PRECONDITIONS (4 parameters):
+    // PRECONDITIONS (5 parameters):
     // 1.) submission: a submission object, which contains information about the current submission
     // 2.) profile: the profile object that is associated with the submission object
     // 3.) type: a string, either "score" or "time", which is defined in the URL
     // 4.) levelName: a valid level name string, which is defined in the URL
+    // 5.) category: a string representing a valid category
     // POSTCONDITIONS (1 possible outcome)
     // the submission is transformed into a format compatible with the form, and is updated by calling the dispatchForm() function
-	const fillForm = (submission, profile, type, levelName) => {
-		const formVals = submission2Form(submission, type, levelName, profile.id);
+	const fillForm = (submission, profile, type, levelName, category) => {
+		const formVals = submission2Form(submission, type, levelName, category, profile.id);
 		dispatchForm({ field: "values", value: formVals });
 	};
 
@@ -130,11 +133,12 @@ const UpdateForm = () => {
     // the date parameter is also used to determine the "submitted_at" field
     const getUpdateFromForm = (formVals, date) => {
         // create our new updatedData object, which is equivelent to formVals minus the following fields:
-        // id, game_id, level_id, score, record, position, all_position, profile_id
+        // id, game_id, level_id, category, score, record, position, all_position, profile_id
         const { 
             id,
             game_id,
             level_id,
+            category,
             score,
             record,
             position,

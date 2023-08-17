@@ -11,6 +11,7 @@ const DeleteForm = () => {
     const location = useLocation();
 	const path = location.pathname.split("/");
 	const abb = path[2];
+    const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
     const formInit = { message: "", error: null };
@@ -85,6 +86,7 @@ const DeleteForm = () => {
             message: form.message,
             game_id: abb,
             level_id: levelName,
+            category: category,
             score: type === "score",
             record: submission.record
         };
@@ -92,7 +94,7 @@ const DeleteForm = () => {
         // perform database queries
         try {
             // first, remove the submission
-            await deleteSubmission(submission.details.id);
+            await deleteSubmission(submission.id);
 
             // then, insert the notification
             await insertNotification(notification);
