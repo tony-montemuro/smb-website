@@ -110,7 +110,7 @@ const FrontendHelper = () => {
     const categoryB2F = category => {
         switch (category) {
             case "main":
-                return "Main Practice Mode";
+                return "Practice Mode";
             case "misc":
                 return "Miscellaneous Practice Mode";
             case "normal":

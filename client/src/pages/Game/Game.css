@@ -37,14 +37,30 @@
 
 .game-radio-btns {
     display: flex;
-    flex-direction: row;
     justify-content: center;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    gap: 5px;
+    margin: 10px;
 }
 
 .game-radio-btn {
-    margin: 5px;
+    background-color: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.game-radio-btn:hover {
+    background-color: #ddd;
+}
+  
+.game-radio-btn-selected {
+    background-color: black;
+    color: #fff;
+}
+
+.game-radio-btn-selected:hover {
+    background-color: #333333;
 }
 
 .game-radio-btn input[type="radio"]:not(:checked) {

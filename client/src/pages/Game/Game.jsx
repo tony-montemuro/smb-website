@@ -31,15 +31,14 @@ function Game() {
   const categories = getGameCategories(game);
 
   /* ===== STATES AND FUNCTIONS ===== */
-  const [selectedRadioBtn, setSelectedRadioBtn] = useState(category ? category : "main");
+  const [selectedCategory, setSelectedCategory] = useState(category ? category : "main");
 
   // states and functions from js file
   const { submissions, getSubmissions } = GameLogic();
   
   // simple function that handles the radio button change
-  const handleChange = (e) => {
-    const category = e.target.value;
-    setSelectedRadioBtn(category);
+  const handleChange = category => {
+    setSelectedCategory(category);
     navigate(`/games/${ abb }/${ category }`);
   };
 
@@ -114,31 +113,30 @@ function Game() {
       { /* Game Level List - Specifies the category of levels, and renders a list of levels to select. */ }
       <div className="game-level-list">
 
+        { /* Chart select title */ }
+        <h2>Charts</h2>
+
         { /* Radio buttons to toggle between the categories. Only render these buttons if the game
         has more than 1 category. */ }
         <div className="game-radio-btns">
           { categories.length > 1 && categories.map(category => {
             return (
-              <div key={ category } className={ `game-radio-btn` }>
-                <label htmlFor={ category }>{ categoryB2F(category) } Levels:</label>
-                <input 
-                  type="radio" 
-                  value={ category }
-                  checked={ selectedRadioBtn === category }
-                  onChange={ handleChange }>
-                </input>
-              </div>
+              <button 
+                key={ category } 
+                className={ `game-radio-btn ${ category === selectedCategory ? `game-radio-btn-selected` : "" }` }
+                onClick={ () => handleChange(category) }
+                title={ categoryB2F(category) }
+              >
+                { categoryB2F(category) }
+              </button>
             );
           })}
         </div>
 
-        { /* Level select title */ }
-        <h2>{ categoryB2F(category) } Levels</h2>
-
         { /* Level select table - Render a table of modes, each of which expands to a selection of levels */ }
         <table>
-          { game.mode.filter(mode => mode.category === selectedRadioBtn).map(mode => {
-            return <ModeBody category={ selectedRadioBtn } modeName={ mode.name } key={ `${ selectedRadioBtn }_${ mode.name }` } />;
+          { game.mode.filter(mode => mode.category === selectedCategory).map(mode => {
+            return <ModeBody category={ selectedCategory } modeName={ mode.name } key={ `${ selectedCategory }_${ mode.name }` } />;
           })}
         </table>
 
