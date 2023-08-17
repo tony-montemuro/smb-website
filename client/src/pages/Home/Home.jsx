@@ -43,8 +43,8 @@ function Home() {
                 <th>Submitted</th>
                 <th>User</th>
                 <th>Game</th>
-                <th>Level</th>
-                <th>Type</th>
+                <th>Category</th>
+                <th>Chart</th>
                 <th>Record</th>
                 <th>Position</th>
               </tr>

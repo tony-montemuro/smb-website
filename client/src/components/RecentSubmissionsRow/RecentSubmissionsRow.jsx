@@ -14,7 +14,7 @@ function RecentSubmissionsRow({ submission, renderGame }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { cleanLevelName, capitalize, getTimeAgo, recordB2F } = FrontendHelper();
+  const { cleanLevelName, capitalize, getTimeAgo, categoryB2F, recordB2F } = FrontendHelper();
 
   /* ===== RECENT SUBMISSION ROW COMPONENT ===== */
   return (
@@ -22,8 +22,8 @@ function RecentSubmissionsRow({ submission, renderGame }) {
       <td>{ getTimeAgo(submission.id) }</td>
       <td><Username country={ profile.country } profileId={ profile.id } username={ profile.username } /></td>
       { renderGame && <td><Link to={ `/games/${ game.abb }` }>{ game.name }</Link></td> }
-      <td><Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>{ cleanLevelName(level.name) }</Link></td>
-      <td>{ capitalize(type) }</td>
+      <td>{ categoryB2F(submission.level.category) }</td>
+      <td><Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>{ cleanLevelName(level.name) } ({ capitalize(type) })</Link></td>
       <td>{ recordB2F(submission.record, type) }</td>
       <td>{ submission.all_position }</td>
     </tr>
