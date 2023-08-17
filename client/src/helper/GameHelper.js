@@ -16,7 +16,7 @@ const GameHelper = () => {
         return categories;
     };
 
-    // FUNCTION 2: getCategoryTypes - function that returns an array which contains all it's level types (which indicates
+    // FUNCTION 2: getCategoryTypes - function that returns an array which contains all the level types in a category (which indicates
     // it's possible chart types)
     // PRECONDITIONS (2 parameters):
     // 1.) game: a game object, that has been taken directly from the `staticCache.games` array
