@@ -37,59 +37,55 @@
 }
 
 .user-layout-stats {
-    margin: 10px;
-    padding: 10px;
-    border: 2px solid #808080;
-    border-radius: 5px;
-    align-self: flex-start;
-    max-height: 88vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    max-height: 92vh;
+    top: 8vh;
     position: sticky;
     position: -webkit-sticky;
-    top: 9vh;
+    overflow-y: auto;
 }
 
 .user-layout-stats h1 {
     text-align: center;
 }
 
-.user-layout-stats table {
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.user-layout-stats tr {
-    border-bottom: 10px solid transparent;
-}
-
-.user-layout-stats td {
-    width: 33.33%;
-}
-
-.user-layout-stats span {
+.user-layout-stats h2 {
     text-align: center;
+}
+
+.user-layout-stats p { 
+    text-align: center;
+}
+
+.user-layout-stats-menus {
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid #808080;
+    border-radius: 5px;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.user-layout-stats-row {
+    margin: 5px 0; 
 }
 
 .user-layout-game-element {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    text-align: center;
+    cursor: pointer;
+    gap: 10px;
 }
 
 .user-layout-category {
-    margin: 5px;
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.user-layout-category h2 {
-    margin: 5px;
-}
-
-.user-layout-category a {
-    margin: 5px;
+.user-layout-category-links {
+    display: flex;
+    gap: 10px;
 }

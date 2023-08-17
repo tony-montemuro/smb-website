@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./UserLayout.css";
-import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { MessageContext, ProfileContext, StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import Avatar from "../Avatar/Avatar.jsx";
@@ -9,6 +9,7 @@ import UserStatsDirectory from "./UserStatsDirectory.jsx";
 function UserLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const params = useParams();
+  const location = useLocation();
   const { profileId } = params;
   const navigate = useNavigate();
   const IMG_WIDTH = 300;
@@ -26,7 +27,7 @@ function UserLayout({ imageReducer }) {
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component mounts
+  // code that is executed when the component mounts, or when the pathname is updated
   useEffect(() => {
     if (staticCache.profiles.length > 0) {
       // see if profileId corresponds to a profile stored in cache
@@ -44,7 +45,7 @@ function UserLayout({ imageReducer }) {
       setProfile(profile);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staticCache]);
+  }, [staticCache, location.pathname]);
 
   /* ===== USER LAYOUT COMPONENT ===== */ 
   return profile &&
