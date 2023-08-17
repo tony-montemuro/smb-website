@@ -21,7 +21,7 @@ function UserStats({ submissionReducer }) {
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
-  const { getGameCategories } = GameHelper();
+  const { getGameCategories, getCategoryTypes } = GameHelper();
 
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
@@ -57,9 +57,17 @@ function UserStats({ submissionReducer }) {
         return;
       }
 
-      // special case: we are attempting to access a user stats page with a non-valid category
+      // special case #1: we are attempting to access a user stats page with a non-valid category
       const categories = getGameCategories(game);
       if (!(categories.includes(category))) {
+        addMessage("The page you requested does not exist.", "error");
+        navigate("/");
+        return;
+      }
+
+      // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
+      const types = getCategoryTypes(game, category);
+      if (!(types.includes(type))) {
         addMessage("The page you requested does not exist.", "error");
         navigate("/");
         return;
