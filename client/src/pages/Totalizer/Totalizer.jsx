@@ -19,7 +19,7 @@ function Totalizer({ imageReducer, submissionReducer }) {
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
-  const { getGameCategories } = GameHelper();
+  const { getGameCategories, getCategoryTypes } = GameHelper();
   
 
   /* ===== VARIABLES ===== */
@@ -29,6 +29,7 @@ function Totalizer({ imageReducer, submissionReducer }) {
   const category = path[3];
   const type = path[5];
   const categories = getGameCategories(game);
+  const types = getCategoryTypes(game, category);
 
   /* ===== STATES AND FUNCTIONS ===== */
 
@@ -42,8 +43,15 @@ function Totalizer({ imageReducer, submissionReducer }) {
 
   // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
-    // special case: we are attempting to access a totalizer page with a non-valid category
+    // special case #1: we are attempting to access a totalizer page with a non-valid category
     if (!(categories.includes(category))) {
+      addMessage("The page you requested does not exist.", "error");
+      navigate("/");
+      return;
+    }
+
+    // special case #2: we are attempting to access a records page with a valid category, but an invalid type
+    if (!(types.includes(type))) {
       addMessage("The page you requested does not exist.", "error");
       navigate("/");
       return;
@@ -61,7 +69,7 @@ function Totalizer({ imageReducer, submissionReducer }) {
 
     { /* Totalizer Header - Render the title of the totalizer. */ }
       <div className="totalizer-header">
-        <h1>{ categoryB2F(category) } { capitalize(type) } Totalizer</h1>
+        <h1>{ categoryB2F(category) } - { capitalize(type) } Totalizer</h1>
       </div>
 
       { /* Totalizer Body - Render the { type } totalizer table. */ }
