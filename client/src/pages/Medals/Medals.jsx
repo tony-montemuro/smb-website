@@ -19,7 +19,7 @@ function Medals({ submissionReducer, imageReducer }) {
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
-  const { getGameCategories } = GameHelper();
+  const { getGameCategories, getCategoryTypes } = GameHelper();
 
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
@@ -29,6 +29,7 @@ function Medals({ submissionReducer, imageReducer }) {
   const category = path[3];
   const type = path[5];
   const categories = getGameCategories(game);
+  const types = getCategoryTypes(game, category);
 
   /* ===== STATES AND FUNCTIONS ===== */
 
@@ -42,8 +43,15 @@ function Medals({ submissionReducer, imageReducer }) {
 
   // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
-    // special case: we are attempting to access a medals page with a non-valid category
+    // special case #1: we are attempting to access a medals page with a non-valid category
     if (!(categories.includes(category))) {
+      addMessage("The page you requested does not exist.", "error");
+      navigate("/");
+      return;
+    }
+
+    // special case #2: we are attempting to access a medals page with a valid category, but an invalid type
+    if (!(types.includes(type))) {
       addMessage("The page you requested does not exist.", "error");
       navigate("/");
       return;
@@ -62,7 +70,7 @@ function Medals({ submissionReducer, imageReducer }) {
       <div className="medals-header">
 
         { /* Game Title */ }
-        <h1>{ categoryB2F(category) } { capitalize(type) } Medal Table</h1>
+        <h1>{ categoryB2F(category) } - { capitalize(type) } Medal Table</h1>
 
       </div>
 

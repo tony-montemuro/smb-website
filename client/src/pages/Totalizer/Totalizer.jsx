@@ -50,7 +50,7 @@ function Totalizer({ imageReducer, submissionReducer }) {
       return;
     }
 
-    // special case #2: we are attempting to access a records page with a valid category, but an invalid type
+    // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
     if (!(types.includes(type))) {
       addMessage("The page you requested does not exist.", "error");
       navigate("/");
