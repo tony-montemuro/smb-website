@@ -92,8 +92,8 @@ function Game() {
               <tr>
                 <th>Submitted</th>
                 <th>User</th>
+                <th>Category</th>
                 <th>Level</th>
-                <th>Type</th>
                 <th>Record</th>
                 <th>Position</th>
               </tr>

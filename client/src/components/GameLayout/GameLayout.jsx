@@ -88,7 +88,7 @@ function GameLayout({ imageReducer }) {
         { /* Game Layout Sidebar - a set of links used to navigate various game pages. */ }
         <div className="game-layout-body-sidebar">
           { getGameCategories(game).map(category => {
-            return <GameLayoutInfo abb={ game.abb } category={ category } key={ category } />
+            return <GameLayoutInfo category={ category } game={ game } key={ category } />
           })}
         </div>
         

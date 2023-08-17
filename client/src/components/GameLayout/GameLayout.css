@@ -77,11 +77,11 @@
 }
 
 .game-layout-body-content {
-    flex: 8;
+    flex: 7.25;
 }
 
 .game-layout-body-sidebar {
-    flex: 2;
+    flex: 2.75;
     text-align: center;
 }
 
@@ -96,9 +96,25 @@
     margin: 0;
 }
 
-.game-layout-body-links {
+.game-layout-rankings {
     display: flex;
     justify-content: space-around;
+    align-items: flex-end;
+}
+
+.game-layout-ranking-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-layout-ranking-container h3 {
+    margin: 5px;
+}
+
+.game-layout-body-links {
+    display: flex;
+    gap: 10px;
 }
 
 #game-layout-header-download {

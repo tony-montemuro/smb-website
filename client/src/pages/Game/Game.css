@@ -4,8 +4,11 @@
 
 .game-info {
     flex: 1;
-    text-align: center;
     margin: 10px;
+}
+
+.game-info h2 {
+    text-align: center;
 }
 
 .game-rules ol {
