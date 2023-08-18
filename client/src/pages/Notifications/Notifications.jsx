@@ -115,9 +115,10 @@ function Notifications() {
                 />
               </th>
 
-              <th>Time Ago</th>
               <th>Type</th>
+              <th>Time Ago</th>
               <th>Game</th>
+              <th>Category</th>
               <th>Level</th>
               <th>Record</th>
             </tr>

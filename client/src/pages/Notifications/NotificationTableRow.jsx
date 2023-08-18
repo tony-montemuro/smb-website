@@ -8,7 +8,7 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
   const type = row.score ? "score" : "time";
 
   // helper functions
-  const { cleanLevelName, capitalize, recordB2F, getTimeAgo } = FrontendHelper();
+  const { cleanLevelName, capitalize, recordB2F, getTimeAgo, categoryB2F } = FrontendHelper();
 
   /* ===== NOTIFICATION TABLE ROW COMPONENT ===== */
   return (
@@ -23,9 +23,6 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
         />
       </td>
 
-      { /* Render how long ago the notification was receieved. */ }
-      <td onClick={ () => handleRowClick(row) }>{ getTimeAgo(row.notif_date) }</td>
-
       { /* Render the type of notification */ }
       <td onClick={ () => handleRowClick(row) }>
         <div className="notifications-type">
@@ -33,9 +30,17 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
         </div>
       </td>
 
+      { /* Render how long ago the notification was receieved. */ }
+      <td onClick={ () => handleRowClick(row) }>{ getTimeAgo(row.notif_date) }</td>
+
       { /* Render the game associated with the notification */ }
       <td onClick={ () => handleRowClick(row) }>
         { row.level.mode.game.name }
+      </td>
+
+      { /* Render the category associated with the level of the notification */ }
+      <td onClick={ () => handleRowClick(row) }>
+        { categoryB2F(row.level.category) }
       </td>
 
       { /* Render the level associated with the notification */ }

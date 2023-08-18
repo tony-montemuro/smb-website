@@ -13,7 +13,7 @@ function UpdatePopup({ notifications, setNotifications }) {
   const type = notification.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
-  const { capitalize, cleanLevelName, recordB2F, dateB2F } = FrontendHelper();
+  const { capitalize, cleanLevelName, recordB2F, dateB2F, categoryB2F } = FrontendHelper();
 
   /* ===== UPDATE POPUP COMPONENT ===== */
   return (
@@ -38,6 +38,13 @@ function UpdatePopup({ notifications, setNotifications }) {
             <li>
               <span>
                 Game:&nbsp;<Link to={`/games/${ notification.level.mode.game.abb }`}>{ notification.level.mode.game.name }</Link> 
+              </span>
+            </li>
+
+            { /* Link to the category of the level corresponding to the notification prop */ }
+            <li>
+              <span>
+                Category: { categoryB2F(notification.level.category) }
               </span>
             </li>
 

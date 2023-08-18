@@ -7,7 +7,7 @@ function NotificationBasicInfo({ notification }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { capitalize, cleanLevelName } = FrontendHelper();
+  const { capitalize, cleanLevelName, categoryB2F } = FrontendHelper();
 
   /* ===== NOTIFICATION BASIC INFO COMPONENT ===== */
   return ( 
@@ -16,6 +16,11 @@ function NotificationBasicInfo({ notification }) {
       { /* Link to the game corresponding to the notification prop */ }
       <li>
         Game:&nbsp;<Link to={`/games/${ notification.level.mode.game.abb }`}>{ notification.level.mode.game.name }</Link> 
+      </li>
+
+      { /* Link to the category of the level corresponding to the notification prop */ }
+      <li>
+        Category: { categoryB2F(notification.level.category) }
       </li>
 
       { /* Link to the level corresponding to the notification prop */ }
