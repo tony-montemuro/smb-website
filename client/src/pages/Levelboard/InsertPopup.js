@@ -138,6 +138,7 @@ const InsertPopup = () => {
 				message: formVals.message,
                 game_id: formVals.game_id,
                 level_id: formVals.level_id,
+                category: formVals.category,
                 score: formVals.score,
                 record: formVals.record,
 				submission_id: id
