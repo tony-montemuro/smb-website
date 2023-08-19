@@ -53,11 +53,12 @@ const FrontendHelper = () => {
     // PRECONDITION (2 parameters): 
     // 1.) record is a float number with at most two decimal places (should only have decimals if the type is "score")
     // 2.) type is either "score" or "time"
-    // POSTCONDITION (1 possible outcome):
+    // POSTCONDITION (2 possible outcomes):
     // if the type is time, we fix the number of decimal places to two, convert to string, and return
     // if the type is score, return a string representing a formatted integer (includes commas)
     const recordB2F = (record, type) => {
-        return type === "time" ? record.toFixed(2) : record.toLocaleString("en-US");
+        const fixedRecord = Math.abs(record);
+        return type === "time" ? fixedRecord.toFixed(2) : fixedRecord.toLocaleString("en-US");
     };
 
     // FUNCTION 5: secondsToHours - convert a time from seconds to hours

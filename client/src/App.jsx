@@ -125,7 +125,7 @@ function App() {
                 <Route path=":category/score/:levelid/:profileId" element={
                   <SubmissionHistory />
                 }/>
-                <Route path=":category/score/:levelid/:profileId" element={
+                <Route path=":category/time/:levelid/:profileId" element={
                   <SubmissionHistory />
                 }/>
               </Route>
