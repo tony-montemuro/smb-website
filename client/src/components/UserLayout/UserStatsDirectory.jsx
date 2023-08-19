@@ -2,8 +2,10 @@
 import { StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import BoxArt from "../BoxArt/BoxArt.jsx";
-import GameHelper from "../../helper/GameHelper";
+import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
+import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import FrontendHelper from "../../helper/FrontendHelper";
+import GameHelper from "../../helper/GameHelper";
 import UserStatsCategory from "./UserStatsCategory";
 import UserStatsDirectoryLogic from "./UserStatsDirectory.js";
 
@@ -60,8 +62,11 @@ function UserStatsDirectory({ imageReducer, profile }) {
 
                         { /* First, render the game and it's box art. */ }
                         <div className="user-layout-game-element" onClick={ () => setSelectedGame(game.abb !== selectedGame ? game.abb : undefined) }>
-                          <BoxArt game={ game } imageReducer={ imageReducer } width={ 75 } />
-                          <h3>{ game.name }</h3>
+                          <div className="user-layout-game-element">
+                            <BoxArt game={ game } imageReducer={ imageReducer } width={ 75 } />
+                            <h3>{ game.name }</h3>
+                          </div>
+                          { game.abb === selectedGame ? <ExpandLessRoundedIcon /> : <ExpandMoreRoundedIcon /> }
                         </div>
     
                         { /* Now, render the user stats category component for the selected game's category */ }
