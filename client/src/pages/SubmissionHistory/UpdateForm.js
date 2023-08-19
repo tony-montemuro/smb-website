@@ -64,7 +64,7 @@ const UpdateForm = () => {
     // the object returned is compatible with the submission form
     const submission2Form = (submission, type, levelName, category, profileId) => {
         return {
-            record: type === "time" ? recordB2F(submission.record, type) : submission.record,
+            record: type === recordB2F(submission.record, type, submission.level.timer_type),
             score: submission.score,
             monkey_id: submission.monkey.id,
             region_id: submission.region.id,

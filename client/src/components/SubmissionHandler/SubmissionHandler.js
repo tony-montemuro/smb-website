@@ -309,7 +309,7 @@ const SubmissionHandler = (isNew) => {
             const type = submission.score ? "Score" : "Time";
 
             // render error string
-            let errorString = `The following submission failed to ${ submission.action }: ${ submission.level.mode.game.name }: ${ cleanLevelName(submission.level.name) } (${ type }) - ${ recordB2F(submission.details.record, type) } by ${ submission.profile.username }. Reload the page and try again.`;
+            let errorString = `The following submission failed to ${ submission.action }: ${ submission.level.mode.game.name }: ${ cleanLevelName(submission.level.name) } (${ type }) - ${ recordB2F(submission.details.record, type, submission.level.timer_type) } by ${ submission.profile.username }. Reload the page and try again.`;
             addMessage(errorString, "error");
         });
 
@@ -319,7 +319,7 @@ const SubmissionHandler = (isNew) => {
             const type = submission.score ? "Score" : "Time";
 
             // render the error string
-            let errorString = `The following submission was successfully updated, but failed to approve: ${ submission.level.mode.game.name }: ${ cleanLevelName(submission.level.name) } (${ type }) - ${ recordB2F(submission.details.record, type) } by ${ submission.profile.username }. Reload the page and try again.`;
+            let errorString = `The following submission was successfully updated, but failed to approve: ${ submission.level.mode.game.name }: ${ cleanLevelName(submission.level.name) } (${ type }) - ${ recordB2F(submission.details.record, type, submission.level.timer_type) } by ${ submission.profile.username }. Reload the page and try again.`;
             addMessage(errorString, "error");
         });
     };

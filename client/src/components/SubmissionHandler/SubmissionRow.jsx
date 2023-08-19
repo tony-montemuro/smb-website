@@ -8,6 +8,7 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
   /* ===== VARIABLES ===== */
   const details = submission.details;
   const profile = submission.profile;
+  const level = submission.level;
   const creator = !isNew ? submission.report[0].creator : undefined;
   const type = submission.score ? "score" : "time";
 
@@ -64,25 +65,25 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
       { /* If isChecked is true, render the name of the game. */ }
       { isChecked &&
         <td>
-          <div>{ submission.level.mode.game.name }</div>
+          <div>{ level.mode.game.name }</div>
         </td>
       }
 
       { /* Render the category of the level */ }
       <td>
-        <div>{ categoryB2F(submission.level.category) }</div>
+        <div>{ categoryB2F(level.category) }</div>
       </td>
 
       { /* Render the name of the level, as well as the type of submission */ }
       <td>
         <div>
-          { `${ cleanLevelName(submission.level.name) } (${ capitalize(type) })` }
+          { `${ cleanLevelName(level.name) } (${ capitalize(type) })` }
         </div>
       </td>
 
       { /* Render the record */ }
       <td>
-        <div>{ recordB2F(details.record, type) }</div>
+        <div>{ recordB2F(details.record, type, level.timer_type) }</div>
       </td>
       
     </tr>

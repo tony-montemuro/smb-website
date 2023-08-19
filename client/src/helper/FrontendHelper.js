@@ -49,31 +49,19 @@ const FrontendHelper = () => {
         return `${year}-${month}-${day}`;
     };
 
-    // FUNCTION 4: recordB2F - ("record backend-to-frontend") convert record from back-end format to front-end format
-    // PRECONDITION (2 parameters): 
-    // 1.) record is a float number with at most two decimal places (should only have decimals if the type is "score")
-    // 2.) type is either "score" or "time"
-    // POSTCONDITION (2 possible outcomes):
-    // if the type is time, we fix the number of decimal places to two, convert to string, and return
-    // if the type is score, return a string representing a formatted integer (includes commas)
-    const recordB2F = (record, type) => {
-        const fixedRecord = Math.abs(record);
-        return type === "time" ? fixedRecord.toFixed(2) : fixedRecord.toLocaleString("en-US");
-    };
-
-    // FUNCTION 5: secondsToHours - convert a time from seconds to hours
+    // FUNCTION 4: secondsToHours - convert a time from seconds to hours
     // PRECONDITIONS (2 parameters):
     // 1.) record is a float number with at most two decimals places
     // 2.) type is either "score" or "time"
     // POSTCONDITION (2 possible outcome):
     // if the type is time, we will compute the hours, minuntes, seconds, and centiseconds, and return a string with the
-    // following format: XX:XX:XX.XX
+    // following format: [X...X]X:XX:XX.XX
     // if the type is score, return a string representing a formatted integer (includes commas)
     const secondsToHours = (record, type) => {
         if (type === "time") {
             // calculate each unit of time
             let time = Math.floor(record);
-            let hours = Math.floor(time/3600).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            let hours = Math.floor(time/3600).toLocaleString('en-US', { minimumIntegerDigits: 1, useGrouping: false });
             let minutes = Math.floor((time%3600)/60).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
             let seconds = Math.floor(time%60).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
             let centiseconds = Math.round((record%60-seconds)*100).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
@@ -86,7 +74,73 @@ const FrontendHelper = () => {
         return record.toLocaleString("en-US");
     };
 
-    // FUNCTION 6: getTimeAgo - given a timestamp, determine how long ago the timestamp occured given the current time
+    // FUNCTION 5: secondsToMinutes - convert a time from seconds to minutes
+    // PRECONDITIONS (2 parameters):
+    // 1.) record is a float number with at most two decimals places
+    // 2.) type is either "score" or "time"
+    // POSTCONDITION (2 possible outcome):
+    // if the type is time, we will compute the minuntes, seconds, and centiseconds, and return a string with the
+    // following format: [X...X]X:XX.XX
+    // if the type is score, return a string representing a formatted integer (includes commas)
+    const secondsToMinutes = (record, type) => {
+        if (type === "time") {
+            // calculate each unit of time
+            let time = Math.floor(record);
+            let minutes = Math.floor(time/60).toLocaleString('en-US', { minimumIntegerDigits: 1, useGrouping: false });
+            let seconds = Math.floor(time%60).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            let centiseconds = Math.round((record%60-seconds)*100).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+
+            // return with following format: XX:XX:XX.XX
+            return `${ minutes }:${ seconds }.${ centiseconds }`;
+        }
+
+        // otherwise, just return formatted record
+        return record.toLocaleString("en-US");
+    };
+
+    // FUNCTION 6: recordB2F - ("record backend-to-frontend") convert record from back-end format to front-end format
+    // PRECONDITION (2 parameters): 
+    // 1.) record is a float number with at most two decimal places (should only have decimals if the type is "score")
+    // 2.) type is either "score" or "time"
+    // POSTCONDITION (2 possible outcomes):
+    // if the type is time, we convert to a suitable format based on the time type, convert to string, and return
+    // if the type is score, return a string representing a formatted integer (includes commas)
+    const recordB2F = (record, type, timerType) => {
+        // first, take the absolute value of record
+        const fixedRecord = Math.abs(record);
+
+        // next, let's handle time records
+        if (type === "time") {
+            switch (timerType) {
+                case "sec":
+                    return Math.floor(fixedRecord);
+                case "sec_csec":
+                    return fixedRecord.toFixed(2);
+                case "min":
+                    return secondsToMinutes(fixedRecord, type).split(":")[0];
+                case "min_sec":
+                    return secondsToMinutes(fixedRecord, type).split(".")[0];
+                case "min_sec_csec":
+                    return secondsToMinutes(fixedRecord, type);
+                case "hour":
+                    return secondsToHours(fixedRecord, type).split(":")[0];
+                case "hour_min":
+                    const splitTime = secondsToHours(fixedRecord, type).split(":");
+                    return `${ splitTime[0] }:${ splitTime[1] }`;
+                case "hour_min_sec":
+                    return secondsToMinutes(fixedRecord, type).split(".")[0];
+                case "hour_min_sec_csec":
+                    return secondsToHours(fixedRecord, type);
+                default:
+                    return fixedRecord.toFixed(2);
+            };
+        }
+
+        // finally, handle score records
+        return fixedRecord.toLocaleString("en-US");
+    };
+
+    // FUNCTION 7: getTimeAgo - given a timestamp, determine how long ago the timestamp occured given the current time
     // PRECONDITIONS (1 parameter):
     // 1.) timestamp: a string representing a timestamp, typically formatted in the PostgreSQL `timestamptz` format
     // POSTCONDITIONS (4 possible outcomes):
@@ -102,7 +156,7 @@ const FrontendHelper = () => {
         return formattedTimeAgo;
     };
 
-    // FUNCTION 7: categoryB2F - ("category backend-to-frontend") convert category from back-end format to front-end format
+    // FUNCTION 8: categoryB2F - ("category backend-to-frontend") convert category from back-end format to front-end format
     // PRECONDITIONS (1 parameter):
     // 1.) category: a string representing a valid category [main, misc, normal, story, challenge, or party]
     // POSTCONDITIONS (2 possible outcome):
@@ -127,7 +181,7 @@ const FrontendHelper = () => {
         };
     };
 
-    return { capitalize, cleanLevelName, dateB2F, recordB2F, secondsToHours, getTimeAgo, categoryB2F };
+    return { capitalize, cleanLevelName, dateB2F, secondsToHours, recordB2F, getTimeAgo, categoryB2F };
 };
 
 export default FrontendHelper;

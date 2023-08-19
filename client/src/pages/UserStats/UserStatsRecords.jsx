@@ -42,28 +42,28 @@ function UserStatsRecords({ rankings }) {
 
             { /* Table body - Renders the information itself */ }
             <tbody>
-              { rankings[mode].map(level => {
+              { rankings[mode].map(row => {
                 return (
-                  <tr key={ level.level }>
+                  <tr key={ row.level.name }>
 
                     { /* Element 1 - Level name [which includes a link to the chart] */ }
                     <td>
                       <Link
-                        to={ { pathname: `/games/${ abb }/${ category }/${ type }/${ level.level }` } }
+                        to={ { pathname: `/games/${ abb }/${ category }/${ type }/${ row.level.name }` } }
                         className="stats-records-links"
                       >
-                        { cleanLevelName(level.level) }
+                        { cleanLevelName(row.level.name) }
                       </Link>
                     </td>
 
                     { /* Element 2 - Record */ }
-                    <td>{ level.record && recordB2F(level.record, type) }</td>
+                    <td>{ row.record && recordB2F(row.record, type, row.level.timer_type) }</td>
 
                     { /* Element 3 - Position */ }
-                    <td>{ level.position }</td>
+                    <td>{ row.position }</td>
 
                     { /* Element 4 - Submission date */ }
-                    <td>{ level.date ? dateB2F(level.date) : level.date }</td>
+                    <td>{ row.date ? dateB2F(row.date) : row.date }</td>
 
                   </tr>
                 );

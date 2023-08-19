@@ -41,28 +41,28 @@ function RecordTable({ mode, allLiveFilter, recordTable }) {
         </tr>
 
         { /* Render a row for each level */ }
-        { recordTable[allLiveFilter][mode].map((level, index) => {
+        { recordTable[allLiveFilter][mode].map((row, index) => {
           return (
-            <tr className={ allGreater(recordTable, mode, index) ? "records-different-row" : "records-same-row" } key={ level.level }>
+            <tr className={ allGreater(recordTable, mode, index) ? "records-different-row" : "records-same-row" } key={ row.level.name }>
 
               { /* First element is the name of the level, which allows user to navigate to that level's chart */ }
               <td>
-                <Link className="records-level-link" to={ `/games/${ abb }/${ category }/${ type }/${ level.level }` }>
-                  { cleanLevelName(level.level) }
+                <Link className="records-level-link" to={ `/games/${ abb }/${ category }/${ type }/${ row.level.name }` }>
+                  { cleanLevelName(row.level.name) }
                 </Link>
               </td>
 
               { /* Second element is the record */ }
-              <td>{ level.record && recordB2F(level.record, type) }</td>
+              <td>{ row.record && recordB2F(row.record, type, row.level.timer_type) }</td>
 
               { /* Third element is the profiles of each user who has record. This is a list of links, as each name will link to their
               user profile. */ }
               <td>
-                { level.profiles.map((profile, index) => {
+                { row.profiles.map((profile, index) => {
                   return (
                     <Fragment key={ profile.id }>
                       <Username country={ profile.country } profileId={ profile.id } username={ profile.username } />
-                      { index < level.profiles.length-1 ? ", " : null }
+                      { index < row.profiles.length-1 ? ", " : null }
                     </Fragment>
                   );
                 })}

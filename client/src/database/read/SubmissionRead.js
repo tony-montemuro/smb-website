@@ -18,7 +18,7 @@ const SubmissionRead = () => {
             const { data: submissions, error, status } = await supabase
                 .from("submission")
                 .select(`
-                    level!inner (name, category, chart_type, time, id),
+                    level!inner (name, category, chart_type, time, timer_type, id),
                     profile (id, username, country),
                     details:all_submission (
                         all_position,
@@ -132,7 +132,8 @@ const SubmissionRead = () => {
                                 name
                             )
                         ),
-                        name
+                        name,
+                        timer_type
                     ),
                     profile (
                         country,

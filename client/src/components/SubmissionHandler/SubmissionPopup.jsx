@@ -106,7 +106,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                 </div>
 
                 { /* Record: render the user's record (not-editable) */ }
-                <div className="submission-handler-popup-input">{ capitalize(type) }: { recordB2F(submission.details.record, type) }</div>
+                <div className="submission-handler-popup-input">{ capitalize(type) }: { recordB2F(submission.details.record, type, submission.level.timer_type) }</div>
 
                 { /* Position: render the user's position (not-editable) */ }
                 <div className="submission-handler-popup-input">Position: { submission.details.all_position }</div>

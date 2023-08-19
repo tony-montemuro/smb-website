@@ -20,8 +20,8 @@ const Records = () => {
     // FUNCTION 1: generateRecord - given a levelName and the array of submission, generate a record object
     // PRECONDITIONS (3 parameters):
     // 1.) submissionIndex: the current index in our higher-level loop of the submissions
-    // 2.) levelName: the string name of a level
-    // 3.) submissions: submissions: an array containing unfiltered submissions for a particular game. the submissions must be
+    // 2.) level: the level object associated with the next set of submissions
+    // 3.) submissions: an array containing unfiltered submissions for a particular game. the submissions must be
     // ordered by type in descending order, then by level id in ascending order
     // POSTCONDITIONS (1 possible outcome, 2 returns):
     // 1.) record: a record object is generated, which has 3 fields: level, record, and profiles
@@ -29,17 +29,17 @@ const Records = () => {
         // record - a floating point value that represents the world record, or null if there is no record
         // profiles - an array of profile objects (users that have the record), which is a simple object with a username and id field 
     // 2.) index: the updated submissionIndex is returned, since JS passes integers by value, and this value is changed in this function
-    const generateRecord = (submissionIndex, levelName, submissions) => {
+    const generateRecord = (submissionIndex, level, submissions) => {
         // initialize variables used in the function
         const start = submissionIndex;
         const record = {
-            level: levelName,
+            level: level,
             profiles: [],
             record: null
         };
 
         // loop through all submissions for the current level
-        while (submissionIndex < submissions.length && submissions[submissionIndex].level.name === levelName) {
+        while (submissionIndex < submissions.length && submissions[submissionIndex].level.name === level.name) {
 
             // if the current submission has the same record as the first submission for the level, it is record. thus, we need
             // to update the record object
@@ -81,7 +81,7 @@ const Records = () => {
 
                     // only consider levels with a { type } chart
                     if ([type, "both"].includes(level.chart_type)) {
-                        const { index, record } = generateRecord(submissionIndex, level.name, submissions);
+                        const { index, record } = generateRecord(submissionIndex, level, submissions);
                         submissionIndex = index;
                         records.push(record);
                     }

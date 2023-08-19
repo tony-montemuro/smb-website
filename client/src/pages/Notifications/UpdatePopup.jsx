@@ -60,7 +60,7 @@ function UpdatePopup({ notifications, setNotifications }) {
 
               { /* Render the record */ }
               <li>
-                <span>{ capitalize(type) }: { recordB2F(notification.record, type) }</span>
+                <span>{ capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }</span>
               </li>
 
               { /* Render the submission date. If the submission date was updated, render both the old submission date, and the new

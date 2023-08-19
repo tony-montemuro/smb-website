@@ -33,7 +33,8 @@ const AllSubmissionRead = () => {
                             name
                         )
                     ),
-                    name
+                    name,
+                    timer_type
                 ),
                 position,
                 profile (
@@ -86,6 +87,9 @@ const AllSubmissionRead = () => {
                     all_position,
                     comment,
                     id,
+                    level (
+                        timer_type
+                    ),
                     live,
                     monkey (id, monkey_name),
                     position,

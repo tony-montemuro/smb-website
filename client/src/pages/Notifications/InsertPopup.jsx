@@ -41,7 +41,7 @@ function InsertPopup({ notifications, setNotifications }) {
 
               { /* Render the record */ }
               <li>
-                { capitalize(type) }: { recordB2F(notification.record, type) }
+                { capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }
               </li>
               
               { /* Render the submission date */ }

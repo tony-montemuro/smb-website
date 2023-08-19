@@ -49,7 +49,7 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
       </td>
 
       { /* Render the record associated with the notification */ }
-      <td onClick={ () => handleRowClick(row) }>{ recordB2F(row.record, type) }</td>
+      <td onClick={ () => handleRowClick(row) }>{ recordB2F(row.record, type, row.level.timer_type) }</td>
 
     </tr>
   );

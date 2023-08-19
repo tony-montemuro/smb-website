@@ -46,7 +46,7 @@ function DetailPopup({ submission, setSubmission, profile }) {
         { /* Popup header - render the name of the level, the record, and the username */ }
         <h1>
           { cleanLevelName(level) }:&nbsp;
-          { recordB2F(submission.record, type) } by&nbsp;
+          { recordB2F(submission.record, type, submission.level.timer_type) } by&nbsp;
           <Username country={ profile.country.iso2 } profileId={ profile.id } username={ profile.username } />
         </h1>
 

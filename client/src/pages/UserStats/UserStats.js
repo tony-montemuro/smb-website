@@ -26,29 +26,29 @@ const UserStats = () => {
     // PRECONDITIONS (4 parameters):
     // 1.) submissionIndex: the current index in our higher-level loop of the submissions
     // 2.) profileId: a string that contains the id of a user
-    // 3.) levelName: the string name of a level
+    // 3.) level: the level object associated with the following set of submissions
     // 4.) submissions: submissions: an array containing submissions for a particular game. the submissions must be
     // ordered by type in descending order, then by level id in ascending order
     // POSTCONDITIONS (1 possible outcome, 2 returns):
     // 1.) record: a record object is generated, which has 4 fields: level, record, date, and position
-        // level - the string name of a level
+        // level - the level object associated with the record
         // record - a floating point value that represents the world record, or null if user has no record
         // date - a string representing the submission date of the user's record
         // position - the position of the submission
     // 2.) index: the updated submissionIndex is returned, since JS passes integers by value, and this value is changed in this function
-    const generateRecord = (submissionIndex, profileId, levelName, submissions) => {
+    const generateRecord = (submissionIndex, profileId, level, submissions) => {
         // initialize variables used in the function
         let trueCount = 1, posCount = trueCount;
         const record = {
-            level: levelName,
+            level: level,
             record: null,
             date: null,
             position: null
         };
 
         // while their are submissions remaining, and while the current submission has the same level name
-        // as levelName, we iterate through the submissions, looking for submissions belonging to the current user
-        while (submissionIndex < submissions.length && submissions[submissionIndex].level.name === levelName) {
+        // as level.name, we iterate through the submissions, looking for submissions belonging to the current user
+        while (submissionIndex < submissions.length && submissions[submissionIndex].level.name === level.name) {
             const submission = submissions[submissionIndex];
 
             // if the current submission belongs to profileId, update record object
@@ -96,7 +96,7 @@ const UserStats = () => {
 
                     // only consider levels with a { type } chart
                     if ([type, "both"].includes(level.chart_type)) {
-                        const { index, record } = generateRecord(submissionIndex, profileId, level.name, submissions);
+                        const { index, record } = generateRecord(submissionIndex, profileId, level, submissions);
                         submissionIndex = index;
                         records.push(record);
                     }

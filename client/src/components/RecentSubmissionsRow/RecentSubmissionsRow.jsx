@@ -22,9 +22,9 @@ function RecentSubmissionsRow({ submission, renderGame }) {
       <td>{ getTimeAgo(submission.id) }</td>
       <td><Username country={ profile.country } profileId={ profile.id } username={ profile.username } /></td>
       { renderGame && <td><Link to={ `/games/${ game.abb }` }>{ game.name }</Link></td> }
-      <td>{ categoryB2F(submission.level.category) }</td>
+      <td>{ categoryB2F(category) }</td>
       <td><Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>{ cleanLevelName(level.name) } ({ capitalize(type) })</Link></td>
-      <td>{ recordB2F(submission.record, type) }</td>
+      <td>{ recordB2F(submission.record, type, level.timer_type) }</td>
       <td>{ submission.all_position }</td>
     </tr>
   );

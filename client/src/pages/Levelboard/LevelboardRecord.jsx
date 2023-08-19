@@ -48,7 +48,7 @@ function LevelboardRecord({ submission, iconSize }) {
 
       { /* Render the record, as well as a link to the user's submission history on the chart. */ }
       <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }/${ submission.profile.id }` }>
-        { recordB2F(submission.details.record, type) }
+        { recordB2F(submission.details.record, type, submission.level.timer_type) }
       </Link>
       
     </span>

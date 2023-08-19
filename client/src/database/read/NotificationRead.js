@@ -40,7 +40,8 @@ const NotificationRead = () => {
                                 abb, name
                             )
                         ), 
-                        name
+                        name,
+                        timer_type
                     ),
                     score,
                     record,

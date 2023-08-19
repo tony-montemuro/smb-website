@@ -28,7 +28,7 @@ function UpdatePopup({ submission, setSubmission }) {
   const { form, fillForm, handleChange, handleSubmit, closePopup } = UpdatePopupLogic();
 
   // helper functions
-  const { capitalize, recordB2F, dateB2F } = FrontendHelper();
+  const { capitalize, dateB2F } = FrontendHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -63,7 +63,7 @@ function UpdatePopup({ submission, setSubmission }) {
 
               { /* Submission record: simply display the record, which is not able to be changed in this input. */ }
               <div className="levelboard-input-group">
-                <span>{ capitalize(type) }: { recordB2F(submission.details.record, type) }</span>
+                <span>{ capitalize(type) }: { form.values.record }</span>
               </div>
 
               { /* Submission date input: allows the user to modify the date they achieved their submission. */ }

@@ -22,7 +22,7 @@ function FilteredSubmissionRow({ submission, onClickFunc }) {
       <td>{ getTimeAgo(submission.id) }</td>
 
       { /* Record - render the record itself */ }
-      <td>{ recordB2F(submission.record, type) }</td>
+      <td>{ recordB2F(submission.record, type, submission.level.timer_type) }</td>
 
       { /* Date - render the submission date provided by the submitter */ }
       <td>{ dateB2F(submission.submitted_at) }</td>

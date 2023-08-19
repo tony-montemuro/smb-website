@@ -46,7 +46,8 @@ const GameRead = () => {
                             category,
                             chart_type,
                             name,
-                            time
+                            time,
+                            timer_type
                         ),
                         category,
                         name

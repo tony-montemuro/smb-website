@@ -54,7 +54,7 @@ function ReportPopup({ notifications, setNotifications }) {
               <NotificationBasicInfo notification={ notification } />
 
               {/* Render the record */}
-              <li>{ capitalize(type) }: { recordB2F(notification.record, type) }</li>
+              <li>{ capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }</li>
 
               { /* Render the submission date */ }
               <li>Date: { dateB2F(notification.submission.submitted_at) }</li>
