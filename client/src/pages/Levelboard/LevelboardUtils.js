@@ -26,9 +26,6 @@ const LevelboardUtils = () => {
     // if not, we set many of the form values to their default values
     // the object returned is compatible with the submission form
     const submission2Form = (submission, type, levelName, category, profileId) => {
-        console.log(submission.details.record);
-        console.log(type);
-        console.log(submission.level.timer_type);
         // if a submission exists, we can use the data to form our formData object
         if (submission) {
             const details = submission.details;
