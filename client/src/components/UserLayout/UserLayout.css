@@ -39,8 +39,8 @@
 .user-layout-stats {
     max-height: 92vh;
     top: 8vh;
-    position: sticky;
     position: -webkit-sticky;
+    position: sticky;
     overflow-y: auto;
 }
 

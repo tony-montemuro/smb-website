@@ -21,6 +21,7 @@
     height: 78vh;
     top: 14vh;
     z-index: 1;
+    position: -webkit-sticky;
     position: sticky;
 }
 
