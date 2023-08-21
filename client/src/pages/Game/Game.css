@@ -49,7 +49,6 @@
     background-color: #f0f0f0;
     border: none;
     padding: 5px 10px;
-    cursor: pointer;
     border-radius: 4px;
 }
 
@@ -76,40 +75,38 @@
     text-align: center;
 }
 
-.game-level-list table {
-    table-layout: auto;
-    width: 100%;
-    border-collapse: collapse;
+.game-mode-selector {
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.game-mode-name {
+.game-mode-body-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: grey;
     cursor: pointer;
-    width: 100%;
-    line-height: 12px;
+    padding: 15px 8px 15px 6px;
 }
 
-.game-mode-name h3 {
-    margin-left: 5px;
+.game-mode-body-name h3 {
+    margin: 0;
 }
 
-.game-mode-name td {
-    width: 100%;
-}
-
-.game-level {
+.game-mode-body-level {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: lightgray;
     line-height: 1px;
+    padding: 5px 6px;
 }
 
-.game-level button {
-    margin: 0px 10px;
+.game-mode-body-level-btns {
+    display: flex;
+    gap: 8px;
 }
 
-.game-level-name {
-    width: 80%;
-}
-
-.game-level-name p {
-    margin-left: 5px;
+.game-mode-body-level-btns button {
+    min-width: 40px;
 }

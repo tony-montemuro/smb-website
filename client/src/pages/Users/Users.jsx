@@ -68,13 +68,25 @@ function Users({ imageReducer }) {
             { /* Users body page control - render buttons to navigate to the previous and next page, as well as a dropdown for the
             user to select any valid page */ }
             <div className="users-body-page-control">
-              <button onClick={ () => setPageNum(pageNum-1) } disabled={ pageNum <= 1 }>Previous Page</button>
+              <button 
+                type="button"
+                onClick={ () => setPageNum(pageNum-1) } 
+                disabled={ pageNum <= 1 }
+              >
+                Previous Page
+              </button>
               <select value={ pageNum } onChange={ (e) => setPageNum(parseInt(e.target.value)) }>
                 { [...Array(getMaxPage(USERS_PER_PAGE)).keys()].map(num => {
                   return <option value={ num+1 } key={ num+1 }>{ num+1 }</option>;
                 })}
               </select>
-              <button onClick={ () => setPageNum(pageNum+1) } disabled={ pageNum >= getMaxPage(USERS_PER_PAGE) }>Next Page</button>
+              <button
+                type="button"
+                onClick={ () => setPageNum(pageNum+1) } 
+                disabled={ pageNum >= getMaxPage(USERS_PER_PAGE) }
+              >
+                Next Page
+              </button>
             </div>
 
           </div>

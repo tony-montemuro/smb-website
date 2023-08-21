@@ -29,7 +29,7 @@ function DetailPopup({ submission, setSubmission }) {
 
         { /* Button to close the popup */ }
         <div className="levelboard-popup-close-btn">
-          <button onClick={ () => setSubmission(undefined) }>Close</button>
+          <button type="button" onClick={ () => setSubmission(undefined) }>Close</button>
         </div>
 
         { /* Popup header - render the name of the level, the record, and the username */ }

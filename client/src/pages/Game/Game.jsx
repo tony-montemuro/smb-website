@@ -32,6 +32,7 @@ function Game() {
 
   /* ===== STATES AND FUNCTIONS ===== */
   const [selectedCategory, setSelectedCategory] = useState(category ? category : "main");
+  const [selectedMode, setSelectedMode] = useState(null);
 
   // states and functions from js file
   const { submissions, getSubmissions } = GameLogic();
@@ -39,6 +40,7 @@ function Game() {
   // simple function that handles the radio button change
   const handleChange = category => {
     setSelectedCategory(category);
+    setSelectedMode(null);
     navigate(`/games/${ abb }/${ category }`);
   };
 
@@ -122,6 +124,7 @@ function Game() {
           { categories.length > 1 && categories.map(category => {
             return (
               <button 
+                type="button"
                 key={ category } 
                 className={ `game-radio-btn ${ category === selectedCategory ? `game-radio-btn-selected` : "" }` }
                 onClick={ () => handleChange(category) }
@@ -133,12 +136,20 @@ function Game() {
           })}
         </div>
 
-        { /* Level select table - Render a table of modes, each of which expands to a selection of levels */ }
-        <table>
+        { /* Mode body selector - Render rows of modes, each of which expands to a selection of levels */ }
+        <div className="game-mode-selector">
           { game.mode.filter(mode => mode.category === selectedCategory).map(mode => {
-            return <ModeBody category={ selectedCategory } modeName={ mode.name } key={ `${ selectedCategory }_${ mode.name }` } />;
+            return (
+              <ModeBody 
+                category={ selectedCategory } 
+                modeName={ mode.name }
+                selectedMode={ selectedMode }
+                setSelectedMode={ setSelectedMode }
+                key={ `${ selectedCategory }_${ mode.name }` } 
+              />
+            );
           })}
-        </table>
+        </div>
 
       </div>
 

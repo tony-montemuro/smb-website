@@ -26,6 +26,7 @@ function UserStatsCategory({ game, category }) {
         { types.map(type => {
           return ( 
             <button 
+              type="button"
               onClick={ () => navigate(`${ game.abb }/${ category }/${ type }`) }
               key={ type }
             >

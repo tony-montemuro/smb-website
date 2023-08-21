@@ -52,13 +52,25 @@ function News() {
             { /* News body page controls - render buttons to navigate to the previous and next page, as well as a dropdown for the
             user to select any valid page */ }
             <div className="news-body-page-controls">
-              <button onClick={ () => setPageNum(pageNum-1) } disabled={ pageNum <= 1 }>Previous Page</button>
+              <button 
+                type="button"
+                onClick={ () => setPageNum(pageNum-1) } 
+                disabled={ pageNum <= 1 }
+              >
+                Previous Page
+              </button>
               <select value={ pageNum } onChange={ (e) => setPageNum(parseInt(e.target.value)) }>
                 { [...Array(getMaxPage(POSTS_PER_PAGE)).keys()].map(num => {
                   return <option value={ num+1 } key={ num+1 }>{ num+1 }</option>;
                 })}
               </select>
-              <button onClick={ () => setPageNum(pageNum+1) } disabled={ pageNum >= getMaxPage(POSTS_PER_PAGE) }>Next Page</button>
+              <button 
+                type="button"
+                onClick={ () => setPageNum(pageNum+1) } 
+                disabled={ pageNum >= getMaxPage(POSTS_PER_PAGE) }
+              >
+                Next Page
+              </button>
             </div>
 
           </div>

@@ -30,6 +30,7 @@ function GameLayoutInfo({ category, game }) {
             { types.map(type => {
               return (
                 <button 
+                  type="button"
                   onClick={ () => navigate(`/games/${ game.abb }/${ category }/${ type }`) } 
                   key={ type }
                 >
@@ -45,7 +46,15 @@ function GameLayoutInfo({ category, game }) {
           <h3>Totalizers</h3>
           <div className="game-layout-info-body-buttons">
             { types.map(type => {
-              return <button onClick={ () => navigate(`/games/${ game.abb }/${ category }/totalizer/${ type }`) } key={ type }>{ capitalize(type) }</button>
+              return (
+                <button 
+                  type="button" 
+                  onClick={ () => navigate(`/games/${ game.abb }/${ category }/totalizer/${ type }`) } 
+                  key={ type }
+                >
+                  { capitalize(type) }
+                </button>
+              );
             })}
           </div>
         </div>
@@ -55,7 +64,15 @@ function GameLayoutInfo({ category, game }) {
           <h3>Medal Tables</h3>
           <div className="game-layout-info-body-buttons">
             { types.map(type => {
-              return <button onClick={ () => navigate(`/games/${ game.abb }/${ category }/medals/${ type }`) } key={ type }>{ capitalize(type) }</button>
+              return (
+                <button 
+                  type="button"
+                  onClick={ () => navigate(`/games/${ game.abb }/${ category }/medals/${ type }`) } 
+                  key={ type }
+                >
+                  { capitalize(type) }
+                </button>
+              );
             })}
           </div>
         </div>
