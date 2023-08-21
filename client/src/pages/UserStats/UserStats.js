@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import GameHelper from "../../helper/GameHelper";
 import MedalsHelper from "../../helper/MedalsHelper";
 import TotalizerHelper from "../../helper/TotalizerHelper";
 import SubmissionRead from "../../database/read/SubmissionRead";
@@ -17,8 +18,11 @@ const UserStats = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
+    const { getRelevantModes } = GameHelper();
     const { getUserMap, getMedalTable, insertPositionToMedals } = MedalsHelper();
     const { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
+
+    // database functions
     const { getSubmissions } = SubmissionRead();
 
     // FUNCTION 1 - generateRecord - given a submissionIndex, profileId, levelName, and submission list, generate a record
@@ -72,45 +76,41 @@ const UserStats = () => {
     };
 
     // FUNCTION 2: generate rankings - given a path, game object, and submissions array, generate a rankings object
-    // PRECONDITIONS (4 parameters):
-    // 1.) path: an array that contains path information from the URL
-    // 2.) game: an object containing information about the game defined in the path
+    // PRECONDITIONS (3 parameters):
+    // 1.) modes: an array of mode objects containing the relevant modes for the rankings
+    // 2.) path: an array that contains path information from the URL
     // 3.) submissions: an array containing submissions for a particular game. the submissions must
     // be ordered by type in descending order, then by level id in ascending order
     // POSTCONDITIONS (1 possible outcome, 1 return):
     // 1.) rankings: rankings has a field for each mode belonging to { profileId }, { category }, and { type }
     // each field is mapped to an array of record objects, each of which has 4 fields: level, record, date, and position
-    const generateRankings = (path, game, submissions) => {
+    const generateRankings = (modes, path, submissions) => {
         // initialize variables used in the function
-        const profileId = parseInt(path[2]), category = path[4], type = path[5];
+        const profileId = parseInt(path[2]), type = path[5];
         const rankings = {};
         let submissionIndex = 0;
 
         // generate the rankings table
-        game.mode.forEach(mode => {
+        modes.forEach(mode => {             // for each mode
+            const records = [];
+            mode.level.forEach(level => {   // for each level
 
-            // only consider modes belonging to { category }
-            if (mode.category === category) {
-                const records = [];
-                mode.level.forEach(level => {
+                // only consider levels with a { type } chart
+                if ([type, "both"].includes(level.chart_type)) {
+                    const { index, record } = generateRecord(submissionIndex, profileId, level, submissions);
+                    submissionIndex = index;
+                    records.push(record);
+                }
+            });
 
-                    // only consider levels with a { type } chart
-                    if ([type, "both"].includes(level.chart_type)) {
-                        const { index, record } = generateRecord(submissionIndex, profileId, level, submissions);
-                        submissionIndex = index;
-                        records.push(record);
-                    }
-                });
-
-                // for the current mode, create a new field in the rankings table with all the records
-                rankings[mode.name] = records;
-            }
+            // for the current mode, create a new field in the rankings table with all the records
+            rankings[mode.name] = records;
         });
 
         return rankings;
     };
 
-    // FUNCTION 3: fetch user stats - given a path, game object, and submissionReducer object, fetch the stats object
+    // FUNCTION 3: fetchUserStats - given a path, game object, and submissionReducer object, fetch the stats object
     // PRECONDITIONS (3 parameters):
     // 1.) path: an array that contains path information from the URL
     // 2.) game: an object containing information about the game defined in the page
@@ -155,9 +155,12 @@ const UserStats = () => {
             const allMedals = medalTable.find(obj => obj.profile.id === profileId);
             const liveMedals = allMedals;
 
-            // now, it's time to do player rankings
-            const allRankings = generateRankings(path, game, allSubmissions);
-            const liveRankings = generateRankings(path, game, submissions);
+            // now, it's time to do player rankings. first, get the relevant list of modes
+            const modes = getRelevantModes(game, category, type);
+
+            // finally, generate the rankings
+            const allRankings = generateRankings(modes, path, allSubmissions);
+            const liveRankings = generateRankings(modes, path, submissions);
 
             // create our stats object
             const stats = {

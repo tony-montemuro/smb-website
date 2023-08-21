@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import GameHelper from "../../helper/GameHelper";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Records = () => {
@@ -15,6 +16,9 @@ const Records = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
+    const { getRelevantModes } = GameHelper();
+
+    // database functions
     const { getSubmissions } = SubmissionRead();
 
     // FUNCTION 1: generateRecord - given a levelName and the array of submission, generate a record object
@@ -57,7 +61,7 @@ const Records = () => {
 
     // FUNCTION 2: generateRecordTable - given a game, category, type, and submissions, generate the record table
     // PRECONDITIONS (4 parameters):
-    // 1.) game: an object containing information about the game defined in the path
+    // 1.) modes: an array of mode objects, which come from the game object
     // 2.) category: the current category. category is fetched from the URL
     // 3.) type: the current type, either "time" or "score". type is fetched from the URL
     // 4.) submissions: an array containing submissions for a particular game. the submissions must
@@ -66,30 +70,26 @@ const Records = () => {
     // 1.) recordTable: recordTable has a field for each mode belonging to { game }, { category }, and { type }
     // each field is mapped to an array of record objects, each of which has 3 fields: level, record, and profiles
     // once this object is generated, call the setRecordTable() function to update the recordTable state
-    const generateRecordTable = (game, category, type, submissions) => {
+    const generateRecordTable = (modes, category, type, submissions) => {
         // initialize variables used in the function
         const recordTable = {};
         let submissionIndex = 0;
 
         // generate the record table
-        game.mode.forEach(mode => {                             // for each mode
+        modes.forEach(mode => {                 // for each mode
+            const records = [];
+            mode.level.forEach(level => {       // for each level
 
-            // only consider modes belonging to { category }
-            if (mode.category === category) {
-                const records = [];
-                mode.level.forEach(level => {                   // for each level
+                // only consider levels with a { type } chart
+                if ([type, "both"].includes(level.chart_type)) {
+                    const { index, record } = generateRecord(submissionIndex, level, submissions);
+                    submissionIndex = index;
+                    records.push(record);
+                }
+            });
 
-                    // only consider levels with a { type } chart
-                    if ([type, "both"].includes(level.chart_type)) {
-                        const { index, record } = generateRecord(submissionIndex, level, submissions);
-                        submissionIndex = index;
-                        records.push(record);
-                    }
-                });
-
-                // for the current mode, create a new field in the record table with all the records
-                recordTable[mode.name] = records;
-            }
+            // for the current mode, create a new field in the record table with all the records
+            recordTable[mode.name] = records;
         });
 
         return recordTable;
@@ -119,9 +119,12 @@ const Records = () => {
             const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
             const submissions = allSubmissions.filter(row => row.details.live);
 
+            // next, get the relevant list of modes
+            const modes = getRelevantModes(game, category, type);
+
             // generate two record tables: 1 for all submissions, and 1 for live submissions
-            const allRecordTable = generateRecordTable(game, category, type, allSubmissions);
-            const liveRecordTable = generateRecordTable(game, category, type, submissions);
+            const allRecordTable = generateRecordTable(modes, category, type, allSubmissions);
+            const liveRecordTable = generateRecordTable(modes, category, type, submissions);
 
             // create a records object that stores both tables, and update recordTable
             const records = {

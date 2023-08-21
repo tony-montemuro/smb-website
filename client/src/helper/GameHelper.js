@@ -55,7 +55,43 @@ const GameHelper = () => {
         return [prevCategory];
     };
 
-    return { getGameCategories, getCategoryTypes };
+    // FUNCTION 3: getRelevantModes - given a game object, category, and type, return the array of "relevant" modes
+    // PRECONDITIONS (3 parameters):
+    // 1.) game: an object containing information about the game defined in the path
+    // 2.) category: a string representing a valid category
+    // 3.) type: the current type, either "time" or "score"
+    // POSTCONDITIONS (1 possible outcome):
+    // an array of mode objects who have at least 1 chart where the chart_type is either `${ type }` or "both"
+    // is returned
+    const getRelevantModes = (game, category, type) => {
+        // declare the modes array, and initialize as an empty array
+        const modes = [];
+
+        game.mode.forEach(mode => {             // for each mode
+            // only worry about modes who belong to category
+            if (mode.category === category) {
+                // declare isRelevant, a boolean flag which is intialized to false
+                let isRelevant = false;
+
+                mode.level.forEach(level => {   // for each level in each mode
+                    // if chart_type is either both or `${ type }`, then the mode is relevant. thus, update the isRelevant flag
+                    // to true
+                    if (["both", type].includes(level.chart_type)) {
+                        isRelevant = true;
+                    }
+                });
+
+                // if isRelevant flag was updated to true, we push the mode object into modes
+                if (isRelevant) {
+                    modes.push(mode);
+                }
+            }
+        });
+
+        return modes;
+    };
+
+    return { getGameCategories, getCategoryTypes, getRelevantModes };
 };
 
 /* ===== EXPORTS ===== */
