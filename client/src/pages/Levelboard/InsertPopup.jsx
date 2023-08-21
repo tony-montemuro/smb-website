@@ -5,8 +5,9 @@ import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import InsertPopupLogic from "./InsertPopup.js";
+import RecordInput from "./RecordInput";
 
-function InsertPopup({ popup, setPopup, submissions }) {
+function InsertPopup({ popup, setPopup, level, submissions }) {
   /* ===== CONTEXTS ===== */
 
 	// static cache state from static cache context
@@ -62,7 +63,7 @@ function InsertPopup({ popup, setPopup, submissions }) {
             <h2>Submit a New { capitalize(type) }</h2>
 
             { /* Submission form - allows users to submit a record to the database */ }
-            <form onSubmit={ (e) => handleSubmit(e, submissions) }>
+            <form onSubmit={ (e) => handleSubmit(e, submissions, level.timer_type) }>
 
               { /* User input: allows a moderator to select which user they want to submit on behalf of from a dropdown menu. 
               NOTE: this form input is reserved for moderators only! */ }
@@ -77,21 +78,7 @@ function InsertPopup({ popup, setPopup, submissions }) {
                 </div>
               }
 
-              { /* Record input: allows the user to input their record for the submission */ }
-              <div className="levelboard-input-group">
-                <label htmlFor="record">{ capitalize(type) }: </label>
-                <input 
-                  id="record"
-                  className="levelboard-submit-record"
-                  type="number"
-                  value={ form.values.record }
-                  onChange={ (e) => handleChange(e) }
-                />
-
-                { /* If the error.record field is defined, render that underneath the record field. */ }
-                { form.error.record && <p>{ form.error.record }</p> }
-
-              </div>
+              <RecordInput form={ form } handleChange={ handleChange } timerType={ level.timer_type } />
 
               { /* Submission date input: allows the user to input the date they achieved their submission. */ }
               <div className="levelboard-input-group">

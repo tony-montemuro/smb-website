@@ -128,7 +128,7 @@ const FrontendHelper = () => {
                     const splitTime = secondsToHours(fixedRecord, type).split(":");
                     return `${ splitTime[0] }:${ splitTime[1] }`;
                 case "hour_min_sec":
-                    return secondsToMinutes(fixedRecord, type).split(".")[0];
+                    return secondsToHours(fixedRecord, type).split(".")[0];
                 case "hour_min_sec_csec":
                     return secondsToHours(fixedRecord, type);
                 default:

@@ -17,7 +17,16 @@ const InsertPopup = () => {
     const levelName = path[5];
     const formInit = { 
 		values: null, 
-		error: { record: null, proof: null, comment: null, message: null },
+		error: { 
+            record: null, 
+            hour: null, 
+            minute: null, 
+            second: null, 
+            centisecond: null, 
+            proof: null, 
+            comment: null, 
+            message: null 
+        },
 		submitting: false
 	};
 
@@ -55,7 +64,15 @@ const InsertPopup = () => {
 
     // helper functions
     const { getDateOfSubmission } = DateHelper();
-    const { submission2Form, validateRecord } = LevelboardUtils();
+    const { 
+        submission2Form, 
+        validateRecord, 
+        validateHour, 
+        validateMinute, 
+        validateSecond, 
+        validateCentisecond, 
+        recordToSeconds
+    } = LevelboardUtils();
     const { validateMessage, validateProof, validateComment } = ValidationHelper();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
@@ -104,13 +121,14 @@ const InsertPopup = () => {
     // present in the formVals object; it's converted to a backend format
     // POSTCONDITION (1 possible outcome, 1 return):
     // 1.) submission: an object containing mostly the same information from formValues parameter, but with
-    // fixed date value (backend format), as well as removing the `message` field
+    // fixed date value (backend format), as well as removing the `message`, `hour`, `minute`, `second`, & `centisecond` fields
     const getSubmissionFromForm = (formVals, date) => {
         // create our new submission object, which is equivelent to formVals minus the message field
-        const { message, ...submission } = formVals;
+        const { message, hour, minute, second, centisecond, ...submission } = formVals;
 
-        // add additional fields to submission object
+        // add additional fields to submission object, and correct the record field if type is time
         submission.submitted_at = date;
+        submission.record = type === "time" ? recordToSeconds(hour, minute, second, centisecond) : submission.record;
 
         return submission;
     };
@@ -150,15 +168,16 @@ const InsertPopup = () => {
     };
 
     // FUNCTION 5: handleSubmit - function that validates and submits a record to the database
-	// PRECONDITIONS (2 parameters):
+	// PRECONDITIONS (3 parameters):
 	// 1.) e: an event object generated when the user submits the submission form
     // 2.) allSubmissions: an array of submissions for the current levelboard, sorted in descending order by the
     // details.record field
+    // 3.) timerType: a string representing the time of timer of the chart. only really relevent for time charts
 	// POSTCONDITIONS (3 possible outcomes):
 	// if the submission is validated, it is submitted to the database, as well as a notification, if necessary
 	// and the page is reloaded
 	// if not, the function will update the error field of the form state with any new form errors, and return early
-	const handleSubmit = async (e, allSubmissions) => {
+	const handleSubmit = async (e, allSubmissions, timerType) => {
 		// initialize submission
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
@@ -169,7 +188,16 @@ const InsertPopup = () => {
 		Object.keys(form.error).forEach(field => error[field] = undefined);
 
 		// perform form validation
-		error.record = validateRecord(form.values.record, type);
+        let allBlank = false;
+        if (type === "score") {
+            error.record = validateRecord(form.values.record, type);
+        } else {
+            error.hour = validateHour(form.values.hour, timerType);
+            error.minute = validateMinute(form.values.minute, timerType);
+            error.second = validateSecond(form.values.second, timerType);
+            error.centisecond = validateCentisecond(form.values.centisecond, timerType);
+            allBlank = !form.values.hour && !form.values.minute && !form.values.second && !form.values.centisecond;
+        }
 		error.proof = validateProof(form.values.proof);
 		error.comment = validateComment(form.values.comment);
 		error.message = validateMessage(form.values.message, false);
@@ -179,6 +207,12 @@ const InsertPopup = () => {
 		if (Object.values(error).some(e => e !== undefined)) {
             dispatchForm({ field: "submitting", value: false });
             addMessage("One or more form fields had errors.", "error");
+            return;
+        }
+
+        // special case: if allBlank is true, render a special error message to the screen, and return early
+        if (allBlank) {
+            addMessage("Cannot submit without a time.", "error");
             return;
         }
 
