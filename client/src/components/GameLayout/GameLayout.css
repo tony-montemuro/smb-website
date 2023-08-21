@@ -77,11 +77,14 @@
 }
 
 .game-layout-body-content {
-    flex: 7.25;
+    flex: 7.5;
 }
 
-.game-layout-body-sidebar {
-    flex: 2.75;
+.game-layout-info-container {
+    flex: 2.5;
+}
+
+.game-layout-info-container-header {
     text-align: center;
 }
 
@@ -93,28 +96,29 @@
 }
 
 .game-layout-body-info h2 {
-    margin: 0;
-}
-
-.game-layout-rankings {
-    display: flex;
-    justify-content: space-around;
-    align-items: flex-end;
-}
-
-.game-layout-ranking-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.game-layout-ranking-container h3 {
     margin: 5px;
 }
 
-.game-layout-body-links {
+.game-layout-info-rankings {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+}
+
+.game-layout-info-ranking-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.game-layout-info-ranking-container h3 {
+    margin: 5px;
+}
+
+.game-layout-info-body-buttons {
+    display: flex;
+    gap: 8px;
+    margin: 0 5px;
 }
 
 #game-layout-header-download {

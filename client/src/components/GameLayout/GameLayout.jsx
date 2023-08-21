@@ -85,10 +85,13 @@ function GameLayout({ imageReducer }) {
           </GameContext.Provider>
         </div>
 
-        { /* Game Layout Sidebar - a set of links used to navigate various game pages. */ }
-        <div className="game-layout-body-sidebar">
+        { /* Game Layout Info - a set of links used to navigate various game pages. */ }
+        <div className="game-layout-info-container">
+          <div className="game-layout-info-container-header">
+            <h2>Rankings</h2>
+          </div>
           { getGameCategories(game).map(category => {
-            return <GameLayoutInfo category={ category } game={ game } key={ category } />
+            return <GameLayoutInfo category={ category }  game={ game } key={ category } />
           })}
         </div>
         
