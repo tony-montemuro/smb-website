@@ -21,7 +21,7 @@ function UserStats({ submissionReducer }) {
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
-  const { getGameCategories, getCategoryTypes } = GameHelper();
+  const { getGameCategories, getCategoryTypes, isPracticeMode } = GameHelper();
 
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
@@ -105,9 +105,13 @@ function UserStats({ submissionReducer }) {
       { /* Stats body */ }
       <div className="stats-body">
 
-        { /* Stats tables */ }
-        <UserStatsTotal total={ stats[allLiveFilter].total } filter={ allLiveFilter } />
-        <UserStatsMedals medals={ stats[allLiveFilter].medals } filter={ allLiveFilter } />
+        { /* Stats tables - render these only if it's a practice mode category */ }
+        { isPracticeMode(category) &&
+          <>
+            <UserStatsTotal total={ stats[allLiveFilter].total } filter={ allLiveFilter } />
+            <UserStatsMedals medals={ stats[allLiveFilter].medals } filter={ allLiveFilter } />
+          </>
+        }
 
         { /* Stats records */ }
         <UserStatsRecords rankings={ stats[allLiveFilter].rankings } />

@@ -91,7 +91,17 @@ const GameHelper = () => {
         return modes;
     };
 
-    return { getGameCategories, getCategoryTypes, getRelevantModes };
+    // FUNCTION 4: isPracticeMode - takes a category, and determines if it's a practice mode category
+    // PRECONDITIONS (1 parameter):
+    // 1.) category: a string representing a valid category
+    // POSTCONDITIONS (2 possible outcomes, 1 return):
+    // if the category is either "main" or "misc", return true
+    // otherwise, return false
+    const isPracticeMode = category => {
+        return ["main", "misc"].includes(category);
+    };
+
+    return { getGameCategories, getCategoryTypes, getRelevantModes, isPracticeMode };
 };
 
 /* ===== EXPORTS ===== */

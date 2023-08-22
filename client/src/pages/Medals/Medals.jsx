@@ -19,7 +19,7 @@ function Medals({ submissionReducer, imageReducer }) {
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
-  const { getGameCategories, getCategoryTypes } = GameHelper();
+  const { getGameCategories, getCategoryTypes, isPracticeMode } = GameHelper();
 
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
@@ -43,8 +43,8 @@ function Medals({ submissionReducer, imageReducer }) {
 
   // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
-    // special case #1: we are attempting to access a medals page with a non-valid category
-    if (!(categories.includes(category))) {
+    // special case #1: we are attempting to access a medals page with a non-valid or non-practice mode category
+    if (!(categories.includes(category) && isPracticeMode(category))) {
       addMessage("The page you requested does not exist.", "error");
       navigate("/");
       return;

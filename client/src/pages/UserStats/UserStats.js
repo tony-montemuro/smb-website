@@ -18,7 +18,7 @@ const UserStats = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { getRelevantModes } = GameHelper();
+    const { getRelevantModes, isPracticeMode } = GameHelper();
     const { getUserMap, getMedalTable, insertPositionToMedals } = MedalsHelper();
     const { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
 
@@ -124,9 +124,11 @@ const UserStats = () => {
     // if the submissions fail to be retrieved, an error message is rendered to the user, and the stats state is NOT updated, 
     // leaving the UserStats component stuck loading
     const fetchUserStats = async (path, game, submissionReducer) => {
-        // first, reset stats state to default value (undefined), and unpack path parameter
+        // first, reset stats state to default value (undefined), unpack path parameter, and define our stats
+        // collection objects
         setStats(undefined);
         const profileId = parseInt(path[2]), category = path[4], type = path[5];
+        let allTotal, liveTotal, allMedals, liveMedals, allRankings, liveRankings;
 
         // next, let's compute the total time of the game
         const totalTime = calculateTotalTime(game, category);
@@ -134,33 +136,37 @@ const UserStats = () => {
         try {
             // fetch submissions
             const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
-
-            // let's start with the totalizer
-            const { allTotalsMap, liveTotalsMap } = getTotalMaps(allSubmissions, type, totalTime);
-            const { allTotals, liveTotals } = sortTotals(allTotalsMap, liveTotalsMap, type);
-            insertPositionToTotals(allTotals, type);
-            insertPositionToTotals(liveTotals, type);
-
-            // we can filter the allTotals & liveTotals array looking for the profileId's object
-            const allTotal = allTotals.find(obj => obj.profile.id === profileId);
-            const liveTotal = liveTotals.find(obj => obj.profile.id === profileId);
-
-            // now, it's time to do the medal table
             const submissions = allSubmissions.filter(row => row.details.live);
-            const userMap = getUserMap(submissions);
-            const medalTable = getMedalTable(userMap, submissions);
-            insertPositionToMedals(medalTable);
 
-            // we can filter the medalTable looking for the profileId's object. [note: medal tables are the same for all and live!]
-            const allMedals = medalTable.find(obj => obj.profile.id === profileId);
-            const liveMedals = allMedals;
+            // only bother with totalizer and medal table for practice mode categories
+            if (isPracticeMode(category)) {
+
+                // let's start with the totalizer
+                const { allTotalsMap, liveTotalsMap } = getTotalMaps(allSubmissions, type, totalTime);
+                const { allTotals, liveTotals } = sortTotals(allTotalsMap, liveTotalsMap, type);
+                insertPositionToTotals(allTotals, type);
+                insertPositionToTotals(liveTotals, type);
+
+                // we can filter the allTotals & liveTotals array looking for the profileId's object
+                allTotal = allTotals.find(obj => obj.profile.id === profileId);
+                liveTotal = liveTotals.find(obj => obj.profile.id === profileId);
+
+                // now, it's time to do the medal table
+                const userMap = getUserMap(submissions);
+                const medalTable = getMedalTable(userMap, submissions);
+                insertPositionToMedals(medalTable);
+
+                // we can filter the medalTable looking for the profileId's object. [note: medal tables are the same for all and live!]
+                allMedals = medalTable.find(obj => obj.profile.id === profileId);
+                liveMedals = allMedals;
+            }
 
             // now, it's time to do player rankings. first, get the relevant list of modes
             const modes = getRelevantModes(game, category, type);
 
             // finally, generate the rankings
-            const allRankings = generateRankings(modes, path, allSubmissions);
-            const liveRankings = generateRankings(modes, path, submissions);
+            allRankings = generateRankings(modes, path, allSubmissions);
+            liveRankings = generateRankings(modes, path, submissions);
 
             // create our stats object
             const stats = {

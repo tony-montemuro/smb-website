@@ -6,7 +6,7 @@ import GameHelper from "../../helper/GameHelper";
 function GameLayoutInfo({ category, game }) {
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
-  const { getCategoryTypes } = GameHelper();
+  const { getCategoryTypes, isPracticeMode } = GameHelper();
   
   /* ===== VARIABLES ===== */
   const types = getCategoryTypes(game, category);
@@ -41,41 +41,49 @@ function GameLayoutInfo({ category, game }) {
           </div>
         </div>
 
-        { /* Totalizers - Render links to each Totalizer page of a category */ }
-        <div className="game-layout-info-ranking-container">
-          <h3>Totalizers</h3>
-          <div className="game-layout-info-body-buttons">
-            { types.map(type => {
-              return (
-                <button 
-                  type="button" 
-                  onClick={ () => navigate(`/games/${ game.abb }/${ category }/totalizer/${ type }`) } 
-                  key={ type }
-                >
-                  { capitalize(type) }
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        { /* Only render totalizer and medal table links if the category is "practice mode" */ }
+        { isPracticeMode(category) &&
+          <>
 
-        { /* Medal Tables - Render links to each Medal Table page of a category */ }
-        <div className="game-layout-info-ranking-container">
-          <h3>Medal Tables</h3>
-          <div className="game-layout-info-body-buttons">
-            { types.map(type => {
-              return (
-                <button 
-                  type="button"
-                  onClick={ () => navigate(`/games/${ game.abb }/${ category }/medals/${ type }`) } 
-                  key={ type }
-                >
-                  { capitalize(type) }
-                </button>
-              );
-            })}
-          </div>
-        </div>
+            { /* Totalizers - Render links to each Totalizer page of a category */ }
+            <div className="game-layout-info-ranking-container">
+              <h3>Totalizers</h3>
+              <div className="game-layout-info-body-buttons">
+                { types.map(type => {
+                  return (
+                    <button 
+                      type="button" 
+                      onClick={ () => navigate(`/games/${ game.abb }/${ category }/totalizer/${ type }`) } 
+                      key={ type }
+                    >
+                      { capitalize(type) }
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            { /* Medal Tables - Render links to each Medal Table page of a category */ }
+            <div className="game-layout-info-ranking-container">
+              <h3>Medal Tables</h3>
+              <div className="game-layout-info-body-buttons">
+                { types.map(type => {
+                  return (
+                    <button 
+                      type="button"
+                      onClick={ () => navigate(`/games/${ game.abb }/${ category }/medals/${ type }`) } 
+                      key={ type }
+                    >
+                      { capitalize(type) }
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+          </>
+        }
+        
       </div>
     
       
