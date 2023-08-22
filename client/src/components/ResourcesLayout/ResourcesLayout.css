@@ -25,7 +25,7 @@
     padding-inline-start: 0;
 }
 
-.resources-layout-content ul[role='list'], li {
+.resources-layout-sidebar li {
     list-style: none;
 }
 
