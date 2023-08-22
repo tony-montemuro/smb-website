@@ -85,7 +85,6 @@ function GameLayoutInfo({ category, game }) {
         }
         
       </div>
-    
       
     </div>
   );

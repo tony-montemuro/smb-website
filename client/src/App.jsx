@@ -1,13 +1,14 @@
 /* ===== IMPORTS ===== */
 import "./App.css";
-import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
 import { MessageContext, StaticCacheContext, UserContext } from "./utils/Contexts";
+import { Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
 import AppLogic from "./App.js";
 import Approvals from "./pages/Approvals/Approvals.jsx";
 import Game from "./pages/Game/Game.jsx";
 import GameLayout from "./components/GameLayout/GameLayout";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
+import GettingStarted from "./pages/GettingStarted/GettingStarted.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
 import Medals from "./pages/Medals/Medals.jsx";
@@ -19,9 +20,10 @@ import News from "./pages/News/News.jsx";
 import Notifications from "./pages/Notifications/Notifications.jsx";
 import Post from "./pages/Post/Post.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
+import Overview from "./pages/Overview/Overview.jsx";
 import Records from "./pages/Records/Records.jsx";
 import Reports from "./pages/Reports/Reports.jsx";
-import Resources from "./pages/Resources/Resources.jsx";
+import ResourcesLayout from "./components/ResourcesLayout/ResourcesLayout.jsx";
 import SignIn from "./pages/SignIn/SignIn.jsx";
 import SubmissionHistory from "./pages/SubmissionHistory/SubmissionHistory.jsx";
 import Support from "./pages/Support/Support.jsx";
@@ -90,7 +92,6 @@ function App() {
               <Route path="/games" element={<GameSelect imageReducer={ imageReducer } />}/>
               <Route path="/users" element={ <Users imageReducer={ imageReducer } /> } />
               <Route path="/news" element={ <News /> } />
-              <Route path="/resources" element={<Resources />}></Route>
               <Route path="/support" element={ <Support /> }/>
               <Route path="/notifications" element={ <Notifications /> } />
               <Route path="/profile" element={ <Profile imageReducer={ imageReducer } /> }/>
@@ -137,6 +138,11 @@ function App() {
                 <Route path=":game/:category/time" element={
                   <UserStats submissionReducer={ submissionReducer } />
                 }/>
+              </Route>
+              <Route path="resources" element={ <ResourcesLayout /> } >
+                <Route index element={ <Overview /> } />
+                <Route path="overview" element={ <Overview /> } />
+                <Route path="getting_started" element={ <GettingStarted /> } />
               </Route>
               <Route path="moderator" element={ <ModeratorLayout /> } >
                 <Route index element={ <Moderator /> } />
