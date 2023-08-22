@@ -1,0 +1,42 @@
+.resources-layout {
+    display: flex;
+}
+
+.resources-layout-sidebar {
+    flex: 2;
+    padding: 15px;
+}
+
+.resources-layout-content {
+    flex: 8;
+    padding: 15px;
+}
+
+.resource-layout-content ul {
+    padding-inline-start: 0;
+}
+
+.resources-layout-content ul[role='list'], li {
+    list-style: none;
+}
+
+.resources-layout-page-item-header {
+    cursor: pointer;
+}
+
+.resources-layout-page-list {
+    padding-inline-start: 0;
+}
+
+.resources-layout-page-list li {
+    padding-top: 5px;
+}
+
+.resources-layout-header-list {
+    padding: 0;
+    padding-top: 5px;
+}
+
+.resources-layout-header-list li {
+    padding: 5px 0;
+}
