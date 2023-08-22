@@ -18,6 +18,8 @@ function ResourcesLayout() {
   /* ===== RESOURCES LAYOUT COMPONENT ===== */
   return (
     <div className="resources-layout">
+
+      { /* Resources layout sidebar - render the page controls here.  */ }
       <div className="resources-layout-sidebar">
         <h1>Resources</h1>
         <ul className="resources-layout-page-list">
@@ -26,9 +28,12 @@ function ResourcesLayout() {
           })}
         </ul>
       </div>
+
+      { /* Resources layout content - render the resources page here (the actual content) */ }
       <div className="resources-layout-content">
         <Outlet />
       </div>
+      
     </div>
   );
 };

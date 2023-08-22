@@ -1,12 +1,16 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
+import ResourcesLayoutLogic from "./ResourcesLayout.js";
 
 function PageItem({ page, currentPage, setCurrentPage }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
   const { cleanLevelName } = FrontendHelper();
+
+  // functions from the js file
+  const { handleHeaderClick } = ResourcesLayoutLogic();
 
   /* ===== PAGE ITEM COMPONENT ===== */
   return (
@@ -19,7 +23,7 @@ function PageItem({ page, currentPage, setCurrentPage }) {
       { currentPage === page.name &&
         <ul className="resources-layout-header-list">
           { page.headers.map(header => {
-            return <li key={ header }>{ cleanLevelName(header) }</li>
+            return <li key={ header } onClick={ () => handleHeaderClick(header) }>{ cleanLevelName(header) }</li>
           })}
         </ul>
       }
