@@ -3,7 +3,7 @@
     justify-content: center;
     position: -webkit-sticky;
     position: sticky;
-    top: 8vh;
+    top: var(--navbar-height);
 }
 
 .moderator-layout-tabs {
@@ -18,7 +18,7 @@
     border-top: none;
     border-bottom: none;
     width: 25%;
-    line-height: 4vh;
+    line-height: calc(var(--navbar-height)/2);
 }
 
 .moderator-layout-tab-active {

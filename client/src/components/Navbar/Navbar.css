@@ -1,6 +1,6 @@
 .nav-wrapper {
     display: flex;
-    height: 8vh;
+    height: 75px;
     position: -webkit-sticky;
     position: sticky;
     top: 0;
@@ -27,7 +27,7 @@
 }
 
 .nav-logo-container {
-    width: 10vh;
+    width: 100px;
 }
 
 .nav-logo-container svg {

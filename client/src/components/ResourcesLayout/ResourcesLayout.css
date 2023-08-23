@@ -5,8 +5,8 @@
 .resources-layout-sidebar {
     flex: 2;
     padding: 15px;
-    top: 9vh;
-    height: 87vh;
+    top: var(--navbar-height);
+    height: 100%;
     z-index: 1;
     position: -webkit-sticky;
     position: sticky;

@@ -1,6 +1,5 @@
 .submission-handler {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
+    display: flex;
     gap: 20px;
 }
 
@@ -12,14 +11,15 @@
 }
 
 .submission-handler-list {
-    margin: 2vh;
+    flex: 2.32;
+    margin: 19px;
     display: flex;
     flex-direction: column;
     align-items: center;
     border: 2px solid black;
     border-radius: 4px;
     height: 78vh;
-    top: 14vh;
+    top: calc(var(--navbar-height) + calc(var(--navbar-height)/2) + 19px);
     z-index: 1;
     position: -webkit-sticky;
     position: sticky;
@@ -58,6 +58,10 @@
 .submission-handler-list-tab-active {
     background-color: #ffffff;
     cursor: default;
+}
+
+.submission-handler-content {
+    flex: 7.68;
 }
 
 .submission-handler-checked {

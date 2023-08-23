@@ -37,11 +37,13 @@
 }
 
 .user-layout-stats {
-    max-height: 92vh;
-    top: 8vh;
+    height: calc(100vh - var(--navbar-height));
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     position: -webkit-sticky;
     position: sticky;
-    overflow-y: auto;
+    top: var(--navbar-height);
 }
 
 .user-layout-stats h1 {
@@ -57,14 +59,12 @@
 }
 
 .user-layout-stats-menus {
+    display: flex;
+    flex-direction: column;
     margin: 10px;
     padding: 10px;
     border: 2px solid #808080;
     border-radius: 5px;
-    align-self: flex-start;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
 .user-layout-stats-row {

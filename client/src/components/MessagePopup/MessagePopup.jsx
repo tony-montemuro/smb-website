@@ -6,7 +6,7 @@ function MessagePopup({ message, type, index, onClose }) {
   /* ===== VARIABLES ===== */
   const typeStyle = {
     backgroundColor: type === "success" ? "rgba(76, 175, 80, 0.85)" : "rgba(244, 67, 54, 0.85)",
-    top: `${ 9 + index * 5 }vh`
+    top: `${ 84.375 + index * 46.875 }px`
   };
 
   /* ===== FUNCTIONS ===== */

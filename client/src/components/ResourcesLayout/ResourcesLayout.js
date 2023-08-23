@@ -19,8 +19,9 @@ const ResourcesLayout = () => {
     // POSTCONDITIONS (1 possible outcome):
     // using vanilla JS, we scroll to the section based on the header parameter
     const handleHeaderClick = header => {
+        const root = document.querySelector(":root");
         const section = document.querySelector(`#${ header }`);
-        const yOffset = -75;
+        const yOffset = -parseInt((getComputedStyle(root).getPropertyValue("--navbar-height")))-5;
         const y = section.getBoundingClientRect().top + window.scrollY + yOffset;
         window.scrollTo({ top: y, behavior: "smooth" });
     };
