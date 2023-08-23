@@ -3,7 +3,7 @@
 function GettingStarted() {
   /* ===== GETTING STARTED COMPONENT ===== */
   return (
-    <div className="getting-started">
+    <div id="getting_started" className="getting-started">
       <h1>Getting Started</h1>
     </div>
   );

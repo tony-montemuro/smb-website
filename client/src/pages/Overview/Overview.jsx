@@ -1,9 +1,10 @@
 /* ===== IMPORTS ===== */
+import "./Overview.css";
 
 function Overview() {
   /* ===== OVERVIEW COMPONENT ===== */
   return (
-    <div className="overview">
+    <div id="overview" className="overview">
       <div className="overview-header">
         <h1>Overview</h1>
       </div>

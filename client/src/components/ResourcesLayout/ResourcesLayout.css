@@ -27,6 +27,12 @@
 
 .resources-layout-sidebar li {
     list-style: none;
+    width: fit-content;
+}
+
+.resources-layout-page-item h2 {
+    margin: 0;
+    padding: 0;
 }
 
 .resources-layout-page-item-header {
