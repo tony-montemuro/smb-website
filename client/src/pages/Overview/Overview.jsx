@@ -17,10 +17,16 @@ function Overview({ imageReducer }) {
   /* ===== OVERVIEW COMPONENT ===== */
   return (
     <div id="overview" className="overview">
+
+      { /* Overview header */ }
       <div className="overview-header">
         <h1>Overview</h1>
       </div>
+
+      { /* Overview body */ }
       <div className="overview-body">
+
+        { /* Overview - general section */ }
         <div className="overview-section">
           <h2 id="general">General</h2>
           This page contains general information relevant to the main Super Monkey Ball games: 
@@ -31,12 +37,16 @@ function Overview({ imageReducer }) {
           </ul>
           For information regarding custom level packs or another entry in the series, please refer to the game-specific rules page.
         </div>
+
+        { /* Overview - types section */ }
         <div className="overview-section">
           <h2 id="types">Types</h2>
           Genearlly, there are two types of competition in Super Monkey Ball games: <b>time</b> and <b>score</b>, with the straightforward objectives of achieving the fastest time or highest score respectively.<br /><br />
           For time submissions, please submit the time remaining on the timer when you finish your run; do <b>not</b> calculate and submit the actual time taken. For example, if you finish at 58.33, submit 58.33, <b>not</b> 1.67. Time charts are displayed in descending order, so the higher your time, the better.<br /><br />
           For score submissions, simply submit the final score displayed after you finish your run.
         </div>
+
+        { /* Overview - score calculation section */ }
         <div className="overview-section">
           <h2 id="score_calculation">Score Calculation</h2>
           Score on individual levels (ILs) in Super Monkey Ball is calculated based on three variables:
@@ -59,15 +69,21 @@ function Overview({ imageReducer }) {
           In SMBDX, bonus floors that do not contain a goal calculate score in the same fashion as bonus floors in SMB1. Any bonus floor that contains a goal (including E20 Bonus Hunting) calculates score as normal.<br /><br />
           <i>Note that IL score calculation is slightly different outside of Practice Mode. Please see “Replay Errors” for more details.</i>
         </div>
+
+        { /* Overview - pausing rule section */ }
         <div className="overview-section">
           <h2 id="pausing_rule">Pausing Rule</h2>
           Pausing the game at any point during the “live” part of an attempt is considered cheating and will immediately invalidate any time or score, as pausing can easily be abused to gain a competitive advantage, rendering competition trivial. The “live” part of an attempt is specifically from when the player first gains control of the monkey (i.e. the frame the timer displays 59.98 or 29.98) up until, but not including, the first frame the goal tape is broken, or rather, the second frame the timer displays the finish time for that attempt.
         </div>
+
+        { /* Overview - proof requirements section */ }
         <div className="overview-section">
           <h2 id="proof_requirements">Proof Requirements</h2>
           For a run to be officially recognised and counted toward your total score, you <b>must</b> provide a <b>liveplay</b> of your run, this being a video of the run being performed in Practice Mode. Providing only an in-game replay is <b>not sufficient</b> evidence to prove a submission. If you are unable to provide a liveplay, replay-only scores may still be submitted, however the submission will <b>not</b> be officially recognised nor count toward your total score, and must be specified when submitting your run.<br /><br />
           Liveplays must be of at least reasonable video quality in order to be verified, and runs may be rejected if the video quality is too poor. Please use common sense to judge what constitutes “reasonable video quality”. Game audio is not required, but strongly preferred for liveplay submissions.
         </div>
+
+        { /* Overview - regions section */ }
         <div className="overview-section">
           <h2 id="regions">Regions</h2>
           NTSC and PAL are terms used to distinguish between different regional releases of Super Monkey Ball, with NTSC being further split into NTSC-J and NTSC-U. Typically, NTSC-J is considered the Japanese version, NTSC-U the North American version, and PAL the European version. As such, the version you own will most likely depend on where in the world you live. If you are unsure which version you own, you can easily check by looking at the box art. Take SMB2 as an example:<br /><br />
@@ -85,16 +101,22 @@ function Overview({ imageReducer }) {
           If you are unsure which mode you are playing in, you can tell by checking the decimal values of the in-game timer. In 50Hz mode, the timer displays .X0, .X2, .X4, .X6, and .X8, whereas in 60Hz mode, the timer displays .X0, .X1, .X3, .X5, .X6, and .X8. To play in 60Hz mode, make sure your console is set to 60Hz in the system settings.<br /><br />
           As for SMB2, the NTSC and PAL versions have slightly different physics, with faster times and higher scores being achievable on the PAL version. Consequently, times and scores cannot be fairly compared and are recorded on separate charts. Please ensure you are aware which version of SMB2 you are playing on and submit your runs to the correct charts.
         </div>
+
+        { /* Overview - replay errors section */ }
         <div className="overview-section">
           <h2 id="replay_errors">Replay Errors</h2>
           A common mistake new players make is submitting incorrect times based off of the replay info rather than the actual time in Practice Mode. This is due to an in-game error where times ending in .X1 or .X6 will display incorrectly as .X2 and .X7 respectively in the replay. If this happens, please make sure to submit the time you finished in Practice Mode, not the time displayed in the replay.<br /><br />
           Another error with the replay info will occur when saving a replay from Normal / Challenge Mode that finishes in a warp goal. Outside of Practice Mode, warp goals give an additional warp bonus that multiplies the clear score by x2 or x3 depending on the colour of the goal, making much higher scores achievable than what is possible in Practice Mode. Replays from Normal / Challenge Mode will display the score <b>including</b> the warp bonus, and these scores should <b>not</b> be submitted to Practice Mode charts. If you wish to submit an IL score performed in Normal / Challenge Mode, you must first re-calculate it to negate the warp bonus beforehand.
         </div>
+
+        { /* Overview - emulators section */ }
         <div className="overview-section">
           <h2 id="emulators">Emulators</h2>
           Currently, runs performed on Dolphin emulator are allowed to be submitted to SMB1 and SMB2 charts, however they must be marked as such. Despite this, playing on console is much preferred and encouraged. For SMBDX, emulator runs are strictly <b>not allowed</b> and may not be submitted to any ranked charts.
         </div>
+
       </div>
+      
     </div>
   );
 };
