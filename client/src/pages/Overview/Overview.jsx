@@ -1,7 +1,19 @@
 /* ===== IMPORTS ===== */
 import "./Overview.css";
+import { StaticCacheContext } from "../../utils/Contexts";
+import { useContext } from "react";
+import BoxArt from "../../components/BoxArt/BoxArt.jsx";
 
-function Overview() {
+function Overview({ imageReducer }) {
+  /* ===== CONTEXTS ===== */
+
+  // static cache state from static cache context
+  const { staticCache } = useContext(StaticCacheContext);
+
+  /* ===== VARIABLES ===== */
+  const games = staticCache.games;
+  const smb2games = games.filter(game => game.abb === "smb2" || game.abb === "smb2pal");
+
   /* ===== OVERVIEW COMPONENT ===== */
   return (
     <div id="overview" className="overview">
@@ -58,7 +70,17 @@ function Overview() {
         </div>
         <div className="overview-section">
           <h2 id="regions">Regions</h2>
-          NTSC and PAL are terms used to distinguish between different regional releases of Super Monkey Ball, with NTSC being further split into NTSC-J and NTSC-U. Typically, NTSC-J is considered the Japanese version, NTSC-U the North American version, and PAL the European version. As such, the version you own will most likely depend on where in the world you live. If you are unsure which version you own, you can easily check by looking at the box art.<br /><br />
+          NTSC and PAL are terms used to distinguish between different regional releases of Super Monkey Ball, with NTSC being further split into NTSC-J and NTSC-U. Typically, NTSC-J is considered the Japanese version, NTSC-U the North American version, and PAL the European version. As such, the version you own will most likely depend on where in the world you live. If you are unsure which version you own, you can easily check by looking at the box art. Take SMB2 as an example:<br /><br />
+          <div className="overview-boxart-wrapper">
+            { smb2games.map(game => {
+              return (
+                <div className="overview-boxart" key={ game.abb }>
+                  <BoxArt game={ game } imageReducer={ imageReducer } width={ 200 } />
+                  <span>{ game.name }</span>
+                </div>
+              );
+            })}
+          </div>
           With the exception of SMB2, the version you use will have no effect on times or scores and are all recorded on the same charts, however the version used should still be specified when submitting. That said, if you own the PAL version of either game, you should ensure you play in <b>60Hz mode</b> to be able to compete fairly, as 50Hz mode runs the game slower, making it much harder to compete. Moreover, score calculation in 50Hz mode is broken in SMB1, always resulting in significantly lower scores than at 60Hz.<br /><br />
           If you are unsure which mode you are playing in, you can tell by checking the decimal values of the in-game timer. In 50Hz mode, the timer displays .X0, .X2, .X4, .X6, and .X8, whereas in 60Hz mode, the timer displays .X0, .X1, .X3, .X5, .X6, and .X8. To play in 60Hz mode, make sure your console is set to 60Hz in the system settings.<br /><br />
           As for SMB2, the NTSC and PAL versions have slightly different physics, with faster times and higher scores being achievable on the PAL version. Consequently, times and scores cannot be fairly compared and are recorded on separate charts. Please ensure you are aware which version of SMB2 you are playing on and submit your runs to the correct charts.

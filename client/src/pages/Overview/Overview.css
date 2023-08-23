@@ -1,3 +1,19 @@
 .overview h1 {
     margin: 0;
 }
+
+.overview-boxart-wrapper {
+    display: flex;
+    justify-content: space-around;
+    margin: 25px;
+}
+
+.overview-boxart {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.overview-boxart span {
+    padding: 5px;
+}

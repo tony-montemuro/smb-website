@@ -140,7 +140,7 @@ function App() {
                 }/>
               </Route>
               <Route path="resources" element={ <ResourcesLayout /> } >
-                <Route index element={ <Overview /> } />
+                <Route index element={ <Overview imageReducer={ imageReducer } /> } />
                 <Route path="overview" element={ <Overview /> } />
                 <Route path="getting_started" element={ <GettingStarted /> } />
               </Route>
