@@ -28,11 +28,14 @@
 .resources-layout-sidebar li {
     list-style: none;
     width: fit-content;
+    text-decoration: none;
 }
 
 .resources-layout-page-item h2 {
     margin: 0;
     padding: 0;
+    cursor: pointer;
+    width: fit-content;
 }
 
 .resources-layout-page-item-header {
