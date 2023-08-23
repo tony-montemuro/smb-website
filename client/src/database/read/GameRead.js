@@ -28,6 +28,12 @@ const GameRead = () => {
                             monkey_name
                         )
                     ),
+                    game_platform (
+                        platform (
+                            id,
+                            platform_name
+                        )
+                    ),
                     game_region (
                         region (
                             id,

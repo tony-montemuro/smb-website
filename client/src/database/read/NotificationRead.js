@@ -27,6 +27,7 @@ const NotificationRead = () => {
                         region (id, region_name),
                         submitted_at,
                         monkey (id, monkey_name),
+                        platform (id, platform_name),
                         proof,
                         comment,
                         live,
@@ -48,6 +49,7 @@ const NotificationRead = () => {
                     submitted_at,
                     region (id, region_name),
                     monkey (id, monkey_name),
+                    platform (id, platform_name),
                     proof,
                     live,
                     comment
