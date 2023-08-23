@@ -62,6 +62,7 @@ function DetailPopup({ submission, setSubmission, profile }) {
           { submission.live && <li>Live Position: { submission.position }</li> }
           <li>Date: { dateB2F(submission.submitted_at) }</li>
           <li>Monkey: { submission.monkey.monkey_name }</li>
+          <li>Platform: { submission.platform.platform_name }</li>
           <li>Region: { submission.region.region_name }</li>
           <li>Live:&nbsp;
             <span className="submission-history-svg-wrapper">

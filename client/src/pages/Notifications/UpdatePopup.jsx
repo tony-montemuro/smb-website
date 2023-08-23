@@ -77,19 +77,6 @@ function UpdatePopup({ notifications, setNotifications }) {
                 </li>
               }
 
-              { /* Render the submission region. If the submission region was updated, render both the old region, and the new region. */ }
-              { notification.region.id !== notification.submission.region.id ?
-                <li className="notifications-updated">
-                  <span>
-                    Region: { notification.region.region_name } → { notification.submission.region.region_name }
-                  </span>
-                </li>
-              :
-                <li>
-                  <span>Region: { notification.region.region_name }</span>
-                </li>
-              }
-
               { /* Render the submission monkey. If the submission monkey was updated, render both the old monkey, and the new monkey. */ }
               { notification.monkey.id !== notification.submission.monkey.id ?
                 <li className="notifications-updated">
@@ -100,6 +87,33 @@ function UpdatePopup({ notifications, setNotifications }) {
               :
                 <li>
                   <span>Monkey: { notification.monkey.monkey_name }</span>
+                </li>
+              }
+
+              { /* Render the submission platform. If the submission platform was updated, render both the old platform,
+              and the new platform. */ }
+              { notification.platform.id !== notification.submission.platform.id ?
+                <li className="notifications-updated">
+                  <span>
+                    Platform: { notification.platform.platform_name } → { notification.submission.platform.platform_name }
+                  </span>
+                </li>
+              :
+                <li>
+                  <span>Platform: { notification.platform.platform_name }</span>
+                </li>
+              }
+
+              { /* Render the submission region. If the submission region was updated, render both the old region, and the new region. */ }
+              { notification.region.id !== notification.submission.region.id ?
+                <li className="notifications-updated">
+                  <span>
+                    Region: { notification.region.region_name } → { notification.submission.region.region_name }
+                  </span>
+                </li>
+              :
+                <li>
+                  <span>Region: { notification.region.region_name }</span>
                 </li>
               }
 

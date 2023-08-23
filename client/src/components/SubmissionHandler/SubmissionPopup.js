@@ -43,6 +43,7 @@ const SubmissionPopup = () => {
             submitted_at: dateB2F(submission.details.submitted_at),
             region_id: submission.details.region.id.toString(),
             monkey_id: submission.details.monkey.id.toString(),
+            platform_id: submission.details.platform.id.toString(),
             proof: submission.details.proof,
             live: submission.details.live,
             comment: submission.details.comment,
@@ -105,6 +106,7 @@ const SubmissionPopup = () => {
         return form.values.submitted_at === dateB2F(submission.details.submitted_at)
             && form.values.region_id === submission.details.region.id.toString()
             && form.values.monkey_id === submission.details.monkey.id.toString()
+            && form.values.platform_id === submission.details.platform.id.toString()
             && form.values.proof === submission.details.proof
             && form.values.live === submission.details.live
             && form.values.comment === submission.details.comment;
@@ -171,6 +173,10 @@ const SubmissionPopup = () => {
                     monkey: {
                         ...submission.details.monkey,
                         id: parseInt(form.values.monkey_id)
+                    },
+                    platform: {
+                        ...submission.details.platform,
+                        id: parseInt(form.values.platform_id)
                     },
                     proof: form.values.proof,
                     region: {

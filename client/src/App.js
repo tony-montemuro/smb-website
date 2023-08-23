@@ -181,10 +181,15 @@ const App = () => {
         game.game_region.forEach(row => game.region.push(row.region));
         delete game.game_region;
 
-        // finally, handle the game <==> rule relationship
+        // next, handle the game <==> rule relationship
         game.rule = [];
         game.game_rule.forEach(row => game.rule.push(row.rule));
         delete game.game_rule;
+
+        // finally, handle the game <==> platform relationship
+        game.platform = [];
+        game.game_platform.forEach(row => game.platform.push(row.platform));
+        delete game.game_platform;
       });
 
       // add the mod field to each profile object

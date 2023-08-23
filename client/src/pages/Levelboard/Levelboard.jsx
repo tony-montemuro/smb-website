@@ -199,6 +199,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 								<th>{ capitalize(type) }</th>
 								<th>Date</th>
 								<th>Monkey</th>
+								<th>Platform</th>
 								<th>Region</th>
 								<th></th>
 								<th></th>

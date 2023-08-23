@@ -30,6 +30,9 @@ function FilteredSubmissionRow({ submission, onClickFunc }) {
       { /* Monkey name - render the monkey of the submission */ }
       <td>{ submission.monkey.monkey_name }</td>
 
+      { /* Platform name - render the platform of the submission */ }
+      <td>{ submission.platform.platform_name }</td>
+
       { /* Region - render the region of the submission */ }
       <td>{ submission.region.region_name }</td>
 

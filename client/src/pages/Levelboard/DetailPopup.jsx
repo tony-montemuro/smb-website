@@ -49,6 +49,7 @@ function DetailPopup({ submission, setSubmission }) {
           <li>Position: { submission.position }</li>
           <li>Date: { dateB2F(details.submitted_at) }</li>
           <li>Monkey: { details.monkey.monkey_name }</li>
+          <li>Platform: { details.platform.platform_name }</li>
           <li>Region: { details.region.region_name }</li>
           <li>Live:&nbsp;
             <div className="levelboard-svg-wrapper">

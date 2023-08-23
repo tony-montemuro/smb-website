@@ -207,6 +207,7 @@ const SubmissionHandler = (isNew) => {
                         submitted_at: submission.details.submitted_at,
                         region_id: submission.details.region.id,
                         monkey_id: submission.details.monkey.id,
+                        platform_id: submission.details.platform.id,
                         proof: submission.details.proof,
                         live: submission.details.live,
                         comment: submission.details.comment
@@ -272,7 +273,7 @@ const SubmissionHandler = (isNew) => {
                             };
                             return Promise.reject(rejectionReason);
                         });
-                    } 
+                    }
                     
                     // otherwise, we delete the report, which will THEN approve as a db trigger function
                     else {

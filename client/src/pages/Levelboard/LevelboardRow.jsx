@@ -38,6 +38,9 @@ function LevelboardRow({ submission, imageReducer, onClickFunc }) {
       { /* Render the name of the monkey */ }
       <td>{ submission.details.monkey.monkey_name }</td>
 
+      { /* Render the name of the platform */ }
+      <td>{ submission.details.platform.platform_name }</td>
+
       { /* Render the name of the region */ }
       <td>{ submission.details.region.region_name }</td>
 

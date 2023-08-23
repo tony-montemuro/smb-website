@@ -131,6 +131,32 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                   />
                 </div>
 
+                { /* Monkey: Render a dropdown allowing the user to select a monkey if necessary */ }
+                <div className="submission-handler-popup-input">
+                  <label htmlFor="monkey_id">Monkey: </label>
+                    <select id="monkey_id" value={ form.values.monkey_id } onChange={ (e) => handleChange(e) }>
+                      { game.monkey.map(monkey => (
+                        <option key={ monkey.id } value={ monkey.id }>{ monkey.monkey_name }</option>
+                      ))}
+                    </select>
+
+                    { /* Render an updated field symbol if the monkey_id value has been modified */ }
+                    <UpdatedFieldSymbol oldVal={ submission.details.monkey.id } newVal={ parseInt(form.values.monkey_id) } />
+                </div>
+
+                { /* Platform: Render a dropdown allowing the user to select a platform if necessary */ }
+                <div className="submission-handler-popup-input">
+                  <label htmlFor="platform_id">Platform: </label>
+                    <select id="platform_id" value={ form.values.platform_id } onChange={ (e) => handleChange(e) }>
+                      { game.platform.map(platform => (
+                        <option key={ platform.id } value={ platform.id }>{ platform.platform_name }</option>
+                      ))}
+                    </select>
+
+                    { /* Render an updated field symbol if the platform_id value has been modified */ }
+                    <UpdatedFieldSymbol oldVal={ submission.details.platform.id } newVal={ parseInt(form.values.platform_id) } />
+                </div>
+
                 { /* Region: Render a dropdown allowing the user to select a region if necessary */ }
                 <div className="submission-handler-popup-input">
                   <label htmlFor="region_id">Region: </label>
@@ -142,19 +168,6 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
 
                   { /* Render an updated field symbol if the region_id value has been modified */ }
                   <UpdatedFieldSymbol oldVal={ submission.details.region.id } newVal={ parseInt(form.values.region_id) } />
-                </div>
-
-                { /* Monkey: Render a dropdown allowing the user to select a monkey if necessary */ }
-                <div className="submission-handler-popup-input">
-                  <label htmlFor="monkey_id">Monkey: </label>
-                    <select id="monkey_id" value={ form.values.monkey_id } onChange={ (e) => handleChange(e) }>
-                      { game.monkey.map((monkey) => (
-                        <option key={ monkey.id } value={ monkey.id }>{ monkey.monkey_name }</option>
-                      ))}
-                    </select>
-
-                    { /* Render an updated field symbol if the monkey_id value has been modified */ }
-                    <UpdatedFieldSymbol oldVal={ submission.details.monkey.id } newVal={ parseInt(form.values.monkey_id) } />
                 </div>
 
                 { /* Proof: Render a textbox allowing the user to edit the proof if necessary */ }

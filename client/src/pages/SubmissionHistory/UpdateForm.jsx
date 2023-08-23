@@ -61,22 +61,32 @@ function UpdateForm({ submission, profile }) {
           />
         </div>
 
-        { /* Submission region input: allows the user to select the region of the submission from a dropdown. */ }
-        <div className="submission-history-input-group">
-          <label htmlFor="region_id">Region: </label>
-          <select id="region_id" value={ form.values.region_id } onChange={ (e) => handleChange(e) }>
-            { game.region.map(region => (
-              <option key={ region.id } value={ region.id }>{ region.region_name }</option>
-            ))}
-          </select>
-        </div>
-
         { /* Submission monkey input: allows the user to select the monkey of the submission from a dropdown. */ }
         <div className="submission-history-input-group">
           <label htmlFor="monkey_id">Monkey: </label>
           <select id="monkey_id" value={ form.values.monkey_id } onChange={ (e) => handleChange(e) }>
             { game.monkey.map((monkey) => (
               <option key={ monkey.id } value={ monkey.id }>{ monkey.monkey_name }</option>
+            ))}
+          </select>
+        </div>
+
+        { /* Submission platform input: allows the user to select the platform of the submission from a dropdown. */ }
+        <div className="submission-history-input-group">
+          <label htmlFor="platform_id">Platform: </label>
+          <select id="platform_id" value={ form.values.platform_id } onChange={ (e) => handleChange(e) }>
+            { game.platform.map(platform => (
+              <option key={ platform.id } value={ platform.id }>{ platform.platform_name }</option>
+            ))}
+          </select>
+        </div>
+
+        { /* Submission region input: allows the user to select the region of the submission from a dropdown. */ }
+        <div className="submission-history-input-group">
+          <label htmlFor="region_id">Region: </label>
+          <select id="region_id" value={ form.values.region_id } onChange={ (e) => handleChange(e) }>
+            { game.region.map(region => (
+              <option key={ region.id } value={ region.id }>{ region.region_name }</option>
             ))}
           </select>
         </div>

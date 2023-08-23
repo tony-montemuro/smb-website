@@ -68,6 +68,7 @@ const UpdateForm = () => {
             score: submission.score,
             monkey_id: submission.monkey.id,
             region_id: submission.region.id,
+            platform_id: submission.platform.id,
             live: submission.live,
             proof: submission.proof,
             comment: submission.comment ? submission.comment : "",

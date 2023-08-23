@@ -59,11 +59,14 @@ function ReportPopup({ notifications, setNotifications }) {
               { /* Render the submission date */ }
               <li>Date: { dateB2F(notification.submission.submitted_at) }</li>
 
-              { /* Render the region of the submission */ }
-              <li>Region: { notification.submission.region.region_name }</li>
-
               { /* Render the monkey used in the submission */ }
               <li>Monkey: { notification.submission.monkey.monkey_name }</li>
+
+              { /* Render the platform of the submission */ }
+              <li>Platform: { notification.submission.platform.platform_name }</li>
+
+              { /* Render the region of the submission */ }
+              <li>Region: { notification.submission.region.region_name }</li>
 
               { /* Render the proof of the submission */ }
               <li><NotificationProof proof={ notification.submission.proof } /></li>
