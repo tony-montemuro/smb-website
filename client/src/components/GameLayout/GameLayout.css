@@ -76,12 +76,14 @@
     display: flex;
 }
 
-.game-layout-body-content {
-    flex: 7.5;
-}
-
 .game-layout-info-container {
     flex: 2.5;
+    margin: 10px;
+}
+
+.game-layout-body-content {
+    flex: 7.5;
+    margin: 10px;
 }
 
 .game-layout-info-container-header {
@@ -89,10 +91,10 @@
 }
 
 .game-layout-body-info {
-    margin: 10px;
     border: 1px solid black;
     border-radius: 5px;
     padding: 10px;
+    margin: 10px 0;
 }
 
 .game-layout-body-info h2 {
