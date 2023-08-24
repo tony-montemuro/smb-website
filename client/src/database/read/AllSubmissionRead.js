@@ -92,7 +92,7 @@ const AllSubmissionRead = () => {
                     ),
                     live,
                     monkey (id, monkey_name),
-                    platform (id, platform_name),
+                    platform (id, platform_abb, platform_name),
                     position,
                     proof,
                     record,

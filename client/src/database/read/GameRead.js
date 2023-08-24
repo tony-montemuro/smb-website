@@ -31,6 +31,7 @@ const GameRead = () => {
                     game_platform (
                         platform (
                             id,
+                            platform_abb,
                             platform_name
                         )
                     ),
