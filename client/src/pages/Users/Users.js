@@ -70,30 +70,7 @@ const Users = () => {
         handleFilter("");
     };
 
-    // FUNCTION 4: getStartAndEnd - given the number of users and page number, retrieve the start and end post indicies
-    // PRECONDITIONS (1 parameters):
-    // 1.) num: an integer representing the max number of users that should exist on each page 
-    // POSTCONDITIONS (2 possible returns, 1 possible outcome):
-    // two variables are returned
-    // a.) start: the index of the first post on the page
-    // b.) end: the index of the last post on the page
-    const getStartAndEnd = num => {
-        const start = Math.min(((num*(pageNum-1))+1), users.filtered.length);
-        const end = Math.min((((num*pageNum)-1)+1), users.filtered.length);
-        return { start: start, end: end };
-    };
-
-    // FUNCTION 5: getMaxPage - function that returns the max number of pages, given the total # of filtered users & number of users
-    // per page
-    // PRECONDITIONS (1 parameter):
-    // 1.) num - an integer representing the number of users per page
-    // POSTCONDITIONS (1 possible outcome):
-    // using these two values, the max page number is returned (must be at least 1)
-    const getMaxPage = num => {
-        return Math.max(Math.ceil(users.filtered.length/num), 1);
-    };
-
-    return { searchRef, users, pageNum, setPageNum, prepareUsers, handleFilter, clearSearch, getStartAndEnd, getMaxPage };
+    return { searchRef, users, pageNum, setPageNum, prepareUsers, handleFilter, clearSearch };
 };
 
 /* ===== EXPORTS ===== */

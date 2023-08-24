@@ -4,30 +4,34 @@ import { useContext, useState } from "react";
 import NotificationDelete from "../../database/delete/NotificationDelete";
 
 const Notifications = () => {
+    /* ===== VARIABLES ===== */
+    const notificationsInit = {
+        all: [],
+        current: null,
+        selected: [],
+        submitting: false
+    };
+
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
-    const [notifications, setNotifications] = useState({
-        all: [],
-        selected: [],
-        current: null,
-        submitting: false
-    });
+    const [notifications, setNotifications] = useState(notificationsInit);
+    const [pageNum, setPageNum] = useState(1);
 
     /* ===== FUNCTIONS ===== */
 
     // database functions
     const { deleteNotification } = NotificationDelete();
 
-    // FUNCTION 1: init - update the notifications state's all parameter with the array of user notifications
+    // FUNCTION 1: prepareNotifs - update the notifications state's all parameter with the array of user notifications
     // PRECONDITIONS (1 condition):
     // the 'user' state from the userContext should be fully loaded
     // POSTCONDITIONS (1 possible outcome):
     // the setNotifications() function is called, and the `all` parameter is updaded with the notifs parameter
-    const init = (notifs) => {
+    const prepareNotifs = notifs => {
         setNotifications({ ...notifications, all: notifs });
     };
 
@@ -93,12 +97,14 @@ const Notifications = () => {
     // a popup will immediately be rendered once the setNotification() function is called
     const handleRowClick = (notification) => {
         setNotifications({ ...notifications, current: notification });
-    }
+    };
 
     return { 
         notifications, 
+        pageNum,
         setNotifications,
-        init, 
+        setPageNum,
+        prepareNotifs,
         toggleSelectionAll, 
         toggleSelection,
         removeSelected,

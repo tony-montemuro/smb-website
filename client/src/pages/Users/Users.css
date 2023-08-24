@@ -51,17 +51,6 @@
     padding: 5px;
 }
 
-.users-body-bottom {
-    display: flex;
-    justify-content: space-between;
+.users-body-page-controls-wrapper {
     padding: 5px;
-}
-
-.users-body-bottom button {
-    margin-left: 5px;
-    margin-right: 5px;
-}
-
-.users-body-bottom select {
-    width: 50px;
 }

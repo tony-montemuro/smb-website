@@ -63,10 +63,20 @@ td.notifications-select-element {
     cursor: auto;
 }
 
+.notifications-body-selector {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 .notifications-type {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.notifications-body-page-controls-wrapper {
+    padding: 5px 0;
 }
 
 .notifications-popup {

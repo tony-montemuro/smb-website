@@ -3,6 +3,7 @@ import "./Notifications.css";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { MessageContext, UserContext } from "../../utils/Contexts";
+import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
 import NotificationsLogic from "./Notifications.js";
 import NotificationPopup from "./NotificationPopup";
 import NotificationTableRow from "./NotificationTableRow";
@@ -19,6 +20,7 @@ function Notifications() {
 
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 7;
+  const NOTIFS_PER_PAGE = 50;
   const messages = {
     approve: "A moderator has approved one of your submission.",
     report: "A user has reported one of your submissions.",
@@ -33,8 +35,10 @@ function Notifications() {
   // states and functions from init file
   const { 
     notifications, 
-    init, 
+    pageNum,
     setNotifications,
+    setPageNum,
+    prepareNotifs, 
     toggleSelection,
     toggleSelectionAll,
     removeSelected,
@@ -55,7 +59,7 @@ function Notifications() {
       }
 
       // if we made it past this check, we can go ahead and initialize the page
-      init(user.notifications);
+      prepareNotifs(user.notifications);
     }
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -92,11 +96,19 @@ function Notifications() {
       { /* Notification body */ }
       <div className="notifications-body">
 
-        { /* Delete button - when pressed, will remove all notifications the user has selected. This button
-        is disabled if no notifications are selected. */ }
-        <button type="button" onClick={ removeSelected } disabled={ notifications.selected.length === 0 || notifications.submitting }>
-          Delete
-        </button>
+        { /* Notifications body selector: where user can select to delete notifications, and see how many are selected (if any) */ }
+        <div className="notifications-body-selector">
+
+          { /* Delete button - when pressed, will remove all notifications the user has selected. This button
+          is disabled if no notifications are selected. */ }
+          <button type="button" onClick={ removeSelected } disabled={ notifications.selected.length === 0 || notifications.submitting }>
+            Delete
+          </button>
+
+          { /* Render message displaying how many notifications have been selected, if any */ }
+          { notifications.selected.length > 0 && <span>{ notifications.selected.length } Selected</span> }
+
+        </div>
 
         { /* Notification table */ }
         <table>
@@ -121,6 +133,7 @@ function Notifications() {
               <th>Category</th>
               <th>Level</th>
               <th>Record</th>
+
             </tr>
           </thead>
 
@@ -129,7 +142,7 @@ function Notifications() {
 
             { /* If there are notifications, map a NotificationTableRow element for each notification */ }
             { notifications.all.length > 0 ?
-              notifications.all.map(row => {
+              notifications.all.slice((pageNum-1)*NOTIFS_PER_PAGE, pageNum*NOTIFS_PER_PAGE).map(row => {
                 return <NotificationTableRow 
                   row={ row } 
                   notifications= { notifications } 
@@ -150,7 +163,19 @@ function Notifications() {
 
           </tbody>
 
-        </table> 
+        </table>
+
+        { /* Render pagination controls at the bottom of this container */ }
+        <div className="notifications-body-page-controls-wrapper">
+          <CachedPageControls
+            items={ notifications.all }
+            itemsPerPage={ NOTIFS_PER_PAGE }
+            pageNum={ pageNum }
+            setPageNum={ setPageNum }
+            itemsName={ "Notifications" }
+          />
+        </div>
+
       </div>
 
       { /* Notification popup element - will only render if the current field in the notification state is set */ }
