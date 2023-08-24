@@ -111,8 +111,10 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                 { /* Position: render the user's position (not-editable) */ }
                 <div className="submission-handler-popup-input">Position: { submission.details.all_position }</div>
 
-                { /* Live Position: render the user's position calculated using only LIVE submissions (not-editable) */ }
-                <div className="submission-handler-popup-input">Live Position: { submission.details.position }</div>
+                { /* Live Position: render the user's position calculated using only LIVE submissions (if it exists; not-editable) */ }
+                { submission.details.position &&
+                  <div className="submission-handler-popup-input">Live Position: { submission.details.position }</div>
+                }
 
                 { /* Date: render the date of the submission in the form of a date picker */ }
                 <div className="submission-handler-popup-input">
