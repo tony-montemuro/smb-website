@@ -49,7 +49,7 @@ function ModeratorLayout() {
   }, [staticCache, user]);
 
   /* ===== MODERATOR LAYOUT COMPONENT ===== */
-  return (
+  return user.is_mod &&
     <div className="moderator-layout">
 
       { /* Moderator layout header - contains any header information for moderator hub */ }
@@ -105,7 +105,6 @@ function ModeratorLayout() {
       </div>
 
     </div>
-  );
 };
 
 /* ===== EXPORTS ===== */
