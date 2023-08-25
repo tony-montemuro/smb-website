@@ -1,4 +1,5 @@
 /* ===== IMPORTS ===== */
+import { isBefore } from "date-fns";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
@@ -23,7 +24,13 @@ const Levelboard = () => {
 	const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
-	const boardInit = { records: null, report: null };
+	const boardInit = { 
+		all: undefined,
+		adjacent: undefined,
+		filtered: undefined,
+		filters: undefined,
+		records: null
+	};
 	const navigate = useNavigate();
 
 	/* ===== STATES ===== */
@@ -111,38 +118,14 @@ const Levelboard = () => {
         });
     };
 
-	// FUNCTION 3: splitSubmissions - given an array of submissions, split submissions into live and all array
-	// PRECONDITIONS (1 parameter):
-	// 1.) submissions: an array of submissions objects, which must first be ordered by the current level name defined in the path.
-	// also, it must be first ordered in descending order by the details.record field, then in ascending order by the details.submitted_at
-	// field
-	// POSTCONDITIONS (2 returns):
-	// the function always has the same two returns:
-	// 1.) all: the sorted array of submission objects that has all submission objects in the `submissions` array
-	// 2.) live: the sorted array of submission objects that has only has objects whose details.live field are set to true
-	const splitSubmissions = submissions => {
-		// initialize variables used to split the submissions
-		const live = [], all = [];
-
-		// split board into two lists: live-only, and all records
-		submissions.forEach(submission => {
-			if (submission.details.live) {
-				live.push({ ...submission, details: { ...submission.details } });
-			}
-			all.push(submission);
-		});
-
-		return { all: all, live: live };
-	};
-
-	// FUNCTION 4: setupBoard - given information about the path and the submissionReducer, set up the board object
+	// FUNCTION 3: setupBoard - given information about the path and the submissionReducer, set up the board object
 	// PRECONDITIONS (2 parameters):
 	// 1.) submissionReducer: an object with two fields:
 		// a.) reducer: the submission reducer itself (state)
 		// b.) dispatchSubmissions: the reducer function used to update the reducer
 	// POSTCONDITIONS (2 possible outcome):
-	// if the submissions successfully are retrieved, the list of submissions are generated, which is then split into two arrays: 
-	// all and live. these arrays are used to set the records field of the board state, which is updated by calling the setBoard() function
+	// if the submissions successfully are retrieved, the list of submissions are generated, and both the `all` and `adjacent` fields
+	// are updated
 	// if the submissions fail to be retrieved, an error message is rendered to the user, and the board state is NOT updated, leaving the
 	// Levelboard component stuck loading
 	const setupBoard = async submissionReducer => {
@@ -153,23 +136,50 @@ const Levelboard = () => {
 		try {
 			// get submissions, and filter based on the levelId
 			const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
-			const submissions = allSubmissions.filter(row => row.level.name === levelName).map(row => Object.assign({}, row));
-
-			// split submissions into two arrays: all and live. [NOTE: this function will also update the form!]
-			const { all, live } = splitSubmissions(submissions, game, type, levelName);
-
-			// now, let's add the position field to each submission in both arrays
-			insertPositionToLevelboard(all);
-			insertPositionToLevelboard(live);
+			const allLevelSubmissions = allSubmissions.filter(row => row.level.name === levelName).map(row => Object.assign({}, row));
 
 			// finally, update board state hook, as well as the userSubmission state hook
-			setBoard({ ...board, records: { all: all, live: live }, adjacent: { prev: prev, next: next } });
-			setUserSubmission(user.profile ? all.find(row => row.profile.id === user.profile.id) : undefined);
+			setBoard({ ...board, all: allLevelSubmissions, adjacent: { prev: prev, next: next } });
+			setUserSubmission(user.profile ? allLevelSubmissions.find(row => row.profile.id === user.profile.id) : undefined);
 
 		} catch (error) {
 			// if the submissions fail to be fetched, let's render an error specifying the issue
 			addMessage("Failed to fetch submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
 		}
+	};
+
+	// FUNCTION 4: applyFilters - given a filter object, apply filters, and update the board's `filtered` field
+	// PRECONDITIONS (1 parameter):
+	// 1.) filters: a filter object with the following fields: 
+	// endDate (Date), live (array), monkeys (monkeys), platforms (array), regions (array)
+	// POSTCONDITIONS (1 possible outcomes):
+	// given the filters object, apply our filters to the array of all submissions, and update the `filters` and `filtered` field 
+	// by calling the setBoard() function
+	const applyFilters = filters => {
+		const filtered = board.all.filter(submission => {
+			return (
+				// first, let's handle the "endDate" filter
+				isBefore(new Date(submission.details.submitted_at), filters.endDate) &&
+			
+				// next, let's handle the "live" filter
+				filters.live.includes(submission.details.live) &&
+
+				// next, we handle the "monkeys" filter
+				filters.monkeys.includes(submission.details.monkey.id) &&
+
+				// next, we handle the "platforms" filter
+				filters.platforms.includes(submission.details.platform.id) &&
+
+				// finally, we handle the "regions" filter
+				filters.regions.includes(submission.details.region.id)
+			);
+		});
+
+		// next, insert the position field to this set of submissions
+		insertPositionToLevelboard(filtered);
+
+		// finally, update the `filtered` property of the board state by calling `setBoard()`
+		setBoard({ ...board, filtered: filtered, filters: filters });
 	};
 
 	// FUNCTION 5: handleTabClick - function that switches leaderboards based on the otherType parameter
@@ -188,6 +198,7 @@ const Levelboard = () => {
 		board,
 		userSubmission,
 		setupBoard,
+		applyFilters,
 		handleTabClick
 	};
 };  

@@ -235,6 +235,12 @@
     margin-top: 5px;
 }
 
+.levelboard-filter-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .levelboard-decision-btns {
     text-align: center;
 }
@@ -251,4 +257,36 @@
 
 .levelboard-record {
     white-space: nowrap;
+}
+
+.levelboard-filter-btns {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.levelboard-radio-btn {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.levelboard-radio-btn:hover {
+    background-color: #ddd;
+}
+  
+.levelboard-radio-btn-selected {
+    background-color: black;
+    color: #fff;
+}
+
+.levelboard-radio-btn-selected:hover {
+    background-color: #333333;
+}
+
+.levelboard-filter-bottom {
+    display: flex;
+    gap: 5px;
+    margin: 20px 0;
 }

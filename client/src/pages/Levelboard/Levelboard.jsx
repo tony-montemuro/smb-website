@@ -4,6 +4,7 @@ import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import DetailPopup from "./DetailPopup.jsx";
+import FiltersPopup from "./FiltersPopup.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
@@ -12,15 +13,6 @@ import PathHelper from "../../helper/PathHelper";
 import UpdatePopup from "./UpdatePopup.jsx";
 
 function Levelboard({ imageReducer, submissionReducer }) {
-	/* ===== VARIABLES ===== */
-	const navigate = useNavigate();
-	const location = useLocation();
-	const path = location.pathname.split("/");
-	const abb = path[2];
-	const category = path[3];
-	const type = path[4];
-	const levelName = path[5];
-
 	/* ===== CONTEXTS ===== */
 
 	// user state from user context
@@ -32,9 +24,25 @@ function Levelboard({ imageReducer, submissionReducer }) {
 	// add message function from message context
 	const { addMessage } = useContext(MessageContext);
 
+	/* ===== VARIABLES ===== */
+	const navigate = useNavigate();
+	const location = useLocation();
+	const path = location.pathname.split("/");
+	const abb = path[2];
+	const category = path[3];
+	const type = path[4];
+	const levelName = path[5];
+	const defaultFilters = {
+		endDate: new Date(),
+		live: game.live_preference ? [true] : [false, true],
+		monkeys: game.monkey.map(monkey => monkey.id),
+		platforms: game.platform.map(platform => platform.id),
+		regions: game.region.map(region => region.id)
+	};
+
 	/* ===== STATES & FUNCTIONS ===== */
 	const [level, setLevel] = useState(undefined);
-	const [levelboardState, setLevelboardState] = useState(game.live_preference ? "live" : "all");
+	const [filtersPopup, setFiltersPopup] = useState(false);
 	const [detailSubmission, setDetailSubmission] = useState(undefined);
 	const [insertPopup, setInsertPopup] = useState(false);
 	const [updateSubmission, setUpdateSubmission] = useState(undefined);
@@ -44,6 +52,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 		board,
 		userSubmission,
 		setupBoard,
+		applyFilters,
 		handleTabClick
 	} = LevelboardLogic();
 
@@ -76,8 +85,16 @@ function Levelboard({ imageReducer, submissionReducer }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, location.pathname]);
 
+	// code that is executed once the board's initial data has loaded (`all` field, containing all submissions) has loaded
+	useEffect(() => {
+		if (board.all) {
+			applyFilters(defaultFilters);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [board.all]);
+
 	/* ===== LEVELBOARD COMPONENT ===== */
-	return level && board.records ?
+	return level && board.filtered && board.filters ?
 		// Levelboard header - Contains general information about them game and board
 		<div className="levelboard">
 			<div className="levelboard-header">
@@ -142,18 +159,9 @@ function Levelboard({ imageReducer, submissionReducer }) {
 
 				</div>
 
-				{ /* Levelboard toggle - contains a toggle to switch the levelboard between the live and all states */ }
-				<div className="levelboard-toggle">
-
-					{ /* All-live toggle: Toggles the levelboard between all and live, allowing both arrays of submissions to be rendered. */ }
-					<label htmlFor="showLive">Live-{ type }s only: </label>
-					<input
-						id="showLive"
-						type="checkbox"
-						checked={ levelboardState === "live" }
-						onChange={ () => setLevelboardState(levelboardState === "live" ? "all" : "live") }
-					/>
-
+				{ /* Levelboard filters - contains a button to pull up the filters popup box */ }
+				<div className="levelboard-filters">
+					<button type="button" onClick={ () => setFiltersPopup(true) }>Filters</button>
 				</div>
 			</div>
 
@@ -209,12 +217,12 @@ function Levelboard({ imageReducer, submissionReducer }) {
 
 						{ /* Table body information - the submission data */ }
 						<tbody>
-							{ board.records[levelboardState].map((val) => {
+							{ board.filtered.map(submission => {
 								return <LevelboardRow 
-									submission={ val } 
+									submission={ submission } 
 									imageReducer={ imageReducer } 
 									onClickFunc={ setDetailSubmission }
-									key={ val.details.id } 
+									key={ submission.details.id } 
 								/>
 							})}
 						</tbody>
@@ -224,12 +232,19 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			</div>
 
 			{ /* Popups */ }
+			<FiltersPopup
+				popup={ filtersPopup }
+				setPopup={ setFiltersPopup }
+				currentFilters={ board.filters }
+				defaultFilters={ defaultFilters }
+				onApplyFunc={ applyFilters }
+			/>
 			<DetailPopup submission={ detailSubmission } setSubmission={ setDetailSubmission } />
 			<InsertPopup 
 				popup={ insertPopup } 
 				setPopup={ setInsertPopup } 
 				level={ level }
-				submissions={ board.records.all }
+				submissions={ board.all }
 			/>
 			<UpdatePopup
 				submission={ updateSubmission }
