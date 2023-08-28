@@ -126,50 +126,14 @@ function Levelboard({ imageReducer, submissionCache }) {
 					</div>
 					
 				</div>
-
-				{ /* Levelboard buttons - contains many buttons related to the game that levelboard belongs to */ }
-				<div className="levelboard-buttons">
-
-					{ /* Button that pulls up the submission popup. NOTE: this button should only render if the user has a profile. */ }
-					{ user.profile && 
-						<button 
-							type="button" 
-							onClick={ () => setInsertPopup(true) }
-							disabled={ userSubmission && userSubmission.submission[0].report.length > 0 }
-							title={ userSubmission && userSubmission.submission[0].report.length > 0 ? 
-								"Please wait for a moderator to review your current submission before submitting." 
-							: 
-								undefined
-							}
-						>
-							Submit { capitalize(type) }
-						</button>
-					}
-
-					{ /* Button that pulls up the update submission popup. NOTE: this button should only render if the user has a profile,
-					and a submission on the current levelboard. */ }
-					{ user.profile && userSubmission &&
-						<button 
-							type="button" 
-							onClick={ () => setUpdateSubmission(userSubmission)}
-						>
-							Update Submission
-						</button>
-					}
-
-				</div>
-
-				{ /* Levelboard filters - contains a button to pull up the filters popup box */ }
-				<div className="levelboard-filters">
-					<button type="button" onClick={ () => setFiltersPopup(true) }>Filters</button>
-				</div>
 			</div>
 
 			{ /* Levelboard container - div container wrapping the levelboard table, as well as the type tabs. */ }
 			<div className="levelboard-container">
 
+				<div className="levelboard-options">
+
 				{ /* Levelboard tabs: The type tabs for the levelboard. Will only render a tab if the level has a board for it. */ }
-				<div className="levelboard-tabs-wraper">
 					<div className="levelboard-tabs">
 
 						{ /* Render a score tab if the chart type is score or both */ }
@@ -190,6 +154,41 @@ function Levelboard({ imageReducer, submissionCache }) {
 							>
 								Time
 							</div>
+						}
+
+					</div>
+
+					{ /* Levelboard buttons - contains many buttons related to the game that levelboard belongs to */ }
+					<div className="levelboard-buttons">
+
+						{ /* Levelboard filters - contains a button to pull up the filters popup box */ }
+						<button type="button" onClick={ () => setFiltersPopup(true) }>Filters</button>
+
+						{ /* Button that pulls up the update submission popup. NOTE: this button should only render if the user has a profile,
+						and a submission on the current levelboard. */ }
+						{ user.profile && userSubmission &&
+							<button 
+								type="button" 
+								onClick={ () => setUpdateSubmission(userSubmission)}
+							>
+								Update Submission
+							</button>
+						}
+
+						{ /* Button that pulls up the submission popup. NOTE: this button should only render if the user has a profile. */ }
+						{ user.profile && 
+							<button 
+								type="button" 
+								onClick={ () => setInsertPopup(true) }
+								disabled={ userSubmission && userSubmission.submission[0].report.length > 0 }
+								title={ userSubmission && userSubmission.submission[0].report.length > 0 ? 
+									"Please wait for a moderator to review your current submission before submitting." 
+								: 
+									undefined
+								}
+							>
+								Submit { capitalize(type) }
+							</button>
 						}
 
 					</div>

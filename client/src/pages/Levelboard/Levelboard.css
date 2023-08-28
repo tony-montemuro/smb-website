@@ -6,6 +6,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
 }
 
 .levelboard-title-btn {
@@ -21,35 +22,25 @@
     margin-bottom: 10px;
 }
 
-.levelboard-title button {
-    appearance: none;
-    margin-top: 19px;
-    margin-left: 10px;
-    margin-right: 10px;
-    outline: none;
-}
-
-.levelboard-buttons button {
-    margin: 3px;
-}
-
-.levelboard-toggle {
-    margin: 5px;
-}
-
 .levelboard-container {
     display: flex;
     flex-direction: column;
     margin: 10px;
 }
 
-.levelboard-tabs-wrapper {
+.levelboard-options {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .levelboard-tabs {
     display: flex;
+}
+
+.levelboard-buttons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .levelboard-tab {
@@ -59,7 +50,7 @@
     padding: 8px;
     border: 1px solid #ccc;
     border-bottom: none;
-    max-width: 80px;
+    width: 80px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
