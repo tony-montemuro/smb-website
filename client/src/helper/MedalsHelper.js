@@ -7,7 +7,7 @@ const MedalsHelper = () => {
     // POSTCONDITIONS (1 possible outcome):
     // 1.) userMap: an object representing a map with the following key value pair:
     //                   profile_id -> profile information, platinum, gold, silver, bronze
-    const getUserMap = (submissions) => {
+    const getUserMap = submissions => {
         // initialize variables
         const userMap = {};
         const uniqueIds = [];
@@ -53,7 +53,7 @@ const MedalsHelper = () => {
             // iterate through all submissions for a particular level
             while (!finished) {
                 // define commonly referenced variables for the current submission
-                const currRecord = submissions[i].details.record;
+                const currRecord = submissions[i].record;
                 const currUser = submissions[i].profile.id;
 
                 // case 1: first record. it can be either platinum, or gold. a platinum is awarded in the following cases:
@@ -61,7 +61,7 @@ const MedalsHelper = () => {
                 // 2.) the submission is the only one for a particular level (condition 1 and 2)
                 // otherwise, the submission will be awarded a gold medal
                 if (j === 1) {
-                    if (i+1 === sLength || submissions[i+1].level.id !== levelId || currRecord > submissions[i+1].details.record) {
+                    if (i+1 === sLength || submissions[i+1].level.id !== levelId || currRecord > submissions[i+1].record) {
                         userMap[currUser].platinum++;
                         prev = "platinum"
                     } else {
@@ -83,21 +83,21 @@ const MedalsHelper = () => {
                 // case 3: the third or more record. it can be either gold, silver, or bronze. this is dependent on the prev variable
                 } else {
                     if (prev === "gold") {
-                        if (currRecord === submissions[i-1].details.record) {
+                        if (currRecord === submissions[i-1].record) {
                             userMap[currUser].gold++;
                         } else {
                             userMap[currUser].silver++;
                             prev = "silver";
                         }
                     } else if (prev === "silver") {
-                        if (currRecord === submissions[i-1].details.record) {
+                        if (currRecord === submissions[i-1].record) {
                             userMap[currUser].silver++;
                         } else {
                             userMap[currUser].bronze++;
                             prev = "bronze";
                         }
                     } else {
-                        if (currRecord === submissions[i-1].details.record) {
+                        if (currRecord === submissions[i-1].record) {
                             userMap[currUser].bronze++;
                         } else {
                             finished = true;
@@ -130,12 +130,13 @@ const MedalsHelper = () => {
         return Object.values(userMap).sort((a, b) => b.platinum-a.platinum || b.gold-a.gold || b.silver-a.silver || b.bronze-a.bronze);
     };
 
-    // FUNCTION 3: insertPositionToMedals
+    // FUNCTION 3: insertPositionToMedals - function that calculates the position and adds it as a property to each medalTable object
+    // in `medalTable`
     // PRECONDITIONS (1 parameter): 
     // 1.) medalTable: an array of user objects sorted in descending order by platinum, then gold, then silver, then bronze
     // POSTCONDITIONS (1 possible outcome):
     // for each object in medalTable, a new field is added: position.
-    const insertPositionToMedals = (medalTable) => {
+    const insertPositionToMedals = medalTable => {
         // variables used to determine position of each submission, and an array of all medal types
         let trueCount = 1, posCount = trueCount;
         const medals = ["platinum", "gold", "silver", "bronze"];

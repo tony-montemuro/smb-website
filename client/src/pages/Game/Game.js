@@ -20,7 +20,7 @@ const Game = () => {
     // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.
     // POSTCONDITIONS (1 possible outcome):
     // query the recent submissions, and update the submissions state by calling the setSubmissions() function
-    const getSubmissions = async (abb) => {
+    const getSubmissions = async abb => {
         const submissions = await queryRecentSubmissions(abb);
         setSubmissions(submissions);
     };

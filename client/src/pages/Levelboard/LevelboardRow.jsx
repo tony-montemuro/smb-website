@@ -33,20 +33,20 @@ function LevelboardRow({ submission, imageReducer, onClickFunc }) {
       </td>
 
       { /* Render the submission date */ }
-      <td>{ getTimeAgo(submission.details.submitted_at) }</td>
+      <td>{ getTimeAgo(submission.submitted_at) }</td>
 
       { /* Render the name of the monkey */ }
-      <td>{ submission.details.monkey.monkey_name }</td>
+      <td>{ submission.monkey.monkey_name }</td>
 
       { /* Render the platform abbreviation */ }
-      <td>{ submission.details.platform.platform_abb }</td>
+      <td>{ submission.platform.platform_abb }</td>
 
       { /* Render the name of the region */ }
-      <td>{ submission.details.region.region_name }</td>
+      <td>{ submission.region.region_name }</td>
 
       { /* Render a camera svg tag that links to the proof of the submission, if one exists */ }
       <td>
-        { submission.details.proof && 
+        { submission.proof && 
           <div className="levelboard-svg-wrapper">
             <VideocamIcon titleAccess="Has proof" sx={{ color: "black" }} />
           </div>
@@ -55,9 +55,9 @@ function LevelboardRow({ submission, imageReducer, onClickFunc }) {
 
       { /* Render the comment */ }
       <td>
-        { submission.details.comment && 
+        { submission.comment && 
           <div className="levelboard-svg-wrapper">
-            <ChatBubbleRoundedIcon titleAccess={ submission.details.comment } fontSize="small" />
+            <ChatBubbleRoundedIcon titleAccess={ submission.comment } fontSize="small" />
           </div>
         }
       </td>

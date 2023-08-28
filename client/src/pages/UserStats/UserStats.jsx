@@ -10,7 +10,7 @@ import UserStatsMedals from "./UserStatsMedals";
 import UserStatsTotal from "./UserStatsTotal";
 import UserStatsRecords from "./UserStatsRecords";
 
-function UserStats({ submissionReducer }) {
+function UserStats({ submissionCache }) {
   /* ===== CONTEXTS ===== */
 
   // static cache state from static cache context
@@ -76,7 +76,7 @@ function UserStats({ submissionReducer }) {
       // otherwise, update the game, filter, & user state hooks, and fetch user stats
       setGame(game);
       setAllLiveFilter(game.live_preference ? "live" : "all");
-      fetchUserStats(path, game, submissionReducer);
+      fetchUserStats(path, game, submissionCache);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache, location.pathname]);

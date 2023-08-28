@@ -218,7 +218,7 @@ const InsertPopup = () => {
 
 		// convert the date from the front-end format, to the backend format.
 		const oldSubmission = allSubmissions.find(row => row.profile.id === form.values.profile_id);
-		const backendDate = getDateOfSubmission(form.values.submitted_at, oldSubmission ? oldSubmission.details.submitted_at : undefined);
+		const backendDate = getDateOfSubmission(form.values.submitted_at, oldSubmission ? oldSubmission.submitted_at : undefined);
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
 		const submission = getSubmissionFromForm(form.values, backendDate);

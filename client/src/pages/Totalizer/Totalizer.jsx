@@ -8,7 +8,7 @@ import GameHelper from "../../helper/GameHelper";
 import TotalizerLogic from "./Totalizer.js";
 import TotalizerTable from "./TotalizerTable";
 
-function Totalizer({ imageReducer, submissionReducer }) {
+function Totalizer({ imageReducer, submissionCache }) {
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -58,7 +58,7 @@ function Totalizer({ imageReducer, submissionReducer }) {
     }
 
     // if we made it past the special case, let's go ahead and compute the totals
-    fetchTotals(game, category, type, submissionReducer);
+    fetchTotals(game, category, type, submissionCache);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);

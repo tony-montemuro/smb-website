@@ -56,7 +56,9 @@ function UpdatePopup({ submission, setSubmission }) {
 
             { /* Form header */ }
             <h2>Update Current Submission</h2>
-            { submission.approved && <p><b>Note:</b> Since this submission has been approved by a moderator, any updates will revoke it's approval.</p> }
+            { submission.submission.length > 0 && submission.submission[0].approved &&
+              <p><b>Note:</b> Since this submission has been approved by a moderator, any updates will revoke it's approval.</p>
+            }
 
             { /* Update submission form */ }
             <form onSubmit={ (e) => handleSubmit(e, submission) }>

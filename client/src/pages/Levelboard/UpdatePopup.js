@@ -142,10 +142,10 @@ const UpdatePopup = () => {
         }
 
         // finally, let's convert the date from the front-end format, to the backend format.
-		const backendDate = getDateOfSubmission(form.values.submitted_at, submission.details.submitted_at);
+		const backendDate = getDateOfSubmission(form.values.submitted_at, submission.submitted_at);
 
         // if we made it this far, no errors were detected, generate our submission data
-		const id = submission.details.id;
+		const id = submission.id;
 		const updatedData = getUpdateFromForm(form.values, backendDate);
 
         try {

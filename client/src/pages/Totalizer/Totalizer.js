@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts"; 
 import { useContext, useState } from "react";
-import SubmissionRead from "../../database/read/SubmissionRead";
+import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 import TotalizerHelper from "../../helper/TotalizerHelper";
 
 const Totalizer = () => {
@@ -17,7 +17,9 @@ const Totalizer = () => {
 
     // helper functions
     const { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
-    const { getSubmissions } = SubmissionRead();
+
+    // database functions
+    const { getSubmissions } = AllSubmissionRead();
 
     // FUNCTION 1: generateTotalizer - given an array of submissions, a type, and a totalTime, generate two separate arrays that
     // collectively represent the totalizer for a submission type combination
@@ -32,9 +34,12 @@ const Totalizer = () => {
     // 2.) live: an array of totalizer objects, that only considers live submissions, sorted in descending order if
     // { type } is score, and ascending order if { type } is time
     const generateTotalizer = (submissions, type, totalTime) => {
+        // first, filter our any non-current submissions
+        const filtered = submissions.filter(submission => submission.submission.length > 0);
+
         // create two maps from the submissions: the { type } totals for only live records,
         // and the { type } totals for all records. (key: user_id -> value: total object)
-        const { allTotalsMap, liveTotalsMap } = getTotalMaps(submissions, type, totalTime);
+        const { allTotalsMap, liveTotalsMap } = getTotalMaps(filtered, type, totalTime);
 
         // from our maps, let's get a sorted list of totals objects sorted by total field. if the type is score, it will sort in descending order.
         // if the type is time, it will sort in ascending order
@@ -53,22 +58,22 @@ const Totalizer = () => {
     // 1.) game: an object containing information about the game defined in the path
     // 2.) category: the current category. category is fetched from the URL
     // 3.) type: the type of medal table, either "score" or "time". type is fetched from the URL
-    // 4.) submissionReducer: an object with two fields:
-        // a.) reducer: the submission reducer itself (state)
-        // b.) dispatchSubmissions: the reducer function used to update the reducer
+    // 4.) submissionCache: an object with two fields:
+		// a.) cache: the cache object that actually stores the submission objects (state)
+		// b.) setCache: the function used to update the cache
     // POSTCONDITIONS (2 possible outcome):
     // if the submission query is successful, a totals object is generated. totals has two fields, all and live. each of these fields 
     // is mapped to a totalizer array. once this object is generated, call the setTotals() function to update the totals state
     // if the submissions fail to be retrieved, an error message is rendered to the user, and the totals state is NOT updated, 
     // leaving the Totalizer component stuck loading
-    const fetchTotals = async (game, category, type, submissionReducer) => {
+    const fetchTotals = async (game, category, type, submissionCache) => {
         // first, reset totals state to default state (undefined), & compute the total time of the game
         setTotals(undefined);
         const totalTime = calculateTotalTime(game, category);
 
         try {
             // get the { type } submissions that are a part of the { category } of { game.abb }
-            const submissions = await getSubmissions(game.abb, category, type, submissionReducer);
+            const submissions = await getSubmissions(game.abb, category, type, submissionCache);
 
             // generate totalizer object
             const { all, live } = generateTotalizer(submissions, type, totalTime);
