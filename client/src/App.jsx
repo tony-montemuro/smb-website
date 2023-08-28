@@ -42,8 +42,10 @@ function App() {
     staticCache, 
     messages,
     submissions,
+    gameSubmissions,
     images,
     dispatchSubmissions,
+    setGameSubmissions,
     dispatchImages,
     addMessage,
     callSessionListener,
@@ -53,6 +55,7 @@ function App() {
 
   /* ===== VARIABLES ===== */
   const submissionReducer = { state: submissions, dispatchSubmissions: dispatchSubmissions };
+  const submissionCache = { cache: gameSubmissions, setCache: setGameSubmissions };
   const imageReducer = { reducer: images, dispatchImages: dispatchImages };
 
   /* ===== EFFECTS ===== */
@@ -100,28 +103,28 @@ function App() {
                 <Route index element={ <Game /> } />
                 <Route path=":category" element={ <Game /> }/>
                 <Route path=":category/medals/score" element={
-                  <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+                  <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/medals/time" element={
-                  <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+                  <Medals imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/totalizer/score" element={
-                  <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+                  <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/totalizer/time" element={
-                  <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+                  <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/score" element={
-                  <Records submissionReducer={ submissionReducer } />
+                  <Records submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/time" element={
-                  <Records submissionReducer={ submissionReducer } />
+                  <Records submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/score/:levelid" element={
-                  <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+                  <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/time/:levelid" element={
-                  <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } />
+                  <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/score/:levelid/:profileId" element={
                   <SubmissionHistory />
@@ -133,10 +136,10 @@ function App() {
               <Route path="/user/:profileId" element={ <UserLayout imageReducer={ imageReducer } /> } >
                 <Route index element={ <User />} />
                 <Route path=":game/:category/score" element={
-                  <UserStats submissionReducer={ submissionReducer } />
+                  <UserStats submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":game/:category/time" element={
-                  <UserStats submissionReducer={ submissionReducer } />
+                  <UserStats submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
                 }/>
               </Route>
               <Route path="resources" element={ <ResourcesLayout /> } >
