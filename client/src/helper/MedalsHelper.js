@@ -130,7 +130,8 @@ const MedalsHelper = () => {
         return Object.values(userMap).sort((a, b) => b.platinum-a.platinum || b.gold-a.gold || b.silver-a.silver || b.bronze-a.bronze);
     };
 
-    // FUNCTION 3: insertPositionToMedals
+    // FUNCTION 3: insertPositionToMedals - function that calculates the position and adds it as a property to each medalTable object
+    // in `medalTable`
     // PRECONDITIONS (1 parameter): 
     // 1.) medalTable: an array of user objects sorted in descending order by platinum, then gold, then silver, then bronze
     // POSTCONDITIONS (1 possible outcome):

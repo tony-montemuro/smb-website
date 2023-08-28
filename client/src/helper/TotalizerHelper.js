@@ -48,7 +48,7 @@ const TotalizerHelper = () => {
             // first, extract information from the submission object
             const profile = submission.profile;
             const profileId = profile.id;
-            const record = type === "score" ? submission.details.record : -Math.abs(submission.details.record);
+            const record = type === "score" ? submission.record : -Math.abs(submission.record);
             
             // next, update the allTotals list
             if (profileId in allTotalsMap) {
@@ -61,7 +61,7 @@ const TotalizerHelper = () => {
             }
 
             // finally, update the liveTotals list
-            if (submission.details.live) {
+            if (submission.live) {
                 if (profileId in liveTotalsMap) {
                     liveTotalsMap[profileId].total += record
                 } else {
@@ -96,12 +96,13 @@ const TotalizerHelper = () => {
         return { allTotals: allTotals, liveTotals: liveTotals };
     };
 
-    // FUNCTION 4: insertPositionToTotals
+    // FUNCTION 4: insertPositionToTotals - function that calculates the position and adds it as a property to each total object 
+    // in `totals`
     // PRECONDITIONS (2 parameters): 
     // 1.) totals: an array of totals objects sorted in descending order by total field
     // POSTCONDITIONS (1 possible outcome):
     // for each object in totals, a new field is added: position.
-    const insertPositionToTotals = (totals) => {
+    const insertPositionToTotals = totals => {
         // variables used to determine position of each submission
         let trueCount = 1, posCount = trueCount;
 

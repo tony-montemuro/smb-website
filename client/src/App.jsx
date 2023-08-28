@@ -109,10 +109,10 @@ function App() {
                   <Medals imageReducer={ imageReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/totalizer/score" element={
-                  <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
+                  <Totalizer imageReducer={ imageReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/totalizer/time" element={
-                  <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
+                  <Totalizer imageReducer={ imageReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/score" element={
                   <Records submissionCache={ submissionCache } />

@@ -8,7 +8,7 @@ import GameHelper from "../../helper/GameHelper";
 import MedalsLogic from "./Medals.js";
 import MedalTable from "./MedalTable";
 
-function Medals({ submissionCache, imageReducer }) {
+function Medals({ imageReducer, submissionCache }) {
   /* ===== CONTEXTS ===== */
 
   // game state from game context
