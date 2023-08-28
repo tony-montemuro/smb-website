@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 import MedalsHelper from "../../helper/MedalsHelper";
-import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Medals = () => {
     /* ===== CONTEXTS ===== */
@@ -17,7 +17,9 @@ const Medals = () => {
 
     // helper functions
     const { getUserMap, getMedalTable, insertPositionToMedals } = MedalsHelper();
-    const { getSubmissions } = SubmissionRead();
+
+    // database functions
+    const { getSubmissions2 } = AllSubmissionRead();
 
     // FUNCTION 1: generateMedalTable - given an array of submissions, create an array of medal table objects
     // PRECONDITIONS (1 parameter):
@@ -27,8 +29,8 @@ const Medals = () => {
     // 1.) table: an array of medal table objects is returned. the array is sorted as follows (descending): 
     // platinum, gold, silver, bronze.
     const generateMedalTable = allSubmissions => {
-        // filter submissions by the details.live field
-        const submissions = allSubmissions.filter(row => row.details.live);
+        // filter submissions by the live field, and also filter out any non-current submissions
+        const submissions = allSubmissions.filter(submission => submission.live && submission.submission.length > 0);
 
         // given our array of submissions, create the medal table
         const userMap = getUserMap(submissions);
@@ -44,9 +46,9 @@ const Medals = () => {
     // the URL
     // 2.) category: the current category. category is fetched from the URL
     // 3.) type: the type of medal table, either "score" or "time". type is fetched from the URL 
-    // 4.) submissionReducer: an object with two fields:
-        // a.) reducer: the submission reducer itself (state)
-        // b.) dispatchSubmissions: the reducer function used to update the reducer
+    // 4.) submissionCache: an object with two fields:
+		// a.) cache: the cache object that actually stores the submission objects (state)
+		// b.) setCache: the function used to update the cache
     // POSTCONDITIONS (2 possible outcomes):
     // if the submission query is a success, both the time and score medal tables are generated, and the setMedals() function is called
     // to update the medals state with the medalTable object. the medalTable object has two fields:
@@ -54,13 +56,13 @@ const Medals = () => {
         // b.) time: this field stores the time medal table
     // if the submissions fail to be retrieved, an error message is rendered to the user, and the medal table state is NOT updated, 
     // leaving the Medals component stuck loading
-    const fetchMedals = async (abb, category, type, submissionReducer) => {
+    const fetchMedals = async (abb, category, type, submissionCache) => {
         // first, reset medal table state to undefined
         setMedalTable(undefined);
 
         try {
-            // get all submissions, and filter based on the details.live field
-            const allSubmissions = await getSubmissions(abb, category, type, submissionReducer);
+            // get all submissions
+            const allSubmissions = await getSubmissions2(abb, category, type, submissionCache);
             
             // generate medal table
             const table = generateMedalTable(allSubmissions);

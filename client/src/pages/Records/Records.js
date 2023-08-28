@@ -99,9 +99,9 @@ const Records = () => {
     // 1.) game: an object containing information about the game defined in the path
     // 2.) category: the current category. category is fetched from the URL
     // 3.) type: the current type, either "time" or "score". type is fetched from the URL
-    // 4.) submissionReducer: an object with two fields:
-        // a.) reducer: the submission reducer itself (state)
-        // b.) dispatchSubmissions: the reducer function used to update the reducer
+    // 4.) submissionCache: an object with two fields:
+		// a.) cache: the cache object that actually stores the submission objects (state)
+		// b.) setCache: the function used to update the cache
     // POSTCONDITIONS (1 possible outcome):
     // if the submission query is a success, a recordTable object is generated. records has two fields: all and live. each field maps
     // to a recordTable object. each recordTable object has a field for each mode belonging to { game }, { category }, and { type }
