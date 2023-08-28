@@ -87,7 +87,8 @@ function UserInfoForm() {
           { form.error.bio && <p>Error: { form.error.bio }</p> }
 
         </div>
-
+          
+        { /* Birthday input: an optional text input, with the requirement that it must be a date in 20th century, or before current date */ }
         <div className="profile-info-entry">
           <label htmlFor="birthday">Birthday (optional): </label>
           <input 
