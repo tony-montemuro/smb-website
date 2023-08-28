@@ -1,8 +1,9 @@
 /* ===== IMPORTS ===== */
 import "./Profile.css";
 import { useContext, useEffect } from "react";
-import UserInfoFormLogic from "./UserInfoForm.js";
 import { UserContext } from "../../utils/Contexts";
+import FrontendHelper from "../../helper/FrontendHelper";
+import UserInfoFormLogic from "./UserInfoForm.js";
 
 function UserInfoForm() {
   /* ===== VARIABLES ===== */
@@ -18,6 +19,9 @@ function UserInfoForm() {
 
   // states and functions from the js file
   const { form, initForm, handleChange, uploadUserInfo } = UserInfoFormLogic();
+
+  // helper functions
+  const { dateB2F } = FrontendHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -90,6 +94,7 @@ function UserInfoForm() {
             id="birthday" 
             type="date" 
             min="1900-01-01" 
+            max={ dateB2F() }
             value={ form.user.birthday }
             onChange={ handleChange }
           />
