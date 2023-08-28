@@ -28,21 +28,20 @@ const LevelboardUtils = () => {
     const submission2Form = (submission, type, levelName, category, profileId) => {
         // if a submission exists, we can use the data to form our formData object
         if (submission) {
-            const details = submission.details;
             return {
-                record: recordB2F(details.record, type, submission.level.timer_type),
+                record: recordB2F(submission.record, type, submission.level.timer_type),
                 score: submission.score,
-                monkey_id: details.monkey.id,
-                platform_id: details.platform.id,
-                region_id: details.region.id,
-                live: details.live,
-                proof: details.proof,
-                comment: details.comment ? details.comment : "",
+                monkey_id: submission.monkey.id,
+                platform_id: submission.platform.id,
+                region_id: submission.region.id,
+                live: submission.live,
+                proof: submission.proof,
+                comment: submission.comment ? submission.comment : "",
                 profile_id: parseInt(profileId),
                 game_id: game.abb,
                 level_id: levelName,
                 category: category,
-                submitted_at: dateB2F(details.submitted_at),
+                submitted_at: dateB2F(submission.submitted_at),
                 message: ""
             };
 

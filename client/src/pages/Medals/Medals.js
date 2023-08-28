@@ -19,7 +19,7 @@ const Medals = () => {
     const { getUserMap, getMedalTable, insertPositionToMedals } = MedalsHelper();
 
     // database functions
-    const { getSubmissions2 } = AllSubmissionRead();
+    const { getSubmissions } = AllSubmissionRead();
 
     // FUNCTION 1: generateMedalTable - given an array of submissions, create an array of medal table objects
     // PRECONDITIONS (1 parameter):
@@ -62,7 +62,7 @@ const Medals = () => {
 
         try {
             // get all submissions
-            const allSubmissions = await getSubmissions2(abb, category, type, submissionCache);
+            const allSubmissions = await getSubmissions(abb, category, type, submissionCache);
             
             // generate medal table
             const table = generateMedalTable(allSubmissions);

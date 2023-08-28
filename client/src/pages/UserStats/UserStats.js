@@ -23,7 +23,7 @@ const UserStats = () => {
     const { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
 
     // database functions
-    const { getSubmissions2 } = AllSubmissionRead();
+    const { getSubmissions } = AllSubmissionRead();
 
     // FUNCTION 1 - generateRecord - given a submissionIndex, profileId, levelName, and submission list, generate a record
     // object that contains information about a user's submission on a certain level
@@ -135,7 +135,7 @@ const UserStats = () => {
 
         try {
             // fetch submissions
-            const submissions = await getSubmissions2(game.abb, category, type, submissionCache);
+            const submissions = await getSubmissions(game.abb, category, type, submissionCache);
             const allSubmissions = submissions.filter(submission => submission.submission.length > 0);
             const liveSubmissions = allSubmissions.filter(submission => submission.live);
 

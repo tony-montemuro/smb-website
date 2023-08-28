@@ -140,7 +140,7 @@ const AllSubmissionRead = () => {
     // if the query is a success, an array of submissions belonging to the game (specified by abb),
     // ordered by level id, then record, then submission date, is returned
     // if the query is unsuccessful, the error is thrown to be handled by the caller function
-    const query = async (abb) => {
+    const query = async abb => {
         try {
             const { data: submissions, error, status } = await supabase
                 .from("all_submission")
@@ -235,7 +235,7 @@ const AllSubmissionRead = () => {
     // if user is accessing already cached submissions, we can fetch this information from the submission cache.
     // if not, we query, and if the query is successful, we update the submission cache, and return the array of submissions
     // if not, we query, and if the query is unsuccessful, this function throws an error to be handled by the caller function
-    const getSubmissions2 = async (abb, category, type, submissionCache) => {
+    const getSubmissions = async (abb, category, type, submissionCache) => {
         // initialize submissions object
         let cache = {};
 
@@ -258,7 +258,7 @@ const AllSubmissionRead = () => {
         return cache[category][type];
     };
 
-    return { queryRecentSubmissions, queryFilteredSubmissions, getSubmissions2 };
+    return { queryRecentSubmissions, queryFilteredSubmissions, getSubmissions };
 };
 
 /* ===== EXPORTS ===== */

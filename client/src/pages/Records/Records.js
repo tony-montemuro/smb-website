@@ -19,7 +19,7 @@ const Records = () => {
     const { getRelevantModes } = GameHelper();
 
     // database functions
-    const { getSubmissions2 } = AllSubmissionRead();
+    const { getSubmissions } = AllSubmissionRead();
 
     // FUNCTION 1: generateRecord - given a levelName and the array of submission, generate a record object
     // PRECONDITIONS (3 parameters):
@@ -115,7 +115,7 @@ const Records = () => {
 
         try {
             // get submissions, and generate two filtered arrays: allSubmissions, and liveSubmissions
-            const submissions = await getSubmissions2(game.abb, category, type, submissionCache);
+            const submissions = await getSubmissions(game.abb, category, type, submissionCache);
             const allSubmissions = submissions.filter(submission => submission.submission.length > 0);
             const liveSubmissions = allSubmissions.filter(submission => submission.live);
 

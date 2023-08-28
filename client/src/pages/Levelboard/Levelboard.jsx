@@ -12,7 +12,7 @@ import InsertPopup from "./InsertPopup.jsx";
 import PathHelper from "../../helper/PathHelper";
 import UpdatePopup from "./UpdatePopup.jsx";
 
-function Levelboard({ imageReducer, submissionReducer }) {
+function Levelboard({ imageReducer, submissionCache }) {
 	/* ===== CONTEXTS ===== */
 
 	// user state from user context
@@ -80,7 +80,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 			setLevel(level);
 			
 			// set up the board object
-			setupBoard(submissionReducer);
+			setupBoard(submissionCache);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, location.pathname]);
@@ -135,8 +135,8 @@ function Levelboard({ imageReducer, submissionReducer }) {
 						<button 
 							type="button" 
 							onClick={ () => setInsertPopup(true) }
-							disabled={ userSubmission && userSubmission.report[0] }
-							title={ userSubmission && userSubmission.report[0] ? 
+							disabled={ userSubmission && userSubmission.submission[0].report.length > 0 }
+							title={ userSubmission && userSubmission.submission[0].report.length > 0 ? 
 								"Please wait for a moderator to review your current submission before submitting." 
 							: 
 								undefined
@@ -222,7 +222,7 @@ function Levelboard({ imageReducer, submissionReducer }) {
 									submission={ submission } 
 									imageReducer={ imageReducer } 
 									onClickFunc={ setDetailSubmission }
-									key={ submission.details.id } 
+									key={ submission.id } 
 								/>
 							})}
 						</tbody>

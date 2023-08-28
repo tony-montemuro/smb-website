@@ -13,7 +13,6 @@ function DetailPopup({ submission, setSubmission }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const level = location.pathname.split("/")[5];
-  const details = submission ? submission.details : undefined;
   const profile = submission ? submission.profile : undefined;
 
   /* ===== FUNCTIONS ===== */
@@ -40,23 +39,23 @@ function DetailPopup({ submission, setSubmission }) {
         </h1>
 
         { /* Levelboard details popup video - render the embeded video within this container */ }
-        <div className={ getUrlType(details.proof) !== "twitter" ? "levelboard-detail-popup-video" : "" }>
-          <EmbededVideo url={ details.proof } />
+        <div className={ getUrlType(submission.proof) !== "twitter" ? "levelboard-detail-popup-video" : "" }>
+          <EmbededVideo url={ submission.proof } />
         </div>
 
         { /* Levelboard details popup info - render the submission details within this unordered list */ }
         <ul className="levelboard-detail-popup-info">
           <li>Position: { submission.position }</li>
-          <li>Date: { dateB2F(details.submitted_at) }</li>
-          <li>Monkey: { details.monkey.monkey_name }</li>
-          <li>Platform: { details.platform.platform_name }</li>
-          <li>Region: { details.region.region_name }</li>
+          <li>Date: { dateB2F(submission.submitted_at) }</li>
+          <li>Monkey: { submission.monkey.monkey_name }</li>
+          <li>Platform: { submission.platform.platform_name }</li>
+          <li>Region: { submission.region.region_name }</li>
           <li>Live:&nbsp;
             <div className="levelboard-svg-wrapper">
-              { details.live ? <CheckIcon /> : <CloseRoundedIcon /> }
+              { submission.live ? <CheckIcon /> : <CloseRoundedIcon /> }
             </div>
           </li>
-          { details.comment && <li>Comment: "{ details.comment }"</li> }
+          { submission.comment && <li>Comment: "{ submission.comment }"</li> }
         </ul>
 
         { /* Horizontal rule to break the "submission" from the "report" form */ }

@@ -42,10 +42,8 @@ function App() {
     staticCache, 
     messages,
     submissions,
-    gameSubmissions,
     images,
-    dispatchSubmissions,
-    setGameSubmissions,
+    setSubmissions,
     dispatchImages,
     addMessage,
     callSessionListener,
@@ -54,9 +52,8 @@ function App() {
   } = AppLogic();
 
   /* ===== VARIABLES ===== */
-  const submissionReducer = { state: submissions, dispatchSubmissions: dispatchSubmissions };
-  const submissionCache = { cache: gameSubmissions, setCache: setGameSubmissions };
   const imageReducer = { reducer: images, dispatchImages: dispatchImages };
+  const submissionCache = { cache: submissions, setCache: setSubmissions };
 
   /* ===== EFFECTS ===== */
 
@@ -121,10 +118,10 @@ function App() {
                   <Records submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/score/:levelid" element={
-                  <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
+                  <Levelboard imageReducer={ imageReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/time/:levelid" element={
-                  <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
+                  <Levelboard imageReducer={ imageReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/score/:levelid/:profileId" element={
                   <SubmissionHistory />

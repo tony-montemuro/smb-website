@@ -19,7 +19,7 @@ const Totalizer = () => {
     const { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
 
     // database functions
-    const { getSubmissions2 } = AllSubmissionRead();
+    const { getSubmissions } = AllSubmissionRead();
 
     // FUNCTION 1: generateTotalizer - given an array of submissions, a type, and a totalTime, generate two separate arrays that
     // collectively represent the totalizer for a submission type combination
@@ -73,7 +73,7 @@ const Totalizer = () => {
 
         try {
             // get the { type } submissions that are a part of the { category } of { game.abb }
-            const submissions = await getSubmissions2(game.abb, category, type, submissionCache);
+            const submissions = await getSubmissions(game.abb, category, type, submissionCache);
 
             // generate totalizer object
             const { all, live } = generateTotalizer(submissions, type, totalTime);

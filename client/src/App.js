@@ -27,24 +27,10 @@ const App = () => {
   const [user, setUser] = useState(defaultUser);
   const [staticCache, setStaticCache] = useState(defaultStaticCache);
   const [messages, setMessages] = useState([]);
-  const [submissions, dispatchSubmissions] = useReducer((state, action) => {
-    const submissionAbb = state[action.abb] || {};
-    const submissionCategory = submissionAbb[action.category] || {};
-    return {
-      ...state,
-      [action.abb]: {
-        ...submissionAbb,
-        [action.category]: {
-          ...submissionCategory,
-          [action.type]: action.data
-        }
-      }
-    };
-  }, {});
   const [images, dispatchImages] = useReducer((state, action) => {
     return { ...state, [action.field]: action.data }
   }, null);
-  const [gameSubmissions, setGameSubmissions] = useState({ abb: undefined });
+  const [submissions, setSubmissions] = useState({ abb: undefined });
 
   /* ===== FUNCTIONS ===== */
 
@@ -230,10 +216,8 @@ const App = () => {
     staticCache, 
     messages,
     submissions,
-    gameSubmissions,
     images,
-    dispatchSubmissions,
-    setGameSubmissions,
+    setSubmissions,
     dispatchImages,
     addMessage,
     callSessionListener,

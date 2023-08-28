@@ -3,7 +3,7 @@ import { isBefore } from "date-fns";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
-import SubmissionRead from "../../database/read/SubmissionRead";
+import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 
 const Levelboard = () => {
 	/* ===== CONTEXTS ===== */
@@ -40,7 +40,7 @@ const Levelboard = () => {
 	/* ===== FUNCTIONS ===== */
 	
 	// database functions
-	const { getSubmissions } = SubmissionRead();
+	const { getSubmissions } = AllSubmissionRead();
 
 	// FUNCTION 1: getPrevAndNext - get the previous and next level names
     // PRECONDTIONS (2 parameters):
@@ -96,8 +96,8 @@ const Levelboard = () => {
 
 	// FUNCTION 2: insertPositionToLevelboard - for each submission, add the position field
     // PRECONDITIONS (1 parameter):
-    // 1.) submissions: an array of submission objects, ordered in descending order by details.record, then in ascending order
-    // by details.submitted_at
+    // 1.) submissions: an array of submission objects, ordered in descending order by record, then in ascending order
+    // by submitted_at
     // POSTCONDITIONS (1 possible outcome): 
     // each submission object in the submissions array is updated to include position field, which accurately ranks each record
     // based on the details.record field
@@ -112,35 +112,41 @@ const Levelboard = () => {
             trueCount++;
 
             // if the next submission exists, and it's record is different from the current submission, update posCount to trueCount
-            if (index < submissions.length-1 && submissions[index+1].details.record !== submission.details.record) {
+            if (index < submissions.length-1 && submissions[index+1].record !== submission.record) {
                 posCount = trueCount;
             }
         });
     };
 
-	// FUNCTION 3: setupBoard - given information about the path and the submissionReducer, set up the board object
+	// FUNCTION 3: setupBoard - given information about the path and the submissionCache, set up the board object
 	// PRECONDITIONS (2 parameters):
-	// 1.) submissionReducer: an object with two fields:
-		// a.) reducer: the submission reducer itself (state)
-		// b.) dispatchSubmissions: the reducer function used to update the reducer
+	// 1.) submissionCache: an object with two fields:
+		// a.) cache: the cache object that actually stores the submission objects (state)
+		// b.) setCache: the function used to update the cache
 	// POSTCONDITIONS (2 possible outcome):
 	// if the submissions successfully are retrieved, the list of submissions are generated, and both the `all` and `adjacent` fields
 	// are updated
 	// if the submissions fail to be retrieved, an error message is rendered to the user, and the board state is NOT updated, leaving the
 	// Levelboard component stuck loading
-	const setupBoard = async submissionReducer => {
+	const setupBoard = async submissionCache => {
 		// first, set board to default values, and get the names of the previous and next level
 		setBoard(boardInit);
 		const { prev, next } = getPrevAndNext(category, levelName);
 
 		try {
 			// get submissions, and filter based on the levelId
-			const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
-			const allLevelSubmissions = allSubmissions.filter(row => row.level.name === levelName).map(row => Object.assign({}, row));
-
+			const allSubmissions = await getSubmissions(game.abb, category, type, submissionCache);
+			const allLevelSubmissions = allSubmissions.filter(submission => {
+				return submission.submission.length > 0 && submission.level.name === levelName
+			}).map(submission => Object.assign({}, submission));
+	
 			// finally, update board state hook, as well as the userSubmission state hook
 			setBoard({ ...board, all: allLevelSubmissions, adjacent: { prev: prev, next: next } });
-			setUserSubmission(user.profile ? allLevelSubmissions.find(row => row.profile.id === user.profile.id) : undefined);
+			setUserSubmission(user.profile ? 
+				allLevelSubmissions.find(submission => submission.profile.id === user.profile.id && submission.submission.length > 0) 
+			: 
+				undefined
+			);
 
 		} catch (error) {
 			// if the submissions fail to be fetched, let's render an error specifying the issue
@@ -159,19 +165,19 @@ const Levelboard = () => {
 		const filtered = board.all.filter(submission => {
 			return (
 				// first, let's handle the "endDate" filter
-				isBefore(new Date(submission.details.submitted_at), filters.endDate) &&
+				isBefore(new Date(submission.submitted_at), filters.endDate) &&
 			
 				// next, let's handle the "live" filter
-				filters.live.includes(submission.details.live) &&
+				filters.live.includes(submission.live) &&
 
 				// next, we handle the "monkeys" filter
-				filters.monkeys.includes(submission.details.monkey.id) &&
+				filters.monkeys.includes(submission.monkey.id) &&
 
 				// next, we handle the "platforms" filter
-				filters.platforms.includes(submission.details.platform.id) &&
+				filters.platforms.includes(submission.platform.id) &&
 
 				// finally, we handle the "regions" filter
-				filters.regions.includes(submission.details.region.id)
+				filters.regions.includes(submission.region.id)
 			);
 		});
 

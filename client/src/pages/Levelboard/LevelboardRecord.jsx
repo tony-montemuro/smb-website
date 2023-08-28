@@ -22,7 +22,7 @@ function LevelboardRecord({ submission, iconSize }) {
     <span className="levelboard-record">
 
       { /* If submission is approved, render a checkbox next to the record */ }
-      { submission.approved ? 
+      { submission.submission.length > 0 && submission.submission[0].approved ? 
         <div className="levelboard-aligned-span">
           <CheckIcon 
             fontSize={ iconSize }
@@ -32,7 +32,7 @@ function LevelboardRecord({ submission, iconSize }) {
       :
 
         // If submission has a report, render a warning icon next to the record 
-        submission.report[0] ?
+        submission.submission.length > 0 && submission.submission[0].report[0] ?
           <div className="levelboard-aligned-span">
             <WarningRoundedIcon 
               fontSize={ iconSize }
@@ -48,7 +48,7 @@ function LevelboardRecord({ submission, iconSize }) {
 
       { /* Render the record, as well as a link to the user's submission history on the chart. */ }
       <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }/${ submission.profile.id }` }>
-        { recordB2F(submission.details.record, type, submission.level.timer_type) }
+        { recordB2F(submission.record, type, submission.level.timer_type) }
       </Link>
       
     </span>
