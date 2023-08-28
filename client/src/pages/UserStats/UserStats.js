@@ -1,10 +1,10 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 import GameHelper from "../../helper/GameHelper";
 import MedalsHelper from "../../helper/MedalsHelper";
 import TotalizerHelper from "../../helper/TotalizerHelper";
-import SubmissionRead from "../../database/read/SubmissionRead";
 
 const UserStats = () => {
     /* ===== CONTEXTS ===== */
@@ -23,7 +23,7 @@ const UserStats = () => {
     const { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
 
     // database functions
-    const { getSubmissions } = SubmissionRead();
+    const { getSubmissions2 } = AllSubmissionRead();
 
     // FUNCTION 1 - generateRecord - given a submissionIndex, profileId, levelName, and submission list, generate a record
     // object that contains information about a user's submission on a certain level
@@ -32,7 +32,7 @@ const UserStats = () => {
     // 2.) profileId: a string that contains the id of a user
     // 3.) level: the level object associated with the following set of submissions
     // 4.) submissions: submissions: an array containing submissions for a particular game. the submissions must be
-    // ordered by type in descending order, then by level id in ascending order
+    // ordered by level id in ascending order, then by record in descending order
     // POSTCONDITIONS (1 possible outcome, 2 returns):
     // 1.) record: a record object is generated, which has 4 fields: level, record, date, and position
         // level - the level object associated with the record
@@ -57,15 +57,15 @@ const UserStats = () => {
 
             // if the current submission belongs to profileId, update record object
             if (submission.profile.id === profileId) {
-                record.record = submission.details.record;
+                record.record = submission.record;
                 record.position = posCount;
-                record.date = submission.details.submitted_at;
+                record.date = submission.submitted_at;
             }
             trueCount++;
 
             // if there is another submission left, and the next submission has a worse record than the current record, we
             // need to update posCount
-            if (submissionIndex < submissions.length-1 && submissions[submissionIndex+1].details.record !== submission.details.record) {
+            if (submissionIndex < submissions.length-1 && submissions[submissionIndex+1].record !== submission.record) {
                 posCount = trueCount;
             }
             submissionIndex++;
@@ -79,8 +79,8 @@ const UserStats = () => {
     // PRECONDITIONS (3 parameters):
     // 1.) modes: an array of mode objects containing the relevant modes for the rankings
     // 2.) path: an array that contains path information from the URL
-    // 3.) submissions: an array containing submissions for a particular game. the submissions must
-    // be ordered by type in descending order, then by level id in ascending order
+    // 3.) submissions: an array containing submissions for a particular game. the submissions must be
+    // ordered by level id in ascending order, then by record in descending order
     // POSTCONDITIONS (1 possible outcome, 1 return):
     // 1.) rankings: rankings has a field for each mode belonging to { profileId }, { category }, and { type }
     // each field is mapped to an array of record objects, each of which has 4 fields: level, record, date, and position
@@ -110,20 +110,20 @@ const UserStats = () => {
         return rankings;
     };
 
-    // FUNCTION 3: fetchUserStats - given a path, game object, and submissionReducer object, fetch the stats object
+    // FUNCTION 3: fetchUserStats - given a path, game object, and submissionCache object, fetch the stats object
     // PRECONDITIONS (3 parameters):
     // 1.) path: an array that contains path information from the URL
     // 2.) game: an object containing information about the game defined in the page
-    // 3.) submissionReducer: an object with two fields:
-        // a.) reducer: the submission reducer itself (state)
-        // b.) dispatchSubmissions: the reducer function used to update the reducer
+    // 3.) submissionCache: an object with two fields:
+		// a.) cache: the cache object that actually stores the submission objects (state)
+		// b.) setCache: the function used to update the cache
     // POSTCONDITIONS (1 possible outcome):
     // if the submission query is successful, we are able to first generate two submission arrays: one for all, and one for live only. 
     // from these arrays, we generate two separate userStats objects. these two objects are then combined to form 'stats',
     // a single object which contains both user stats objects. the setStats() function is called to update the stats object
     // if the submissions fail to be retrieved, an error message is rendered to the user, and the stats state is NOT updated, 
     // leaving the UserStats component stuck loading
-    const fetchUserStats = async (path, game, submissionReducer) => {
+    const fetchUserStats = async (path, game, submissionCache) => {
         // first, reset stats state to default value (undefined), unpack path parameter, and define our stats
         // collection objects
         setStats(undefined);
@@ -135,8 +135,9 @@ const UserStats = () => {
 
         try {
             // fetch submissions
-            const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
-            const submissions = allSubmissions.filter(row => row.details.live);
+            const submissions = await getSubmissions2(game.abb, category, type, submissionCache);
+            const allSubmissions = submissions.filter(submission => submission.submission.length > 0);
+            const liveSubmissions = allSubmissions.filter(submission => submission.live);
 
             // only bother with totalizer and medal table for practice mode categories
             if (isPracticeMode(category)) {
@@ -152,8 +153,8 @@ const UserStats = () => {
                 liveTotal = liveTotals.find(obj => obj.profile.id === profileId);
 
                 // now, it's time to do the medal table
-                const userMap = getUserMap(submissions);
-                const medalTable = getMedalTable(userMap, submissions);
+                const userMap = getUserMap(liveSubmissions);
+                const medalTable = getMedalTable(userMap, liveSubmissions);
                 insertPositionToMedals(medalTable);
 
                 // we can filter the medalTable looking for the profileId's object. [note: medal tables are the same for all and live!]
@@ -166,7 +167,7 @@ const UserStats = () => {
 
             // finally, generate the rankings
             allRankings = generateRankings(modes, path, allSubmissions);
-            liveRankings = generateRankings(modes, path, submissions);
+            liveRankings = generateRankings(modes, path, liveSubmissions);
 
             // create our stats object
             const stats = {
