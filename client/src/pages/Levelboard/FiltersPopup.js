@@ -49,7 +49,7 @@ const FiltersPopup = (defaultFilters, currentFilters) => {
         }
 
         // now, since arrays are assumed to be sorted, let's just compare elements 1 by 1. if any don't match, we return true
-        for (let i = 1; i < defaultArr.length; i++) {
+        for (let i = 0; i < defaultArr.length; i++) {
             if (defaultArr[i] !== currentArr[i]) {
                 return true;
             }
