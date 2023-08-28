@@ -115,10 +115,10 @@ function App() {
                   <Totalizer imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/score" element={
-                  <Records submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
+                  <Records submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/time" element={
-                  <Records submissionReducer={ submissionReducer } submissionCache={ submissionCache } />
+                  <Records submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/score/:levelid" element={
                   <Levelboard imageReducer={ imageReducer } submissionReducer={ submissionReducer } submissionCache={ submissionCache } />

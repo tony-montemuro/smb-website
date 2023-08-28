@@ -154,7 +154,7 @@ const AllSubmissionRead = () => {
                         id,
                         name,
                         time,
-                        timer_type,
+                        timer_type
                     ),
                     live,
                     monkey (id, monkey_name),
@@ -178,8 +178,8 @@ const AllSubmissionRead = () => {
                 throw error;
             }
 
-            // now, sort the array first by the level.id field in descending order, then by the details.record field in descending order.
-            // finally, by the details.submitted_at field ascending order, and return array
+            // now, sort the array first by the level.id field in descending order, then by the record field in descending order.
+            // finally, by the submitted_at field ascending order, and return array
             submissions.sort((a, b) => {
                 if (a.level.id !== b.level.id) {
                     return a.level.id - b.level.id;
@@ -206,15 +206,15 @@ const AllSubmissionRead = () => {
     // by performing various filters, we organize the submission data into an object, and return it
     const getCacheObject = (abb, submissions) => {
         // first, fetch game object from static cache
-        const game = staticCache.find(game => game.abb === abb);
+        const game = staticCache.games.find(game => game.abb === abb);
 
         // next, let's declare and define our cache object
         const cacheObject = { abb: abb };
         getGameCategories(game).forEach(category => {                   // for each category
             cacheObject[category] = {};
             getCategoryTypes(game, category).forEach(type => {          // for each type
-                cacheObject[type] = submissions.filter(submission => {
-                    return submission.category === category && submission.score === (type === "score"); 
+                cacheObject[category][type] = submissions.filter(submission => {
+                    return submission.level.category === category && submission.score === (type === "score"); 
                 });
             });
         });
@@ -235,12 +235,12 @@ const AllSubmissionRead = () => {
     // if user is accessing already cached submissions, we can fetch this information from the submission cache.
     // if not, we query, and if the query is successful, we update the submission cache, and return the array of submissions
     // if not, we query, and if the query is unsuccessful, this function throws an error to be handled by the caller function
-    const getSubmissions = async (abb, category, type, submissionCache) => {
+    const getSubmissions2 = async (abb, category, type, submissionCache) => {
         // initialize submissions object
         let cache = {};
 
         // we have two choices: fetch submissions from cache if they are already there, or query them, update cache, and return result
-        if (abb in submissionCache.cache) {
+        if (submissionCache.cache.abb === abb) {
             cache = submissionCache.cache;
         } else {
             // attempt to query submissions. if the query is successful, we generate cache object, and update the cache
@@ -258,7 +258,7 @@ const AllSubmissionRead = () => {
         return cache[category][type];
     };
 
-    return { queryRecentSubmissions, queryFilteredSubmissions, getSubmissions };
+    return { queryRecentSubmissions, queryFilteredSubmissions, getSubmissions2 };
 };
 
 /* ===== EXPORTS ===== */

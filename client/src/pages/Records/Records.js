@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 import GameHelper from "../../helper/GameHelper";
-import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Records = () => {
     /* ===== CONTEXTS ===== */
@@ -19,14 +19,14 @@ const Records = () => {
     const { getRelevantModes } = GameHelper();
 
     // database functions
-    const { getSubmissions } = SubmissionRead();
+    const { getSubmissions2 } = AllSubmissionRead();
 
     // FUNCTION 1: generateRecord - given a levelName and the array of submission, generate a record object
     // PRECONDITIONS (3 parameters):
     // 1.) submissionIndex: the current index in our higher-level loop of the submissions
     // 2.) level: the level object associated with the next set of submissions
-    // 3.) submissions: an array containing unfiltered submissions for a particular game. the submissions must be
-    // ordered by type in descending order, then by level id in ascending order
+    // 3.) submissions: an array containing unfiltered submissions for a particular game. the submissions must
+    // be ordered by level id ascending order, then by record in descending order
     // POSTCONDITIONS (1 possible outcome, 2 returns):
     // 1.) record: a record object is generated, which has 3 fields: level, record, and profiles
         // level - the string name of a level
@@ -47,9 +47,9 @@ const Records = () => {
 
             // if the current submission has the same record as the first submission for the level, it is record. thus, we need
             // to update the record object
-            if (submissions[submissionIndex].details.record === submissions[start].details.record) {
+            if (submissions[submissionIndex].record === submissions[start].record) {
                 const profile = submissions[submissionIndex].profile;
-                record.record = submissions[submissionIndex].details.record;
+                record.record = submissions[submissionIndex].record;
                 record.profiles.push(profile);
             }
             submissionIndex++;
@@ -59,18 +59,17 @@ const Records = () => {
         return { record: record, index: submissionIndex }; 
     };
 
-    // FUNCTION 2: generateRecordTable - given a game, category, type, and submissions, generate the record table
-    // PRECONDITIONS (4 parameters):
+    // FUNCTION 2: generateRecordTable - given a game, type, and submissions array, generate the record table
+    // PRECONDITIONS (3 parameters):
     // 1.) modes: an array of mode objects, which come from the game object
-    // 2.) category: the current category. category is fetched from the URL
-    // 3.) type: the current type, either "time" or "score". type is fetched from the URL
-    // 4.) submissions: an array containing submissions for a particular game. the submissions must
-    // be ordered by type in descending order, then by level id in ascending order
+    // 2.) type: the current type, either "time" or "score". type is fetched from the URL
+    // 3.) submissions: an array containing submissions for a particular game. the submissions must
+    // be ordered by level id ascending order, then by record in descending order
     // POSTCONDITIONS (1 possible outcome, 1 return):
     // 1.) recordTable: recordTable has a field for each mode belonging to { game }, { category }, and { type }
     // each field is mapped to an array of record objects, each of which has 3 fields: level, record, and profiles
     // once this object is generated, call the setRecordTable() function to update the recordTable state
-    const generateRecordTable = (modes, category, type, submissions) => {
+    const generateRecordTable = (modes, type, submissions) => {
         // initialize variables used in the function
         const recordTable = {};
         let submissionIndex = 0;
@@ -110,21 +109,22 @@ const Records = () => {
     // generated, call the setRecordTable() function to update the recordTable state
     // if the submissions fail to be retrieved, an error message is rendered to the user, and the record table state is NOT updated, 
     // leaving the Records component stuck loading
-    const fetchRecords = async (game, category, type, submissionReducer) => {
+    const fetchRecords = async (game, category, type, submissionCache) => {
         // first, reset record table state to default value (undefined)
         setRecordTable(undefined);
 
         try {
-            // get submissions, and also generate a filtered array of submissions based on the details.live field
-            const allSubmissions = await getSubmissions(game.abb, category, type, submissionReducer);
-            const submissions = allSubmissions.filter(row => row.details.live);
+            // get submissions, and generate two filtered arrays: allSubmissions, and liveSubmissions
+            const submissions = await getSubmissions2(game.abb, category, type, submissionCache);
+            const allSubmissions = submissions.filter(submission => submission.submission.length > 0);
+            const liveSubmissions = allSubmissions.filter(submission => submission.live);
 
             // next, get the relevant list of modes
             const modes = getRelevantModes(game, category, type);
 
             // generate two record tables: 1 for all submissions, and 1 for live submissions
-            const allRecordTable = generateRecordTable(modes, category, type, allSubmissions);
-            const liveRecordTable = generateRecordTable(modes, category, type, submissions);
+            const allRecordTable = generateRecordTable(modes, type, allSubmissions);
+            const liveRecordTable = generateRecordTable(modes, type, liveSubmissions);
 
             // create a records object that stores both tables, and update recordTable
             const records = {
