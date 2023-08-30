@@ -59,17 +59,37 @@ const FiltersPopup = (defaultFilters, currentFilters) => {
         return false;
     };
 
-    // FUNCTION 4: handleArrayFilterReset - code that is executed when user requests to reset the filter for a particular array-based
+    // FUNCTION 3: handleFilterReset - code that is executed when user requests to reset the a filter for a non-array based filter
     // property
     // PRECONDITIONS (1 parameter):
-    // 1.) property: a string representing the name of the filter property (MUST be for an array-based filter)
+    // 1.) property: a string representing the name of the filter property
     // POSTCONDITIONS (1 possible outcome):
     // we reset the property by calling the setFilters() function with the defaultFilters[property] as part of our argument
-    const handleArrayFilterReset = property => {
+    const handleFilterReset = property => {
         setFilters({ ...filters, [property]: defaultFilters[property] });
     };
 
-    // FUNCTION 5: handleFiltersResetAll - code that is executed when user requests to reset all filters
+    // FUNCTION 4: handleFilterChange - code that is executed when the user makes a change to a non-array based filter property
+    // PRECONDITIONS (1 parameter):
+    // 1.) val: a variable representing the value the user selected
+    // 2.) property: a string representing the name of the filter property (MUST be for an non-array based filter)
+    // POSTCONDITIONS (1 possible outcomes):
+    // the field in filters is updated to the value of `val` 
+    const handleFilterChange = (val, property) => {
+        setFilters({ ...filters, [property]: val });
+    };
+
+    // FUNCTION 5: hasFilterChanged - code that checks whether or not a non-array based filter has changed
+    // PRECONDITIONS (1 parameter):
+    // 1.) property: a string representing the name of the property we want to check for changes
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the current value for `filters[property]` is the same as default, false is returned
+    // otherwise, true is returned
+    const hasFilterChanged = property => {
+        return filters[property] !== defaultFilters[property];
+    };
+
+    // FUNCTION 6: handleFiltersResetAll - code that is executed when user requests to reset all filters
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // we reset the filters by calling the setFilters() function with the defaultFilters as an argument
@@ -77,7 +97,7 @@ const FiltersPopup = (defaultFilters, currentFilters) => {
         setFilters(defaultFilters);
     };
 
-    // FUNCTION 6: handleApplyFilters - code that is executed when the user requests to apply filters
+    // FUNCTION 7: handleApplyFilters - code that is executed when the user requests to apply filters
     // PRECONDITIONS (2 parameters):
     // 1.) onApplyFunc: code that is executed in `Levelboard.js` when we apply filters
     // 2.) setPopup: a function we can use to close the popup, which we want to do after applying filters
@@ -93,7 +113,9 @@ const FiltersPopup = (defaultFilters, currentFilters) => {
         filters, 
         handleArrayFilterChange, 
         hasArrayFilterChanged, 
-        handleArrayFilterReset, 
+        handleFilterReset,
+        handleFilterChange, 
+        hasFilterChanged, 
         handleFiltersResetAll,
         handleApplyFilters
     };

@@ -24,6 +24,10 @@ function Levelboard({ imageReducer, submissionCache }) {
 	// add message function from message context
 	const { addMessage } = useContext(MessageContext);
 
+	/* ===== HELPER FUNCTIONS ===== */
+	const { capitalize, cleanLevelName, dateB2F } = FrontendHelper();
+	const { fetchLevelFromGame } = PathHelper();
+
 	/* ===== VARIABLES ===== */
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -33,11 +37,13 @@ function Levelboard({ imageReducer, submissionCache }) {
 	const type = path[4];
 	const levelName = path[5];
 	const defaultFilters = {
-		endDate: new Date(),
+		endDate: dateB2F(),
 		live: game.live_preference ? [true] : [false, true],
 		monkeys: game.monkey.map(monkey => monkey.id),
 		platforms: game.platform.map(platform => platform.id),
-		regions: game.region.map(region => region.id)
+		obsolete: false,
+		regions: game.region.map(region => region.id),
+		tas: [false]
 	};
 
 	/* ===== STATES & FUNCTIONS ===== */
@@ -55,10 +61,6 @@ function Levelboard({ imageReducer, submissionCache }) {
 		applyFilters,
 		handleTabClick
 	} = LevelboardLogic();
-
-	// helper functions
-	const { capitalize, cleanLevelName } = FrontendHelper();
-	const { fetchLevelFromGame } = PathHelper();
 
 	/* ===== EFFECTS ===== */
 
@@ -180,8 +182,8 @@ function Levelboard({ imageReducer, submissionCache }) {
 							<button 
 								type="button" 
 								onClick={ () => setInsertPopup(true) }
-								disabled={ userSubmission && userSubmission.submission[0].report.length > 0 }
-								title={ userSubmission && userSubmission.submission[0].report.length > 0 ? 
+								disabled={ userSubmission && userSubmission.report }
+								title={ userSubmission && userSubmission.report ? 
 									"Please wait for a moderator to review your current submission before submitting." 
 								: 
 									undefined

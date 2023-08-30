@@ -179,6 +179,15 @@
     margin: 5px;
 }
 
+.levelboard-filters-popup-inner {
+    position: relative;
+    padding: 32px;
+    width: 100%;
+    max-width: 50%;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
 .levelboard-aligned-span {
     display: inline-block;
     vertical-align: middle;
@@ -250,6 +259,12 @@
     white-space: nowrap;
 }
 
+.levelboard-filters-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
 .levelboard-filter-btns {
     display: flex;
     flex-direction: row;
@@ -276,8 +291,9 @@
     background-color: #333333;
 }
 
-.levelboard-filter-bottom {
+.levelboard-filters-bottom {
     display: flex;
+    justify-content: flex-end;
     gap: 5px;
     margin: 20px 0;
 }

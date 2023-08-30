@@ -54,7 +54,30 @@ const DateHelper = () => {
         return dateF2B(submittedAt);
     };
 
-    return { getDateOfSubmission };
+    // FUNCTION 3: getInclusiveDate - function that essentially takes a date string as input, and returns the next day as a date object
+    // this function is particularly useful when dealing with filters THROUGH a particular date
+    // PRECONDITIONS (1 parameter):
+    // 1.) date: a string representing the date, in the format: YYYY-MM-DD
+    // POSTCONDITIONS (1 possible outcome):
+    // the date is converted to a Date object, added a day by 1, and returned
+    const getInclusiveDate = date => {
+        const currentDate = new Date(date);
+
+        // convert date to UTC
+        const nextDate = new Date(
+            currentDate.getUTCFullYear(),
+            currentDate.getUTCMonth(),
+            currentDate.getUTCDate(),
+            0, 0, 0, 0
+        );
+
+        // add one day
+        nextDate.setDate(nextDate.getDate()+1);
+
+        return nextDate;
+    };
+
+    return { getDateOfSubmission, getInclusiveDate };
 };
 
 /* ===== EXPORTS ===== */
