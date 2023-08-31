@@ -7,7 +7,7 @@ const ProfileRead = () => {
     // FUNCTION 1: queryProfiles - async function that makes a call to supabase to get an array of all the profiles
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, the list of profiles is simply returned
+    // if the query is successful, the list of profiles is sorted by username & returned
     // otherwise, this function throws an error, which should be handled by caller function
     const queryProfiles = async () => {
         try {
@@ -19,8 +19,24 @@ const ProfileRead = () => {
                 throw error;
             }
 
+            // now, let's sort the profiles by username
+            const sortedProfiles = profiles.sort((a, b) => {
+                // convert to lowercase
+                const usernameA = a.username.toLowerCase();
+                const usernameB = b.username.toLowerCase();
+    
+                // now, do comparisons
+                if (usernameA < usernameB) {
+                    return -1;
+                }
+                if (usernameA > usernameB) {
+                    return 1;
+                }
+                return 0;
+            });
+
             // return data
-            return profiles;
+            return sortedProfiles;
 
         } catch(error) {
             // throw error to be handled by caller
