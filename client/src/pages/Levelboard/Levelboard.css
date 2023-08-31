@@ -119,6 +119,44 @@
     margin-bottom: 8px;
 }
 
+.levelboard-table-group span {
+    margin: 5px 0;
+}
+
+.levelboard-table-group table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 100%;
+}
+
+.levelboard-table-group thead {
+    border: 1px solid black;
+}
+  
+.levelboard-table-group th {
+    text-align: left;
+    padding: 4px 8px;
+}
+
+.levelboard-table-group tr {
+    height: 36px;
+}
+
+.levelboard-table-group td {
+    padding: 4px 8px;
+}
+
+.levelboard-table-row-selected {
+    background-color: darkgrey;
+}
+
+.levelboard-table-group table tbody tr:not(.levelboard-table-row-selected):hover {
+    background-color: lightgray;
+    cursor: pointer;
+}
+
 .levelboard-textarea-group {
     display: flex;
     flex-direction: column;
@@ -184,6 +222,8 @@
     padding: 32px;
     width: 100%;
     max-width: 50%;
+    max-height: 75vh;
+    overflow-y: auto;
     background-color: #fff;
     border-radius: 10px;
 }
@@ -215,7 +255,7 @@
     padding-bottom: 10px;
 }
 
-.levelboard-update h2 {
+.levelboard-update-header h2 {
     text-align: center;
 }
 

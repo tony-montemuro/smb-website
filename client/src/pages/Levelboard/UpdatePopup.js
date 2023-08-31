@@ -2,7 +2,6 @@
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
-import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import DateHelper from "../../helper/DateHelper";
 import LevelboardUtils from "./LevelboardUtils";
 import Submission2Update from "../../database/update/Submission2Update";
@@ -47,7 +46,6 @@ const UpdatePopup = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { updateSubmission } = AllSubmissionUpdate(); 
     const { updateSubmission2 } = Submission2Update();
 
     // helper functions
@@ -67,39 +65,36 @@ const UpdatePopup = () => {
 	};
 
     // FUNCTION 2: handleChange - function that is called whenever the user makes any change to the form
-    // PRECONDITIONS (2 parameters):
+    // PRECONDITIONS (1 parameter):
 	// 1.) e: an event object generated when the user makes a change to the form
-    // 2.) submissions: an array of all submission objects belonging to the current user for the current level. this parameter
-    // is only necessary if we are modifying the `id` field
 	// POSTCONDITIONS (2 possible outcomes):
-	// if the field id is live, we use the checked variable rather than the value variable to update the form
+	// if the field id is live / tas, we use the checked variable rather than the value variable to update the form
 	// otherwise, we simply update the form field based on the value variable
-	const handleChange = (e, submissions) => {
+	const handleChange = e => {
         // descruct properties of e.target used in this function
         const { id, value, checked } = e.target;
 
-		switch (id) {
-			// case 1: live. this is a checkbox, so we need to use the "checked" variable as our value
-			case "live":
-				dispatchForm({ field: "values", value: { live: checked } });
-				break;
+        // special case: if id is "live" or "tas", we want to use `checked` as our value
+        if (id === "live" || id === "tas") {
+            dispatchForm({ field: "values", value: { [id]: checked } });
+        } 
+        
+        // otherwise, we simply use the `value` property as our updated value
+        else {
+            dispatchForm({ field: "values", value: { [id]: value } });
+        }
+    };
 
-            // case 2: tas: this is a checkbox, so we also need to use the "checked" variable as our value
-            case "tas":
-                dispatchForm({ field: "values", value: { tas: checked } });
-                break;
-
-            // case 3: id. this field will update the entire form, so we do that here
-            case "id":
-                const submission = submissions.find(submission => submission.id === value);
-                const formVals = submission2Form(submission, type, levelName, category, submission.profile.id);
-                dispatchForm({ field: "values", value: formVals });
-                break;
-
-			// default case: simply update the id field of the values object with the value variable
-			default:
-				dispatchForm({ field: "values", value: { [id]: value } });
-		};
+    // FUNCTION 3: handleSubmissionChange - function that runs when the user wants to change the submission
+    // PRECONDITIONS (1 parameter):
+    // 1.) id: a string in the timestamptz postgreSQL format representing the unique id of one of the submissions in `submissions`
+    // 2.) submissions: an array of all submission objects belonging to the current user for the current level
+    // POSTCONDITIONS (1 possible outcome):
+    // we use the `id` parameter to fetch the submission we want to change to, and update the form accordingly
+    const handleSubmissionChange = (id, submissions) => {
+        const submission = submissions.find(submission => submission.id === id);
+        const formVals = submission2Form(submission, type, levelName, category, submission.profile.id);
+        dispatchForm({ field: "values", value: formVals });
     };
 
     // FUNCTION 3: getUpdateFromForm - takes form data, and extracts only the updatable information
@@ -195,7 +190,7 @@ const UpdatePopup = () => {
         setPopup(null);
     };
 
-    return { form, fillForm, handleChange, handleSubmit, closePopup };
+    return { form, fillForm, handleChange, handleSubmissionChange, handleSubmit, closePopup };
 };
 
 /* ===== EXPORTS ===== */

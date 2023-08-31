@@ -3,16 +3,17 @@ import { GameContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
+import LevelboardRecord from "./LevelboardRecord";
 import UpdatePopupLogic from "./UpdatePopup.js";
 
 function UpdatePopup({ submissions, setSubmissions }) {
   /* ===== STATES & FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { form, fillForm, handleChange, handleSubmit, closePopup } = UpdatePopupLogic();
+  const { form, fillForm, handleChange, handleSubmissionChange, handleSubmit, closePopup } = UpdatePopupLogic();
 
   // helper functions
-  const { capitalize, dateB2F, recordB2F } = FrontendHelper();
+  const { capitalize, dateB2F } = FrontendHelper();
 
   /* ===== VARIABLES ===== */
   const location = useLocation();
@@ -49,21 +50,45 @@ function UpdatePopup({ submissions, setSubmissions }) {
           <div className="levelboard-update">
 
             { /* Form header */ }
-            <h2>Update Submission</h2>
+            <div className="levelboard-update-header">
+              <h2>Update Submission</h2>
+            </div>
 
             { /* Update submission form */ }
             <form onSubmit={ (e) => handleSubmit(e, submissions) }>
 
-              { /* Submission selector: allows the user to select any of their submissions with from a dropdown. */ }
-              <div className="levelboard-input-group">
-                <label htmlFor="submission">Select Submission: </label>
-                <select id="id" value={ form.values.id } onChange={ (e) => handleChange(e, submissions) }>
-                  { submissions.map(submission => (
-                    <option key={ submission.id } value={ submission.id }>
-                      { dateB2F(submission.submitted_at) } | { recordB2F(submission.record, type, submission.level.timer_type) } 
-                    </option>
-                  ))}
-                </select>
+              { /* Submission selector: render a table that allows the user to select any of their submissions. */ }
+              <div className="levelboard-table-group">
+                <span>Select Submission:</span>
+                <table>
+
+                  { /* Table header - render the description of what is rendered in each column */ }
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>{ capitalize(type) }</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+
+                  { /* Table body - render a unique, selectable row for each submission */ }
+                  <tbody>
+                    { submissions.map(submission => {
+                      return (
+                        <tr 
+                          className={ submission.id === form.values.id ? "levelboard-table-row-selected" : "" }
+                          key={ submission.id } 
+                          onClick={ () => handleSubmissionChange(submission.id, submissions) }
+                        >
+                          <td>{ dateB2F(submission.submitted_at) }</td>
+                          <td>{ <LevelboardRecord submission={ submission } iconSize={ "small" } /> }</td>
+                          <td>{ submission.tas && "TAS" }</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+
+                </table>
               </div>
 
               <hr />
