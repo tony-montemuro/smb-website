@@ -42,7 +42,7 @@ const LevelboardUtils = () => {
                 level_id: levelName,
                 category: category,
                 submitted_at: dateB2F(submission.submitted_at),
-                message: ""
+                tas: submission.tas
             };
 
         // if not, we can fill the object with default data values
@@ -65,7 +65,7 @@ const LevelboardUtils = () => {
                 level_id: levelName,
                 category: category,
                 submitted_at: dateB2F(),
-                message: ""
+                tas: false
             };
         }
     };

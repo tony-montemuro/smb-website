@@ -149,6 +149,17 @@ function InsertPopup({ popup, setPopup, level, submissions }) {
                 />
               </div>
 
+              { /* Submission tas checkbox: allows the user to specify whether or not the submission used tools. */ }
+              <div className="levelboard-input-group">
+                <label htmlFor="tas">TAS: </label>
+                <input
+                  id="tas"
+                  type="checkbox"
+                  checked={ form.values.tas }
+                  onChange={ (e) => handleChange(e) }
+                />
+              </div>
+
               { /* Submission comment input: allows the user to input a comment regarding their submission. */ }
               <div className="levelboard-textarea-group">
                 <label htmlFor="comment">Comment (optional): </label>
@@ -166,26 +177,6 @@ function InsertPopup({ popup, setPopup, level, submissions }) {
                 { form.error.proof && <p>{ form.error.comment }</p> }
 
               </div>
-
-              { /* Submission message input: allows a moderator to include a message for the submission, since users will recieve a
-              notification when a moderator submits or updates a submission on behalf of them. The message is included in this.
-              NOTE: This input form should only render if the current user is a moderator, and the form user is different than the mod. */ }
-              { user.is_mod && user.profile.id !== form.values.profile_id &&
-                <div className="levelboard-textarea-group">
-                  <label htmlFor="message">Leave a message (optional): </label>
-                  <textarea 
-                    id="message"
-                    value={ form.values.message }
-                    onChange={ (e) => handleChange(e) }
-                    rows={ TEXT_AREA_ROWS }
-                    cols={ TEXT_AREA_COLS }
-                  >
-                  </textarea>
-
-                  { /* If the error.message field is defined, render that underneath the proof field. */ }
-                  { form.error.message  && <p>{ form.error.message }</p> }
-                </div>
-              }
 
               { /* Form submission button: submits the form. NOTE: button is disabled if the submitting field of form is true. */ }
               <div className="levelboard-submit-btn-wrapper">

@@ -21,7 +21,7 @@ const NotificationRead = () => {
                     notif_type,
                     creator:profile!notification_creator_id_fkey (country, id, username),
                     message,
-                    submission:all_submission (
+                    submission:submission2 (
                         profile (id, username),
                         record,
                         region (id, region_name),
