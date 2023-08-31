@@ -75,7 +75,7 @@ function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApply
   /* ===== FILTERS POPUP COMPONENT ===== */
   return popup &&
     <div className="levelboard-popup">
-      <div className="levelboard-popup-inner" style={ { "min-width": "60%" } }>
+      <div className="levelboard-popup-inner" style={ { "minWidth": "60%" } }>
 
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">

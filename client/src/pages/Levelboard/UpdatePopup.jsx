@@ -41,7 +41,7 @@ function UpdatePopup({ submissions, setSubmissions }) {
   /* ===== UPDATE POPUP ===== */
   return submissions && form.values &&
     <div className="levelboard-popup">
-      <div className="levelboard-popup-inner" style={ { "min-width": "40%" } }>
+      <div className="levelboard-popup-inner" style={ { "minWidth": "40%" } }>
 
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">
