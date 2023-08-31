@@ -29,6 +29,7 @@ const LevelboardUtils = () => {
         // if a submission exists, we can use the data to form our formData object
         if (submission) {
             return {
+                id: submission.id,
                 record: recordB2F(submission.record, type, submission.level.timer_type),
                 score: submission.score,
                 monkey_id: submission.monkey.id,
@@ -42,7 +43,8 @@ const LevelboardUtils = () => {
                 level_id: levelName,
                 category: category,
                 submitted_at: dateB2F(submission.submitted_at),
-                tas: submission.tas
+                tas: submission.tas,
+                approved: submission.approve ? true : false
             };
 
         // if not, we can fill the object with default data values

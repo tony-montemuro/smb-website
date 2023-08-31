@@ -51,12 +51,12 @@ function Levelboard({ imageReducer, submissionCache }) {
 	const [filtersPopup, setFiltersPopup] = useState(false);
 	const [detailSubmission, setDetailSubmission] = useState(undefined);
 	const [insertPopup, setInsertPopup] = useState(false);
-	const [updateSubmission, setUpdateSubmission] = useState(undefined);
+	const [updateSubmissions, setUpdateSubmissions] = useState(undefined);
 
 	// states and functions from js file
 	const { 
 		board,
-		userSubmission,
+		userSubmissions,
 		setupBoard,
 		applyFilters,
 		handleTabClick
@@ -167,11 +167,11 @@ function Levelboard({ imageReducer, submissionCache }) {
 						<button type="button" onClick={ () => setFiltersPopup(true) }>Filters</button>
 
 						{ /* Button that pulls up the update submission popup. NOTE: this button should only render if the user has a profile,
-						and a submission on the current levelboard. */ }
-						{ user.profile && userSubmission &&
+						and at least 1 submission on the current levelboard. */ }
+						{ user.profile && userSubmissions.length > 0 &&
 							<button 
 								type="button" 
-								onClick={ () => setUpdateSubmission(userSubmission)}
+								onClick={ () => setUpdateSubmissions(userSubmissions)}
 							>
 								Update Submission
 							</button>
@@ -182,12 +182,6 @@ function Levelboard({ imageReducer, submissionCache }) {
 							<button 
 								type="button" 
 								onClick={ () => setInsertPopup(true) }
-								disabled={ userSubmission && userSubmission.report }
-								title={ userSubmission && userSubmission.report ? 
-									"Please wait for a moderator to review your current submission before submitting." 
-								: 
-									undefined
-								}
 							>
 								Submit { capitalize(type) }
 							</button>
@@ -248,8 +242,8 @@ function Levelboard({ imageReducer, submissionCache }) {
 				submissions={ board.all }
 			/>
 			<UpdatePopup
-				submission={ updateSubmission }
-				setSubmission={ setUpdateSubmission }
+				submissions={ updateSubmissions }
+				setSubmissions={ setUpdateSubmissions }
 			/>
 
 		</div>

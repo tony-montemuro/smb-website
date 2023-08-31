@@ -1,17 +1,22 @@
 /* ===== IMPORTS ===== */
-import { GameContext, UserContext } from "../../utils/Contexts";
+import { GameContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import UpdatePopupLogic from "./UpdatePopup.js";
 
-function UpdatePopup({ submission, setSubmission }) {
+function UpdatePopup({ submissions, setSubmissions }) {
+  /* ===== STATES & FUNCTIONS ===== */
+
+  // states and functions from the js file
+  const { form, fillForm, handleChange, handleSubmit, closePopup } = UpdatePopupLogic();
+
+  // helper functions
+  const { capitalize, dateB2F, recordB2F } = FrontendHelper();
+
   /* ===== VARIABLES ===== */
   const location = useLocation();
-  const path = location.pathname.split("/");
-  const category = path[3];
-  const type = path[4];
-  const levelName = path[5];
+  const type = location.pathname.split("/")[4];
   const TEXT_AREA_ROWS = 5;
 
   /* ===== CONTEXTS ===== */
@@ -19,35 +24,24 @@ function UpdatePopup({ submission, setSubmission }) {
   // game state from game context
   const { game } = useContext(GameContext);
 
-  // user state from user context
-  const { user } = useContext(UserContext);
-
-  /* ===== STATES & FUNCTIONS ===== */
-
-  // states and functions from the js file
-  const { form, fillForm, handleChange, handleSubmit, closePopup } = UpdatePopupLogic();
-
-  // helper functions
-  const { capitalize, dateB2F } = FrontendHelper();
-
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts, or when updatePopup is modified
   useEffect(() => {
-    if (submission) {
-      fillForm(submission, type, levelName, category); 
+    if (submissions) {
+      fillForm(submissions); 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [submission]); 
+  }, [submissions]); 
   
   /* ===== UPDATE POPUP ===== */
-  return submission && form.values &&
+  return submissions && form.values &&
     <div className="levelboard-popup">
       <div className="levelboard-popup-inner">
 
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">
-           <button type="button" onClick={ () => closePopup(setSubmission) } disabled={ form.submitting }>Close</button>
+           <button type="button" onClick={ () => closePopup(setSubmissions) } disabled={ form.submitting }>Close</button>
         </div>
 
         { /* Levelboard update */ }
@@ -55,13 +49,28 @@ function UpdatePopup({ submission, setSubmission }) {
           <div className="levelboard-update">
 
             { /* Form header */ }
-            <h2>Update Current Submission</h2>
-            { submission.approve &&
-              <p><b>Note:</b> Since this submission has been approved by a moderator, any updates will revoke it's approval.</p>
-            }
+            <h2>Update Submission</h2>
 
             { /* Update submission form */ }
-            <form onSubmit={ (e) => handleSubmit(e, submission) }>
+            <form onSubmit={ (e) => handleSubmit(e, submissions) }>
+
+              { /* Submission selector: allows the user to select any of their submissions with from a dropdown. */ }
+              <div className="levelboard-input-group">
+                <label htmlFor="submission">Select Submission: </label>
+                <select id="id" value={ form.values.id } onChange={ (e) => handleChange(e, submissions) }>
+                  { submissions.map(submission => (
+                    <option key={ submission.id } value={ submission.id }>
+                      { dateB2F(submission.submitted_at) } | { recordB2F(submission.record, type, submission.level.timer_type) } 
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <hr />
+
+              { form.values.approved &&
+                <p><b>Note:</b> Since this submission has been approved by a moderator, any updates will revoke it's approval.</p>
+              }
 
               { /* Submission record: simply display the record, which is not able to be changed in this input. */ }
               <div className="levelboard-input-group">
@@ -137,6 +146,17 @@ function UpdatePopup({ submission, setSubmission }) {
                 />
               </div>
 
+              { /* Submission tas checkbox: allows the user to specify whether or not the submission used tools. */ }
+              <div className="levelboard-input-group">
+                <label htmlFor="tas">TAS: </label>
+                <input
+                  id="tas"
+                  type="checkbox"
+                  checked={ form.values.tas }
+                  onChange={ (e) => handleChange(e) }
+                />
+              </div>
+
               { /* Submission comment input: allows the user to modify their submission comment. */ }
               <div className="levelboard-textarea-group">
                 <label htmlFor="comment">Comment (optional): </label>
@@ -148,30 +168,10 @@ function UpdatePopup({ submission, setSubmission }) {
                 >
                 </textarea>
 
-
                 { /* If the error.comment field is defined, render that underneath the proof field. */ }
                 { form.error.comment && <p>{ form.error.comment }</p> }
 
               </div>
-
-              { /* Submission message input: allows a moderator to include a message for the submission, since users will recieve a
-              notification when a moderator submits or updates a submission on behalf of them. The message is included in this.
-              NOTE: This input form should only render if the current user is a moderator, and the form user is different than the mod. */ }
-              { user.is_mod && user.profile.id !== form.values.profile_id &&
-                <div className="levelboard-textarea-group">
-                  <label htmlFor="message">Leave a message (optional): </label>
-                  <textarea 
-                    id="message"
-                    value={ form.values.message }
-                    onChange={ (e) => handleChange(e) }
-                    rows={ TEXT_AREA_ROWS }
-                  >
-                  </textarea>
-
-                  { /* If the error.message field is defined, render that underneath the proof field. */ }
-                  { form.error.message  && <p>{ form.error.message }</p> }
-                </div>
-              }
 
               { /* Form submission button: submits the form. NOTE: button is disabled if the submitting field of form is true. */ }
               <div className="levelboard-submit-btn-wrapper">

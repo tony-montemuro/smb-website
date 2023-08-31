@@ -37,7 +37,7 @@ const Levelboard = () => {
 
 	/* ===== STATES ===== */
 	const [board, setBoard] = useState(boardInit);
-	const [userSubmission, setUserSubmission] = useState(undefined);
+	const [userSubmissions, setUserSubmissions] = useState([]);
 
 	/* ===== FUNCTIONS ===== */
 	
@@ -146,10 +146,10 @@ const Levelboard = () => {
 	
 			// finally, update board state hook, as well as the userSubmission state hook
 			setBoard({ ...board, all: allLevelSubmissions, adjacent: { prev: prev, next: next } });
-			setUserSubmission(user.profile ? 
-				allLevelSubmissions.find(submission => submission.profile.id === user.profile.id)
+			setUserSubmissions(user.profile ? 
+				allLevelSubmissions.filter(submission => submission.profile.id === user.profile.id)
 			: 
-				undefined
+				[]
 			);
 
 		} catch (error) {
@@ -228,7 +228,7 @@ const Levelboard = () => {
 
 	return {
 		board,
-		userSubmission,
+		userSubmissions,
 		setupBoard,
 		applyFilters,
 		handleTabClick

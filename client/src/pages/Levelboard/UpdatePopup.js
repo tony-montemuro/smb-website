@@ -1,13 +1,20 @@
 /* ===== IMPORTS ===== */
-import { useContext, useReducer } from "react";
 import { MessageContext } from "../../utils/Contexts";
+import { useContext, useReducer } from "react";
+import { useLocation } from "react-router-dom";
 import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import DateHelper from "../../helper/DateHelper";
 import LevelboardUtils from "./LevelboardUtils";
+import Submission2Update from "../../database/update/Submission2Update";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const UpdatePopup = () => {
     /* ===== VARIABLES ===== */
+    const location = useLocation();
+    const path = location.pathname.split("/");
+    const category = path[3];
+    const type = path[4];
+    const levelName = path[5];
     const formInit = {
 		values: null,
 		error: { proof: null, comment: null },
@@ -41,6 +48,7 @@ const UpdatePopup = () => {
 
     // database functions
     const { updateSubmission } = AllSubmissionUpdate(); 
+    const { updateSubmission2 } = Submission2Update();
 
     // helper functions
     const { getDateOfSubmission } = DateHelper();
@@ -48,31 +56,45 @@ const UpdatePopup = () => {
     const { validateProof, validateComment } = ValidationHelper();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
-    // PRECONDITIONS (4 parameters):
-    // 1.) submission: a submission object, which contains information about the current submission
-    // 2.) type: a string, either "score" or "time", which is defined in the URL
-    // 3.) levelName: a valid level name string, which is defined in the URL
-    // 4.) category: a string representing a valid category
+    // PRECONDITIONS (1 parameter):
+    // 1.) submissions: an array of all submission objects belonging to the current user for the current level
     // POSTCONDITIONS (1 possible outcome)
     // the submission is transformed into a format compatible with the form, and is updated by calling the dispatchForm() function
-	const fillForm = (submission, type, levelName, category) => {
+	const fillForm = (submissions, type, levelName, category) => {
+        const submission = submissions[0];
 		const formVals = submission2Form(submission, type, levelName, category, submission.profile.id);
 		dispatchForm({ field: "values", value: formVals });
 	};
 
     // FUNCTION 2: handleChange - function that is called whenever the user makes any change to the form
-    // PRECONDITIONS (1 parameter)
+    // PRECONDITIONS (2 parameters):
 	// 1.) e: an event object generated when the user makes a change to the form
+    // 2.) submissions: an array of all submission objects belonging to the current user for the current level. this parameter
+    // is only necessary if we are modifying the `id` field
 	// POSTCONDITIONS (2 possible outcomes):
 	// if the field id is live, we use the checked variable rather than the value variable to update the form
 	// otherwise, we simply update the form field based on the value variable
-	const handleChange = (e) => {
+	const handleChange = (e, submissions) => {
+        // descruct properties of e.target used in this function
         const { id, value, checked } = e.target;
+
 		switch (id) {
 			// case 1: live. this is a checkbox, so we need to use the "checked" variable as our value
 			case "live":
-				dispatchForm({ field: "values", value: { [id]: checked } });
+				dispatchForm({ field: "values", value: { live: checked } });
 				break;
+
+            // case 2: tas: this is a checkbox, so we also need to use the "checked" variable as our value
+            case "tas":
+                dispatchForm({ field: "values", value: { tas: checked } });
+                break;
+
+            // case 3: id. this field will update the entire form, so we do that here
+            case "id":
+                const submission = submissions.find(submission => submission.id === value);
+                const formVals = submission2Form(submission, type, levelName, category, submission.profile.id);
+                dispatchForm({ field: "values", value: formVals });
+                break;
 
 			// default case: simply update the id field of the values object with the value variable
 			default:
@@ -89,7 +111,7 @@ const UpdatePopup = () => {
     // the date parameter is also used to determine the "submitted_at" field
     const getUpdateFromForm = (formVals, date) => {
         // create our new updatedData object, which is equivelent to formVals minus the following fields:
-        // id, game_id, level_id, score, record, position, all_position, profile_id, message
+        // id, game_id, level_id, score, record, position, all_position, profile_id, approved
         const { 
             id,
             game_id,
@@ -100,7 +122,7 @@ const UpdatePopup = () => {
             position,
             all_position,
             profile_id,
-            message,
+            approved,
             ...updatedData 
         } = formVals;
 
@@ -113,13 +135,13 @@ const UpdatePopup = () => {
     // FUNCTION 4: handleSubmit - function that is called when the user submits the form
     // PRECONDITIONS (2 parameters):
     // 1.) e: an event object which is generated when the user submits the update submission form
-    // 2.) submission: a submission object, which represents the submission pre-update
+    // 2.) submissions: an array of all submission objects belonging to the current user for the current level
     // POSTCONDITIONS (3 possible outcomes):
     // if the form fails to validate, the function will return early, and the user will be shown the errors
     // if the form successfully validates, but the data fails to submit, the submission process is halted, and the user is displayed an
     // error message
     // if the form successfully validates, and the data successfully submits, then the page is reloaded
-    const handleSubmit = async (e, submission) => {
+    const handleSubmit = async (e, submissions) => {
         // initialize submission
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
@@ -142,6 +164,7 @@ const UpdatePopup = () => {
         }
 
         // finally, let's convert the date from the front-end format, to the backend format.
+        const submission = submissions.find(submission => submission.id === form.values.id);
 		const backendDate = getDateOfSubmission(form.values.submitted_at, submission.submitted_at);
 
         // if we made it this far, no errors were detected, generate our submission data
@@ -150,7 +173,7 @@ const UpdatePopup = () => {
 
         try {
             // attempt to update the submission using updated data
-            await updateSubmission(updatedData, id);
+            await updateSubmission2(updatedData, id);
 
             // reload the page
             window.location.reload();
