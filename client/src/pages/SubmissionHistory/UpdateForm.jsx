@@ -117,6 +117,17 @@ function UpdateForm({ submission, profile }) {
           />
         </div>
 
+        { /* Submission tas checkbox: allows the user to specify whether or not the submission used tools. */ }
+        <div className="submission-history-input-group">
+          <label htmlFor="tas">TAS: </label>
+          <input
+            id="tas"
+            type="checkbox"
+            checked={ form.values.tas }
+            onChange={ (e) => handleChange(e) }
+          />
+        </div>
+
         { /* Submission comment input: allows the user to modify the submission comment. */ }
         <div className="submission-history-textarea-group">
           <label htmlFor="comment">Comment (optional): </label>

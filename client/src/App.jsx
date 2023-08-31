@@ -124,10 +124,10 @@ function App() {
                   <Levelboard imageReducer={ imageReducer } submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/score/:levelid/:profileId" element={
-                  <SubmissionHistory />
+                  <SubmissionHistory submissionCache={ submissionCache } />
                 }/>
                 <Route path=":category/time/:levelid/:profileId" element={
-                  <SubmissionHistory />
+                  <SubmissionHistory submissionCache={ submissionCache } />
                 }/>
               </Route>
               <Route path="/user/:profileId" element={ <UserLayout imageReducer={ imageReducer } /> } >

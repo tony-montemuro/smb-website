@@ -132,14 +132,14 @@ const Levelboard = () => {
 	// are updated
 	// if the submissions fail to be retrieved, an error message is rendered to the user, and the board state is NOT updated, leaving the
 	// Levelboard component stuck loading
-	const setupBoard = async (submissionCache) => {
+	const setupBoard = async submissionCache => {
 		// first, set board to default values, and get the names of the previous and next level
 		setBoard(boardInit);
 		const { prev, next } = getPrevAndNext(category, levelName);
 
 		try {
 			// get submissions, and filter based on the levelId
-			const allSubmissions = await getSubmissions2(game.abb, category, type, submissionCache);
+			const allSubmissions = await getSubmissions2(abb, category, type, submissionCache);
 			const allLevelSubmissions = allSubmissions.filter(submission => {
 				return submission.level.name === levelName
 			}).map(submission => Object.assign({}, submission));

@@ -18,14 +18,14 @@ function FilteredSubmissionRow({ submission, onClickFunc }) {
   /* ===== FILTERED SUBMISSION ROW COMPONENT ===== */
   return (
     <tr onClick={ () => onClickFunc(submission) }>
+      { /* Date - render the submission date provided by the submitter */ }
+      <td>{ dateB2F(submission.submitted_at) }</td>
+
       { /* Submitted - render how long ago the submission was posted. */ }
       <td>{ getTimeAgo(submission.id) }</td>
 
       { /* Record - render the record itself */ }
       <td>{ recordB2F(submission.record, type, submission.level.timer_type) }</td>
-
-      { /* Date - render the submission date provided by the submitter */ }
-      <td>{ dateB2F(submission.submitted_at) }</td>
 
       { /* Monkey name - render the monkey of the submission */ }
       <td>{ submission.monkey.monkey_name }</td>
@@ -68,6 +68,9 @@ function FilteredSubmissionRow({ submission, onClickFunc }) {
 
       { /* Live Position - Render the position of the submission (live only) */ }
       <td>{ submission.position ? submission.position : "-" }</td>
+
+      { /* TAS - Render the phrase "TAS" if submission is marked as TAS, otherwise nothing */ }
+      <td>{ submission.tas && "TAS" }</td>
       
     </tr>
   );
