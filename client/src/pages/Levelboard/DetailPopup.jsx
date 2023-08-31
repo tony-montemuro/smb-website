@@ -38,6 +38,9 @@ function DetailPopup({ submission, setSubmission }) {
           <Username country={ profile.country } profileId={ profile.id } username={ profile.username } />
         </h1>
 
+        { submission.tas && <p id="levelboard-tas"><b>Note:</b> This run is a tool-assisted speedrun, and will not count toward any rankings.</p> }
+        
+
         { /* Levelboard details popup video - render the embeded video within this container */ }
         <div className={ getUrlType(submission.proof) !== "twitter" ? "levelboard-detail-popup-video" : "" }>
           <EmbededVideo url={ submission.proof } />
@@ -45,16 +48,30 @@ function DetailPopup({ submission, setSubmission }) {
 
         { /* Levelboard details popup info - render the submission details within this unordered list */ }
         <ul className="levelboard-detail-popup-info">
+
+          { /* Position - render the position of the submission */ }
           <li>Position: { submission.position }</li>
+
+          { /* Date - render the submission date */ }
           <li>Date: { dateB2F(submission.submitted_at) }</li>
+
+          { /* Monkey - render the monkey used in the submission */ }
           <li>Monkey: { submission.monkey.monkey_name }</li>
+
+          { /* Platform - render the platform the submission was achieved on */ }
           <li>Platform: { submission.platform.platform_name }</li>
+
+          { /* Region - render the region the submission was achieved on */ }
           <li>Region: { submission.region.region_name }</li>
+
+          { /* Live - render a checkbox if the submission has a live proof, otherwise an 'x' symbol */ }
           <li>Live:&nbsp;
             <div className="levelboard-svg-wrapper">
               { submission.live ? <CheckIcon /> : <CloseRoundedIcon /> }
             </div>
           </li>
+
+          { /* Comment: if a submission has a comment, render it here */ }
           { submission.comment && <li>Comment: "{ submission.comment }"</li> }
         </ul>
 

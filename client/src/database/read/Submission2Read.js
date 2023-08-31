@@ -63,7 +63,7 @@ const Submission2Read = () => {
                         id, 
                         region_name
                     ),
-                    report2 (
+                    report:report2 (
                         creator_id
                     ),
                     score,
