@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
 import { useState } from "react";
 
-const FiltersPopup = (defaultFilters, currentFilters) => {
+const FiltersPopup = (defaultFilters) => {
     /* ===== STATES ===== */
-    const [filters, setFilters] = useState(currentFilters);
+    const [filters, setFilters] = useState(undefined);
 
     /* ===== FUNCTIONS ===== */
 
@@ -111,6 +111,7 @@ const FiltersPopup = (defaultFilters, currentFilters) => {
 
     return { 
         filters, 
+        setFilters,
         handleArrayFilterChange, 
         hasArrayFilterChanged, 
         handleFilterReset,

@@ -119,12 +119,16 @@
     margin-bottom: 8px;
 }
 
-.levelboard-table-group span {
+.levelboard-table-group-body {
+    border: 1px solid black;
+}
+
+.levelboard-table-group p {
     margin: 5px 0;
 }
 
 .levelboard-table-group table {
-    border: 1px solid black;
+    border-bottom: 1px solid black;
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
@@ -132,7 +136,7 @@
 }
 
 .levelboard-table-group thead {
-    border: 1px solid black;
+    border-bottom: 1px solid black;
 }
   
 .levelboard-table-group th {
@@ -155,6 +159,10 @@
 .levelboard-table-group table tbody tr:not(.levelboard-table-row-selected):hover {
     background-color: lightgray;
     cursor: pointer;
+}
+
+.levelboard-table-group-page-controls-wrapper {
+    margin: 5px;
 }
 
 .levelboard-textarea-group {
@@ -198,31 +206,17 @@
     padding: 32px;
     width: 100%;
     max-width: 30%;
-    background-color: #fff;
-    border-radius: 10px;
-}
-
-.levelboard-detail-popup-inner {
-    position: relative;
-    padding: 32px;
-    width: 100%;
-    max-width: 35%;
-    max-height: 75vh;
+    max-height: 60vh;
     overflow-y: auto;
     background-color: #fff;
     border-radius: 10px;
 }
 
-.levelboard-detail-popup-inner h1 {
-    margin: 5px 0;
-}
-
-.levelboard-filters-popup-inner {
+.levelboard-popup-inner {
     position: relative;
     padding: 32px;
     width: 100%;
-    max-width: 50%;
-    max-height: 75vh;
+    max-height: 60vh;
     overflow-y: auto;
     background-color: #fff;
     border-radius: 10px;

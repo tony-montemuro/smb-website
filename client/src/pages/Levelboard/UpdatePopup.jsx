@@ -1,13 +1,15 @@
 /* ===== IMPORTS ===== */
 import { GameContext } from "../../utils/Contexts";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardRecord from "./LevelboardRecord";
 import UpdatePopupLogic from "./UpdatePopup.js";
 
 function UpdatePopup({ submissions, setSubmissions }) {
   /* ===== STATES & FUNCTIONS ===== */
+  const [pageNum, setPageNum] = useState(1);
 
   // states and functions from the js file
   const { form, fillForm, handleChange, handleSubmissionChange, handleSubmit, closePopup } = UpdatePopupLogic();
@@ -19,6 +21,7 @@ function UpdatePopup({ submissions, setSubmissions }) {
   const location = useLocation();
   const type = location.pathname.split("/")[4];
   const TEXT_AREA_ROWS = 5;
+  const SUBMISSIONS_PER_TABLE = 5;
 
   /* ===== CONTEXTS ===== */
 
@@ -38,7 +41,7 @@ function UpdatePopup({ submissions, setSubmissions }) {
   /* ===== UPDATE POPUP ===== */
   return submissions && form.values &&
     <div className="levelboard-popup">
-      <div className="levelboard-popup-inner">
+      <div className="levelboard-popup-inner" style={ { "min-width": "40%" } }>
 
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">
@@ -59,36 +62,51 @@ function UpdatePopup({ submissions, setSubmissions }) {
 
               { /* Submission selector: render a table that allows the user to select any of their submissions. */ }
               <div className="levelboard-table-group">
-                <span>Select Submission:</span>
-                <table>
+                <p>Select Submission:</p>
 
-                  { /* Table header - render the description of what is rendered in each column */ }
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>{ capitalize(type) }</th>
-                      <th></th>
-                    </tr>
-                  </thead>
+                <div className="levelboard-table-group-body">
+                  <table>
 
-                  { /* Table body - render a unique, selectable row for each submission */ }
-                  <tbody>
-                    { submissions.map(submission => {
-                      return (
-                        <tr 
-                          className={ submission.id === form.values.id ? "levelboard-table-row-selected" : "" }
-                          key={ submission.id } 
-                          onClick={ () => handleSubmissionChange(submission.id, submissions) }
-                        >
-                          <td>{ dateB2F(submission.submitted_at) }</td>
-                          <td>{ <LevelboardRecord submission={ submission } iconSize={ "small" } /> }</td>
-                          <td>{ submission.tas && "TAS" }</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
+                    { /* Table header - render the description of what is rendered in each column */ }
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>{ capitalize(type) }</th>
+                        <th></th>
+                      </tr>
+                    </thead>
 
-                </table>
+                    { /* Table body - render a unique, selectable row for each submission */ }
+                    <tbody>
+                      { submissions.slice((pageNum-1)*SUBMISSIONS_PER_TABLE, pageNum*SUBMISSIONS_PER_TABLE).map(submission => {
+                        return (
+                          <tr 
+                            className={ submission.id === form.values.id ? "levelboard-table-row-selected" : "" }
+                            key={ submission.id } 
+                            onClick={ () => handleSubmissionChange(submission.id, submissions) }
+                          >
+                            <td>{ dateB2F(submission.submitted_at) }</td>
+                            <td>{ <LevelboardRecord submission={ submission } iconSize={ "small" } /> }</td>
+                            <td>{ submission.tas && "TAS" }</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+
+                  </table>
+
+                  { /* Render pagination controls at the bottom of this container */ }
+                  <div className="levelboard-table-group-page-controls-wrapper">
+                    <CachedPageControls
+                      items={ submissions }
+                      itemsPerPage={ SUBMISSIONS_PER_TABLE }
+                      pageNum={ pageNum }
+                      setPageNum={ setPageNum }
+                      itemsName={ "Submissions" }
+                    />
+                  </div>
+                  
+                </div>
               </div>
 
               <hr />

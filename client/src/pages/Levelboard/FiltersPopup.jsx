@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { GameContext } from "../../utils/Contexts";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import FiltersPopupLogic from "./FiltersPopup.js";
 import FrontendHelper from "../../helper/FrontendHelper";
 import ArrayBasedFilter from "./ArrayBasedFilter";
@@ -40,7 +40,7 @@ function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApply
       })
     },
     {
-      name: "TAS",
+      name: "Run Type",
       propertyName: "tas",
       items: [{ id: false, name: "Normal runs" }, { id: true, name: "TAS runs" }]
     }
@@ -50,7 +50,8 @@ function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApply
   
   // states and functions from the js file
   const { 
-    filters, 
+    filters,
+    setFilters, 
     handleArrayFilterChange, 
     hasArrayFilterChanged, 
     handleFilterReset, 
@@ -63,10 +64,18 @@ function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApply
   // helper functions
   const { dateB2F } = FrontendHelper();
 
+  /* ===== EFFECTS ===== */
+
+  // code that is executed each time the `currentFilters` parameter changes
+  useEffect(() => {
+    setFilters(currentFilters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentFilters]);
+
   /* ===== FILTERS POPUP COMPONENT ===== */
   return popup &&
     <div className="levelboard-popup">
-      <div className="levelboard-filters-popup-inner">
+      <div className="levelboard-popup-inner" style={ { "min-width": "60%" } }>
 
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">

@@ -87,13 +87,14 @@ function Levelboard({ imageReducer, submissionCache }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, location.pathname]);
 
-	// code that is executed once the board's initial data has loaded (`all` field, containing all submissions) has loaded
+	// code that is executed once the board's initial data has loaded (`all` field, containing all submissions) has loaded,
+	// or when the user switches levels
 	useEffect(() => {
 		if (board.all) {
 			applyFilters(defaultFilters);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [board.all]);
+	}, [board.all, location.pathname]);
 
 	/* ===== LEVELBOARD COMPONENT ===== */
 	return level && board.filtered && board.filters ?
@@ -206,7 +207,7 @@ function Levelboard({ imageReducer, submissionCache }) {
 								<th>Region</th>
 								<th></th>
 								<th></th>
-								
+								<th></th>
 							</tr>
 						</thead>
 

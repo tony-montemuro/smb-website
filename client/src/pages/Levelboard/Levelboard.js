@@ -123,7 +123,7 @@ const Levelboard = () => {
     };
 
 	// FUNCTION 3: setupBoard - given information about the path and the submissionCache, set up the board object
-	// PRECONDITIONS (2 parameters):
+	// PRECONDITIONS (1 parameter):
 	// 1.) submissionCache: an object with two fields:
 		// a.) cache: the cache object that actually stores the submission objects (state)
 		// b.) setCache: the function used to update the cache
@@ -132,7 +132,7 @@ const Levelboard = () => {
 	// are updated
 	// if the submissions fail to be retrieved, an error message is rendered to the user, and the board state is NOT updated, leaving the
 	// Levelboard component stuck loading
-	const setupBoard = async submissionCache => {
+	const setupBoard = async (submissionCache) => {
 		// first, set board to default values, and get the names of the previous and next level
 		setBoard(boardInit);
 		const { prev, next } = getPrevAndNext(category, levelName);

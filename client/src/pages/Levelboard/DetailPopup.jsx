@@ -24,7 +24,7 @@ function DetailPopup({ submission, setSubmission }) {
   /* ===== DETAIL POPUP COMPONENT ===== */
   return submission &&
     <div className="levelboard-popup">
-      <div className="levelboard-detail-popup-inner">
+      <div className="levelboard-popup-inner">
 
         { /* Button to close the popup */ }
         <div className="levelboard-popup-close-btn">
@@ -73,6 +73,7 @@ function DetailPopup({ submission, setSubmission }) {
 
           { /* Comment: if a submission has a comment, render it here */ }
           { submission.comment && <li>Comment: "{ submission.comment }"</li> }
+          
         </ul>
 
         { /* Horizontal rule to break the "submission" from the "report" form */ }
