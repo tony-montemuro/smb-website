@@ -1,15 +1,15 @@
 /* ===== IMPORTS ===== */
 import "./Notifications.css";
+import CheckmarkOrX from "./CheckmarkOrX";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
-import NotificationMessage from "./NotificationMessage";
 import NotificationProof from "./NotificationProof";
 import Username from "../../components/Username/Username";
-import LiveSymbol from "./LiveSymbol";
 
 function InsertPopup({ notifications, setNotifications }) {
   /* ===== VARIABLES ===== */
   const notification = notifications.current;
+  const submission = notification.submission;
   const type = notification.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
@@ -45,29 +45,29 @@ function InsertPopup({ notifications, setNotifications }) {
               </li>
               
               { /* Render the submission date */ }
-              <li>Date: { dateB2F(notification.submission.submitted_at) }</li>
+              <li>Date: { dateB2F(submission.submitted_at) }</li>
 
               { /* Render the monkey used in the submission */ }
-              <li>Monkey: { notification.submission.monkey.monkey_name }</li>
+              <li>Monkey: { submission.monkey.monkey_name }</li>
 
               { /* Render the platform of the submission */ }
-              <li>Platform: { notification.submission.platform.platform_name }</li>
+              <li>Platform: { submission.platform.platform_name }</li>
 
               { /* Render the region of the submission */ }
-              <li>Region: { notification.submission.region.region_name }</li>
+              <li>Region: { submission.region.region_name }</li>
 
               { /* Render the proof of the submission */ }
-              <li><NotificationProof proof={ notification.submission.proof } /></li>
+              <li><NotificationProof proof={ submission.proof } /></li>
 
               { /* Render whether or not the submission was live */ }
-              <li>Live Proof: <LiveSymbol liveStatus={ notification.submission.live } /></li>
+              <li>Live Proof: <CheckmarkOrX isChecked={ submission.live } /></li>
+
+              { /* Render whether or not the submission used TAS */ }
+              <li>TAS: <CheckmarkOrX isChecked={ submission.tas } /></li>
 
             </ul>
           </div>
         </div>
-
-        { /* Render the message associated with the submission, if there is one. */ }
-        <NotificationMessage message={ notification.message } notification={ notification } />
 
       </div>
     </div>

@@ -2,13 +2,10 @@
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 
-function LiveSymbol({ liveStatus }) {
+function CheckmarkOrX({ isChecked }) {
   /* ===== LIVE SYMBOL COMPONENT ===== */
-  return liveStatus ?
-    <CheckIcon />
-  :
-    <ClearIcon />
+  return isChecked ? <CheckIcon /> : <ClearIcon />;
 };
 
 /* ===== EXPORTS ===== */
-export default LiveSymbol;
+export default CheckmarkOrX;

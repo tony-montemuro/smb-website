@@ -32,7 +32,8 @@ const NotificationRead = () => {
                         comment,
                         live,
                         position,
-                        all_position
+                        all_position,
+                        tas
                     ),
                     level (
                         category, 
@@ -52,7 +53,8 @@ const NotificationRead = () => {
                     platform (id, platform_name),
                     proof,
                     live,
-                    comment
+                    comment,
+                    tas
                 `)
                 .order("notif_date", { ascending: false });
 

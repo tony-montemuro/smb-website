@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./Notifications.css";
+import CheckmarkOrX from "./CheckmarkOrX";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
 import Username from "../../components/Username/Username.jsx";
@@ -40,6 +41,9 @@ function ApprovePopup({ notifications, setNotifications }) {
               <li>
                 { capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }
               </li>
+
+              { /* Render whether or not the submission used TAS */ }
+              <li>TAS: <CheckmarkOrX isChecked={ notification.tas } /></li>
 
             </ul>
           </div>

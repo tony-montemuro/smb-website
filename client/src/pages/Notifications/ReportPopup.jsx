@@ -3,16 +3,17 @@ import "./Notifications.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../utils/Contexts";
+import CheckmarkOrX from "./CheckmarkOrX";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
 import NotificationMessage from "./NotificationMessage";
 import NotificationProof from "./NotificationProof";
 import Username from "../../components/Username/Username";
-import LiveSymbol from "./LiveSymbol";
 
 function ReportPopup({ notifications, setNotifications }) {
   /* ===== VARIABLES ===== */
   const notification = notifications.current;
+  const submission = notification.submission;
   const type = notification.score ? "score" : "time";
 
   /* ===== CONTEXTS ===== */
@@ -36,7 +37,7 @@ function ReportPopup({ notifications, setNotifications }) {
         { /* Popup header - includes a link to the reporter's user page */ }
         <h2>
           <Username country={ notification.creator.country } profileId={ notification.creator.id } username={ notification.creator.username } />
-          &nbsp;has reported { user.id === notification.submission.profile.id ? "your" : "the following" } submission:
+          &nbsp;has reported { user.id === submission.profile.id ? "your" : "the following" } submission:
         </h2>
 
         { /* Notification details */ }
@@ -46,8 +47,8 @@ function ReportPopup({ notifications, setNotifications }) {
             <ul>
 
               { /* Render the owner of the reported submission. If the report is for the current user, we do not need to render. */ }
-              { user.profile.id !== notification.submission.profile.id && 
-                <li>User:&nbsp;<Link to={ `/user/${ notification.submission.profile.id }`}>{ notification.submission.profile.username }</Link></li>
+              { user.profile.id !== submission.profile.id && 
+                <li>User:&nbsp;<Link to={ `/user/${ submission.profile.id }`}>{ submission.profile.username }</Link></li>
               }
 
               { /* Render basic information about submission - includes the game, as well as level */ }
@@ -57,22 +58,28 @@ function ReportPopup({ notifications, setNotifications }) {
               <li>{ capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }</li>
 
               { /* Render the submission date */ }
-              <li>Date: { dateB2F(notification.submission.submitted_at) }</li>
+              <li>Date: { dateB2F(submission.submitted_at) }</li>
 
               { /* Render the monkey used in the submission */ }
-              <li>Monkey: { notification.submission.monkey.monkey_name }</li>
+              <li>Monkey: { submission.monkey.monkey_name }</li>
 
               { /* Render the platform of the submission */ }
-              <li>Platform: { notification.submission.platform.platform_name }</li>
+              <li>Platform: { submission.platform.platform_name }</li>
 
               { /* Render the region of the submission */ }
-              <li>Region: { notification.submission.region.region_name }</li>
+              <li>Region: { submission.region.region_name }</li>
 
               { /* Render the proof of the submission */ }
-              <li><NotificationProof proof={ notification.submission.proof } /></li>
+              <li><NotificationProof proof={ submission.proof } /></li>
 
               { /* Render whether or not the submission was live */ }
-              <li>Live Proof: <LiveSymbol liveStatus={ notification.submission.live } /></li>
+              <li>Live Proof: <CheckmarkOrX isChecked={ submission.live } /></li>
+
+              { /* Render whether or not the submission used tools */ }
+              <li>TAS: <CheckmarkOrX isChecked={ submission.tas } /></li>
+
+              { /* Render the submission comment, if there is one */ }
+              { submission.comment && <li>Comment: { submission.comment }</li> }
 
             </ul>
           </div>
@@ -81,14 +88,10 @@ function ReportPopup({ notifications, setNotifications }) {
         { /* Render the message associated with the submission, if there is one. */ }
         <NotificationMessage message={ notification.message } notification={ notification } />
 
-        { /* Render a disclaimer message about reports. Only render if the reported submission belongs to the current user. */ }
-        { user.profile.id === notification.submission.profile.id && 
-          <>
-            <p><b>Note: </b><i>It is suggested that you ensure all properties of your submission are valid. If you are confident
-            your submission is fine, do not worry. If not, a moderator may be forced to delete your submission!</i></p>
-            <p><i>If a moderator falsely deletes any of your submissions, please contact the moderation team.</i></p>
-          </>
-        }
+        { /* Render a disclaimer message about reports. */ }
+        <p><b>Note: </b><i>It is suggested that you ensure all properties of your submission are valid. If you are confident
+        your submission is fine, do not worry. If not, a moderator may be forced to delete your submission!</i></p>
+        <p><i>If a moderator falsely deletes any of your submissions, please contact the moderation team.</i></p>
         
       </div>
   </div>
