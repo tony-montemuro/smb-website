@@ -131,10 +131,9 @@ const DeleteForm = () => {
     // 1.) submission - the submission object in question
     // 2.) profile - a profile object, containing the profile info of the current submission
     // POSTCONDITIONS (2 possible outcomes):
-    // if the submission belongs to the user, or is a "current" submission, return false
-    // otherwise, return true
+    // if the submission belongs to the user, return false; otherwise, return true
     const isNotifyable = (submission, profile) => {
-        return parseInt(profile.id) !== user.profile.id && submission.submission.length !== 0;
+        return parseInt(profile.id) !== user.profile.id;
     };
     
     return { form, handleDelete, handleDeleteAndNotify, handleChange, isNotifyable };
