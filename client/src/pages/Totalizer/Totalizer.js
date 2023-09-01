@@ -72,11 +72,11 @@ const Totalizer = () => {
 
         try {
             // get the { type } submissions that are a part of the { category } of { game.abb }
-            const submissions = await getSubmissions2(game.abb, category, type, submissionCache);
-            const allSubmissions = getFilteredForRankings(submissions);
+            const allSubmissions = await getSubmissions2(game.abb, category, type, submissionCache);
+            const submissions = getFilteredForRankings(allSubmissions);
 
             // generate totalizer object
-            const { all, live } = generateTotalizer(allSubmissions, type, totalTime);
+            const { all, live } = generateTotalizer(submissions, type, totalTime);
             
             // update the totals state
             const totals = {

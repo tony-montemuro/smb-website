@@ -64,11 +64,11 @@ const Medals = () => {
 
         try {
             // get all submissions
-            const submissions = await getSubmissions2(abb, category, type, submissionCache);
-            const allSubmissions = getFilteredForRankings(submissions);
+            const allSubmissions = await getSubmissions2(abb, category, type, submissionCache);
+            const submissions = getFilteredForRankings(allSubmissions);
             
             // generate medal table
-            const table = generateMedalTable(allSubmissions);
+            const table = generateMedalTable(submissions);
 
             // update the medals state
             setMedalTable(table);
