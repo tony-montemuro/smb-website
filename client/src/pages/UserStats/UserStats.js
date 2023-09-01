@@ -1,9 +1,10 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
-import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 import GameHelper from "../../helper/GameHelper";
 import MedalsHelper from "../../helper/MedalsHelper";
+import SubmissionHelper from "../../helper/SubmissionHelper";
+import Submission2Read from "../../database/read/Submission2Read";
 import TotalizerHelper from "../../helper/TotalizerHelper";
 
 const UserStats = () => {
@@ -20,10 +21,11 @@ const UserStats = () => {
     // helper functions
     const { getRelevantModes, isPracticeMode } = GameHelper();
     const { getUserMap, getMedalTable, insertPositionToMedals } = MedalsHelper();
+    const { getFilteredForRankings } = SubmissionHelper();
     const { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
 
     // database functions
-    const { getSubmissions } = AllSubmissionRead();
+    const { getSubmissions2 } = Submission2Read();
 
     // FUNCTION 1 - generateRecord - given a submissionIndex, profileId, levelName, and submission list, generate a record
     // object that contains information about a user's submission on a certain level
@@ -135,8 +137,8 @@ const UserStats = () => {
 
         try {
             // fetch submissions
-            const submissions = await getSubmissions(game.abb, category, type, submissionCache);
-            const allSubmissions = submissions.filter(submission => submission.submission.length > 0);
+            const submissions = await getSubmissions2(game.abb, category, type, submissionCache);
+            const allSubmissions = getFilteredForRankings(submissions);
             const liveSubmissions = allSubmissions.filter(submission => submission.live);
 
             // only bother with totalizer and medal table for practice mode categories
