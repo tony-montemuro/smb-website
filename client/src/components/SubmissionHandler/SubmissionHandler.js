@@ -1,12 +1,12 @@
 /* ===== IMPORTS ===== */
 import { MessageContext, SubmissionContext, UserContext } from "../../utils/Contexts";
 import { useContext, useReducer, useState } from "react";
-import AllSubmissionDelete from "../../database/delete/AllSubmissionDelete";
-import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
+import ApproveUpdate from "../../database/update/ApproveUpdate";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
-import ReportDelete from "../../database/delete/ReportDelete";
-import SubmissionUpdate from "../../database/update/SubmissionUpdate";
+import Report2Delete from "../../database/delete/Report2Delete";
+import Submission2Delete from "../../database/delete/Submission2Delete";
+import Submission2Update from "../../database/update/Submission2Update";
 
 const SubmissionHandler = (isNew) => {
     /* ===== STATES ===== */
@@ -51,8 +51,8 @@ const SubmissionHandler = (isNew) => {
                 setChecked(oldChecked => [submission, ...oldChecked]);
 
                 // then, we can update the recent state
-                const id = submission.details.id, abb = submission.level.mode.game.abb;
-                const newArr = state[abb].filter(row => row.details.id !== id);
+                const id = submission.id, abb = submission.level.mode.game.abb;
+                const newArr = state[abb].filter(submission => submission.id !== id);
                 return {
                     ...state,
                     [abb]: newArr
@@ -66,15 +66,15 @@ const SubmissionHandler = (isNew) => {
                 const submission = action.payload;
                 setChecked(oldChecked => oldChecked.filter(row => row !== submission));
 
-                // then, we use the details from the submission to fetch a hard copy of the original submission found in the
+                // then, we use information from the submission to fetch a hard copy of the original submission found in the
                 // submissionSet (set depends on the value of `isNew`)
-                const id = submission.details.id, abb = submission.level.mode.game.abb;
+                const id = submission.id, abb = submission.level.mode.game.abb;
                 const submissionSet = isNew ? submissions.recent : submissions.reported;
-                const originalSubmission = JSON.parse(JSON.stringify(submissionSet[abb].find(row => row.details.id === id)));
+                const originalSubmission = JSON.parse(JSON.stringify(submissionSet[abb].find(submission => submission.id === id)));
 
                 // finally, we can update the recent state
                 const newArr = [...state[abb], originalSubmission].sort((a, b) => {
-                    return isNew ? a.details.id.localeCompare(b.details.id) : a.report[0].report_date.localeCompare(b.report[0].report_date);
+                    return isNew ? a.id.localeCompare(b.id) : a.report.report_date.localeCompare(b.report.report_date);
                 });
                 return {
                     ...state,
@@ -95,11 +95,11 @@ const SubmissionHandler = (isNew) => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { deleteSubmission } = AllSubmissionDelete();
-    const { updateSubmission } = AllSubmissionUpdate();
+    const { insertApproval } = ApproveUpdate();
     const { insertNotification } = NotificationUpdate();
-    const { approveSubmission } = SubmissionUpdate();
-    const { deleteReport } = ReportDelete();
+    const { deleteReport2 } = Report2Delete();
+    const { deleteSubmission2 } = Submission2Delete();
+    const { updateSubmission2 } = Submission2Update();
 
     // helper functions
     const { cleanLevelName, recordB2F } = FrontendHelper();
@@ -150,9 +150,8 @@ const SubmissionHandler = (isNew) => {
     // in general, this function will return true
     // however, if the submission is NOT new, and the report that exists is either on a submission belonging to the current user,
     // or was created by the current user, we want to return false
-    const isClickable = (submission) => {
-        const report = submission.report[0];
-        return !(!isNew && (report.profile_id === user.profile.id || report.creator.id === user.profile.id));
+    const isClickable = submission => {
+        return !(!isNew && (submission.profile_id === user.profile.id || submission.report.creator.id === user.profile.id));
     }
 
     // FUNCTION 5: generateLevel1Promises - a function that returns an array of promises, which should be executed concurrently
@@ -169,7 +168,7 @@ const SubmissionHandler = (isNew) => {
                 case "approve":
                     // if isNew, we simply approve the submission
                     if (isNew) {
-                        promiseFunc = approveSubmission(submission).catch(error => {
+                        promiseFunc = insertApproval(submission.id, user.profile.id).catch(error => {
                             const rejectionReason = {
                                 submission: submission,
                                 error
@@ -180,7 +179,7 @@ const SubmissionHandler = (isNew) => {
 
                     // otherwise, we delete the report, which will THEN approve as a db trigger function
                     else {
-                        promiseFunc = deleteReport(submission.report[0].report_date).catch(error => {
+                        promiseFunc = deleteReport2(submission.report.report_date).catch(error => {
                             const rejectionReason = {
                                 submission: submission,
                                 error
@@ -192,7 +191,7 @@ const SubmissionHandler = (isNew) => {
                 
                 // if action is delete, generate a promise for deleting a submission
                 case "delete":
-                    promiseFunc = deleteSubmission(submission.details.id).catch(error => {
+                    promiseFunc = deleteSubmission2(submission.id).catch(error => {
                         const rejectionReason = {
                             submission: submission,
                             error
@@ -204,15 +203,16 @@ const SubmissionHandler = (isNew) => {
                 // if action is update, generate an update payload & update submission promise
                 case "update":
                     const payload = {
-                        submitted_at: submission.details.submitted_at,
-                        region_id: submission.details.region.id,
-                        monkey_id: submission.details.monkey.id,
-                        platform_id: submission.details.platform.id,
-                        proof: submission.details.proof,
-                        live: submission.details.live,
-                        comment: submission.details.comment
+                        submitted_at: submission.updates.submitted_at,
+                        region_id: submission.updates.region_id,
+                        monkey_id: submission.updates.monkey_id,
+                        platform_id: submission.updates.platform_id,
+                        proof: submission.updates.proof,
+                        live: submission.updates.live,
+                        tas: submission.updates.tas,
+                        comment: submission.updates.comment
                     };
-                    promiseFunc = updateSubmission(payload, submission.details.id).catch(error => {
+                    promiseFunc = updateSubmission2(payload, submission.id).catch(error => {
                         const rejectionReason = {
                             submission: submission,
                             error
@@ -247,11 +247,13 @@ const SubmissionHandler = (isNew) => {
                         message: submission.message,
                         game_id: submission.level.mode.game.abb,
                         level_id: submission.level.name,
+                        category: submission.level.category,
                         score: submission.score,
-                        record: submission.details.record,
+                        record: submission.record,
                         profile_id: submission.profile.id,
                         creator_id: user.profile.id,
-                        notif_type: "delete"
+                        notif_type: "delete",
+                        tas: submission.tas
                     };
                     promiseFunc = insertNotification(notification).catch(error => {
                         const rejectionReason = {
@@ -266,7 +268,7 @@ const SubmissionHandler = (isNew) => {
                 case "update":
                     // if isNew, we simply approve the submission
                     if (isNew) {
-                        promiseFunc = approveSubmission(submission).catch(error => {
+                        promiseFunc = insertApproval(submission.id, user.profile.id).catch(error => {
                             const rejectionReason = {
                                 submission: submission,
                                 error
@@ -277,7 +279,7 @@ const SubmissionHandler = (isNew) => {
                     
                     // otherwise, we delete the report, which will THEN approve as a db trigger function
                     else {
-                        promiseFunc = deleteReport(submission.report[0].report_date).catch(error => {
+                        promiseFunc = deleteReport2(submission.report.report_date).catch(error => {
                             const rejectionReason = {
                                 submission: submission,
                                 error
@@ -305,12 +307,13 @@ const SubmissionHandler = (isNew) => {
     // a unique error message is rendered to the user for each query that failed
     const renderErrorMessages = (failedLevel1Queries, failedLevel2Queries) => {
         failedLevel1Queries.forEach(query => {
+            console.log(query);
             // define variables used for the error message
             const submission = query.reason.submission;
             const type = submission.score ? "Score" : "Time";
 
             // render error string
-            let errorString = `The following submission failed to ${ submission.action }: ${ submission.level.mode.game.name }: ${ cleanLevelName(submission.level.name) } (${ type }) - ${ recordB2F(submission.details.record, type, submission.level.timer_type) } by ${ submission.profile.username }. Reload the page and try again.`;
+            let errorString = `The following submission failed to ${ submission.action }: ${ submission.level.mode.game.name }: ${ cleanLevelName(submission.level.name) } (${ type }) - ${ recordB2F(submission.record, type, submission.level.timer_type) } by ${ submission.profile.username }. Reload the page and try again.`;
             addMessage(errorString, "error");
         });
 
@@ -320,7 +323,7 @@ const SubmissionHandler = (isNew) => {
             const type = submission.score ? "Score" : "Time";
 
             // render the error string
-            let errorString = `The following submission was successfully updated, but failed to approve: ${ submission.level.mode.game.name }: ${ cleanLevelName(submission.level.name) } (${ type }) - ${ recordB2F(submission.details.record, type, submission.level.timer_type) } by ${ submission.profile.username }. Reload the page and try again.`;
+            let errorString = `The following submission was successfully updated, but failed to approve: ${ submission.level.mode.game.name }: ${ cleanLevelName(submission.level.name) } (${ type }) - ${ recordB2F(submission.record, type, submission.level.timer_type) } by ${ submission.profile.username }. Reload the page and try again.`;
             addMessage(errorString, "error");
         });
     };

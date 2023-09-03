@@ -157,7 +157,32 @@ const Submission2Read = () => {
         return cache[category][type];
     };
 
-    return { getSubmissions2 };
+    // FUNCTION 4: getUnapproved2 - function that grabs all submissions that have not yet been approved [note: this function does NOT
+    // cache submissions]
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes, 1 return):
+    // if the query is a success, an array containing all of the unapproved submissions will be returned
+    // otherwise, this function will throw an error, which should be handled by the caller function
+    const getUnapproved2 = async () => {
+        try {
+            const { data: unapproved, error } = await supabase
+                .rpc("get_unapproved");
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            // return the array of unapproved submissions
+            return unapproved;
+
+        } catch (error) {
+            // error will be handled by caller function
+            throw error;
+        }
+    };
+
+    return { getSubmissions2, getUnapproved2 };
 };
 
 /* ===== EXPORTS ===== */

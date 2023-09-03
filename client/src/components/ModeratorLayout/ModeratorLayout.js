@@ -2,7 +2,7 @@
 import { MessageContext, StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import SubmissionRead from "../../database/read/SubmissionRead";
+import Submission2Read from "../../database/read/Submission2Read";
 
 const ModeratorLayout = () => {
     /* ===== VARIABLES ===== */
@@ -23,7 +23,7 @@ const ModeratorLayout = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { getUnapproved } = SubmissionRead();
+    const { getUnapproved2 } = Submission2Read();
 
     // FUNCTION 1: handleTabClick - code that is executed when a moderator layout tab is selected
     // PRECONDITIONS (1 parameter):
@@ -50,17 +50,7 @@ const ModeratorLayout = () => {
         const recentSubmissions = [], reportedSubmissions = [];
 
         // fill the two arrays
-        allSubmissions.forEach(submission => {
-            // if submission has a report, and that report is not associated with the current moderator, add it to reported array
-            if (submission.report.length > 0) {
-                reportedSubmissions.push(submission);
-            }
-
-            // if submission has no report, add it to the recent array
-            if (submission.report.length === 0) {
-                recentSubmissions.push(submission);
-            }
-        });
+        allSubmissions.forEach(submission => submission.report ? reportedSubmissions.push(submission) : recentSubmissions.push(submission));
 
         return { recentSubmissions, reportedSubmissions };
     };
@@ -72,11 +62,11 @@ const ModeratorLayout = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // in both cases, the same array is returned, but sorted according to the `isNew` parameter
     // if `isNew` it's set to true, we treat the array as "recent submissions", and sort them based on the
-    // details.submission_id field.
+    // id field.
     // otherwise, we treat the array as "reported submissions", and sort them based on the report.report_date field
     const getSortedSubmissions = (submissions, isNew) => {
         return submissions.sort((a, b) => {
-            return isNew ? a.details.id.localeCompare(b.details.id) : a.report[0].report_date.localeCompare(b.report.report_date);
+            return isNew ? a.id.localeCompare(b.id) : a.report.report_date.localeCompare(b.report.report_date);
         });
     };
 
@@ -116,13 +106,13 @@ const ModeratorLayout = () => {
     const fetchSubmissions = async () => {
         try {
             // attempt to get the list of all submissions
-            const allSubmissions = await getUnapproved();
+            const allSubmissions = await getUnapproved2();
 
             // partition all submissions into two arrays
             const { recentSubmissions, reportedSubmissions } = partitionByType(allSubmissions);
 
-            // sort both arrays. the recent submissions are ordered by details.submission_id, while the reported
-            // submissions are sorted by report_date
+            // sort both arrays. the recent submissions are ordered by id in descending order, while the reported
+            // submissions are sorted by report_date in descending order
             const sortedRecentSubmissions = getSortedSubmissions(recentSubmissions, true);
             const sortedReportedSubmissions = getSortedSubmissions(reportedSubmissions, false);
 

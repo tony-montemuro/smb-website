@@ -40,13 +40,14 @@ const SubmissionPopup = () => {
     // using data from the submission object, we fill the form values, and also set the clearForm value back to false
     const fillForm = submission => {
         setForm({ ...form, values: {
-            submitted_at: dateB2F(submission.details.submitted_at),
-            region_id: submission.details.region.id.toString(),
-            monkey_id: submission.details.monkey.id.toString(),
-            platform_id: submission.details.platform.id.toString(),
-            proof: submission.details.proof,
-            live: submission.details.live,
-            comment: submission.details.comment,
+            submitted_at: dateB2F(submission.submitted_at),
+            region_id: submission.region.id.toString(),
+            monkey_id: submission.monkey.id.toString(),
+            platform_id: submission.platform.id.toString(),
+            proof: submission.proof,
+            live: submission.live,
+            tas: submission.tas,
+            comment: submission.comment,
             message: ""
         }});
         setClearToggle(false);
@@ -56,14 +57,14 @@ const SubmissionPopup = () => {
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object generated when the user makes a change to the form
     // POSTCONDITIONS (2 possible outcomes):
-    // if the field id is live, we use the checked variable rather than the value variable to update the form
+    // if the field id is live / tas, we use the checked variable rather than the value variable to update the form
 	// otherwise, we simply update the form field based on the value variable
     const handleChange = e => {
         // get variables from e.target
         const { id, value, checked } = e.target;
 
         // special case: updating the live field
-        if (id === "live") {
+        if (id === "live" || id === "tas") {
             setForm({ ...form, values: { ...form.values, [id]: checked } });
         }
 
@@ -80,7 +81,7 @@ const SubmissionPopup = () => {
     // if the toggle is not activated before this function runs, the toggle will enable, and the comment will clear
     // if the toggle is activated before this function runs, the toggle will disable, and the comment will reappear
     const handleToggle = submission => {
-        setForm({ ...form, values: { ...form.values, comment: clearToggle ? submission.details.comment : "" } })
+        setForm({ ...form, values: { ...form.values, comment: clearToggle ? submission.comment : "" } })
         setClearToggle(!clearToggle);
     };
 
@@ -102,14 +103,15 @@ const SubmissionPopup = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // if not a single form value is different than the value in submission, we return true
     // otherwise, return false
-    const isFormUnchanged = (submission) => {
-        return form.values.submitted_at === dateB2F(submission.details.submitted_at)
-            && form.values.region_id === submission.details.region.id.toString()
-            && form.values.monkey_id === submission.details.monkey.id.toString()
-            && form.values.platform_id === submission.details.platform.id.toString()
-            && form.values.proof === submission.details.proof
-            && form.values.live === submission.details.live
-            && form.values.comment === submission.details.comment;
+    const isFormUnchanged = submission => {
+        return form.values.submitted_at === dateB2F(submission.submitted_at)
+            && form.values.region_id === submission.region.id.toString()
+            && form.values.monkey_id === submission.monkey.id.toString()
+            && form.values.platform_id === submission.platform.id.toString()
+            && form.values.proof === submission.proof
+            && form.values.live === submission.live
+            && form.values.tas === submission.tas
+            && form.values.comment === submission.comment;
     };
 
     // FUNCTION 6: handleSubmit - function that runs when the user submits the approval form
@@ -166,24 +168,15 @@ const SubmissionPopup = () => {
             const checkedSubmission = {
                 ...submission,
                 action: "update",
-                details: {
-                    ...submission.details,
+                updates: {
                     comment: form.values.comment,
                     live: form.values.live,
-                    monkey: {
-                        ...submission.details.monkey,
-                        id: parseInt(form.values.monkey_id)
-                    },
-                    platform: {
-                        ...submission.details.platform,
-                        id: parseInt(form.values.platform_id)
-                    },
+                    monkey_id: parseInt(form.values.monkey_id),
+                    platform_id: parseInt(form.values.platform_id),
                     proof: form.values.proof,
-                    region: {
-                        ...submission.details.region,
-                        id: parseInt(form.values.region_id)
-                    },
-                    submitted_at: getDateOfSubmission(form.values.submitted_at, submission.details.submitted_at)
+                    region_id: parseInt(form.values.region_id),
+                    submitted_at: getDateOfSubmission(form.values.submitted_at, submission.submitted_at),
+                    tas: form.values.tas
                 }
             };
             dispatchRecent({ type: "delete", payload: checkedSubmission });

@@ -6,10 +6,9 @@ import Username from "../../components/Username/Username.jsx"
 
 function SubmissionRow({ submission, onClick, isChecked, isNew }) {
   /* ===== VARIABLES ===== */
-  const details = submission.details;
   const profile = submission.profile;
   const level = submission.level;
-  const creator = !isNew ? submission.report[0].creator : undefined;
+  const creator = !isNew ? submission.report.creator : undefined;
   const type = submission.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
@@ -35,7 +34,7 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
 
       { /* Render how long ago the submission was submitted */ }
       <td>
-        <div>{ getTimeAgo(isNew ? details.id : submission.report[0].report_date) }</div>
+        <div>{ getTimeAgo(isNew ? submission.id : submission.report.report_date) }</div>
       </td>
 
       { /* Render the username of the person who made the report, assuming `isNew` is false (report submission) */ }
@@ -83,7 +82,7 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
 
       { /* Render the record */ }
       <td>
-        <div>{ recordB2F(details.record, type, level.timer_type) }</div>
+        <div>{ recordB2F(submission.record, type, level.timer_type) }</div>
       </td>
       
     </tr>
