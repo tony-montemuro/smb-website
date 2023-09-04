@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
-import Submission2Delete from "../../database/delete/Submission2Delete";
+import SubmissionDelete from "../../database/delete/SubmissionDelete";
 
 const DeleteForm = () => {
     /* ===== VARIABLES ===== */
@@ -33,7 +33,7 @@ const DeleteForm = () => {
     const { validateMessage } = ValidationHelper();
 
     // database functions
-    const { deleteSubmission2 } = Submission2Delete();
+    const { deleteSubmission } = SubmissionDelete();
     const { insertNotification } = NotificationUpdate();
 
     // FUNCTION 1: handleDelete - function that is called when a moderator deletes a "historic" record, or belongs to the moderator
@@ -46,7 +46,7 @@ const DeleteForm = () => {
     const handleDelete = async submission_id => {
         try {
             // await the removal of the submission
-            await deleteSubmission2(submission_id);
+            await deleteSubmission(submission_id);
 
             // if successful, reload the page
             window.location.reload();
@@ -95,7 +95,7 @@ const DeleteForm = () => {
         // perform database queries
         try {
             // first, remove the submission
-            await deleteSubmission2(submission.id);
+            await deleteSubmission(submission.id);
 
             // then, insert the notification
             await insertNotification(notification);

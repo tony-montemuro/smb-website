@@ -5,7 +5,7 @@ import ApproveUpdate from "../../database/update/ApproveUpdate";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ReportDelete from "../../database/delete/ReportDelete";
-import Submission2Delete from "../../database/delete/Submission2Delete";
+import SubmissionDelete from "../../database/delete/SubmissionDelete";
 import Submission2Update from "../../database/update/Submission2Update";
 
 const SubmissionHandler = (isNew) => {
@@ -98,7 +98,7 @@ const SubmissionHandler = (isNew) => {
     const { insertApproval } = ApproveUpdate();
     const { insertNotification } = NotificationUpdate();
     const { deleteReport } = ReportDelete();
-    const { deleteSubmission2 } = Submission2Delete();
+    const { deleteSubmission } = SubmissionDelete();
     const { updateSubmission2 } = Submission2Update();
 
     // helper functions
@@ -191,7 +191,7 @@ const SubmissionHandler = (isNew) => {
                 
                 // if action is delete, generate a promise for deleting a submission
                 case "delete":
-                    promiseFunc = deleteSubmission2(submission.id).catch(error => {
+                    promiseFunc = deleteSubmission(submission.id).catch(error => {
                         const rejectionReason = {
                             submission: submission,
                             error
