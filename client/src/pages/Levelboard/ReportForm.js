@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
 import { MessageContext, UserContext } from "../../utils/Contexts";
-import Report2Update from "../../database/update/Report2Update";
+import ReportUpdate from "../../database/update/ReportUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const ReportForm = () => {
@@ -22,7 +22,7 @@ const ReportForm = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { insertReport2 } = Report2Update();
+    const { insertReport } = ReportUpdate();
 
     // helper functions
     const { validateMessage } = ValidationHelper();
@@ -57,7 +57,7 @@ const ReportForm = () => {
         // now, let's add the report to the database
         try {
             // await promises to complete
-            await insertReport2(report);
+            await insertReport(report);
         
             // reload the page if the query is successful
             window.location.reload();

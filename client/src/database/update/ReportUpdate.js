@@ -1,16 +1,16 @@
 /* ===== IMPORTS ===== */
 import { supabase } from "../SupabaseClient";
 
-const Report2Update = () => {
+const ReportUpdate = () => {
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: insertReport2 - function that takes a report object, and inserts it into the db
+    // FUNCTION 1: insertReport - function that takes a report object, and inserts it into the db
     // PRECONDITIONS (1 parameter):
     // 1.) report: an object containing the fields relevant to a submission report
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, simply return
     // otherwise, throw the error to be handled in the caller function
-    const insertReport2 = async report => {
+    const insertReport = async report => {
         try {
             const { error } = await supabase
                 .from("report2")
@@ -26,8 +26,8 @@ const Report2Update = () => {
         }
     };
     
-    return { insertReport2 };
+    return { insertReport };
 };
 
 /* ===== EXPORTS ===== */
-export default Report2Update;
+export default ReportUpdate;
