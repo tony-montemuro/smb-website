@@ -2,7 +2,7 @@
 import { MessageContext, StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Submission2Read from "../../database/read/Submission2Read";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const ModeratorLayout = () => {
     /* ===== VARIABLES ===== */
@@ -23,7 +23,7 @@ const ModeratorLayout = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { getUnapproved2 } = Submission2Read();
+    const { getUnapproved } = SubmissionRead();
 
     // FUNCTION 1: handleTabClick - code that is executed when a moderator layout tab is selected
     // PRECONDITIONS (1 parameter):
@@ -106,7 +106,7 @@ const ModeratorLayout = () => {
     const fetchSubmissions = async () => {
         try {
             // attempt to get the list of all submissions
-            const allSubmissions = await getUnapproved2();
+            const allSubmissions = await getUnapproved();
 
             // partition all submissions into two arrays
             const { recentSubmissions, reportedSubmissions } = partitionByType(allSubmissions);

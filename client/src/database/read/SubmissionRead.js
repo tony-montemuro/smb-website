@@ -4,7 +4,7 @@ import { supabase } from "../SupabaseClient";
 import { useContext } from "react";
 import GameHelper from "../../helper/GameHelper";
 
-const Submission2Read = () => {
+const SubmissionRead = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
@@ -125,7 +125,7 @@ const Submission2Read = () => {
         return cacheObject;
     };
 
-    // FUNCTION 3: getSubmissions2 - the public facing function used to get a list of submissions given some parameters
+    // FUNCTION 3: getSubmissions - the public facing function used to get a list of submissions given some parameters
     // PRECONDITIONS (4 parameters):
     // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.
     // 2.) category: a string value representing a valid category
@@ -137,7 +137,7 @@ const Submission2Read = () => {
     // if user is accessing already cached submissions, we can fetch this information from the submission cache.
     // if not, we query, and if the query is successful, we update the submission cache, and return the array of submissions
     // if not, we query, and if the query is unsuccessful, this function throws an error to be handled by the caller function
-    const getSubmissions2 = async (abb, category, type, submissionCache) => {
+    const getSubmissions = async (abb, category, type, submissionCache) => {
         // initialize submissions object
         let cache = {};
 
@@ -160,13 +160,13 @@ const Submission2Read = () => {
         return cache[category][type];
     };
 
-    // FUNCTION 4: getUnapproved2 - function that grabs all submissions that have not yet been approved [note: this function does NOT
+    // FUNCTION 4: getUnapproved - function that grabs all submissions that have not yet been approved [note: this function does NOT
     // cache submissions]
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes, 1 return):
     // if the query is a success, an array containing all of the unapproved submissions will be returned
     // otherwise, this function will throw an error, which should be handled by the caller function
-    const getUnapproved2 = async () => {
+    const getUnapproved = async () => {
         try {
             const { data: unapproved, error } = await supabase
                 .rpc("get_unapproved");
@@ -185,14 +185,14 @@ const Submission2Read = () => {
         }
     };
 
-    // FUNCTION 5: queryRecentSubmissions2 - function that retrieves the 5 most recent submissions in the database, and returns them
+    // FUNCTION 5: queryRecentSubmissions - function that retrieves the 5 most recent submissions in the database, and returns them
     // PRECONDITIONS (1 parameter):
     // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it. this value could be undefined:
     // in that case, the query will simply get the 5 most recent submissions. otherwise, the query will be filtered based on this parameter
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the 5 most recent submissions from the database are returned, sorted from most recent to least recent
     // if the query is a failure, the user is alerted of the error, and an empty array is returned
-    const queryRecentSubmissions2 = async abb => {
+    const queryRecentSubmissions = async abb => {
         // first, we define our query
         let query = supabase
             .from("submission2")
@@ -243,8 +243,8 @@ const Submission2Read = () => {
         };
     };
 
-    return { getSubmissions2, getUnapproved2, queryRecentSubmissions2 };
+    return { getSubmissions, getUnapproved, queryRecentSubmissions };
 };
 
 /* ===== EXPORTS ===== */
-export default Submission2Read;
+export default SubmissionRead;

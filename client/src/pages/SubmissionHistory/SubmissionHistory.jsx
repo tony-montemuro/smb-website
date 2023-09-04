@@ -47,7 +47,7 @@ function SubmissionHistory({ submissionCache }) {
     submissions,
     profile, 
     setProfile, 
-    getSubmissions
+    fetchSubmissions
   } = SubmissionHistoryLogic();
 
   // helper functions
@@ -86,7 +86,7 @@ function SubmissionHistory({ submissionCache }) {
       setProfile(profile);
 			
       // finally, given information about the path, fetch submissions for this page
-			getSubmissions(submissionCache);
+			fetchSubmissions(submissionCache);
 		}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache]);

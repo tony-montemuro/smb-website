@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useState } from "react";
 import PostRead from "../../database/read/PostRead";
-import Submission2Read from "../../database/read/Submission2Read";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Home = () => {
     /* ===== STATES ===== */
@@ -12,7 +12,7 @@ const Home = () => {
 
     // database functions
     const { queryRecentPosts } = PostRead();
-    const { queryRecentSubmissions2 } = Submission2Read();
+    const { queryRecentSubmissions } = SubmissionRead();
 
     // FUNCTION 1: getSubmissions - retrieve 5 most recent submissions from database, and update the submissions state
     // PRECONDITIONS (1 condition):
@@ -20,7 +20,7 @@ const Home = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the most recent submissions are retrieved, and the submissions state is updated by calling setSubmissions() function
     const getSubmissions = async () => {
-        const submissions = await queryRecentSubmissions2();
+        const submissions = await queryRecentSubmissions();
         setSubmissions(submissions);
     };
 

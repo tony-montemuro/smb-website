@@ -2,7 +2,7 @@
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Submission2Read from "../../database/read/Submission2Read";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const SubmissionHistory = () => {
     /* ===== VARIABLES ===== */
@@ -29,9 +29,9 @@ const SubmissionHistory = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { getSubmissions2 } = Submission2Read();
+    const { getSubmissions } = SubmissionRead();
 
-    // FUNCTION 1: getSubmissions - given information from the path and submission cache, get the list of submissions from the database
+    // FUNCTION 1: fetchSubmissions - given information from the path and submission cache, get the list of submissions from the database
     // PRECONDITIONS (1 parameter):
     // 1.) submissionCache: an object with two fields:
 		// a.) cache: the cache object that actually stores the submission objects (state)
@@ -39,10 +39,10 @@ const SubmissionHistory = () => {
     // POSTCONDITIONS (1 possible outcome):
     // given the submission cache, we get a filtered list of submissions, and update the submissions state by calling the
     // setSubmissions() function
-    const getSubmissions = async submissionCache => {
+    const fetchSubmissions = async submissionCache => {
         try {
             // attempt to grab the submissions, and filter by level and profile
-            const submissions = await getSubmissions2(abb, category, type, submissionCache);
+            const submissions = await getSubmissions(abb, category, type, submissionCache);
             const userLevelSubmissions = submissions.filter(submission => {
 				return submission.level.name === levelName && submission.profile.id === profileId;
 			});
@@ -110,7 +110,7 @@ const SubmissionHistory = () => {
         submissions,
         profile, 
         setProfile, 
-        getSubmissions,
+        fetchSubmissions,
         cantModify,
         getDeleteReasoning,
         getUpdateReasoning

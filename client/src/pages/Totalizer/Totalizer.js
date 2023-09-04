@@ -3,7 +3,7 @@ import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import TotalizerHelper from "../../helper/TotalizerHelper";
 import SubmissionsHelper from "../../helper/SubmissionHelper";
-import Submission2Read from "../../database/read/Submission2Read";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Totalizer = () => {
     /* ===== CONTEXTS ===== */
@@ -21,7 +21,7 @@ const Totalizer = () => {
     const { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
 
     // database functions
-    const { getSubmissions2 } = Submission2Read();
+    const { getSubmissions } = SubmissionRead();
 
     // FUNCTION 1: generateTotalizer - given an array of submissions, a type, and a totalTime, generate two separate arrays that
     // collectively represent the totalizer for a submission type combination
@@ -72,7 +72,7 @@ const Totalizer = () => {
 
         try {
             // get the { type } submissions that are a part of the { category } of { game.abb }
-            const allSubmissions = await getSubmissions2(game.abb, category, type, submissionCache);
+            const allSubmissions = await getSubmissions(game.abb, category, type, submissionCache);
             const submissions = getFilteredForRankings(allSubmissions);
 
             // generate totalizer object

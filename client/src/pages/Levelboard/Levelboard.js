@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
-import Submission2Read from "../../database/read/Submission2Read";
+import SubmissionRead from "../../database/read/SubmissionRead";
 import SubmissionHelper from "../../helper/SubmissionHelper";
 
 const Levelboard = () => {
@@ -42,8 +42,10 @@ const Levelboard = () => {
 	/* ===== FUNCTIONS ===== */
 	
 	// database functions
+	const { getSubmissions } = SubmissionRead();
+
+	// helper functions
 	const { getInclusiveDate } = DateHelper();
-	const { getSubmissions2 } = Submission2Read();
 	const { removeObsolete } = SubmissionHelper();
 
 	// FUNCTION 1: getPrevAndNext - get the previous and next level names
@@ -139,7 +141,7 @@ const Levelboard = () => {
 
 		try {
 			// get submissions, and filter based on the levelId
-			const allSubmissions = await getSubmissions2(abb, category, type, submissionCache);
+			const allSubmissions = await getSubmissions(abb, category, type, submissionCache);
 			const allLevelSubmissions = allSubmissions.filter(submission => {
 				return submission.level.name === levelName
 			}).map(submission => Object.assign({}, submission));

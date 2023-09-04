@@ -3,7 +3,7 @@ import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import GameHelper from "../../helper/GameHelper";
 import SubmissionHelper from "../../helper/SubmissionHelper";
-import Submission2Read from "../../database/read/Submission2Read";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Records = () => {
     /* ===== CONTEXTS ===== */
@@ -21,7 +21,7 @@ const Records = () => {
     const { getFilteredForRankings } = SubmissionHelper();
 
     // database functions
-    const { getSubmissions2 } = Submission2Read();
+    const { getSubmissions } = SubmissionRead();
 
     // FUNCTION 1: generateRecord - given a levelName and the array of submission, generate a record object
     // PRECONDITIONS (3 parameters):
@@ -117,7 +117,7 @@ const Records = () => {
 
         try {
             // get submissions, and generate two filtered arrays: allSubmissions, and liveSubmissions
-            const submissions = await getSubmissions2(game.abb, category, type, submissionCache);
+            const submissions = await getSubmissions(game.abb, category, type, submissionCache);
             const allSubmissions = getFilteredForRankings(submissions);
             const liveSubmissions = allSubmissions.filter(submission => submission.live);
 

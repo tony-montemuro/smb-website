@@ -3,7 +3,7 @@ import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import MedalsHelper from "../../helper/MedalsHelper";
 import SubmissionHelper from "../../helper/SubmissionHelper";
-import Submission2Read from "../../database/read/Submission2Read";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Medals = () => {
     /* ===== CONTEXTS ===== */
@@ -21,7 +21,7 @@ const Medals = () => {
     const { getFilteredForRankings } = SubmissionHelper();
 
     // database functions
-    const { getSubmissions2 } = Submission2Read();
+    const { getSubmissions } = SubmissionRead();
 
     // FUNCTION 1: generateMedalTable - given an array of submissions, create an array of medal table objects
     // PRECONDITIONS (1 parameter):
@@ -64,7 +64,7 @@ const Medals = () => {
 
         try {
             // get all submissions
-            const allSubmissions = await getSubmissions2(abb, category, type, submissionCache);
+            const allSubmissions = await getSubmissions(abb, category, type, submissionCache);
             const submissions = getFilteredForRankings(allSubmissions);
             
             // generate medal table

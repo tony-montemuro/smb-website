@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Submission2Read from "../../database/read/Submission2Read";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Game = () => {
     /* ===== VARIABLES ===== */
@@ -13,7 +13,7 @@ const Game = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { queryRecentSubmissions2 } = Submission2Read();
+    const { queryRecentSubmissions } = SubmissionRead();
     
     // FUNCTION 1: getSubmissions - given an abb, get the 5 most recent submissions for that game, and update the submission state
     // PRECONDITIONS (1 parameter):
@@ -21,7 +21,7 @@ const Game = () => {
     // POSTCONDITIONS (1 possible outcome):
     // query the recent submissions, and update the submissions state by calling the setSubmissions() function
     const getSubmissions = async abb => {
-        const submissions = await queryRecentSubmissions2(abb);
+        const submissions = await queryRecentSubmissions(abb);
         setSubmissions(submissions);
     };
 
