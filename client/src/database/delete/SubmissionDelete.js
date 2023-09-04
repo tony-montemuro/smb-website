@@ -13,7 +13,7 @@ const SubmissionDelete = () => {
     const deleteSubmission = async id => {
         try {
             const { error } = await supabase
-                .from("submission2")
+                .from("submission")
                 .delete()
                 .match({ id: id });
 

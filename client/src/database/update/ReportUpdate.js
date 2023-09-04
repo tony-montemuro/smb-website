@@ -13,7 +13,7 @@ const ReportUpdate = () => {
     const insertReport = async report => {
         try {
             const { error } = await supabase
-                .from("report2")
+                .from("report")
                 .insert(report);
     
             // error handling

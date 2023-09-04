@@ -28,7 +28,7 @@ const SubmissionRead = () => {
     const query = async abb => {
         try {
             const { data: submissions, error, status } = await supabase
-                .from("submission2")
+                .from("submission")
                 .select(`
                     all_position,
                     approve (
@@ -66,7 +66,7 @@ const SubmissionRead = () => {
                         id, 
                         region_name
                     ),
-                    report:report2 (
+                    report (
                         creator_id
                     ),
                     score,
@@ -195,7 +195,7 @@ const SubmissionRead = () => {
     const queryRecentSubmissions = async abb => {
         // first, we define our query
         let query = supabase
-            .from("submission2")
+            .from("submission")
             .select(`
                 all_position,
                 id,

@@ -13,7 +13,7 @@ const SubmissionUpdate = () => {
     const insertSubmission = async submission => {
         try {
             const { error } = await supabase
-                .from("submission2")
+                .from("submission")
                 .insert(submission);
 
             // error handling
@@ -38,7 +38,7 @@ const SubmissionUpdate = () => {
     const updateSubmission = async (submission, id) => {
         try {
             const { error } = await supabase
-                .from("submission2")
+                .from("submission")
                 .update(submission)
                 .eq("id", id);
             
