@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { StaticCacheContext } from "../../utils/Contexts";
+import { MessageContext, StaticCacheContext } from "../../utils/Contexts";
 import { supabase } from "../SupabaseClient";
 import { useContext } from "react";
 import GameHelper from "../../helper/GameHelper";
@@ -7,7 +7,10 @@ import GameHelper from "../../helper/GameHelper";
 const Submission2Read = () => {
     /* ===== CONTEXTS ===== */
 
-    // static cache state from static cache object
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
+    // static cache state from static cache context
     const { staticCache } = useContext(StaticCacheContext);
 
     /* ===== FUNCTIONS ===== */
@@ -182,7 +185,65 @@ const Submission2Read = () => {
         }
     };
 
-    return { getSubmissions2, getUnapproved2 };
+    // FUNCTION 5: queryRecentSubmissions2 - function that retrieves the 5 most recent submissions in the database, and returns them
+    // PRECONDITIONS (1 parameter):
+    // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it. this value could be undefined:
+    // in that case, the query will simply get the 5 most recent submissions. otherwise, the query will be filtered based on this parameter
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, the 5 most recent submissions from the database are returned, sorted from most recent to least recent
+    // if the query is a failure, the user is alerted of the error, and an empty array is returned
+    const queryRecentSubmissions2 = async abb => {
+        // first, we define our query
+        let query = supabase
+            .from("submission2")
+            .select(`
+                all_position,
+                id,
+                level (
+                    category,
+                    mode (
+                        game (
+                            abb,
+                            name
+                        )
+                    ),
+                    name,
+                    timer_type
+                ),
+                position,
+                profile (
+                    country,
+                    id,
+                    username
+                ),
+                proof,
+                record,
+                score,
+                tas
+            `)
+            .limit(5)
+            .order("id", { ascending: false });
+        query = abb ? query.eq("game_id", abb) : query;
+
+        try {
+            // now, perform the query
+            const { data: submissions, error } = await query;
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            // if we made it here, let's just return data
+            return submissions;
+
+        } catch (error) {
+            addMessage("Recent submissions failed to load.", "error");
+            return [];
+        };
+    };
+
+    return { getSubmissions2, getUnapproved2, queryRecentSubmissions2 };
 };
 
 /* ===== EXPORTS ===== */
