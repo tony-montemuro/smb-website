@@ -4,7 +4,7 @@ import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
 import DateHelper from "../../helper/DateHelper";
 import LevelboardUtils from "./LevelboardUtils";
-import Submission2Update from "../../database/update/Submission2Update";
+import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const UpdatePopup = () => {
@@ -46,7 +46,7 @@ const UpdatePopup = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { updateSubmission2 } = Submission2Update();
+    const { updateSubmission } = SubmissionUpdate();
 
     // helper functions
     const { getDateOfSubmission } = DateHelper();
@@ -168,7 +168,7 @@ const UpdatePopup = () => {
 
         try {
             // attempt to update the submission using updated data
-            await updateSubmission2(updatedData, id);
+            await updateSubmission(updatedData, id);
 
             // reload the page
             window.location.reload();

@@ -3,7 +3,7 @@ import { useContext, useReducer, useState } from "react";
 import { GameContext, MessageContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
 import FrontendHelper from "../../helper/FrontendHelper";
-import Submission2Update from "../../database/update/Submission2Update";
+import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const UpdateForm = () => {
@@ -44,7 +44,7 @@ const UpdateForm = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { updateSubmission2 } = Submission2Update();
+    const { updateSubmission } = SubmissionUpdate();
 
     // helper functions
     const { getDateOfSubmission } = DateHelper();
@@ -196,7 +196,7 @@ const UpdateForm = () => {
 
         try {
             // attempt to update the submission using updated data
-            await updateSubmission2(updatedData, id);
+            await updateSubmission(updatedData, id);
 
             // reload the page
             window.location.reload();

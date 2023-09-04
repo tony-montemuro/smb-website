@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
 import LevelboardUtils from "./LevelboardUtils";
-import Submission2Update from "../../database/update/Submission2Update";
+import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const InsertPopup = () => {
@@ -58,7 +58,7 @@ const InsertPopup = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { insertSubmission2 } = Submission2Update();
+    const { insertSubmission } = SubmissionUpdate();
 
     // helper functions
     const { getDateOfSubmission } = DateHelper();
@@ -194,7 +194,7 @@ const InsertPopup = () => {
         
         try {
             // attempt to submit the submission, and grab submission id from db response
-            await insertSubmission2(submission);
+            await insertSubmission(submission);
 
             // once all database updates have been finished, reload the page
             window.location.reload();

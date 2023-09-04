@@ -6,7 +6,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ReportDelete from "../../database/delete/ReportDelete";
 import SubmissionDelete from "../../database/delete/SubmissionDelete";
-import Submission2Update from "../../database/update/Submission2Update";
+import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 
 const SubmissionHandler = (isNew) => {
     /* ===== STATES ===== */
@@ -99,7 +99,7 @@ const SubmissionHandler = (isNew) => {
     const { insertNotification } = NotificationUpdate();
     const { deleteReport } = ReportDelete();
     const { deleteSubmission } = SubmissionDelete();
-    const { updateSubmission2 } = Submission2Update();
+    const { updateSubmission } = SubmissionUpdate();
 
     // helper functions
     const { cleanLevelName, recordB2F } = FrontendHelper();
@@ -212,7 +212,7 @@ const SubmissionHandler = (isNew) => {
                         tas: submission.updates.tas,
                         comment: submission.updates.comment
                     };
-                    promiseFunc = updateSubmission2(payload, submission.id).catch(error => {
+                    promiseFunc = updateSubmission(payload, submission.id).catch(error => {
                         const rejectionReason = {
                             submission: submission,
                             error
