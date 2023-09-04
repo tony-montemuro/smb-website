@@ -38,8 +38,8 @@ function DetailPopup({ submission, setSubmission }) {
           <Username country={ profile.country } profileId={ profile.id } username={ profile.username } />
         </h1>
 
+        { /* Render a special message if the submission used tools. */ }
         { submission.tas && <p id="levelboard-tas"><b>Note:</b> This run is a tool-assisted speedrun, and will not count toward any rankings.</p> }
-        
 
         { /* Levelboard details popup video - render the embeded video within this container */ }
         <div className={ getUrlType(submission.proof) !== "twitter" ? "levelboard-detail-popup-video" : "" }>
