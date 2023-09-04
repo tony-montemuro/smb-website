@@ -14,7 +14,7 @@ const ReportDelete = () => {
     const deleteReport = async report_date => {
         try {
             const { error } = await supabase
-                .from("report")
+                .from("report2")
                 .delete()
                 .match({ report_date: report_date });
 

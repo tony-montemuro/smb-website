@@ -4,7 +4,7 @@ import { useContext, useReducer, useState } from "react";
 import ApproveUpdate from "../../database/update/ApproveUpdate";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
-import Report2Delete from "../../database/delete/Report2Delete";
+import ReportDelete from "../../database/delete/ReportDelete";
 import Submission2Delete from "../../database/delete/Submission2Delete";
 import Submission2Update from "../../database/update/Submission2Update";
 
@@ -97,7 +97,7 @@ const SubmissionHandler = (isNew) => {
     // database functions
     const { insertApproval } = ApproveUpdate();
     const { insertNotification } = NotificationUpdate();
-    const { deleteReport2 } = Report2Delete();
+    const { deleteReport } = ReportDelete();
     const { deleteSubmission2 } = Submission2Delete();
     const { updateSubmission2 } = Submission2Update();
 
@@ -179,7 +179,7 @@ const SubmissionHandler = (isNew) => {
 
                     // otherwise, we delete the report, which will THEN approve as a db trigger function
                     else {
-                        promiseFunc = deleteReport2(submission.report.report_date).catch(error => {
+                        promiseFunc = deleteReport(submission.report.report_date).catch(error => {
                             const rejectionReason = {
                                 submission: submission,
                                 error
@@ -279,7 +279,7 @@ const SubmissionHandler = (isNew) => {
                     
                     // otherwise, we delete the report, which will THEN approve as a db trigger function
                     else {
-                        promiseFunc = deleteReport2(submission.report.report_date).catch(error => {
+                        promiseFunc = deleteReport(submission.report.report_date).catch(error => {
                             const rejectionReason = {
                                 submission: submission,
                                 error
