@@ -2,9 +2,9 @@
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-import AllSubmissionDelete from "../../database/delete/AllSubmissionDelete";
 import NotificationUpdate from "../../database/update/NotificationUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
+import SubmissionDelete from "../../database/delete/SubmissionDelete";
 
 const DeleteForm = () => {
     /* ===== VARIABLES ===== */
@@ -33,7 +33,7 @@ const DeleteForm = () => {
     const { validateMessage } = ValidationHelper();
 
     // database functions
-    const { deleteSubmission } = AllSubmissionDelete();
+    const { deleteSubmission } = SubmissionDelete();
     const { insertNotification } = NotificationUpdate();
 
     // FUNCTION 1: handleDelete - function that is called when a moderator deletes a "historic" record, or belongs to the moderator
@@ -87,6 +87,7 @@ const DeleteForm = () => {
             game_id: abb,
             level_id: levelName,
             category: category,
+            tas: submission.tas,
             score: type === "score",
             record: submission.record
         };
@@ -130,10 +131,9 @@ const DeleteForm = () => {
     // 1.) submission - the submission object in question
     // 2.) profile - a profile object, containing the profile info of the current submission
     // POSTCONDITIONS (2 possible outcomes):
-    // if the submission belongs to the user, or is a "current" submission, return false
-    // otherwise, return true
+    // if the submission belongs to the user, return false; otherwise, return true
     const isNotifyable = (submission, profile) => {
-        return parseInt(profile.id) !== user.profile.id && submission.submission.length !== 0;
+        return parseInt(profile.id) !== user.profile.id;
     };
     
     return { form, handleDelete, handleDeleteAndNotify, handleChange, isNotifyable };

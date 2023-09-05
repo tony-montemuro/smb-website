@@ -11,7 +11,7 @@ import PathHelper from "../../helper/PathHelper";
 import SubmissionHistoryLogic from "./SubmissionHistory";
 import Username from "../../components/Username/Username";
 
-function SubmissionHistory() {
+function SubmissionHistory({ submissionCache }) {
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
 	const location = useLocation();
@@ -47,7 +47,7 @@ function SubmissionHistory() {
     submissions,
     profile, 
     setProfile, 
-    getSubmissions
+    fetchSubmissions
   } = SubmissionHistoryLogic();
 
   // helper functions
@@ -86,7 +86,7 @@ function SubmissionHistory() {
       setProfile(profile);
 			
       // finally, given information about the path, fetch submissions for this page
-			getSubmissions(abb, levelName, profileId, type);
+			fetchSubmissions(submissionCache);
 		}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache]);
@@ -117,9 +117,9 @@ function SubmissionHistory() {
           { /* Table header: specifies the information displayed in each cell of the table */ }
           <thead>
             <tr>
+              <th>Date</th>
               <th>Submitted</th>
               <th>{ capitalize(type) }</th>
-              <th>Date</th>
               <th>Monkey</th>
               <th>Platform</th>
               <th>Region</th>
@@ -128,6 +128,7 @@ function SubmissionHistory() {
               <th></th>
               <th>Position</th>
               <th>Live Position</th>
+              <th></th>
             </tr>
           </thead>
 

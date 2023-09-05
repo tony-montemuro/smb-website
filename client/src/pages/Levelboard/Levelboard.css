@@ -119,6 +119,52 @@
     margin-bottom: 8px;
 }
 
+.levelboard-table-group-body {
+    border: 1px solid black;
+}
+
+.levelboard-table-group p {
+    margin: 5px 0;
+}
+
+.levelboard-table-group table {
+    border-bottom: 1px solid black;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 100%;
+}
+
+.levelboard-table-group thead {
+    border-bottom: 1px solid black;
+}
+  
+.levelboard-table-group th {
+    text-align: left;
+    padding: 4px 8px;
+}
+
+.levelboard-table-group tr {
+    height: 36px;
+}
+
+.levelboard-table-group td {
+    padding: 4px 8px;
+}
+
+.levelboard-table-row-selected {
+    background-color: darkgrey;
+}
+
+.levelboard-table-group table tbody tr:not(.levelboard-table-row-selected):hover {
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.levelboard-table-group-page-controls-wrapper {
+    margin: 5px;
+}
+
 .levelboard-textarea-group {
     display: flex;
     flex-direction: column;
@@ -160,23 +206,20 @@
     padding: 32px;
     width: 100%;
     max-width: 30%;
-    background-color: #fff;
-    border-radius: 10px;
-}
-
-.levelboard-detail-popup-inner {
-    position: relative;
-    padding: 32px;
-    width: 100%;
-    max-width: 35%;
-    max-height: 75vh;
+    max-height: 60vh;
     overflow-y: auto;
     background-color: #fff;
     border-radius: 10px;
 }
 
-.levelboard-detail-popup-inner h1 {
-    margin: 5px;
+.levelboard-popup-inner {
+    position: relative;
+    padding: 32px;
+    width: 100%;
+    max-height: 60vh;
+    overflow-y: auto;
+    background-color: #fff;
+    border-radius: 10px;
 }
 
 .levelboard-aligned-span {
@@ -206,7 +249,7 @@
     padding-bottom: 10px;
 }
 
-.levelboard-update h2 {
+.levelboard-update-header h2 {
     text-align: center;
 }
 
@@ -250,6 +293,12 @@
     white-space: nowrap;
 }
 
+.levelboard-filters-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
 .levelboard-filter-btns {
     display: flex;
     flex-direction: row;
@@ -276,8 +325,13 @@
     background-color: #333333;
 }
 
-.levelboard-filter-bottom {
+.levelboard-filters-bottom {
     display: flex;
+    justify-content: flex-end;
     gap: 5px;
     margin: 20px 0;
+}
+
+#levelboard-tas {
+    margin: 10px 0;
 }

@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
 import { useContext, useReducer, useState } from "react";
 import { GameContext, MessageContext } from "../../utils/Contexts";
-import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import DateHelper from "../../helper/DateHelper";
 import FrontendHelper from "../../helper/FrontendHelper";
+import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const UpdateForm = () => {
@@ -44,7 +44,7 @@ const UpdateForm = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { updateSubmission } = AllSubmissionUpdate(); 
+    const { updateSubmission } = SubmissionUpdate();
 
     // helper functions
     const { getDateOfSubmission } = DateHelper();
@@ -70,13 +70,14 @@ const UpdateForm = () => {
             region_id: submission.region.id,
             platform_id: submission.platform.id,
             live: submission.live,
+            tas: submission.tas,
             proof: submission.proof,
             comment: submission.comment ? submission.comment : "",
             profile_id: parseInt(profileId),
             game_id: game.abb,
             level_id: levelName,
             category: category,
-            submitted_at: dateB2F(submission.submitted_at),
+            submitted_at: dateB2F(submission.submitted_at)
         };
     };
 
@@ -98,20 +99,21 @@ const UpdateForm = () => {
     // PRECONDITIONS (1 parameter)
 	// 1.) e: an event object generated when the user makes a change to the form
 	// POSTCONDITIONS (2 possible outcomes):
-	// if the field id is live, we use the checked variable rather than the value variable to update the form
+	// if the field id is live/tas, we use the checked variable rather than the value variable to update the form
 	// otherwise, we simply update the form field based on the value variable
-	const handleChange = (e) => {
+	const handleChange = e => {
+        // descruct properties of e.target used in this function
         const { id, value, checked } = e.target;
-		switch (id) {
-			// case 1: live. this is a checkbox, so we need to use the "checked" variable as our value
-			case "live":
-				dispatchForm({ field: "values", value: { [id]: checked } });
-				break;
 
-			// default case: simply update the id field of the values object with the value variable
-			default:
-				dispatchForm({ field: "values", value: { [id]: value } });
-		};
+        // special case: if id is "live" or "tas", we want to use `checked` as our value
+        if (id === "live" || id === "tas") {
+            dispatchForm({ field: "values", value: { [id]: checked } });
+        } 
+        
+        // otherwise, we simply use the `value` property as our updated value
+        else {
+            dispatchForm({ field: "values", value: { [id]: value } });
+        }
     };
 
     // FUNCTION 4: handleToggle - code that executes each time the user toggles the "Clear Comment" option

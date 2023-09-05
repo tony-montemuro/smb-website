@@ -1,8 +1,9 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
-import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 import GameHelper from "../../helper/GameHelper";
+import SubmissionHelper from "../../helper/SubmissionHelper";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Records = () => {
     /* ===== CONTEXTS ===== */
@@ -17,9 +18,10 @@ const Records = () => {
 
     // helper functions
     const { getRelevantModes } = GameHelper();
+    const { getFilteredForRankings } = SubmissionHelper();
 
     // database functions
-    const { getSubmissions } = AllSubmissionRead();
+    const { getSubmissions } = SubmissionRead();
 
     // FUNCTION 1: generateRecord - given a levelName and the array of submission, generate a record object
     // PRECONDITIONS (3 parameters):
@@ -116,7 +118,7 @@ const Records = () => {
         try {
             // get submissions, and generate two filtered arrays: allSubmissions, and liveSubmissions
             const submissions = await getSubmissions(game.abb, category, type, submissionCache);
-            const allSubmissions = submissions.filter(submission => submission.submission.length > 0);
+            const allSubmissions = getFilteredForRankings(submissions);
             const liveSubmissions = allSubmissions.filter(submission => submission.live);
 
             // next, get the relevant list of modes

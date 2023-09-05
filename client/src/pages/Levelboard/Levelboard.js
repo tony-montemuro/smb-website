@@ -3,7 +3,9 @@ import { isBefore } from "date-fns";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
-import AllSubmissionRead from "../../database/read/AllSubmissionRead";
+import DateHelper from "../../helper/DateHelper";
+import SubmissionRead from "../../database/read/SubmissionRead";
+import SubmissionHelper from "../../helper/SubmissionHelper";
 
 const Levelboard = () => {
 	/* ===== CONTEXTS ===== */
@@ -35,12 +37,16 @@ const Levelboard = () => {
 
 	/* ===== STATES ===== */
 	const [board, setBoard] = useState(boardInit);
-	const [userSubmission, setUserSubmission] = useState(undefined);
+	const [userSubmissions, setUserSubmissions] = useState([]);
 
 	/* ===== FUNCTIONS ===== */
 	
 	// database functions
-	const { getSubmissions } = AllSubmissionRead();
+	const { getSubmissions } = SubmissionRead();
+
+	// helper functions
+	const { getInclusiveDate } = DateHelper();
+	const { removeObsolete } = SubmissionHelper();
 
 	// FUNCTION 1: getPrevAndNext - get the previous and next level names
     // PRECONDTIONS (2 parameters):
@@ -119,7 +125,7 @@ const Levelboard = () => {
     };
 
 	// FUNCTION 3: setupBoard - given information about the path and the submissionCache, set up the board object
-	// PRECONDITIONS (2 parameters):
+	// PRECONDITIONS (1 parameter):
 	// 1.) submissionCache: an object with two fields:
 		// a.) cache: the cache object that actually stores the submission objects (state)
 		// b.) setCache: the function used to update the cache
@@ -135,17 +141,17 @@ const Levelboard = () => {
 
 		try {
 			// get submissions, and filter based on the levelId
-			const allSubmissions = await getSubmissions(game.abb, category, type, submissionCache);
+			const allSubmissions = await getSubmissions(abb, category, type, submissionCache);
 			const allLevelSubmissions = allSubmissions.filter(submission => {
-				return submission.submission.length > 0 && submission.level.name === levelName
+				return submission.level.name === levelName
 			}).map(submission => Object.assign({}, submission));
 	
 			// finally, update board state hook, as well as the userSubmission state hook
 			setBoard({ ...board, all: allLevelSubmissions, adjacent: { prev: prev, next: next } });
-			setUserSubmission(user.profile ? 
-				allLevelSubmissions.find(submission => submission.profile.id === user.profile.id && submission.submission.length > 0) 
+			setUserSubmissions(user.profile ? 
+				allLevelSubmissions.filter(submission => submission.profile.id === user.profile.id)
 			: 
-				undefined
+				[]
 			);
 
 		} catch (error) {
@@ -157,17 +163,31 @@ const Levelboard = () => {
 	// FUNCTION 4: applyFilters - given a filter object, apply filters, and update the board's `filtered` field
 	// PRECONDITIONS (1 parameter):
 	// 1.) filters: a filter object with the following fields: 
-	// endDate (Date), live (array), monkeys (monkeys), platforms (array), regions (array)
+	// endDate (Date), live (array), monkeys (array), platforms (array), obsolete (boolean), regions (array), tas: (array)
 	// POSTCONDITIONS (1 possible outcomes):
 	// given the filters object, apply our filters to the array of all submissions, and update the `filters` and `filtered` field 
 	// by calling the setBoard() function
 	const applyFilters = filters => {
-		const filtered = board.all.filter(submission => {
-			return (
-				// first, let's handle the "endDate" filter
-				isBefore(new Date(submission.submitted_at), filters.endDate) &&
-			
-				// next, let's handle the "live" filter
+		// first, let's just filter the submissions by date
+		let filtered = board.all.filter(submission => isBefore(new Date(submission.submitted_at), getInclusiveDate(filters.endDate)));
+
+		// next, let's filter the submissions by the tas boolean field, depending on the value in filters
+		let rta = filters.tas.includes(false) ? filtered.filter(submission => !submission.tas) : [];
+		let tas = filters.tas.includes(true) ? filtered.filter(submission => submission.tas) : [];
+
+		// now, if filters.obsolete is true, we want to remove all obsolete runs from both array of submissions
+		if (!filters.obsolete) {
+			rta = removeObsolete(rta);
+			tas = removeObsolete(tas);
+		}
+
+		// then, we can combine the two arrays
+		filtered = rta.concat(tas);
+
+		// now, let's perform the remainder of the filters
+		filtered = filtered.filter(submission => {
+			return (			
+				// first, let's handle the "live" filter
 				filters.live.includes(submission.live) &&
 
 				// next, we handle the "monkeys" filter
@@ -179,6 +199,14 @@ const Levelboard = () => {
 				// finally, we handle the "regions" filter
 				filters.regions.includes(submission.region.id)
 			);
+		});
+
+		// next, let's correctly sort the filtered submissions
+		filtered.sort((a, b) => {
+			if (a.record !== b.record) {
+				return b.record - a.record;
+			}
+			return a.submitted_at.localeCompare(b.submitted_at);
 		});
 
 		// next, insert the position field to this set of submissions
@@ -202,7 +230,7 @@ const Levelboard = () => {
 
 	return {
 		board,
-		userSubmission,
+		userSubmissions,
 		setupBoard,
 		applyFilters,
 		handleTabClick

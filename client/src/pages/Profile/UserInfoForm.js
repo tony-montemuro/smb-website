@@ -2,7 +2,7 @@
 import { MessageContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import ProfileUtils from "./ProfileUtils.js";
-import ProfilesUpdate from "../../database/update/ProfilesUpdate";
+import ProfileUpdate from "../../database/update/ProfileUpdate";
 
 const UserInfoForm = () => {
     /* ===== CONTEXTS ===== */
@@ -59,7 +59,7 @@ const UserInfoForm = () => {
         validateFeaturedVideo,
         validateVideoDescription,
     } = ProfileUtils();
-    const { upsertUserInfo } = ProfilesUpdate();
+    const { upsertUserInfo } = ProfileUpdate();
 
     // FUNCTION 1: initForm - function that is called when the component first mounts that sets the user form
     // PRECONDITIONS (1 condition):

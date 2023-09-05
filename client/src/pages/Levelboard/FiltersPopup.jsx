@@ -1,7 +1,8 @@
 /* ===== IMPORTS ===== */
 import { GameContext } from "../../utils/Contexts";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import FiltersPopupLogic from "./FiltersPopup.js";
+import FrontendHelper from "../../helper/FrontendHelper";
 import ArrayBasedFilter from "./ArrayBasedFilter";
 
 function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApplyFunc }) {
@@ -37,6 +38,11 @@ function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApply
       items: game.region.map(region => {
         return { id: region.id, name: region.region_name }
       })
+    },
+    {
+      name: "Run Type",
+      propertyName: "tas",
+      items: [{ id: false, name: "Normal runs" }, { id: true, name: "TAS runs" }]
     }
   ];
 
@@ -44,18 +50,32 @@ function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApply
   
   // states and functions from the js file
   const { 
-    filters, 
+    filters,
+    setFilters, 
     handleArrayFilterChange, 
     hasArrayFilterChanged, 
-    handleArrayFilterReset, 
+    handleFilterReset, 
+    handleFilterChange, 
+    hasFilterChanged,
     handleFiltersResetAll,
     handleApplyFilters 
   } = FiltersPopupLogic(defaultFilters, currentFilters);
 
+  // helper functions
+  const { dateB2F } = FrontendHelper();
+
+  /* ===== EFFECTS ===== */
+
+  // code that is executed each time the `currentFilters` parameter changes
+  useEffect(() => {
+    setFilters(currentFilters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentFilters]);
+
   /* ===== FILTERS POPUP COMPONENT ===== */
   return popup &&
     <div className="levelboard-popup">
-      <div className="levelboard-popup-inner">
+      <div className="levelboard-popup-inner" style={ { "minWidth": "60%" } }>
 
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">
@@ -78,16 +98,79 @@ function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApply
                 selectedFilter={ filter }
                 hasFilterChanged={ hasArrayFilterChanged }
                 handleFilterChange={ handleArrayFilterChange }
-                handleFilterReset={ handleArrayFilterReset }
+                handleFilterReset={ handleFilterReset }
                 key={ filter.propertyName }
               />
             );
           })}
 
+          { /* Obsolete runs filter - allows user to select whether or not to see ALL submissions, or just most recent */ }
+          <div className="levelboard-filter-container">
+
+            { /* Levelboard filter header - render the name of the filter, as well as a reset button if the filter has been modified
+            from default value */ }
+            <div className="levelboard-filter-header">
+              <h2>Obsolete Runs</h2>
+              { hasFilterChanged("obsolete") && 
+                <button type="button" onClick={ () => handleFilterReset("obsolete") }>Reset</button>
+              }
+            </div>
+
+            { /* Levelboard filter btns - render a button for each obsolete button (hidden & shown), which users can toggle on and off */ }
+            <div className="levelboard-filter-btns">
+
+              { /* Hidden button */ }
+              <button 
+                type="button" 
+                className={ `levelboard-radio-btn ${ !filters["obsolete"] ? `levelboard-radio-btn-selected` : "" }` }
+                onClick={ () => handleFilterChange(false, "obsolete") }
+              >
+                Hidden
+              </button>
+
+              { /* Shown button */ }
+              <button 
+                type="button" 
+                className={ `levelboard-radio-btn ${ filters["obsolete"] ? `levelboard-radio-btn-selected` : "" }` }
+                onClick={ () => handleFilterChange(true, "obsolete") }
+              >
+                Shown
+              </button>
+
+            </div>
+
+          </div>
+
+          { /* End date filter - allows user to select a cuttoff date for submissions to be shown */ }
+          <div className="levelboard-filter-container">
+
+            { /* Levelboard filter header - render the name of the filter, as well as a reset button if the filter has been modified
+            from default value */ }
+            <div className="levelboard-filter-header">
+              <h2>End Date</h2>
+              { hasFilterChanged("endDate") && 
+                <button type="button" onClick={ () => handleFilterReset("endDate") }>Reset</button>
+              }
+            </div>
+
+            { /* Levelboard filter calendar - render a date input for the user to select an end date */ }
+            <div className="levelboard-filter-calendar">
+              <input 
+                type="date" 
+                id="endDate"
+                value={ filters.endDate }
+                min={ game.release_date }
+                max={ dateB2F() }
+                onChange={ (e) => handleFilterChange(e.target.value, e.target.id) }
+              />
+            </div>
+
+          </div>
+
         </div>
 
         { /* Levelboard filter buttons - allow the user to either apply the filters, or reset them to default values */ }
-        <div className="levelboard-filter-bottom">
+        <div className="levelboard-filters-bottom">
           <button type="button" onClick={ handleFiltersResetAll }>Reset filters</button>
           <button type="button" onClick={ () => handleApplyFilters(onApplyFunc, setPopup) }>Apply filters</button>
         </div>

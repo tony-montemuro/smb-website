@@ -13,31 +13,14 @@ const Users = () => {
 
     // FUNCTION 1: prepareUsers - function that sets the users state with the appropriate data
     // PRECONDITIONS (1 parameter):
-    // 1.) profiles - an array of all profile objects
+    // 1.) profiles - a sorted array of all profile objects
     // POSTCONDITIONS (1 posssible outcome):
-    // the users array is sorted in ascending order by the `username` field, and both the `all` and `filtered` fields of the
-    // user state are set equal to this sorted array, by calling the setUsers() function
+    // both the `all` and `filtered` fields of the user state are set equal to `profiles`, by calling the setUsers() function
     const prepareUsers = profiles => {
-        // first, sort users
-        const sortedUsers = profiles.sort((a, b) => {
-            // convert to lowercase
-            const usernameA = a.username.toLowerCase();
-            const usernameB = b.username.toLowerCase();
-
-            // now, do comparisons
-            if (usernameA < usernameB) {
-                return -1;
-            }
-            if (usernameA > usernameB) {
-                return 1;
-            }
-            return 0;
-        });
-        
         // then, we can update the users state
         setUsers({
-            all: sortedUsers,
-            filtered: sortedUsers
+            all: profiles,
+            filtered: profiles
         });
     };
 

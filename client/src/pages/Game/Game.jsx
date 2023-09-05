@@ -97,7 +97,7 @@ function Game() {
                 <th>Category</th>
                 <th>Chart</th>
                 <th>Record</th>
-                <th>Position</th>
+                <th>TAS</th>
               </tr>
             </thead>
 

@@ -26,7 +26,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
   const type = submission && submission.score ? "score" : "time";
   const isOwn = submission && submission.profile.id === user.profile.id;
   const TEXT_AREA_ROWS = 5;
-  const creator = submission && submission.report[0] && submission.report[0].creator;
+  const creator = submission && submission.report && submission.report.creator;
 
   /* ===== FUNCTIONS ===== */
 
@@ -73,7 +73,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
               The following submission was reported by&nbsp;
               <Username country={ creator.country } profileId={ creator.id } username={ creator.username } />.
             </h1>
-            <p>They left the following message with the report: "{ submission.report[0].message }"</p>
+            <p>They left the following message with the report: "{ submission.report.message }"</p>
           </div>
         }
 
@@ -81,8 +81,8 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
         <div className="submission-handler-popup-body">
 
           { /* Approvals body left side */ }
-          <div className="submission-handler-popup-left" style={ getUrlType(submission.details.proof) !== "twitter" ? { height: "50vh" } : null }>
-            <EmbededVideo url={ submission.details.proof } />
+          <div className="submission-handler-popup-left" style={ getUrlType(submission.proof) !== "twitter" ? { height: "50vh" } : null }>
+            <EmbededVideo url={ submission.proof } />
           </div>
 
           { /* Approvals body right side */ }
@@ -106,21 +106,21 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                 </div>
 
                 { /* Record: render the user's record (not-editable) */ }
-                <div className="submission-handler-popup-input">{ capitalize(type) }: { recordB2F(submission.details.record, type, submission.level.timer_type) }</div>
+                <div className="submission-handler-popup-input">{ capitalize(type) }: { recordB2F(submission.record, type, submission.level.timer_type) }</div>
 
                 { /* Position: render the user's position (not-editable) */ }
-                <div className="submission-handler-popup-input">Position: { submission.details.all_position }</div>
+                <div className="submission-handler-popup-input">Position: { submission.all_position }</div>
 
                 { /* Live Position: render the user's position calculated using only LIVE submissions (if it exists; not-editable) */ }
-                { submission.details.position &&
-                  <div className="submission-handler-popup-input">Live Position: { submission.details.position }</div>
+                { submission.position &&
+                  <div className="submission-handler-popup-input">Live Position: { submission.position }</div>
                 }
 
                 { /* Date: render the date of the submission in the form of a date picker */ }
                 <div className="submission-handler-popup-input">
 
                   { /* Render an updated field symbol if the submitted at value has been modified */ }
-                  <UpdatedFieldSymbol oldVal={ dateB2F(submission.details.submitted_at) } newVal={ form.values.submitted_at } />
+                  <UpdatedFieldSymbol oldVal={ dateB2F(submission.submitted_at) } newVal={ form.values.submitted_at } />
 
                   <label htmlFor="submitted_at">Date: </label>
                   <input 
@@ -143,7 +143,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                     </select>
 
                     { /* Render an updated field symbol if the monkey_id value has been modified */ }
-                    <UpdatedFieldSymbol oldVal={ submission.details.monkey.id } newVal={ parseInt(form.values.monkey_id) } />
+                    <UpdatedFieldSymbol oldVal={ submission.monkey.id } newVal={ parseInt(form.values.monkey_id) } />
                 </div>
 
                 { /* Platform: Render a dropdown allowing the user to select a platform if necessary */ }
@@ -156,7 +156,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                     </select>
 
                     { /* Render an updated field symbol if the platform_id value has been modified */ }
-                    <UpdatedFieldSymbol oldVal={ submission.details.platform.id } newVal={ parseInt(form.values.platform_id) } />
+                    <UpdatedFieldSymbol oldVal={ submission.platform.id } newVal={ parseInt(form.values.platform_id) } />
                 </div>
 
                 { /* Region: Render a dropdown allowing the user to select a region if necessary */ }
@@ -169,7 +169,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                   </select>
 
                   { /* Render an updated field symbol if the region_id value has been modified */ }
-                  <UpdatedFieldSymbol oldVal={ submission.details.region.id } newVal={ parseInt(form.values.region_id) } />
+                  <UpdatedFieldSymbol oldVal={ submission.region.id } newVal={ parseInt(form.values.region_id) } />
                 </div>
 
                 { /* Proof: Render a textbox allowing the user to edit the proof if necessary */ }
@@ -183,7 +183,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                   />
 
                   { /* Render an updated field symbol if the proof value has been modified */ }
-                  <UpdatedFieldSymbol oldVal={ submission.details.proof } newVal={ form.values.proof } />
+                  <UpdatedFieldSymbol oldVal={ submission.proof } newVal={ form.values.proof } />
                 </div>
 
                 { /* Live Proof: Render a checkbox allowing the user to specify if the proof is live or not, if necessary */ }
@@ -197,7 +197,21 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                   />
 
                   { /* Render an updated field symbol if the live value has been modified */ }
-                  <UpdatedFieldSymbol oldVal={ submission.details.live } newVal={ form.values.live } />
+                  <UpdatedFieldSymbol oldVal={ submission.live } newVal={ form.values.live } />
+                </div>
+
+                { /* TAS: Render a checkbox allowing the user to specify if the submission used tools */ }
+                <div className="submission-handler-popup-input">
+                  <label htmlFor="tas">TAS: </label>
+                  <input
+                    id="tas"
+                    type="checkbox"
+                    checked={ form.values.tas }
+                    onChange={ (e) => handleChange(e) }
+                  />
+
+                  { /* Render an updated field symbol if the live value has been modified */ }
+                  <UpdatedFieldSymbol oldVal={ submission.live } newVal={ form.values.live } />
                 </div>
 
                 { /* Comment: Render a read-only textbox that allows the user to see the comment */ }
@@ -214,7 +228,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                     </textarea>
 
                     { /* Render an updated field symbol if the comment value has been modified */ }
-                    <UpdatedFieldSymbol oldVal={ submission.details.comment } newVal={ form.values.comment } />
+                    <UpdatedFieldSymbol oldVal={ submission.comment } newVal={ form.values.comment } />
                   </div>
                 </div>
 

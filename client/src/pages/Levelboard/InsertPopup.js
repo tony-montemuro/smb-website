@@ -2,10 +2,9 @@
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
 import { MessageContext, UserContext } from "../../utils/Contexts";
-import AllSubmissionUpdate from "../../database/update/AllSubmissionUpdate";
 import DateHelper from "../../helper/DateHelper";
 import LevelboardUtils from "./LevelboardUtils";
-import NotificationUpdate from "../../database/update/NotificationUpdate";
+import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const InsertPopup = () => {
@@ -59,8 +58,7 @@ const InsertPopup = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { insertSubmission } = AllSubmissionUpdate();
-    const { insertNotification } = NotificationUpdate();
+    const { insertSubmission } = SubmissionUpdate();
 
     // helper functions
     const { getDateOfSubmission } = DateHelper();
@@ -73,7 +71,7 @@ const InsertPopup = () => {
         validateCentisecond, 
         recordToSeconds
     } = LevelboardUtils();
-    const { validateMessage, validateProof, validateComment } = ValidationHelper();
+    const { validateProof, validateComment } = ValidationHelper();
 
     // FUNCTION 1 - fillForm - function that is called when the popup activates
     // PRECONDITIONS: NONE
@@ -89,18 +87,23 @@ const InsertPopup = () => {
 	// PRECONDITIONS (1 parameter):
 	// 1.) e: an event object generated when the user makes a change to the submission form
 	// POSTCONDITIONS (3 possible outcomes):
-	// if the field id is live, we use the checked variable rather than the value variable to update the form
+	// if the field id is live or tas, we use the checked variable rather than the value variable to update the form
     // if the field id is profile_id, we will reset the entire form to default values
 	// otherwise, we simply update the form field based on the value variable
-    const handleChange = (e) => {
+    const handleChange = e => {
         const { id, value, checked } = e.target;
 		switch (id) {
 			// case 1: live. this is a checkbox, so we need to use the "checked" variable as our value
 			case "live":
-				dispatchForm({ field: "values", value: { [id]: checked } });
+				dispatchForm({ field: "values", value: { live: checked } });
 				break;
 
-            // case 2: profile_id. this is a special field that only moderators are able to change. if a moderator is trying to update
+            // case 2: tas. also a checkbox, so we ened to use the "checked" variable as our value
+            case "tas":
+                dispatchForm({ field: "values", value: { tas: checked } });
+                break;
+
+            // case 3: profile_id. this is a special field that only moderators are able to change. if a moderator is trying to update
 			// a record from a user that has already submitted to the chart, the form will be loaded with that user's submission data. 
 			// otherwise, the form is set to the default values
 			case "profile_id":
@@ -124,7 +127,7 @@ const InsertPopup = () => {
     // fixed date value (backend format), as well as removing the `message`, `hour`, `minute`, `second`, & `centisecond` fields
     const getSubmissionFromForm = (formVals, date) => {
         // create our new submission object, which is equivelent to formVals minus the message field
-        const { message, hour, minute, second, centisecond, ...submission } = formVals;
+        const { hour, minute, second, centisecond, ...submission } = formVals;
 
         // add additional fields to submission object, and correct the record field if type is time
         submission.submitted_at = date;
@@ -133,50 +136,17 @@ const InsertPopup = () => {
         return submission;
     };
 
-    // FUNCTION 4: handleNotification - determines if a submission needs a notification as well. if so, notification is inserted
-    // to backend
-    // PRECONDITIONS (4 parameters):
-    // 1.) formVals: an object that contains data from the submission form
-    // 2.) id: a string representing the unique id assigned to the current submission
-    // POSTCONDITION (2 possible outcomes):
-    // if the current user does not own the submission, this function will generate a notification object and make a call to 
-    // insert it into the database
-    // if the current user does own the submission, this function returns early
-    const handleNotification = async (formVals, id) => {
-        // determine the user id belonging to the submission
-        const submissionProfileId = formVals.profile_id;
-
-        // if these two ids are not equal, it means a moderator is inserting a submission, so we need to notify the owner
-        // of the submission of this action. if this condition is not met, the function will return early
-        if (user.profile.id !== submissionProfileId) {
-			let notification = {
-				notif_type: "insert",
-				profile_id: submissionProfileId,
-				creator_id: user.profile.id,
-				message: formVals.message,
-                game_id: formVals.game_id,
-                level_id: formVals.level_id,
-                category: formVals.category,
-                score: formVals.score,
-                record: formVals.record,
-				submission_id: id
-			};
-			
-			// insert the notification into the database
-			await insertNotification(notification);
-		}
-    };
-
-    // FUNCTION 5: handleSubmit - function that validates and submits a record to the database
+    // FUNCTION 4: handleSubmit - function that validates and submits a record to the database
 	// PRECONDITIONS (3 parameters):
 	// 1.) e: an event object generated when the user submits the submission form
     // 2.) allSubmissions: an array of submissions for the current levelboard, sorted in descending order by the
     // details.record field
     // 3.) timerType: a string representing the time of timer of the chart. only really relevent for time charts
 	// POSTCONDITIONS (3 possible outcomes):
-	// if the submission is validated, it is submitted to the database, as well as a notification, if necessary
-	// and the page is reloaded
-	// if not, the function will update the error field of the form state with any new form errors, and return early
+    // if the submission fails to validate, the function will update the error field of the form state with any new form errors,
+    // and return early
+	// if the submission is validated, and the submission is successful, the page is reloaded
+	// if the submission is validated, but the submission fails, and error message is rendered, and page does NOT reload
 	const handleSubmit = async (e, allSubmissions, timerType) => {
 		// initialize submission
 		e.preventDefault();
@@ -200,7 +170,6 @@ const InsertPopup = () => {
         }
 		error.proof = validateProof(form.values.proof);
 		error.comment = validateComment(form.values.comment);
-		error.message = validateMessage(form.values.message, false);
 
 		// if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
@@ -225,10 +194,7 @@ const InsertPopup = () => {
         
         try {
             // attempt to submit the submission, and grab submission id from db response
-            const id = await insertSubmission(submission);
-
-            // next, handle notification
-            await handleNotification(form.values, id);
+            await insertSubmission(submission);
 
             // once all database updates have been finished, reload the page
             window.location.reload();

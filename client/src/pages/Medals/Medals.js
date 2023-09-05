@@ -1,8 +1,9 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
-import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 import MedalsHelper from "../../helper/MedalsHelper";
+import SubmissionHelper from "../../helper/SubmissionHelper";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Medals = () => {
     /* ===== CONTEXTS ===== */
@@ -17,20 +18,21 @@ const Medals = () => {
 
     // helper functions
     const { getUserMap, getMedalTable, insertPositionToMedals } = MedalsHelper();
+    const { getFilteredForRankings } = SubmissionHelper();
 
     // database functions
-    const { getSubmissions } = AllSubmissionRead();
+    const { getSubmissions } = SubmissionRead();
 
     // FUNCTION 1: generateMedalTable - given an array of submissions, create an array of medal table objects
     // PRECONDITIONS (1 parameter):
-    // 1.) allSubmissions: an array containing unfiltered submissions for a particular game. the submissions must be
+    // 1.) allSubmissions: an array containing relevant submissions for a particular game. the submissions must be
     // ordered by type in descending order, then by level id in ascending order
     // POSTCONDITIONS (1 possible outcome):
     // 1.) table: an array of medal table objects is returned. the array is sorted as follows (descending): 
     // platinum, gold, silver, bronze.
     const generateMedalTable = allSubmissions => {
-        // filter submissions by the live field, and also filter out any non-current submissions
-        const submissions = allSubmissions.filter(submission => submission.live && submission.submission.length > 0);
+        // filter submissions by the live field
+        const submissions = allSubmissions.filter(submission => submission.live);
 
         // given our array of submissions, create the medal table
         const userMap = getUserMap(submissions);
@@ -63,9 +65,10 @@ const Medals = () => {
         try {
             // get all submissions
             const allSubmissions = await getSubmissions(abb, category, type, submissionCache);
+            const submissions = getFilteredForRankings(allSubmissions);
             
             // generate medal table
-            const table = generateMedalTable(allSubmissions);
+            const table = generateMedalTable(submissions);
 
             // update the medals state
             setMedalTable(table);

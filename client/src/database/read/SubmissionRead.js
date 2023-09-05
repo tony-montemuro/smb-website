@@ -1,10 +1,166 @@
 /* ===== IMPORTS ===== */
+import { MessageContext, StaticCacheContext } from "../../utils/Contexts";
 import { supabase } from "../SupabaseClient";
+import { useContext } from "react";
+import GameHelper from "../../helper/GameHelper";
 
 const SubmissionRead = () => {
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
+    // static cache state from static cache context
+    const { staticCache } = useContext(StaticCacheContext);
+
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: getUnapproved - function that grabs all submissions that have not yet been approved [note: this function does NOT
+    // helper functions
+    const { getGameCategories, getCategoryTypes } = GameHelper();
+
+    // FUNCTION 1: query - an internal module function performs query to get ALL submissions for a game
+    // PRECONDITIONS (3 parameters):
+    // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is a success, an array of submissions belonging to the game (specified by abb),
+    // ordered by level id, then profile id, then submission date, is returned
+    // if the query is unsuccessful, the error is thrown to be handled by the caller function
+    const query = async abb => {
+        try {
+            const { data: submissions, error, status } = await supabase
+                .from("submission")
+                .select(`
+                    all_position,
+                    approve (
+                        creator_id
+                    ),
+                    comment,
+                    id,
+                    level!inner (
+                        category,
+                        chart_type,
+                        id,
+                        name,
+                        time,
+                        timer_type
+                    ),
+                    live,
+                    monkey (
+                        id, 
+                        monkey_name
+                    ),
+                    platform (
+                        id, 
+                        platform_abb, 
+                        platform_name
+                    ),
+                    position,
+                    profile (
+                        id, 
+                        username, 
+                        country
+                    ),
+                    proof,
+                    record,
+                    region (
+                        id, 
+                        region_name
+                    ),
+                    report (
+                        creator_id
+                    ),
+                    score,
+                    submitted_at,
+                    tas
+                `)
+                .eq("game_id", abb);
+
+            // error handling
+            if (error && status !== 406) {
+                throw error;
+            }
+
+            // now, sort the array first by the level.id field in ascending order, then by the profile field in ascending order.
+            // finally, by the submitted_at field descending order, and return array
+            submissions.sort((a, b) => {
+                if (a.level.id !== b.level.id) {
+                    return a.level.id - b.level.id;
+                }
+                if (b.profile.id !== a.profile.id) {
+                    return a.profile.id - b.profile.id 
+                }
+                return b.submitted_at.localeCompare(a.submitted_at);
+            });
+
+            return submissions;
+
+        } catch (error) {
+            // error to be handled by caller function
+            throw error;
+        }
+    };
+
+    // FUNCTION 2: getCacheObject - given a large array of submission objects, convert to a cache object, and return it
+    // PRECONDITIONS (1 parameter):
+    // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.
+    // 2.) submissions: an array of submission objects fetched from the database
+    // POSTCONDITIONS (1 possible outcome):
+    // by performing various filters, we organize the submission data into an object, and return it
+    const getCacheObject = (abb, submissions) => {
+        // first, fetch game object from static cache
+        const game = staticCache.games.find(game => game.abb === abb);
+
+        // next, let's declare and define our cache object
+        const cacheObject = { abb: abb };
+        getGameCategories(game).forEach(category => {                   // for each category
+            cacheObject[category] = {};
+            getCategoryTypes(game, category).forEach(type => {          // for each type
+                cacheObject[category][type] = submissions.filter(submission => {
+                    return submission.level.category === category && submission.score === (type === "score"); 
+                });
+            });
+        });
+
+        // finally, return the object
+        return cacheObject;
+    };
+
+    // FUNCTION 3: getSubmissions - the public facing function used to get a list of submissions given some parameters
+    // PRECONDITIONS (4 parameters):
+    // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it.
+    // 2.) category: a string value representing a valid category
+    // 3.) type: a string value, either "score" or "time".
+    // 4.) submissionCache: an object with two fields:
+		// a.) cache: the cache object that actually stores the submission objects (state)
+		// b.) setCache: the function used to update the cache
+    // POSTCONDITIONS (3 possible outcomes):
+    // if user is accessing already cached submissions, we can fetch this information from the submission cache.
+    // if not, we query, and if the query is successful, we update the submission cache, and return the array of submissions
+    // if not, we query, and if the query is unsuccessful, this function throws an error to be handled by the caller function
+    const getSubmissions = async (abb, category, type, submissionCache) => {
+        // initialize submissions object
+        let cache = {};
+
+        // we have two choices: fetch submissions from cache if they are already there, or query them, update cache, and return result
+        if (submissionCache.cache.abb === abb) {
+            cache = submissionCache.cache;
+        } else {
+            // attempt to query submissions. if the query is successful, we generate cache object, and update the cache
+            try {
+                const submissions = await query(abb);
+                cache = getCacheObject(abb, submissions);
+                submissionCache.setCache(cache);
+            } 
+            
+            // in the event of an error, it will be thrown by the function to be handled by the caller function
+            catch (error) {
+                throw error;
+            }
+        }
+        return cache[category][type];
+    };
+
+    // FUNCTION 4: getUnapproved - function that grabs all submissions that have not yet been approved [note: this function does NOT
     // cache submissions]
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes, 1 return):
@@ -13,51 +169,7 @@ const SubmissionRead = () => {
     const getUnapproved = async () => {
         try {
             const { data: unapproved, error } = await supabase
-                .from("submission")
-                .select(`
-                    details:all_submission (
-                        all_position,
-                        comment,
-                        id,
-                        live,
-                        monkey (id, monkey_name),
-                        platform (id, platform_name),
-                        position,
-                        proof,
-                        record,
-                        region (id, region_name),
-                        submitted_at
-                    ),
-                    level (
-                        category,
-                        mode (
-                            game (
-                                abb,
-                                name
-                            )
-                        ),
-                        name,
-                        timer_type
-                    ),
-                    profile (
-                        country,
-                        id,
-                        username
-                    ),
-                    report (
-                        creator:profile (
-                            country,
-                            id,
-                            username
-                        ),
-                        message,
-                        profile_id,
-                        report_date
-                    ),
-                    score,
-                    approved
-                `)
-                .eq("approved", false);
+                .rpc("get_unapproved");
 
             // error handling
             if (error) {
@@ -73,7 +185,65 @@ const SubmissionRead = () => {
         }
     };
 
-    return { getUnapproved };
+    // FUNCTION 5: queryRecentSubmissions - function that retrieves the 5 most recent submissions in the database, and returns them
+    // PRECONDITIONS (1 parameter):
+    // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it. this value could be undefined:
+    // in that case, the query will simply get the 5 most recent submissions. otherwise, the query will be filtered based on this parameter
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, the 5 most recent submissions from the database are returned, sorted from most recent to least recent
+    // if the query is a failure, the user is alerted of the error, and an empty array is returned
+    const queryRecentSubmissions = async abb => {
+        // first, we define our query
+        let query = supabase
+            .from("submission")
+            .select(`
+                all_position,
+                id,
+                level (
+                    category,
+                    mode (
+                        game (
+                            abb,
+                            name
+                        )
+                    ),
+                    name,
+                    timer_type
+                ),
+                position,
+                profile (
+                    country,
+                    id,
+                    username
+                ),
+                proof,
+                record,
+                score,
+                tas
+            `)
+            .limit(5)
+            .order("id", { ascending: false });
+        query = abb ? query.eq("game_id", abb) : query;
+
+        try {
+            // now, perform the query
+            const { data: submissions, error } = await query;
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            // if we made it here, let's just return data
+            return submissions;
+
+        } catch (error) {
+            addMessage("Recent submissions failed to load.", "error");
+            return [];
+        };
+    };
+
+    return { getSubmissions, getUnapproved, queryRecentSubmissions };
 };
 
 /* ===== EXPORTS ===== */

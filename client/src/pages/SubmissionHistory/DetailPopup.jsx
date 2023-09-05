@@ -50,6 +50,9 @@ function DetailPopup({ submission, setSubmission, profile }) {
           <Username country={ profile.country.iso2 } profileId={ profile.id } username={ profile.username } />
         </h1>
 
+        { /* Render a special message if the submission used tools. */ }
+        { submission.tas && <p id="levelboard-tas"><b>Note:</b> This run is a tool-assisted speedrun, and will not count toward any rankings.</p> }
+
         { /* Submission history popup video - render the embeded video within this container */ }
         <div className={ getUrlType(submission.proof) !== "twitter" ? "submission-history-popup-video" : "" }>
           <EmbededVideo url={ submission.proof } />

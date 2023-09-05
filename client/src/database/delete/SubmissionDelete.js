@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { supabase } from "../SupabaseClient";
 
-const AllSubmissionDelete = () => {
+const SubmissionDelete = () => {
     /* ===== FUNCTIONS ===== */
 
     // FUNCTION 1: deleteSubmission - removes a submission from the database, given the submission id as an argument
@@ -10,10 +10,10 @@ const AllSubmissionDelete = () => {
     // POSTCONDITIONS (1 possible outcomes):
     // if the delete query is successful, this function simply returns
     // if the delete query is unsuccessful, this function throws an error, which will be handled in the caller function
-    const deleteSubmission = async (id) => {
+    const deleteSubmission = async id => {
         try {
             const { error } = await supabase
-                .from(`all_submission`)
+                .from("submission")
                 .delete()
                 .match({ id: id });
 
@@ -31,4 +31,4 @@ const AllSubmissionDelete = () => {
 };
 
 /* ===== EXPORTS ===== */
-export default AllSubmissionDelete;
+export default SubmissionDelete;

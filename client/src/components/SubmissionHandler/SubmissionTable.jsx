@@ -44,7 +44,7 @@ function SubmissionTable({ submissions, onRowClick, isChecked, isNew }) {
               onClick={ isClickable(submission) ? onRowClick : null } 
               isChecked={ isChecked } 
               isNew={ isNew }
-              key={ submission.details.id } 
+              key={ submission.id } 
             />
           })
         :

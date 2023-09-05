@@ -1,19 +1,12 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { MessageContext, UserContext } from "../../utils/Contexts";
-import ReportUpdate from "../../database/update/ReportUpdates";
+import ReportUpdate from "../../database/update/ReportUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const ReportForm = () => {
     /* ===== VARIABLES ===== */
     const formInit = { message: "", error: null, submitting: false };
-    const location = useLocation();
-	const path = location.pathname.split("/");
-	const abb = path[2];
-    const category = path[3];
-	const type = path[4];
-	const levelName = path[5];
 
     /* ===== CONTEXTS ===== */
 
@@ -56,11 +49,7 @@ const ReportForm = () => {
     
         // define our report object
         const report = {
-            game_id: abb,
-            level_id: levelName,
-            category: category,
-            score: type === "score" ? true : false,
-            profile_id: submission.profile.id,
+            submission_id: submission.id,
             creator_id: user.profile.id,
             message: form.message
         };

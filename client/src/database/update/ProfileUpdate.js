@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { supabase } from "../SupabaseClient";
 
-const ProfilesUpdate = () => {
+const ProfileUpdate = () => {
     // FUNCTION 1: upsertUserInfo: takes user information, and upserts it to the profiles page
     // PRECONDITIONS (1 parameter):
     // 1.) userInfo: an object that contains information about the user. this object must be well-formatted according to
@@ -9,7 +9,7 @@ const ProfilesUpdate = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // if successful, this function will simply return
     // if failure, this function will throw an error, which will be handled in the caller function
-    const upsertUserInfo = async (userInfo) => {
+    const upsertUserInfo = async userInfo => {
         try {
             let { error } = await supabase
                 .from("profile")
@@ -32,4 +32,4 @@ const ProfilesUpdate = () => {
 };
 
 /* ===== EXPORTS ===== */
-export default ProfilesUpdate;
+export default ProfileUpdate;

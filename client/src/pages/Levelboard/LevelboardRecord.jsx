@@ -22,7 +22,7 @@ function LevelboardRecord({ submission, iconSize }) {
     <span className="levelboard-record">
 
       { /* If submission is approved, render a checkbox next to the record */ }
-      { submission.submission.length > 0 && submission.submission[0].approved ? 
+      { submission.approve ? 
         <div className="levelboard-aligned-span">
           <CheckIcon 
             fontSize={ iconSize }
@@ -32,7 +32,7 @@ function LevelboardRecord({ submission, iconSize }) {
       :
 
         // If submission has a report, render a warning icon next to the record 
-        submission.submission.length > 0 && submission.submission[0].report[0] ?
+        submission.report ?
           <div className="levelboard-aligned-span">
             <WarningRoundedIcon 
               fontSize={ iconSize }

@@ -24,6 +24,10 @@ function Levelboard({ imageReducer, submissionCache }) {
 	// add message function from message context
 	const { addMessage } = useContext(MessageContext);
 
+	/* ===== HELPER FUNCTIONS ===== */
+	const { capitalize, cleanLevelName, dateB2F } = FrontendHelper();
+	const { fetchLevelFromGame } = PathHelper();
+
 	/* ===== VARIABLES ===== */
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -33,11 +37,13 @@ function Levelboard({ imageReducer, submissionCache }) {
 	const type = path[4];
 	const levelName = path[5];
 	const defaultFilters = {
-		endDate: new Date(),
+		endDate: dateB2F(),
 		live: game.live_preference ? [true] : [false, true],
 		monkeys: game.monkey.map(monkey => monkey.id),
 		platforms: game.platform.map(platform => platform.id),
-		regions: game.region.map(region => region.id)
+		obsolete: false,
+		regions: game.region.map(region => region.id),
+		tas: [false]
 	};
 
 	/* ===== STATES & FUNCTIONS ===== */
@@ -45,20 +51,16 @@ function Levelboard({ imageReducer, submissionCache }) {
 	const [filtersPopup, setFiltersPopup] = useState(false);
 	const [detailSubmission, setDetailSubmission] = useState(undefined);
 	const [insertPopup, setInsertPopup] = useState(false);
-	const [updateSubmission, setUpdateSubmission] = useState(undefined);
+	const [updateSubmissions, setUpdateSubmissions] = useState(undefined);
 
 	// states and functions from js file
 	const { 
 		board,
-		userSubmission,
+		userSubmissions,
 		setupBoard,
 		applyFilters,
 		handleTabClick
 	} = LevelboardLogic();
-
-	// helper functions
-	const { capitalize, cleanLevelName } = FrontendHelper();
-	const { fetchLevelFromGame } = PathHelper();
 
 	/* ===== EFFECTS ===== */
 
@@ -85,13 +87,14 @@ function Levelboard({ imageReducer, submissionCache }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, location.pathname]);
 
-	// code that is executed once the board's initial data has loaded (`all` field, containing all submissions) has loaded
+	// code that is executed once the board's initial data has loaded (`all` field, containing all submissions) has loaded,
+	// or when the user switches levels
 	useEffect(() => {
 		if (board.all) {
 			applyFilters(defaultFilters);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [board.all]);
+	}, [board.all, location.pathname]);
 
 	/* ===== LEVELBOARD COMPONENT ===== */
 	return level && board.filtered && board.filters ?
@@ -165,11 +168,11 @@ function Levelboard({ imageReducer, submissionCache }) {
 						<button type="button" onClick={ () => setFiltersPopup(true) }>Filters</button>
 
 						{ /* Button that pulls up the update submission popup. NOTE: this button should only render if the user has a profile,
-						and a submission on the current levelboard. */ }
-						{ user.profile && userSubmission &&
+						and at least 1 submission on the current levelboard. */ }
+						{ user.profile && userSubmissions.length > 0 &&
 							<button 
 								type="button" 
-								onClick={ () => setUpdateSubmission(userSubmission)}
+								onClick={ () => setUpdateSubmissions(userSubmissions)}
 							>
 								Update Submission
 							</button>
@@ -180,12 +183,6 @@ function Levelboard({ imageReducer, submissionCache }) {
 							<button 
 								type="button" 
 								onClick={ () => setInsertPopup(true) }
-								disabled={ userSubmission && userSubmission.submission[0].report.length > 0 }
-								title={ userSubmission && userSubmission.submission[0].report.length > 0 ? 
-									"Please wait for a moderator to review your current submission before submitting." 
-								: 
-									undefined
-								}
 							>
 								Submit { capitalize(type) }
 							</button>
@@ -210,7 +207,7 @@ function Levelboard({ imageReducer, submissionCache }) {
 								<th>Region</th>
 								<th></th>
 								<th></th>
-								
+								<th></th>
 							</tr>
 						</thead>
 
@@ -246,8 +243,8 @@ function Levelboard({ imageReducer, submissionCache }) {
 				submissions={ board.all }
 			/>
 			<UpdatePopup
-				submission={ updateSubmission }
-				setSubmission={ setUpdateSubmission }
+				submissions={ updateSubmissions }
+				setSubmissions={ setUpdateSubmissions }
 			/>
 
 		</div>

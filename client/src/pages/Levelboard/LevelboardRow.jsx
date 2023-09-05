@@ -53,13 +53,18 @@ function LevelboardRow({ submission, imageReducer, onClickFunc }) {
         }
       </td>
 
-      { /* Render the comment */ }
+      { /* Render a comment svg tag that, when hovered, displays the comment, if one exists */ }
       <td>
         { submission.comment && 
           <div className="levelboard-svg-wrapper">
             <ChatBubbleRoundedIcon titleAccess={ submission.comment } fontSize="small" />
           </div>
         }
+      </td>
+
+      { /* Render the phrase "TAS", if the submission's tas property is `true` */ }
+      <td>
+        { submission.tas && "TAS" }
       </td>
 
     </tr>

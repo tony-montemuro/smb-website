@@ -1,8 +1,9 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts"; 
 import { useContext, useState } from "react";
-import AllSubmissionRead from "../../database/read/AllSubmissionRead";
 import TotalizerHelper from "../../helper/TotalizerHelper";
+import SubmissionsHelper from "../../helper/SubmissionHelper";
+import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Totalizer = () => {
     /* ===== CONTEXTS ===== */
@@ -16,10 +17,11 @@ const Totalizer = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
+    const { getFilteredForRankings } = SubmissionsHelper();
     const { calculateTotalTime, getTotalMaps, sortTotals, insertPositionToTotals } = TotalizerHelper();
 
     // database functions
-    const { getSubmissions } = AllSubmissionRead();
+    const { getSubmissions } = SubmissionRead();
 
     // FUNCTION 1: generateTotalizer - given an array of submissions, a type, and a totalTime, generate two separate arrays that
     // collectively represent the totalizer for a submission type combination
@@ -34,12 +36,9 @@ const Totalizer = () => {
     // 2.) live: an array of totalizer objects, that only considers live submissions, sorted in descending order if
     // { type } is score, and ascending order if { type } is time
     const generateTotalizer = (submissions, type, totalTime) => {
-        // first, filter our any non-current submissions
-        const filtered = submissions.filter(submission => submission.submission.length > 0);
-
-        // create two maps from the submissions: the { type } totals for only live records,
+        // first, create two maps from the submissions: the { type } totals for only live records,
         // and the { type } totals for all records. (key: user_id -> value: total object)
-        const { allTotalsMap, liveTotalsMap } = getTotalMaps(filtered, type, totalTime);
+        const { allTotalsMap, liveTotalsMap } = getTotalMaps(submissions, type, totalTime);
 
         // from our maps, let's get a sorted list of totals objects sorted by total field. if the type is score, it will sort in descending order.
         // if the type is time, it will sort in ascending order
@@ -73,7 +72,8 @@ const Totalizer = () => {
 
         try {
             // get the { type } submissions that are a part of the { category } of { game.abb }
-            const submissions = await getSubmissions(game.abb, category, type, submissionCache);
+            const allSubmissions = await getSubmissions(game.abb, category, type, submissionCache);
+            const submissions = getFilteredForRankings(allSubmissions);
 
             // generate totalizer object
             const { all, live } = generateTotalizer(submissions, type, totalTime);
