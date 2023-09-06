@@ -263,13 +263,11 @@ INSERT INTO "public"."countries" ("name", "iso2") VALUES
 --
 
 INSERT INTO "public"."profile" ("id", "user_id", "username", "youtube_handle", "twitch_username", "country", "discord", "bio", "birthday", "featured_video", "video_description", "twitter_handle", "report_token") VALUES
-	(1, NULL, 'TonySMB', '@Tony_SMB', 'tony_smb', 'US', 'tonysmb', '22 year old. I also made this website.', '1900-01-01', 'https://youtu.be/w-aeBJY3GMA', 'One of my greatest achievements in gaming!', '@Tony__SMB', 10),
-	(15, NULL, 'newUser', '@Tony_SMB', '', 'AF', '', 'I am a new user', '2017-10-15', 'https://youtu.be/wAnuhpsxcOk', 'this is my video', '', 10),
-	(4, NULL, 'Baller2000', NULL, NULL, 'US', NULL, NULL, NULL, NULL, NULL, NULL, 10),
+	(1, NULL, 'TonySMB', '@Tony_SMB', 'tony_smb', 'US', 'tonysmb', '23 years old. I am gamer. I make website.', '1900-01-01', 'https://youtu.be/w-aeBJY3GMA', 'One of my greatest achievements in gaming!', '@Tony__SMB', 10),
+	(2, NULL, 'Penguin', '', '', 'AQ', '', 'Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. ', NULL, '', '', '', 10),
 	(3, NULL, 'COOLMAN', NULL, NULL, 'JP', NULL, NULL, NULL, NULL, NULL, NULL, 10),
-	(6, NULL, 'Cutsman', NULL, NULL, 'US', NULL, NULL, NULL, NULL, NULL, NULL, 10),
-	(5, NULL, 'scrap651', NULL, NULL, 'CA', NULL, NULL, NULL, NULL, NULL, NULL, 10),
-	(2, NULL, 'Penguin', '', '', 'AQ', '', 'Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. ', NULL, '', '', '', 10);
+	(4, NULL, 'scrap651', NULL, NULL, 'CA', NULL, NULL, NULL, NULL, NULL, NULL, 10),
+	(5, NULL, 'Cutsman', NULL, NULL, 'US', NULL, NULL, NULL, NULL, NULL, NULL, 10);
 
 
 --
@@ -277,13 +275,11 @@ INSERT INTO "public"."profile" ("id", "user_id", "username", "youtube_handle", "
 --
 
 INSERT INTO "public"."game" ("abb", "name", "custom", "id", "release_date", "creator", "download", "live_preference") VALUES
+	('smb1', 'Super Monkey Ball', false, 1, '2001-09-14', NULL, NULL, true),
 	('smb2', 'Super Monkey Ball 2', false, 2, '2002-08-25', NULL, NULL, true),
 	('smb2pal', 'Super Monkey Ball 2 PAL', false, 3, '2003-03-10', NULL, NULL, true),
-	('smbdx', 'Super Monkey Ball Deluxe', false, 4, '2005-03-15', NULL, NULL, true),
-	('smb1', 'Super Monkey Ball', false, 1, '2001-09-14', NULL, NULL, true),
-	('mkw', 'Mario Kart Wii', false, 7, '2008-04-10', NULL, NULL, true),
-	('gaiden', 'Super Monkey Ball Gaiden', true, 6, '2020-06-23', 6, 'https://mega.nz/file/taYiVC4S#DRr9ulDEM526IySEehGkgJI-vpbUPvJrY8UNnRccOcY', false),
-	('651', 'Super Monkey Ball 651', true, 5, '2019-07-15', 5, 'https://mega.nz/file/McN2VI4S#p8pkonzW-iO4HsWwLgRGzwXx2Li3Jfk4-hTK6nV0SJY', false);
+	('651', 'Super Monkey Ball 651', true, 4, '2019-07-15', 4, 'https://mega.nz/file/McN2VI4S#p8pkonzW-iO4HsWwLgRGzwXx2Li3Jfk4-hTK6nV0SJY', false),
+	('gaiden', 'Super Monkey Ball Gaiden', true, 5, '2020-06-23', 5, 'https://mega.nz/file/taYiVC4S#DRr9ulDEM526IySEehGkgJI-vpbUPvJrY8UNnRccOcY', false);
 
 
 --
@@ -382,16 +378,6 @@ INSERT INTO "public"."mode" ("game", "name", "id", "category") VALUES
 	('smb2pal', 'world_8', 25, 'misc'),
 	('smb2', 'world_9', 26, 'misc'),
 	('smb2pal', 'world_9', 26, 'misc'),
-	('smbdx', 'beginner', 1, 'main'),
-	('smbdx', 'beginner_extra', 2, 'main'),
-	('smbdx', 'advanced', 3, 'main'),
-	('smbdx', 'advanced_extra', 4, 'main'),
-	('smbdx', 'expert', 5, 'main'),
-	('smbdx', 'expert_extra', 6, 'main'),
-	('smbdx', 'master', 7, 'main'),
-	('smbdx', 'master_extra', 8, 'main'),
-	('smbdx', 'world_10', 9, 'main'),
-	('mkw', 'mushroom_cup', 1, 'main'),
 	('smb1', 'beginner', 11, 'normal'),
 	('smb1', 'advanced', 12, 'normal'),
 	('smb1', 'expert', 13, 'normal'),
@@ -1198,7 +1184,6 @@ INSERT INTO "public"."level" ("id", "game", "mode", "name", "chart_type", "time"
 	(29, 'smb2', 'advanced', 'advanced_9_-_totalitarianism', 'both', 60, 'main', false, 'sec_csec'),
 	(60, 'smb2pal', 'advanced_extra', 'advanced_extra_10_-_teapot', 'both', 30, 'main', false, 'sec_csec'),
 	(25, 'smb2', 'advanced', 'advanced_5_-_board_park', 'both', 60, 'main', false, 'sec_csec'),
-	(1, 'mkw', 'mushroom_cup', 'luigi_circuit', 'both', 100, 'main', false, 'sec_csec'),
 	(61, 'smb2pal', 'expert', 'expert_1_-_wormhole', 'both', 60, 'main', false, 'sec_csec'),
 	(62, 'smb2pal', 'expert', 'expert_2_-_free_fall', 'both', 60, 'main', false, 'sec_csec'),
 	(63, 'smb2pal', 'expert', 'expert_3_-_melting_pot', 'both', 30, 'main', false, 'sec_csec'),
@@ -1474,8 +1459,7 @@ INSERT INTO "public"."monkey" ("id", "monkey_name") VALUES
 	(1, 'Aiai'),
 	(2, 'Meemee'),
 	(3, 'Baby'),
-	(4, 'Gongon'),
-	(5, 'Mario');
+	(4, 'Gongon');
 
 
 --
@@ -1538,10 +1522,6 @@ INSERT INTO "public"."game_monkey" ("game", "monkey") VALUES
 	('smb2pal', 2),
 	('smb2pal', 3),
 	('smb2pal', 4),
-	('smbdx', 1),
-	('smbdx', 2),
-	('smbdx', 3),
-	('smbdx', 4),
 	('651', 1),
 	('651', 2),
 	('651', 3),
@@ -1549,8 +1529,7 @@ INSERT INTO "public"."game_monkey" ("game", "monkey") VALUES
 	('gaiden', 1),
 	('gaiden', 2),
 	('gaiden', 3),
-	('gaiden', 4),
-	('mkw', 5);
+	('gaiden', 4);
 
 
 --
@@ -1572,12 +1551,7 @@ INSERT INTO "public"."game_platform" ("game", "platform") VALUES
 	('smb2', 26),
 	('smb2pal', 26),
 	('651', 26),
-	('gaiden', 26),
-	('smbdx', 5),
-	('smbdx', 6),
-	('smbdx', 7),
-	('smbdx', 9),
-	('smbdx', 10);
+	('gaiden', 26);
 
 
 --
@@ -1591,15 +1565,10 @@ INSERT INTO "public"."game_region" ("game", "region") VALUES
 	('smb2', 1),
 	('smb2', 2),
 	('smb2pal', 3),
-	('smbdx', 1),
-	('smbdx', 2),
-	('smbdx', 3),
 	('651', 1),
 	('gaiden', 1),
 	('smb1', 4),
-	('smb2pal', 4),
-	('smbdx', 4),
-	('mkw', 1);
+	('smb2pal', 4);
 
 
 --
@@ -1609,7 +1578,9 @@ INSERT INTO "public"."game_region" ("game", "region") VALUES
 INSERT INTO "public"."rule" ("id", "rule_name") VALUES
 	(1, 'This is a rule.'),
 	(2, 'This is another rule.'),
-	(3, 'This is yet another rule.');
+	(3, 'This is yet another rule.'),
+	(4, 'Take a look; another rule!'),
+	(5, 'Here is a rule about custom games.');
 
 
 --
@@ -1619,7 +1590,13 @@ INSERT INTO "public"."rule" ("id", "rule_name") VALUES
 INSERT INTO "public"."game_rule" ("abb", "rule") VALUES
 	('smb1', 1),
 	('smb1', 2),
-	('smb1', 3);
+	('smb1', 3),
+	('smb2', 2),
+	('smb2', 4),
+	('smb2pal', 2),
+	('smb2pal', 4),
+	('651', 5),
+	('gaiden', 5);
 
 
 --
@@ -1677,10 +1654,3 @@ Work', '2023-08-11 20:39:21.656768+00', 'https://youtu.be/vlpvJLlAu3A', 1, 'Here
 INSERT INTO "storage"."buckets" ("id", "name", "owner", "created_at", "updated_at", "public", "avif_autodetection", "file_size_limit", "allowed_mime_types") VALUES
 	('avatars', 'avatars', NULL, '2022-06-22 18:59:36.937336+00', '2022-06-22 18:59:36.937336+00', false, false, NULL, NULL),
 	('games', 'games', NULL, '2022-07-05 14:46:17.712956+00', '2022-07-05 14:46:17.712956+00', false, false, NULL, NULL);
-
---
--- Data for Name: objects; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
---
-
-INSERT INTO "storage"."objects" ("id", "bucket_id", "name", "owner", "created_at", "updated_at", "last_accessed_at", "metadata", "version") VALUES
-	('2ef29b14-e4c9-4bf4-bfa4-7fe4d7283295', 'games', 'mkw.png', NULL, '2023-05-31 19:12:01.905863+00', '2023-05-31 19:12:02.148594+00', '2023-05-31 19:12:01.905863+00', '{"eTag": "\"cc183f985c1bf1717a004a6a9cc3664b\"", "size": 459452, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2023-05-31T19:12:02.000Z", "contentLength": 459452, "httpStatusCode": 200}', NULL);

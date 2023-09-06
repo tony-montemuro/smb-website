@@ -1,3 +1,6 @@
 # Supabase
 .branches
 .temp
+
+# Used in scripts
+node_modules

@@ -1,0 +1,15 @@
+{
+  "name": "supabase",
+  "version": "1.0.0",
+  "description": "",
+  "main": "upload_images.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "author": "Tony Montemuro",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.33.1"
+  }
+}
