@@ -1,4 +1,6 @@
 /* ===== IMPORTS ===== */
+import { UserContext } from "../../utils/Contexts";
+import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
@@ -14,6 +16,11 @@ function DetailPopup({ submission, setSubmission }) {
   const location = useLocation();
   const level = location.pathname.split("/")[5];
   const profile = submission ? submission.profile : undefined;
+
+  /* ===== CONTEXTS ===== */
+  
+  // user state from user context
+  const { user } = useContext(UserContext);
 
   /* ===== FUNCTIONS ===== */
 
@@ -76,10 +83,15 @@ function DetailPopup({ submission, setSubmission }) {
 
         </ul>
 
-        { /* Horizontal rule to break the "submission" from the "report" form */ }
-        <hr />
+        { /* If user is authenticated, render the ReportForm */ }
+        { user.id &&
+          <>
+            { /* Horizontal rule to break the "submission" from the "report" form */ }
+            <hr />
 
-        <ReportForm submission={ submission } />
+            <ReportForm submission={ submission } />
+          </>
+        }
 
       </div>
     </div>;
