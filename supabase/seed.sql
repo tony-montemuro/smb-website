@@ -1506,6 +1506,60 @@ INSERT INTO "public"."region" ("id", "region_name") VALUES
 	(4, 'PAL 60');
 
 --
+-- Data for Name: submission; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."submission" ("id", "game_id", "level_id", "category", "profile_id", "score", "tas", "record", "submitted_at", "monkey_id", "platform_id", "region_id", "proof", "comment", "live", "position", "all_position") VALUES
+	('2023-08-21 18:13:39.585107+00', 'smb2', 'story', 'story', 1, false, false, 3661, '2023-08-21 18:13:39.217+00', 1, 1, 1, 'https://youtu.be/-ed6UeDp1ek', '', true, 1, 1),
+	('2023-08-19 16:39:06.954902+00', 'smb1', 'beginner_1', 'main', 2, false, false, 50.5, '2023-08-19 16:39:04.068+00', 1, 2, 1, 'https://youtu.be/3Qpf9pAkUeI', '', true, 1, 1),
+	('2023-08-17 16:35:12.4032+00', 'smb1', 'beginner_1', 'main', 5, true, false, 5000, '2023-08-17 16:35:12.309+00', 1, 26, 1, 'https://youtu.be/59M5z0c8YtE', '', true, 1, 1),
+	('2023-08-23 22:32:44.949924+00', 'smb1', 'beginner_2', 'main', 2, true, false, 8000, '2023-08-23 22:32:44.35+00', 1, 2, 1, 'https://youtu.be/LI1Pt3h2rXs?si=uXGjQAltzEj7is1N', '', true, 1, 1),
+	('2023-08-28 20:38:04.841467+00', 'smb1', 'beginner_1', 'main', 2, true, false, 4500, '2023-08-02 12:00:00+00', 4, 1, 1, 'https://youtu.be/dgCnYsDTiXU?si=5Sn9Cr0-gSUBvs47', '', true, 1, 1),
+	('2023-02-03 22:01:22.786426+00', 'smb1', 'beginner_2', 'main', 1, true, false, 250, '2023-01-17 12:00:00+00', 1, 1, 1, 'https://www.youtube.com/', 'clean!!', true, 1, 1),
+	('2023-04-06 16:48:58.02+00', 'smb1', 'beginner_1', 'main', 3, true, false, 4500, '2019-02-06 12:00:00+00', 4, 1, 2, 'https://www.youtube.com', '', false, NULL, 1),
+	('2023-02-03 22:06:44.842893+00', 'smb1', 'beginner_2_(blue)', 'misc', 1, true, false, 6000, '2022-12-13 21:10:33.451171+00', 4, 1, 1, 'https://www.youtube.com/', 'misc thing', true, 1, 1),
+	('2023-02-03 22:08:36.154728+00', 'smb2', 'beginner_1_-_simple', 'main', 1, true, false, 10820, '2022-12-13 21:07:43.454189+00', 3, 1, 1, 'https://www.youtube.com/', 'simply amazin', true, 1, 1),
+	('2023-02-03 22:22:19.29121+00', 'smb1', 'beginner_2', 'main', 1, false, false, 57.01, '2022-12-14 01:23:10.012281+00', 1, 1, 1, 'https://www.youtube.com/', 'debofarm', true, 1, 1),
+	('2023-02-03 22:20:41.854288+00', 'smb1', 'beginner_1', 'main', 3, false, false, 55, '2023-01-05 21:46:04.539875+00', 4, 1, 1, 'https://www.youtube.com/', 'FAKE', false, NULL, 1),
+	('2023-02-03 22:21:23.171195+00', 'smb1', 'beginner_1', 'main', 1, false, false, 50, '2023-01-19 12:00:00+00', 1, 1, 1, 'https://www.youtube.com/', '...', true, 1, 1),
+	('2023-02-15 19:52:13.096+00', 'smb1', 'beginner_1', 'main', 3, true, false, 3002, '2023-02-15 19:52:13.096+00', 1, 1, 1, 'https://www.youtube.com/', 'POOP 2.0', true, 1, 1),
+	('2023-05-09 21:32:19.86+00', 'smb2', 'beginner_1_-_simple', 'main', 1, false, false, 54.15, '2023-05-09 21:32:19.86+00', 1, 1, 1, 'https://www.youtube.com', 'this is the dream :) ', true, 1, 1),
+	('2023-05-12 00:20:33.799+00', 'smb1', 'beginner_2', 'main', 1, true, false, 380, '2023-05-12 00:20:33.799+00', 1, 1, 1, 'https://www.youtube.com', '#KeepImproving', true, 1, 1),
+	('2023-02-03 22:03:36.18389+00', 'smb1', 'beginner_3', 'main', 1, true, false, 10000, '2023-01-14 23:40:39.807329+00', 3, 1, 2, 'https://www.youtube.com/', 'dafuq? played on JP', true, 1, 1),
+	('2023-05-25 18:40:53.23+00', 'smb1', 'beginner_3', 'main', 2, true, false, 9999, '2023-05-01 12:00:00+00', 2, 1, 1, 'https://www.youtube.com', '', true, 1, 1),
+	('2023-05-25 21:33:29.091+00', 'smb2', 'beginner_1_-_simple', 'main', 2, true, false, 10800, '2023-05-02 12:00:00+00', 4, 1, 2, 'https://www.youtube.com', '', true, 1, 1),
+	('2023-05-25 21:50:53.548+00', 'smb2', 'beginner_2_-_hollow', 'main', 1, false, false, 54, '2023-05-25 21:50:53.548+00', 1, 1, 1, 'https://www.youtube.com', '', true, 1, 1),
+	('2023-06-19 14:41:31.567+00', 'smb2', 'beginner_2_-_hollow', 'main', 1, true, false, 8000, '2023-06-19 14:41:31.567+00', 1, 1, 1, 'https://www.youtube.com', '', true, 1, 1),
+	('2023-06-27 21:49:14.388438+00', 'smb1', 'beginner_2_(blue)', 'misc', 1, true, false, 6100, '2023-06-27 21:49:14.212+00', 1, 1, 1, 'https://youtu.be/1Zrq8FiKS6A', 'keep imporving', true, 1, 1),
+	('2023-06-27 21:59:00.136341+00', 'smb2', 'advanced_16_-_mad_rings_(blue)', 'misc', 2, true, false, 9000, '2023-06-27 21:58:59.988+00', 4, 1, 2, 'https://www.youtube.com/watch?v=RuhvdaDabpU', ':^)', true, 1, 1),
+	('2023-05-25 18:46:01.482+00', 'smb1', 'beginner_1', 'main', 2, true, false, 4000, '2023-05-26 18:46:01.482+00', 4, 1, 2, 'https://www.youtube.com/watch?v=k3oNeVUtvyU', 'from client', true, 1, 1),
+	('2023-07-04 16:08:37.370712+00', 'smb2', 'beginner_2_-_hollow', 'main', 2, false, false, 53.98, '2023-07-04 16:08:37.102+00', 1, 1, 1, 'https://www.youtube.com/watch?v=gtmpFgPSXPI&t=4s', '', true, 1, 1),
+	('2023-06-19 21:51:20.069+00', 'smb1', 'beginner_3', 'main', 1, true, false, 10002, '2023-06-19 21:51:20.069+00', 2, 1, 1, 'https://www.twitch.tv/videos/1867491186?t=01h32m55s', 'TEST', true, 1, 1),
+	('2023-08-09 18:10:20.634711+00', 'smb1', 'beginner_2', 'main', 5, true, false, 6456, '2023-08-09 18:10:20.531+00', 1, 1, 1, 'https://youtu.be/0hEYvdMoF2g', '', true, 1, 1),
+	('2023-05-21 01:28:13.176+00', 'smb1', 'beginner_1', 'main', 1, true, false, 6800, '2023-04-12 12:00:00+00', 1, 1, 1, 'https://twitter.com/bwtellnews/status/1667686357974540289', '~~~', true, 1, 1),
+	('2023-06-28 17:01:56.428648+00', 'smb1', 'beginner_1', 'main', 2, true, false, 4100, '2023-06-28 12:00:00+00', 1, 1, 1, 'https://www.youtube.com/watch?v=RuhvdaDabpU', 'better', true, 1, 1),
+	('2023-08-14 21:23:03.381794+00', 'gaiden', 'world_1-1_-_ease', 'main', 1, true, false, 20000, '2023-08-14 21:23:03.133+00', 1, 1, 1, 'https://youtu.be/R8h-wiSnBG0', 'sick', true, 1, 1),
+	('2023-08-15 16:00:25.601339+00', '651', 'world_1-1_-_nest', 'main', 1, true, false, 1, '2023-08-15 16:00:25.477+00', 1, 1, 1, 'https://youtu.be/qPn2FclmBD4', '', true, 1, 1),
+	('2023-06-28 22:32:47.90751+00', 'smb2', 'advanced_16_-_mad_rings_(blue)', 'misc', 1, true, false, 12000, '2023-06-28 21:45:04.539975+00', 1, 1, 1, 'https://youtu.be/dQw4w9WgXcQ', '', true, 1, 1),
+	('2023-06-26 23:45:30.699328+00', 'smb2', 'advanced_16_-_mad_rings_(blue)', 'misc', 1, true, false, 10000, '2023-01-05 21:46:04.539875+00', 4, 1, 1, 'https://youtu.be/dQw4w9WgXcQ', '', true, 1, 1),
+	('2023-06-28 22:32:26.706686+00', 'smb2', 'advanced_16_-_mad_rings_(blue)', 'misc', 1, true, false, 11000, '2023-06-28 21:45:04.540975+00', 1, 1, 1, 'https://youtu.be/dQw4w9WgXcQ', '', true, 1, 1),
+	('2023-06-27 22:00:01.658744+00', 'smb2', 'advanced_16_-_mad_rings_(blue)', 'misc', 2, true, false, 9500, '2023-06-26 21:46:04.539875+00', 4, 1, 1, 'https://youtu.be/dQw4w9WgXcQ', '', true, 1, 1),
+	('2023-07-04 18:18:13.659877+00', 'smb1', 'beginner_2', 'main', 5, true, false, 77, '2023-07-04 18:18:13.247+00', 2, 1, 1, 'https://www.youtube.com/watch?v=RuhvdaDabpU', '', true, 1, 1),
+	('2023-08-21 16:46:47.276976+00', 'smb1', 'beginner_1', 'main', 1, false, false, 8.06, '2023-08-21 16:46:47.152+00', 1, 1, 1, 'https://youtu.be/C7VlC0QjdHU', '', true, 1, 1),
+	('2023-08-10 19:46:46.226283+00', 'smb1', 'beginner_2', 'main', 2, true, false, 7000, '2023-08-10 19:47:08.195+00', 1, 2, 1, 'https://youtu.be/rdKfuwy6LUM', '', true, 1, 1),
+	('2023-08-09 18:40:43.400254+00', 'smb1', 'beginner_2', 'main', 1, true, false, 10000, '2023-08-09 18:40:43.277+00', 3, 26, 1, 'https://youtu.be/tCnBrrnOefs', 'we are so back', true, 1, 1),
+	('2023-08-21 16:47:16.979916+00', 'smb1', 'beginner_1', 'main', 1, true, false, 9900, '2023-08-21 16:47:16.852+00', 1, 1, 1, 'https://youtu.be/C7VlC0QjdHU', 'improvement', true, 1, 1),
+	('2023-07-12 20:31:34.198043+00', 'smb1', 'beginner_3', 'main', 2, true, false, 9898, '2023-07-12 12:00:00+00', 2, 26, 1, 'https://youtu.be/BnC0mzsQmb8', 'a comment 5!', true, 1, 1),
+	('2023-08-31 14:52:33.203824+00', 'smb1', 'beginner_1', 'main', 2, true, false, 4950, '2023-08-31 14:52:30.652+00', 1, 2, 1, 'https://youtu.be/Ua0KpfJsxKo?si=sUgo-QT7uCBF9Tig', '!', true, 3, 3),
+	('2023-08-31 15:11:22.501836+00', 'smb1', 'beginner_1', 'main', 3, true, false, 3500, '2023-08-31 15:11:19.679+00', 4, 1, 4, 'https://youtu.be/8GW6sLrK40k?si=jJSpL86JGnphQAOi', '', true, 3, 3),
+	('2023-06-20 21:16:32.655+00', 'smb1', 'beginner_1', 'main', 1, false, false, 51, '2023-06-20 21:16:32.655+00', 1, 2, 2, 'https://www.youtube.com/watch?v=gtmpFgPSXPI&t=4s', 'testing', true, 1, 1),
+	('2023-07-05 19:35:22.720142+00', 'smb1', 'beginner_1', 'main', 2, true, false, 4400, '2023-07-10 12:00:00+00', 2, 1, 1, 'https://www.youtube.com/watch?v=gtmpFgPSXPI&t=4s', 'its a test', true, 1, 1),
+	('2023-08-31 14:53:27.853917+00', 'smb1', 'beginner_1', 'main', 2, true, true, 10000, '2023-08-31 14:52:30.652+00', 1, 26, 1, 'https://youtu.be/Ua0KpfJsxKo?si=sUgo-QT7uCBF9Tig', 'shesh', true, 1, 1),
+	('2023-07-05 21:26:04.995996+00', 'smb1', 'beginner_3', 'main', 4, true, false, 11000, '2023-08-17 16:02:30.631+00', 4, 1, 1, 'https://www.youtube.com/watch?v=k3oNeVUtvyU', '', true, 1, 1),
+	('2023-05-02 15:29:27.256+00', 'smb1', 'beginner_1', 'main', 1, true, true, 6500, '2023-05-02 15:29:27.256+00', 1, 2, 1, 'https://youtu.be/LI1Pt3h2rXs?si=Ycosz2DMWyg6QSOV', 'keep improving', true, 1, 1),
+	('2023-09-04 19:05:36.617736+00', 'smb1', 'beginner_3', 'main', 5, true, false, 10500, '2023-09-04 19:05:36.47+00', 1, 1, 1, 'https://youtu.be/ulOgzjdBdzY?si=QmCL_UvXoKu715GB', '', true, 2, 2);
+
+--
 -- Data for Name: game_monkey; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
