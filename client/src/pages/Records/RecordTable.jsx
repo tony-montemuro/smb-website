@@ -43,12 +43,12 @@ function RecordTable({ mode, allLiveFilter, recordTable }) {
         { /* Render a row for each level */ }
         { recordTable[allLiveFilter][mode].map((row, index) => {
           return (
-            <tr className={ allGreater(recordTable, mode, index) ? "records-different-row" : "records-same-row" } key={ row.level.name }>
+            <tr className={ allGreater(recordTable, mode, index) ? "records-different-row" : "records-same-row" } key={ row.level }>
 
               { /* First element is the name of the level, which allows user to navigate to that level's chart */ }
               <td>
-                <Link className="records-level-link" to={ `/games/${ abb }/${ category }/${ type }/${ row.level.name }` }>
-                  { cleanLevelName(row.level.name) }
+                <Link className="records-level-link" to={ `/games/${ abb }/${ category }/${ type }/${ row.level }` }>
+                  { cleanLevelName(row.level) }
                 </Link>
               </td>
 

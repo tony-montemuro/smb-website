@@ -8,7 +8,7 @@ import GameHelper from "../../helper/GameHelper";
 import RecordsLogic from "./Records.js";
 import RecordTable from "./RecordTable";
 
-function Records({ submissionCache }) {
+function Records() {
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -59,7 +59,7 @@ function Records({ submissionCache }) {
     }
 
     // if we made it past the special case, let's go ahead and fetch all records
-    fetchRecords(game, category, type, submissionCache);
+    fetchRecords(game, category, type);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
