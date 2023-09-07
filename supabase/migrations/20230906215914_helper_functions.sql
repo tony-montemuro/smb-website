@@ -8,7 +8,8 @@ RETURNS TABLE (
   country text,
   record float8,
   submitted_at timestamptz,
-  live boolean
+  live boolean,
+  "position" integer
 )
 LANGUAGE sql
 AS $$
@@ -18,7 +19,7 @@ AS $$
     JOIN profile p ON s.profile_id = p.id
     WHERE s.game_id = game_name AND s.category = category_name AND s.score = is_score AND tas = false AND (NOT live_only OR s.live = true)
   )
-  SELECT r.game_id, r.level_id, r.category, r.id, r.username, r.country, r.record, r.submitted_at, r.live
+  SELECT r.game_id, r.level_id, r.category, r.id, r.username, r.country, r.record, r.submitted_at, r.live, RANK() OVER (PARTITION BY r.level_id ORDER BY r.record DESC) AS "position"
   FROM ranked r
   WHERE r.rn = 1
   ORDER BY r.level_id ASC, r.record DESC, r.submitted_at ASC
