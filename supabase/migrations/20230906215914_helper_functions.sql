@@ -33,3 +33,22 @@ AS $$
   FROM level
   WHERE game = game_name AND category = category_name AND chart_type <> 'score'::chart_t;
 $$;
+
+CREATE OR REPLACE FUNCTION get_category_levels_by_mode(game_name text, category_name category_t, is_score boolean)
+RETURNS TABLE (name text)
+LANGUAGE sql
+AS $$
+  SELECT COALESCE(json_agg(row_to_json(record_row)), '[]'::json)
+  FROM (
+    SELECT
+      name,
+      (SELECT array_agg(l.name ORDER BY l.id) AS levels FROM level l WHERE (m.game = l.game AND m.category = l.category AND m.name = l.mode) AND ((is_score = true AND l.chart_type IN ('score', 'both')) OR (is_score = false AND l.chart_type IN ('time', 'both'))))
+    FROM mode m
+    WHERE (EXISTS (
+      SELECT 1
+      FROM level l
+      WHERE (m.game = l.game AND m.category = l.category AND m.name = l.mode) AND ((is_score = true AND l.chart_type IN ('score', 'both')) OR (is_score = false AND l.chart_type IN ('time', 'both')))
+    )) AND m.game = game_name AND m.category = category_name
+    ORDER BY m.id
+  ) record_row
+$$;
