@@ -133,10 +133,10 @@ function App() {
               <Route path="/user/:profileId" element={ <UserLayout imageReducer={ imageReducer } /> } >
                 <Route index element={ <User />} />
                 <Route path=":game/:category/score" element={
-                  <UserStats submissionCache={ submissionCache } />
+                  <UserStats />
                 }/>
                 <Route path=":game/:category/time" element={
-                  <UserStats submissionCache={ submissionCache } />
+                  <UserStats />
                 }/>
               </Route>
               <Route path="resources" element={ <ResourcesLayout /> } >

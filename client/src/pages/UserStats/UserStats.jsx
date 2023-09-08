@@ -10,7 +10,7 @@ import UserStatsMedals from "./UserStatsMedals";
 import UserStatsTotal from "./UserStatsTotal";
 import UserStatsRecords from "./UserStatsRecords";
 
-function UserStats({ submissionCache }) {
+function UserStats() {
   /* ===== CONTEXTS ===== */
 
   // static cache state from static cache context
@@ -27,6 +27,7 @@ function UserStats({ submissionCache }) {
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
+  const profileId = parseInt(path[2]);
   const abb = path[3];
   const category = path[4];
   const type = path[5];
@@ -76,7 +77,7 @@ function UserStats({ submissionCache }) {
       // otherwise, update the game, filter, & user state hooks, and fetch user stats
       setGame(game);
       setAllLiveFilter(game.live_preference ? "live" : "all");
-      fetchUserStats(path, game, submissionCache);
+      fetchUserStats(game, profileId, category, type);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache, location.pathname]);

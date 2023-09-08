@@ -95,7 +95,40 @@ const RPCRead = () => {
         };
     };
 
-    return { getRecords, getTotals, getMedals };
+    // FUNCTION 4: getUserRankings - function that calls on a procedure to generate user ranking object depending on the parameters
+    // PRECONDITIONS (5 parameters):
+    // 1.) abb: a string representing the unique identifier for a game
+    // 2.) category: a string representing a valid category
+    // 3.) type: a string, either "score" or "time"
+    // 4.) live: a boolean value representing whether or not to filter by live submissions
+    // 5.) profileId: the id of the user whose rankings we want to grab
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, a user ranking object is is returned
+    // otherwise, this function throws an error, which should be handled by the caller function
+    const getUserRankings = async (abb, category, type, live, profileId) => {
+        try {
+            const { data: rankings, error } = await supabase.rpc("get_user_rankings", { 
+                abb: abb, 
+                category: category,
+                score: type === "score",
+                live_only: live,
+                profile_id: profileId
+            });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            return rankings;
+
+        } catch (error) {
+            // if we get an error, throw for caller function to handle
+            throw error;
+        };
+    };
+
+    return { getRecords, getTotals, getMedals, getUserRankings };
 };
 
 /* ===== EXPORTS ===== */
