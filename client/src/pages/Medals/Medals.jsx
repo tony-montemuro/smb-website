@@ -8,7 +8,7 @@ import GameHelper from "../../helper/GameHelper";
 import MedalsLogic from "./Medals.js";
 import MedalTable from "./MedalTable";
 
-function Medals({ imageReducer, submissionCache }) {
+function Medals({ imageReducer }) {
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -58,7 +58,7 @@ function Medals({ imageReducer, submissionCache }) {
     }
 
     // if we made it past the special case, let's go ahead and fetch the medal table
-    fetchMedals(abb, category, type, submissionCache);
+    fetchMedals(abb, category, type);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);

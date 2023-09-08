@@ -35,7 +35,7 @@ const RPCRead = () => {
         };
     };
 
-    // FUNCTION 2: getTotals - function that calls on a procedure to generate the totalizer object depending on the parameters
+    // FUNCTION 2: getTotals - function that calls on a procedure to generate a totalizer array depending on the parameters
     // PRECONDITIONS (4 parameters):
     // 1.) abb: a string representing the unique identifier for a game
     // 2.) category: a string representing a valid category
@@ -66,7 +66,36 @@ const RPCRead = () => {
         };
     };
 
-    return { getRecords, getTotals };
+    // FUNCTION 3: getMedals - function that calls on a procedure to generate a medals array depending on the parameters
+    // PRECONDITIONS (3 parameters):
+    // 1.) abb: a string representing the unique identifier for a game
+    // 2.) category: a string representing a valid category
+    // 3.) type: a string, either "score" or "time"
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, an array of medals objects, sorted by position field, is returned
+    // otherwise, this function throws an error, which should be handled by the caller function
+    const getMedals = async (abb, category, type) => {
+        try {
+            const { data: medals, error } = await supabase.rpc("get_medals", { 
+                abb: abb, 
+                category: category,
+                score: type === "score"
+            });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            return medals;
+
+        } catch (error) {
+            // if we get an error, throw for caller function to handle
+            throw error;
+        };
+    };
+
+    return { getRecords, getTotals, getMedals };
 };
 
 /* ===== EXPORTS ===== */

@@ -100,10 +100,10 @@ function App() {
                 <Route index element={ <Game /> } />
                 <Route path=":category" element={ <Game /> }/>
                 <Route path=":category/medals/score" element={
-                  <Medals imageReducer={ imageReducer } submissionCache={ submissionCache } />
+                  <Medals imageReducer={ imageReducer } />
                 }/>
                 <Route path=":category/medals/time" element={
-                  <Medals imageReducer={ imageReducer } submissionCache={ submissionCache } />
+                  <Medals imageReducer={ imageReducer } />
                 }/>
                 <Route path=":category/totalizer/score" element={
                   <Totalizer imageReducer={ imageReducer } />
