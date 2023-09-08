@@ -35,7 +35,38 @@ const RPCRead = () => {
         };
     };
 
-    return { getRecords };
+    // FUNCTION 2: getTotals - function that calls on a procedure to generate the totalizer object depending on the parameters
+    // PRECONDITIONS (4 parameters):
+    // 1.) abb: a string representing the unique identifier for a game
+    // 2.) category: a string representing a valid category
+    // 3.) type: a string, either "score" or "time"
+    // 4.) live: a boolean value representing whether or not to filter by live submissions
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, an array of totals objects, sorted by position field, is returned
+    // otherwise, this function throws an error, which should be handled by the caller function
+    const getTotals = async (abb, category, type, live) => {
+        try {
+            const { data: totals, error } = await supabase.rpc("get_totals", { 
+                abb: abb, 
+                category: category,
+                score: type === "score",
+                live_only: live
+            });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            return totals;
+
+        } catch (error) {
+            // if we get an error, throw for caller function to handle
+            throw error;
+        };
+    };
+
+    return { getRecords, getTotals };
 };
 
 /* ===== EXPORTS ===== */

@@ -40,7 +40,7 @@ const Records = () => {
             });
             const [all, live] = await Promise.all(promises);
 
-            // create a records object that stores both tables, and update recordTable
+            // create a records object that stores both tables, and update recordTable by calling setRecordTable()
             setRecordTable({ all, live });
 
         } catch (error) {

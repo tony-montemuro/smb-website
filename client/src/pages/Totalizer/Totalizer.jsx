@@ -8,7 +8,7 @@ import GameHelper from "../../helper/GameHelper";
 import TotalizerLogic from "./Totalizer.js";
 import TotalizerTable from "./TotalizerTable";
 
-function Totalizer({ imageReducer, submissionCache }) {
+function Totalizer({ imageReducer }) {
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -20,7 +20,6 @@ function Totalizer({ imageReducer, submissionCache }) {
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
   const { getGameCategories, getCategoryTypes, isPracticeMode } = GameHelper();
-  
 
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
@@ -58,7 +57,7 @@ function Totalizer({ imageReducer, submissionCache }) {
     }
 
     // if we made it past the special case, let's go ahead and compute the totals
-    fetchTotals(game, category, type, submissionCache);
+    fetchTotals(game, category, type);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
