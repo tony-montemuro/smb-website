@@ -30,7 +30,8 @@ FROM (
     platinum,
     gold,
     silver,
-    bronze
+    bronze,
+    RANK() OVER (ORDER BY platinum DESC, gold DESC, silver DESC, bronze DESC) AS "position"
   FROM medal_counts mc
   ORDER BY platinum DESC, gold DESC, silver DESC, bronze DESC
 ) medals_row
