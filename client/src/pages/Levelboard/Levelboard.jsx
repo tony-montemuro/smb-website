@@ -12,7 +12,7 @@ import InsertPopup from "./InsertPopup.jsx";
 import PathHelper from "../../helper/PathHelper";
 import UpdatePopup from "./UpdatePopup.jsx";
 
-function Levelboard({ imageReducer, submissionCache }) {
+function Levelboard({ imageReducer }) {
 	/* ===== CONTEXTS ===== */
 
 	// user state from user context
