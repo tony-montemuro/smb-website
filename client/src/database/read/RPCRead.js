@@ -128,7 +128,39 @@ const RPCRead = () => {
         };
     };
 
-    return { getRecords, getTotals, getMedals, getUserRankings };
+    // FUNCTION 5: getChartSubmissions - function that calls on a procedure to generate the list of submissions for a particular chart
+    // PRECONDITIONS (5 parameters):
+    // 1.) abb: a string representing the unique identifier for a game
+    // 2.) category: a string representing a valid category
+    // 3.) level: a string representing the name of the level whose chart data we need to query
+    // 4.) type: a string, either "score" or "time"
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, an array of submissions, ordered by record in descending order, then by submitted_at in ascending
+    // order, is returned
+    // otherwise, this function throws an error, which should be handled by the caller function
+    const getChartSubmissions = async (abb, category, level, type) => {
+        try {
+            const { data: submissions, error } = await supabase.rpc("get_chart_submissions", { 
+                game: abb, 
+                category_name: category,
+                level: level,
+                is_score: type === "score"
+            });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            return submissions;
+
+        } catch (error) {
+            // if we get an error, throw for caller function to handle
+            throw error;
+        };
+    };
+
+    return { getRecords, getTotals, getMedals, getUserRankings, getChartSubmissions };
 };
 
 /* ===== EXPORTS ===== */

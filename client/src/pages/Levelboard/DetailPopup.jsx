@@ -11,10 +11,10 @@ import LevelboardRecord from "./LevelboardRecord";
 import ReportForm from "./ReportForm.jsx";
 import Username from "../../components/Username/Username.jsx";
 
-function DetailPopup({ submission, setSubmission }) {
+function DetailPopup({ submission, setSubmission, level }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
-  const level = location.pathname.split("/")[5];
+  const levelName = location.pathname.split("/")[5];
   const profile = submission ? submission.profile : undefined;
 
   /* ===== CONTEXTS ===== */
@@ -40,8 +40,8 @@ function DetailPopup({ submission, setSubmission }) {
 
         { /* Popup header - render the name of the level, the record, and the username */ }
         <h1>
-          { cleanLevelName(level) }:&nbsp;
-          <LevelboardRecord submission={ submission } iconSize={ "large" } /> by&nbsp;
+          { cleanLevelName(levelName) }:&nbsp;
+          <LevelboardRecord submission={ submission } iconSize={ "large" } timerType={ level.timer_type } /> by&nbsp;
           <Username country={ profile.country } profileId={ profile.id } username={ profile.username } />
         </h1>
 

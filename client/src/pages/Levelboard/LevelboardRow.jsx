@@ -5,7 +5,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardRecord from "./LevelboardRecord";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
-function LevelboardRow({ submission, imageReducer, onClickFunc }) {
+function LevelboardRow({ submission, imageReducer, level, onClickFunc }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
@@ -29,7 +29,7 @@ function LevelboardRow({ submission, imageReducer, onClickFunc }) {
 
       { /* Render the record */ }
       <td>
-        <LevelboardRecord submission={ submission } iconSize={ "medium" } />
+        <LevelboardRecord submission={ submission } iconSize={ "medium" } timerType={ level.timer_type } />
       </td>
 
       { /* Render the submission date */ }

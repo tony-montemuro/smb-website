@@ -7,13 +7,12 @@ import LevelboardUtils from "./LevelboardUtils";
 import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
-const UpdatePopup = () => {
+const UpdatePopup = (level) => {
     /* ===== VARIABLES ===== */
     const location = useLocation();
     const path = location.pathname.split("/");
     const category = path[3];
     const type = path[4];
-    const levelName = path[5];
     const formInit = {
 		values: null,
 		error: { proof: null, comment: null },
@@ -58,9 +57,9 @@ const UpdatePopup = () => {
     // 1.) submissions: an array of all submission objects belonging to the current user for the current level
     // POSTCONDITIONS (1 possible outcome)
     // the submission is transformed into a format compatible with the form, and is updated by calling the dispatchForm() function
-	const fillForm = (submissions, type, levelName, category) => {
+	const fillForm = submissions => {
         const submission = submissions[0];
-		const formVals = submission2Form(submission, type, levelName, category, submission.profile.id);
+		const formVals = submission2Form(submission, type, level, category, submission.profile.id);
 		dispatchForm({ field: "values", value: formVals });
 	};
 
@@ -93,7 +92,7 @@ const UpdatePopup = () => {
     // we use the `id` parameter to fetch the submission we want to change to, and update the form accordingly
     const handleSubmissionChange = (id, submissions) => {
         const submission = submissions.find(submission => submission.id === id);
-        const formVals = submission2Form(submission, type, levelName, category, submission.profile.id);
+        const formVals = submission2Form(submission, type, level, category, submission.profile.id);
         dispatchForm({ field: "values", value: formVals });
     };
 

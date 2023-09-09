@@ -7,12 +7,12 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardRecord from "./LevelboardRecord";
 import UpdatePopupLogic from "./UpdatePopup.js";
 
-function UpdatePopup({ submissions, setSubmissions }) {
+function UpdatePopup({ submissions, setSubmissions, level }) {
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
 
   // states and functions from the js file
-  const { form, fillForm, handleChange, handleSubmissionChange, handleSubmit, closePopup } = UpdatePopupLogic();
+  const { form, fillForm, handleChange, handleSubmissionChange, handleSubmit, closePopup } = UpdatePopupLogic(level);
 
   // helper functions
   const { capitalize, dateB2F } = FrontendHelper();
@@ -86,7 +86,7 @@ function UpdatePopup({ submissions, setSubmissions }) {
                             onClick={ () => handleSubmissionChange(submission.id, submissions) }
                           >
                             <td>{ dateB2F(submission.submitted_at) }</td>
-                            <td>{ <LevelboardRecord submission={ submission } iconSize={ "small" } /> }</td>
+                            <td>{ <LevelboardRecord submission={ submission } iconSize={ "small" } timerType={ level.timer_type } /> }</td>
                             <td>{ submission.tas && "TAS" }</td>
                           </tr>
                         );

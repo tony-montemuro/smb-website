@@ -4,8 +4,7 @@ import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
-import SubmissionRead from "../../database/read/SubmissionRead";
-import SubmissionHelper from "../../helper/SubmissionHelper";
+import RPCRead from "../../database/read/RPCRead";
 
 const Levelboard = () => {
 	/* ===== CONTEXTS ===== */
@@ -42,11 +41,10 @@ const Levelboard = () => {
 	/* ===== FUNCTIONS ===== */
 	
 	// database functions
-	const { getSubmissions } = SubmissionRead();
-
+	const { getChartSubmissions } = RPCRead();
+ 
 	// helper functions
 	const { getInclusiveDate } = DateHelper();
-	const { removeObsolete } = SubmissionHelper();
 
 	// FUNCTION 1: getPrevAndNext - get the previous and next level names
     // PRECONDTIONS (2 parameters):
@@ -106,7 +104,7 @@ const Levelboard = () => {
     // by submitted_at
     // POSTCONDITIONS (1 possible outcome): 
     // each submission object in the submissions array is updated to include position field, which accurately ranks each record
-    // based on the details.record field
+    // based on the record field
     const insertPositionToLevelboard = submissions => {
         // variables used to determine position of each submission
         let trueCount = 1, posCount = trueCount;
@@ -124,39 +122,37 @@ const Levelboard = () => {
         });
     };
 
-	// FUNCTION 3: setupBoard - given information about the path and the submissionCache, set up the board object
-	// PRECONDITIONS (1 parameter):
-	// 1.) submissionCache: an object with two fields:
-		// a.) cache: the cache object that actually stores the submission objects (state)
-		// b.) setCache: the function used to update the cache
+	// FUNCTION 3: setupBoard - given information about the path, set up the board object
+	// PRECONDITIONS (4 parameters):
+	// 1.) abb: a string representing the game defined in the path
+    // 2.) category: a string representing the current category. category is fetched from the URL
+	// 3.) levelName: a string representing the current level name. levelName is fetched from the URL
+    // 4.) type: the current type, either "time" or "score". type is fetched from the URL
 	// POSTCONDITIONS (2 possible outcome):
 	// if the submissions successfully are retrieved, the list of submissions are generated, and both the `all` and `adjacent` fields
 	// are updated
 	// if the submissions fail to be retrieved, an error message is rendered to the user, and the board state is NOT updated, leaving the
 	// Levelboard component stuck loading
-	const setupBoard = async submissionCache => {
+	const setupBoard = async (abb, category, levelName, type) => {
 		// first, set board to default values, and get the names of the previous and next level
 		setBoard(boardInit);
 		const { prev, next } = getPrevAndNext(category, levelName);
 
 		try {
-			// get submissions, and filter based on the levelId
-			const allSubmissions = await getSubmissions(abb, category, type, submissionCache);
-			const allLevelSubmissions = allSubmissions.filter(submission => {
-				return submission.level.name === levelName
-			}).map(submission => Object.assign({}, submission));
+			// get chart submissions
+			const submissions = await getChartSubmissions(abb, category, levelName, type);
 	
 			// finally, update board state hook, as well as the userSubmission state hook
-			setBoard({ ...board, all: allLevelSubmissions, adjacent: { prev: prev, next: next } });
+			setBoard({ ...board, all: submissions, adjacent: { prev: prev, next: next } });
 			setUserSubmissions(user.profile ? 
-				allLevelSubmissions.filter(submission => submission.profile.id === user.profile.id)
+				submissions.filter(submission => submission.profile.id === user.profile.id)
 			: 
 				[]
 			);
 
 		} catch (error) {
 			// if the submissions fail to be fetched, let's render an error specifying the issue
-			addMessage("Failed to fetch submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+			addMessage("Failed to fetch chart data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
 		}
 	};
 
@@ -168,45 +164,30 @@ const Levelboard = () => {
 	// given the filters object, apply our filters to the array of all submissions, and update the `filters` and `filtered` field 
 	// by calling the setBoard() function
 	const applyFilters = filters => {
-		// first, let's just filter the submissions by date
-		let filtered = board.all.filter(submission => isBefore(new Date(submission.submitted_at), getInclusiveDate(filters.endDate)));
-
-		// next, let's filter the submissions by the tas boolean field, depending on the value in filters
-		let rta = filters.tas.includes(false) ? filtered.filter(submission => !submission.tas) : [];
-		let tas = filters.tas.includes(true) ? filtered.filter(submission => submission.tas) : [];
-
-		// now, if filters.obsolete is true, we want to remove all obsolete runs from both array of submissions
-		if (!filters.obsolete) {
-			rta = removeObsolete(rta);
-			tas = removeObsolete(tas);
-		}
-
-		// then, we can combine the two arrays
-		filtered = rta.concat(tas);
-
-		// now, let's perform the remainder of the filters
-		filtered = filtered.filter(submission => {
+		// first, let's perform the filtration process
+		const filtered = board.all.filter(submission => {
 			return (			
-				// first, let's handle the "live" filter
-				filters.live.includes(submission.live) &&
+				// first, filter by submission date
+				isBefore(new Date(submission.submitted_at), getInclusiveDate(filters.endDate)) &&
 
-				// next, we handle the "monkeys" filter
+				// next, filter by the `tas` bollean
+				filters.tas.includes(submission.tas) &&
+
+				// next, handle the "live" filter
+				filters.live.includes(submission.live) &&
+				
+				// next, handle the "obsolete" filter
+				(!filters.obsolete ? !submission.obsolete : true) &&
+
+				// next, handle the "monkeys" filter
 				filters.monkeys.includes(submission.monkey.id) &&
 
-				// next, we handle the "platforms" filter
+				// next, handle the "platforms" filter
 				filters.platforms.includes(submission.platform.id) &&
 
-				// finally, we handle the "regions" filter
+				// finally, handle the "regions" filter
 				filters.regions.includes(submission.region.id)
 			);
-		});
-
-		// next, let's correctly sort the filtered submissions
-		filtered.sort((a, b) => {
-			if (a.record !== b.record) {
-				return b.record - a.record;
-			}
-			return a.submitted_at.localeCompare(b.submitted_at);
 		});
 
 		// next, insert the position field to this set of submissions

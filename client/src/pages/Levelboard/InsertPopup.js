@@ -7,13 +7,12 @@ import LevelboardUtils from "./LevelboardUtils";
 import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
-const InsertPopup = () => {
+const InsertPopup = (level) => {
     /* ===== VARIABLES ===== */
     const location = useLocation();
     const path = location.pathname.split("/");
     const category = path[3];
     const type = path[4];
-    const levelName = path[5];
     const formInit = { 
 		values: null, 
 		error: { 
@@ -76,10 +75,10 @@ const InsertPopup = () => {
     // FUNCTION 1 - fillForm - function that is called when the popup activates
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome)
-    // default form values are generated using the type and levelName parameters, and the form is updated by calling the 
-    // dispatchForm() function
-	const fillForm = () => {
-		const formVals = submission2Form(null, type, levelName, category, user.profile.id);
+    // default form values are generated using the type, level, category, and user.profile.id arguments, and the form is updated 
+    // by calling the dispatchForm() function
+	const fillForm = level => {
+		const formVals = submission2Form(null, type, level, category, user.profile.id);
 		dispatchForm({ field: "values", value: formVals });
 	};
 
@@ -107,7 +106,7 @@ const InsertPopup = () => {
 			// a record from a user that has already submitted to the chart, the form will be loaded with that user's submission data. 
 			// otherwise, the form is set to the default values
 			case "profile_id":
-				const formData = submission2Form(null, type, levelName, category, parseInt(value));
+				const formData = submission2Form(null, type, level, category, parseInt(value));
 				dispatchForm({ field: "values", value: formData });
 				break;
 

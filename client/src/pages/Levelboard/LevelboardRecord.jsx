@@ -5,7 +5,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import FrontendHelper from "../../helper/FrontendHelper";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 
-function LevelboardRecord({ submission, iconSize }) {
+function LevelboardRecord({ submission, iconSize, timerType }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const path = location.pathname.split("/");
@@ -48,7 +48,7 @@ function LevelboardRecord({ submission, iconSize }) {
 
       { /* Render the record, as well as a link to the user's submission history on the chart. */ }
       <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }/${ submission.profile.id }` }>
-        { recordB2F(submission.record, type, submission.level.timer_type) }
+        { recordB2F(submission.record, type, timerType) }
       </Link>
       
     </span>

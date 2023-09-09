@@ -30,7 +30,7 @@ function InsertPopup({ popup, setPopup, level, submissions }) {
   /* ===== STATES & FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { form, fillForm, handleChange, handleSubmit, closePopup } = InsertPopupLogic(); 
+  const { form, fillForm, handleChange, handleSubmit, closePopup } = InsertPopupLogic(level); 
   
   // helper functions
   const { capitalize, dateB2F } = FrontendHelper();

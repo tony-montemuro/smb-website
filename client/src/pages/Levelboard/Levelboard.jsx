@@ -82,7 +82,7 @@ function Levelboard({ imageReducer, submissionCache }) {
 			setLevel(level);
 			
 			// set up the board object
-			setupBoard(submissionCache);
+			setupBoard(abb, category, levelName, type);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, location.pathname]);
@@ -216,7 +216,8 @@ function Levelboard({ imageReducer, submissionCache }) {
 							{ board.filtered.map(submission => {
 								return <LevelboardRow 
 									submission={ submission } 
-									imageReducer={ imageReducer } 
+									imageReducer={ imageReducer }
+									level={ level }
 									onClickFunc={ setDetailSubmission }
 									key={ submission.id } 
 								/>
@@ -235,7 +236,11 @@ function Levelboard({ imageReducer, submissionCache }) {
 				defaultFilters={ defaultFilters }
 				onApplyFunc={ applyFilters }
 			/>
-			<DetailPopup submission={ detailSubmission } setSubmission={ setDetailSubmission } />
+			<DetailPopup 
+				submission={ detailSubmission } 
+				setSubmission={ setDetailSubmission }
+				level={ level }
+			/>
 			<InsertPopup 
 				popup={ insertPopup } 
 				setPopup={ setInsertPopup } 
@@ -245,6 +250,7 @@ function Levelboard({ imageReducer, submissionCache }) {
 			<UpdatePopup
 				submissions={ updateSubmissions }
 				setSubmissions={ setUpdateSubmissions }
+				level={ level }
 			/>
 
 		</div>
