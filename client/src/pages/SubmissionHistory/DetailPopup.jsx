@@ -12,12 +12,12 @@ import SubmissionHistoryLogic from "./SubmissionHistory.js";
 import UpdateForm from "./UpdateForm.jsx";
 import Username from "../../components/Username/Username";
 
-function DetailPopup({ submission, setSubmission, profile }) {
+function DetailPopup({ submission, setSubmission, profile, level }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const path = location.pathname.split("/");
   const type = path[4];
-  const level = path[5];
+  const levelName = path[5];
   
   /* ===== CONTEXTS ===== */
 
@@ -45,8 +45,8 @@ function DetailPopup({ submission, setSubmission, profile }) {
 
         { /* Popup header - render the name of the level, the record, and the username */ }
         <h1>
-          { cleanLevelName(level) }:&nbsp;
-          { recordB2F(submission.record, type, submission.level.timer_type) } by&nbsp;
+          { cleanLevelName(levelName) }:&nbsp;
+          { recordB2F(submission.record, type, level.timer_type) } by&nbsp;
           <Username country={ profile.country.iso2 } profileId={ profile.id } username={ profile.username } />
         </h1>
 

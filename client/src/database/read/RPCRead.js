@@ -160,7 +160,30 @@ const RPCRead = () => {
         };
     };
 
-    return { getRecords, getTotals, getMedals, getUserRankings, getChartSubmissions };
+    // FUNCTION 6: getUnapproved - function that grabs all submissions that have not yet been approved
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes, 1 return):
+    // if the query is a success, an array containing all of the unapproved submissions will be returned
+    // otherwise, this function will throw an error, which should be handled by the caller function
+    const getUnapproved = async () => {
+        try {
+            const { data: unapproved, error } = await supabase.rpc("get_unapproved");
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            // return the array of unapproved submissions
+            return unapproved;
+
+        } catch (error) {
+            // error will be handled by caller function
+            throw error;
+        }
+    };
+
+    return { getRecords, getTotals, getMedals, getUserRankings, getChartSubmissions, getUnapproved };
 };
 
 /* ===== EXPORTS ===== */

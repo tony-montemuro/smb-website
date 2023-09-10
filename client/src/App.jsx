@@ -41,9 +41,7 @@ function App() {
     user, 
     staticCache, 
     messages,
-    submissions,
     images,
-    setSubmissions,
     dispatchImages,
     addMessage,
     callSessionListener,
@@ -53,7 +51,6 @@ function App() {
 
   /* ===== VARIABLES ===== */
   const imageReducer = { reducer: images, dispatchImages: dispatchImages };
-  const submissionCache = { cache: submissions, setCache: setSubmissions };
 
   /* ===== EFFECTS ===== */
 
@@ -124,10 +121,10 @@ function App() {
                   <Levelboard imageReducer={ imageReducer } />
                 }/>
                 <Route path=":category/score/:levelid/:profileId" element={
-                  <SubmissionHistory submissionCache={ submissionCache } />
+                  <SubmissionHistory />
                 }/>
                 <Route path=":category/time/:levelid/:profileId" element={
-                  <SubmissionHistory submissionCache={ submissionCache } />
+                  <SubmissionHistory />
                 }/>
               </Route>
               <Route path="/user/:profileId" element={ <UserLayout imageReducer={ imageReducer } /> } >

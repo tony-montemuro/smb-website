@@ -30,7 +30,6 @@ const App = () => {
   const [images, dispatchImages] = useReducer((state, action) => {
     return { ...state, [action.field]: action.data }
   }, null);
-  const [submissions, setSubmissions] = useState({ abb: undefined });
 
   /* ===== FUNCTIONS ===== */
 
@@ -215,9 +214,7 @@ const App = () => {
     user, 
     staticCache, 
     messages,
-    submissions,
     images,
-    setSubmissions,
     dispatchImages,
     addMessage,
     callSessionListener,

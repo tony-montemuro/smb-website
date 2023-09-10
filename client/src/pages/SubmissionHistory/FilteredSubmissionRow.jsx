@@ -5,7 +5,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import FrontendHelper from "../../helper/FrontendHelper";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
-function FilteredSubmissionRow({ submission, onClickFunc }) {
+function FilteredSubmissionRow({ submission, level, onClickFunc }) {
   /* ===== VARIABLES ===== */
 	const location = useLocation();
 	const type = location.pathname.split("/")[4];
@@ -25,7 +25,7 @@ function FilteredSubmissionRow({ submission, onClickFunc }) {
       <td>{ getTimeAgo(submission.id) }</td>
 
       { /* Record - render the record itself */ }
-      <td>{ recordB2F(submission.record, type, submission.level.timer_type) }</td>
+      <td>{ recordB2F(submission.record, type, level.timer_type) }</td>
 
       { /* Monkey name - render the monkey of the submission */ }
       <td>{ submission.monkey.monkey_name }</td>

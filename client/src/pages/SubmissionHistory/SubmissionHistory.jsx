@@ -11,7 +11,7 @@ import PathHelper from "../../helper/PathHelper";
 import SubmissionHistoryLogic from "./SubmissionHistory";
 import Username from "../../components/Username/Username";
 
-function SubmissionHistory({ submissionCache }) {
+function SubmissionHistory() {
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
 	const location = useLocation();
@@ -41,6 +41,7 @@ function SubmissionHistory({ submissionCache }) {
 
   // states
   const [detailSubmission, setDetailSubmission] = useState(undefined);
+  const [level, setLevel] = useState(undefined);
 
   // states and functions from the js file
   const { 
@@ -72,6 +73,9 @@ function SubmissionHistory({ submissionCache }) {
 				return;
 			}
 
+      // update the state hook for level
+      setLevel(level);
+
       // see if the profileId corresponds to a profile stored in the profiles array
       const profile = profiles.find(row => row.id === parseInt(profileId));
 
@@ -86,7 +90,7 @@ function SubmissionHistory({ submissionCache }) {
       setProfile(profile);
 			
       // finally, given information about the path, fetch submissions for this page
-			fetchSubmissions(submissionCache);
+			fetchSubmissions();
 		}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache]);
@@ -140,6 +144,7 @@ function SubmissionHistory({ submissionCache }) {
               submissions.map(submission => {
                 return <FilteredSubmissionRow 
                   submission={ submission }
+                  level={ level }
                   onClickFunc={ setDetailSubmission }
                   key={ submission.id }
                 />;
@@ -159,7 +164,12 @@ function SubmissionHistory({ submissionCache }) {
       </div>
 
       { /* Detail popup */ }
-      <DetailPopup submission={ detailSubmission } setSubmission={ setDetailSubmission } profile={ profile } />
+      <DetailPopup 
+        submission={ detailSubmission } 
+        setSubmission={ setDetailSubmission } 
+        profile={ profile } 
+        level={ level }
+      />
     </>
    
   ;

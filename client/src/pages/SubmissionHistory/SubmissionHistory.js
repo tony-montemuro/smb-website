@@ -29,26 +29,18 @@ const SubmissionHistory = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { getSubmissions } = SubmissionRead();
+    const { getChartSubmissionsByProfile } = SubmissionRead();
 
-    // FUNCTION 1: fetchSubmissions - given information from the path and submission cache, get the list of submissions from the database
-    // PRECONDITIONS (1 parameter):
-    // 1.) submissionCache: an object with two fields:
-		// a.) cache: the cache object that actually stores the submission objects (state)
-		// b.) setCache: the function used to update the cache
+    // FUNCTION 1: fetchSubmissions - given information from the path, get the list of submissions from the database
+    // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
-    // given the submission cache, we get a filtered list of submissions, and update the submissions state by calling the
+    // we query a highly filtered list of submissions according to the url path, and update the submissions state by calling the 
     // setSubmissions() function
-    const fetchSubmissions = async submissionCache => {
+    const fetchSubmissions = async () => {
         try {
-            // attempt to grab the submissions, and filter by level and profile
-            const submissions = await getSubmissions(abb, category, type, submissionCache);
-            const userLevelSubmissions = submissions.filter(submission => {
-				return submission.level.name === levelName && submission.profile.id === profileId;
-			});
-
-            // finally, update the submissions state by calling `setSubmissions()`
-            setSubmissions(userLevelSubmissions);
+            // attempt to grab the submissions, and update submission state by calling `setSubmissions()`
+            const submissions = await getChartSubmissionsByProfile(abb, category, levelName, type, profileId)
+            setSubmissions(submissions);
 
         } catch (error) {
             // if submissions fail to load, render an error message
