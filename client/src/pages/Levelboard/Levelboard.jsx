@@ -64,7 +64,7 @@ function Levelboard({ imageReducer }) {
 
 	/* ===== EFFECTS ===== */
 
-	// code that is executed when the page loads, when the staticCache object is updated, or when the user
+	// code that is executed when the page loads, when the user state is updated, or when the user
   // switches levels
 	useEffect(() => {
 		if (user !== undefined) {
@@ -82,19 +82,10 @@ function Levelboard({ imageReducer }) {
 			setLevel(level);
 			
 			// set up the board object
-			setupBoard(abb, category, levelName, type);
+			setupBoard(abb, category, levelName, type, defaultFilters);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, location.pathname]);
-
-	// code that is executed once the board's initial data has loaded (`all` field, containing all submissions) has loaded,
-	// or when the user switches levels
-	useEffect(() => {
-		if (board.all) {
-			applyFilters(defaultFilters);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [board.all, location.pathname]);
 
 	/* ===== LEVELBOARD COMPONENT ===== */
 	return level && board.filtered && board.filters ?
@@ -141,22 +132,24 @@ function Levelboard({ imageReducer }) {
 
 						{ /* Render a score tab if the chart type is score or both */ }
 						{ level.chart_type !== "time" &&
-							<div
+							<button
+								type="button"
 								className={ `levelboard-tab ${ type === "score" ? "levelboard-tab-active" : "" }` }
 								onClick={ () => handleTabClick("score") }
 							>
 								Score
-							</div>
+							</button>
 						}
 
 						{ /* Render a time tab if the chart type is time or both */ }
 						{ level.chart_type !== "score" && 
-							<div
+							<button
+								type="button"
 								className={ `levelboard-tab ${ type === "time" ? "levelboard-tab-active" : "" }` }
 								onClick={ () => handleTabClick("time") }
 							>
 								Time
-							</div>
+							</button>
 						}
 
 					</div>

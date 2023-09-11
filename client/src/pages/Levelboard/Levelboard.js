@@ -29,8 +29,7 @@ const Levelboard = () => {
 		all: undefined,
 		adjacent: undefined,
 		filtered: undefined,
-		filters: undefined,
-		records: null
+		filters: undefined
 	};
 	const navigate = useNavigate();
 
@@ -122,50 +121,19 @@ const Levelboard = () => {
         });
     };
 
-	// FUNCTION 3: setupBoard - given information about the path, set up the board object
-	// PRECONDITIONS (4 parameters):
-	// 1.) abb: a string representing the game defined in the path
-    // 2.) category: a string representing the current category. category is fetched from the URL
-	// 3.) levelName: a string representing the current level name. levelName is fetched from the URL
-    // 4.) type: the current type, either "time" or "score". type is fetched from the URL
-	// POSTCONDITIONS (2 possible outcome):
-	// if the submissions successfully are retrieved, the list of submissions are generated, and both the `all` and `adjacent` fields
-	// are updated
-	// if the submissions fail to be retrieved, an error message is rendered to the user, and the board state is NOT updated, leaving the
-	// Levelboard component stuck loading
-	const setupBoard = async (abb, category, levelName, type) => {
-		// first, set board to default values, and get the names of the previous and next level
-		setBoard(boardInit);
-		const { prev, next } = getPrevAndNext(category, levelName);
-
-		try {
-			// get chart submissions
-			const submissions = await getChartSubmissions(abb, category, levelName, type);
-	
-			// finally, update board state hook, as well as the userSubmission state hook
-			setBoard({ ...board, all: submissions, adjacent: { prev: prev, next: next } });
-			setUserSubmissions(user.profile ? 
-				submissions.filter(submission => submission.profile.id === user.profile.id)
-			: 
-				[]
-			);
-
-		} catch (error) {
-			// if the submissions fail to be fetched, let's render an error specifying the issue
-			addMessage("Failed to fetch chart data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
-		}
-	};
-
-	// FUNCTION 4: applyFilters - given a filter object, apply filters, and update the board's `filtered` field
-	// PRECONDITIONS (1 parameter):
+	// FUNCTION 3: getFiltered - given a filter object (and optionally, an array of submission objects), get an array of filtered
+	// submissions
+	// PRECONDITIONS (2 parameters):
 	// 1.) filters: a filter object with the following fields: 
 	// endDate (Date), live (array), monkeys (array), platforms (array), obsolete (boolean), regions (array), tas: (array)
+	// 2.) allSubmissions: an optional parameter, that stores an array of submission objects. this should always be the value of `board.all`,
+	// but sometimes, this function is called before the `board` state updates for the first time.
 	// POSTCONDITIONS (1 possible outcomes):
-	// given the filters object, apply our filters to the array of all submissions, and update the `filters` and `filtered` field 
-	// by calling the setBoard() function
-	const applyFilters = filters => {
-		// first, let's perform the filtration process
-		const filtered = board.all.filter(submission => {
+	// given the filters object, apply our filters to the array of all submissions, and return the new array of submissions
+	const getFiltered = (filters, allSubmissions) => {
+		// perform filter
+		const submissions = allSubmissions ? allSubmissions : board.all;
+		const filtered = submissions.filter(submission => {
 			return (			
 				// first, filter by submission date
 				isBefore(new Date(submission.submitted_at), getInclusiveDate(filters.endDate)) &&
@@ -193,11 +161,68 @@ const Levelboard = () => {
 		// next, insert the position field to this set of submissions
 		insertPositionToLevelboard(filtered);
 
+		// finally, return filtered submissions
+		return filtered;
+	};
+
+	// FUNCTION 4: setupBoard - given information about the path, set up the board object
+	// PRECONDITIONS (4 parameters):
+	// 1.) abb: a string representing the game defined in the path
+    // 2.) category: a string representing the current category. category is fetched from the URL
+	// 3.) levelName: a string representing the current level name. levelName is fetched from the URL
+    // 4.) type: the current type, either "time" or "score". type is fetched from the URL
+	// 5.) filters: a filter object with the following fields: 
+	// endDate (Date), live (array), monkeys (array), platforms (array), obsolete (boolean), regions (array), tas: (array)
+	// POSTCONDITIONS (2 possible outcome):
+	// if the submissions successfully are retrieved, the list of submissions are generated, and all fields of `applyFilters` are
+	// updated
+	// if the submissions fail to be retrieved, an error message is rendered to the user, and the board state is NOT updated, leaving the
+	// Levelboard component stuck loading
+	const setupBoard = async (abb, category, levelName, type, filters) => {
+		// first, set board to default values, and get the names of the previous and next level
+		setBoard(boardInit);
+		const adjacent = getPrevAndNext(category, levelName);
+
+		try {
+			// get chart submissions
+			const all = await getChartSubmissions(abb, category, levelName, type);
+
+			// then, we need to get the array of filtered submissions
+			const filtered = getFiltered(filters, all);
+
+			// finally, we can update state hooks (board & user submissions)
+			setBoard({ adjacent, all, filters, filtered });
+			setUserSubmissions(user.profile ? 
+				all.filter(submission => submission.profile.id === user.profile.id)
+			: 
+				[]
+			);
+
+		} catch (error) {
+			// if the submissions fail to be fetched, let's render an error specifying the issue
+			console.log(error);
+			addMessage("Failed to fetch chart data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+		}
+	};
+
+	// FUNCTION 5: applyFilters - given a filter object, apply filters, and update the board's `filtered` field
+	// PRECONDITIONS (2 parameters):
+	// 1.) filters: a filter object with the following fields: 
+	// endDate (Date), live (array), monkeys (array), platforms (array), obsolete (boolean), regions (array), tas: (array)
+	// 2.) allSubmissions: an optional parameter, that stores an array of submission objects. this should always be the value of `board.all`,
+	// but sometimes, this function is called before the `board` state updates for the first time.
+	// POSTCONDITIONS (1 possible outcomes):
+	// given the filters object, apply our filters to the array of all submissions, and update the `filters` and `filtered` field 
+	// by calling the setBoard() function
+	const applyFilters = (filters) => {
+		// first, let's perform the filtration process
+		const filtered = getFiltered(filters);
+
 		// finally, update the `filtered` property of the board state by calling `setBoard()`
 		setBoard({ ...board, filtered: filtered, filters: filters });
 	};
 
-	// FUNCTION 5: handleTabClick - function that switches leaderboards based on the otherType parameter
+	// FUNCTION 6: handleTabClick - function that switches leaderboards based on the otherType parameter
 	// PRECONDITIONS (1 parameter):
 	// 1.) otherType: a string, either "score" or "time"
 	// POSTCONDITIONS (2 possible outcome):

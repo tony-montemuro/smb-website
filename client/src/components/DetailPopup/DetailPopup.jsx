@@ -17,7 +17,6 @@ function DetailPopup({ submission, setSubmission, level }) {
   const location = useLocation();
   const levelName = location.pathname.split("/")[5];
   const profile = submission ? submission.profile : undefined;
-  console.log(profile);
 
   /* ===== CONTEXTS ===== */
   
