@@ -10,6 +10,7 @@ import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
 import InsertPopup from "./InsertPopup.jsx";
 import PathHelper from "../../helper/PathHelper";
+import TableTabs from "../../components/TableTabs/TableTabs";
 import UpdatePopup from "./UpdatePopup.jsx";
 
 function Levelboard({ imageReducer }) {
@@ -59,6 +60,7 @@ function Levelboard({ imageReducer }) {
 		userSubmissions,
 		setupBoard,
 		applyFilters,
+		getChartTypes,
 		handleTabClick
 	} = LevelboardLogic();
 
@@ -127,32 +129,8 @@ function Levelboard({ imageReducer }) {
 
 				<div className="levelboard-options">
 
-				{ /* Levelboard tabs: The type tabs for the levelboard. Will only render a tab if the level has a board for it. */ }
-					<div className="levelboard-tabs">
-
-						{ /* Render a score tab if the chart type is score or both */ }
-						{ level.chart_type !== "time" &&
-							<button
-								type="button"
-								className={ `levelboard-tab ${ type === "score" ? "levelboard-tab-active" : "" }` }
-								onClick={ () => handleTabClick("score") }
-							>
-								Score
-							</button>
-						}
-
-						{ /* Render a time tab if the chart type is time or both */ }
-						{ level.chart_type !== "score" && 
-							<button
-								type="button"
-								className={ `levelboard-tab ${ type === "time" ? "levelboard-tab-active" : "" }` }
-								onClick={ () => handleTabClick("time") }
-							>
-								Time
-							</button>
-						}
-
-					</div>
+					{ /* Levelboard tabs: The type tabs for the levelboard. Will only render a tab if the level has a board for it. */ }
+					<TableTabs elements={ getChartTypes(level) } current={ type } handleClick={ handleTabClick } />
 
 					{ /* Levelboard buttons - contains many buttons related to the game that levelboard belongs to */ }
 					<div className="levelboard-buttons">

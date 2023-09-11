@@ -222,7 +222,20 @@ const Levelboard = () => {
 		setBoard({ ...board, filtered: filtered, filters: filters });
 	};
 
-	// FUNCTION 6: handleTabClick - function that switches leaderboards based on the otherType parameter
+	// FUNCTION 6: getChartTypes - function that generates array of valid chart types, given information about the level
+	// PRECONDITIONS (1 parameter):
+	// 1.) level: a level object, which references the current level
+	// POSTCONDITIONS (1 possible outcome):
+	// depending on the value of the `chart_type` attribute of level, an array of types (strings) is returned
+	const getChartTypes = level => {
+		if (level.chart_type === "both") {
+			return ["score", "time"];
+		} else {
+			return [level.timer_type];
+		}
+	};
+
+	// FUNCTION 7: handleTabClick - function that switches leaderboards based on the otherType parameter
 	// PRECONDITIONS (1 parameter):
 	// 1.) otherType: a string, either "score" or "time"
 	// POSTCONDITIONS (2 possible outcome):
@@ -239,6 +252,7 @@ const Levelboard = () => {
 		userSubmissions,
 		setupBoard,
 		applyFilters,
+		getChartTypes,
 		handleTabClick
 	};
 };  
