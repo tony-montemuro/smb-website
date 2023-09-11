@@ -3,8 +3,8 @@ import { GameContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
+import DetailedRecord from "../../components/DetailedRecord/DetailedRecord";
 import FrontendHelper from "../../helper/FrontendHelper";
-import LevelboardRecord from "./LevelboardRecord";
 import UpdatePopupLogic from "./UpdatePopup.js";
 
 function UpdatePopup({ submissions, setSubmissions, level }) {
@@ -86,7 +86,7 @@ function UpdatePopup({ submissions, setSubmissions, level }) {
                             onClick={ () => handleSubmissionChange(submission.id, submissions) }
                           >
                             <td>{ dateB2F(submission.submitted_at) }</td>
-                            <td>{ <LevelboardRecord submission={ submission } iconSize={ "small" } timerType={ level.timer_type } /> }</td>
+                            <td>{ <DetailedRecord submission={ submission } iconSize={ "small" } timerType={ level.timer_type } /> }</td>
                             <td>{ submission.tas && "TAS" }</td>
                           </tr>
                         );

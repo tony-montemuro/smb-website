@@ -1,10 +1,10 @@
 /* ===== IMPORTS ===== */
 import "./SubmissionHistory.css";
-import { GameContext, MessageContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
+import { GameContext, MessageContext, StaticCacheContext } from "../../utils/Contexts";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import DetailPopup from "./DetailPopup";
+import DetailPopup from "../../components/DetailPopup/DetailPopup.jsx";
 import FilteredSubmissionRow from "./FilteredSubmissionRow";
 import FrontendHelper from "../../helper/FrontendHelper";
 import PathHelper from "../../helper/PathHelper";
@@ -21,15 +21,12 @@ function SubmissionHistory() {
 	const type = path[4];
 	const levelName = path[5];
   const profileId = path[6];
-  const TABLE_WIDTH = 10;
+  const TABLE_WIDTH = 12;
 
   /* ===== CONTEXTS ===== */
 
   // static cache state from static cache context
   const { staticCache } = useContext(StaticCacheContext);
-
-  // user state from user context
-  const { user } = useContext(UserContext);
 
   // game state from game context
   const { game } = useContext(GameContext);
@@ -38,16 +35,13 @@ function SubmissionHistory() {
   const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES & FUNCTIONS ====== */
-
-  // states
   const [detailSubmission, setDetailSubmission] = useState(undefined);
   const [level, setLevel] = useState(undefined);
+  const [profile, setProfile] = useState(undefined);
 
   // states and functions from the js file
   const { 
     submissions,
-    profile, 
-    setProfile, 
     fetchSubmissions
   } = SubmissionHistoryLogic();
 
@@ -154,7 +148,7 @@ function SubmissionHistory() {
 
               // Otherwise, render a message to the client stating that the user specified in the path has not submitted to the level.
               <tr>
-                <td className="submission-history-empty" colSpan={ user.is_mod ? TABLE_WIDTH+1 : TABLE_WIDTH }><i>This user has never submitted to this chart.</i></td>
+                <td id="submission-history-empty" colSpan={ TABLE_WIDTH }><i>This user has never submitted to this chart.</i></td>
               </tr>
 
             }
@@ -167,7 +161,6 @@ function SubmissionHistory() {
       <DetailPopup 
         submission={ detailSubmission } 
         setSubmission={ setDetailSubmission } 
-        profile={ profile } 
         level={ level }
       />
     </>

@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
+import DetailedRecord from "../../components/DetailedRecord/DetailedRecord";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
-import LevelboardRecord from "./LevelboardRecord";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
 function LevelboardRow({ submission, imageReducer, level, onClickFunc }) {
@@ -29,7 +29,7 @@ function LevelboardRow({ submission, imageReducer, level, onClickFunc }) {
 
       { /* Render the record */ }
       <td>
-        <LevelboardRecord submission={ submission } iconSize={ "medium" } timerType={ level.timer_type } />
+        <DetailedRecord submission={ submission } iconSize={ "medium" } timerType={ level.timer_type } />
       </td>
 
       { /* Render the submission date */ }

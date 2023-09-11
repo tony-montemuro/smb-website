@@ -102,6 +102,11 @@ const SubmissionRead = () => {
                         platform_name
                     ),
                     position,
+                    profile (
+                        country,
+                        id,
+                        username
+                    ),
                     proof,
                     record,
                     region (

@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext } from "react";
 import { UserContext } from "../../utils/Contexts";
-import CountdownTimer from "../../components/CountdownTimer/CountdownTimer.jsx";
+import CountdownTimer from "../CountdownTimer/CountdownTimer.jsx";
 import ReportFormLogic from "./ReportForm.js";
 
 function ReportForm({ submission }) {
@@ -20,7 +20,7 @@ function ReportForm({ submission }) {
 
   /* ===== REPORT FORM COMPONENT ===== */
   return (
-    <div className="levelboard-detail-popup-report">
+    <div className="detail-popup-report">
 
       { submission.report ?
 
@@ -48,7 +48,7 @@ function ReportForm({ submission }) {
             <form>
       
               { /* Message input - a text field where the user must include a message with their report */ }
-              <div className="levelboard-textarea-group">
+              <div className="detail-textarea-group">
                 <label>Message: </label>
                 <textarea 
                   value={ form.message }
@@ -65,7 +65,7 @@ function ReportForm({ submission }) {
             </form>
       
             { /* Report form button */ }
-            <div className="levelboard-decision-btns">
+            <div className="detail-decision-btns">
 
               { /* Button that, when pressed, reports the submission */ }
               <button type="submit" onClick={ () => handleReport(submission) } disabled={ form.submitting || form.submitted }>

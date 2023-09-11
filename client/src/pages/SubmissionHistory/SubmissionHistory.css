@@ -28,17 +28,19 @@
     display: inline-flex;
 }
 
+.submission-history-body table tbody tr:nth-child(even) {
+    background-color: #f1f1f1;
+}
+
 .submission-history-body table tbody tr:hover, .submission-history-body table tbody tr:nth-child(even):hover {
     background-color: lightgray;
     cursor: pointer;
 }
 
-.submission-history-body table tbody tr:nth-child(even) {
-    background-color: #f1f1f1;
-}
-
-.submission-history-empty {
+#submission-history-empty {
     text-align: center;
+    background-color: white;
+    cursor: default;
 }
 
 .submission-history-svg-wrapper {

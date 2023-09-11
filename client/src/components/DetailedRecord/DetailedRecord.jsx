@@ -5,7 +5,10 @@ import CheckIcon from "@mui/icons-material/Check";
 import FrontendHelper from "../../helper/FrontendHelper";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 
-function LevelboardRecord({ submission, iconSize, timerType }) {
+function DetailedRecord({ submission, iconSize, timerType }) {
+  /* ===== FUNCTIONS ===== */
+  const { recordB2F } = FrontendHelper();
+
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const path = location.pathname.split("/");
@@ -13,9 +16,8 @@ function LevelboardRecord({ submission, iconSize, timerType }) {
   const category = path[3];
   const type = path[4];
   const levelName = path[5];
-
-  /* ===== FUNCTIONS ===== */
-  const { recordB2F } = FrontendHelper();
+  const profileId = path[6];
+  const record = recordB2F(submission.record, type, timerType);
 
   /* ===== LEVELBOARD RECORD COMPONENT ===== */
   return (
@@ -46,10 +48,14 @@ function LevelboardRecord({ submission, iconSize, timerType }) {
           null
       }
 
-      { /* Render the record, as well as a link to the user's submission history on the chart. */ }
-      <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }/${ submission.profile.id }` }>
-        { recordB2F(submission.record, type, timerType) }
-      </Link>
+      { /* Render the record, and render the link, depending on whether or not `profileId` is defined. */ }
+      { profileId ?
+        record
+      :
+        <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }/${ submission.profile ? submission.profile.id : profileId }` }>
+          { record }
+        </Link>
+      }
       
     </span>
   );
@@ -57,4 +63,4 @@ function LevelboardRecord({ submission, iconSize, timerType }) {
 };
 
 /* ===== EXPORTS ===== */
-export default LevelboardRecord;
+export default DetailedRecord;

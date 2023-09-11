@@ -3,7 +3,7 @@ import "./Levelboard.css";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import DetailPopup from "./DetailPopup.jsx";
+import DetailPopup from "../../components/DetailPopup/DetailPopup.jsx";
 import FiltersPopup from "./FiltersPopup.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardLogic from "./Levelboard.js";

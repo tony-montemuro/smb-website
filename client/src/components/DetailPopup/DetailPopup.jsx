@@ -1,21 +1,23 @@
 /* ===== IMPORTS ===== */
+import "./DetailPopup.css";
 import { UserContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import DetailedRecord from "../DetailedRecord/DetailedRecord.jsx";
 import EmbedHelper from "../../helper/EmbedHelper";
-import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
+import EmbededVideo from "../EmbededVideo/EmbededVideo.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
-import LevelboardRecord from "./LevelboardRecord";
 import ReportForm from "./ReportForm.jsx";
-import Username from "../../components/Username/Username.jsx";
+import Username from "../Username/Username.jsx";
 
 function DetailPopup({ submission, setSubmission, level }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const levelName = location.pathname.split("/")[5];
   const profile = submission ? submission.profile : undefined;
+  console.log(profile);
 
   /* ===== CONTEXTS ===== */
   
@@ -30,34 +32,45 @@ function DetailPopup({ submission, setSubmission, level }) {
 
   /* ===== DETAIL POPUP COMPONENT ===== */
   return submission &&
-    <div className="levelboard-popup">
-      <div className="levelboard-popup-inner" style={ { "minWidth": "40%" } }>
+    <div className="detail-popup">
+      <div className="detail-popup-inner" style={ { "minWidth": "40%" } }>
 
         { /* Button to close the popup */ }
-        <div className="levelboard-popup-close-btn">
+        <div className="detail-popup-close-btn">
           <button type="button" onClick={ () => setSubmission(undefined) }>Close</button>
         </div>
 
         { /* Popup header - render the name of the level, the record, and the username */ }
         <h1>
           { cleanLevelName(levelName) }:&nbsp;
-          <LevelboardRecord submission={ submission } iconSize={ "large" } timerType={ level.timer_type } /> by&nbsp;
+          <DetailedRecord submission={ submission } iconSize={ "large" } timerType={ level.timer_type } /> by&nbsp;
           <Username country={ profile.country } profileId={ profile.id } username={ profile.username } />
         </h1>
 
         { /* Render a special message if the submission used tools. */ }
-        { submission.tas && <p id="levelboard-tas"><b>Note:</b> This run is a tool-assisted speedrun, and will not count toward any rankings.</p> }
+        { submission.tas && <p><b>Note:</b> This run is a tool-assisted speedrun, and will not count toward any rankings.</p> }
 
-        { /* Levelboard details popup video - render the embeded video within this container */ }
-        <div className={ getUrlType(submission.proof) !== "twitter" ? "levelboard-detail-popup-video" : "" }>
+        { /* Details popup video - render the embeded video within this container */ }
+        <div className={ getUrlType(submission.proof) !== "twitter" ? "detail-popup-video" : "" }>
           <EmbededVideo url={ submission.proof } />
         </div>
 
-        { /* Levelboard details popup info - render the submission details within this unordered list */ }
-        <ul className="levelboard-detail-popup-info">
+        { /* Details popup info - render the submission details within this unordered list */ }
+        <ul className="detail-popup-info">
 
-          { /* Position - render the position of the submission */ }
-          <li>Position: { submission.position }</li>
+          { /* Render the submission differently, depending on whether or not `all_position` is defined. */ }
+          { submission.all_position ?
+            <>
+              {/* Position - render the position at the time the user submitted it */}
+              <li>Position: { submission.all_position }</li>
+
+              { /* Live - render the "live" position at the time the user submitted it */ }
+              { submission.live && <li>Live Position: { submission.position }</li> }
+            </>
+          :
+            // Position - render the "relative" position of the submission (this depends on filters, typically)
+            <li>Position: { submission.position }</li>
+          }
 
           { /* Date - render the submission date */ }
           <li>Date: { dateB2F(submission.submitted_at) }</li>
@@ -73,7 +86,7 @@ function DetailPopup({ submission, setSubmission, level }) {
 
           { /* Live - render a checkbox if the submission has a live proof, otherwise an 'x' symbol */ }
           <li>Live:&nbsp;
-            <div className="levelboard-svg-wrapper">
+            <div className="detail-svg-wrapper">
               { submission.live ? <CheckIcon /> : <CloseRoundedIcon /> }
             </div>
           </li>
