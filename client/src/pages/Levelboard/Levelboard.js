@@ -228,7 +228,7 @@ const Levelboard = () => {
 	// PRECONDITIONS (1 parameter):
 	// 1.) level: a level object, which references the current level
 	// POSTCONDITIONS (1 possible outcome):
-	// depending on the value of the `chart_type` attribute of level, an array of types (strings) is returned
+	// depending on the value of the `chart_type` attribute of level, an array of chart type objects is returned
 	const getChartTypes = level => {
 		if (level.chart_type === "both") {
 			return [{ data: "score", renderedData: "Score" }, { data: "time", renderedData: "Time"}];
