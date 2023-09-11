@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
+import FrontendHelper from "../../helper/FrontendHelper";
 import RPCRead from "../../database/read/RPCRead";
 
 const Levelboard = () => {
@@ -44,6 +45,7 @@ const Levelboard = () => {
  
 	// helper functions
 	const { getInclusiveDate } = DateHelper();
+	const { capitalize } = FrontendHelper();
 
 	// FUNCTION 1: getPrevAndNext - get the previous and next level names
     // PRECONDTIONS (2 parameters):
@@ -229,9 +231,9 @@ const Levelboard = () => {
 	// depending on the value of the `chart_type` attribute of level, an array of types (strings) is returned
 	const getChartTypes = level => {
 		if (level.chart_type === "both") {
-			return ["score", "time"];
+			return [{ data: "score", renderedData: "Score" }, { data: "time", renderedData: "Time"}];
 		} else {
-			return [level.timer_type];
+			return [{ data: level.chart_type, renderedData: capitalize(level.chart_type) }];
 		}
 	};
 

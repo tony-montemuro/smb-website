@@ -120,10 +120,16 @@ function App() {
                 <Route path=":category/time/:levelid" element={
                   <Levelboard imageReducer={ imageReducer } />
                 }/>
-                <Route path=":category/score/:levelid/:profileId" element={
+                <Route path=":category/score/:levelid/:profileId/normal" element={
                   <SubmissionHistory />
                 }/>
-                <Route path=":category/time/:levelid/:profileId" element={
+                <Route path=":category/score/:levelid/:profileId/tas" element={
+                  <SubmissionHistory />
+                }/>
+                <Route path=":category/time/:levelid/:profileId/normal" element={
+                  <SubmissionHistory />
+                }/>
+                <Route path=":category/time/:levelid/:profileId/tas" element={
                   <SubmissionHistory />
                 }/>
               </Route>

@@ -1,11 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./TableTabs.css";
-import FrontendHelper from "../../helper/FrontendHelper";
 
 function TableTabs({ elements, current, handleClick }) {
-  /* ===== FUNCTIONS ===== */
-  const { capitalize } = FrontendHelper();
-  
   /* ===== TABLE TAB BUTTONS ===== */
   return (
     <div className="tabs">
@@ -13,11 +9,11 @@ function TableTabs({ elements, current, handleClick }) {
         return (
           <button
             type="button"
-            className={ `tab ${ current === element ? "tab-active" : "" }` }
-            onClick={ () => handleClick(element) }
-            key={ element }
+            className={ `tab ${ current === element.data ? "tab-active" : "" }` }
+            onClick={ () => handleClick(element.data) }
+            key={ element.data }
           >
-            { capitalize(element) }
+            { element.renderedData }
           </button>
         );
       })}

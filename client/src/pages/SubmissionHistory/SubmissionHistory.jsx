@@ -10,8 +10,13 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import PathHelper from "../../helper/PathHelper";
 import SubmissionHistoryLogic from "./SubmissionHistory";
 import Username from "../../components/Username/Username";
+import TableTabs from "../../components/TableTabs/TableTabs";
 
 function SubmissionHistory() {
+  /* ===== HELPER FUNCTIONS ====== */
+  const { capitalize, cleanLevelName, runTypeB2F } = FrontendHelper();
+  const { fetchLevelFromGame } = PathHelper();
+
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
 	const location = useLocation();
@@ -22,6 +27,7 @@ function SubmissionHistory() {
 	const levelName = path[5];
   const profileId = path[6];
   const TABLE_WIDTH = 12;
+  const tableTabElements = [{ data: "normal", renderedData: runTypeB2F("normal")}, { data: "tas", renderedData: runTypeB2F("tas") }];
 
   /* ===== CONTEXTS ===== */
 
@@ -42,12 +48,11 @@ function SubmissionHistory() {
   // states and functions from the js file
   const { 
     submissions,
-    fetchSubmissions
+    runType,
+    setRunType,
+    fetchSubmissions,
+    handleTabClick
   } = SubmissionHistoryLogic();
-
-  // helper functions
-  const { capitalize, cleanLevelName } = FrontendHelper();
-  const { fetchLevelFromGame } = PathHelper();
 
   /* ===== EFFECTS ====== */
 
@@ -89,8 +94,14 @@ function SubmissionHistory() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticCache]);
 
+  // code that is executed each time the path changes
+  useEffect(() => {
+    setRunType(path[7]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
   /* ===== RECORD HISTORY COMPONENT ===== */
-  return profile && submissions &&
+  return profile && submissions[runType] &&
     <>
 
       { /* Record History Header - Render information about the page. */ }
@@ -108,53 +119,61 @@ function SubmissionHistory() {
         </div>
       </div>
 
-      { /* Record History Body - The actual content of the page: a table of submissions */ }
+      { /* Record History Body - The actual content of the page: tabs to swap between normal & TAS, & a table of submissions */ }
       <div className="submission-history-body">
-        <table>
 
-          { /* Table header: specifies the information displayed in each cell of the table */ }
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Submitted</th>
-              <th>{ capitalize(type) }</th>
-              <th>Monkey</th>
-              <th>Platform</th>
-              <th>Region</th>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th>Position</th>
-              <th>Live Position</th>
-              <th></th>
-            </tr>
-          </thead>
+        { /* Render both the "normal" and "tas" tabs */ }
+        <div className="submission-history-options">
+          <TableTabs elements={ tableTabElements } current={ runType } handleClick={ handleTabClick } />
+        </div>
+        
+        { /* Render the submission history table */ }
+        <div className="submission-history-table">
+          <table>
 
-          { /* Table body - the actual content itself, rendered row by row given submission data */ }
-          <tbody>
-            { submissions.length > 0 ?
-
-              // If any submissions exist, render them using the submission data.
-              submissions.map(submission => {
-                return <FilteredSubmissionRow 
-                  submission={ submission }
-                  level={ level }
-                  onClickFunc={ setDetailSubmission }
-                  key={ submission.id }
-                />;
-              })
-
-            :
-
-              // Otherwise, render a message to the client stating that the user specified in the path has not submitted to the level.
+            { /* Table header: specifies the information displayed in each cell of the table */ }
+            <thead>
               <tr>
-                <td id="submission-history-empty" colSpan={ TABLE_WIDTH }><i>This user has never submitted to this chart.</i></td>
+                <th>Date</th>
+                <th>Submitted</th>
+                <th>{ capitalize(type) }</th>
+                <th>Monkey</th>
+                <th>Platform</th>
+                <th>Region</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Position</th>
+                <th>Live Position</th>
               </tr>
+            </thead>
 
-            }
-          </tbody>
+            { /* Table body - the actual content itself, rendered row by row given submission data */ }
+            <tbody>
+              { submissions[runType].length > 0 ?
 
-        </table>
+                // If any submissions exist, render them using the submission data.
+                submissions[runType].map(submission => {
+                  return <FilteredSubmissionRow 
+                    submission={ submission }
+                    level={ level }
+                    onClickFunc={ setDetailSubmission }
+                    key={ submission.id }
+                  />;
+                })
+
+              :
+
+                // Otherwise, render a message to the client stating that the user specified in the path has not submitted to the level.
+                <tr>
+                  <td id="submission-history-empty" colSpan={ TABLE_WIDTH }><i>This user has never submitted { runTypeB2F(runType) } runs to this chart.</i></td>
+                </tr>
+
+              }
+            </tbody>
+
+          </table>
+        </div>
       </div>
 
       { /* Detail popup */ }

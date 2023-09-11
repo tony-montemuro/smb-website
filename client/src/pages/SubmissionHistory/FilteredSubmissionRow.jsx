@@ -68,9 +68,6 @@ function FilteredSubmissionRow({ submission, level, onClickFunc }) {
 
       { /* Live Position - Render the position of the submission (live only) */ }
       <td>{ submission.position ? submission.position : "-" }</td>
-
-      { /* TAS - Render the phrase "TAS" if submission is marked as TAS, otherwise nothing */ }
-      <td>{ submission.tas && "TAS" }</td>
       
     </tr>
   );

@@ -1,9 +1,21 @@
 .submission-history-header {
     text-align: center;
+    margin: 5px;
+}
+
+.submission-history-body {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
+
+.submission-history-options {
+    display: flex;
+    justify-content: flex-start;
 }
 
 .submission-history-body table {
-    margin-top: 7px;
+    min-width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
     margin-left: auto;

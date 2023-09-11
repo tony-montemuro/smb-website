@@ -181,7 +181,24 @@ const FrontendHelper = () => {
         };
     };
 
-    return { capitalize, cleanLevelName, dateB2F, secondsToHours, recordB2F, getTimeAgo, categoryB2F };
+    // FUNCTION 9: runTypeB2F - ("run type backend-to-frontend") convert run type from backend to frontend format
+    // PRECONDITIONS (1 parameter):
+    // 1.) runType: a string, either "normal" or "tas"
+    // POSTCONDITIONS (1 possible outcome):
+    // if the run type is valid, it is manipulated in some way, and returned
+    // otherwise, an empty string is returned
+    const runTypeB2F = runType => {
+        switch(runType) {
+            case "normal":
+                return capitalize(runType);
+            case "tas":
+                return runType.toUpperCase();
+            default:
+                return "";
+        };
+    };
+
+    return { capitalize, cleanLevelName, dateB2F, secondsToHours, recordB2F, getTimeAgo, categoryB2F, runTypeB2F };
 };
 
 export default FrontendHelper;

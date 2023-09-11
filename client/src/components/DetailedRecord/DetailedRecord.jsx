@@ -17,6 +17,7 @@ function DetailedRecord({ submission, iconSize, timerType }) {
   const type = path[4];
   const levelName = path[5];
   const profileId = path[6];
+  const historyPath = `/games/${ abb }/${ category }/${ type }/${ levelName }/${ submission.profile ? submission.profile.id : profileId }/${ submission.tas ? "tas" : "normal" }`;
   const record = recordB2F(submission.record, type, timerType);
 
   /* ===== LEVELBOARD RECORD COMPONENT ===== */
@@ -52,9 +53,7 @@ function DetailedRecord({ submission, iconSize, timerType }) {
       { profileId ?
         record
       :
-        <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }/${ submission.profile ? submission.profile.id : profileId }` }>
-          { record }
-        </Link>
+        <Link to={ historyPath }>{ record }</Link>
       }
       
     </span>
