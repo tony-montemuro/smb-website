@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import { useLocation } from "react-router-dom";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import CheckIcon from "@mui/icons-material/Check";
 import DetailedRecord from "../../components/DetailedRecord/DetailedRecord.jsx";
@@ -7,14 +6,10 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
 function FilteredSubmissionRow({ submission, level, onClickFunc }) {
-  /* ===== VARIABLES ===== */
-	const location = useLocation();
-	const type = location.pathname.split("/")[4];
-
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { dateB2F, recordB2F, getTimeAgo } = FrontendHelper();
+  const { dateB2F, getTimeAgo } = FrontendHelper();
 
   /* ===== FILTERED SUBMISSION ROW COMPONENT ===== */
   return (
