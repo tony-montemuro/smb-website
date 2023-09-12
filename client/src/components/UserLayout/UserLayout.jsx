@@ -4,6 +4,7 @@ import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-
 import { MessageContext, ProfileContext, StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import Avatar from "../Avatar/Avatar.jsx";
+import UserLayoutLogic from "./UserLayout.js";
 import UserStatsDirectory from "./UserStatsDirectory.jsx";
 
 function UserLayout({ imageReducer }) {
@@ -16,36 +17,47 @@ function UserLayout({ imageReducer }) {
 
   /* ===== CONTEXTS ===== */
 
-  // static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
-
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
   
+  // static cache state from static cache context
+  const { staticCache } = useContext(StaticCacheContext);
+  
   /* ===== STATES ===== */
   const [profile, setProfile] = useState(undefined);
+
+  /* ===== FUNCTIONS ===== */
+  const { fetchProfile } = UserLayoutLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts, or when the pathname is updated
   useEffect(() => {
-    if (staticCache.profiles.length > 0) {
-      // see if profileId corresponds to a profile stored in cache
-      const profiles = staticCache.profiles;
-      const profile = profiles.find(row => row.id === parseInt(profileId));
+    async function initProfile() {
+      // fetch profile from database
+      const profile = await fetchProfile(profileId);
 
-      // if not, we will print an error message, and navigate to the home screen
-      if (!profile) {
-        addMessage("User does not exist.", "error");
-        navigate("/");
-        return;
+      // if profile is defined, we can proceed
+      if (profile !== undefined) {
+        // if profile is a null object, it means no profile exists that corresponds with `profileId`. we will print an error message,
+        // and navigate to the home screen
+        if (!profile) {
+          addMessage("User does not exist.", "error");
+          navigate("/");
+          return;
+        }
+
+        // update the profile state hook
+        setProfile(profile);
       }
+    };
 
-      // update the profile state hook
-      setProfile(profile);
+    // only run `initProfile` if staticCache.games is defined
+    if (staticCache.games.length > 0) {
+      initProfile();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staticCache, location.pathname]);
+  }, [staticCache.games, location.pathname]);
 
   /* ===== USER LAYOUT COMPONENT ===== */ 
   return profile &&

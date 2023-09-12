@@ -183,7 +183,32 @@ const RPCRead = () => {
         }
     };
 
-    return { getRecords, getTotals, getMedals, getUserRankings, getChartSubmissions, getUnapproved };
+    // FUNCTION 7: getProfile - function that can grab a single profile using a profile id
+    // PRECONDITIONS (1 parameter):
+    // 1.) profileId: an integer corresponding to the primary key of a profile in the database
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, a profile object is simply returned
+    // if the query is unsuccessful, this function will throw an error, which should be handled by the caller function
+    const getProfile = async profileId => {
+        try {
+            const { data: profile, error } = await supabase.rpc("get_profile", {
+                profile_id: profileId
+            });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            return profile;
+
+        } catch (error) {
+            // error should be handled by the caller function
+            throw error;
+        };
+    };
+
+    return { getRecords, getTotals, getMedals, getUserRankings, getChartSubmissions, getUnapproved, getProfile };
 };
 
 /* ===== EXPORTS ===== */
