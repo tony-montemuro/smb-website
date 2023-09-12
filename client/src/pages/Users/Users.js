@@ -5,7 +5,7 @@ import ProfileRead from "../../database/read/ProfileRead";
 
 const Users = () => {
     /* ===== VARIABLES ===== */
-    const USERS_PER_PAGE = 2;
+    const USERS_PER_PAGE = 10;
     
     /* ===== CONTEXTS ===== */
 
