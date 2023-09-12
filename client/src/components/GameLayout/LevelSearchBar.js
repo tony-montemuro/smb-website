@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { StaticCacheContext } from "../../utils/Contexts";
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
@@ -20,11 +20,9 @@ const LevelSearchBar = abb => {
     const categories = getGameCategories(game);
     const navigate = useNavigate();
 
-    /* ===== REFS ===== */
-    const searchRef = useRef(null);
-
     /* ===== STATES ===== */
     const [filtered, setFiltered] = useState(undefined);
+    const [searchInput, setSearchInput] = useState("");
 
     /* ===== FUNCTIONS ===== */
 
@@ -72,31 +70,20 @@ const LevelSearchBar = abb => {
         return false;
     };
 
-    // FUNCTION 3: clearSearch - clear the search bar
-    // PRECONDITIONS (1 condition):
-    // this function can only be run if the search bar currently has any text stored inside of it
-    // POSTCONDITIONS (1 possible outcome):
-    // the searchRef's current value is set equal to an empty string, and the handleFilter function is called, with the word
-    // parameter set to an empty string. this should totally reset the searchbarinput component
-    const clearSearch = () => {
-        searchRef.current.value = "";
-        handleFilter("");
-    };
-
-    // FUNCTION 4: onResultClick - function that is called when the user clicks a search result
+    // FUNCTION 3: onResultClick - function that is called when the user clicks a search result
     // PRECONDITIONS (4 parameters):
     // 1.) abb: a string representing the unique identifier for a game
     // 2.) category: a string representing a valid category
     // 3.) type: a string, either "score" or "time"
     // 4.) levelName: a string representing the name of a level belonging to abb's game
     // POSTCONDITIONS (1 possible outcome):
-    // the user is navigated to the levelboard given the parameters, and the search is cleared
+    // the user is navigated to the levelboard given the parameters, and the search input hook is set to an empty string
     const onResultClick = (abb, category, type, levelName) => {
         navigate(`/games/${ abb }/${ category }/${ type }/${ levelName }`);
-        clearSearch();
+        setSearchInput("");
     };
 
-    return { searchRef, filtered, handleFilter, hasElements, clearSearch, onResultClick };
+    return { filtered, searchInput, setSearchInput, handleFilter, hasElements, onResultClick };
 };
 
 /* ===== EXPORTS ===== */

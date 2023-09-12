@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { StaticCacheContext } from "../../utils/Contexts";
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 
 const GameSearchBar = () => {
     /* ===== CONTEXTS ===== */
@@ -8,11 +8,9 @@ const GameSearchBar = () => {
     // static cache state from static cache context
     const { staticCache } = useContext(StaticCacheContext);
 
-    /* ===== REFS ===== */
-    const searchRef = useRef(null);
-
     /* ===== STATES ===== */
     const [filtered, setFiltered] = useState({ main: [], custom: [] });
+    const [searchInput, setSearchInput] = useState("");
 
     /* ===== FUNCTIONS ===== */
 
@@ -25,7 +23,7 @@ const GameSearchBar = () => {
     // to it's respective array (main games in main array, custom games in custom array) 
     // if word is not defined, we simply set filtered back to it's default state
     const handleFilter = word => {
-        // define the new filtered object
+        // first, define the new filtered object
         const newFiltered = { main: [], custom: [] };
 
         // if the word is defined, we add all games whose name match the word parameter (add to the array that
@@ -42,18 +40,7 @@ const GameSearchBar = () => {
         setFiltered(newFiltered);
     };
 
-    // FUNCTION 2: clearSearch - clear the search bar
-    // PRECONDITIONS (1 condition):
-    // this function can only be run if the search bar currently has any text stored inside of it
-    // POSTCONDITIONS (1 possible outcome):
-    // the searchRef's current value is set equal to an empty string, and the handleFilter function is called, with the word
-    // parameter set to an empty string. this should totally reset the searchbarinput component
-    const clearSearch = () => {
-        searchRef.current.value = "";
-        handleFilter("");
-    };
-
-    return { searchRef, filtered, handleFilter, clearSearch };
+    return { filtered, searchInput, setSearchInput, handleFilter };
 };
 
 /* ===== EXPORTS ===== */

@@ -1,14 +1,11 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import ProfileRead from "../../database/read/ProfileRead";
 
 const Users = () => {
     /* ===== VARIABLES ===== */
-    const USERS_PER_PAGE = 10;
-
-    /* ===== REFS ===== */
-    const searchRef = useRef(null);
+    const USERS_PER_PAGE = 2;
     
     /* ===== CONTEXTS ===== */
 
@@ -18,7 +15,7 @@ const Users = () => {
     /* ===== STATES ===== */
     const [users, setUsers] = useState({ data: undefined, total: 9999999999 }); // set total to some arbitrarily large number for now
     const [pageNum, setPageNum] = useState(1);
-    const [forceUpdate, setForceUpdate] = useState(false);
+    const [searchInput, setSearchInput] = useState("");
 
     /* ===== FUNCTIONS ===== */
 
@@ -60,38 +57,15 @@ const Users = () => {
         }
     };
 
-    // FUNCTION 3: resetPageNum - code that resets the pageNum state back to 1, and forces `updateResults` function to be called
-    // PRECONDITIONS: NONE
-    // POSTCONDITIONS (1 possible outcome):
-    // this function will update two states: `pageNum` and `forceUpdate`. `pageNum` is set back to it's default value of 1, and
-    // forceUpdate is toggled. this is a "hacky" way of forcing `updateResults` to be called every time this function is invoked
-    const resetPageNum = () => {
-        setPageNum(1);
-        setForceUpdate(prev => !prev);
-    };
-
-    // FUNCTION 4: clearSearch - code that is executed when the user selects the "clear" button
-    // PRECONDITIONS (2 parameters):
-    // this function should only run if the search bar has content already in it
-    // POSTCONDITIONS (1 possible outcome):
-    // the search bar will be cleared, and the `handleFilter` function will be executed with an empty word, resetting the search
-    // results back to all users
-    const clearSearch = (usersPerPage, pageNumber) => {
-        searchRef.current.value = "";
-        updateResults("", usersPerPage, pageNumber);
-    };
-
     return { 
         USERS_PER_PAGE, 
-        searchRef, 
         users, 
         pageNum, 
-        forceUpdate,
+        searchInput,
         setPageNum, 
+        setSearchInput,
         getStartAndEnd, 
-        updateResults, 
-        resetPageNum, 
-        clearSearch 
+        updateResults
     };
 };
 

@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { StaticCacheContext } from "../../utils/Contexts.js";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import GameHelper from "../../helper/GameHelper.js";
 import SearchBarInput from "../SearchBarInput/SearchBarInput.jsx";
 import LevelSearchBarCategory from "./LevelSearchBarCategory";
@@ -22,14 +22,22 @@ function LevelSearchBar({ abb }) {
   /* ===== FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { filtered, searchRef, handleFilter, hasElements, clearSearch, onResultClick } = LevelSearchBarLogic(abb);
+  const { filtered, searchInput, setSearchInput, handleFilter, hasElements, onResultClick } = LevelSearchBarLogic(abb);
+
+  /* ===== EFFECTS ===== */
+
+  // code that is executed each time the searchInput is updated
+  useEffect(() => {
+    handleFilter(searchInput);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchInput]);
 
   /* ===== LEVEL SEARCH BAR COMPONENT ===== */
   return (
     <div className="game-layout-level-searchbar">
 
       { /* Render the search bar input */ }
-      <SearchBarInput itemType={ "level" } searchRef={ searchRef } handleFilter={ handleFilter } clearSearch={ clearSearch } />
+      <SearchBarInput itemType={ "level" } input={ searchInput } setInput={ setSearchInput } />
 
       { /* Only render search results if the filtered state has any elements. */ }
       { filtered && hasElements() &&
