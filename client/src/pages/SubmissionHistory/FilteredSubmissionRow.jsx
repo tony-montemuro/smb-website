@@ -2,6 +2,7 @@
 import { useLocation } from "react-router-dom";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import CheckIcon from "@mui/icons-material/Check";
+import DetailedRecord from "../../components/DetailedRecord/DetailedRecord.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
@@ -25,7 +26,7 @@ function FilteredSubmissionRow({ submission, level, onClickFunc }) {
       <td>{ getTimeAgo(submission.id) }</td>
 
       { /* Record - render the record itself */ }
-      <td>{ recordB2F(submission.record, type, level.timer_type) }</td>
+      <td><DetailedRecord submission={ submission } iconSize={ "small" } timerType={ level.timer_type } /></td>
 
       { /* Monkey name - render the monkey of the submission */ }
       <td>{ submission.monkey.monkey_name }</td>
