@@ -33,7 +33,7 @@ const News = () => {
     // the posts are retrieved, and the posts state is updated by calling setPosts() function
     const getPosts = async (num, pageNumber) => {
         // first, compute the range of posts to grab based on the parameters
-        const { start, end } = getStartAndEnd(num, pageNumber, posts.total);
+        const { start, end } = getStartAndEnd(num, pageNumber);
 
         // then, we can grab the posts given our range, as well as the total number of posts
         const { postList, count } = await queryPosts(start, end);

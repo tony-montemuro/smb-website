@@ -4,7 +4,7 @@ const CachedPageControls = () => {
     // FUNCTION 1: getStartAndEnd - given the # of items per page, the total # of items, and page number, retrieve the start and end 
     // item indicies (one-based indexing)
     // PRECONDITIONS (3 parameters):
-    // 1.) itemsPerPage - an integer representing the total number of items per page
+    // 1.) itemsPerPage: an integer representing the total number of items per page
     // 2.) numItems: an integer representing the total number of items
     // 3.) pageNum: an integer representing the max number of items that should exist on each page 
     // POSTCONDITIONS (2 possible returns, 1 possible outcome):
@@ -21,7 +21,7 @@ const CachedPageControls = () => {
     // per page
     // PRECONDITIONS (2 parameters):
     // 1.) numItems: an integer representing the total number of items
-    // 2.) itemsPerPage - an integer representing the number of items per page
+    // 2.) itemsPerPage: an integer representing the number of items per page
     // POSTCONDITIONS (1 possible outcome):
     // using these two values, the max page number is returned (must be at least 1)
     const getMaxPage = (numItems, itemsPerPage) => {

@@ -12,15 +12,15 @@ function CachedPageControls({ items, itemsPerPage, pageNum, setPageNum, itemsNam
   return items.length > itemsPerPage &&
     <div className="cached-page-controls">
 
-      { /* Page viewer - render the set of pages shown on the current page */ }
-      <div className="page-viewer">
+      { /* Cached page viewer - render the set of pages shown on the current page */ }
+      <div className="cached-page-viewer">
         Showing { getStartAndEnd(itemsPerPage, items.length, pageNum).start } to&nbsp;
         { getStartAndEnd(itemsPerPage, items.length, pageNum).end } of { items.length } { itemsName }
       </div>
 
-      { /* Page controller - render buttons to navigate to the previous and next page, as well as a dropdown 
+      { /* Cached page controller - render buttons to navigate to the previous and next page, as well as a dropdown 
       for the user to select any valid page */ }
-      <div className="page-controller">
+      <div className="cached-page-controller">
 
         { /* Previous page button */ }
         <button 
