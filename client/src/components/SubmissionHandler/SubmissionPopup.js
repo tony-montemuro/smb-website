@@ -63,7 +63,7 @@ const SubmissionPopup = () => {
         // get variables from e.target
         const { id, value, checked } = e.target;
 
-        // special case: updating the live field
+        // special case: updating a checkbox field
         if (id === "live" || id === "tas") {
             setForm({ ...form, values: { ...form.values, [id]: checked } });
         }

@@ -78,7 +78,7 @@ const InsertPopup = (level) => {
     // default form values are generated using the type, level, category, and user.profile.id arguments, and the form is updated 
     // by calling the dispatchForm() function
 	const fillForm = level => {
-		const formVals = submission2Form(null, type, level, category, user.profile.id);
+		const formVals = submission2Form(null, type, level, category, user.profile);
 		dispatchForm({ field: "values", value: formVals });
 	};
 
@@ -87,33 +87,33 @@ const InsertPopup = (level) => {
 	// 1.) e: an event object generated when the user makes a change to the submission form
 	// POSTCONDITIONS (3 possible outcomes):
 	// if the field id is live or tas, we use the checked variable rather than the value variable to update the form
-    // if the field id is profile_id, we will reset the entire form to default values
 	// otherwise, we simply update the form field based on the value variable
     const handleChange = e => {
+        // get variables from e.target
         const { id, value, checked } = e.target;
-		switch (id) {
-			// case 1: live. this is a checkbox, so we need to use the "checked" variable as our value
-			case "live":
-				dispatchForm({ field: "values", value: { live: checked } });
-				break;
 
-            // case 2: tas. also a checkbox, so we ened to use the "checked" variable as our value
-            case "tas":
-                dispatchForm({ field: "values", value: { tas: checked } });
-                break;
+        // special case: updating a checkbox field
+        if (id === "live" || id === "tas") {
+            dispatchForm({ field: "values", value: { [id]: checked } });
+        }
 
-            // case 3: profile_id. this is a special field that only moderators are able to change. if a moderator is trying to update
-			// a record from a user that has already submitted to the chart, the form will be loaded with that user's submission data. 
-			// otherwise, the form is set to the default values
-			case "profile_id":
-				const formData = submission2Form(null, type, level, category, parseInt(value));
-				dispatchForm({ field: "values", value: formData });
-				break;
+        // general case: updating a "normal" field
+        else {
+            dispatchForm({ field: "values", value: { [id]: value } });
+        }
+    };
 
-			// default case: simply update the id field of the values object with the value variable
-			default:
-				dispatchForm({ field: "values", value: { [id]: value } });
-		};
+    // FUNCTION 3: onUserRowClick - function that is called when a moderator selects a user
+    // PRECONDITIONS (1 parameter):
+    // 1.) profile: a profile object, containing at least the id, username, and country fields
+    // POSTCONDITIONS (2 possible outcomes):
+    // if profileId is the same as the profile id in our form, do nothing
+    // if profileId differs from profile id in our form, reset form to default values, with our new profile
+    const onUserRowClick = profile => {
+        if (profile.id !== form.values.profile.id) {
+            const formData = submission2Form(null, type, level, category, profile);
+            dispatchForm({ field: "values", value: formData });
+        }
     };
 
     // FUNCTION 3: getSubmissionFromForm  - takes form values, and generates a new object with formatting ready for submission
@@ -125,12 +125,13 @@ const InsertPopup = (level) => {
     // 1.) submission: an object containing mostly the same information from formValues parameter, but with
     // fixed date value (backend format), as well as removing the `message`, `hour`, `minute`, `second`, & `centisecond` fields
     const getSubmissionFromForm = (formVals, date) => {
-        // create our new submission object, which is equivelent to formVals minus the message field
-        const { hour, minute, second, centisecond, ...submission } = formVals;
+        // create our new submission object, which is equivelent to formVals minus some fields not present in `submission` table
+        const { hour, minute, second, centisecond, profile, ...submission } = formVals;
 
         // add additional fields to submission object, and correct the record field if type is time
         submission.submitted_at = date;
         submission.record = type === "time" ? recordToSeconds(hour, minute, second, centisecond) : submission.record;
+        submission.profile_id = profile.id;
 
         return submission;
     };
@@ -185,7 +186,7 @@ const InsertPopup = (level) => {
         }
 
 		// convert the date from the front-end format, to the backend format.
-		const oldSubmission = allSubmissions.find(row => row.profile.id === form.values.profile_id);
+		const oldSubmission = allSubmissions.find(row => row.profile.id === form.values.profile.id);
 		const backendDate = getDateOfSubmission(form.values.submitted_at, oldSubmission ? oldSubmission.submitted_at : undefined);
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
@@ -223,7 +224,7 @@ const InsertPopup = (level) => {
         setPopup(false);
     };
 
-    return { form, fillForm, handleChange, handleSubmit, closePopup }; 
+    return { form, fillForm, handleChange, onUserRowClick, handleSubmit, closePopup }; 
 };
 
 /* ===== EXPORTS ===== */

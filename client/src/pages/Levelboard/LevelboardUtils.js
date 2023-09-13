@@ -20,12 +20,12 @@ const LevelboardUtils = () => {
     // 2.) type: a string, either "score" or "time"
     // 3.) level: a level object containing information about the level
     // 4.) category: a string representing a valid category
-    // 5.) profile: a profile integer that belongs to some profile, or is null
+    // 5.) profile: a profile object, containing at least the id, username, and country fields
     // POSTCONDITIONS (2 possible outcomes, 1 return):
     // if submission is defined, we use the information from this object to define the return object
     // if not, we set many of the form values to their default values
     // the object returned is compatible with the submission form
-    const submission2Form = (submission, type, level, category, profileId) => {
+    const submission2Form = (submission, type, level, category, profile) => {
         // if a submission exists, we can use the data to form our formData object
         if (submission) {
             return {
@@ -38,7 +38,7 @@ const LevelboardUtils = () => {
                 live: submission.live,
                 proof: submission.proof,
                 comment: submission.comment ? submission.comment : "",
-                profile_id: parseInt(profileId),
+                profile_id: profile.id,
                 game_id: game.abb,
                 level_id: level.name,
                 category: category,
@@ -62,7 +62,7 @@ const LevelboardUtils = () => {
                 live: true,
                 proof: "",
                 comment: "",
-                profile_id: profileId,
+                profile: profile,
                 game_id: game.abb,
                 level_id: level.name,
                 category: category,

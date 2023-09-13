@@ -150,9 +150,18 @@
     margin-bottom: 8px;
 }
 
+.levelboard-insert-body {
+    display: flex;
+}
+
+.levelboard-profile-select {
+    flex: 1;
+}
+
 .levelboard-submit-wrapper {
     display: flex;
     justify-content: center;
+    flex: 1;
 }
 
 .levelboard-submit {

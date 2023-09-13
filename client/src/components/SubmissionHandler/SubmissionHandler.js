@@ -307,7 +307,6 @@ const SubmissionHandler = (isNew) => {
     // a unique error message is rendered to the user for each query that failed
     const renderErrorMessages = (failedLevel1Queries, failedLevel2Queries) => {
         failedLevel1Queries.forEach(query => {
-            console.log(query);
             // define variables used for the error message
             const submission = query.reason.submission;
             const type = submission.score ? "Score" : "Time";

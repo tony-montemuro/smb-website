@@ -3,10 +3,7 @@ import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import ProfileRead from "../../database/read/ProfileRead";
 
-const Users = () => {
-    /* ===== VARIABLES ===== */
-    const USERS_PER_PAGE = 10;
-    
+const UserSearch = (usersPerPage) => {
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
@@ -44,7 +41,7 @@ const Users = () => {
     // if the query was a failure, simply render an error to the client
     const updateResults = async userInput => {
         // first, compute the range of users to grab based on the parameters
-        const { start, end } = getStartAndEnd(USERS_PER_PAGE, pageNum);
+        const { start, end } = getStartAndEnd(usersPerPage, pageNum);
 
         try {
             // attempt to grab all relevant profiles, and update the users state hook by calling the setUsers() function
@@ -57,17 +54,8 @@ const Users = () => {
         }
     };
 
-    return { 
-        USERS_PER_PAGE, 
-        users, 
-        pageNum, 
-        searchInput,
-        setPageNum, 
-        setSearchInput,
-        getStartAndEnd, 
-        updateResults
-    };
+    return { users, pageNum, searchInput, setPageNum, setSearchInput, getStartAndEnd, updateResults };
 };
 
 /* ===== EXPORTS ===== */
-export default Users;
+export default UserSearch;

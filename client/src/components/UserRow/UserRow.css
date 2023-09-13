@@ -1,0 +1,38 @@
+.users-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.users-row:hover {
+    background-color: #ddd;
+}
+
+.users-row-socials {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.users-row-socials a {
+    margin: 0 3px;
+}
+
+.users-row-discord button {
+    padding: 0;
+    border: none;
+    background-color: white;
+    text-align: center;
+    margin: 0 3px;
+}
+
+.users-row-empty {
+    padding: 5px;
+}
+
+.users-row-bar-page-controls-wrapper {
+    padding: 5px;
+}

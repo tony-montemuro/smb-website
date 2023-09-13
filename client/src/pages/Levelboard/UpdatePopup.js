@@ -59,7 +59,7 @@ const UpdatePopup = (level) => {
     // the submission is transformed into a format compatible with the form, and is updated by calling the dispatchForm() function
 	const fillForm = submissions => {
         const submission = submissions[0];
-		const formVals = submission2Form(submission, type, level, category, submission.profile.id);
+		const formVals = submission2Form(submission, type, level, category, submission.profile);
 		dispatchForm({ field: "values", value: formVals });
 	};
 
@@ -92,7 +92,7 @@ const UpdatePopup = (level) => {
     // we use the `id` parameter to fetch the submission we want to change to, and update the form accordingly
     const handleSubmissionChange = (id, submissions) => {
         const submission = submissions.find(submission => submission.id === id);
-        const formVals = submission2Form(submission, type, level, category, submission.profile.id);
+        const formVals = submission2Form(submission, type, level, category, submission.profile);
         dispatchForm({ field: "values", value: formVals });
     };
 
