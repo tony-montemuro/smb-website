@@ -3,10 +3,10 @@ import "./Notifications.css";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { MessageContext, UserContext } from "../../utils/Contexts";
-import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
 import NotificationsLogic from "./Notifications.js";
 import NotificationPopup from "./NotificationPopup";
 import NotificationTableRow from "./NotificationTableRow";
+import PageControls from "../../components/PageControls/PageControls.jsx";
 import TypeSymbol from "./TypeSymbol";
 
 function Notifications() {
@@ -20,7 +20,7 @@ function Notifications() {
 
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 7;
-  const NOTIFS_PER_PAGE = 50;
+  const NOTIFS_PER_PAGE = 2;
   const messages = {
     approve: "A moderator has approved one of your submission.",
     report: "A user has reported one of your submissions.",
@@ -36,18 +36,20 @@ function Notifications() {
   const { 
     notifications, 
     pageNum,
-    setNotifications,
-    setPageNum,
-    prepareNotifs, 
+    dispatchNotifications,
+    updateNotifications,
+    areAllNotifsSelected,
+    getSelectedCount,
     toggleSelection,
-    toggleSelectionAll,
+    toggleSelectionAll, 
     removeSelected,
-    handleRowClick
+    handleRowClick,
+    changePage
   } = NotificationsLogic();
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the page first loads
+  // code that is executed when the component mounts, when the user state updates, OR when the pageNum is updated
   useEffect(() => {
     if (user.id !== undefined) {
       // if not user.id (meaning user is null), current user is not authenticated. thus, deny
@@ -58,11 +60,11 @@ function Notifications() {
         return;
       }
 
-      // if we made it past this check, we can go ahead and initialize the page
-      prepareNotifs(user.notifications);
+      // if we made it past this check, we can go ahead and update the notifications state
+      updateNotifications(NOTIFS_PER_PAGE, pageNum);
     }
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, pageNum]);
 
   /* ===== NOTIFICATION COMPONENT ===== */
   return notifications.all ?
@@ -101,12 +103,12 @@ function Notifications() {
 
           { /* Delete button - when pressed, will remove all notifications the user has selected. This button
           is disabled if no notifications are selected. */ }
-          <button type="button" onClick={ removeSelected } disabled={ notifications.selected.length === 0 || notifications.submitting }>
+          <button type="button" onClick={ removeSelected } disabled={ getSelectedCount() === 0 || notifications.submitting }>
             Delete
           </button>
 
           { /* Render message displaying how many notifications have been selected, if any */ }
-          { notifications.selected.length > 0 && <span>{ notifications.selected.length } Selected</span> }
+          { getSelectedCount() > 0 && <span>{ getSelectedCount() } Selected</span> }
 
         </div>
 
@@ -121,9 +123,9 @@ function Notifications() {
               <th>
                 <input
                   type="checkbox"
-                  checked={ notifications.all.length > 0 && notifications.selected.length === notifications.all.length }
+                  checked={ notifications.all.length > 0 && areAllNotifsSelected(pageNum) }
                   disabled={ notifications.all.length === 0 }
-                  onChange={ toggleSelectionAll }
+                  onChange={ () => toggleSelectionAll(pageNum) }
                 />
               </th>
 
@@ -142,10 +144,11 @@ function Notifications() {
 
             { /* If there are notifications, map a NotificationTableRow element for each notification */ }
             { notifications.all.length > 0 ?
-              notifications.all.slice((pageNum-1)*NOTIFS_PER_PAGE, pageNum*NOTIFS_PER_PAGE).map(row => {
+              notifications.all.map(row => {
                 return <NotificationTableRow 
                   row={ row } 
                   notifications= { notifications } 
+                  pageNum={ pageNum }
                   handleRowClick={ handleRowClick } 
                   toggleSelection={ toggleSelection } 
                   key={ row.notif_date }
@@ -167,19 +170,19 @@ function Notifications() {
 
         { /* Render pagination controls at the bottom of this container */ }
         <div className="notifications-body-page-controls-wrapper">
-          <CachedPageControls
-            items={ notifications.all }
+          <PageControls 
+            totalItems={ notifications.total }
             itemsPerPage={ NOTIFS_PER_PAGE }
             pageNum={ pageNum }
-            setPageNum={ setPageNum }
-            itemsName={ "Notifications" }
+            setPageNum={ changePage }
+            itemName={ "Notifications" } 
           />
         </div>
 
       </div>
 
-      { /* Notification popup element - will only render if the current field in the notification state is set */ }
-      <NotificationPopup notifications={ notifications } setNotifications={ setNotifications } />
+      { /* Notification popup element - will only render if the current field in the notification.current field is set */ }
+      <NotificationPopup notifications={ notifications } dispatchNotifications={ dispatchNotifications } />
     </>
   :
 

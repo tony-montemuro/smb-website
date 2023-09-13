@@ -3,7 +3,7 @@ import "./Notifications.css";
 import FrontendHelper from "../../helper/FrontendHelper";
 import TypeSymbol from "./TypeSymbol";
 
-function NotificationTableRow({ row, notifications, handleRowClick, toggleSelection }) {
+function NotificationTableRow({ row, notifications, pageNum, handleRowClick, toggleSelection }) {
   /* ===== VARIABLES ===== */
   const type = row.score ? "score" : "time";
 
@@ -18,8 +18,8 @@ function NotificationTableRow({ row, notifications, handleRowClick, toggleSelect
       <td className="notifications-select-element">
         <input
           type="checkbox"
-          checked={ notifications.selected.includes(row.notif_date) }
-          onChange={() => toggleSelection(row.notif_date) }
+          checked={ notifications.selected[pageNum].includes(row.notif_date) }
+          onChange={() => toggleSelection(row.notif_date, pageNum) }
         />
       </td>
 

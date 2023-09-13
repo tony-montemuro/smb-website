@@ -10,7 +10,7 @@ import NotificationMessage from "./NotificationMessage";
 import NotificationProof from "./NotificationProof";
 import Username from "../../components/Username/Username";
 
-function ReportPopup({ notifications, setNotifications }) {
+function ReportPopup({ notifications, dispatchNotifications }) {
   /* ===== VARIABLES ===== */
   const notification = notifications.current;
   const submission = notification.submission;
@@ -32,7 +32,7 @@ function ReportPopup({ notifications, setNotifications }) {
       <div className="notifications-popup-inner">
 
         { /* Button to exit the popup */ }
-        <button type="button" onClick={ () => setNotifications({ ...notifications, current: null }) }>Close</button>
+        <button type="button" onClick={ () => dispatchNotifications({ field: "current", payload: null }) }>Close</button>
 
         { /* Popup header - includes a link to the reporter's user page */ }
         <h2>

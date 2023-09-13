@@ -84,7 +84,7 @@ const PostRead = () => {
                 throw error;
             }
 
-            // if we made it this far, simply return the posts
+            // if we made it this far, return posts, as well as count
             return { postList: postList, count: count };
 
         } catch (error) {

@@ -5,7 +5,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
 import Username from "../../components/Username/Username.jsx";
 
-function ApprovePopup({ notifications, setNotifications }) {
+function ApprovePopup({ notifications, dispatchNotifications }) {
   /* ===== VARIABLES ===== */
   const notification = notifications.current;
   const type = notification.score ? "score" : "time";
@@ -21,7 +21,7 @@ function ApprovePopup({ notifications, setNotifications }) {
       <div className="notifications-popup-inner">
 
         { /* Button to exit the popup */ }
-        <button type="button" onClick={ () => setNotifications({ ...notifications, current: null }) }>Close</button>
+        <button type="button" onClick={ () => dispatchNotifications({ field: "current", payload: null }) }>Close</button>
 
         { /* Popup header - includes a link to the moderator's user page */ }
         <h2>

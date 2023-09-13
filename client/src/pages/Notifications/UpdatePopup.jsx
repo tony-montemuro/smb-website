@@ -7,7 +7,7 @@ import NotificationProof from "./NotificationProof";
 import Username from "../../components/Username/Username";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
-function UpdatePopup({ notifications, setNotifications }) {
+function UpdatePopup({ notifications, dispatchNotifications }) {
   /* ===== VARIABLES ===== */
   const notification = notifications.current;
   const submission = notification.submission;
@@ -22,7 +22,7 @@ function UpdatePopup({ notifications, setNotifications }) {
       <div className="notifications-popup-inner">
 
         { /* Button to exit the popup */ }
-        <button type="button" onClick={ () => setNotifications({ ...notifications, current: null }) }>Close</button>
+        <button type="button" onClick={ () => dispatchNotifications({ field: "current", payload: null }) }>Close</button>
 
         { /* Popup header - includes a link to the moderator's user page */ }
         <h2>
