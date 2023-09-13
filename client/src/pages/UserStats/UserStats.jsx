@@ -46,7 +46,7 @@ function UserStats() {
 
   // code that is executed when the page loads, when the staticCache object is updated
   useEffect(() => {
-    if (staticCache.games.length > 0 && staticCache.profiles.length > 0) {
+    if (staticCache.games.length > 0) {
       // see if abb corresponds to a game stored in cache
       const games = staticCache.games;
       const game = games.find(row => row.abb === abb);

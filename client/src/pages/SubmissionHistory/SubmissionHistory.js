@@ -2,6 +2,7 @@
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import RPCRead from "../../database/read/RPCRead";
 import SubmissionRead from "../../database/read/SubmissionRead";
 
 const SubmissionHistory = () => {
@@ -29,8 +30,26 @@ const SubmissionHistory = () => {
 
     // database functions
     const { getChartSubmissionsByProfile } = SubmissionRead();
+    const { getProfile } = RPCRead();
 
-    // FUNCTION 1: fetchSubmissions - given information from the path, get the list of submissions from the database
+    // FUNCTION 1: fetchProfile - code that is executed when the SubmissionHistory component mounts, to validate the URL path
+    // PRECONDITIONS (1 parameter):
+    // 1.) profileId: an integer corresponding to the primary key of a profile in the database
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, a profile object is simply returned
+    // if the query is unsuccessful, this function will render an error message to the screen, and return an undefined object,
+    // leaving the `SubmissionHistory` page stuck loading
+    const fetchProfile = async profileId => {
+        try {
+            const profile = await getProfile(profileId);
+            return profile;
+        } catch (error) {
+            addMessage("There was an issue fetching this users data.", "error");
+            return undefined;
+        };
+    };
+
+    // FUNCTION 2: fetchSubmissions - given information from the path, get the list of submissions from the database
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // we query a highly filtered list of submissions according to the url path, and update the submissions state by calling the 
@@ -53,7 +72,7 @@ const SubmissionHistory = () => {
         }
     };
 
-    // FUNCTION 2: handleTabClick - code that is executed when the user selects a tab
+    // FUNCTION 3: handleTabClick - code that is executed when the user selects a tab
     // PRECONDITIONS (1 parameter):
     // 1.) otherRunType - a string, either "normal" or "TAS"
     // POSTCONDITIONS (2 possible outcomes):
@@ -69,6 +88,7 @@ const SubmissionHistory = () => {
         submissions,
         runType,
         setRunType,
+        fetchProfile,
         fetchSubmissions,
         handleTabClick
     };

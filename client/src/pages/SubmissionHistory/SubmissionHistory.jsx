@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./SubmissionHistory.css";
-import { GameContext, MessageContext, StaticCacheContext } from "../../utils/Contexts";
+import { GameContext, MessageContext } from "../../utils/Contexts";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -31,9 +31,6 @@ function SubmissionHistory() {
 
   /* ===== CONTEXTS ===== */
 
-  // static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
-
   // game state from game context
   const { game } = useContext(GameContext);
 
@@ -46,26 +43,17 @@ function SubmissionHistory() {
   const [profile, setProfile] = useState(undefined);
 
   // states and functions from the js file
-  const { 
-    submissions,
-    runType,
-    setRunType,
-    fetchSubmissions,
-    handleTabClick
-  } = SubmissionHistoryLogic();
+  const { submissions, runType, setRunType, fetchProfile, fetchSubmissions, handleTabClick } = SubmissionHistoryLogic();
 
   /* ===== EFFECTS ====== */
 
-  // code that is executed when the component mounts, & when the static cache object is updated
+  // code that is executed when the component mounts
   useEffect(() => {
-    // cache variables
-    const profiles = staticCache.profiles;
-    
-		if (profiles.length > 0) {
-			// see if levelName corresponds to a level stored in the game array
-			const level = fetchLevelFromGame(game, levelName, category, type);
+    async function validatePath() {
+      // first, find level that corresponds with path
+      const level = fetchLevelFromGame(game, levelName, category, type);
 			
-			// if not, we will print an error message, and navigate to the home screen
+			// if no level exists, we will print an error message, and navigate to the home screen
 			if (!level) {
 				addMessage("Level does not exist.", "error");
 				navigate("/");
@@ -75,8 +63,8 @@ function SubmissionHistory() {
       // update the state hook for level
       setLevel(level);
 
-      // see if the profileId corresponds to a profile stored in the profiles array
-      const profile = profiles.find(row => row.id === parseInt(profileId));
+      // see if the profileId corresponds to a profile in the db
+      const profile = await fetchProfile(profileId);
 
       // if not, we will print an error message, and navigate to the home screen
 			if (!profile) {
@@ -90,9 +78,11 @@ function SubmissionHistory() {
 			
       // finally, given information about the path, fetch submissions for this page
 			fetchSubmissions();
-		}
+    }
+
+    validatePath();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staticCache]);
+  }, []);
 
   // code that is executed each time the path changes
   useEffect(() => {
