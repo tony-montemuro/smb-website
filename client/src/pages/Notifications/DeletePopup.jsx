@@ -26,7 +26,7 @@ function DeletePopup({ notifications, setNotifications }) {
 
         { /* Popup header - includes a link to the moderator's user page */ }
         <h2>
-          <Username country={ notification.creator.country } profileId={ notification.creator.id } username={ notification.creator.username } />
+          <Username profile={ notification.creator } />
           &nbsp;has removed the following submission: 
         </h2>
 

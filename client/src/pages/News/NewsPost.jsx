@@ -19,7 +19,7 @@ function NewsPost({ post }) {
         { /* Post information */ }
         <span>
           <b>posted { getTimeAgo(post.posted_at) } by&nbsp;
-          <Username country={ post.profile.country } profileId={ post.profile.id } username={ post.profile.username } /></b>
+          <Username profile={ post.profile } /></b>
         </span>
       </div>
 

@@ -61,7 +61,7 @@ function RecordTable({ mode, allLiveFilter, recordTable }) {
                 { row.profiles.map((profile, index) => {
                   return (
                     <Fragment key={ profile.id }>
-                      <Username country={ profile.country } profileId={ profile.id } username={ profile.username } />
+                      <Username profile={ profile } />
                       { index < row.profiles.length-1 ? ", " : null }
                     </Fragment>
                   );

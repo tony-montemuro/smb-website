@@ -18,12 +18,7 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
     return (
       // Simply return a row containing the username of the user in question
       <div className={ `users-row${ onClick ? " users-row-hoverable" : "" }` } onClick={ onClick ? () => onClick(user) : null }>
-        <Username 
-          country={ user.country.iso2 ? user.country.iso2 : user.country } 
-          profileId={ user.id } 
-          username={ user.username } 
-          disableLink={ disableLink } 
-        />
+        <Username profile={ user } disableLink={ disableLink } />
       </div>
     );
   } else {
@@ -31,12 +26,7 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
       <div className={ `users-row${ onClick ? " users-row-hoverable" : "" }` } onClick={ onClick ? () => onClick(user) : null }>
 
         { /* On the left side of the container, render the user's detailed username */ }
-        <DetailedUsername 
-          imageReducer={ imageReducer } 
-          country={ user.country.iso2 } 
-          profileId={ user.id } 
-          username={ user.username } 
-        />
+        <DetailedUsername imageReducer={ imageReducer } profile={ user } />
 
         { /* On the right side of the container, render the user's social media accounts */ }
         <div className="users-row-socials">

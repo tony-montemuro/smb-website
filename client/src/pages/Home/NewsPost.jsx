@@ -24,7 +24,7 @@ function NewsPost({ post }) {
       { /* Post information */ }
       <span className="home-news-post-info">
         posted { getTimeAgo(post.posted_at) } by&nbsp; 
-        <Username country={ post.profile.country } profileId={ post.profile.id } username={ post.profile.username } />
+        <Username profile={ post.profile } />
       </span>
 
       { /* If the viewPost state is set to true, render the body and link of the post (if it exists!) */ }

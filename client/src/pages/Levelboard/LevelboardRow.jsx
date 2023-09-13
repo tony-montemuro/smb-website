@@ -19,12 +19,7 @@ function LevelboardRow({ submission, imageReducer, level, onClickFunc }) {
 
       { /* Render information about the user */ }
       <td>
-        <DetailedUsername
-          imageReducer={ imageReducer }
-          country={ submission.profile.country }
-          profileId={ submission.profile.id }
-          username={ submission.profile.username }
-        />
+        <DetailedUsername imageReducer={ imageReducer } profile={ submission.profile } />
       </td>
 
       { /* Render the record */ }

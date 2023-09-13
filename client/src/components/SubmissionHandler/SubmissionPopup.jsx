@@ -71,7 +71,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
           <div className="submission-handler-report">
             <h1>
               The following submission was reported by&nbsp;
-              <Username country={ creator.country } profileId={ creator.id } username={ creator.username } />.
+              <Username profile={ creator } />.
             </h1>
             <p>They left the following message with the report: "{ submission.report.message }"</p>
           </div>
@@ -95,7 +95,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                 { /* User: Render the username of the user who submitted the submission (not-editable) */ }
                 <div className="submission-handler-popup-input">
                   User:&nbsp;
-                  <Username country={ submission.profile.country } profileId={ submission.profile.id } username={ submission.profile.username } /> 
+                  <Username profile={ submission.profile } /> 
                 </div>
 
                 { /* Level: Render the name of the level as a link tag (not-editable) */ }

@@ -20,7 +20,7 @@ function RecentSubmissionsRow({ submission, renderGame }) {
   return (
     <tr>
       <td>{ getTimeAgo(submission.id) }</td>
-      <td><Username country={ profile.country } profileId={ profile.id } username={ profile.username } /></td>
+      <td><Username profile={ profile } /></td>
       { renderGame && <td><Link to={ `/games/${ game.abb }` }>{ game.name }</Link></td> }
       <td>{ categoryB2F(category) }</td>
       <td><Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>{ cleanLevelName(level.name) } ({ capitalize(type) })</Link></td>

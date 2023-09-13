@@ -43,7 +43,7 @@ function DetailPopup({ submission, setSubmission, level }) {
         <h1>
           { cleanLevelName(levelName) }:&nbsp;
           <DetailedRecord submission={ submission } iconSize={ "large" } timerType={ level.timer_type } /> by&nbsp;
-          <Username country={ profile.country } profileId={ profile.id } username={ profile.username } />
+          <Username profile={ profile } />
         </h1>
 
         { /* Render a special message if the submission used tools. */ }

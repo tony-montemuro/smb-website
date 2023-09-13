@@ -68,12 +68,7 @@ function TotalizerTable({ type, totals, imageReducer }) {
 
                 {/* User info - Render the user's profile picture, as well as their username */}
                 <td>
-                  <DetailedUsername
-                    imageReducer={ imageReducer }
-                    country={ row.profile.country }
-                    profileId={ row.profile.id }
-                    username={ row.profile.username }
-                  />
+                  <DetailedUsername imageReducer={ imageReducer } profile={ row.profile } />
                 </td>
 
                 { /* Total - render the actual total */ }

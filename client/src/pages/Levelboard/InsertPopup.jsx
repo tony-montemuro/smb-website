@@ -84,7 +84,7 @@ function InsertPopup({ popup, setPopup, level, submissions }) {
                 { user.is_mod &&
                   <div className="levelboard-input-group">
                     User:&nbsp;
-                    <Username country={ form.values.profile.country.iso2 ? form.values.profile.country.iso2 : form.values.profile.country } id={ form.values.profile.id } username={ form.values.profile.username } />
+                    <Username profile={ form.values.profile } />
                   </div>
                 }
 

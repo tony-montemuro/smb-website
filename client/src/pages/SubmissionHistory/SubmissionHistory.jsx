@@ -112,7 +112,7 @@ function SubmissionHistory() {
         <div>
           The following is the list of all submissions by&nbsp;
           <>
-            <Username country={ profile.country ? profile.country.iso2 : null } profileId={ profile.id } username={ profile.username } />
+            <Username profile={ profile } />
             &nbsp;to&nbsp;
             <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }` }>{ cleanLevelName(levelName) } ({ capitalize(type) })</Link>:
           </>

@@ -8,7 +8,7 @@ function NotificationMessage({ message, notification }) {
     <>
       { /* Message header */ }
       <h2>
-        <Username country={ notification.creator.country } profileId={ notification.creator.id } username={ notification.creator.username } />
+        <Username profile={ notification.creator } />
         &nbsp;also left a message:
       </h2>
 

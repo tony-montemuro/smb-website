@@ -41,11 +41,7 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
       { !isNew &&
         <td>
           <div>
-            <Username
-              country={ creator.country }
-              profileId={ creator.id }
-              username={ creator.username }
-            />
+            <Username profile={ creator } />
           </div>
         </td>
       }

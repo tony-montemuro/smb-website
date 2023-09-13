@@ -16,7 +16,7 @@ function GameHeaderInfo({ game }) {
         // If game us custom, render the name of the creator, the release date, and the pack download
         <ul>
           <li>
-            Custom Game by <Username country={ game.creator.country } profileId={ game.creator.id } username={ game.creator.username } />
+            Custom Game by <Username profile={ game.creator } />
           </li>  
           <li>Release Date: { game.release_date }</li>
           <li id="game-layout-header-download">Game Download:

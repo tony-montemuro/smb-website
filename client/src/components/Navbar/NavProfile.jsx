@@ -38,7 +38,7 @@ function NavProfile({ imageReducer }) {
 
         { /* Username: render the user's username */ }
         <div className="nav-profile-username">
-          <Username country={ user.profile.country ? user.profile.country.iso2 : null } profileId={ user.profile.id } username={ user.profile.username } />
+          <Username profile={ user.profile } />
         </div>
 
         { /* Links: all the user's different links */ }
