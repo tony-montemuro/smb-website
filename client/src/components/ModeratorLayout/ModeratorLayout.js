@@ -2,7 +2,7 @@
 import { MessageContext, StaticCacheContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import SubmissionRead from "../../database/read/SubmissionRead";
+import RPCRead from "../../database/read/RPCRead";
 
 const ModeratorLayout = () => {
     /* ===== VARIABLES ===== */
@@ -23,7 +23,7 @@ const ModeratorLayout = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { getUnapproved } = SubmissionRead();
+    const { getUnapproved } = RPCRead();
 
     // FUNCTION 1: handleTabClick - code that is executed when a moderator layout tab is selected
     // PRECONDITIONS (1 parameter):

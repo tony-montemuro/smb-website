@@ -9,6 +9,7 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
   const profile = submission.profile;
   const level = submission.level;
   const creator = !isNew ? submission.report.creator : undefined;
+  console.log(creator);
   const type = submission.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
@@ -49,11 +50,7 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
       { /* Render the username of the person who submitted it */ }
       <td>
         <div>
-          <Username 
-            country={ profile.country } 
-            profileId={ profile.id } 
-            username={ profile.username } 
-          />
+          <Username profile={ profile } />
         </div>
       </td>
 
