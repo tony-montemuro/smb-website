@@ -7,8 +7,9 @@
     padding: 10px;
 }
 
-.users-row:hover {
+.users-row-hoverable:hover {
     background-color: #ddd;
+    cursor: pointer;
 }
 
 .users-row-socials {

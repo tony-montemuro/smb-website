@@ -9,15 +9,16 @@ import Username from "../Username/Username.jsx";
 import UserHelper from "../../helper/UserHelper";
 import YT from "../../img/yt-logo.png";
 
-function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = false, onClick = () => {} }) {
+function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = false, onClick = undefined }) {
   /* ===== FUNCTIONS ===== */
   const { alertDiscord } = UserHelper();
+  console.log(`users-row${ onClick && " users-row-hoverable" }`);
 
   /* ===== USER ROW COMPONENT ===== */
   if (!isDetailed) {
     return (
       // Simply return a row containing the username of the user in question
-      <div className="users-row" onClick={ () => onClick(user) }>
+      <div className={ `users-row${ onClick ? " users-row-hoverable" : "" }` } onClick={ onClick ? () => onClick(user) : null }>
         <Username 
           country={ user.country.iso2 ? user.country.iso2 : user.country } 
           profileId={ user.id } 
@@ -28,7 +29,7 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
     );
   } else {
     return (
-      <div className="users-row" onClick={ () => onClick(user) }>
+      <div className={ `users-row${ onClick ? " users-row-hoverable" : "" }` } onClick={ onClick ? () => onClick(user) : null }>
 
         { /* On the left side of the container, render the user's detailed username */ }
         <DetailedUsername 
