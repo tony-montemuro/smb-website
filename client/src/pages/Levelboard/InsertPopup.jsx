@@ -78,7 +78,7 @@ function InsertPopup({ popup, setPopup, level, submissions }) {
               <h2>Submit a New { capitalize(type) }</h2>
 
               { /* Submission form - allows users to submit a record to the database */ }
-              <form onSubmit={ (e) => handleSubmit(e, submissions, level.timer_type) }>
+              <form onSubmit={ (e) => handleSubmit(e, level.timer_type) }>
 
                 { /* If the current user is a moderator, render the user who the moderator is submitting on behalf of. */ }
                 { user.is_mod &&

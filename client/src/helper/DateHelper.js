@@ -21,7 +21,7 @@ const DateHelper = () => {
 
     // FUNCTION 2: getDateOfSubmission - given the frontend date & oldSubmission data, determine the date of the new submission 
     // date
-    // PRECONDITIONS (4 parameters):
+    // PRECONDITIONS (2 parameters):
     // 1.) submittedAt: a string representing a date with a front-end format
     // 2.) oldSubmittedAt: either a backend-formatted submitted at string associated with the "old" submission, or undefined, 
     // if there is no "old" submission
@@ -77,7 +77,7 @@ const DateHelper = () => {
         return nextDate;
     };
 
-    return { getDateOfSubmission, getInclusiveDate };
+    return { dateF2B, getDateOfSubmission, getInclusiveDate };
 };
 
 /* ===== EXPORTS ===== */

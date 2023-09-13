@@ -3,6 +3,7 @@ import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
+import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardUtils from "./LevelboardUtils";
 import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
@@ -60,7 +61,8 @@ const InsertPopup = (level) => {
     const { insertSubmission } = SubmissionUpdate();
 
     // helper functions
-    const { getDateOfSubmission } = DateHelper();
+    const { dateF2B } = DateHelper();
+    const { dateB2F } = FrontendHelper();
     const { 
         submission2Form, 
         validateRecord, 
@@ -116,38 +118,49 @@ const InsertPopup = (level) => {
         }
     };
 
-    // FUNCTION 3: getSubmissionFromForm  - takes form values, and generates a new object with formatting ready for submission
-    // PRECONDITIONS (5 parameter):
+    // FUNCTION 4: getDateOfSubmission - given date from form data, determine new, backend-formatted submission date
+    // PRECONDITIONS (1 parameter):
+    // 1.) submittedAt: the date of the submission, coming from `form.values.submitted_at`
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the submission date is just the current date, return null. we will allow the DB to define `submitted_at`, in this case
+    // otherwise, return call to `dateF2B` with submittedAt as an argument
+    const getDateOfSubmission = submittedAt => {
+        const currDate = dateB2F();
+        return submittedAt === currDate ? null : dateF2B(submittedAt);
+    };
+
+    // FUNCTION 5: getSubmissionFromForm  - takes form values, and generates a new object with formatting ready for submission
+    // PRECONDITIONS (2 parameters):
     // 1.) formVals: an object containing data generated from the submission form
-    // 2.) date: a string representing the date of the submission. this is different from the `submitted_at` field already
-    // present in the formVals object; it's converted to a backend format
+    // 2.) date: a string representing the date of the submission (backend format), or null. if the date is null, this means that
+    // we want the DB to just auto assign the `submitted_at` with the current timestamp
     // POSTCONDITION (1 possible outcome, 1 return):
     // 1.) submission: an object containing mostly the same information from formValues parameter, but with
     // fixed date value (backend format), as well as removing the `message`, `hour`, `minute`, `second`, & `centisecond` fields
     const getSubmissionFromForm = (formVals, date) => {
         // create our new submission object, which is equivelent to formVals minus some fields not present in `submission` table
-        const { hour, minute, second, centisecond, profile, ...submission } = formVals;
+        const { hour, minute, second, centisecond, profile, submitted_at, ...submission } = formVals;
 
         // add additional fields to submission object, and correct the record field if type is time
-        submission.submitted_at = date;
+        if (date) {
+            submission.submitted_at = date;
+        }
         submission.record = type === "time" ? recordToSeconds(hour, minute, second, centisecond) : submission.record;
         submission.profile_id = profile.id;
 
         return submission;
     };
 
-    // FUNCTION 4: handleSubmit - function that validates and submits a record to the database
-	// PRECONDITIONS (3 parameters):
+    // FUNCTION 6: handleSubmit - function that validates and submits a record to the database
+	// PRECONDITIONS (2 parameters):
 	// 1.) e: an event object generated when the user submits the submission form
-    // 2.) allSubmissions: an array of submissions for the current levelboard, sorted in descending order by the
-    // details.record field
-    // 3.) timerType: a string representing the time of timer of the chart. only really relevent for time charts
+    // 2.) timerType: a string representing the time of timer of the chart. only really relevent for time charts
 	// POSTCONDITIONS (3 possible outcomes):
     // if the submission fails to validate, the function will update the error field of the form state with any new form errors,
     // and return early
 	// if the submission is validated, and the submission is successful, the page is reloaded
 	// if the submission is validated, but the submission fails, and error message is rendered, and page does NOT reload
-	const handleSubmit = async (e, allSubmissions, timerType) => {
+	const handleSubmit = async (e, timerType) => {
 		// initialize submission
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
@@ -186,8 +199,7 @@ const InsertPopup = (level) => {
         }
 
 		// convert the date from the front-end format, to the backend format.
-		const oldSubmission = allSubmissions.find(row => row.profile.id === form.values.profile.id);
-		const backendDate = getDateOfSubmission(form.values.submitted_at, oldSubmission ? oldSubmission.submitted_at : undefined);
+		const backendDate = getDateOfSubmission(form.values.submitted_at);
 
 		// if we made it this far, no errors were detected, so we can go ahead and submit
 		const submission = getSubmissionFromForm(form.values, backendDate);
@@ -200,20 +212,12 @@ const InsertPopup = (level) => {
             window.location.reload();
 
         } catch (error) {
-            if (error.code === "42501" && error.message === 'new row violates row-level security policy "Enforce receiving profile exists [RESTRICTIVE]" for table "notification"') {
-                // special case: moderator attempted to update a submission for a profile who is unauthenticated. this is actually
-                // expected behavior, so let's proceed as if there were not issues
-                window.location.reload();
-
-            } else {
-                // general case: if there is an error, inform the user
-                addMessage(error.message, "error");
-                dispatchForm({ field: "submitting", value: false });
-            }
+            addMessage(error.message, "error");
+            dispatchForm({ field: "submitting", value: false });
         };
 	};
 
-    // FUNCTION 6: closePopup - function that is activated when the user attempts to close the popup
+    // FUNCTION 7: closePopup - function that is activated when the user attempts to close the popup
     // PRECONDITIONS (1 parameter):
     // 1.) setPopup - function used to update the insertPopup state in Levelboard.jsx. when set to false, the popup will close
     // POSTCONDITIONS (1 possible outcomes):
