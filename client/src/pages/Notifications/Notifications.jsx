@@ -20,7 +20,7 @@ function Notifications() {
 
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 7;
-  const NOTIFS_PER_PAGE = 2;
+  const NOTIFS_PER_PAGE = 50;
   const messages = {
     approve: "A moderator has approved one of your submission.",
     report: "A user has reported one of your submissions.",
