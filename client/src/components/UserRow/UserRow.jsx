@@ -12,7 +12,6 @@ import YT from "../../img/yt-logo.png";
 function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = false, onClick = undefined }) {
   /* ===== FUNCTIONS ===== */
   const { alertDiscord } = UserHelper();
-  console.log(`users-row${ onClick && " users-row-hoverable" }`);
 
   /* ===== USER ROW COMPONENT ===== */
   if (!isDetailed) {
