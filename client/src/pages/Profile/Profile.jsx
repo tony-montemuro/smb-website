@@ -26,17 +26,17 @@ function Profile({ imageReducer }) {
 
     // code that is executed when the page loads, or when the staticCache object is updated
     useEffect(() => {
-        if (staticCache.countries.length > 0 && user.id !== undefined) {
-          // if not user.id (meaning user is null), current user is not authenticated. thus, deny
-          // access to this page.
-          if (!user.id) {
-            addMessage("You cannot access this page.", "error");
-            navigate("/");
-            return;
-          }
+      if (staticCache.countries.length > 0 && user.id !== undefined) {
+        // if not user.id (meaning user is null), current user is not authenticated. thus, deny
+        // access to this page.
+        if (!user.id) {
+          addMessage("You cannot access this page.", "error");
+          navigate("/");
+          return;
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [staticCache, user]);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [staticCache, user]);
 
     /* ===== PROFILE COMPONENT ===== */
     return user.id && staticCache.countries.length > 0 ?
