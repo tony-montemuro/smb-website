@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { formatDistanceToNowStrict } from 'date-fns';
+import { formatDistanceToNowStrict } from "date-fns";
 
 const FrontendHelper = () => {
     /* ===== FUNCTIONS ===== */
