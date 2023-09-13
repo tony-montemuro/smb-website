@@ -54,12 +54,10 @@ const ProfileUtils = () => {
     // FUNCTION 2: validateUsername - determine if user has entered a valid username
     // PRECONDITIONS (3 parameters):
     // 1.) username: a string that the user has made for their username
-    // 2.) id: a string that corresponds to the current user's id
-    // 3.) profiles: an array of profile objects
     // POSTCONDITIONS (1 returns):
     // 1.) error: a string that gives information as to why their username is problematic, if there is any problems.
     // if this string returns undefined, it means no errors were detected
-    const validateUsername = (username, id, profiles) => {
+    const validateUsername = (username) => {
         // first, check that the username exists
         if (!username) {
             return "Username is required to create a profile!";
@@ -73,11 +71,6 @@ const ProfileUtils = () => {
         // now, ensure the username is well-formatted (alphanumeric and underscores)
         if (!usernamePattern.test(username)) {
             return "Username must consist only of letters, numbers, and/or underscores.";
-        }
-
-        // now, ensure that the username is unique among all usernames
-        if (profiles.some(row => row.username === username && row.id !== id)) {
-            return "This username is already taken. Please try another username.";
         }
 
         return undefined;

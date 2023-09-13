@@ -97,7 +97,6 @@ const UserInfoForm = () => {
     // and return from the function early
     const uploadUserInfo = async (e) => {
         // initialize update
-        const profiles = staticCache.profiles;
         e.preventDefault();
 
         // create error object to track form errors
@@ -105,7 +104,7 @@ const UserInfoForm = () => {
         Object.keys(form.error).forEach(field => error[field] = undefined);
 
         // validate form fields
-        error.username = validateUsername(form.user.username, form.user.id, profiles);
+        error.username = validateUsername(form.user.username);
         error.bio = validateBio(form.user.bio);
         error.youtube_handle = validateYoutubeHandle(form.user.youtube_handle);
         error.twitch_username = validateTwitchUsername(form.user.twitch_username);
@@ -142,8 +141,18 @@ const UserInfoForm = () => {
             window.location.reload();
 
         } catch (error) {
-            // render an error message, and reset the uploading flag
-            addMessage(error.message, "error");
+            // special case: user attempted to update their username to a non-unique name
+            if (error.code === "23505") {
+                addMessage("This username is already taken.", "error");
+                error.username = "Username must be unique.";
+                dispatchForm({ field: "error", value: error });
+            } 
+            
+            // general case: render an error message, and reset the uploading flag
+            else {
+                addMessage("There was an error updating your profile. Please try again.", "error");
+            }
+        } finally {
             dispatchForm({ field: "uploading", value: false });
         }
     };
