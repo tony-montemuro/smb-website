@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./UserSearch.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PageControls from "../PageControls/PageControls.jsx";
 import SearchBarInput from "../SearchBarInput/SearchBarInput";
 import UserSearchLogic from "./UserSearch.js";
@@ -8,20 +8,24 @@ import UserRow from "../UserRow/UserRow.jsx";
 
 function UserSearch({ usersPerPage, searchBarWidth = "100%", imageReducer = null, userRowOptions }) {
   /* ===== STATES & FUNCTIONS ===== */
-  const { users, pageNum, searchInput, setPageNum, setSearchInput, getStartAndEnd, updateResults } = UserSearchLogic(usersPerPage);
+  const [pageNum, setPageNum] = useState(1);
+  const [searchInput, setSearchInput] = useState("");
+
+  // states and functions from the js file
+  const { users, updateResults } = UserSearchLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts OR when user makes changes pages AND/OR makes a change to the search bar
   useEffect(() => {
-    updateResults(searchInput);
+    updateResults(searchInput, usersPerPage, pageNum);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNum]);
 
   // code that is executed when the component mounts OR when users makes a change to searchbar input
   useEffect(() => {
     if (pageNum === 1) {
-      updateResults(searchInput);
+      updateResults(searchInput, usersPerPage, pageNum);
     } else {
       setPageNum(1);
     }
@@ -64,7 +68,6 @@ function UserSearch({ usersPerPage, searchBarWidth = "100%", imageReducer = null
             pageNum={ pageNum }
             setPageNum={ setPageNum }
             itemName={ "Users" } 
-            getStartAndEnd={ getStartAndEnd }
           />
         </div>
       </div>

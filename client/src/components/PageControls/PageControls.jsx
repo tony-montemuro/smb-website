@@ -2,11 +2,11 @@
 import "./PageControls.css";
 import PageControlsLogic from "./PageControls.js";
 
-function PageControls({ totalItems, itemsPerPage, pageNum, setPageNum, itemName, getStartAndEnd }) {
+function PageControls({ totalItems, itemsPerPage, pageNum, setPageNum, itemName }) {
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file
-  const { getMaxPage } = PageControlsLogic();
+  const { getStartAndEnd, getMaxPage } = PageControlsLogic();
   
   /* ===== PAGE CONTROLS COMPONENT ===== */
   return totalItems > itemsPerPage &&

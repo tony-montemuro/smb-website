@@ -1,9 +1,10 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import PageControls from "../PageControls/PageControls.js";
 import ProfileRead from "../../database/read/ProfileRead";
 
-const UserSearch = (usersPerPage) => {
+const UserSearch = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
@@ -11,35 +12,24 @@ const UserSearch = (usersPerPage) => {
 
     /* ===== STATES ===== */
     const [users, setUsers] = useState({ data: undefined, total: 9999999999 }); // set total to some arbitrarily large number for now
-    const [pageNum, setPageNum] = useState(1);
-    const [searchInput, setSearchInput] = useState("");
 
     /* ===== FUNCTIONS ===== */
 
     // database functions
     const { searchForProfiles } = ProfileRead();
 
-    // FUNCTION 1: getStartAndEnd - given the number of users & page number, retrieve the start and end item indicies
-    // PRECONDITIONS (2 parameters):
-    // 1.) itemsPerPage: an integer representing the max number of items that should exist on each page 
-    // 2.) pageNumber: the page number the user is currently on
-    // POSTCONDITIONS (2 possible returns, 1 possible outcome):
-    // two variables are returned
-    // a.) start: the index of the first item on the page
-    // b.) end: the index of the last item on the page
-    const getStartAndEnd = (itemsPerPage, pageNumber) => {
-        const start = itemsPerPage*(pageNumber-1);
-        const end = (itemsPerPage*pageNumber)-1;
-        return { start, end };
-    };
+    // helper functions
+    const { getStartAndEnd } = PageControls();
 
-    // FUNCTION 2: updateResults - function that return all profiles whose username have a substring that matches userInput
-    // PRECONDITIONS (1 parameter):
+    // FUNCTION 1: updateResults - function that return all profiles whose username have a substring that matches userInput
+    // PRECONDITIONS (2 parameters):
     // 1.) userInput: a string created by the user, which we attempt to "match" (via substring) to a username in the db
+    // 2.) usersPerPage: an integer that specifies the number of users that should render on each page
+    // 3.) pageNum: an integer that specifies the page number the user is currently on
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is a success, we use `profiles` and `count` to update the users state hook by calling the `setUsers()` function
     // if the query was a failure, simply render an error to the client
-    const updateResults = async userInput => {
+    const updateResults = async (userInput, usersPerPage, pageNum) => {
         // first, compute the range of users to grab based on the parameters
         const { start, end } = getStartAndEnd(usersPerPage, pageNum);
 
@@ -54,7 +44,7 @@ const UserSearch = (usersPerPage) => {
         }
     };
 
-    return { users, pageNum, searchInput, setPageNum, setSearchInput, getStartAndEnd, updateResults };
+    return { users, updateResults };
 };
 
 /* ===== EXPORTS ===== */
