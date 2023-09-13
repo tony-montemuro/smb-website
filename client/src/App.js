@@ -19,8 +19,7 @@ const App = () => {
   };
   const defaultStaticCache = {
     countries: [],
-    games: [],
-    profiles: []
+    games: []
   };
 
   /* ===== STATES & REDUCERS ===== */
@@ -36,9 +35,9 @@ const App = () => {
   // database functions to load data
   const { queryCountries } = CountriesRead();
   const { queryGames } = GameRead();
-  const { queryModerators, isModerator } = ModeratorRead();
+  const { isModerator } = ModeratorRead();
   const { queryUserNotifications } = NotificationRead();
-  const { queryProfiles, queryUserProfile } = ProfileRead();
+  const { queryUserProfile } = ProfileRead();
 
   // database function used to retrieve the current session
   const { getSession } = Session();
@@ -151,8 +150,8 @@ const App = () => {
   const loadData = async () => {
     try {
       // make concurrent api calls to database to load data
-      const [countries, games, moderators, profiles] = await Promise.all(
-        [queryCountries(), queryGames(), queryModerators(), queryProfiles()]
+      const [countries, games] = await Promise.all(
+        [queryCountries(), queryGames()]
       );
 
       // clean up the many-to-many relationships present in each game object
@@ -178,20 +177,10 @@ const App = () => {
         delete game.game_platform;
       });
 
-      // add the mod field to each profile object
-      profiles.forEach(profile => {
-        profile.mod = false;
-        moderators.forEach(moderator => {
-          profile.mod = profile.id === moderator.profile_id;
-        });
-      });
-
       // update static cache
       const staticCache = {
         countries: countries,
-        games: games,
-        moderators: moderators,
-        profiles: profiles
+        games: games
       };
       setStaticCache(staticCache);
 

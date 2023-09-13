@@ -4,30 +4,7 @@ import { supabase } from "../SupabaseClient";
 const ProfileRead = () => {
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: queryProfiles - async function that makes a call to supabase to get an array of all the profiles
-    // PRECONDITIONS: NONE
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, the list of sorted profiles (by username, ascending order) is returned
-    // otherwise, this function throws an error, which should be handled by caller function
-    const queryProfiles = async () => {
-        try {
-            const { data: profiles, error, status } = await supabase
-                .rpc("get_profiles");
-
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            return profiles;
-
-        } catch(error) {
-            // throw error to be handled by caller
-            throw error;
-        }
-    };
-
-    // FUNCTION 2: queryUserProfile - async function that makes a call to supabase to get the profile object for a given user
+    // FUNCTION 1: queryUserProfile - async function that makes a call to supabase to get the profile object for a given user
     // PRECONDITIONS (1 parameter):
     // 1.) userId - a string corresponding to the uuid of a user, typically the currently signed-in user
     // 2.) addMessage - a function that is used to add messages to the messages array defined in `App.js`. used in the event
@@ -78,7 +55,7 @@ const ProfileRead = () => {
         }
     };
 
-    // FUNCTION 3: searchForProfiles - function that grabs a subset of profiles, according to the users input
+    // FUNCTION 2: searchForProfiles - function that grabs a subset of profiles, according to the users input
     // PRECONDITIONS (3 parameters):
     // 1.) userInput: a string, which a user has entered in an attempt to find a user profile. we use this value to attempt
     // to match 0 or more profiles to this value
@@ -111,7 +88,7 @@ const ProfileRead = () => {
         };
     };
 
-    return { queryProfiles, queryUserProfile, searchForProfiles };
+    return { queryUserProfile, searchForProfiles };
 };
 
 /* ===== EXPORTS ===== */
