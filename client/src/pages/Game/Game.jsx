@@ -126,7 +126,7 @@ function Game() {
               <button 
                 type="button"
                 key={ category } 
-                className={ `game-radio-btn ${ category === selectedCategory ? `game-radio-btn-selected` : "" }` }
+                className={ `game-radio-btn${ category === selectedCategory ? ` game-radio-btn-selected` : "" }` }
                 onClick={ () => handleChange(category) }
                 title={ categoryB2F(category) }
               >

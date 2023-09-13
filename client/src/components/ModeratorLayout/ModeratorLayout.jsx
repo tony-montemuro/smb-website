@@ -61,7 +61,7 @@ function ModeratorLayout() {
 
           { /* About Moderation Tab - Brings moderator to the moderation hub home page */ }
           <div 
-            className={ `moderator-layout-tab ${ !pageType ? "moderator-layout-tab-active" : "" }` } 
+            className={ `moderator-layout-tab${ !pageType ? " moderator-layout-tab-active" : "" }` } 
             onClick={ () => handleTabClick(undefined) }
           >
             About Moderation
@@ -69,7 +69,7 @@ function ModeratorLayout() {
 
           { /* New Submission Tab - Brings moderator to the list of new submissions */ }
           <div 
-            className={ `moderator-layout-tab ${ pageType === "approvals" ? "moderator-layout-tab-active" : "" }` }
+            className={ `moderator-layout-tab${ pageType === "approvals" ? " moderator-layout-tab-active" : "" }` }
             onClick={ () => handleTabClick("approvals") }
           >
             { getNumberOfSubmissions(submissions.recent) > 0 && `(${ getNumberOfSubmissions(submissions.recent) })` } 
@@ -78,7 +78,7 @@ function ModeratorLayout() {
 
           { /* Reported Submissions tab - Brings moderator to the list of report submissions */ }
           <div 
-            className={ `moderator-layout-tab ${ pageType === "reports" ? "moderator-layout-tab-active" : "" }` }
+            className={ `moderator-layout-tab${ pageType === "reports" ? " moderator-layout-tab-active" : "" }` }
             onClick={ () => handleTabClick("reports") }
           >
             { getNumberOfSubmissions(submissions.reported) > 0 && `(${ getNumberOfSubmissions(submissions.reported) })` }
@@ -87,7 +87,7 @@ function ModeratorLayout() {
 
           { /* Create Post tab - Brings moderator to the post page */ }
           <div 
-            className={ `moderator-layout-tab ${ pageType === "post" ? "moderator-layout-tab-active" : "" }` }
+            className={ `moderator-layout-tab${ pageType === "post" ? " moderator-layout-tab-active" : "" }` }
             onClick={ () => handleTabClick("post") }
           >
             Create Post

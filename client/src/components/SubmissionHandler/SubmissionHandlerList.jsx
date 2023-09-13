@@ -24,7 +24,7 @@ function SubmissionHandlerList({ recent, gameAbb, setGameAbb, imageReducer }) {
             const game = staticCache.games.find(row => row.abb === abb);
             return ( 
               <div
-                className={ `submission-handler-list-tab ${ abb === gameAbb ? "submission-handler-list-tab-active" : "" }` }
+                className={ `submission-handler-list-tab${ abb === gameAbb ? " submission-handler-list-tab-active" : "" }` }
                 onClick={ () => setGameAbb(abb) }
                 key={ abb }
               >

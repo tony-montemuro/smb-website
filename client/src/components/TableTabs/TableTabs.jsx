@@ -9,7 +9,7 @@ function TableTabs({ elements, current, handleClick }) {
         return (
           <button
             type="button"
-            className={ `tab ${ current === element.data ? "tab-active" : "" }` }
+            className={ `tab${ current === element.data ? " tab-active" : "" }` }
             onClick={ () => handleClick(element.data) }
             key={ element.data }
           >

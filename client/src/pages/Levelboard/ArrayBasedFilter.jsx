@@ -18,7 +18,7 @@ function ArrayBasedFilter({ filters, selectedFilter, hasFilterChanged, handleFil
           return (
             <button 
               type="button" 
-              className={ `levelboard-radio-btn ${ filters[selectedFilter.propertyName].includes(item.id) ? `levelboard-radio-btn-selected` : "" }` }
+              className={ `levelboard-radio-btn${ filters[selectedFilter.propertyName].includes(item.id) ? ` levelboard-radio-btn-selected` : "" }` }
               onClick={ () => handleFilterChange(item.id, selectedFilter.propertyName) }
               key={ item.id }
             >

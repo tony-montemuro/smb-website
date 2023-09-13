@@ -122,7 +122,7 @@ function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApply
               { /* Hidden button */ }
               <button 
                 type="button" 
-                className={ `levelboard-radio-btn ${ !filters["obsolete"] ? `levelboard-radio-btn-selected` : "" }` }
+                className={ `levelboard-radio-btn${ !filters["obsolete"] ? ` levelboard-radio-btn-selected` : "" }` }
                 onClick={ () => handleFilterChange(false, "obsolete") }
               >
                 Hidden
@@ -131,7 +131,7 @@ function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApply
               { /* Shown button */ }
               <button 
                 type="button" 
-                className={ `levelboard-radio-btn ${ filters["obsolete"] ? `levelboard-radio-btn-selected` : "" }` }
+                className={ `levelboard-radio-btn${ filters["obsolete"] ? ` levelboard-radio-btn-selected` : "" }` }
                 onClick={ () => handleFilterChange(true, "obsolete") }
               >
                 Shown
