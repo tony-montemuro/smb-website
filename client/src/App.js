@@ -13,7 +13,7 @@ const App = () => {
   const defaultUser = {
     id: undefined,
     email: undefined,
-    notifications: [],
+    notificationCount: 0,
     profile: undefined,
     is_mod: false
   };
@@ -36,7 +36,7 @@ const App = () => {
   const { queryCountries } = CountriesRead();
   const { queryGames } = GameRead();
   const { isModerator } = ModeratorRead();
-  const { queryUserNotifications } = NotificationRead();
+  const { queryNotificationCount } = NotificationRead();
   const { queryUserProfile } = ProfileRead();
 
   // database function used to retrieve the current session
@@ -79,15 +79,15 @@ const App = () => {
 
       try {
         // concurrently make all necessary database calls
-        const [notifs, profile, is_mod] = await Promise.all(
-          [queryUserNotifications(), queryUserProfile(userId, addMessage), isModerator(userId)]
+        const [count, profile, is_mod] = await Promise.all(
+          [queryNotificationCount(), queryUserProfile(userId, addMessage), isModerator(userId)]
         );
 
         // update the user state
         setUser({
           id: userId,
           email: user.email,
-          notifications: notifs,
+          notificationCount: count,
           profile: profile,
           is_mod: is_mod
         });

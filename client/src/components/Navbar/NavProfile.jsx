@@ -53,10 +53,10 @@ function NavProfile({ imageReducer }) {
 
           { /* Notifications link - bell icon that links to the notifications page */ }
           <div className="nav-profile-link">
-            { user.notifications.length > 0 ?
+            { user.notificationCount > 0 ?
               // If the user has one or more notifications, render the number of notifications next to a full bell
               <Link to="/notifications">
-                <span>{ user.notifications.length }</span>
+                <span>{ user.notificationCount }</span>
                 <NotificationsIcon titleAccess="Notifications" />
               </Link>
             :
