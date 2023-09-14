@@ -19,27 +19,3 @@
 .news-post-header h2 {
     margin: 18px 0;
 }
-
-.news-body-bottom {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
-
-.news-body-page-viewer {
-    text-align: left;
-    padding: 5px;
-}
-
-.news-body-page-controls {
-    text-align: right;
-    padding: 5px;
-}
-
-.news-body-page-controls select {
-    width: 50px;
-}
-
-.news-body-page-controls button {
-    margin: 0 5px;
-}

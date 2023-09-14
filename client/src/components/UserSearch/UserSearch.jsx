@@ -61,15 +61,13 @@ function UserSearch({ usersPerPage, searchBarWidth = "100%", imageReducer = null
         }
 
         { /* Render pagination controls */ }
-        <div className="users-search-bar-page-controls-wrapper">
-          <PageControls
-            totalItems={ users.total }
-            itemsPerPage={ usersPerPage }
-            pageNum={ pageNum }
-            setPageNum={ setPageNum }
-            itemName={ "Users" } 
-          />
-        </div>
+        <PageControls
+          totalItems={ users.total }
+          itemsPerPage={ usersPerPage }
+          pageNum={ pageNum }
+          setPageNum={ setPageNum }
+          itemName={ "Users" } 
+        />
       </div>
     </div>
 };

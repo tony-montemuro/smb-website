@@ -4,9 +4,14 @@
     justify-content: space-between;
 }
 
+.page-viewer {
+    padding: 5px;
+}
+
 .page-controller {
     display: flex;
     gap: 5px;
+    padding: 5px;
 }
 
 .page-controller select {
