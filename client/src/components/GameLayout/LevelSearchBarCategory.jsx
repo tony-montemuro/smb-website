@@ -1,17 +1,14 @@
 /* ===== IMPORTS ===== */
-import { StaticCacheContext } from "../../utils/Contexts";
+import { GameContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import LevelboardButton from "../LevelboardButton/LevelboardButton.jsx";
 
-function LevelSearchBarCategory({ abb, category, filtered, onResultClick }) {
+function LevelSearchBarCategory({ category, filtered, onResultClick }) {
   /* ===== CONTEXTS ===== */
 
-  // static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
-
-  /* ===== VARIABLES ===== */
-  const game = staticCache.games.find(row => row.abb === abb);
+  // game state from game context
+  const { game } = useContext(GameContext);
 
   /* ===== FUNCTIONS ===== */
   const { categoryB2F, cleanLevelName } = FrontendHelper();

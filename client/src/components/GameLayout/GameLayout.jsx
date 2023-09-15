@@ -1,6 +1,6 @@
 /* ===== IMPORTS ====== */
 import "./GameLayout.css";
-import { GameContext, MessageContext, StaticCacheContext } from "../../utils/Contexts";
+import { GameContext, MessageContext } from "../../utils/Contexts";
 import { Link } from "react-router-dom";
 import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import BoxArt from "../BoxArt/BoxArt.jsx";
 import GameHeaderInfo from "./GameHeaderInfo";
 import GameHelper from "../../helper/GameHelper";
 import GameLayoutInfo from "./GameLayoutInfo";
+import GameLayoutLogic from "./GameLayout.js";
 import LevelSearchBar from "./LevelSearchBar.jsx";
 
 function GameLayout({ imageReducer }) {
@@ -20,9 +21,6 @@ function GameLayout({ imageReducer }) {
 
   /* ===== CONTEXTS ====== */
 
-  // static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
-
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
 
@@ -31,34 +29,38 @@ function GameLayout({ imageReducer }) {
 
   /* ===== FUNCTIONS ===== */
 
+  // database functions
+  const { fetchGame } = GameLayoutLogic();
+
   // helper functions
   const { getGameCategories } = GameHelper();
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component is mounted, and when the static cache is updated
+  // code that is executed when the component is mounted
   useEffect(() => {
-    if (staticCache.games.length > 0) {
-      // see if abb corresponds to a game stored in cache
-      const games = staticCache.games;
-      const game = games.find(row => row.abb === abb);
-
-      // if not, we will print an error message, and navigate to the home screen
+    async function initGame() {
+      // fetch game from database
+      const game = await fetchGame(abb);
+      
+      // if game does not exist, render error message and navigate back home
       if (!game) {
         addMessage("Game does not exist.", "error");
         navigate("/");
         return;
       }
 
-      // update the game state hook
+      // update game state hook
       setGame(game);
-    }
+    };
+   
+    initGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staticCache]);
+  }, []);
 
   /* ===== GAME LAYOUT COMPONENT ===== */
   return game ?
-    <>
+    <GameContext.Provider value={ { game } }>
       {/* Game Layout Header - Render general game information at top of each game page */}
       <div className="game-layout-header">
 
@@ -71,7 +73,7 @@ function GameLayout({ imageReducer }) {
         <GameHeaderInfo game={ game } />
 
         { /* Render the level search bar */ }
-        <LevelSearchBar abb={ game.abb } />
+        <LevelSearchBar />
 
       </div>
 
@@ -80,9 +82,7 @@ function GameLayout({ imageReducer }) {
 
         {/* Game Layout Content - The actual page itself. */}
         <div className="game-layout-body-content">
-          <GameContext.Provider value={ { game } }>
-            <Outlet />
-          </GameContext.Provider>
+          <Outlet />
         </div>
 
         { /* Game Layout Info - a set of links used to navigate various game pages. */ }
@@ -96,7 +96,7 @@ function GameLayout({ imageReducer }) {
         </div>
         
       </div>
-    </>
+    </GameContext.Provider>
   :
     // Loading component
     <p>Loading...</p>

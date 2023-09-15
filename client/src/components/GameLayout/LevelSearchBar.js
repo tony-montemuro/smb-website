@@ -1,22 +1,21 @@
 /* ===== IMPORTS ===== */
-import { StaticCacheContext } from "../../utils/Contexts";
+import { GameContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 
-const LevelSearchBar = abb => {
+const LevelSearchBar = () => {
     /* ===== CONTEXTS ===== */
 
-    // static cache state from static cache context
-    const { staticCache } = useContext(StaticCacheContext);
+    // game state from game context
+    const { game } = useContext(GameContext);
 
     /* ===== HELPER FUNCTIONS ===== */
     const { cleanLevelName } = FrontendHelper();
     const { getGameCategories } = GameHelper();
 
     /* ===== VARIABLES ===== */
-    const game = staticCache.games.find(row => row.abb === abb);
     const categories = getGameCategories(game);
     const navigate = useNavigate();
 
