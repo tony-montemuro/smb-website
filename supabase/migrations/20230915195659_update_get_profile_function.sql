@@ -14,8 +14,6 @@ AS $$
       (
         SELECT json_agg(jsonb_build_object(
           'abb', g.abb,
-          'name', g.name,
-          'live_preference', g.live_preference,
           'categories', (
             SELECT json_agg(jsonb_build_object(
               'name', c.category,
@@ -31,10 +29,13 @@ AS $$
               WHERE m.game = g.abb
               ORDER BY m.category, m.id
             ) c
-          )
+          ),
+          'custom', g.custom,
+          'name', g.name,
+          'live_preference', g.live_preference
         ) ORDER BY g.id) AS submitted_games
         FROM (
-          SELECT DISTINCT ON (s.game_id) s.game_id AS abb, g.id, g.name, g.live_preference
+          SELECT DISTINCT ON (s.game_id) s.game_id AS abb, g.custom, g.id, g.live_preference, g.name
           FROM submission s
           INNER JOIN game AS g ON g.abb = s.game_id
           WHERE s.profile_id = 1
