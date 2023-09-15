@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./UserLayout.css";
 import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { MessageContext, ProfileContext, StaticCacheContext } from "../../utils/Contexts";
+import { MessageContext, ProfileContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import Avatar from "../Avatar/Avatar.jsx";
 import UserLayoutLogic from "./UserLayout.js";
@@ -19,9 +19,6 @@ function UserLayout({ imageReducer }) {
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
-  
-  // static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
   
   /* ===== STATES ===== */
   const [profile, setProfile] = useState(undefined);
@@ -52,12 +49,9 @@ function UserLayout({ imageReducer }) {
       }
     };
 
-    // only run `initProfile` if staticCache.games is defined
-    if (staticCache.games.length > 0) {
-      initProfile();
-    }
+    initProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staticCache.games, location.pathname]);
+  }, [location.pathname]);
 
   /* ===== USER LAYOUT COMPONENT ===== */ 
   return profile &&

@@ -1,6 +1,5 @@
 /* ===== IMPORTS ===== */
-import { StaticCacheContext } from "../../utils/Contexts";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
@@ -10,11 +9,6 @@ import UserStatsCategory from "./UserStatsCategory";
 import UserStatsDirectoryLogic from "./UserStatsDirectory.js";
 
 function UserStatsDirectory({ imageReducer, profile }) {
-  /* ===== CONTEXTS ===== */
-
-  // static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
-
   /* ===== STATES & FUNCTIONS ===== */
   const [selectedGame, setSelectedGame] = useState(undefined);
 
@@ -29,7 +23,7 @@ function UserStatsDirectory({ imageReducer, profile }) {
 
   // code that is executed when the component first mounts, or when the profile state updates
   useEffect(() => {
-    initUserGames(staticCache.games, profile);
+    initUserGames(profile);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 

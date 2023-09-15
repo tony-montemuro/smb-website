@@ -30,36 +30,61 @@ const GameHelper = () => {
 
     // FUNCTION 2: getGameCategories - function that returns the list of all categories a game has
     // PRECONDITIONS (1 parameter):
-    // 1.) game: a game object, that has been taken directly from the `staticCache.games` array
+    // 1.) game: a game object, which may have limited details, or is fully detailed
     // POSTCONDITIONS (1 possible outcome):
     // all unique categories of the game are returned in an array
     const getGameCategories = game => {
         const categories = [];
-        game.mode.forEach(mode => {
-            if (!categories.includes(mode.category)) {
-                categories.push(mode.category);
-            }
-        });
+
+        // special case: game has limited details. in this case, it *should* have a field called `categories`. we can use
+        // the data from this
+        if (!game.mode) {
+            game.categories.forEach(category => {
+                categories.push(category.name);
+            });
+        }
+
+        // general case: game is heavily detailed
+        else {
+            game.mode.forEach(mode => {
+                if (!categories.includes(mode.category)) {
+                    categories.push(mode.category);
+                }
+            });
+        }
+
         return categories;
     };
 
     // FUNCTION 3: getCategoryTypes - function that returns an array which contains all the level types in a category (which indicates
     // it's possible chart types)
     // PRECONDITIONS (2 parameters):
-    // 1.) game: a game object, that has been taken directly from the `staticCache.games` array
-    // 2.) category: a string representing a valid category within the game object (param 1)
+    // 1.) game: a game object, which may have limited details, or is fully detailed
+    // 2.) categoryName: a string representing a valid category within the game object (param 1)
     // POSTCONDITIONS (3 possible outcomes):
     // if a game category only has `score` chart_typed levels, an array with a single string "score" is returned
     // if a game category only has `time` chart_typed levels, an array with a single string "time" is returned
     // if a game category has `both` chart_typed levels, OR has both `score` and `time` chart_typed levels, an array with
     // the strings "score" and "time" is returned
-    const getCategoryTypes = (game, category) => {
+    const getCategoryTypes = (game, categoryName) => {
+        // special case: game has limited details. in this case, game object *should* have a field called `categories`, which
+        // should point to an object with the `types` field. we can use this data to get category types
+        if (!game.mode) {
+            const category = game.categories.find(category => category.name === categoryName);
+            if (category.types.includes("both")) {
+                return ["score", "time"];
+            } else {
+                return category.types.sort();
+            }
+        }
+
+        // general case: game has full details.
         // first, define the variables used in this function
         let prevCategory;
 
-        // next, loop through each mode, and within each mode within { category }, loop through the levels
+        // next, loop through each mode, and within each mode within { categoryName }, loop through the levels
         for (const mode of game.mode) {             // for each mode
-            if (mode.category === category) {
+            if (mode.category === categoryName) {
                 for (const level of mode.level) {   // for each level
                     // first, if the chart type is both, we simply return an array with both possible types
                     if (level.chart_type === "both") {

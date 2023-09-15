@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import "./UserStats.css";
-import { useLocation, useNavigate } from "react-router-dom";
-import { MessageContext, StaticCacheContext } from "../../utils/Contexts";
+import { MessageContext, ProfileContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 import UserStatsLogic from "./UserStats.js";
@@ -13,11 +13,11 @@ import UserStatsRecords from "./UserStatsRecords";
 function UserStats() {
   /* ===== CONTEXTS ===== */
 
-  // static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
-
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
+
+  // profiles state from profile context
+  const { profile } = useContext(ProfileContext);
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
@@ -44,43 +44,41 @@ function UserStats() {
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the page loads, when the staticCache object is updated
+  // code that is executed when the component mounts
   useEffect(() => {
-    if (staticCache.games.length > 0) {
-      // see if abb corresponds to a game stored in cache
-      const games = staticCache.games;
-      const game = games.find(row => row.abb === abb);
+    // see if abb corresponds to a game the current user has submitted to
+    const games = profile.submitted_games;
+    const game = games.find(row => row.abb === abb);
 
-      // if either do not match, handle the error, and navigate to the home screen
-      if (!game) {
-        addMessage("Invalid game.", "error");
-        navigate("/");
-        return;
-      }
-
-      // special case #1: we are attempting to access a user stats page with a non-valid category
-      const categories = getGameCategories(game);
-      if (!(categories.includes(category))) {
-        addMessage("The page you requested does not exist.", "error");
-        navigate("/");
-        return;
-      }
-
-      // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
-      const types = getCategoryTypes(game, category);
-      if (!(types.includes(type))) {
-        addMessage("The page you requested does not exist.", "error");
-        navigate("/");
-        return;
-      }
-
-      // otherwise, update the game, filter, & user state hooks, and fetch user stats
-      setGame(game);
-      setAllLiveFilter(game.live_preference ? "live" : "all");
-      fetchUserStats(game, profileId, category, type);
+    // if either do not match, handle the error, and navigate to the home screen
+    if (!game) {
+      addMessage("Invalid game.", "error");
+      navigate("/");
+      return;
     }
+
+    // special case #1: we are attempting to access a user stats page with a non-valid category
+    const categories = getGameCategories(game);
+    if (!(categories.includes(category))) {
+      addMessage("The page you requested does not exist.", "error");
+      navigate("/");
+      return;
+    }
+
+    // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
+    const types = getCategoryTypes(game, category);
+    if (!(types.includes(type))) {
+      addMessage("The page you requested does not exist.", "error");
+      navigate("/");
+      return;
+    }
+
+    // otherwise, update the game, filter, & user state hooks, and fetch user stats
+    setGame(game);
+    setAllLiveFilter(game.live_preference ? "live" : "all");
+    fetchUserStats(game, profileId, category, type);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staticCache, location.pathname]);
+  }, [location.pathname]);
 
   /* ===== USER STATS COMPONENT ===== */
   return game && stats ?
