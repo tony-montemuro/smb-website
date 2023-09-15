@@ -37,7 +37,6 @@ const Levelboard = () => {
 	/* ===== STATES ===== */
 	const [board, setBoard] = useState(boardInit);
 	const [userSubmissions, setUserSubmissions] = useState([]);
-	const [detailSubmission, setDetailSubmission] = useState(undefined);
 
 	/* ===== FUNCTIONS ===== */
 	
@@ -245,30 +244,13 @@ const Levelboard = () => {
 		}
 	};
 
-	// FUNCTION 8: closeDetailPopup - function that executes when user attempts to close the detail popup
-	// PRECONDITIONS (1 parameters):
-	// 1.) isReported - boolean variable that should be set to true when user closes detail popup from reporting the submission,
-	// false otherwise
-	// POSTCONDITIONS (2 possible outcome):
-	// if isReported is false, simply close the popup
-	// otherwise, we want to re-setup the board with the updated data, and then close the popup
-	const closeDetailPopup = async isReported => {
-		if (isReported) {
-			await setupBoard(board.filters);
-		}
-		setDetailSubmission(undefined);
-	};
-
 	return {
 		board,
 		userSubmissions,
-		detailSubmission,
-		setDetailSubmission,
 		setupBoard,
 		applyFilters,
 		getChartTypes,
-		handleTabClick,
-		closeDetailPopup
+		handleTabClick
 	};
 };  
 

@@ -38,21 +38,28 @@ function SubmissionHistory() {
   const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES & FUNCTIONS ====== */
+
+  // states
   const [level, setLevel] = useState(undefined);
   const [profile, setProfile] = useState(undefined);
+  const [detailSubmission, setDetailSubmission] = useState(undefined);
 
   // states and functions from the js file
-  const { 
-    submissions, 
-    runType, 
-    detailSubmission,
-    setRunType, 
-    setDetailSubmission,
-    fetchProfile, 
-    fetchSubmissions, 
-    handleTabClick,
-    closeDetailPopup
-  } = SubmissionHistoryLogic();
+  const { submissions, runType, setRunType, fetchProfile, fetchSubmissions, handleTabClick } = SubmissionHistoryLogic();
+
+  // FUNCTION 1: closeDetailPopup - function that executes when user attempts to close the detail popup
+	// PRECONDITIONS (1 parameters):
+	// 1.) isReported - boolean variable that should be set to true when user closes detail popup from reporting the submission,
+	// false otherwise
+	// POSTCONDITIONS (2 possible outcome):
+	// if isReported is false, simply close the popup
+	// otherwise, we want to re-setup the board with the updated data, and then close the popup
+	const closeDetailPopup = async isReported => {
+		if (isReported) {
+			await fetchSubmissions();
+		}
+		setDetailSubmission(undefined);
+	};
 
   /* ===== EFFECTS ====== */
 
@@ -178,7 +185,7 @@ function SubmissionHistory() {
       { /* Detail popup */ }
       <DetailPopup 
         submission={ detailSubmission } 
-        closeDetailPopup={ closeDetailPopup } 
+        closePopup={ closeDetailPopup } 
         level={ level }
       />
     </>

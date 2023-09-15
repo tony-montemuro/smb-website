@@ -48,23 +48,38 @@ function Levelboard({ imageReducer }) {
 	};
 
 	/* ===== STATES & FUNCTIONS ===== */
+	// states
 	const [level, setLevel] = useState(undefined);
 	const [filtersPopup, setFiltersPopup] = useState(false);
 	const [insertPopup, setInsertPopup] = useState(false);
 	const [updateSubmissions, setUpdateSubmissions] = useState(undefined);
+	const [detailSubmission, setDetailSubmission] = useState(undefined);
 
 	// states and functions from js file
 	const { 
 		board,
 		userSubmissions,
-		detailSubmission,
-		setDetailSubmission,
 		setupBoard,
 		applyFilters,
 		getChartTypes,
-		handleTabClick,
-		closeDetailPopup
+		handleTabClick
 	} = LevelboardLogic();
+
+	// FUNCTION 1: closePopups - general function that executes when user attempts to close a popup
+	// PRECONDITIONS (1 parameter):
+	// 1.) hasChanged - boolean variable that should be set to true when user's popup closure is a result of a change to db
+	// POSTCONDITIONS (2 possible outcome):
+	// if isChanged is false, simply close all popups
+	// otherwise, we want to re-setup the board with the updated data, and close popups
+	const closePopups = async hasChanged => {
+		if (hasChanged) {
+			await setupBoard(board.filters);
+		}
+		setFiltersPopup(null);
+		setInsertPopup(null);
+		setUpdateSubmissions(null);
+		setDetailSubmission(null);
+	};
 
 	/* ===== EFFECTS ===== */
 
@@ -211,7 +226,7 @@ function Levelboard({ imageReducer }) {
 			/>
 			<DetailPopup 
 				submission={ detailSubmission } 
-				closeDetailPopup={ closeDetailPopup }
+				closePopup={ closePopups }
 				level={ level }
 			/>
 			<InsertPopup 

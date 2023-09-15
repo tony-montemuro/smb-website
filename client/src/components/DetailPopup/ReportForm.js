@@ -32,12 +32,12 @@ const ReportForm = () => {
     // PRECONDITIONS (3 parameters):
     // 1.) e: an event object generated when the user submits the submission form
     // 2.) submission: a submission object that contains information about the reported submission
-    // 3.) closeDetailPopup: a function called once we have reported the submission that will close the popup
+    // 3.) closePopup: a function called once we have reported the submission that will close the popup
     // POSTCONDITIONS (3 possible outcomes):
     // if the message is not validated, the error field of form is updated by calling setForm() function, and the function returns early
     // if the message is validated, and at least one notification fails to insert, user is alerted of the error
     // if the message is validated, and all notifications insert, the page will reload
-    const handleReport = async (e, submission, closeDetailPopup) => {
+    const handleReport = async (e, submission, closePopup) => {
         // first, update the form to prevent multiple submissions
         e.preventDefault();
         setForm({ ...form, submitting: true });
@@ -63,7 +63,7 @@ const ReportForm = () => {
             await insertReport(report);
         
             // await popup to close
-            await closeDetailPopup(true);
+            await closePopup(true);
 
             // finally, let the user know that they successfully reported the submission
             addMessage("The submission was successfully reported! Please give the moderation team a few days to look it over.", "success");
