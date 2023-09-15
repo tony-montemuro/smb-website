@@ -1,18 +1,10 @@
 /* ===== IMPORTS ===== */
 import "./Overview.css";
-import { StaticCacheContext } from "../../utils/Contexts";
-import { useContext } from "react";
 import BoxArt from "../../components/BoxArt/BoxArt.jsx";
 
 function Overview({ imageReducer }) {
-  /* ===== CONTEXTS ===== */
-
-  // static cache state from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
-
   /* ===== VARIABLES ===== */
-  const games = staticCache.games;
-  const smb2games = games.filter(game => game.abb === "smb2" || game.abb === "smb2pal");
+  const smb2Games = [{ abb: "smb2", name: "Super Monkey Ball 2" }, { abb: "smb2pal", name: "Super Monkey Ball 2 PAL" }];
 
   /* ===== OVERVIEW COMPONENT ===== */
   return (
@@ -88,7 +80,7 @@ function Overview({ imageReducer }) {
           <h2 id="regions">Regions</h2>
           NTSC and PAL are terms used to distinguish between different regional releases of Super Monkey Ball, with NTSC being further split into NTSC-J and NTSC-U. Typically, NTSC-J is considered the Japanese version, NTSC-U the North American version, and PAL the European version. As such, the version you own will most likely depend on where in the world you live. If you are unsure which version you own, you can easily check by looking at the box art. Take SMB2 as an example:<br /><br />
           <div className="overview-boxart-wrapper">
-            { smb2games.map(game => {
+            { smb2Games.map(game => {
               return (
                 <div className="overview-boxart" key={ game.abb }>
                   <BoxArt game={ game } imageReducer={ imageReducer } width={ 200 } />

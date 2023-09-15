@@ -96,6 +96,7 @@ const GameRead = () => {
                 .from("game")
                 .select(`
                     abb,
+                    custom,
                     game_monkey (
                         monkey (
                             id,
@@ -121,7 +122,9 @@ const GameRead = () => {
                             rule_name
                         )
                     ),
-                    custom,
+                    mode (
+                        category
+                    ),
                     name,
                     release_date
                 `)
