@@ -5,12 +5,43 @@
 
 .game-select-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     margin: 10px 0;
 }
 
 .game-select-header h1 {
     margin: 0;
+}
+
+.game-select-filters {
+    display: flex;
+    justify-content: space-between;
+}
+
+.game-select-filter-btns {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.game-select-filter-btn {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.game-select-filter-btn:hover {
+    background-color: #ddd;
+}
+  
+.game-select-filter-btn-selected {
+    background-color: black;
+    color: #fff;
+}
+
+.game-select-filter-btn-selected:hover {
+    background-color: #333333;
 }
 
 .game-searchbar {
