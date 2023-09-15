@@ -4,7 +4,7 @@ import { UserContext } from "../../utils/Contexts";
 import CountdownTimer from "../CountdownTimer/CountdownTimer.jsx";
 import ReportFormLogic from "./ReportForm.js";
 
-function ReportForm({ submission }) {
+function ReportForm({ submission, closeDetailPopup }) {
   /* ===== VARIABLES ===== */
   const TEXT_AREA_ROWS = 2;
 
@@ -45,7 +45,7 @@ function ReportForm({ submission }) {
             <p>You have <b>{ user.profile.report_token }</b> reports left. Report counts reset in <CountdownTimer />.</p>
             
             { /* Report form */ }
-            <form>
+            <form onSubmit={ (e) => handleReport(e, submission, closeDetailPopup) }>
       
               { /* Message input - a text field where the user must include a message with their report */ }
               <div className="detail-textarea-group">
@@ -61,18 +61,18 @@ function ReportForm({ submission }) {
       
               { /* Render the form error under this input, if an error is defined */ }
               { form.error && <p>{ form.error }</p> }
+
+              { /* Report form button */ }
+              <div className="detail-decision-btns">
+
+                { /* Button that, when pressed, reports the submission */ }
+                <button type="submit" disabled={ form.submitting || form.submitted }>
+                  Submit Report
+                </button>
+
+              </div>
       
             </form>
-      
-            { /* Report form button */ }
-            <div className="detail-decision-btns">
-
-              { /* Button that, when pressed, reports the submission */ }
-              <button type="submit" onClick={ () => handleReport(submission) } disabled={ form.submitting || form.submitted }>
-                Submit Report
-              </button>
-
-            </div>
           </>
       }
 

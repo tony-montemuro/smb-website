@@ -29,14 +29,17 @@ const ReportForm = () => {
 
     // FUNCTION 1 - handleReport: given the report object, send an array of reports to all moderators, and the owner
     // of the submission
-    // PRECONDITIONS (1 parameter):
-    // 1.) submission: a submission object that contains information about the reported submission
+    // PRECONDITIONS (3 parameters):
+    // 1.) e: an event object generated when the user submits the submission form
+    // 2.) submission: a submission object that contains information about the reported submission
+    // 3.) closeDetailPopup: a function called once we have reported the submission that will close the popup
     // POSTCONDITIONS (3 possible outcomes):
     // if the message is not validated, the error field of form is updated by calling setForm() function, and the function returns early
     // if the message is validated, and at least one notification fails to insert, user is alerted of the error
     // if the message is validated, and all notifications insert, the page will reload
-    const handleReport = async submission => {
+    const handleReport = async (e, submission, closeDetailPopup) => {
         // first, update the form to prevent multiple submissions
+        e.preventDefault();
         setForm({ ...form, submitting: true });
 
         // next, verify that the message is valid
@@ -56,11 +59,14 @@ const ReportForm = () => {
           
         // now, let's add the report to the database
         try {
-            // await promises to complete
+            // await report to be completed
             await insertReport(report);
         
-            // reload the page if the query is successful
-            window.location.reload();
+            // await popup to close
+            await closeDetailPopup(true);
+
+            // finally, let the user know that they successfully reported the submission
+            addMessage("The submission was successfully reported! Please give the moderation team a few days to look it over.", "success");
     
         } catch (error) {
             // otherwise, render an error message, and set the submitting state back to false

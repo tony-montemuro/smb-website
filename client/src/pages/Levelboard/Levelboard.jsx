@@ -50,7 +50,6 @@ function Levelboard({ imageReducer }) {
 	/* ===== STATES & FUNCTIONS ===== */
 	const [level, setLevel] = useState(undefined);
 	const [filtersPopup, setFiltersPopup] = useState(false);
-	const [detailSubmission, setDetailSubmission] = useState(undefined);
 	const [insertPopup, setInsertPopup] = useState(false);
 	const [updateSubmissions, setUpdateSubmissions] = useState(undefined);
 
@@ -58,10 +57,13 @@ function Levelboard({ imageReducer }) {
 	const { 
 		board,
 		userSubmissions,
+		detailSubmission,
+		setDetailSubmission,
 		setupBoard,
 		applyFilters,
 		getChartTypes,
-		handleTabClick
+		handleTabClick,
+		closeDetailPopup
 	} = LevelboardLogic();
 
 	/* ===== EFFECTS ===== */
@@ -84,7 +86,7 @@ function Levelboard({ imageReducer }) {
 			setLevel(level);
 			
 			// set up the board object
-			setupBoard(abb, category, levelName, type, defaultFilters);
+			setupBoard(defaultFilters);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, location.pathname]);
@@ -209,7 +211,7 @@ function Levelboard({ imageReducer }) {
 			/>
 			<DetailPopup 
 				submission={ detailSubmission } 
-				setSubmission={ setDetailSubmission }
+				closeDetailPopup={ closeDetailPopup }
 				level={ level }
 			/>
 			<InsertPopup 

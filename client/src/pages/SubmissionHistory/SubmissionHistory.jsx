@@ -38,12 +38,21 @@ function SubmissionHistory() {
   const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES & FUNCTIONS ====== */
-  const [detailSubmission, setDetailSubmission] = useState(undefined);
   const [level, setLevel] = useState(undefined);
   const [profile, setProfile] = useState(undefined);
 
   // states and functions from the js file
-  const { submissions, runType, setRunType, fetchProfile, fetchSubmissions, handleTabClick } = SubmissionHistoryLogic();
+  const { 
+    submissions, 
+    runType, 
+    detailSubmission,
+    setRunType, 
+    setDetailSubmission,
+    fetchProfile, 
+    fetchSubmissions, 
+    handleTabClick,
+    closeDetailPopup
+  } = SubmissionHistoryLogic();
 
   /* ===== EFFECTS ====== */
 
@@ -169,7 +178,7 @@ function SubmissionHistory() {
       { /* Detail popup */ }
       <DetailPopup 
         submission={ detailSubmission } 
-        setSubmission={ setDetailSubmission } 
+        closeDetailPopup={ closeDetailPopup } 
         level={ level }
       />
     </>

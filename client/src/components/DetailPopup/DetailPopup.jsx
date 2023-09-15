@@ -12,7 +12,7 @@ import FrontendHelper from "../../helper/FrontendHelper.js";
 import ReportForm from "./ReportForm.jsx";
 import Username from "../Username/Username.jsx";
 
-function DetailPopup({ submission, setSubmission, level }) {
+function DetailPopup({ submission, closeDetailPopup, level }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const levelName = location.pathname.split("/")[5];
@@ -36,7 +36,7 @@ function DetailPopup({ submission, setSubmission, level }) {
 
         { /* Button to close the popup */ }
         <div className="detail-popup-close-btn">
-          <button type="button" onClick={ () => setSubmission(undefined) }>Close</button>
+          <button type="button" onClick={ () => closeDetailPopup(false) }>Close</button>
         </div>
 
         { /* Popup header - render the name of the level, the record, and the username */ }
@@ -101,7 +101,7 @@ function DetailPopup({ submission, setSubmission, level }) {
             { /* Horizontal rule to break the "submission" from the "report" form */ }
             <hr />
 
-            <ReportForm submission={ submission } />
+            <ReportForm submission={ submission } closeDetailPopup={ closeDetailPopup } />
           </>
         }
 

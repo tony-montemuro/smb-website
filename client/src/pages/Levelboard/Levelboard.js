@@ -37,6 +37,7 @@ const Levelboard = () => {
 	/* ===== STATES ===== */
 	const [board, setBoard] = useState(boardInit);
 	const [userSubmissions, setUserSubmissions] = useState([]);
+	const [detailSubmission, setDetailSubmission] = useState(undefined);
 
 	/* ===== FUNCTIONS ===== */
 	
@@ -168,19 +169,15 @@ const Levelboard = () => {
 	};
 
 	// FUNCTION 4: setupBoard - given information about the path, set up the board object
-	// PRECONDITIONS (4 parameters):
-	// 1.) abb: a string representing the game defined in the path
-    // 2.) category: a string representing the current category. category is fetched from the URL
-	// 3.) levelName: a string representing the current level name. levelName is fetched from the URL
-    // 4.) type: the current type, either "time" or "score". type is fetched from the URL
-	// 5.) filters: a filter object with the following fields: 
+	// PRECONDITIONS (1 parameters):
+	// 1.) filters: a filter object with the following fields: 
 	// endDate (Date), live (array), monkeys (array), platforms (array), obsolete (boolean), regions (array), tas: (array)
 	// POSTCONDITIONS (2 possible outcome):
 	// if the submissions successfully are retrieved, the list of submissions are generated, and all fields of `applyFilters` are
 	// updated
 	// if the submissions fail to be retrieved, an error message is rendered to the user, and the board state is NOT updated, leaving the
 	// Levelboard component stuck loading
-	const setupBoard = async (abb, category, levelName, type, filters) => {
+	const setupBoard = async filters => {
 		// first, set board to default values, and get the names of the previous and next level
 		setBoard(boardInit);
 		const adjacent = getPrevAndNext(category, levelName);
@@ -215,7 +212,7 @@ const Levelboard = () => {
 	// POSTCONDITIONS (1 possible outcomes):
 	// given the filters object, apply our filters to the array of all submissions, and update the `filters` and `filtered` field 
 	// by calling the setBoard() function
-	const applyFilters = (filters) => {
+	const applyFilters = filters => {
 		// first, let's perform the filtration process
 		const filtered = getFiltered(filters);
 
@@ -248,13 +245,30 @@ const Levelboard = () => {
 		}
 	};
 
+	// FUNCTION 8: closeDetailPopup - function that executes when user attempts to close the detail popup
+	// PRECONDITIONS (1 parameters):
+	// 1.) isReported - boolean variable that should be set to true when user closes detail popup from reporting the submission,
+	// false otherwise
+	// POSTCONDITIONS (2 possible outcome):
+	// if isReported is false, simply close the popup
+	// otherwise, we want to re-setup the board with the updated data, and then close the popup
+	const closeDetailPopup = async isReported => {
+		if (isReported) {
+			await setupBoard(board.filters);
+		}
+		setDetailSubmission(undefined);
+	};
+
 	return {
 		board,
 		userSubmissions,
+		detailSubmission,
+		setDetailSubmission,
 		setupBoard,
 		applyFilters,
 		getChartTypes,
-		handleTabClick
+		handleTabClick,
+		closeDetailPopup
 	};
 };  
 
