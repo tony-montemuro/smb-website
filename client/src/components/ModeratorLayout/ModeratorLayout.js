@@ -1,7 +1,9 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, StaticCacheContext } from "../../utils/Contexts";
-import { useContext, useState } from "react";
+import { MessageContext } from "../../utils/Contexts";
+import { useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import GameHelper from "../../helper/GameHelper";
+import GameRead from "../../database/read/GameRead";
 import RPCRead from "../../database/read/RPCRead";
 
 const ModeratorLayout = () => {
@@ -14,30 +16,16 @@ const ModeratorLayout = () => {
     // addMessage function from message context
     const { addMessage } = useContext(MessageContext);
 
-    // static cache state from static cache context
-    const { staticCache } = useContext(StaticCacheContext);
-
-    /* ===== STATES ===== */
-    const [submissions, setSubmissions] = useState({ recent: null, reported: null });
-
     /* ===== FUNCTIONS ===== */
 
     // database functions
     const { getUnapproved } = RPCRead();
+    const { queryGamesInfo } = GameRead();
 
-    // FUNCTION 1: handleTabClick - code that is executed when a moderator layout tab is selected
-    // PRECONDITIONS (1 parameter):
-	// 1.) otherPageType: a string, either "approvals", "reports", "post", or undefined
-	// POSTCONDITIONS (2 possible outcome):
-	// if otherPageType and pageType are the same, this function does nothing
-	// otherwise, the user is navigated to the other page
-	const handleTabClick = otherPageType => {
-		if (otherPageType !== pageType) {
-			otherPageType ? navigate(`/moderator/${ otherPageType }`) : navigate("/moderator");
-		}
-	};
+    // helper functions
+    const { cleanGameObject } = GameHelper();
 
-    // FUNCTION 2: partitionByType - function that takes the list of all submissions, and returns two separate lists, filtered
+    // FUNCTION 1: partitionByType - function that takes the list of all submissions, and returns two separate lists, filtered
     // by whether or not the submission has a report
     // PRECONDITIONS (1 parameter):
     // 1.) allSubmissions: an array of all unapproved submission objects
@@ -55,7 +43,7 @@ const ModeratorLayout = () => {
         return { recentSubmissions, reportedSubmissions };
     };
 
-    // FUNCTION 3: getSortedSubmissions - a function that returns a sorted copy of array of submissions based on the type of submission
+    // FUNCTION 2: getSortedSubmissions - a function that returns a sorted copy of array of submissions based on the type of submission
     // PRECONDITIONS (2 parameters):
     // 1.) submissions: an array of submission objects
     // 2.) isNew: a boolean variable which controls the sort style
@@ -70,16 +58,16 @@ const ModeratorLayout = () => {
         });
     };
 
-    // FUNCTION 4: getCategorizedObject - a function that takes an array of submissions, and returns an object that categorizes
+    // FUNCTION 3: getCategorizedObject - a function that takes an array of submissions, and returns an object that categorizes
     // each submission by game
     // PRECONDITIONS (1 parameter):
     // 1.) submissions: an array of submission objects
+    // 2.) games: an array of simple game objects
     // POSTCONDITIONS (1 possible outcome):
     // using the games array from the static cache context, we generate an object that has fields for each game. each field 
     // corresponds to an array of submissions
-    const getCategorizedObject = submissions => {
-        // extract games array from static cache, and define our categorized object
-        const games = staticCache.games;
+    const getCategorizedObject = (submissions, games) => {
+        // define our categorized object
         const categorized = {};
 
         // define the fields for each game
@@ -95,18 +83,23 @@ const ModeratorLayout = () => {
         return categorized;
     };
 
-    // FUNCTION 5: fetchSubmissions - function that gets all relevant submissions for moderator hub
+    // FUNCTION 4: fetchData - code that is executed when the ModeratorLayout component mounts, to fetch game & submission data
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
-    // if the query successfully returns submissions, filter them into two distinct arrays: recent and reports
+    // if the query successfully returns both arrays of data, filter allSubmissions into two distinct arrays: recent and reports
     // recent submissions are simply ones that were recently submitted but not yet approved
     // report submissions are ones that have been reported
-    // once the filtering is complete, we can update the submissions state by calling the `setSubmissions()` function
-    // if the query is a failure, render an error message to the user, and do not update the submissions state
-    const fetchSubmissions = async () => {
+    // once the filtering is complete, we return both the games array, as well as a submission object containing both arrays of submissions
+    // if the query is a failure, render an error message to the user, and set both fields in the return array equal to undefined
+    const fetchData = async () => {
         try {
-            // attempt to get the list of all submissions
-            const allSubmissions = await getUnapproved();
+            // first, let's just fetch the games and allSubmissions data
+            const [games, allSubmissions] = await Promise.all([queryGamesInfo(), getUnapproved()]);
+
+            // next, for each game, clean the object
+            for (let game of games) {
+                cleanGameObject(game);
+            }
 
             // partition all submissions into two arrays
             const { recentSubmissions, reportedSubmissions } = partitionByType(allSubmissions);
@@ -117,22 +110,33 @@ const ModeratorLayout = () => {
             const sortedReportedSubmissions = getSortedSubmissions(reportedSubmissions, false);
 
             // generate an object that categorize each submissions by game
-            const recent = getCategorizedObject(sortedRecentSubmissions);
-            const reported = getCategorizedObject(sortedReportedSubmissions);
+            const recent = getCategorizedObject(sortedRecentSubmissions, games);
+            const reported = getCategorizedObject(sortedReportedSubmissions, games);
 
-            // finally, update the submissions state hook
-            setSubmissions({
-                recent: recent,
-                reported: reported
-            });
+            return {
+                games,
+                submissions: { recent, reported }
+            };
 
         } catch (error) {
-            // render an error message to the user explaining what happened
-            addMessage("Submission data failed to load. Please try again later.", "error");
-        };
+            addMessage("Moderator layout data failed to load. Refresh the page and try again.", "error");
+            return { games: undefined, submissions: undefined };
+        }
     };
 
-    // FUNCTION 5: getNumberOfSubmissions - function that returns the number of submissions in a submissions object
+    // FUNCTION 5: handleTabClick - code that is executed when a moderator layout tab is selected
+    // PRECONDITIONS (1 parameter):
+	// 1.) otherPageType: a string, either "approvals", "reports", "post", or undefined
+	// POSTCONDITIONS (2 possible outcome):
+	// if otherPageType and pageType are the same, this function does nothing
+	// otherwise, the user is navigated to the other page
+	const handleTabClick = otherPageType => {
+		if (otherPageType !== pageType) {
+			otherPageType ? navigate(`/moderator/${ otherPageType }`) : navigate("/moderator");
+		}
+	};
+
+    // FUNCTION 6: getNumberOfSubmissions - function that returns the number of submissions in a submissions object
     // PRECONDITIONS (1 parameter):
     // 1.) submissions: an object which contains all the submissions categorized by game, or null
     // POSTCONDITIONS (2 possible outcomes):
@@ -147,13 +151,13 @@ const ModeratorLayout = () => {
         // otherwise, count up all the submissions into a counter, and return that value
         let counter = 0;
         Object.keys(submissions).forEach(game => {
-            submissions[game].forEach(submission => counter++); 
+            counter += submissions[game].length; 
         });
         
         return counter;
     };
 
-    return { submissions, handleTabClick, fetchSubmissions, getNumberOfSubmissions };
+    return { fetchData, handleTabClick, getNumberOfSubmissions };
 };
 
 /* ===== EXPORTS ===== */

@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
+import { GamesContext, UserContext } from "../../utils/Contexts";
 import { Link } from "react-router-dom";
-import { StaticCacheContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import EmbedHelper from "../../helper/EmbedHelper";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
@@ -12,15 +12,14 @@ import Username from "../../components/Username/Username";
 function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
   /* ===== CONTEXTS ===== */
 
-  // static cache from static cache object
-  const { staticCache } = useContext(StaticCacheContext);
+  // games state from games context
+  const { games } = useContext(GamesContext);
 
   // user state from user context
   const { user } = useContext(UserContext);
 
   /* ===== VARIABLES ===== */
   const submission = popup;
-  const games = staticCache.games;
   const game = submission && games.find(row => row.abb === submission.level.mode.game.abb);
   const category = submission && submission.level.category;
   const type = submission && submission.score ? "score" : "time";

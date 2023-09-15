@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
-import { StaticCacheContext } from "../../utils/Contexts";
+import { GamesContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 
 function SubmissionHandlerList({ recent, gameAbb, setGameAbb, imageReducer }) {
   /* ===== CONTEXTS ===== */
 
-  // static cache from static cache context
-  const { staticCache } = useContext(StaticCacheContext);
+  // games context from games context
+  const { games } = useContext(GamesContext);
 
   /* ===== SUBMISSION HANDLER LIST COMPONENT ===== */
   return (
@@ -21,7 +21,7 @@ function SubmissionHandlerList({ recent, gameAbb, setGameAbb, imageReducer }) {
           .map(row => {
             const abb = row[0];
             const num = row[1].length;
-            const game = staticCache.games.find(row => row.abb === abb);
+            const game = games.find(row => row.abb === abb);
             return ( 
               <div
                 className={ `submission-handler-list-tab${ abb === gameAbb ? " submission-handler-list-tab-active" : "" }` }

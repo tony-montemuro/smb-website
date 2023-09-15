@@ -84,6 +84,64 @@ const GameRead = () => {
         }
     };
 
+    // FUNCTION 2: queryGamesInfo - async function that makes a call to supabase to get an array of all the games, but only
+    // a small subset of their data
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, the list of games is simply returned
+    // otherwise, this function throws an error, which should be handled by the caller function
+    const queryGamesInfo = async () => {
+        try {
+            const { data: games, error } = await supabase
+                .from("game")
+                .select(`
+                    abb,
+                    game_monkey (
+                        monkey (
+                            id,
+                            monkey_name
+                        )
+                    ),
+                    game_platform (
+                        platform (
+                            id,
+                            platform_abb,
+                            platform_name
+                        )
+                    ),
+                    game_region (
+                        region (
+                            id,
+                            region_name
+                        )
+                    ),
+                    game_rule (
+                        rule (
+                            id,
+                            rule_name
+                        )
+                    ),
+                    custom,
+                    name,
+                    release_date
+                `)
+                .order("custom")
+                .order("id");
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            // return the games
+            return games;
+
+        } catch (error) {
+            // throw error to be handled by caller
+            throw error;
+        }
+    };
+
     // FUNCTION 1: queryGames - async function that makes a call to supabase to get an array of all the games
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
@@ -161,7 +219,7 @@ const GameRead = () => {
         }
     };
 
-    return { queryGame, queryGames };
+    return { queryGame, queryGamesInfo, queryGames };
 };
 
 /* ===== EXPORTS ===== */

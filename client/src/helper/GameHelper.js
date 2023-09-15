@@ -1,7 +1,34 @@
 const GameHelper = () => {
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: getGameCategories - function that returns the list of all categories a game has
+    // FUNCTION 1: cleanGameObject - function that takes a game object freshly called from the db, and cleans up many-to-many relationships
+    // PRECONDITIONS (1 parameter):
+    // 1.) game: a game object freshly called from the database. NOTE: This function MODIFIES this parameter!
+    // POSTCONDITIONS (1 possible outcome):
+    // all many-to-many relationships are resolved within the object
+    const cleanGameObject = game => {
+        // first, handle the game <==> monkey relationship
+        game.monkey = [];
+        game.game_monkey.forEach(row => game.monkey.push(row.monkey));
+        delete game.game_monkey;
+
+        // next, handle the game <==> region relationship
+        game.region = [];
+        game.game_region.forEach(row => game.region.push(row.region));
+        delete game.game_region;
+
+        // next, handle the game <==> rule relationship
+        game.rule = [];
+        game.game_rule.forEach(row => game.rule.push(row.rule));
+        delete game.game_rule;
+
+        // finally, handle the game <==> platform relationship
+        game.platform = [];
+        game.game_platform.forEach(row => game.platform.push(row.platform));
+        delete game.game_platform;
+    };
+
+    // FUNCTION 2: getGameCategories - function that returns the list of all categories a game has
     // PRECONDITIONS (1 parameter):
     // 1.) game: a game object, that has been taken directly from the `staticCache.games` array
     // POSTCONDITIONS (1 possible outcome):
@@ -16,7 +43,7 @@ const GameHelper = () => {
         return categories;
     };
 
-    // FUNCTION 2: getCategoryTypes - function that returns an array which contains all the level types in a category (which indicates
+    // FUNCTION 3: getCategoryTypes - function that returns an array which contains all the level types in a category (which indicates
     // it's possible chart types)
     // PRECONDITIONS (2 parameters):
     // 1.) game: a game object, that has been taken directly from the `staticCache.games` array
@@ -55,7 +82,7 @@ const GameHelper = () => {
         return [prevCategory];
     };
 
-    // FUNCTION 3: getRelevantModes - given a game object, category, and type, return the array of "relevant" modes
+    // FUNCTION 4: getRelevantModes - given a game object, category, and type, return the array of "relevant" modes
     // PRECONDITIONS (3 parameters):
     // 1.) game: an object containing information about the game defined in the path
     // 2.) category: a string representing a valid category
@@ -91,7 +118,7 @@ const GameHelper = () => {
         return modes;
     };
 
-    // FUNCTION 4: isPracticeMode - takes a category, and determines if it's a practice mode category
+    // FUNCTION 5: isPracticeMode - takes a category, and determines if it's a practice mode category
     // PRECONDITIONS (1 parameter):
     // 1.) category: a string representing a valid category
     // POSTCONDITIONS (2 possible outcomes, 1 return):
@@ -101,7 +128,7 @@ const GameHelper = () => {
         return ["main", "misc"].includes(category);
     };
 
-    return { getGameCategories, getCategoryTypes, getRelevantModes, isPracticeMode };
+    return { cleanGameObject, getGameCategories, getCategoryTypes, getRelevantModes, isPracticeMode };
 };
 
 /* ===== EXPORTS ===== */

@@ -9,7 +9,6 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
   const profile = submission.profile;
   const level = submission.level;
   const creator = !isNew ? submission.report.creator : undefined;
-  console.log(creator);
   const type = submission.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
