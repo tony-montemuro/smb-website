@@ -5,7 +5,7 @@ import { UserContext } from "../../utils/Contexts";
 import FrontendHelper from "../../helper/FrontendHelper";
 import UserInfoFormLogic from "./UserInfoForm.js";
 
-function UserInfoForm() {
+function UserInfoForm({ countries }) {
   /* ===== VARIABLES ===== */
   const BIO_WIDTH = 50;
   const BIO_HEIGHT = 4;
@@ -27,7 +27,7 @@ function UserInfoForm() {
 
   // code that is executed when the component first mounts
   useEffect(() => {
-    initForm();
+    initForm(countries);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

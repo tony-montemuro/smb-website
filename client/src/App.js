@@ -1,8 +1,6 @@
 /* ===== IMPORTS ===== */
 import { supabase } from "./database/SupabaseClient";
 import { useReducer, useState } from "react";
-import CountriesRead from "./database/read/CountriesRead";
-import GameRead from "./database/read/GameRead";
 import ModeratorRead from "./database/read/ModeratorRead";
 import NotificationRead from "./database/read/NotificationRead";
 import ProfileRead from "./database/read/ProfileRead";
@@ -17,14 +15,9 @@ const App = () => {
     profile: undefined,
     is_mod: false
   };
-  const defaultStaticCache = {
-    countries: [],
-    games: []
-  };
 
   /* ===== STATES & REDUCERS ===== */
   const [user, setUser] = useState(defaultUser);
-  const [staticCache, setStaticCache] = useState(defaultStaticCache);
   const [messages, setMessages] = useState([]);
   const [images, dispatchImages] = useReducer((state, action) => {
     return { ...state, [action.field]: action.data }
@@ -33,8 +26,6 @@ const App = () => {
   /* ===== FUNCTIONS ===== */
 
   // database functions to load data
-  const { queryCountries } = CountriesRead();
-  const { queryGames } = GameRead();
   const { isModerator } = ModeratorRead();
   const { queryNotificationCount } = NotificationRead();
   const { queryUserProfile } = ProfileRead();
@@ -140,57 +131,7 @@ const App = () => {
     });
   };
 
-  // FUNCTION 5: loadData - async function that will make concurrent api calls to the database
-  // PRECONDITIONS (1 condition):
-  // this function should be run exactly once: when the application is first loaded
-  // POSTCONDTIONS (1 possible outcome):
-  // the list of countries, games, moderators, and profiles are all loaded from the database.
-  // the games and profiles arrays are cleaned, and finally, are used to set the static cache state by
-  // calling the setStaticCache() function
-  const loadData = async () => {
-    try {
-      // make concurrent api calls to database to load data
-      const [countries, games] = await Promise.all(
-        [queryCountries(), queryGames()]
-      );
-
-      // clean up the many-to-many relationships present in each game object
-      games.forEach(game => {
-        // first, handle the game <==> monkey relationship
-        game.monkey = [];
-        game.game_monkey.forEach(row => game.monkey.push(row.monkey));
-        delete game.game_monkey;
-
-        // next, handle the game <==> region relationship
-        game.region = [];
-        game.game_region.forEach(row => game.region.push(row.region));
-        delete game.game_region;
-
-        // next, handle the game <==> rule relationship
-        game.rule = [];
-        game.game_rule.forEach(row => game.rule.push(row.rule));
-        delete game.game_rule;
-
-        // finally, handle the game <==> platform relationship
-        game.platform = [];
-        game.game_platform.forEach(row => game.platform.push(row.platform));
-        delete game.game_platform;
-      });
-
-      // update static cache
-      const staticCache = {
-        countries: countries,
-        games: games
-      };
-      setStaticCache(staticCache);
-
-    } catch (error) {
-      // if any errors were detected, let the user know, and do not update cache
-      addMessage("Many resources failed to load, meaning the application may not work as intented. The database server may be experiencing some issues.", "error");
-    }
-  };
-
-  // FUNCTION 6: handleMessageClose - function that is executed when the user closes a message popup
+  // FUNCTION 5: handleMessageClose - function that is executed when the user closes a message popup
   // PRECONDITIONS (1 parameter):
   // 1.) index: the index-th element to be removed from the messages array, causing it to immediately unrender
   // POSTCONDITIONS (1 possible outcome):
@@ -201,13 +142,11 @@ const App = () => {
 
   return { 
     user, 
-    staticCache, 
     messages,
     images,
     dispatchImages,
     addMessage,
     callSessionListener,
-    loadData,
     handleMessageClose
   };
 };

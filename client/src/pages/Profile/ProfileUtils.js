@@ -9,8 +9,6 @@ import {
 } from "../../utils/RegexPatterns";
 
 const ProfileUtils = () => {
-    /* ===== FUNCTIONS ===== */
-
     // FUNCTION 1: generateFormVals - generate an object representing the form values
     // PRECONDITIONS (2 parameters):
     // 1.) userInfo - an profile object, which will be undefined if the user has not yet set up their profile

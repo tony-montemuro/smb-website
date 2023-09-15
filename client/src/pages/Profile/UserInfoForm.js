@@ -1,14 +1,11 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, StaticCacheContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import ProfileUtils from "./ProfileUtils.js";
 import ProfileUpdate from "../../database/update/ProfileUpdate";
 
 const UserInfoForm = () => {
     /* ===== CONTEXTS ===== */
-
-    // static cache state from static cache context & user state from user context 
-    const { staticCache } = useContext(StaticCacheContext);
 
     // user state from user context
     const { user } = useContext(UserContext);
@@ -62,19 +59,18 @@ const UserInfoForm = () => {
     const { upsertUserInfo } = ProfileUpdate();
 
     // FUNCTION 1: initForm - function that is called when the component first mounts that sets the user form
-    // PRECONDITIONS (1 condition):
-    // both the staticCache and user states should be fully updated before this function is ever called
+    // PRECONDITIONS (1 parameter):
+    // 1.) countries: an array of country objects, which we will use in the user form for selecting a country
     // POSTCONDITIONS (2 possible outcome):
     // if the current user has a profile, simply fill the form states with their information from the user object.
     // otherwise, the form will be initialized with default data
-    const initForm = () => {
+    const initForm = countries => {
         // we have two cases: user has set up a profile, or is a first time user
         const userId = user.id;
         const profile = user.profile;
         dispatchForm({ field: "user", value: generateFormVals(profile, userId) });
 
         // finally, let's update user form with countries data
-        const countries = staticCache.countries;
         dispatchForm({ field: "countries", value: countries });
     };
 

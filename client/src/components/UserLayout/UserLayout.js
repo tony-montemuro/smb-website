@@ -20,8 +20,7 @@ const UserLayout = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, a profile object is simply returned
     // if the query is unsuccessful, this function will render an error message to the screen, and return an undefined object,
-    // leaving the `UserLayout` component stuck
-    // loading
+    // leaving the `UserLayout` component stuck loading
     const fetchProfile = async profileId => {
         try {
             const profile = await getProfile(profileId);
