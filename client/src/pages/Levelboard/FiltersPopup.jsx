@@ -5,7 +5,7 @@ import FiltersPopupLogic from "./FiltersPopup.js";
 import FrontendHelper from "../../helper/FrontendHelper";
 import ArrayBasedFilter from "./ArrayBasedFilter";
 
-function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApplyFunc }) {
+function FiltersPopup({ popup, closePopup, currentFilters, defaultFilters, onApplyFunc }) {
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -79,7 +79,7 @@ function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApply
 
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">
-          <button type="button" onClick={ () => setPopup(false) }>Close</button>
+          <button type="button" onClick={ () => closePopup(false) }>Close</button>
         </div>
 
         { /* Levelboard filters header - render the header information for this popup */ }
@@ -172,7 +172,7 @@ function FiltersPopup({ popup, setPopup, currentFilters, defaultFilters, onApply
         { /* Levelboard filter buttons - allow the user to either apply the filters, or reset them to default values */ }
         <div className="levelboard-filters-bottom">
           <button type="button" onClick={ handleFiltersResetAll }>Reset filters</button>
-          <button type="button" onClick={ () => handleApplyFilters(onApplyFunc, setPopup) }>Apply filters</button>
+          <button type="button" onClick={ () => handleApplyFilters(onApplyFunc, closePopup) }>Apply filters</button>
         </div>
 
       </div>

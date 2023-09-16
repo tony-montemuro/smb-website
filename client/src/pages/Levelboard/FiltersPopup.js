@@ -100,13 +100,13 @@ const FiltersPopup = (defaultFilters) => {
     // FUNCTION 7: handleApplyFilters - code that is executed when the user requests to apply filters
     // PRECONDITIONS (2 parameters):
     // 1.) onApplyFunc: code that is executed in `Levelboard.js` when we apply filters
-    // 2.) setPopup: a function we can use to close the popup, which we want to do after applying filters
+    // 2.) closePopup: a function we can use to close the popup, which we want to do after applying filters
     // POSTCONDITIONS (1 possible outcome):
     // we apply filters by calling the `onApplyFunc` with our `filters` state as a parameter, and close the popup by calling
     // the `setPopup` function with the false argument
-    const handleApplyFilters = (onApplyFunc, setPopup) => {
+    const handleApplyFilters = (onApplyFunc, closePopup) => {
         onApplyFunc(filters);
-        setPopup(false);
+        closePopup(false);
     };
 
     return { 

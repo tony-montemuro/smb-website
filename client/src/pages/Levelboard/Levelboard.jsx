@@ -219,7 +219,7 @@ function Levelboard({ imageReducer }) {
 			{ /* Popups */ }
 			<FiltersPopup
 				popup={ filtersPopup }
-				setPopup={ setFiltersPopup }
+				closePopup={ closePopups }
 				currentFilters={ board.filters }
 				defaultFilters={ defaultFilters }
 				onApplyFunc={ applyFilters }
