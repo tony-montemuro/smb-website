@@ -10,7 +10,7 @@ import Username from "../../components/Username/Username.jsx";
 import UserRow from "../../components/UserRow/UserRow";
 import UserSearch from "../../components/UserSearch/UserSearch.jsx";
 
-function InsertPopup({ popup, setPopup, level, submissions }) {
+function InsertPopup({ popup, closePopup, level }) {
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -22,7 +22,7 @@ function InsertPopup({ popup, setPopup, level, submissions }) {
   /* ===== STATES & FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { form, fillForm, handleChange, onUserRowClick, handleSubmit, closePopup } = InsertPopupLogic(level); 
+  const { form, fillForm, handleChange, onUserRowClick, handleSubmit, resetAndClosePopup } = InsertPopupLogic(level); 
   
   // helper functions
   const { capitalize, dateB2F } = FrontendHelper();
@@ -57,7 +57,7 @@ function InsertPopup({ popup, setPopup, level, submissions }) {
         
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">
-          <button type="button" onClick={ () => closePopup(setPopup) } disabled={ form.submitting }>Close</button>
+          <button type="button" onClick={ () => resetAndClosePopup(closePopup) } disabled={ form.submitting }>Close</button>
         </div>
 
         <div className="levelboard-insert-body">
@@ -78,7 +78,7 @@ function InsertPopup({ popup, setPopup, level, submissions }) {
               <h2>Submit a New { capitalize(type) }</h2>
 
               { /* Submission form - allows users to submit a record to the database */ }
-              <form onSubmit={ (e) => handleSubmit(e, level.timer_type) }>
+              <form onSubmit={ (e) => handleSubmit(e, level.timer_type, closePopup) }>
 
                 { /* If the current user is a moderator, render the user who the moderator is submitting on behalf of. */ }
                 { user.is_mod &&

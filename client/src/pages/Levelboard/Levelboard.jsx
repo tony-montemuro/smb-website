@@ -231,9 +231,8 @@ function Levelboard({ imageReducer }) {
 			/>
 			<InsertPopup 
 				popup={ insertPopup } 
-				setPopup={ setInsertPopup } 
+				closePopup={ closePopups } 
 				level={ level }
-				submissions={ board.all }
 			/>
 			<UpdatePopup
 				submissions={ updateSubmissions }
