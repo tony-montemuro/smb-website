@@ -107,7 +107,7 @@ const App = () => {
       session = await getSession();
 
       // if query is successful, let's update user data accordingly
-      updateUser(session.user ? session.user.id : null);
+      updateUser(session ? session.user.id : null);
 
     } catch (error) {
       // otherwise, render an error message
@@ -122,7 +122,7 @@ const App = () => {
       }
 
       // otherwise, update the user data
-      updateUser(newSession.user ? newSession.user.id : null);
+      updateUser(newSession ? newSession.user.id : null);
       session = newSession;
     });
   };
