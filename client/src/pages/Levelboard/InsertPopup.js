@@ -226,7 +226,7 @@ const InsertPopup = (level) => {
     // 1.) closePopup - function that, when called, actually closes the popup
     // POSTCONDITIONS (1 possible outcomes):
     // the form is set to default values by calling the dispatchForm() function with the { field: "all" } argument, and the popup
-    // is set to false
+    // is closed
     const resetAndClosePopup = closePopup => {
         dispatchForm({ field: "all" });
         closePopup(false);

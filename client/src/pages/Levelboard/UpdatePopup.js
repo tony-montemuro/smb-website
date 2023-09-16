@@ -130,12 +130,13 @@ const UpdatePopup = (level) => {
     // PRECONDITIONS (2 parameters):
     // 1.) e: an event object which is generated when the user submits the update submission form
     // 2.) submissions: an array of all submission objects belonging to the current user for the current level
+    // 3.) closePopup: a function that, when called, will update the level leaderboard, and close the popup
     // POSTCONDITIONS (3 possible outcomes):
     // if the form fails to validate, the function will return early, and the user will be shown the errors
     // if the form successfully validates, but the data fails to submit, the submission process is halted, and the user is displayed an
     // error message
     // if the form successfully validates, and the data successfully submits, then the page is reloaded
-    const handleSubmit = async (e, submissions) => {
+    const handleSubmit = async (e, submissions, closePopup) => {
         // initialize submission
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
@@ -169,8 +170,11 @@ const UpdatePopup = (level) => {
             // attempt to update the submission using updated data
             await updateSubmission(updatedData, id);
 
-            // reload the page
-            window.location.reload();
+            // wait for the popup to close
+            await closePopup(true);
+
+            // finally, let the user know that they successfully submitted their submission
+            addMessage("Your submission was successfully updated!", "success");
 
         } catch (error) {
             addMessage(error.message, "error");
@@ -178,18 +182,18 @@ const UpdatePopup = (level) => {
         };
     };
 
-    // FUNCTION 6: closePopup - function that is activated when the user attempts to close the popup
+    // FUNCTION 6: resetAndClosePopup - function that is activated when the user attempts to close the popup
     // PRECONDITIONS (1 parameter):
-    // 1.) setSubmission - function used to update the updateSubmission state in Levelboard.jsx. when set to null, the popup will close
+    // 1.) closePopup - function that, when called, actually closes the popup
     // POSTCONDITIONS (1 possible outcomes):
     // the form is set to default values by calling the dispatchForm() function with the { field: "all" } argument, and the popup
-    // is set to false
-    const closePopup = (setPopup) => {
+    // is closed
+    const resetAndClosePopup = closePopup => {
         dispatchForm({ field: "all" });
-        setPopup(null);
+        closePopup(false);
     };
 
-    return { form, fillForm, handleChange, handleSubmissionChange, handleSubmit, closePopup };
+    return { form, fillForm, handleChange, handleSubmissionChange, handleSubmit, resetAndClosePopup };
 };
 
 /* ===== EXPORTS ===== */

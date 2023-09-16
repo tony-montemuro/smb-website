@@ -162,7 +162,7 @@ function Levelboard({ imageReducer }) {
 								type="button" 
 								onClick={ () => setUpdateSubmissions(userSubmissions)}
 							>
-								Update Submission
+								Update Submission(s)
 							</button>
 						}
 
@@ -236,7 +236,7 @@ function Levelboard({ imageReducer }) {
 			/>
 			<UpdatePopup
 				submissions={ updateSubmissions }
-				setSubmissions={ setUpdateSubmissions }
+				closePopup={ closePopups }
 				level={ level }
 			/>
 

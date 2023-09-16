@@ -7,12 +7,12 @@ import DetailedRecord from "../../components/DetailedRecord/DetailedRecord";
 import FrontendHelper from "../../helper/FrontendHelper";
 import UpdatePopupLogic from "./UpdatePopup.js";
 
-function UpdatePopup({ submissions, setSubmissions, level }) {
+function UpdatePopup({ submissions, closePopup, level }) {
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
 
   // states and functions from the js file
-  const { form, fillForm, handleChange, handleSubmissionChange, handleSubmit, closePopup } = UpdatePopupLogic(level);
+  const { form, fillForm, handleChange, handleSubmissionChange, handleSubmit, resetAndClosePopup } = UpdatePopupLogic(level);
 
   // helper functions
   const { capitalize, dateB2F } = FrontendHelper();
@@ -45,7 +45,7 @@ function UpdatePopup({ submissions, setSubmissions, level }) {
 
         { /* Close popup button */ }
         <div className="levelboard-popup-close-btn">
-           <button type="button" onClick={ () => closePopup(setSubmissions) } disabled={ form.submitting }>Close</button>
+           <button type="button" onClick={ () => resetAndClosePopup(closePopup) } disabled={ form.submitting }>Close</button>
         </div>
 
         { /* Levelboard update */ }
@@ -58,7 +58,7 @@ function UpdatePopup({ submissions, setSubmissions, level }) {
             </div>
 
             { /* Update submission form */ }
-            <form onSubmit={ (e) => handleSubmit(e, submissions) }>
+            <form onSubmit={ (e) => handleSubmit(e, submissions, closePopup) }>
 
               { /* Submission selector: render a table that allows the user to select any of their submissions. */ }
               <div className="levelboard-table-group">
