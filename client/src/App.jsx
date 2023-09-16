@@ -43,6 +43,7 @@ function App() {
     images,
     dispatchImages,
     addMessage,
+    updateUser,
     callSessionListener,
     handleMessageClose
   } = AppLogic();
@@ -61,7 +62,7 @@ function App() {
   /* ===== APP COMPONENT ===== */
   return (
     <MessageContext.Provider value={ { addMessage } }>
-      <UserContext.Provider value={ { user } }>
+      <UserContext.Provider value={ { user, updateUser } }>
         { /* Render the navbar at the top of the application */ }
         <Navbar imageReducer={ imageReducer } />
 

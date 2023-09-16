@@ -198,7 +198,7 @@ const Levelboard = () => {
 
 		} catch (error) {
 			// if the submissions fail to be fetched, let's render an error specifying the issue
-			addMessage("Failed to fetch chart data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+			addMessage("Failed to fetch / update chart data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
 		}
 	};
 

@@ -54,20 +54,17 @@ const App = () => {
     setMessages(messages.concat(newMessageArr));
   };
 
-  // FUNCTION 3: updateUserData - async function that loads user data based on a session object
+  // FUNCTION 3: updateUser - async function that loads user data based on a uuid user id
   // PRECONDITIONS (1 parameter):
-  // 1.) session: an object that is returned by the database containing information about the current user's session
+  // 1.) userId: a unique uuid value that belongs to exactly one authenticated user
   // this value also might be null if no user is currently signed in
   // POSTCONDITIONS (2 possible outcomes):
-  // if the session object is defined (meaning user is logged in), we use the user.id field to load the user's
-  // notifications, profile, and whether or not they are a moderator, and update the user state by calling the setUser() function
+  // if the session object is defined (meaning user is logged in), we use userId field to load the user's
+  // notification count, profile, and whether or not they are a moderator, and update the user state by calling the setUser() function
   // if the session object is null, we call the setUser() function with the default user object
-  const updateUserData = async (session) => {
-    // two different cases: a null session, or a session belonging to a user
-    if (session) {
-      // make concurrent api calls to database to load user data
-      const user = session.user, userId = user.id;
-
+  const updateUser = async userId => {
+    // two different cases: a null userId, or a userId belonging to a user
+    if (userId) {
       try {
         // concurrently make all necessary database calls
         const [count, profile, is_mod] = await Promise.all(
@@ -77,7 +74,6 @@ const App = () => {
         // update the user state
         setUser({
           id: userId,
-          email: user.email,
           notificationCount: count,
           profile: profile,
           is_mod: is_mod
@@ -89,7 +85,7 @@ const App = () => {
       }
       
     } else {
-      // if we have a null session, there is no current user. simply set the state to default value
+      // if we have a null user id, there is no current user. simply set the state to default value
       setUser({ ...defaultUser, id: null });
     }
   };
@@ -101,7 +97,7 @@ const App = () => {
   // however, may be run any number of times
   // POSTCONDTIONS (1 possible outcome):
   // the session object is initialized to the current session, and the supabase.auth.onAuthStateChange listener function is called
-  // this function will typically call the updateUserData function each time it itself is called, with the exception of the case
+  // this function will typically call the updateUser function each time it itself is called, with the exception of the case
   // when the new session's user id is the same as the current session's user id
   const callSessionListener = async () => {
     // define variable used to keep track of the session object
@@ -111,7 +107,7 @@ const App = () => {
       session = await getSession();
 
       // if query is successful, let's update user data accordingly
-      updateUserData(session);
+      updateUser(session.user ? session.user.id : null);
 
     } catch (error) {
       // otherwise, render an error message
@@ -126,7 +122,7 @@ const App = () => {
       }
 
       // otherwise, update the user data
-      updateUserData(newSession);
+      updateUser(newSession.user ? newSession.user.id : null);
       session = newSession;
     });
   };
@@ -146,6 +142,7 @@ const App = () => {
     images,
     dispatchImages,
     addMessage,
+    updateUser,
     callSessionListener,
     handleMessageClose
   };

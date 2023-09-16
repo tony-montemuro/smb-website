@@ -10,8 +10,8 @@ const ReportForm = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // user state from user context
-    const { user } = useContext(UserContext);
+    // user state & updateUser function from user context
+    const { user, updateUser } = useContext(UserContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -62,8 +62,9 @@ const ReportForm = () => {
             // await report to be completed
             await insertReport(report);
         
-            // await popup to close
-            await closePopup(true);
+            // perform a concurrent call to close the popup, as well as update user data (specifically, the report token count
+            // should decrease)
+            await Promise.all([closePopup(true), updateUser(user.id)]);
 
             // finally, let the user know that they successfully reported the submission
             addMessage("The submission was successfully reported! Please give the moderation team a few days to look it over.", "success");

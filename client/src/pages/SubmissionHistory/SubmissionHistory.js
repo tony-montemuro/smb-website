@@ -68,7 +68,7 @@ const SubmissionHistory = () => {
 
         } catch (error) {
             // if submissions fail to load, render an error message
-            addMessage("Failed to fetch submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error")
+            addMessage("Failed to fetch / update submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error")
         }
     };
 
