@@ -29,7 +29,7 @@ function AvatarInfoForm({ imageReducer }) {
       <p><b>Note:</b> Must be JPEG or PNG, and cannot exceed 5 MB. If your avatar does not update immediately, give it some time.</p>
 
       { /* Avatar form */ }
-      <form className="profile-avatar-form" onSubmit={ (e) => submitAvatar(e, avatarRef) }>
+      <form className="profile-avatar-form" onSubmit={ (e) => submitAvatar(e, avatarRef, imageReducer) }>
 
         { /* Render the user's current avatar */ }
         <Avatar profileId={ user.profile ? user.profile.id : null } size={ IMG_LENGTH } imageReducer={ imageReducer } />

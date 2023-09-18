@@ -16,8 +16,8 @@ const App = () => {
     is_mod: false
   };
   const defaultImages = {
-    games: [],
-    users: []
+    games: {},
+    users: {}
   }
 
   /* ===== STATES & REDUCERS ===== */

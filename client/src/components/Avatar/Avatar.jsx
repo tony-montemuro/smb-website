@@ -1,21 +1,33 @@
 /* ===== IMPORTS ===== */
-import { useEffect } from "react";
-import AvatarLogic from "./Avatar.js";
+import { useEffect, useState } from "react";
 import Default from "../../img/default.png";
+import Download from "../../database/storage/Download";
 
 function Avatar( { profileId, size, imageReducer } ) {
+    /* ===== VARIABLES ===== */
+    const images = imageReducer.reducer;
+
     /* ===== FUNCTIONS ===== */
 
-    // states and functions from the js file file
-    const { avatar, fetchAvatar } = AvatarLogic();
+    // database functions
+    const { updateImageByProfileId } = Download();
+
+    /* ===== STATES ===== */
+    const [avatar, setAvatar] = useState(undefined);
 
     /* ===== EFFECTS ===== */
 
     // code that is executed when the component mounts, or when the `profileId` parameter is changed
     useEffect(() => {
-        fetchAvatar(profileId, imageReducer);
+        updateImageByProfileId(profileId, imageReducer, false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [profileId]);
+    }, [profileId]);
+
+    // code that is executed when the component mounts, or when the image associated with `profileId` is updated
+    useEffect(() => {
+        setAvatar(images.users[`${ profileId }.png`]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [images.users[`${ profileId }.png`]]);
 
     /* ===== AVATAR COMPONENT ===== */
 

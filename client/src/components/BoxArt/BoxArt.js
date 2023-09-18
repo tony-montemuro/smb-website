@@ -9,7 +9,7 @@ const BoxArt = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { retrieveImage } = Download();
+    const { retrieveGameImage } = Download();
     
     // FUNCTION 1: fetchBoxArt - given an abb and imageReducer, get the game's box art
     // PRECONDITIONS (2 parameters):
@@ -20,7 +20,7 @@ const BoxArt = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the boxart is fetched from the database, and the box state is updated by calling the setBox() function
     const fetchBoxArt = async (abb, imageReducer) => {
-        const boxArt = await retrieveImage(abb, imageReducer, "games");
+        const boxArt = await retrieveGameImage(abb, imageReducer);
         setBox(boxArt);
     };
 

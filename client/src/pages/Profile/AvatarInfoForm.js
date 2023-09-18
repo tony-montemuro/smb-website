@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
+import Download from "../../database/storage/Download";
 import ProfileUtils from "./ProfileUtils";
 import Upload from "../../database/storage/Upload";
 
@@ -28,17 +29,21 @@ const AvatarInfoForm = () => {
 
     // database functions
     const { uploadAvatar } = Upload();
+    const { updateImageByProfileId } = Download(); 
 
     // FUNCTION 1: submitAvatar - function that validates, processes, & submits an avatar
     // PRECONDITIONS (2 parameters):
     // 1.) e: an event object that is generated when the user submits the form
     // 2.) avatarRef: a ref hook that is assigned to the avatar input
+    // 3.) imageReducer: an object with two fields:
+        // a.) reducer: the image reducer itself (state)
+        // b.) dispatchSubmissions: the reducer function used to update the reducer
     // POSTCONDITIONS (2 possible outcomes): 
     // if the avatar form is validated, we upload the image and update the user's profile in the database, 
     // and reload the page.
     // if the form fails to validate, we update the error field of the avatar form with the validation error,
     // and return from the function early
-    const submitAvatar = async (e, avatarRef) => {
+    const submitAvatar = async (e, avatarRef, imageReducer) => {
         // initialize update
         e.preventDefault();
 
@@ -61,15 +66,15 @@ const AvatarInfoForm = () => {
             const convertedFile = await convertToPNG(file);
             await uploadAvatar(convertedFile, `${ profileId }.png`);
 
-            // if successful, reload the page
-            window.location.reload();
+            // re-download the new image & update the global image state, and render a success message
+            await updateImageByProfileId(user.profile.id, imageReducer, true);
+            addMessage("Avatar successfully uploaded. If it is not showing up, give it some time and reload the page.", "success");
             
         } catch (error) {
             addMessage(error.message, "error");
-        }
-
-        // before the function returns, set the uploading flag back to false
-        dispatchForm({ field: "uploading", value: false });
+        } finally {
+            dispatchForm({ field: "uploading", value: false });
+        };
     };
 
     return { form, submitAvatar };

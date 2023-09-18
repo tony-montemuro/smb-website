@@ -42,7 +42,7 @@ const Download = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, we convert the blob object returned into a url object, and return it
     // if the query is unsuccessful, simply return null
-    const downloadAvatar = async (path) => {
+    const downloadAvatar = async path => {
         try {
             // query supabase avatar storage for image
             const { data, error } = await supabase.storage.from('avatars').download(path);
@@ -60,31 +60,51 @@ const Download = () => {
         }
     };
 
-    // FUNCTION 3: retrieveImage - public facing function that, given an image, imageReducer, and type, returns an image. this image may
-    // either be from the imageReducer cache, or may need to be downloaded from storage
+    // FUNCTION 3: retrieveGameImage - public facing function that, given an image&  imageReducer, and type, returns a game image. this 
+    // image may either be from the imageReducer cache, or may need to be downloaded from storage
+    // PRECONDITIONS (2 parameters):
+    // 1.) abb: a string that represents the name of a file in one of the storage bucket (game abb)
+    // 2.) imageReducer: an object with two fields:
+        // a.) reducer: the image reducer itself (state)
+        // b.) dispatchSubmissions: the reducer function used to update the reducer
+    // POSTCONDITIONS (2 possible outcomes):
+    // if imageName is already stored in cache, we can retrieve the URL object from there, and return it
+    // otherwise, we need to make a query to the database (different query depending on the type parameter), and
+    // update the cache once the query is complete
+    const retrieveGameImage = async (imageName, imageReducer) => {
+        const images = imageReducer.reducer.games;
+        let img = null;
+        if (imageName in images) {
+            img = images[imageName];
+        } else {
+            img = await downloadBoxArt(imageName);
+            imageReducer.dispatchImages({ set: "games", field: imageName, data: img });
+        }
+        return img;
+    };
+
+    // FUNCTION 4: updateImageByProfileId - public facing function that, given an image, imageReducer, and forceUpdate boolean, will update
+    // the imageReducer global images state, if necessary (imageName is not found in imageReducer, or forceUpdate is set to true)
     // PRECONDITIONS (3 parameters):
     // 1.) imageName: a string that represents the name of a file in one of the storage bucket
     // 2.) imageReducer: an object with two fields:
         // a.) reducer: the image reducer itself (state)
         // b.) dispatchSubmissions: the reducer function used to update the reducer
-    // 3.) set: a string value, either "avatar" or "boxart"
+    // 3.) forceUpdate: a boolean value, which will determine if update should be forced or not
     // POSTCONDITIONS (2 possible outcomes):
-    // if imageName is already stored in cache, we can retrieve the URL object from there, and return it
-    // otherwise, we need to make a query to the database (different query depending on the type parameter), and
-    // update the cache once the query is complete
-    const retrieveImage = async (imageName, imageReducer, set) => {
-        const images = imageReducer.reducer[set];
-        let img = null;
-        if (images && imageName in images) {
-            img = images[imageName];
-        } else {
-            img = set === "users" ? await downloadAvatar(imageName) : await downloadBoxArt(imageName);
-            imageReducer.dispatchImages({ set: set, field: imageName, data: img });
+    // if the imageReducer requires an update, or forceUpdate is set to true, we will download the avatar from storage, and
+    // update the imageReducer state
+    // otherwise, this function does nothing
+    const updateImageByProfileId = async (profileId, imageReducer, forceUpdate) => {
+        const images = imageReducer.reducer.users;
+        const imageName = `${ profileId }.png`;
+        if (!(imageName in images) || forceUpdate) {
+            const img = await downloadAvatar(imageName);
+            imageReducer.dispatchImages({ set: "users", field: imageName, data: img });
         }
-        return img;
     };
 
-    return { retrieveImage };
+    return { retrieveGameImage, updateImageByProfileId };
 };
 
 /* ===== EXPORTS ===== */
