@@ -21,8 +21,8 @@ const SubmissionHandler = (isNew) => {
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
-    // user state from user context
-    const { user } = useContext(UserContext);
+    // user state & update user function from user context
+    const { user, updateUser } = useContext(UserContext);
 
     /* ===== REDUCER FUNCTIONS ===== */
 
@@ -32,14 +32,16 @@ const SubmissionHandler = (isNew) => {
     // 2.) action: an object that typically has two parameters:
         // a.) type: specifies what operations this function should perform
         // b.) payload: an object that stores information used in the operations
-    // POSTCONDITIONS (3 possible outcomes):
+    // POSTCONDITIONS (4 possible outcomes):
     // if type is set, the function will return the payload, which defines the recent state
     // if type is delete, the function will remove a submission object based on payload values
     // if type is add, the function will add a submission object based on payload values
+    // otherwise, the state remains unchanged
     const reducer = (state, action) => {
         switch (action.type) {
             // case 1: set - simply return the payload
             case "set": {
+                setChecked([]);
                 return action.payload;
             }
 
@@ -372,11 +374,12 @@ const SubmissionHandler = (isNew) => {
             return result.status === "rejected" && result.reason.submission.action === "update"
         });
 
-        // finally, if there are any query fails, render the messages. otherwise, reload the page
+        // finally, if there are any query fails, render the messages. otherwise, update user state
         if (failedLevel1Queries.length > 0 || failedLevel2Queries.length > 0) {
             renderErrorMessages(failedLevel1Queries, failedLevel2Queries);
         } else {
-            window.location.reload();
+            await updateUser(user.id);
+            addMessage("All actions were completed successfully!", "success");
         }
     };
 
