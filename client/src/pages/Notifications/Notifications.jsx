@@ -20,7 +20,7 @@ function Notifications() {
 
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 7;
-  const NOTIFS_PER_PAGE = 50;
+  const NOTIFS_PER_PAGE = 2;
   const messages = {
     approve: "A moderator has approved one of your submission.",
     report: "A user has reported one of your submissions.",
@@ -103,7 +103,7 @@ function Notifications() {
 
           { /* Delete button - when pressed, will remove all notifications the user has selected. This button
           is disabled if no notifications are selected. */ }
-          <button type="button" onClick={ () => removeSelected(NOTIFS_PER_PAGE) } disabled={ getSelectedCount() === 0 || notifications.submitting }>
+          <button type="button" onClick={ removeSelected } disabled={ getSelectedCount() === 0 || notifications.submitting }>
             Delete
           </button>
 

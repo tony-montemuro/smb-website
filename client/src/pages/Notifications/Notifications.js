@@ -12,7 +12,7 @@ const Notifications = () => {
         all: undefined,     // store all current notification objects
         current: null,      // stores either nothing, or a notification object to display in popup view
         selected: {},       // stores the notif_dates of all the selected notifications, partitioned by page number
-        submitting: false,  // a boolean flag that checks whether or not the user is attempting to delete submissions
+        submitting: true,  // a boolean flag that checks whether or not the user is attempting to delete submissions
         total: 0            // stores the total number of notifications the user has
     };
 
@@ -25,6 +25,7 @@ const Notifications = () => {
         // a.) field: specifies which field this function should update
         // b.) payload: an data type OR object that stores information used in the operations (type depends on field)
     // POSTCONDITIONS (3 possible outcomes):
+    // if field is `reset`, the function will return the initial value of the `notifications` state (notificationsInit)
     // if field is `all`, `current`, `submitting`, or `total`, the function simply update that field using the payload data
     // if field is `selected`, the payload will have an additional field called `pageNum`, which we will use to update the
     // `selected` object
@@ -32,7 +33,12 @@ const Notifications = () => {
     const reducer = (state, action) => {
         const field = action.field, payload = action.payload;
 
-        // case 1: simply update the field using payload
+        // case 1: simply return the initial `notifications` value
+        if (field === "reset") {
+            return notificationsInit;
+        }
+
+        // case 2: simply update the field using payload
         if (["all", "current", "submitting", "total"].includes(field)) {
             return {
                 ...state,
@@ -40,7 +46,7 @@ const Notifications = () => {
             }
         }
 
-        // case 2: update the `selected` field using the `payload.pageNum` and `payload.data`
+        // case 3: update the `selected` field using the `payload.pageNum` and `payload.data`
         if (field === "selected") {
             return {
                 ...state,
@@ -51,7 +57,7 @@ const Notifications = () => {
             };
         }
 
-        // case 3: function executed using an invalid `action.field`. just do nothing
+        // case 4: function executed using an invalid `action.field`. just do nothing
         return state;
     };
 
@@ -97,6 +103,7 @@ const Notifications = () => {
                 pageNum: pageNum
             }});
             dispatchNotifications({ field: "total", payload: count });
+            dispatchNotifications({ field: "submitting", payload: false });
 
         } catch (error) {
             // render an error message to the client
@@ -190,31 +197,36 @@ const Notifications = () => {
     };
 
     // FUNCTION 6: removeSelected - remove all selected notifications from the database
-    // PRECONDITIONS (1 parameter):
-    // 1.) notifsPerPage: an integer that specifies the number of notifications that should render on each page
-    // POSTCONDITIONS (1 possible outcomes):
-    // a concurrent call to the database is made to remove all notifications by notif_date. this function
-    // will await all calls, and once they have all been resolved, the page reloads.
-    const removeSelected = async notifsPerPage => {
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // this function attempts to make many queries, including a set of queries to delete each selected notification, as well as 
+    // updating the user
+    // if any of these queries fail, this function will render an error message to the user
+    // otherwise, a success message is rendered to the user
+    const removeSelected = async () => {
         // create array of promises
         dispatchNotifications({ field: "submitting", payload: true });
         let promises = [];
         Object.keys(notifications.selected).forEach(key => {
             const pagePromises = notifications.selected[key].map(notif_date => deleteNotification(notif_date));
-            promises.concat(pagePromises);
+            promises = promises.concat(pagePromises);
         });
 
         try {
-            // attempt to delete all notifications, update the notificaion list, & finally, the user state
+            // attempt to delete all notifications
             await Promise.all(promises);
-            await updateNotifications(notifsPerPage);
+
+            // next, reset component state (both notifications and page number), and also update the user state
+            dispatchNotifications({ field: "reset" });
             await updateUser(user.id);
+            setPageNum(1);
 
             // finally, render a success message to the user
             addMessage("Notifications successfully deleted.", "success");
 
         } catch (error) {
             addMessage("One or more notifications failed to delete. Refresh the page and try again.", "error");
+        } finally {
             dispatchNotifications({ field: "submitting", payload: false });
         }
     };
@@ -234,7 +246,7 @@ const Notifications = () => {
     // POSTCONDITIONS (1 possible outcome):
     // not only do we update the pageNum state hook by calling the `setPageNum` hook, we also update the `all` field of the
     // notifications object back to undefined, while we wait for new notifications to load in
-    const changePage = (newPageNum) => {
+    const changePage = newPageNum => {
         setPageNum(newPageNum);
         dispatchNotifications({ field: "all", payload: undefined });
     };

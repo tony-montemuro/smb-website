@@ -11,7 +11,7 @@ const NotificationRead = () => {
     // if the query is successful, an integer will be returned that has the count of all notifications for the current user
     // otherwise, this function will throw an error, which is expected to be handled by the caller function
     const queryNotificationCount = async () => {
-        try { 
+        try {
             const { count, error } = await supabase
                 .from("notification")
                 .select("*", { count: "exact", head: true });
