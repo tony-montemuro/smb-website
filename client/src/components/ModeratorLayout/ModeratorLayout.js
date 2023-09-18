@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import GameHelper from "../../helper/GameHelper";
 import GameRead from "../../database/read/GameRead";
@@ -10,6 +10,10 @@ const ModeratorLayout = () => {
     /* ===== VARIABLES ===== */
     const pageType = useLocation().pathname.split("/")[2];
     const navigate = useNavigate();
+
+    /* ===== STATES ===== */
+    const [submissions, setSubmissions] = useState(undefined);
+    const [games, setGames] = useState(undefined);
 
     /* ===== CONTEXTS ===== */
 
@@ -83,15 +87,15 @@ const ModeratorLayout = () => {
         return categorized;
     };
 
-    // FUNCTION 4: fetchData - code that is executed when the ModeratorLayout component mounts, to fetch game & submission data
+    // FUNCTION 4: updateLayout - code that is executed when the ModeratorLayout component mounts, to fetch game & submission data
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the query successfully returns both arrays of data, filter allSubmissions into two distinct arrays: recent and reports
     // recent submissions are simply ones that were recently submitted but not yet approved
     // report submissions are ones that have been reported
-    // once the filtering is complete, we return both the games array, as well as a submission object containing both arrays of submissions
+    // once the filtering is complete, we can update both the `games` and `submissions` states by calling their respective setter functions 
     // if the query is a failure, render an error message to the user, and set both fields in the return array equal to undefined
-    const fetchData = async () => {
+    const updateLayout = async () => {
         try {
             // first, let's just fetch the games and allSubmissions data
             const [games, allSubmissions] = await Promise.all([queryGamesInfo(), getUnapproved()]);
@@ -113,13 +117,12 @@ const ModeratorLayout = () => {
             const recent = getCategorizedObject(sortedRecentSubmissions, games);
             const reported = getCategorizedObject(sortedReportedSubmissions, games);
 
-            return {
-                games,
-                submissions: { recent, reported }
-            };
+            // finally, let's update `games` & `submissions` state hooks
+            setGames(games);
+            setSubmissions({ recent, reported });
 
         } catch (error) {
-            addMessage("Moderator layout data failed to load. Refresh the page and try again.", "error");
+            addMessage("Moderator layout data failed to load / update. Refresh the page and try again.", "error");
             return { games: undefined, submissions: undefined };
         }
     };
@@ -157,7 +160,7 @@ const ModeratorLayout = () => {
         return counter;
     };
 
-    return { fetchData, handleTabClick, getNumberOfSubmissions };
+    return { games, submissions, updateLayout, handleTabClick, getNumberOfSubmissions };
 };
 
 /* ===== EXPORTS ===== */

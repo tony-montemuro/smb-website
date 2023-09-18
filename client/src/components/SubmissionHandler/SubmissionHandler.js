@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, SubmissionContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
 import { useContext, useReducer, useState } from "react";
 import ApproveUpdate from "../../database/update/ApproveUpdate";
 import FrontendHelper from "../../helper/FrontendHelper";
@@ -15,14 +15,14 @@ const SubmissionHandler = (isNew) => {
 
     /* ===== CONTEXTS ===== */
 
-    // submissions state from submission context
-    const { submissions } = useContext(SubmissionContext);
+    // submissions state & update layout function from moderator layout context
+    const { submissions, updateLayout } = useContext(ModeratorLayoutContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
     // user state & update user function from user context
-    const { user, updateUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
     /* ===== REDUCER FUNCTIONS ===== */
 
@@ -378,7 +378,7 @@ const SubmissionHandler = (isNew) => {
         if (failedLevel1Queries.length > 0 || failedLevel2Queries.length > 0) {
             renderErrorMessages(failedLevel1Queries, failedLevel2Queries);
         } else {
-            await updateUser(user.id);
+            await updateLayout();
             addMessage("All actions were completed successfully!", "success");
         }
     };

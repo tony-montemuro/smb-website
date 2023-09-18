@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import "./ModeratorLayout.css";
-import { GamesContext, MessageContext, SubmissionContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
 import { Outlet } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ModeratorLogic from "./ModeratorLayout.js";
 
@@ -20,19 +20,16 @@ function ModeratorLayout() {
   const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES & FUNCTIONS ===== */
-  const [submissions, setSubmissions] = useState(undefined);
-  const [games, setGames] = useState(undefined);
-
-  /* ===== FUNCTIONS ===== */
   
-  // functions from the js file
-  const { fetchData, handleTabClick, getNumberOfSubmissions } = ModeratorLogic();
+  // states & functions from the js file
+  const { submissions, games, updateLayout, handleTabClick, getNumberOfSubmissions } = ModeratorLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the page loads, or when the user state changes
   useEffect(() => {
-    async function init() {
+    // only initialize component once the user state has initialized
+    if (user.id !== undefined) {
       // if user is not a moderator, render error, navigate to homepage, and render early
       if (!user.is_mod) {
         addMessage("Forbidden access.", "error");
@@ -40,22 +37,15 @@ function ModeratorLayout() {
         return;
       }
 
-      // otherwise, fetch games and submissions, and update their respective state hooks
-      const { games, submissions } = await fetchData();
-      setGames(games);
-      setSubmissions(submissions);
-    }
-
-    // only initialize component once the user state has initialized
-    if (user.id !== undefined) {
-      init();
+      // if we made it this far, go ahead and initialize the layout
+      updateLayout();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   /* ===== MODERATOR LAYOUT COMPONENT ===== */
   return user.is_mod && games && submissions &&
-    <GamesContext.Provider value={ { games } }>
+    <ModeratorLayoutContext.Provider value={ { games, submissions, updateLayout } }>
       <div className="moderator-layout">
 
         { /* Moderator layout header - contains any header information for moderator hub */ }
@@ -105,13 +95,11 @@ function ModeratorLayout() {
 
         { /* Moderation Layout Content: renders the contents of the page based on the URL */ }
         <div className="moderator-layout-content">
-          <SubmissionContext.Provider value={ { submissions } }>
-            <Outlet />
-          </SubmissionContext.Provider>
+          <Outlet />
         </div>
 
       </div>
-    </GamesContext.Provider>
+    </ModeratorLayoutContext.Provider>
 };
 
 /* ===== EXPORTS ===== */

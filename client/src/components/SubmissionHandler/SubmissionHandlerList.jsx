@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
-import { GamesContext } from "../../utils/Contexts";
+import { ModeratorLayoutContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 
 function SubmissionHandlerList({ recent, gameAbb, setGameAbb, imageReducer }) {
   /* ===== CONTEXTS ===== */
 
-  // games context from games context
-  const { games } = useContext(GamesContext);
+  // games context from moderator layout
+  const { games } = useContext(ModeratorLayoutContext);
 
   /* ===== SUBMISSION HANDLER LIST COMPONENT ===== */
   return (

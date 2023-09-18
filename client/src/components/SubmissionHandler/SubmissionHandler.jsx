@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./SubmissionHandler.css";
-import { SubmissionContext } from "../../utils/Contexts";
+import { ModeratorLayoutContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import SubmissionHandlerList from "./SubmissionHandlerList";
 import SubmissionHandlerLogic from "./SubmissionHandler.js";
@@ -10,8 +10,8 @@ import SubmissionTable from "./SubmissionTable";
 function SubmissionHandler({ imageReducer, isNew }) {
   /* ===== CONTEXTS ===== */
 
-  // submissions state from submission context
-  const { submissions } = useContext(SubmissionContext);
+  // submissions state from modereator layout context
+  const { submissions } = useContext(ModeratorLayoutContext);
 
   /* ===== STATES & FUNCTIONS ===== */
   const [submission, setSubmission] = useState(null);

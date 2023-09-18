@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
-import { GamesContext, UserContext } from "../../utils/Contexts";
 import { Link } from "react-router-dom";
+import { ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import EmbedHelper from "../../helper/EmbedHelper";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
@@ -12,8 +12,8 @@ import Username from "../../components/Username/Username";
 function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
   /* ===== CONTEXTS ===== */
 
-  // games state from games context
-  const { games } = useContext(GamesContext);
+  // games state from moderator layout context
+  const { games } = useContext(ModeratorLayoutContext);
 
   // user state from user context
   const { user } = useContext(UserContext);
