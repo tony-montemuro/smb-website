@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./DetailPopup.css";
 import { UserContext } from "../../utils/Contexts";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
@@ -23,6 +23,9 @@ function DetailPopup({ submission, closePopup, level }) {
   // user state from user context
   const { user } = useContext(UserContext);
 
+  /* ===== STATES ===== */
+  const [submitting, setSubmitting] = useState(false);
+
   /* ===== FUNCTIONS ===== */
 
   // helper functions
@@ -36,7 +39,7 @@ function DetailPopup({ submission, closePopup, level }) {
 
         { /* Button to close the popup */ }
         <div className="detail-popup-close-btn">
-          <button type="button" onClick={ () => closePopup(false) }>Close</button>
+          <button type="button" onClick={ () => closePopup(false) } disabled={ submitting }>Close</button>
         </div>
 
         { /* Popup header - render the name of the level, the record, and the username */ }
@@ -101,7 +104,12 @@ function DetailPopup({ submission, closePopup, level }) {
             { /* Horizontal rule to break the "submission" from the "report" form */ }
             <hr />
 
-            <ReportForm submission={ submission } closePopup={ closePopup } />
+            <ReportForm 
+              submission={ submission } 
+              closePopup={ closePopup } 
+              submitting ={ submitting } 
+              setSubmitting={ setSubmitting } 
+            />
           </>
         }
 

@@ -6,7 +6,7 @@ import ValidationHelper from "../../helper/ValidationHelper";
 
 const ReportForm = () => {
     /* ===== VARIABLES ===== */
-    const formInit = { message: "", error: null, submitting: false };
+    const formInit = { message: "", error: null };
 
     /* ===== CONTEXTS ===== */
 
@@ -29,23 +29,24 @@ const ReportForm = () => {
 
     // FUNCTION 1 - handleReport: given the report object, send an array of reports to all moderators, and the owner
     // of the submission
-    // PRECONDITIONS (3 parameters):
+    // PRECONDITIONS (4 parameters):
     // 1.) e: an event object generated when the user submits the submission form
     // 2.) submission: a submission object that contains information about the reported submission
     // 3.) closePopup: a function called once we have reported the submission that will close the popup
+    // 4.) setSubmitting: a function that allows us to trigger the submitting state between true and false
     // POSTCONDITIONS (3 possible outcomes):
     // if the message is not validated, the error field of form is updated by calling setForm() function, and the function returns early
     // if the message is validated, and at least one notification fails to insert, user is alerted of the error
     // if the message is validated, and all notifications insert, the page will reload
-    const handleReport = async (e, submission, closePopup) => {
+    const handleReport = async (e, submission, closePopup, setSubmitting) => {
         // first, update the form to prevent multiple submissions
         e.preventDefault();
-        setForm({ ...form, submitting: true });
+        setSubmitting(true);
 
         // next, verify that the message is valid
         const error = validateMessage(form.message, true);
         if (error) {
-            setForm({ ...form, error: error, submitting: false });
+            setSubmitting(false);
             addMessage(error, "error");
             return;
         }
@@ -72,7 +73,7 @@ const ReportForm = () => {
         } catch (error) {
             // otherwise, render an error message, and set the submitting state back to false
             addMessage(error.message, "error");
-            setForm({ ...form, submitting: false });
+            setSubmitting(false);
         }
     };
 
