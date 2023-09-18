@@ -53,7 +53,6 @@ function ReportForm({ submission, closePopup }) {
                 <textarea 
                   value={ form.message }
                   onChange={ handleChange }
-                  disabled={ form.submitted }
                   rows={ TEXT_AREA_ROWS }
                 >
                 </textarea>
@@ -66,7 +65,7 @@ function ReportForm({ submission, closePopup }) {
               <div className="detail-decision-btns">
 
                 { /* Button that, when pressed, reports the submission */ }
-                <button type="submit" disabled={ form.submitting || form.submitted }>
+                <button type="submit" disabled={ form.submitting }>
                   Submit Report
                 </button>
 
