@@ -67,19 +67,19 @@ const Download = () => {
     // 2.) imageReducer: an object with two fields:
         // a.) reducer: the image reducer itself (state)
         // b.) dispatchSubmissions: the reducer function used to update the reducer
-    // 3.) type: a string value, either "avatar" or "boxart"
+    // 3.) set: a string value, either "avatar" or "boxart"
     // POSTCONDITIONS (2 possible outcomes):
     // if imageName is already stored in cache, we can retrieve the URL object from there, and return it
     // otherwise, we need to make a query to the database (different query depending on the type parameter), and
     // update the cache once the query is complete
-    const retrieveImage = async (imageName, imageReducer, type) => {
-        const images = imageReducer.reducer;
+    const retrieveImage = async (imageName, imageReducer, set) => {
+        const images = imageReducer.reducer[set];
         let img = null;
         if (images && imageName in images) {
             img = images[imageName];
         } else {
-            img = type === "avatar" ? await downloadAvatar(imageName) : await downloadBoxArt(imageName);
-            imageReducer.dispatchImages({ field: imageName, data: img });
+            img = set === "users" ? await downloadAvatar(imageName) : await downloadBoxArt(imageName);
+            imageReducer.dispatchImages({ set: set, field: imageName, data: img });
         }
         return img;
     };

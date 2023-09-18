@@ -15,13 +15,22 @@ const App = () => {
     profile: undefined,
     is_mod: false
   };
+  const defaultImages = {
+    games: [],
+    users: []
+  }
 
   /* ===== STATES & REDUCERS ===== */
   const [user, setUser] = useState(defaultUser);
   const [messages, setMessages] = useState([]);
   const [images, dispatchImages] = useReducer((state, action) => {
-    return { ...state, [action.field]: action.data }
-  }, null);
+    const set = action.set, field = action.field, data = action.data;
+    if (set === "games" || set === "users") {
+      return { ...state, [set]: { ...state[set], [field]: data } };
+    } else {
+      return state;
+    }
+  }, defaultImages);
 
   /* ===== FUNCTIONS ===== */
 

@@ -20,7 +20,7 @@ const BoxArt = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the boxart is fetched from the database, and the box state is updated by calling the setBox() function
     const fetchBoxArt = async (abb, imageReducer) => {
-        const boxArt = await retrieveImage(abb, imageReducer, "boxart");
+        const boxArt = await retrieveImage(abb, imageReducer, "games");
         setBox(boxArt);
     };
 
