@@ -2,3 +2,11 @@
     display: inline;
     white-space: nowrap;
 }
+
+.username span {
+    margin-right: 2px;
+}
+
+.username a {
+    margin-left: 2px;
+}
