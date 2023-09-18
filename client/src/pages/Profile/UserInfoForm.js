@@ -7,8 +7,8 @@ import ProfileUpdate from "../../database/update/ProfileUpdate";
 const UserInfoForm = () => {
     /* ===== CONTEXTS ===== */
 
-    // user state from user context
-    const { user } = useContext(UserContext);
+    // user state and update user function from user context
+    const { user, updateUser } = useContext(UserContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -133,8 +133,9 @@ const UserInfoForm = () => {
             // attempt to upload user info
             await upsertUserInfo(userInfo);
 
-            // if successful, reload the page
-            window.location.reload();
+            // if successful, update the user state, and render a success message
+            await updateUser(user.id);
+            addMessage("Profile information has successfully updated!", "success");
 
         } catch (error) {
             // special case: user attempted to update their username to a non-unique name
