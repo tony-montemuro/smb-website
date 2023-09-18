@@ -20,7 +20,7 @@ function Notifications() {
 
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 7;
-  const NOTIFS_PER_PAGE = 2;
+  const NOTIFS_PER_PAGE = 50;
   const messages = {
     approve: "A moderator has approved one of your submission.",
     report: "A user has reported one of your submissions.",
@@ -157,7 +157,7 @@ function Notifications() {
             :
             
               // Otherwise, render a single row that informs the user they have no notifications
-              <tr>
+              <tr className="notifications-empty">
                 <td colSpan={ TABLE_WIDTH }>
                   <i>You have no notifications!</i>
                 </td>
