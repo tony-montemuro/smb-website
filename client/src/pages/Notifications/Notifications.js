@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { isBefore } from "date-fns";
-import { MessageContext } from "../../utils/Contexts";
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useReducer, useState } from "react";
 import NotificationDelete from "../../database/delete/NotificationDelete";
 import NotificationRead from "../../database/read/NotificationRead";
@@ -59,6 +59,9 @@ const Notifications = () => {
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
+
+    // user state & update user function from user context
+    const { user, updateUser } = useContext(UserContext);
 
     /* ===== STATES ===== */
     const [notifications, dispatchNotifications] = useReducer(reducer, notificationsInit);
@@ -187,12 +190,12 @@ const Notifications = () => {
     };
 
     // FUNCTION 6: removeSelected - remove all selected notifications from the database
-    // PRECONDITIONS (1 condition):
-    // the notifications.selected array must be non-empty. this is enforced by the application
+    // PRECONDITIONS (1 parameter):
+    // 1.) notifsPerPage: an integer that specifies the number of notifications that should render on each page
     // POSTCONDITIONS (1 possible outcomes):
     // a concurrent call to the database is made to remove all notifications by notif_date. this function
     // will await all calls, and once they have all been resolved, the page reloads.
-    const removeSelected = async () => {
+    const removeSelected = async notifsPerPage => {
         // create array of promises
         dispatchNotifications({ field: "submitting", payload: true });
         let promises = [];
@@ -202,11 +205,13 @@ const Notifications = () => {
         });
 
         try {
-            // attempt to delete all notifications
+            // attempt to delete all notifications, update the notificaion list, & finally, the user state
             await Promise.all(promises);
+            await updateNotifications(notifsPerPage);
+            await updateUser(user.id);
 
-            // once all deletes have occurred successfully, reload the page
-            window.location.reload();
+            // finally, render a success message to the user
+            addMessage("Notifications successfully deleted.", "success");
 
         } catch (error) {
             addMessage("One or more notifications failed to delete. Refresh the page and try again.", "error");
