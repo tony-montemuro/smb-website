@@ -17,18 +17,19 @@ const ProfileRead = () => {
             const { data: profile, error } = await supabase
                 .from("profile")
                 .select(`
-                    id,
-                    username,
-                    country (iso2, name),
-                    youtube_handle,
-                    twitch_username,
-                    twitter_handle,
-                    discord,
                     bio,
                     birthday,
+                    country (iso2, name),
+                    discord,
                     featured_video,
+                    id,
+                    moderator (profile_id),
+                    report_token,
+                    twitch_username,
+                    twitter_handle,
+                    username,
                     video_description,
-                    report_token
+                    youtube_handle
                 `)
                 .eq("user_id", userId)
                 .single();

@@ -1,7 +1,6 @@
 /* ===== IMPORTS ===== */
 import { supabase } from "./database/SupabaseClient";
 import { useReducer, useState } from "react";
-import ModeratorRead from "./database/read/ModeratorRead";
 import NotificationRead from "./database/read/NotificationRead";
 import ProfileRead from "./database/read/ProfileRead";
 import Session from "./database/authentication/Session";
@@ -35,7 +34,6 @@ const App = () => {
   /* ===== FUNCTIONS ===== */
 
   // database functions to load data
-  const { isModerator } = ModeratorRead();
   const { queryNotificationCount } = NotificationRead();
   const { queryUserProfile } = ProfileRead();
 
@@ -76,16 +74,20 @@ const App = () => {
     if (userId) {
       try {
         // concurrently make all necessary database calls
-        const [count, profile, is_mod] = await Promise.all(
-          [queryNotificationCount(), queryUserProfile(userId, addMessage), isModerator(userId)]
+        const [count, profile] = await Promise.all(
+          [queryNotificationCount(), queryUserProfile(userId, addMessage)]
         );
+
+        // use the `moderator` field from profile object to determine if user is moderator
+        const isMod = profile.moderator !== null;
+        delete profile.moderator;
 
         // update the user state
         setUser({
           id: userId,
           notificationCount: count,
           profile: profile,
-          is_mod: is_mod
+          is_mod: isMod
         });
 
       } catch (error) {
