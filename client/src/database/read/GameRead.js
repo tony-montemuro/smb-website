@@ -61,6 +61,7 @@ const GameRead = () => {
                         name
                     ),
                     name,
+                    profile!game_profile (id, username, country),
                     release_date
                 `)
                 .order("custom")
@@ -75,11 +76,15 @@ const GameRead = () => {
                 throw error;
             }
 
+            // next, let's sort the list of profiles (game moderators) by username
+            game.profile.sort((a, b) => a.username.localeCompare(b.name));
+
             // return the game object
             return game;
 
         } catch (error) {
             // throw error to be handled by caller
+            console.log(error);
             throw error;
         }
     };

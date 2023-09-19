@@ -11,6 +11,7 @@ import GameHelper from "../../helper/GameHelper";
 import GameLayoutInfo from "./GameLayoutInfo";
 import GameLayoutLogic from "./GameLayout.js";
 import LevelSearchBar from "./LevelSearchBar.jsx";
+import ModeratorContainer from "./ModeratorContainer";
 
 function GameLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -93,6 +94,10 @@ function GameLayout({ imageReducer }) {
           { getGameCategories(game).map(category => {
             return <GameLayoutInfo category={ category }  game={ game } key={ category } />
           })}
+          <div className="game-layout-info-container-header">
+            <h2>Moderators</h2>
+            <ModeratorContainer imageReducer={ imageReducer } />
+          </div>
         </div>
         
       </div>

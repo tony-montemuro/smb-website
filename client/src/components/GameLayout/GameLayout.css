@@ -123,6 +123,11 @@
     margin: 0 5px;
 }
 
+.game-layout-body-info-moderator-wrapper {
+    display: inline-block;
+    margin: 10px;
+}
+
 #game-layout-header-download {
     display: flex;
     flex-direction: row;
