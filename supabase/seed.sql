@@ -1654,10 +1654,10 @@ INSERT INTO "public"."game_rule" ("abb", "rule") VALUES
 
 
 --
--- Data for Name: moderator; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: administrator; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."moderator" ("profile_id") VALUES
+INSERT INTO "public"."administrator" ("profile_id") VALUES
 	(1);
 
 
