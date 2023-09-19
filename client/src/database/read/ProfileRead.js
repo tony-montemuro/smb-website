@@ -23,7 +23,7 @@ const ProfileRead = () => {
                     country (iso2, name),
                     discord,
                     featured_video,
-                    game!game_profile (abb),
+                    game!game_profile (abb, name),
                     id,
                     report_token,
                     twitch_username,

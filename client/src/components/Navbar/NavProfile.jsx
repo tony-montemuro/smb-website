@@ -14,8 +14,8 @@ import Username from "../Username/Username";
 function NavProfile({ imageReducer }) {
   /* ===== CONTEXTS ===== */
 
-  // user state from user context
-  const { user } = useContext(UserContext);
+  // user state & is moderator function from user context
+  const { user, isModerator } = useContext(UserContext);
 
   /* ===== FUNCTIONS ===== */
 
@@ -67,8 +67,8 @@ function NavProfile({ imageReducer }) {
             }
           </div>
 
-          { /* Moderator link - icon that links to the moderation hub page (for moderators only) */ }
-          { user.is_admin &&
+          { /* Moderator link - icon that links to the moderation hub page (for admins + moderators only) */ }
+          { isModerator() &&
             <div className="nav-profile-link">
               <Link to="/moderator">
                 <AbcIcon titleAccess="Moderator Hub" />

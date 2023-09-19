@@ -13,8 +13,8 @@ function ModeratorLayout() {
 
   /* ===== CONTEXTS ===== */
   
-  // user state from user context
-  const { user } = useContext(UserContext);
+  // user state & is moderator function from user context
+  const { user, isModerator } = useContext(UserContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -31,7 +31,7 @@ function ModeratorLayout() {
     // only initialize component once the user state has initialized
     if (user.id !== undefined) {
       // if user is not an adminstrator, render error, navigate to homepage, and render early
-      if (!user.is_admin) {
+      if (!(isModerator())) {
         addMessage("Forbidden access.", "error");
         navigate("/");
         return;
@@ -44,7 +44,7 @@ function ModeratorLayout() {
   }, [user]);
 
   /* ===== MODERATOR LAYOUT COMPONENT ===== */
-  return user.is_admin && games && submissions &&
+  return isModerator() && games && submissions &&
     <ModeratorLayoutContext.Provider value={ { games, submissions, updateLayout } }>
       <div className="moderator-layout">
 

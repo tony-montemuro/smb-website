@@ -10,8 +10,7 @@ const App = () => {
   const defaultUser = {
     id: undefined,
     notificationCount: 0,
-    profile: undefined,
-    is_admin: false
+    profile: undefined
   };
   const defaultImages = {
     games: {},
@@ -66,7 +65,7 @@ const App = () => {
   // this value also might be null if no user is currently signed in
   // POSTCONDITIONS (2 possible outcomes):
   // if the session object is defined (meaning user is logged in), we use userId field to load the user's
-  // notification count, profile, and whether or not they are a moderator, and update the user state by calling the setUser() function
+  // notification count & profile, and update the user state by calling the setUser() function
   // if the session object is null, we call the setUser() function with the default user object
   const updateUser = async userId => {
     // two different cases: a null userId, or a userId belonging to a user
@@ -77,19 +76,11 @@ const App = () => {
           [queryNotificationCount(), queryUserProfile(userId, addMessage)]
         );
 
-        // use the `administrator` field from profile object to determine if user is administrator
-        let isAdmin = false;
-        if (profile) {
-          isAdmin = profile && profile.administrator !== null;
-          delete profile.administrator;
-        }
-
         // update the user state
         setUser({
           id: userId,
           notificationCount: count,
-          profile: profile,
-          is_admin: isAdmin
+          profile: profile
         });
 
       } catch (error) {
@@ -103,7 +94,22 @@ const App = () => {
     }
   };
 
-  // FUNCTION 4: callSessionListener - this function is called once just to run the supabase session listener function, which will be called
+  // FUNCTION 4: isModerator - function that determines if the current user is a moderator or not
+  // PRECONDITIONS (1 parameter):
+  // 1.) abb (OPTIONAL): a string corresponding to the primary key of a game. if this string is provided, this function will
+  // check if the current moderator is a moderator for the particular game associated with `abb`. otherwise, it's a general check
+  // POSTCONDITIONS (2 possible outcomes):
+  // if the user is defined, and they either are an administrator, or moderate [at least 1 game OR the game specified by abb, if it's
+  // defined], return true
+  // otherwise, return false
+  const isModerator = abb => {
+    if (abb) {
+      return user.id !== undefined && (user.profile.abministrator || user.profile.game.some(game => game.abb === abb));
+    }
+    return user.id !== undefined && (user.profile.administrator || user.profile.game.length > 0);
+  };
+
+  // FUNCTION 5: callSessionListener - this function is called once just to run the supabase session listener function, which will be called
   // each time a change in session occurs
   // PRECONDITIONS (1 condition):
   // this function should be run exactly once: when the application is first loaded. the listener function defined within this function,
@@ -140,7 +146,7 @@ const App = () => {
     });
   };
 
-  // FUNCTION 5: handleMessageClose - function that is executed when the user closes a message popup
+  // FUNCTION 6: handleMessageClose - function that is executed when the user closes a message popup
   // PRECONDITIONS (1 parameter):
   // 1.) index: the index-th element to be removed from the messages array, causing it to immediately unrender
   // POSTCONDITIONS (1 possible outcome):
@@ -156,6 +162,7 @@ const App = () => {
     dispatchImages,
     addMessage,
     updateUser,
+    isModerator,
     callSessionListener,
     handleMessageClose
   };

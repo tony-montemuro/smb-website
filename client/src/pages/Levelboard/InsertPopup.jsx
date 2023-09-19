@@ -16,8 +16,8 @@ function InsertPopup({ popup, closePopup, level }) {
   // game state from game context
   const { game } = useContext(GameContext);
 
-	// user state from user context
-  const { user } = useContext(UserContext);
+	// user state & is moderator function from user context
+  const { user, isModerator } = useContext(UserContext);
 
   /* ===== STATES & FUNCTIONS ===== */
 
@@ -30,6 +30,7 @@ function InsertPopup({ popup, closePopup, level }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const path = location.pathname.split("/");
+  const abb = path[2];
   const type = path[4];
   const TEXT_AREA_ROWS = 5;
   const TEXT_AREA_COLS = 20;
@@ -61,7 +62,7 @@ function InsertPopup({ popup, closePopup, level }) {
         </div>
 
         <div className="levelboard-insert-body">
-          { user.is_admin &&
+          { isModerator(abb) &&
             <div className="levelboard-profile-select">
               <h2>Select a User</h2>
               <UserRow user={ user.profile } disableLink={ true } onClick={ onUserRowClick } />
@@ -81,7 +82,7 @@ function InsertPopup({ popup, closePopup, level }) {
               <form onSubmit={ (e) => handleSubmit(e, level.timer_type, closePopup) }>
 
                 { /* If the current user is a moderator, render the user who the moderator is submitting on behalf of. */ }
-                { user.is_admin &&
+                { isModerator(abb) &&
                   <div className="levelboard-input-group">
                     User:&nbsp;
                     <Username profile={ form.values.profile } />

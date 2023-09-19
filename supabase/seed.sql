@@ -1607,6 +1607,13 @@ INSERT INTO "public"."game_platform" ("game", "platform") VALUES
 	('651', 26),
 	('gaiden', 26);
 
+--
+-- Data for Name: game_profile; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."game_profile" ("game", "profile") VALUES
+	('smb2', 2);
+
 
 --
 -- Data for Name: game_region; Type: TABLE DATA; Schema: public; Owner: postgres
