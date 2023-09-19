@@ -61,7 +61,7 @@ function InsertPopup({ popup, closePopup, level }) {
         </div>
 
         <div className="levelboard-insert-body">
-          { user.is_mod &&
+          { user.is_admin &&
             <div className="levelboard-profile-select">
               <h2>Select a User</h2>
               <UserRow user={ user.profile } disableLink={ true } onClick={ onUserRowClick } />
@@ -81,7 +81,7 @@ function InsertPopup({ popup, closePopup, level }) {
               <form onSubmit={ (e) => handleSubmit(e, level.timer_type, closePopup) }>
 
                 { /* If the current user is a moderator, render the user who the moderator is submitting on behalf of. */ }
-                { user.is_mod &&
+                { user.is_admin &&
                   <div className="levelboard-input-group">
                     User:&nbsp;
                     <Username profile={ form.values.profile } />

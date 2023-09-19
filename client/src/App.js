@@ -9,10 +9,9 @@ const App = () => {
   /* ===== VARIABLES ===== */
   const defaultUser = {
     id: undefined,
-    email: undefined,
     notificationCount: 0,
     profile: undefined,
-    is_mod: false
+    is_admin: false
   };
   const defaultImages = {
     games: {},
@@ -78,16 +77,19 @@ const App = () => {
           [queryNotificationCount(), queryUserProfile(userId, addMessage)]
         );
 
-        // use the `moderator` field from profile object to determine if user is moderator
-        const isMod = profile.moderator !== null;
-        delete profile.moderator;
+        // use the `administrator` field from profile object to determine if user is administrator
+        let isAdmin = false;
+        if (profile) {
+          isAdmin = profile && profile.administrator !== null;
+          delete profile.administrator;
+        }
 
         // update the user state
         setUser({
           id: userId,
           notificationCount: count,
           profile: profile,
-          is_mod: isMod
+          is_admin: isAdmin
         });
 
       } catch (error) {

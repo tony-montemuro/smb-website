@@ -30,8 +30,8 @@ function ModeratorLayout() {
   useEffect(() => {
     // only initialize component once the user state has initialized
     if (user.id !== undefined) {
-      // if user is not a moderator, render error, navigate to homepage, and render early
-      if (!user.is_mod) {
+      // if user is not an adminstrator, render error, navigate to homepage, and render early
+      if (!user.is_admin) {
         addMessage("Forbidden access.", "error");
         navigate("/");
         return;
@@ -44,7 +44,7 @@ function ModeratorLayout() {
   }, [user]);
 
   /* ===== MODERATOR LAYOUT COMPONENT ===== */
-  return user.is_mod && games && submissions &&
+  return user.is_admin && games && submissions &&
     <ModeratorLayoutContext.Provider value={ { games, submissions, updateLayout } }>
       <div className="moderator-layout">
 

@@ -17,13 +17,14 @@ const ProfileRead = () => {
             const { data: profile, error } = await supabase
                 .from("profile")
                 .select(`
+                    administrator (profile_id),
                     bio,
                     birthday,
                     country (iso2, name),
                     discord,
                     featured_video,
+                    game!game_profile (abb),
                     id,
-                    moderator (profile_id),
                     report_token,
                     twitch_username,
                     twitter_handle,

@@ -12,12 +12,12 @@ const NotificationRead = () => {
     // otherwise, this function will throw an error, which is expected to be handled by the caller function
     const queryNotificationCount = async () => {
         try {
-            const { count, error } = await supabase
+            const { count, error, status } = await supabase
                 .from("notification")
                 .select("*", { count: "exact", head: true });
 
             // error handling
-            if (error) {
+            if (error && status !== 406) {
                 throw error;
             }
 

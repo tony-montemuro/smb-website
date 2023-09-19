@@ -68,7 +68,7 @@ function NavProfile({ imageReducer }) {
           </div>
 
           { /* Moderator link - icon that links to the moderation hub page (for moderators only) */ }
-          { user.is_mod &&
+          { user.is_admin &&
             <div className="nav-profile-link">
               <Link to="/moderator">
                 <AbcIcon titleAccess="Moderator Hub" />
