@@ -6,7 +6,8 @@ AS $$
   FROM (
     SELECT 
       g.abb AS abb, 
-      g.name, 
+      g.name,
+      g.release_date,
       COUNT(CASE WHEN s.id IS NOT NULL AND a.submission_id IS NULL AND r.submission_id IS NULL THEN 1 ELSE NULL END) AS unapproved, 
       COUNT(CASE WHEN s.id IS NOT NULL AND a.submission_id IS NULL AND r.submission_id IS NOT NULL THEN 1 ELSE NULL END) AS reported,
       (
