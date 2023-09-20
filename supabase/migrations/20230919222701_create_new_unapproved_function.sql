@@ -28,7 +28,7 @@ AS $$
       ((SELECT report_date FROM report r WHERE r.submission_id = s.id) IS NULL)
       AND
       (s.game_id = abb)
-    ORDER BY s.id DESC
+    ORDER BY s.id
   ) submissions_row
 $$;
 
@@ -62,6 +62,6 @@ AS $$
       ((SELECT report_date FROM report r WHERE r.submission_id = s.id) IS NOT NULL)
       AND 
       (s.game_id = abb)
-    ORDER BY s.id DESC
+    ORDER BY s.id
   ) submissions_row
 $$;
