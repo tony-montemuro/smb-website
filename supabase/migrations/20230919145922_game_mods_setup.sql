@@ -10,5 +10,5 @@ ALTER TABLE game_profile ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Enable read access for all users" ON game_profile
 FOR SELECT
-TO authenticated
+TO public
 USING (true);
