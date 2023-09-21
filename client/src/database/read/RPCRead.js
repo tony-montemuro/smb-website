@@ -183,7 +183,79 @@ const RPCRead = () => {
         }
     };
 
-    // FUNCTION 7: getProfile - function that can grab a single profile using a profile id
+    // FUNCTION 7: getUnapprovedCounts - function that grabs the count of unapproved submissions, either for a list of games, or all
+    // games
+    // PRECONDITIONS (1 parameter):
+    // 1.) games: an array of game strings (abbs), which is set if the current user is a moderator. otherwise, an empty array is supplied,
+    // which should return the result for ALL games
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, an array of objects, one for each game, is returned, which specifies the count of unapproved
+    // submissions per game
+    // if the query is unsuccessful, an error is thrown, which is to be handled by the caller function
+    const getUnapprovedCounts = async games => {
+        try {
+            const { data: gameCounts, error } = await supabase.rpc("get_unapproved_counts", { abbs: games });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            return gameCounts;
+
+        } catch (error) {
+            // error should be handled by the caller function
+            throw error;
+        };
+    };
+
+    // FUNCTION 8: getUnapprovedByGame - function that grabs all the unapproved submissions for a particular game
+    // PRECONDITIONS (1 parameter):
+    // 1.) abb: a string corresponding to the primary key of a game
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, an array of submissions is simply returned, sorted by the submission id in descending order
+    // if the query is not successful, an error is thrown, which is expected to be handled by the caller function
+    const getUnapprovedByGame = async abb => {
+        try {
+            const { data: submissions, error } = await supabase.rpc("get_unapproved", { abb: abb });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            return submissions;
+
+        } catch (error) {
+            // error should be handled by the caller function
+            throw error;
+        };
+    };
+
+    // FUNCTION 9: getReportedByGame - function that grabs all the reported submissions for a particular game
+    // PRECONDITIONS (1 parameter):
+    // 1.) abb: a string corresponding to the primary key of a game
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, an array of submissions is simply returned, sorted by the submission id in descending order
+    // if the query is not successful, an error is thrown, which is expected to be handled by the caller function
+    const getReportedByGame = async abb => {
+        try {
+            const { data: submissions, error } = await supabase.rpc("get_reported", { abb: abb });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            return submissions;
+
+        } catch (error) {
+            // error should be handled by the caller function
+            throw error;
+        };
+    };
+
+    // FUNCTION 10: getProfile - function that can grab a single profile using a profile id
     // PRECONDITIONS (1 parameter):
     // 1.) profileId: an integer corresponding to the primary key of a profile in the database
     // POSTCONDITIONS (2 possible outcomes):
@@ -208,7 +280,18 @@ const RPCRead = () => {
         };
     };
 
-    return { getRecords, getTotals, getMedals, getUserRankings, getChartSubmissions, getUnapproved, getProfile };
+    return { 
+        getRecords, 
+        getTotals, 
+        getMedals, 
+        getUserRankings, 
+        getChartSubmissions, 
+        getUnapproved, 
+        getUnapprovedCounts, 
+        getUnapprovedByGame,
+        getReportedByGame,
+        getProfile 
+    };
 };
 
 /* ===== EXPORTS ===== */

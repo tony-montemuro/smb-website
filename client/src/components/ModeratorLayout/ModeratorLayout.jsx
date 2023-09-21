@@ -22,7 +22,7 @@ function ModeratorLayout() {
   /* ===== STATES & FUNCTIONS ===== */
   
   // states & functions from the js file
-  const { submissions, games, updateLayout, handleTabClick, getNumberOfSubmissions } = ModeratorLogic();
+  const { games, dispatchGames, updateLayout, handleTabClick, getNumberOfSubmissions } = ModeratorLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -30,7 +30,7 @@ function ModeratorLayout() {
   useEffect(() => {
     // only initialize component once the user state has initialized
     if (user.id !== undefined) {
-      // if user is not an adminstrator, render error, navigate to homepage, and render early
+      // if user is not logged in or a moderator of at least 1 game, render error, navigate to homepage, and render early
       if (!(isModerator())) {
         addMessage("Forbidden access.", "error");
         navigate("/");
@@ -44,8 +44,8 @@ function ModeratorLayout() {
   }, [user]);
 
   /* ===== MODERATOR LAYOUT COMPONENT ===== */
-  return isModerator() && games && submissions &&
-    <ModeratorLayoutContext.Provider value={ { games, submissions, updateLayout } }>
+  return isModerator() && games &&
+    <ModeratorLayoutContext.Provider value={ { games, dispatchGames } }>
       <div className="moderator-layout">
 
         { /* Moderator layout header - contains any header information for moderator hub */ }
@@ -68,7 +68,7 @@ function ModeratorLayout() {
               className={ `moderator-layout-tab${ pageType === "approvals" ? " moderator-layout-tab-active" : "" }` }
               onClick={ () => handleTabClick("approvals") }
             >
-              { getNumberOfSubmissions(submissions.recent) > 0 && `(${ getNumberOfSubmissions(submissions.recent) })` } 
+              { getNumberOfSubmissions(true) > 0 && `(${ getNumberOfSubmissions(true) })` } 
               &nbsp;New Submissions
             </div>
 
@@ -77,7 +77,7 @@ function ModeratorLayout() {
               className={ `moderator-layout-tab${ pageType === "reports" ? " moderator-layout-tab-active" : "" }` }
               onClick={ () => handleTabClick("reports") }
             >
-              { getNumberOfSubmissions(submissions.reported) > 0 && `(${ getNumberOfSubmissions(submissions.reported) })` }
+              { getNumberOfSubmissions(false) > 0 && `(${ getNumberOfSubmissions(false) })` }
               &nbsp;Reported Submissions
             </div>
 

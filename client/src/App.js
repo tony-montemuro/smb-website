@@ -104,9 +104,9 @@ const App = () => {
   // otherwise, return false
   const isModerator = abb => {
     if (abb) {
-      return user.id !== undefined && (user.profile.abministrator || user.profile.game.some(game => game.abb === abb));
+      return user.id !== undefined && user.profile && (user.profile.administrator || user.profile.game.some(game => game.abb === abb));
     }
-    return user.id !== undefined && (user.profile.administrator || user.profile.game.length > 0);
+    return user.id !== undefined && user.profile && (user.profile.administrator || user.profile.game.length > 0);
   };
 
   // FUNCTION 5: callSessionListener - this function is called once just to run the supabase session listener function, which will be called

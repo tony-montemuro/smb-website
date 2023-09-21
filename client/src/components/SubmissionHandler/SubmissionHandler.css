@@ -10,6 +10,18 @@
     align-items: center;
 }
 
+.submission-handler-header h1 {
+    margin: 0;
+    padding-top: 12px;
+    padding-bottom: 6px;
+}
+
+.submission-handler-header p {
+    margin: 0;
+    padding-top: 6px;
+    padding-bottom: 12px;
+}
+
 .submission-handler-list {
     flex: 2.32;
     margin: 19px;
@@ -64,32 +76,11 @@
     flex: 7.68;
 }
 
-.submission-handler-checked {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.submission-handler-checked-header {
-    text-align: center;
-}
-
-.submission-handler-submission-table {
+.submission-handler-body table {
+    border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
     width: 85%;
-}
-
-.submission-handler-checked-table {
-    max-height: 30vh;
-    overflow-y: auto;
-    margin: 0 auto;
-    overflow-anchor: initial;
-}
-
-.submission-handler-body table {
-    border-collapse: collapse;
-    width: 100%;
 }
 
 .submission-handler-body th {
@@ -122,21 +113,6 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-}
-
-.submission-handler-new-header {
-    text-align: center;
-}
-
-.submission-handler-btn-wrapper {
-    display: flex;
-    justify-content: center;
-    margin: 10px;
-}
-
-.submission-handler-action-symbol {
-    display: flex;
-    align-items: center;
 }
 
 .submission-handler-popup {

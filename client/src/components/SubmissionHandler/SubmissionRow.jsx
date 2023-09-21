@@ -1,21 +1,20 @@
 /* ===== IMPORTS ===== */
-import ActionSymbol from "./ActionSymbol";
 import FrontendHelper from "../../helper/FrontendHelper";
 import SubmissionHandlerLogic from "./SubmissionHandler.js";
 import Username from "../../components/Username/Username.jsx"
 
-function SubmissionRow({ submission, onClick, isChecked, isNew }) {
+function SubmissionRow({ submission, onClick, isUnapproved }) {
   /* ===== VARIABLES ===== */
   const profile = submission.profile;
   const level = submission.level;
-  const creator = !isNew ? submission.report.creator : undefined;
+  const creator = !isUnapproved ? submission.report.creator : undefined;
   const type = submission.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
 
   // helper functions
   const { getTimeAgo, capitalize, cleanLevelName, recordB2F, categoryB2F } = FrontendHelper();
-  const { isClickable } = SubmissionHandlerLogic(isNew);
+  const { isClickable } = SubmissionHandlerLogic(isUnapproved);
 
   /* ===== SUBMISSION ROW ===== */
   return (
@@ -25,23 +24,16 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
       disabled={ true }
     >
 
-      { /* If isChecked is true, render the action for the submission */ }
-      { isChecked && 
-        <td>
-          <ActionSymbol action={ submission.action } />
-        </td>
-      }
-
       { /* Render how long ago the submission was submitted */ }
       <td>
-        <div>{ getTimeAgo(isNew ? submission.id : submission.report.report_date) }</div>
+        <div>{ getTimeAgo(isUnapproved ? submission.id : submission.report.report_date) }</div>
       </td>
 
-      { /* Render the username of the person who made the report, assuming `isNew` is false (report submission) */ }
-      { !isNew &&
+      { /* Render the username of the person who made the report, assuming `isUnapproved` is false (report submission) */ }
+      { !isUnapproved &&
         <td>
           <div>
-            <Username profile={ creator } />
+            <Username profile={ creator } disableLink={ true } />
           </div>
         </td>
       }
@@ -49,16 +41,9 @@ function SubmissionRow({ submission, onClick, isChecked, isNew }) {
       { /* Render the username of the person who submitted it */ }
       <td>
         <div>
-          <Username profile={ profile } />
+          <Username profile={ profile } disableLink={ true } />
         </div>
       </td>
-
-      { /* If isChecked is true, render the name of the game. */ }
-      { isChecked &&
-        <td>
-          <div>{ level.mode.game.name }</div>
-        </td>
-      }
 
       { /* Render the category of the level */ }
       <td>

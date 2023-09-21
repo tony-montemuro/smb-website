@@ -1,11 +1,16 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import ApproveUpdate from "../../database/update/ApproveUpdate";
 import DateHelper from "../../helper/DateHelper";
 import FrontendHelper from "../../helper/FrontendHelper";
+import NotificationUpdate from "../../database/update/NotificationUpdate";
+import ReportDelete from "../../database/delete/ReportDelete";
+import SubmissionDelete from "../../database/delete/SubmissionDelete";
+import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
-const SubmissionPopup = () => {
+const SubmissionPopup = (submission, setSubmission, game, setSubmissions, isUnapproved) => {
     /* ===== VARIABLES ===== */
     const defaultForm = { 
         values: null, 
@@ -21,6 +26,12 @@ const SubmissionPopup = () => {
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
+    // dispatch games function from the moderator layout context
+    const { dispatchGames } = useContext(ModeratorLayoutContext);
+
+    // user state from user context
+    const { user } = useContext(UserContext);
+
     /* ===== STATES ===== */
     const [form, setForm] = useState(defaultForm);
     const [showReject, setShowReject] = useState(false);
@@ -33,12 +44,18 @@ const SubmissionPopup = () => {
     const { validateProof, validateComment, validateMessage } = ValidationHelper();
     const { getDateOfSubmission } = DateHelper();
 
+    // database functions
+    const { insertApproval } = ApproveUpdate();
+    const { insertNotification } = NotificationUpdate();
+    const { deleteReport } = ReportDelete();
+    const { deleteSubmission } = SubmissionDelete();
+    const { updateSubmission } = SubmissionUpdate();
+
     // FUNCTION 1: fillForm - function that fills the form with values from the submission object
-    // PRECONDITIONS (1 parameter):
-    // 1.) submission: an object containing lots of information about a submission
+    // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // using data from the submission object, we fill the form values, and also set the clearForm value back to false
-    const fillForm = submission => {
+    const fillForm = () => {
         setForm({ ...form, values: {
             submitted_at: dateB2F(submission.submitted_at),
             region_id: submission.region.id.toString(),
@@ -75,35 +92,43 @@ const SubmissionPopup = () => {
     };
 
     // FUNCTION 3: handleToggle - code that executes each time the user toggles the "Clear Comment" option
-    // PRECONDITIONS (1 parameter):
-    // 1.) submission: a submission object
+    // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the toggle is not activated before this function runs, the toggle will enable, and the comment will clear
     // if the toggle is activated before this function runs, the toggle will disable, and the comment will reappear
-    const handleToggle = submission => {
+    const handleToggle = () => {
         setForm({ ...form, values: { ...form.values, comment: clearToggle ? submission.comment : "" } })
         setClearToggle(!clearToggle);
     };
 
     // FUNCTION 4: handleClose - function that runs to close the component
-    // PRECONDITIONS (1 parameter):
-    // 1.) setPopup - a state function that we can use to close the popup, since a popup will only render if the popup
-    // state is defined
+    // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the form is set back to it's default values, and the popup is closed
-    const handleClose = setPopup => {
+    const handleClose = () => {
         setForm(defaultForm);
         setShowReject(false);
-        setPopup(null);
+        setSubmission(null);
     };
 
-    // FUNCTION 5: isFormUnchanged - function that checks whether or not the form was unchanged
-    // PRECONDITIONS (1 parameter):
-    // 1.) submission - our original submission object
+    // FUNCTION 5: handleCloseAndRemove - function that removes the submission from both the `submissions` state, as well as 1 count
+    // from the `games` state, and closes the popup
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // the submission is removed from both `submissions` state, as well as the count being updated in the `games` state, and the popup 
+    // is closed
+    const handleCloseAndRemove = () => {
+        setSubmissions(submissions => submissions.filter(row => row !== submission));
+        dispatchGames({ type: isUnapproved ? "decrementUnapproved" : "decrementReported", value: game.abb });
+        handleClose(setSubmission);
+    };
+
+    // FUNCTION 6: isFormUnchanged - function that checks whether or not the form was unchanged
+    // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if not a single form value is different than the value in submission, we return true
     // otherwise, return false
-    const isFormUnchanged = submission => {
+    const isFormUnchanged = () => {
         return form.values.submitted_at === dateB2F(submission.submitted_at)
             && form.values.region_id === submission.region.id.toString()
             && form.values.monkey_id === submission.monkey.id.toString()
@@ -114,76 +139,126 @@ const SubmissionPopup = () => {
             && form.values.comment === submission.comment;
     };
 
-    // FUNCTION 6: handleSubmit - function that runs when the user submits the approval form
-    // PRECONDITIONS (5 parameters):
-    // 1.) e: an event object generated when the user submits the form
-    // 2.) action: a string, either "approve" or "delete"
-    // 3.) submission - our original submission object, which we will potentially have to update using the form values
-    // 4.) dispatchRecent - a function used to update the recent reducer in `Approvals.jsx`
-    // 5.) setPopup - a state function used to close the popup
-    // POSTCONDITIONS (2 possible outcome):
-    // if the form values are validated, than the recent reducer is updated with a new submission object, which includes
-    // an `action` field, which specifies what should be done to the submission object, as well as potentially other updated fields
-    // otherwise, the function will return early, and update the error field of the 
-    const handleSubmit = (e, action, submission, dispatchRecent, setPopup) => {
-        // first, prevent default action when a form submits (page reload)
-        e.preventDefault();
+    // FUNCTION 7: approveSubmission - function that runs when the user approves a submission with NO changes to it
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the submission approval is successful, we close the popup and render a success message to the user
+    // if the submission approval is a failure, render an error message to the user
+    const approveSubmission = async () => {
+        try {
+            const query = isUnapproved ? insertApproval(submission.id, user.profile.id) : deleteReport(submission.report.report_date);
+            await query;
+            handleCloseAndRemove();
+            addMessage("Submission was successfully approved!", "success");
+        } catch (error) {
+            addMessage("There was a problem approving this submission.", "error");
+        };
+    };
 
-        // if the action is delete, or the action is approve and the form is unchanged, we can essentially just remove the
-        // submission from recent (which adds the submission to checked array)
-        if (action === "delete" || (action === "approve" && isFormUnchanged(submission))) {
-            dispatchRecent({ 
-                type: "delete", 
-                payload: {
-                    ...submission, 
-                    action: action,
-                    message: form.values.message
-                } 
-            });
+    // FUNCTION 8: approveAndUpdateSubmission - function that runs when the user approves a submission with SOME changes to it
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if both queries succeed, we close the popup and render a success message to the user
+    // if either query fails, render an error message to the user
+    const updateAndApproveSubmission = async () => {
+        // create an error object that will store error messages for each field value that needs to
+        // be validated
+        const error = {};
+        Object.keys(form.error).forEach(field => error[field] = undefined);
+
+        // validate necessary fields
+        error.proof = validateProof(form.values.proof);
+        error.comment = validateComment(form.values.comment);
+        error.message = validateMessage(form.values.message, false);
+
+        // if any fields returned an error, let's render a message, update the `error.fields` object by calling the setForm() function,
+        // and return early
+        if (Object.values(error).some(row => row !== undefined)) {
+            setForm({ ...form, error: error });
+            addMessage("One or more form fields had errors.", "error");
+            return;
         }
 
-        // otherwise, we need to validate the form values. if the validation is a success, we can remove the submission
-        // from recent, with updated fields
-        else {
-            // create an error object that will store error messages for each field value that needs to
-            // be validated
-            const error = {};
-            Object.keys(form.error).forEach(field => error[field] = undefined);
+        try {
+            // first, update submission with values from the form
+            const { message, submitted_at, ...payload } = form.values;
+            payload.submitted_at = getDateOfSubmission(form.values.submitted_at, submission.submitted_at);
+            await updateSubmission(payload, submission.id);
 
-            // validate necessary fields
-            error.proof = validateProof(form.values.proof);
-            error.comment = validateComment(form.values.comment);
-            error.message = validateMessage(form.values.message, false);
+            // next, insert approval
+            const query = isUnapproved ? insertApproval(submission.id, user.profile.id) : deleteReport(submission.report.report_date);
+            await query;
 
-            // if any fields returned an error, let's render a message, update the `error.fields` object by calling the setForm() function,
-            // and return early
-            if (Object.values(error).some(row => row !== undefined)) {
-                setForm({ ...form, error: error });
-                addMessage("One or more form fields had errors.", "error");
-                return;
+            // finally, close popup
+            handleCloseAndRemove();
+            addMessage("Submission was successfully updated and approved!", "success");
+
+        } catch (error) {
+            if (error.message === "approve") {
+                addMessage("There was a problem approving this submission.", "error");
+            } else {
+                addMessage("There was a problem updating this submission.", "error");
+            }
+        };
+    };
+
+    // FUNCTION 9: onApproveClick - function that runs when the user hits the "approve" button
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: an event object that is generated when the user submits the form
+    // POSTCONDITIONS (2 possible outcomes):
+    // if no changes to the form are detected, we run the `approveSubmission` function
+    // otherwise, we run the `updateSubmission` function
+    const onApproveClick = e => {
+        e.preventDefault();
+        if (isFormUnchanged()) {
+            approveSubmission();
+        } else {
+            updateAndApproveSubmission();
+        }
+    };
+
+    // FUNCTION 10: onRejectClick - function that runs when the user hits the "Yes, Reject" button
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: an event object that is generated when the user submits the form
+    // POSTCONDITIONS (2 possible outcomes):
+    // if both queries succeed, we close the popup and render a success message to the user
+    // if either query fails, render an error message to the user
+    const onRejectClick = async e => {
+        e.preventDefault();
+        try {
+            // first, attempt to delete the submission
+            await deleteSubmission(submission.id);
+
+            // next, we can attempt to notify the user of the deletion (this is only necessary if submission's profile id differs
+            // from current user's id)
+            if (user.profile.id !== submission.profile.id) {
+                const notification = {
+                    message: form.values.message,
+                    game_id: game.abb,
+                    level_id: submission.level.name,
+                    category: submission.level.category,
+                    score: submission.score,
+                    record: submission.record,
+                    profile_id: submission.profile.id,
+                    creator_id: user.profile.id,
+                    notif_type: "delete",
+                    tas: submission.tas
+                };
+                await insertNotification(notification);
             }
 
-            // finally, if the fields were successfully validated, we can call the dispatchRecent function, and update any necessary
-            // fields
-            const checkedSubmission = {
-                ...submission,
-                action: "update",
-                updates: {
-                    comment: form.values.comment,
-                    live: form.values.live,
-                    monkey_id: parseInt(form.values.monkey_id),
-                    platform_id: parseInt(form.values.platform_id),
-                    proof: form.values.proof,
-                    region_id: parseInt(form.values.region_id),
-                    submitted_at: getDateOfSubmission(form.values.submitted_at, submission.submitted_at),
-                    tas: form.values.tas
-                }
-            };
-            dispatchRecent({ type: "delete", payload: checkedSubmission });
-        }
+            // finally, close popup
+            handleCloseAndRemove();
+            addMessage("Submission was successfully rejected!", "success");
 
-        // finally, close the popup
-        handleClose(setPopup);
+        } catch (error) {
+            if (error.message === "delete") {
+                addMessage("There was a problem deleting this submission.", "error");
+            } else {
+                console.log(error);
+                addMessage("The submission successfully was rejected, but the notification system failed to notify the user.", "error");
+            }
+        };
     };
 
     return { 
@@ -194,8 +269,9 @@ const SubmissionPopup = () => {
         fillForm, 
         handleChange, 
         handleToggle,
-        handleClose, 
-        handleSubmit 
+        handleClose,
+        onApproveClick,
+        onRejectClick
     };
 };
 

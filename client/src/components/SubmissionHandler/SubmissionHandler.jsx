@@ -5,93 +5,118 @@ import { useContext, useEffect, useState } from "react";
 import SubmissionHandlerList from "./SubmissionHandlerList";
 import SubmissionHandlerLogic from "./SubmissionHandler.js";
 import SubmissionPopup from "./SubmissionPopup.jsx";
-import SubmissionTable from "./SubmissionTable";
+import SubmissionRow from "./SubmissionRow";
 
-function SubmissionHandler({ imageReducer, isNew }) {
+function SubmissionHandler({ imageReducer, isUnapproved }) {
+  /* ===== VARIABLES ===== */
+  const NUM_COLS = isUnapproved ? 5 : 6;
+
   /* ===== CONTEXTS ===== */
 
-  // submissions state from modereator layout context
-  const { submissions } = useContext(ModeratorLayoutContext);
+  // games state from modereator layout context
+  const { games } = useContext(ModeratorLayoutContext);
 
   /* ===== STATES & FUNCTIONS ===== */
-  const [submission, setSubmission] = useState(null);
+  const [submission, setSubmission] = useState(undefined);
+  const [game, setGame] = useState(undefined);
+  const [sortedGames, setSortedGames] = useState(undefined);
 
   // states & functions from the js file
   const { 
-    game, 
-    recent, 
-    checked, 
-    setGame, 
-    dispatchRecent, 
-    setRecent, 
-    setDefaultGame, 
-    addToRecent,
-    handleChanges
-  } = SubmissionHandlerLogic(isNew);
+    submissions,
+    setSubmissions,
+    fetchSubmissions,
+    isClickable
+  } = SubmissionHandlerLogic(isUnapproved);
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component mounts
+  // code that is executed when the component mounts, when the games state changes, OR when isUnapproved changes
   useEffect(() => {
-    if (submissions.recent && submissions.reported) {
-      // first, update the recent state reducer by calling the setRecent function
-      setRecent(isNew ? submissions.recent : submissions.reported);
-
-      // next, let's initialize the game state
-      setDefaultGame(isNew ? submissions.recent : submissions.reported);
+    if (games) {
+      const sorted = isUnapproved ? games.toSorted((a, b) => b.unapproved - a.unapproved) : games.toSorted((a, b) => b.reported - a.reported);
+      setSortedGames(sorted);
+      setGame(sorted[0]);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [submissions]);
+  }, [games, isUnapproved]);
+
+  // code that is executed when the component mounts, OR when the game state changes
+  useEffect(() => {
+    if (game) {
+      fetchSubmissions(game.abb);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game]);
 
   /* ===== SUBMISSION HANDLER COMPONENT ===== */
-  return recent && game ?
+  return game && submissions ?
     <div className="submission-handler">
 
       { /* Submission handler list - Render a column of games to choose from */ }
-      <SubmissionHandlerList recent={ recent } gameAbb={ game } setGameAbb={ setGame } imageReducer={ imageReducer } />
+      <SubmissionHandlerList 
+        games={ sortedGames } 
+        isUnapproved={ isUnapproved }
+        game={ game } 
+        setGame={ setGame } 
+        imageReducer={ imageReducer } 
+      />
       
       { /* Submission handler content - the bulk of this page */ }
       <div className="submission-handler-content">
 
         { /* Submission handler header - render the header info here. */ }
         <div className="submission-handler-header">
-          <h1>Check { isNew ? "New" : "Reported" } Submissions</h1>
-          <p>Please go through and approve or reject each { isNew ? "new" : "reported" } submission.</p>
+          <h1>Check { isUnapproved ? "New" : "Reported" } Submissions</h1>
+          <p>Please go through and approve or reject each { isUnapproved ? "new" : "reported" } submission.</p>
         </div>
 
         { /* Submission handler body - render checked & submissions here */ }
         <div className="submission-handler-body">
 
-          { /* Submission handler checked - render the list of checked submissions */ }
-          <div className="submission-handler-checked">
-
-            { /* Checked header - render information regarding the checked list of submissions */ }
-            <div className="submission-handler-checked-header">
-              <h2>Checked Submissions</h2>
-              <p><b>Note: </b>If you mistakenly added a submission to the list of checked submissions, you can remove it by simply
-              clicking the submission.</p>
-            </div>
-
-            { /* Submission table - render the "checked" submissions */ }
-            <SubmissionTable submissions={ checked } onRowClick={ addToRecent } isChecked={ true } isNew={ isNew } />
-
-            { /* Submission handler button - when pressed, all actions will actually perform */ }
-            <div className="submission-handler-btn-wrapper">
-              <button type="button" disabled={ checked.length === 0 } onClick={ () => handleChanges(checked) }>Make Changes</button>
-            </div>
-
-          </div>
-
           { /* Submission handler new - render the list of new submissions */ }
           <div className="submission-handler-new">
 
-            { /* Submissions handler new header - render information about the new (or reported) submissions list of submissions */ }
-            <div className="submission-handler-new-header">
-              <h2>{ isNew ? "New" : "Reported" } Submissions</h2>
-            </div>
+            { /* Submission table - render the unapproved / reported submissions here */ }
 
-            { /* Submission table - render the recent (unchecked) submissions */ }
-            <SubmissionTable submissions={ recent[game] } onRowClick={ setSubmission } isChecked={ false } isNew={ isNew } />
+            <table>
+              { /* Submission table header - Render the description of what's contained in each row. If the isUnapproved parameter 
+              is false, an additional column will be rendered. */ }
+              <thead>
+                <tr>
+                  <th>{ isUnapproved ? "Submitted" : "Reported" }</th>
+                  { !isUnapproved && <th>Reported By</th> }
+                  <th>User</th>
+                  <th>Category</th>
+                  <th>Level</th>
+                  <th>Record</th>
+                </tr>
+              </thead>
+
+              { /* Submission table body - Render information about each submission in submissions array */ }
+              <tbody>
+                { submissions.length > 0 ?
+                  // If any submissions exist, render a submission row for each submission in the array.
+                  submissions.map(submission => {
+                    return <SubmissionRow 
+                      submission={ submission } 
+                      onClick={ isClickable(submission) ? setSubmission : null }
+                      isUnapproved={ isUnapproved }
+                      key={ submission.id } 
+                    />
+                  })
+
+                :
+                  // Otherwise, render a message to the user.
+                  <tr className="submission-handler-empty-row">
+                    <td colSpan={ NUM_COLS }>
+                      <i>This game has no { isUnapproved ? "new" : "reported" } submissions.</i>
+                    </td>
+                  </tr>
+
+                }
+              </tbody>
+            </table>
 
           </div>
 
@@ -100,7 +125,13 @@ function SubmissionHandler({ imageReducer, isNew }) {
       </div>
     
     { /* Popup elements */ }
-    <SubmissionPopup popup={ submission } setPopup={ setSubmission } abb={ game } dispatchRecent={ dispatchRecent } isNew={ isNew } />
+    <SubmissionPopup 
+      submission={ submission } 
+      setSubmission={ setSubmission }
+      game={ game }
+      setSubmissions={ setSubmissions }
+      isUnapproved={ isUnapproved } 
+    />
 
     </div>
   :

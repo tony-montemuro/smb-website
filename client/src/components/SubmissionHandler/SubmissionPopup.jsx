@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
-import { ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
+import { UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import EmbedHelper from "../../helper/EmbedHelper";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
@@ -9,18 +9,13 @@ import SubmissionPopupLogic from "./SubmissionPopup.js";
 import UpdatedFieldSymbol from "./UpdatedFieldSymbol";
 import Username from "../../components/Username/Username";
 
-function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
+function SubmissionPopup({ submission, setSubmission, game, setSubmissions, isUnapproved }) {
   /* ===== CONTEXTS ===== */
-
-  // games state from moderator layout context
-  const { games } = useContext(ModeratorLayoutContext);
 
   // user state from user context
   const { user } = useContext(UserContext);
 
   /* ===== VARIABLES ===== */
-  const submission = popup;
-  const game = submission && games.find(row => row.abb === submission.level.mode.game.abb);
   const category = submission && submission.level.category;
   const type = submission && submission.score ? "score" : "time";
   const isOwn = submission && submission.profile.id === user.profile.id;
@@ -38,9 +33,10 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
     fillForm, 
     handleChange, 
     handleToggle, 
-    handleClose, 
-    handleSubmit 
-  } = SubmissionPopupLogic();
+    handleClose,
+    onApproveClick,
+    onRejectClick
+  } = SubmissionPopupLogic(submission, setSubmission, game, setSubmissions, isUnapproved);
 
   // helper functions
   const { capitalize, cleanLevelName, recordB2F, dateB2F } = FrontendHelper();
@@ -51,22 +47,22 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
   // code that is executed when the popup parameter is updated
   useEffect(() => {
     if (submission) {
-      fillForm(submission);
+      fillForm();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submission]);
 
   /* ===== SUBMISSION POPUP COMPONENT ===== */ 
-  return popup && form.values ?
+  return submission && form.values ?
     <div className="submission-handler-popup">
       <div className="submission-handler-popup-inner">
 
         { /* Close button - a button that allows user to close the popup */ }
         <div className="submission-handler-popup-close-btn">
-          <button type="button" onClick={ () => handleClose(setPopup) }>Close</button>
+          <button type="button" onClick={ handleClose }>Close</button>
         </div>
 
-        { !isNew &&
+        { !isUnapproved &&
           <div className="submission-handler-report">
             <h1>
               The following submission was reported by&nbsp;
@@ -237,19 +233,19 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                   <input 
                     type="checkbox"
                     checked={ clearToggle }
-                    onChange={ () => handleToggle(submission) }
+                    onChange={ handleToggle }
                   />
                 </div>
               </div>
 
               { /* Button used to reset the form back to it's original values */ }
               <div className="submission-handler-popup-buttons">
-                <button type="button" onClick={ () => fillForm(submission) }>Reset Values</button>
+                <button type="button" onClick={ () => fillForm() }>Reset Values</button>
               </div>
 
               { /* Two buttons: one for approving the submission, and one for deleting. */ }
               <div className="submission-handler-popup-buttons">
-                <button type="submit" disabled={ showReject } onClick={ (e) => handleSubmit(e, "approve", submission, dispatchRecent, setPopup) }>Approve Submission</button>
+                <button type="submit" disabled={ showReject } onClick={ (e) => onApproveClick(e) }>Approve Submission</button>
                 <button type="button" disabled={ showReject } onClick={ () => setShowReject(true) }>Reject Submission</button>
               </div>
 
@@ -290,7 +286,7 @@ function SubmissionPopup({ popup, setPopup, dispatchRecent, isNew }) {
                     { /* Two buttons: one for yes, and one for no. */ }
                     <div className="submission-handler-popup-buttons">
                       <button type="button" onClick={ () => setShowReject(false) }>No, Cancel</button>
-                      <button type="submit" onClick={ (e) => handleSubmit(e, "delete", submission, dispatchRecent, setPopup) }>
+                      <button type="submit" onClick={ (e) => onRejectClick(e) }>
                         Yes, Reject
                       </button>
                     </div>

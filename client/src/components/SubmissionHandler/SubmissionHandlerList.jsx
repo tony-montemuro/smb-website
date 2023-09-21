@@ -1,14 +1,7 @@
 /* ===== IMPORTS ===== */
-import { ModeratorLayoutContext } from "../../utils/Contexts";
-import { useContext } from "react";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 
-function SubmissionHandlerList({ recent, gameAbb, setGameAbb, imageReducer }) {
-  /* ===== CONTEXTS ===== */
-
-  // games context from moderator layout
-  const { games } = useContext(ModeratorLayoutContext);
-
+function SubmissionHandlerList({ games, isUnapproved, game, setGame, imageReducer }) {
   /* ===== SUBMISSION HANDLER LIST COMPONENT ===== */
   return (
     <div className="submission-handler-list">
@@ -16,20 +9,16 @@ function SubmissionHandlerList({ recent, gameAbb, setGameAbb, imageReducer }) {
         <h2>Select a Game:</h2>
       </div>
       <div className="submission-handler-list-tabs">
-        { Object.entries(recent)
-          .sort((a, b) => b[1].length - a[1].length)
-          .map(row => {
-            const abb = row[0];
-            const num = row[1].length;
-            const game = games.find(row => row.abb === abb);
+        { games.map(gameObj => {
+            const num = isUnapproved ? gameObj.unapproved : gameObj.reported;
             return ( 
               <div
-                className={ `submission-handler-list-tab${ abb === gameAbb ? " submission-handler-list-tab-active" : "" }` }
-                onClick={ () => setGameAbb(abb) }
-                key={ abb }
+                className={ `submission-handler-list-tab${ gameObj.abb === game.abb ? " submission-handler-list-tab-active" : "" }` }
+                onClick={ () => setGame(gameObj) }
+                key={ gameObj.abb }
               >
-                <BoxArt game={ game } imageReducer={ imageReducer } width={ 50 } />
-                <span>{ game.name }{ num > 0 && ` (${ num })` }</span>
+                <BoxArt game={ gameObj } imageReducer={ imageReducer } width={ 50 } />
+                <span>{ gameObj.name }{ num > 0 && ` (${ num })` }</span>
               </div>
             );
         })}

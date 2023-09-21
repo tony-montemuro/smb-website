@@ -19,7 +19,7 @@ const SubmissionDelete = () => {
 
             // error handling
             if (error) {
-                throw error;
+                throw new Error("delete", { error });
             }
             
         } catch (error) {

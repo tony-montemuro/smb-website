@@ -21,7 +21,7 @@ const ApproveUpdate = () => {
 
             // error handling
             if (error) {
-                throw error;
+                throw new Error("approve", { error });
             }
 
         } catch (error) {
