@@ -5,7 +5,7 @@ import NotificationRead from "./database/read/NotificationRead";
 import ProfileRead from "./database/read/ProfileRead";
 import Session from "./database/authentication/Session";
 
-const App = () => {
+const App = (addMessage) => {
   /* ===== VARIABLES ===== */
   const defaultUser = {
     id: undefined,
@@ -19,7 +19,6 @@ const App = () => {
 
   /* ===== STATES & REDUCERS ===== */
   const [user, setUser] = useState(defaultUser);
-  const [messages, setMessages] = useState([]);
   const [images, dispatchImages] = useReducer((state, action) => {
     const set = action.set, field = action.field, data = action.data;
     if (set === "games" || set === "users") {
@@ -38,28 +37,7 @@ const App = () => {
   // database function used to retrieve the current session
   const { getSession } = Session();
 
-  // FUNCTION 1: toArray - takes a parameter, and converts it to an array
-  // PRECONDITIONS (1 parameter):
-  // 1.) e: some element; typically, it's either a string, or an array of strings
-  // POSTCONDITIONS (1 possible outcome):
-  // an array is returned. if e is just a string, it is wrapped in an array, and if e is already an array, it is simply returned
-  const toArray = (e) => {
-    return Array.isArray(e) ? e : [e];
-  };
-
-  // FUNCTION 2: addMessage - function that takes a message, and it's type, and adds it to the array of messages
-  // PRECONDITIONS (2 parameters):
-  // 1.) messageArr: either an erray of messages, or a string value, representing the message(s) to be rendered as a message popup 
-  // to the client
-  // 2.) type: a string value specifying the type of message, which has impacts on styling. either "error" or "success"
-  // POSTCONDITIONS (1 possible outcome):
-  // a new object is greated using the two parameters, and the object is pushed into the messages state array
-  const addMessage = (messageArr, type) => {
-    const newMessageArr = toArray(messageArr).map(message => ({ message, type }));
-    setMessages(messages.concat(newMessageArr));
-  };
-
-  // FUNCTION 3: updateUser - async function that loads user data based on a uuid user id
+  // FUNCTION 1: updateUser - async function that loads user data based on a uuid user id
   // PRECONDITIONS (1 parameter):
   // 1.) userId: a unique uuid value that belongs to exactly one authenticated user
   // this value also might be null if no user is currently signed in
@@ -94,7 +72,7 @@ const App = () => {
     }
   };
 
-  // FUNCTION 4: isModerator - function that determines if the current user is a moderator or not
+  // FUNCTION 2: isModerator - function that determines if the current user is a moderator or not
   // PRECONDITIONS (1 parameter):
   // 1.) abb (OPTIONAL): a string corresponding to the primary key of a game. if this string is provided, this function will
   // check if the current moderator is a moderator for the particular game associated with `abb`. otherwise, it's a general check
@@ -109,7 +87,7 @@ const App = () => {
     return user.id !== undefined && user.profile && (user.profile.administrator || user.profile.game.length > 0);
   };
 
-  // FUNCTION 5: callSessionListener - this function is called once just to run the supabase session listener function, which will be called
+  // FUNCTION 3: callSessionListener - this function is called once just to run the supabase session listener function, which will be called
   // each time a change in session occurs
   // PRECONDITIONS (1 condition):
   // this function should be run exactly once: when the application is first loaded. the listener function defined within this function,
@@ -146,25 +124,13 @@ const App = () => {
     });
   };
 
-  // FUNCTION 6: handleMessageClose - function that is executed when the user closes a message popup
-  // PRECONDITIONS (1 parameter):
-  // 1.) index: the index-th element to be removed from the messages array, causing it to immediately unrender
-  // POSTCONDITIONS (1 possible outcome):
-  // the message popup is closed
-  const handleMessageClose = index => {
-    setMessages(messages.filter((_, i) => i !== index));
-  };
-
   return { 
     user, 
-    messages,
     images,
     dispatchImages,
-    addMessage,
     updateUser,
     isModerator,
-    callSessionListener,
-    handleMessageClose
+    callSessionListener
   };
 };
 

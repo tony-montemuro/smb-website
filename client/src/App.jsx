@@ -13,6 +13,7 @@ import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
 import Medals from "./pages/Medals/Medals.jsx";
 import MessagePopup from "./components/MessagePopup/MessagePopup.jsx";
+import MessagePopupLogic from "./components/MessagePopup/MessagePopup.js";
 import Moderator from "./pages/Moderator/Moderator.jsx";
 import ModeratorLayout from "./components/ModeratorLayout/ModeratorLayout.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
@@ -36,18 +37,22 @@ import UserStats from "./pages/UserStats/UserStats.jsx";
 function App() {
   /* ===== STATES AND FUNCTIONS ===== */
 
-  // states and functions from the js file
+  // states and functions from the message popup js file
+  const {
+    messages,
+    addMessage,
+    handleMessageClose
+  } = MessagePopupLogic();
+
+  // states and functions from the app js file
   const {
     user,
-    messages,
     images,
     dispatchImages,
-    addMessage,
     updateUser,
     isModerator,
-    callSessionListener,
-    handleMessageClose
-  } = AppLogic();
+    callSessionListener
+  } = AppLogic(addMessage);
 
   /* ===== VARIABLES ===== */
   const imageReducer = { reducer: images, dispatchImages: dispatchImages };
