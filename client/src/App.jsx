@@ -38,11 +38,7 @@ function App() {
   /* ===== STATES AND FUNCTIONS ===== */
 
   // states and functions from the message popup js file
-  const {
-    messages,
-    addMessage,
-    handleMessageClose
-  } = MessagePopupLogic();
+  const { message, addMessage, handleMessageClose } = MessagePopupLogic();
 
   // states and functions from the app js file
   const {
@@ -75,16 +71,11 @@ function App() {
         { /* The app div is a set of routes, as well as any messages. Each route corresponds to a page. */ }
         <div className="app">
 
-          { /* Render any message popups. */ }
-          { messages.map((row, index) => {
-            return <MessagePopup 
-              message={ row.message } 
-              type={ row.type }
-              index={ index }
-              onClose={ handleMessageClose }
-              key={ index }
-            />;
-          })}
+          { /* Render the message popup (will only render if the message object is initialized) */ }
+          <MessagePopup
+            message={ message } 
+            onClose={ handleMessageClose }
+          />
 
           { /* App routes */ }
           <Routes>

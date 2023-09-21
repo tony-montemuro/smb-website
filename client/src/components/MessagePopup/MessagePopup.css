@@ -7,6 +7,8 @@
   border-radius: 4px;
   z-index: 1000;
   width: 85%;
+  top: calc(var(--navbar-height) + 10px);
+  position: fixed;
 }
   
 .message-popup-content {
