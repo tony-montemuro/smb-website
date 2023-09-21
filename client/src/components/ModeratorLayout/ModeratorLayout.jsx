@@ -81,13 +81,15 @@ function ModeratorLayout() {
               &nbsp;Reported Submissions
             </div>
 
-            { /* Create Post tab - Brings moderator to the post page */ }
-            <div 
-              className={ `moderator-layout-tab${ pageType === "post" ? " moderator-layout-tab-active" : "" }` }
-              onClick={ () => handleTabClick("post") }
-            >
-              Create Post
-            </div>
+            { /* Create Post tab - allows user to make posts (FOR ADMINISTRATORS ONLY!) */ }
+            { user.profile.administrator &&
+              <div 
+                className={ `moderator-layout-tab${ pageType === "post" ? " moderator-layout-tab-active" : "" }` }
+                onClick={ () => handleTabClick("post") }
+              >
+                Create Post
+              </div>
+            }
 
           </div>
 

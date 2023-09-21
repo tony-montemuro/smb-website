@@ -1,15 +1,40 @@
 /* ===== IMPORTS ===== */
 import "./Post.css";
+import { MessageContext, UserContext } from "../../utils/Contexts";
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import PostLogic from "./Post.js";
 
 function Post() {
   /* ===== VARIABLES ===== */
   const NUM_ROWS = 20;
+  const navigate = useNavigate();
+
+  /* ===== CONTEXTS ===== */
+
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
+
+  // user state from user context
+  const { user } = useContext(UserContext);
 
   /* ===== STATES & FUNCTIONS ===== */
   
   // states and functions from the js file
   const { form, handleChange, onPostSubmit } = PostLogic();
+
+  /* ===== EFFECTS ===== */
+
+  // code that is executed when the component mounts
+  useEffect(() => {
+    // if moderator is not also an administrator, render an error message, and navigate back to home page
+    if (!user.profile.administrator) {
+      addMessage("Forbidden access.", "error");
+      navigate("/");
+      return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ===== POST COMPONENT ===== */
   return (

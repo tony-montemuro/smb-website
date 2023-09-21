@@ -9,6 +9,7 @@
 
 .moderator-layout-tabs {
     display: flex;
+    justify-content: space-around;
     width: 100%;
 }
 
@@ -18,7 +19,7 @@
     border: 1px solid #ccc;
     border-top: none;
     border-bottom: none;
-    width: 25%;
+    width: 100%;
     line-height: calc(var(--navbar-height)/2);
 }
 
