@@ -262,12 +262,12 @@ INSERT INTO "public"."countries" ("name", "iso2") VALUES
 -- Data for Name: profile; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."profile" ("id", "user_id", "username", "youtube_handle", "twitch_username", "country", "discord", "bio", "birthday", "featured_video", "video_description", "twitter_handle", "report_token") VALUES
-	(1, NULL, 'TonySMB', '@Tony_SMB', 'tony_smb', 'US', 'tonysmb', '23 years old. I am gamer. I make website.', '1900-01-01', 'https://youtu.be/w-aeBJY3GMA', 'One of my greatest achievements in gaming!', '@Tony__SMB', 10),
-	(2, NULL, 'Penguin', '', '', 'AQ', '', 'Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. ', NULL, '', '', '', 10),
-	(3, NULL, 'COOLMAN', NULL, NULL, 'JP', NULL, NULL, NULL, NULL, NULL, NULL, 10),
-	(4, NULL, 'scrap651', NULL, NULL, 'CA', NULL, NULL, NULL, NULL, NULL, NULL, 10),
-	(5, NULL, 'Cutsman', NULL, NULL, 'US', NULL, NULL, NULL, NULL, NULL, NULL, 10);
+INSERT INTO "public"."profile" ("user_id", "username", "youtube_handle", "twitch_username", "country", "discord", "bio", "birthday", "featured_video", "video_description", "twitter_handle", "report_token") VALUES
+	(NULL, 'TonySMB', '@Tony_SMB', 'tony_smb', 'US', 'tonysmb', '23 years old. I am gamer. I make website.', '1900-01-01', 'https://youtu.be/w-aeBJY3GMA', 'One of my greatest achievements in gaming!', '@Tony__SMB', 10),
+	(NULL, 'Penguin', '', '', 'AQ', '', 'Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. Yes I am a Penguin. ', NULL, '', '', '', 10),
+	(NULL, 'COOLMAN', NULL, NULL, 'JP', NULL, NULL, NULL, NULL, NULL, NULL, 10),
+	(NULL, 'scrap651', NULL, NULL, 'CA', NULL, NULL, NULL, NULL, NULL, NULL, 10),
+	(NULL, 'Cutsman', NULL, NULL, 'US', NULL, NULL, NULL, NULL, NULL, NULL, 10);
 
 
 --

@@ -25,11 +25,11 @@ function UserInfoForm({ countries }) {
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component first mounts
+  // code that is executed when the component first mounts, OR when the user state is updated
   useEffect(() => {
     initForm(countries);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
   /* ===== USER INFO FORM COMPONENT ===== */
   return form.user && form.countries &&
