@@ -1,7 +1,9 @@
 /* ===== IMPORTS ===== */
 import "./User.css";
+import { Link } from "react-router-dom";
 import { ProfileContext } from "../../utils/Contexts";
 import { useContext } from "react";
+import BoxArt from "../../components/BoxArt/BoxArt.jsx";
 import Discord from "../../img/discord-logo.png";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import SocialLink from "../../components/SocialLink/SocialLink.jsx";
@@ -10,7 +12,7 @@ import Twitter from "../../img/twitter-logo.png";
 import YT from "../../img/yt-logo.png";
 import UserHelper from "../../helper/UserHelper";
 
-function User() {
+function User({ imageReducer }) {
   /* ===== CONTEXTS ===== */
 
   // profile state from profile context
@@ -85,16 +87,34 @@ function User() {
 
       </div>
       
+      { /* If a user has a featured video, render it */ }
       { profile.featured_video &&
+        <div className="user-info">
+          <h1>Featured Video</h1>
           <div className="user-featured-video">
-            <h1>Featured Video</h1>
-            <div className="user-featured-video-wrapper">
-              <EmbededVideo url={ profile.featured_video } />
-            </div>
-            { profile.video_description &&
-              <p>{ profile.video_description }</p>
-            }
+            <EmbededVideo url={ profile.featured_video } />
           </div>
+          { profile.video_description &&
+            <p>{ profile.video_description }</p>
+          }
+        </div>
+      }
+
+      { /* If a user moderates at least 1 game, render a link to the game page for each game */ }
+      { profile.moderated_games.length > 0 &&
+        <div className="user-info">
+          <h1>Games Moderated</h1>
+          { profile.moderated_games.map(game => {
+            return (
+              <div className="user-game">
+                <Link to={ `/games/${ game.abb }` }>
+                  { <BoxArt game={ game } imageReducer={ imageReducer } width={ 80 } /> }
+                  <span>{ game.name }</span>
+                </Link>
+              </div>
+            );
+          })}
+        </div>
       }
     </div>
   );

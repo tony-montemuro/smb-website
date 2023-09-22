@@ -128,7 +128,7 @@ function App() {
               }/>
             </Route>
             <Route path="/user/:profileId" element={ <UserLayout imageReducer={ imageReducer } /> } >
-              <Route index element={ <User />} />
+              <Route index element={ <User imageReducer={ imageReducer } />} />
               <Route path=":game/:category/score" element={
                 <UserStats />
               }/>
