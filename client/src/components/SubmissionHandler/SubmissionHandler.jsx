@@ -2,7 +2,7 @@
 import "./SubmissionHandler.css";
 import { ModeratorLayoutContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
-import SubmissionHandlerList from "./SubmissionHandlerList";
+import SimpleGameSelect from "../SimpleGameSelect/SimpleGameSelect.jsx";
 import SubmissionHandlerLogic from "./SubmissionHandler.js";
 import SubmissionPopup from "./SubmissionPopup.jsx";
 import SubmissionRow from "./SubmissionRow";
@@ -53,13 +53,13 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
   return game && submissions ?
     <div className="submission-handler">
 
-      { /* Submission handler list - Render a column of games to choose from */ }
-      <SubmissionHandlerList 
+      { /* Simple game select - Render a column of games to choose from */ }
+      <SimpleGameSelect 
         games={ sortedGames } 
-        isUnapproved={ isUnapproved }
         game={ game } 
         setGame={ setGame } 
         imageReducer={ imageReducer } 
+        countType={ isUnapproved ? "unapproved" : "reported" }
       />
       
       { /* Submission handler content - the bulk of this page */ }

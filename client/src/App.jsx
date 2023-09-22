@@ -7,6 +7,7 @@ import AppLogic from "./App.js";
 import Approvals from "./pages/Approvals/Approvals.jsx";
 import Game from "./pages/Game/Game.jsx";
 import GameLayout from "./components/GameLayout/GameLayout.jsx";
+import GameModerators from "./pages/GameModerators/GameModerators.jsx";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
 import GettingStarted from "./pages/GettingStarted/GettingStarted.jsx";
 import Home from "./pages/Home/Home.jsx";
@@ -145,6 +146,9 @@ function App() {
               <Route index element={ <Moderator /> } />
               <Route path="approvals" element={
                 <Approvals imageReducer={ imageReducer } />
+              }/>
+              <Route path="gamemoderators" element={
+                <GameModerators imageReducer={ imageReducer } />
               }/>
               <Route path="reports" element={
                 <Reports imageReducer={ imageReducer } />

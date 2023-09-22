@@ -81,14 +81,24 @@ function ModeratorLayout() {
               &nbsp;Reported Submissions
             </div>
 
-            { /* Create Post tab - allows user to make posts (FOR ADMINISTRATORS ONLY!) */ }
             { user.profile.administrator &&
-              <div 
-                className={ `moderator-layout-tab${ pageType === "post" ? " moderator-layout-tab-active" : "" }` }
-                onClick={ () => handleTabClick("post") }
-              >
-                Create Post
-              </div>
+              <>
+                { /* Game Moderators tab - allows user to add / remove game-specific moderators (FOR ADMINISTRATORS ONLY!) */ }
+                <div 
+                  className={ `moderator-layout-tab${ pageType === "gamemoderators" ? " moderator-layout-tab-active" : "" }` }
+                  onClick={ () => handleTabClick("gamemoderators") }
+                >
+                  Game Moderators
+                </div>
+
+                { /* Create Post tab - allows user to make posts (FOR ADMINISTRATORS ONLY!) */ }
+                <div 
+                  className={ `moderator-layout-tab${ pageType === "post" ? " moderator-layout-tab-active" : "" }` }
+                  onClick={ () => handleTabClick("post") }
+                >
+                  Create Post
+                </div>
+              </>
             }
 
           </div>

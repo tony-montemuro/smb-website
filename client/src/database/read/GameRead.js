@@ -84,7 +84,6 @@ const GameRead = () => {
 
         } catch (error) {
             // throw error to be handled by caller
-            console.log(error);
             throw error;
         }
     };

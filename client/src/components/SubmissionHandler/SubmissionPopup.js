@@ -255,7 +255,6 @@ const SubmissionPopup = (submission, setSubmission, game, setSubmissions, isUnap
             if (error.message === "delete") {
                 addMessage("There was a problem deleting this submission.", "error");
             } else {
-                console.log(error);
                 addMessage("The submission successfully was rejected, but the notification system failed to notify the user.", "error");
             }
         };

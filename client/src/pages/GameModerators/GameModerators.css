@@ -1,0 +1,12 @@
+.game-moderators {
+    display: flex;
+    gap: 20px;
+}
+
+.game-moderators-content {
+    flex: 7.68;
+}
+
+.game-moderators-content h1 {
+    text-align: center;
+}
