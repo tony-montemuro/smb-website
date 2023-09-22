@@ -12,11 +12,11 @@ AS $$
       featured_video,
       id,
       (
-        SELECT json_agg(jsonb_build_object(
+        SELECT COALESCE ((json_agg(jsonb_build_object(
           'abb', g.abb,
           'custom', g.custom,
           'name', g.name
-        ) ORDER BY g.id)
+        ) ORDER BY g.id)), '[]'::json)
         FROM (
           SELECT g.abb, g.custom, g.id, g.name
           FROM game_profile gp
