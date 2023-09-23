@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import "./ModeratorLayout.css";
 import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
