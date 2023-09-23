@@ -1,14 +1,9 @@
 /* ===== IMPORTS ===== */
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import RPCRead from "../../database/read/RPCRead";
 
 const ModeratorLayout = () => {
-    /* ===== VARIABLES ===== */
-    const pageType = useLocation().pathname.split("/")[2];
-    const navigate = useNavigate();
-
     /* ===== REDUCER FUNCTIONS ===== */
 
     // FUNCTION 1: reducer - function that is executed when the user tries to update the games reducer hook
@@ -94,19 +89,7 @@ const ModeratorLayout = () => {
         };
     };
 
-    // FUNCTION 2: handleTabClick - code that is executed when a moderator layout tab is selected
-    // PRECONDITIONS (1 parameter):
-	// 1.) otherPageType: a string, either "approvals", "reports", "post", or undefined
-	// POSTCONDITIONS (2 possible outcome):
-	// if otherPageType and pageType are the same, this function does nothing
-	// otherwise, the user is navigated to the other page
-	const handleTabClick = otherPageType => {
-		if (otherPageType !== pageType) {
-			otherPageType ? navigate(`/moderator/${ otherPageType }`) : navigate("/moderator");
-		}
-	};
-
-    // FUNCTION 3: getNumberOfSubmissions - function that returns the number of submissions in the games object
+    // FUNCTION 2: getNumberOfSubmissions - function that returns the number of submissions in the games object
     // PRECONDITIONS (1 parameter):
     // 1.) isUnapproved: a boolean function that will determine which set of submissions to count: unapproved or reported
     // POSTCONDITIONS (2 possible outcomes):
@@ -126,7 +109,7 @@ const ModeratorLayout = () => {
         return counter;
     };
 
-    return { games, dispatchGames, updateLayout, handleTabClick, getNumberOfSubmissions };
+    return { games, dispatchGames, updateLayout, getNumberOfSubmissions };
 };
 
 /* ===== EXPORTS ===== */

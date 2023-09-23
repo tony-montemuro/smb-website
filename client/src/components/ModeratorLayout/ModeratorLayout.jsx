@@ -3,12 +3,31 @@ import "./ModeratorLayout.css";
 import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ModeratorLogic from "./ModeratorLayout.js";
+import ModeratorTabs from "../ModeratorTabs/ModeratorTabs.jsx";
 
 function ModeratorLayout() {
+  /* ===== STATES & FUNCTIONS ===== */
+  
+  // states & functions from the js file
+  const { games, dispatchGames, updateLayout, getNumberOfSubmissions } = ModeratorLogic();
+
   /* ===== VARIABLES ===== */
-  const pageType = useLocation().pathname.split("/")[2];
+  const tabs = [
+    { 
+      pageType: undefined, 
+      content: "About Moderation" 
+    },
+    { 
+      pageType: "approvals", 
+      content: `${ getNumberOfSubmissions(true) > 0 ? `(${ getNumberOfSubmissions(true) }) ` : "" }New Submissions`
+    },
+    {
+      pageType: "reports",
+      content: `${ getNumberOfSubmissions(false) > 0 ? `(${ getNumberOfSubmissions(false) }) ` : "" }Reported Submissions`
+    }
+  ];
   const navigate = useNavigate();
 
   /* ===== CONTEXTS ===== */
@@ -18,11 +37,6 @@ function ModeratorLayout() {
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
-
-  /* ===== STATES & FUNCTIONS ===== */
-  
-  // states & functions from the js file
-  const { games, dispatchGames, updateLayout, handleTabClick, getNumberOfSubmissions } = ModeratorLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -48,62 +62,8 @@ function ModeratorLayout() {
     <ModeratorLayoutContext.Provider value={ { games, dispatchGames } }>
       <div className="moderator-layout">
 
-        { /* Moderator layout header - contains any header information for moderator hub */ }
-        <div className="moderator-layout-header">
-
-          { /* Moderator layout tabs - a div containing the tabs that allow the moderator to access different moderation
-          pages */ }
-          <div className="moderator-layout-tabs">
-
-            { /* About Moderation Tab - Brings moderator to the moderation hub home page */ }
-            <div 
-              className={ `moderator-layout-tab${ !pageType ? " moderator-layout-tab-active" : "" }` } 
-              onClick={ () => handleTabClick(undefined) }
-            >
-              About Moderation
-            </div>
-
-            { /* New Submission Tab - Brings moderator to the list of new submissions */ }
-            <div 
-              className={ `moderator-layout-tab${ pageType === "approvals" ? " moderator-layout-tab-active" : "" }` }
-              onClick={ () => handleTabClick("approvals") }
-            >
-              { getNumberOfSubmissions(true) > 0 && `(${ getNumberOfSubmissions(true) })` } 
-              &nbsp;New Submissions
-            </div>
-
-            { /* Reported Submissions tab - Brings moderator to the list of report submissions */ }
-            <div 
-              className={ `moderator-layout-tab${ pageType === "reports" ? " moderator-layout-tab-active" : "" }` }
-              onClick={ () => handleTabClick("reports") }
-            >
-              { getNumberOfSubmissions(false) > 0 && `(${ getNumberOfSubmissions(false) })` }
-              &nbsp;Reported Submissions
-            </div>
-
-            { user.profile.administrator &&
-              <>
-                { /* Game Moderators tab - allows user to add / remove game-specific moderators (FOR ADMINISTRATORS ONLY!) */ }
-                <div 
-                  className={ `moderator-layout-tab${ pageType === "gamemoderators" ? " moderator-layout-tab-active" : "" }` }
-                  onClick={ () => handleTabClick("gamemoderators") }
-                >
-                  Game Moderators
-                </div>
-
-                { /* Create Post tab - allows user to make posts (FOR ADMINISTRATORS ONLY!) */ }
-                <div 
-                  className={ `moderator-layout-tab${ pageType === "post" ? " moderator-layout-tab-active" : "" }` }
-                  onClick={ () => handleTabClick("post") }
-                >
-                  Create Post
-                </div>
-              </>
-            }
-
-          </div>
-
-        </div>
+        { /* Moderator tabs - render tabs we can use to navigate the moderation hub */ }
+        <ModeratorTabs tabs={ tabs } />
 
         { /* Moderation Layout Content: renders the contents of the page based on the URL */ }
         <div className="moderator-layout-content">
