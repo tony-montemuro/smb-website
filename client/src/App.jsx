@@ -3,6 +3,8 @@ import "./App.css";
 import { MessageContext, UserContext } from "./utils/Contexts";
 import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
+import Administrator from "./pages/Administrator/Administrator.jsx";
+import AdministratorLayout from "./components/AdministratorLayout/AdministratorLayout.jsx";
 import AppLogic from "./App.js";
 import Approvals from "./pages/Approvals/Approvals.jsx";
 import Game from "./pages/Game/Game.jsx";
@@ -142,19 +144,20 @@ function App() {
               <Route path="overview" element={ <Overview imageReducer={ imageReducer } /> } />
               <Route path="getting_started" element={ <GettingStarted /> } />
             </Route>
+            <Route path="administrator" element={ <AdministratorLayout /> } >
+              <Route index element={ <Administrator /> } />
+              <Route path="game-moderators" element={
+                <GameModerators imageReducer={ imageReducer } />
+              }/>
+              <Route path="post" element={ <Post /> }/>
+            </Route>
             <Route path="moderator" element={ <ModeratorLayout /> } >
               <Route index element={ <Moderator /> } />
               <Route path="approvals" element={
                 <Approvals imageReducer={ imageReducer } />
               }/>
-              <Route path="gamemoderators" element={
-                <GameModerators imageReducer={ imageReducer } />
-              }/>
               <Route path="reports" element={
                 <Reports imageReducer={ imageReducer } />
-              }/>
-              <Route path="post" element={
-                <Post />
               }/>
             </Route>
           </Routes>

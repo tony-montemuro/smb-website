@@ -8,6 +8,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded';
 import Signout from "../../database/authentication/Signout";
 import Username from "../Username/Username";
 
@@ -53,6 +54,7 @@ function NavProfile({ imageReducer }) {
 
           { /* Notifications link - bell icon that links to the notifications page */ }
           <div className="nav-profile-link">
+
             { user.notificationCount > 0 ?
               // If the user has one or more notifications, render the number of notifications next to a full bell
               <Link to="/notifications">
@@ -65,9 +67,19 @@ function NavProfile({ imageReducer }) {
                 <NotificationsNoneOutlinedIcon titleAccess="Notifications" />
               </Link>
             }
+
           </div>
 
-          { /* Moderator link - icon that links to the moderation hub page (for admins + moderators only) */ }
+          { /* Administrator hub link - icon that links to the administrator hub page (for admins only) */ }
+          { user.profile.administrator &&
+            <div className="nav-profile-link">
+              <Link to="/administrator">
+                <ShieldRoundedIcon titleAccess="Administrator Hub" />
+              </Link>
+            </div>
+          }
+
+          { /* Moderator hub link - icon that links to the moderation hub page (for admins + moderators only) */ }
           { isModerator() &&
             <div className="nav-profile-link">
               <Link to="/moderator">
