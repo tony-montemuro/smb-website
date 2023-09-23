@@ -3,7 +3,10 @@ import "./GameModerators.css";
 import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import DeletePopup from "./DeletePopup";
+import GameModeratorsLogic from "./GameModerators.js";
 import SimpleGameSelect from "../../components/SimpleGameSelect/SimpleGameSelect.jsx";
+import UserRow from "../../components/UserRow/UserRow.jsx";
 
 function GameModerators({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -20,8 +23,12 @@ function GameModerators({ imageReducer }) {
   // user state from user context
   const { user } = useContext(UserContext);
 
-  /* ===== STATES ===== */
+  /* ===== STATES & FUNCTIONS ===== */
   const [game, setGame] = useState(undefined);
+  const [moderator, setModerator] = useState(undefined);
+
+  // states and functions from the js file
+  const { removeModerator } = GameModeratorsLogic(game);
 
   /* ===== EFFECTS ===== */
 
@@ -46,6 +53,8 @@ function GameModerators({ imageReducer }) {
   /* ===== GAME MODERATOR COMPONENT ===== */
   return game &&
     <div className="game-moderators">
+
+      { /* Simple game select - render a column of games to select from */ }
       <SimpleGameSelect
         games={ games }
         game={ game }
@@ -55,6 +64,36 @@ function GameModerators({ imageReducer }) {
 
       <div className="game-moderators-content">
         <h1>Game Moderators</h1>
+
+        { /* Game moderators current - render list of all current moderators */ }
+        <div className="game-moderators-current">
+          <h2>Current Moderators</h2>
+
+          { /* If at least 1 moderator exists, render it */ }
+          { game.moderators.length > 0 ?
+
+            <div className="game-moderators-list">
+              <p>Select a moderator to remove them!</p>
+              { game.moderators.map(moderator => {
+                return (
+                  <UserRow  
+                    user={ moderator }
+                    disableLink={ true }
+                    onClick={ setModerator }
+                  />
+                );
+              })}
+            </div>
+          :
+
+          // Otherwise, render message to admin that they should add some
+          <p className="game-moderators-current-empty">This game has no moderators! You should at at least one.</p> 
+          }
+
+        </div>
+
+        <DeletePopup moderator={ moderator } setModerator={ setModerator } onDelete={ removeModerator } />
+
       </div>
     </div>;
 };
