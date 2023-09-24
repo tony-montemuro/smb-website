@@ -57,7 +57,7 @@ function UserSearch({ usersPerPage, searchBarWidth = "100%", imageReducer = null
           })
         :
           // If no user data, just render a message to the user letting them know 
-          <div className="user-search-empty">No users match your search.</div>
+          <div className="users-search-empty">No users match your search.</div>
         }
 
         { /* Render pagination controls */ }

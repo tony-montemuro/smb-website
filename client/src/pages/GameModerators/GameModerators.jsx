@@ -1,57 +1,39 @@
 /* ===== IMPORTS ===== */
 import "./GameModerators.css";
-import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import DeletePopup from "./DeletePopup";
 import GameModeratorsLogic from "./GameModerators.js";
+import InsertPopup from "./InsertPopup";
 import SimpleGameSelect from "../../components/SimpleGameSelect/SimpleGameSelect.jsx";
 import UserRow from "../../components/UserRow/UserRow.jsx";
+import UserSearch from "../../components/UserSearch/UserSearch.jsx";
 
 function GameModerators({ imageReducer }) {
-  /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
-
-  /* ===== CONTEXTS ===== */
-
-  // add message function from message context
-  const { addMessage } = useContext(MessageContext);
-
-  // games state from modereator layout context
-  const { games } = useContext(ModeratorLayoutContext);
-
-  // user state from user context
-  const { user } = useContext(UserContext);
-
   /* ===== STATES & FUNCTIONS ===== */
-  const [game, setGame] = useState(undefined);
-  const [moderator, setModerator] = useState(undefined);
+  const [moderatorToRemove, setModeratorToRemove] = useState(undefined);
+  const [moderatorToAdd, setModeratorToAdd] = useState(undefined);
 
   // states and functions from the js file
-  const { removeModerator } = GameModeratorsLogic(game);
+  const { game, games, submitting, setGame, queryGames, removeModerator, addModerator } = GameModeratorsLogic();
+
+  /* ===== VARIABLES ===== */
+  const options = {
+    disableLink: true,
+    isDetailed: false,
+    onUserRowClick: setModeratorToAdd
+  };
+  const USERS_PER_PAGE = 20;
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component mounts OR when the user state is updated
+  // code that is executed when the component mounts
   useEffect(() => {
-    if (!user.profile.administrator) {
-      addMessage("Forbidden access.", "error");
-      navigate("/");
-      return;
-    }
+    queryGames();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
-  // code that is executed when the component mounts OR when the games state is updated
-  useEffect(() => {
-    if (games) {
-      setGame(games[0]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [games]);
+  }, []);
   
   /* ===== GAME MODERATOR COMPONENT ===== */
-  return game &&
+  return game && games &&
     <div className="game-moderators">
 
       { /* Simple game select - render a column of games to select from */ }
@@ -62,6 +44,7 @@ function GameModerators({ imageReducer }) {
         imageReducer={ imageReducer }
       />
 
+      { /* Game moderators current - render both the list of current moderators, and a user search to add new moderators */ }
       <div className="game-moderators-content">
         <h1>Game Moderators</h1>
 
@@ -79,7 +62,7 @@ function GameModerators({ imageReducer }) {
                   <UserRow  
                     user={ moderator }
                     disableLink={ true }
-                    onClick={ setModerator }
+                    onClick={ setModeratorToRemove }
                   />
                 );
               })}
@@ -92,7 +75,24 @@ function GameModerators({ imageReducer }) {
 
         </div>
 
-        <DeletePopup moderator={ moderator } setModerator={ setModerator } onDelete={ removeModerator } />
+        <div className="game-moderators-new">
+          <h2>Add New Moderator</h2>
+          <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ options } />
+        </div>
+
+        { /* Popups */ }
+        <DeletePopup 
+          moderator={ moderatorToRemove } 
+          setModerator={ setModeratorToRemove } 
+          onDelete={ removeModerator }
+          submitting={ submitting } 
+        />
+        <InsertPopup 
+          moderator={ moderatorToAdd } 
+          setModerator={ setModeratorToAdd } 
+          onInsert={ addModerator }
+          submitting={ submitting }
+        />
 
       </div>
     </div>;

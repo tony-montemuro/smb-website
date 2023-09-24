@@ -7,3 +7,7 @@
 .users-search-results {
     border: 1px solid black;
 }
+
+.users-search-empty {
+    padding: 5px;
+}

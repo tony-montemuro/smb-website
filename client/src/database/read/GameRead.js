@@ -88,13 +88,13 @@ const GameRead = () => {
         }
     };
 
-    // FUNCTION 2: queryGamesInfo - async function that makes a call to supabase to get an array of all the games, but only
+    // FUNCTION 2: queryGamesForModerators - async function that makes a call to supabase to get an array of all the games, but only
     // a small subset of their data
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, the list of games is simply returned
+    // if the query is successful, the list of games, with the list of it's moderators, is simply returned
     // otherwise, this function throws an error, which should be handled by the caller function
-    const queryGamesInfo = async () => {
+    const queryGamesForModerators = async () => {
         try {
             const { data: games, error } = await supabase
                 .from("game")
@@ -130,6 +130,7 @@ const GameRead = () => {
                         category
                     ),
                     name,
+                    moderators:profile!game_profile (id, username, country),
                     release_date
                 `)
                 .order("custom")
@@ -194,7 +195,7 @@ const GameRead = () => {
         };
     };
 
-    return { queryGame, queryGamesInfo, searchForGames };
+    return { queryGame, queryGamesForModerators, searchForGames };
 };
 
 /* ===== EXPORTS ===== */

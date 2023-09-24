@@ -10,7 +10,7 @@ function AdministratorLayout() {
   const tabs = [
     { 
       pageType: undefined, 
-      content: "About Administering" 
+      content: "About Administrating"
     },
     { 
       pageType: "game-moderators", 
@@ -18,7 +18,7 @@ function AdministratorLayout() {
     },
     {
       pageType: "post",
-      content: "Posts"
+      content: "Create Post"
     }
   ];
   const navigate = useNavigate();
