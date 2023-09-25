@@ -61,14 +61,14 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
         { /* Render button for first page */ }
         <PageNumberButton currentPageNum={ pageNum } pageNum={ 1 } setPageNum={ setPageNum } />
 
-        { middlePages[0] !== 2 && "..." }
+        { middlePages.length > 0 && middlePages[0] !== 2 && "..." }
 
         { /* Render the "middle" page buttons */ }
         { middlePages.map(page => {
           return <PageNumberButton currentPageNum={ pageNum } pageNum={ page } setPageNum={ setPageNum } key={ page } />;
         })}
 
-        { middlePages[middlePages.length-1] !== maxPage-1 && "..." }
+        { middlePages.length > 0 && middlePages[middlePages.length-1] !== maxPage-1 && "..." }
 
         { /* Render button for last page */ }
         <PageNumberButton currentPageNum={ pageNum } pageNum={ maxPage } setPageNum={ setPageNum } />

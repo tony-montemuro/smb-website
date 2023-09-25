@@ -1,11 +1,10 @@
 /* ===== IMPORTS ===== */
 import "./Game.css";
 import { GameContext, MessageContext } from "../../utils/Contexts";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
-import GameLogic from "./Game.js";
 import ModeBody from "./ModeBody";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 
@@ -80,10 +79,11 @@ function Game() {
         <div className="game-recent-submissions">
 
           { /* Recent Submissions header */ }
-          <h2>Recent Submissions</h2>
+          <h2><Link to={ `/recent-submissions?game_id=${ abb }` }>Recent Submissions</Link></h2>
 
           { /* Recent Submissions table */ }
           <RecentSubmissionsTable renderGame={ false } searchParams={ searchParams } />
+
         </div>
 
       </div>
