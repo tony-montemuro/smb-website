@@ -4,7 +4,7 @@ const PageControls = () => {
     // FUNCTION 1: getStartAndEnd - given the number of items & page number, retrieve the start and end item indicies
     // PRECONDITIONS (2 parameters):
     // 1.) itemsPerPage: an integer representing the max number of items that should exist on each page 
-    // 2.) pageNumber: the page number the user is currently on
+    // 2.) pageNumber: an integer representing the page number the user is currently on
     // POSTCONDITIONS (2 possible returns, 1 possible outcome):
     // two variables are returned
     // a.) start: the index of the first item on the page
@@ -25,7 +25,26 @@ const PageControls = () => {
         return Math.ceil(numItems/itemsPerPage);
     };
 
-    return { getStartAndEnd, getMaxPage };
+    // FUNCTION 3: getMiddlePages - function that will generate an array of numbers representing the "middle" pages
+    // PRECONDITIONS (2 parameters):
+    // 1.) pageNumber: an integer representing the page number the user is currently on
+    // 2.) maxPage: an integer respresenting the max number of pages
+    // POSTCONDITIONS (1 possible outcomes):
+    // based on the pageNumber and max page, an array of integers representing the middle pages is returned
+    const getMiddlePages = (pageNumber, maxPage) => {
+        const numMiddlePages = 5;
+        let pages = [];
+
+        const offset = Math.max(2, pageNumber-maxPage+5)
+        const start = Math.max(2, pageNumber-offset);
+        for (let i = start; i < start+numMiddlePages && i < maxPage; i++) {
+            pages.push(i);
+        }
+
+        return pages;
+    };
+
+    return { getStartAndEnd, getMaxPage, getMiddlePages };
 };
 
 /* ===== EXPORTS ===== */

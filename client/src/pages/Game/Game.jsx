@@ -29,6 +29,8 @@ function Game() {
   const abb = path[2];
   const category = path[3];
   const categories = getGameCategories(game);
+  const searchParams = new URLSearchParams();
+  searchParams.append("game_id", abb);
 
   /* ===== STATES AND FUNCTIONS ===== */
   const [selectedCategory, setSelectedCategory] = useState(category ? category : "main");
@@ -87,7 +89,7 @@ function Game() {
           <h2>Recent Submissions</h2>
 
           { /* Recent Submissions table */ }
-          <RecentSubmissionsTable renderGame={ false } searchParams={ new URLSearchParams().append("game_id", abb) } />
+          <RecentSubmissionsTable renderGame={ false } searchParams={ searchParams } />
         </div>
 
       </div>

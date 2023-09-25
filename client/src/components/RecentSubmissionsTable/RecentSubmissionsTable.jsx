@@ -5,7 +5,7 @@ import PageControls from "../PageControls/PageControls.jsx";
 import RecentSubmissionsRow from "./RecentSubmissionsRow.jsx";
 import RecentSubmissionsTableLogic from "./RecentSubmissionsTable.js";
 
-function RecentSubmissionsTable({ renderGame = true, numSubmissions = 5, searchParams = new URLSearchParams() }) {
+function RecentSubmissionsTable({ renderGame = true, numSubmissions = 5, searchParams }) {
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
 
@@ -16,7 +16,7 @@ function RecentSubmissionsTable({ renderGame = true, numSubmissions = 5, searchP
 
   // code that is executed when the component mounts, or when the searchParams are updated
   useEffect(() => {
-    fetchRecentSubmissions(numSubmissions, searchParams, pageNum);
+    fetchRecentSubmissions(numSubmissions, searchParams ? searchParams : new URLSearchParams(), pageNum);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNum, searchParams]);
 
@@ -54,6 +54,7 @@ function RecentSubmissionsTable({ renderGame = true, numSubmissions = 5, searchP
         pageNum={ pageNum }
         setPageNum={ setPageNum }
         itemName={ "Submissions" } 
+        isDetailedController={ false }
       />
     </div>
   );
