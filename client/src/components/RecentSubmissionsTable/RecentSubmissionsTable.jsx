@@ -54,7 +54,7 @@ function RecentSubmissionsTable({ renderGame = true, numSubmissions = 5, searchP
         pageNum={ pageNum }
         setPageNum={ setPageNum }
         itemName={ "Submissions" } 
-        isDetailedController={ false }
+        useDropdown={ false }
       />
     </div>
   );

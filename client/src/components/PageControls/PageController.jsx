@@ -44,6 +44,7 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, isDetai
   } else {
     const maxPage = getMaxPage(totalItems, itemsPerPage);
     const middlePages = getMiddlePages(pageNum, maxPage);
+    
     return (
       // Page controller - render a button for the first page, the last page, and a button for each page between [pageNum, pageNum+5]
       <div className="page-controller">
