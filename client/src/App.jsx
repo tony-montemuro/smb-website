@@ -25,6 +25,7 @@ import Notifications from "./pages/Notifications/Notifications.jsx";
 import Post from "./pages/Post/Post.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import Overview from "./pages/Overview/Overview.jsx";
+import RecentSubmissions from "./pages/RecentSubmissions/RecentSubmissions.jsx";
 import Records from "./pages/Records/Records.jsx";
 import Reports from "./pages/Reports/Reports.jsx";
 import ResourcesLayout from "./components/ResourcesLayout/ResourcesLayout.jsx";
@@ -160,6 +161,7 @@ function App() {
                 <Reports imageReducer={ imageReducer } />
               }/>
             </Route>
+            <Route path="recent-submissions" element={ <RecentSubmissions /> } />
           </Routes>
         </div>
       </UserContext.Provider>
