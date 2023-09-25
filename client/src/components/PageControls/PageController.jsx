@@ -49,6 +49,7 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
     return (
       // Page controller - render a button for the first page, the last page, and a button for each page between [pageNum, pageNum+5]
       <div className="page-controller">
+
         { /* Previous page button */ }
         <button 
           type="button"
@@ -61,14 +62,14 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
         { /* Render button for first page */ }
         <PageNumberButton currentPageNum={ pageNum } pageNum={ 1 } setPageNum={ setPageNum } />
 
-        { middlePages.length > 0 && middlePages[0] !== 2 && "..." }
+        { middlePages.length > 0 && middlePages[0] !== 2 && <span className="page-controller-spread">...</span> }
 
         { /* Render the "middle" page buttons */ }
         { middlePages.map(page => {
           return <PageNumberButton currentPageNum={ pageNum } pageNum={ page } setPageNum={ setPageNum } key={ page } />;
         })}
 
-        { middlePages.length > 0 && middlePages[middlePages.length-1] !== maxPage-1 && "..." }
+        { middlePages.length > 0 && middlePages[middlePages.length-1] !== maxPage-1 && <span className="page-controller-spread">...</span> }
 
         { /* Render button for last page */ }
         <PageNumberButton currentPageNum={ pageNum } pageNum={ maxPage } setPageNum={ setPageNum } />
@@ -81,6 +82,7 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
         >
           Next Page
         </button>
+
       </div>
     );
   }

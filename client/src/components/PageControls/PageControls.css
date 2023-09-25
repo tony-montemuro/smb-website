@@ -37,3 +37,7 @@
 .page-number-btn-selected:hover {
     background-color: #333333;
 }
+
+.page-controller-spread {
+    margin-top: auto;
+}
