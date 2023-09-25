@@ -5,7 +5,7 @@ import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/Rece
 
 function RecentSubmissions() {
   /* ===== VARIABLES ===== */
-  const NUM_ROWS = 100;
+  const NUM_SUBMISSIONS = 20;
 
   /* ===== STATES ===== */
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,7 +14,7 @@ function RecentSubmissions() {
   return (
     <div className="recent-submissions">
       <h1>Recent Submissions</h1>
-      <RecentSubmissionsTable numRows={ NUM_ROWS } searchParams={ searchParams } />
+      <RecentSubmissionsTable numSubmissions={ NUM_SUBMISSIONS } searchParams={ searchParams } />
     </div>
   );
 };

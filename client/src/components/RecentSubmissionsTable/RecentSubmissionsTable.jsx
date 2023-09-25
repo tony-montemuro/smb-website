@@ -1,20 +1,24 @@
 /* ===== IMPORTS ===== */
 import "./RecentSubmissionsTable.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import PageControls from "../PageControls/PageControls.jsx";
 import RecentSubmissionsRow from "./RecentSubmissionsRow.jsx";
 import RecentSubmissionsTableLogic from "./RecentSubmissionsTable.js";
 
-function RecentSubmissionsTable({ renderGame = true, numRows = 5, searchParams = new URLSearchParams() }) {
+function RecentSubmissionsTable({ renderGame = true, numSubmissions = 5, searchParams = new URLSearchParams() }) {
   /* ===== STATES & FUNCTIONS ===== */
-  const { submissions, total, fetchRecentSubmissions } = RecentSubmissionsTableLogic();
+  const [pageNum, setPageNum] = useState(1);
+
+  // states and functions from the js file
+  const { submissions, fetchRecentSubmissions } = RecentSubmissionsTableLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts, or when the searchParams are updated
   useEffect(() => {
-    fetchRecentSubmissions(numRows, searchParams);
+    fetchRecentSubmissions(numSubmissions, searchParams, pageNum);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [pageNum, searchParams]);
 
   /* ===== RECENT SUBMISSIONS TABLE COMPONENT ===== */
   return (
@@ -36,12 +40,21 @@ function RecentSubmissionsTable({ renderGame = true, numRows = 5, searchParams =
 
         { /* Table body - for each submission, render a row in the table */ }
         <tbody>
-          { submissions.map(submission => {
+          { submissions.data.map(submission => {
             return <RecentSubmissionsRow submission={ submission } renderGame={ renderGame } key={ submission.id } />;
           })}
         </tbody>
 
       </table>
+
+      {/* Finally, render the page controls at the bottom of the page */}
+      <PageControls 
+        totalItems={ submissions.total }
+        itemsPerPage={ numSubmissions }
+        pageNum={ pageNum }
+        setPageNum={ setPageNum }
+        itemName={ "Submissions" } 
+      />
     </div>
   );
 };

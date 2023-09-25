@@ -13,14 +13,15 @@ const SubmissionRead = () => {
 
     // FUNCTION 1: queryRecentSubmissions - function that retrieves the most recent submissions in the database, given parameters to the
     // function as filters, and returns them, as well as the total number of submissions that match the filters
-    // PRECONDITIONS (2 parameters):
-    // 1.) numRows: an integer that specifies the number of row that should be returned by the query
-    // 2.) searchParams: a URLSearchParams objects containing the set of filters
+    // PRECONDITIONS (3 parameters):
+    // 1.) start: an integer representing the index of the first submission we should query
+    // 2.) end: an integer representing the index of the last submission we should query
+    // 3.) searchParams: a URLSearchParams objects containing the set of filters
     // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, the `numRows` most recent submissions from the database matching the filters in `searchParams` are returned,
+    // if the query is successful, the (end-start) most recent submissions from the database matching the filters in `searchParams` are returned,
     // sorted from most recent to least recent, as well as the total number of submissions that match the filters
     // if the query is a failure, the user is alerted of the error, and an empty array & a count of 0 are returned
-    const queryRecentSubmissions = async (numRows, searchParams) => {
+    const queryRecentSubmissions = async (start, end, searchParams) => {
         // first, we define our base query
         let query = supabase
             .from("submission")
@@ -51,8 +52,6 @@ const SubmissionRead = () => {
             `,
             { count: "exact" }
             )
-            .limit(numRows)
-            .order("id", { ascending: false });
 
             // add filters to our query according to `searchParams`, if it's defined
             if (searchParams) {
@@ -60,6 +59,9 @@ const SubmissionRead = () => {
                     query = query.eq(key, value);
                 }
             }
+
+            // finally, add our pagenation limits, and ordering
+            query = query.range(start, end).order("id", { ascending: false });
 
         try {
             // now, perform the query
