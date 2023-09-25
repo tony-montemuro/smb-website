@@ -1,17 +1,18 @@
 /* ===== IMPORTS ===== */
 import PageControlsLogic from "./PageControls.js";
+import PageNumberButton from "./PageNumberButton.jsx";
 
-function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, isDetailedController }) {
+function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDropdown }) {
   /* ===== FUNCTIONS ===== */
   
   // functions from the js file
   const { getMaxPage, getMiddlePages } = PageControlsLogic();
 
   /* ===== PAGE CONTROLLER COMPONENT ===== */
-  if (isDetailedController) {
+  if (useDropdown) {
     return (
-      // Detailed page controller - render buttons to navigate to the previous and next page, as well as a dropdown for the
-      // user to select any valid page
+      // Dropdown page controller - render buttons to navigate to the previous and next page, as well as a dropdown for the
+      // user to select any valid page. Better for small page counts
       <div className="page-controller">
 
         { /* Previous page button */ }
@@ -44,7 +45,7 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, isDetai
   } else {
     const maxPage = getMaxPage(totalItems, itemsPerPage);
     const middlePages = getMiddlePages(pageNum, maxPage);
-    
+
     return (
       // Page controller - render a button for the first page, the last page, and a button for each page between [pageNum, pageNum+5]
       <div className="page-controller">
@@ -58,19 +59,19 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, isDetai
         </button>
 
         { /* Render button for first page */ }
-        <button type="button" onClick={ () => { setPageNum(1) } }>1</button>
+        <PageNumberButton currentPageNum={ pageNum } pageNum={ 1 } setPageNum={ setPageNum } />
 
         { middlePages[0] !== 2 && "..." }
 
         { /* Render the "middle" page buttons */ }
         { middlePages.map(page => {
-          return <button type="button" onClick={ () => setPageNum(page) }>{ page }</button>
+          return <PageNumberButton currentPageNum={ pageNum } pageNum={ page } setPageNum={ setPageNum } key={ page } />;
         })}
 
         { middlePages[middlePages.length-1] !== maxPage-1 && "..." }
 
         { /* Render button for last page */ }
-        <button type="button" onClick={ () => { setPageNum(maxPage) } }>{ maxPage }</button>
+        <PageNumberButton currentPageNum={ pageNum } pageNum={ maxPage } setPageNum={ setPageNum } />
 
         { /* Next page button */ }
         <button 

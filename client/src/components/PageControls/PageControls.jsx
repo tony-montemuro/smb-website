@@ -3,7 +3,7 @@ import "./PageControls.css";
 import PageControlsLogic from "./PageControls.js";
 import PageController from "./PageController";
 
-function PageControls({ totalItems, itemsPerPage, pageNum, setPageNum, itemName, isDetailedController = true }) {
+function PageControls({ totalItems, itemsPerPage, pageNum, setPageNum, itemName, useDropdown = true }) {
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file
@@ -19,15 +19,15 @@ function PageControls({ totalItems, itemsPerPage, pageNum, setPageNum, itemName,
         { Math.min(((getStartAndEnd(itemsPerPage, pageNum, totalItems).end)+1), totalItems) } of { totalItems } { itemName }
       </div>
 
-      { /* Page controller - render the page controller, which should differ based on the `isDetailedController` argument */ }
+      { /* Page controller - render the page controller, which should differ based on the `useDropdown` argument */ }
       <PageController
         totalItems={ totalItems }
         itemsPerPage={ itemsPerPage }
         pageNum={ pageNum }
         setPageNum={ setPageNum }
-        isDetailedController={ isDetailedController }
+        useDropdown={ useDropdown }
       />
-      
+
     </div>;
 };
 

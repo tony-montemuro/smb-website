@@ -17,3 +17,23 @@
 .page-controller select {
     width: 50px;
 }
+
+.page-number-btn {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.page-number-btn:hover {
+    background-color: #ddd;
+}
+  
+.page-number-btn-selected {
+    background-color: black;
+    color: #fff;
+}
+
+.page-number-btn-selected:hover {
+    background-color: #333333;
+}
