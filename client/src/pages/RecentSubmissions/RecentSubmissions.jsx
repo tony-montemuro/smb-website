@@ -2,9 +2,11 @@
 import "./RecentSubmissions.css";
 
 function RecentSubmissions() {
+  /* ===== RECENT SUBMISSIONS COMPONENT ===== */
   return (
-    /* ===== RECENT SUBMISSIONS COMPONENT ===== */
-    <h1>Recent Submissions</h1>
+    <div className="recent-submissions">
+      <h1>Recent Submissions</h1>
+    </div>
   );
 };
 
