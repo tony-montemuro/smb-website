@@ -10,19 +10,18 @@ function Home() {
   /* ===== STATES & FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { submissions, posts, getSubmissions, getPosts } = HomeLogic();
+  const { posts, getPosts } = HomeLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the home component mounts
   useEffect(() => {
-    getSubmissions();
     getPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* ===== HOME COMPONENT ===== */
-  return submissions && posts &&
+  return posts &&
     <div className="home">
       { /* Home Header - Display most general information about the website */ }
       <div className="home-header">

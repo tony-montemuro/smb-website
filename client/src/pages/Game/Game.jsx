@@ -35,9 +35,6 @@ function Game() {
   /* ===== STATES AND FUNCTIONS ===== */
   const [selectedCategory, setSelectedCategory] = useState(category ? category : "main");
   const [selectedMode, setSelectedMode] = useState(null);
-
-  // states and functions from js file
-  const { submissions, getSubmissions } = GameLogic();
   
   // simple function that handles the radio button change
   const handleChange = category => {
@@ -54,14 +51,11 @@ function Game() {
       navigate("/");
       return;
     }
-
-    // otherwise, let's get submissions
-    getSubmissions(game.abb);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* ===== GAME COMPONENT ===== */
-  return submissions &&
+  return (
     <div className="game">
 
       { /* Game Info - Render various information about a game */ }
@@ -136,6 +130,7 @@ function Game() {
       </div>
 
     </div>
+  );
 };
 
 /* ===== EXPORTS ===== */

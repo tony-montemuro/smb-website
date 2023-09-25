@@ -1,30 +1,17 @@
 /* ===== IMPORTS ===== */
 import { useState } from "react";
 import PostRead from "../../database/read/PostRead";
-import SubmissionRead from "../../database/read/SubmissionRead";
 
 const Home = () => {
     /* ===== STATES ===== */
-    const [submissions, setSubmissions] = useState(undefined);
     const [posts, setPosts] = useState(undefined);
  
     /* ===== FUNCTIONS ===== */
 
     // database functions
     const { queryRecentPosts } = PostRead();
-    const { queryRecentSubmissions } = SubmissionRead();
 
-    // FUNCTION 1: getSubmissions - retrieve 5 most recent submissions from database, and update the submissions state
-    // PRECONDITIONS (1 condition):
-    // this function should be called when the Home component is first mounted
-    // POSTCONDITIONS (1 possible outcome):
-    // the most recent submissions are retrieved, and the submissions state is updated by calling setSubmissions() function
-    const getSubmissions = async () => {
-        const submissions = await queryRecentSubmissions();
-        setSubmissions(submissions);
-    };
-
-    // FUNCTION 2: getPosts - retrieve 3 most recent submissions from database, and update the posts state
+    // FUNCTION 1: getPosts - retrieve 3 most recent submissions from database, and update the posts state
     // PRECONDITIONS (1 condition):
     // this function should be called when the Home component is first mounted
     // POSTCONDITIONS (1 possible outcome):
@@ -42,7 +29,7 @@ const Home = () => {
         setPosts(posts);
     };
 
-    return { submissions, posts, getSubmissions, getPosts };
+    return { posts, getPosts };
 };
 
 /* ===== EXPORTS ===== */
