@@ -8,20 +8,6 @@ AS $$
       g.abb AS abb,
       g.id,
       (
-        SELECT COALESCE ((json_agg(jsonb_build_object(
-          'country', p.country,
-          'id', p.id,
-          'username', p.username
-        ) ORDER BY p.id)), '[]'::json)
-        FROM (
-          SELECT p.country, p.id, p.username
-          FROM game_profile gp
-          INNER JOIN profile AS p ON p.id = gp.profile
-          WHERE gp.game = g.abb
-          ORDER BY p.username
-        ) p
-      ) moderators,
-      (
         SELECT json_agg(monkey_row)
         FROM (
           SELECT m.id, m.monkey_name
