@@ -48,15 +48,15 @@ function GameModerators({ imageReducer }) {
       <div className="game-moderators-content">
         <h1>Game Moderators</h1>
 
-        { /* Game moderators current - render list of all current moderators */ }
-        <div className="game-moderators-current">
+        { /* Render list of all current moderators */ }
+        <div className="game-moderators-container">
           <h2>Current Moderators</h2>
 
           { /* If at least 1 moderator exists, render it */ }
           { game.moderators.length > 0 ?
 
             <div className="game-moderators-list">
-              <p>Select a moderator to remove them!</p>
+              <p>Select a moderator to remove them.</p>
               { game.moderators.map(moderator => {
                 return (
                   <UserRow  
@@ -75,8 +75,10 @@ function GameModerators({ imageReducer }) {
 
         </div>
 
-        <div className="game-moderators-new">
+        { /* Render the ability to search for users to add them as moderators */ }
+        <div className="game-moderators-container">
           <h2>Add New Moderator</h2>
+          <p>Select a user to add them as a moderator.</p>
           <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ options } />
         </div>
 

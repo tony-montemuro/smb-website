@@ -12,33 +12,25 @@
     text-align: center;
 }
 
-.game-moderators-current {
+.game-moderators-container {
     border: 1px solid black;
     border-radius: 5px;
     width: 85%;
     margin: 10px auto;
 }
 
-.game-moderators-current h2 {
+.game-moderators-container h2 {
     padding: 10px 5px;
     margin: 0;
 }
 
-.game-moderators-current p {
+.game-moderators-container p {
     margin: 0;
     padding: 10px 5px;
 }
 
-.game-moderators-new {
-    border: 1px solid black;
-    border-radius: 5px;
-    width: 85%;
-    margin: 10px auto;
-}
-
-.game-moderators-new h2 {
-    padding: 10px 5px;
-    margin: 0;
+.game-moderators-container .user-search {
+    margin-top: 10px;
 }
 
 .game-moderators-popup {
