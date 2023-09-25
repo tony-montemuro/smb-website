@@ -6,6 +6,7 @@ import { useContext } from "react";
 import BoxArt from "../../components/BoxArt/BoxArt.jsx";
 import Discord from "../../img/discord-logo.png";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
+import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import SocialLink from "../../components/SocialLink/SocialLink.jsx";
 import Twitch from "../../img/twitch-logo.png";
 import Twitter from "../../img/twitter-logo.png";
@@ -17,6 +18,10 @@ function User({ imageReducer }) {
 
   // profile state from profile context
   const { profile } = useContext(ProfileContext);
+
+  /* ===== VARIABLES ===== */
+  const searchParams = new URLSearchParams();
+  searchParams.append("profile_id", profile.id);
 
   /* ===== FUNCTIONS ===== */
 
@@ -100,20 +105,28 @@ function User({ imageReducer }) {
         </div>
       }
 
+      { /* Render the user's recent submissions */ }
+      <div className="user-info">
+        <h1><Link to={ `/recent-submissions?profile_id=${ profile.id }` }>Recent Submissions</Link></h1>
+        <RecentSubmissionsTable searchParams={ searchParams } />
+      </div>
+
       { /* If a user moderates at least 1 game, render a link to the game page for each game */ }
       { profile.moderated_games.length > 0 &&
         <div className="user-info">
           <h1>Games Moderated</h1>
-          { profile.moderated_games.map(game => {
-            return (
-              <div className="user-game">
-                <Link to={ `/games/${ game.abb }` }>
-                  { <BoxArt game={ game } imageReducer={ imageReducer } width={ 80 } /> }
-                  <span>{ game.name }</span>
-                </Link>
-              </div>
-            );
-          })}
+          <div className="user-games">
+            { profile.moderated_games.map(game => {
+              return (
+                <div className="user-game">
+                  <Link to={ `/games/${ game.abb }` }>
+                    { <BoxArt game={ game } imageReducer={ imageReducer } width={ 80 } /> }
+                    <span>{ game.name }</span>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
         </div>
       }
     </div>

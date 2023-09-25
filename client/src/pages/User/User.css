@@ -13,6 +13,7 @@
     text-align: center;
     margin-left: 10%;
     margin-right: 10%;
+    padding: 10px 20px;
 }
 
 .user-info a {
@@ -73,12 +74,18 @@
     margin-bottom: 5px;
 }
 
+.user-games {
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
 .user-game {
     padding: 20px;
 }
 
 .user-game:hover {
     background-color: #f0f0f0;
+    border-radius: 5px;
     cursor: pointer;
 }
 
