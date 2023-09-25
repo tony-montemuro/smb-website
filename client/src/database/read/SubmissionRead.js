@@ -11,15 +11,17 @@ const SubmissionRead = () => {
 
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: queryRecentSubmissions - function that retrieves the 5 most recent submissions in the database, and returns them
-    // PRECONDITIONS (1 parameter):
-    // 1.) abb: a string value, representing a game's abb value. this is used to uniquely identify it. this value could be undefined:
-    // in that case, the query will simply get the 5 most recent submissions. otherwise, the query will be filtered based on this parameter
+    // FUNCTION 1: queryRecentSubmissions - function that retrieves the most recent submissions in the database, given parameters to the
+    // function as filters, and returns them, as well as the total number of submissions that match the filters
+    // PRECONDITIONS (2 parameters):
+    // 1.) numRows: an integer that specifies the number of row that should be returned by the query
+    // 2.) searchParams: a URLSearchParams objects containing the set of filters
     // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, the 5 most recent submissions from the database are returned, sorted from most recent to least recent
-    // if the query is a failure, the user is alerted of the error, and an empty array is returned
-    const queryRecentSubmissions = async abb => {
-        // first, we define our query
+    // if the query is successful, the `numRows` most recent submissions from the database matching the filters in `searchParams` are returned,
+    // sorted from most recent to least recent, as well as the total number of submissions that match the filters
+    // if the query is a failure, the user is alerted of the error, and an empty array & a count of 0 are returned
+    const queryRecentSubmissions = async (numRows, searchParams) => {
+        // first, we define our base query
         let query = supabase
             .from("submission")
             .select(`
@@ -46,26 +48,34 @@ const SubmissionRead = () => {
                 record,
                 score,
                 tas
-            `)
-            .limit(5)
+            `,
+            { count: "exact" }
+            )
+            .limit(numRows)
             .order("id", { ascending: false });
-        query = abb ? query.eq("game_id", abb) : query;
+
+            // add filters to our query according to `searchParams`, if it's defined
+            if (searchParams) {
+                for (const [key, value] of searchParams) {
+                    query = query.eq(key, value);
+                }
+            }
 
         try {
             // now, perform the query
-            const { data: submissions, error } = await query;
+            const { data: submissions, count, error } = await query;
 
             // error handling
             if (error) {
                 throw error;
             }
 
-            // if we made it here, let's just return data
-            return submissions;
+            // if we made it here, let's just return the submissions, as well as the count
+            return { submissions, count };
 
         } catch (error) {
             addMessage("Recent submissions failed to load.", "error");
-            return [];
+            return { submissions: [], count: 0 };
         };
     };
 

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import HomeLogic from "./Home.js";
 import NewsPost from "./NewsPost";
-import RecentSubmissionsRow from "../../components/RecentSubmissionsRow/RecentSubmissionsRow";
+import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 
 function Home() {
   /* ===== STATES & FUNCTIONS ===== */
@@ -34,30 +34,8 @@ function Home() {
 
         { /* Recent Submissions - render the 5 most recent submissions in a table */ }
         <div className="home-recent-submissions">
-          <h2>Recent Submissions</h2>
-          <table>
-
-            { /* Table header: specifies the information displayed in each cell of the table */ }
-            <thead>
-              <tr>
-                <th>Submitted</th>
-                <th>User</th>
-                <th>Game</th>
-                <th>Category</th>
-                <th>Chart</th>
-                <th>Record</th>
-                <th>TAS</th>
-              </tr>
-            </thead>
-
-            { /* Table body - the actual content itself, rendered row by row given submission data */ }
-            <tbody>
-              { submissions.map((submission) => {
-                return <RecentSubmissionsRow submission={ submission } renderGame={ true } key={ submission.id } />
-              })}
-            </tbody>
-            
-          </table>
+          <h2><Link to="/recent-submissions">Recent Submissions</Link></h2>
+          <RecentSubmissionsTable />
         </div>
 
         {/* Home posts - render the 3 most recent posts */}

@@ -7,7 +7,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 import GameLogic from "./Game.js";
 import ModeBody from "./ModeBody";
-import RecentSubmissionsRow from "../../components/RecentSubmissionsRow/RecentSubmissionsRow";
+import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 
 function Game() {
   /* ===== CONTEXTS ===== */
@@ -87,27 +87,7 @@ function Game() {
           <h2>Recent Submissions</h2>
 
           { /* Recent Submissions table */ }
-          <table>
-
-            { /* Table header - specifies the information displayed in each cell of the table */ }
-            <thead>
-              <tr>
-                <th>Submitted</th>
-                <th>User</th>
-                <th>Category</th>
-                <th>Chart</th>
-                <th>Record</th>
-                <th>TAS</th>
-              </tr>
-            </thead>
-
-            { /* Table body - render a row for each submission object in the array. */ }
-            <tbody>
-              { submissions.map(submission => {
-                return <RecentSubmissionsRow submission={ submission } renderGame={ false } key={ submission.id } />;
-              })}
-            </tbody>
-          </table>
+          <RecentSubmissionsTable renderGame={ false } searchParams={ new URLSearchParams().append("game_id", abb) } />
         </div>
 
       </div>
