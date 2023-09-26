@@ -1,0 +1,20 @@
+.game-row-card {
+    justify-self: start;
+}
+
+.game-row-card p {
+    text-align: center;
+}
+
+.game-row-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    padding: 10px 5px;
+}
+
+.game-row-item:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
