@@ -32,7 +32,7 @@ function GameFilterPopup({ popup, setPopup, searchParams, setSearchParams, image
 
         { /* Render button to close the popup */ }
         <div className="recent-submissions-popup-close-btn">
-          <button onClick={ () => closePopup(setPopup) }>Close</button>
+          <button type="button" onClick={ () => closePopup(setPopup) }>Close</button>
         </div>
 
         { /* Render the name of the popup */ }
@@ -68,10 +68,11 @@ function GameFilterPopup({ popup, setPopup, searchParams, setSearchParams, image
 
               { /* Render a button that allows user to update the filters */ }
               <button 
+                type="button"
                 onClick={ () => closePopupAndUpdate(setPopup, searchParams, setSearchParams) }
                 id="recent-submissions-popup-selected-btn"
               >
-                Update Filters
+                Apply Filters
               </button>
             </>
 

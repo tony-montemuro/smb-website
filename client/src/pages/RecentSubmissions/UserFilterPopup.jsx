@@ -30,7 +30,7 @@ function UserFilterPopup({ popup, setPopup, searchParams, setSearchParams }) {
 
         { /* Render buttom to close the popup */ }
         <div className="recent-submissions-popup-close-btn">
-          <button onClick={ () => closePopup(setPopup) }>Close</button>
+          <button type="button" onClick={ () => closePopup(setPopup) }>Close</button>
         </div>
 
         { /* Render name of component */ }
@@ -65,10 +65,11 @@ function UserFilterPopup({ popup, setPopup, searchParams, setSearchParams }) {
 
               { /* Render a button that allows user to update the filters */ }
               <button 
+                type="button"
                 onClick={ () => closePopupAndUpdate(setPopup, searchParams, setSearchParams) }
                 id="recent-submissions-popup-selected-btn"
               >
-                Update Filters
+                Apply Filters
               </button>
             </>
 

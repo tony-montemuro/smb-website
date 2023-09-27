@@ -2,8 +2,9 @@
 import "./RecentSubmissions.css";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import GameFilterPopup from "./GameFilterPopup.jsx";
+import OtherFilterPopup from "./OtherFilterPopup.jsx";
+import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import UserFilterPopup from "./UserFilterPopup.jsx";
 
 function RecentSubmissions({ imageReducer }) {
@@ -14,6 +15,7 @@ function RecentSubmissions({ imageReducer }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [gamePopup, setGamePopup] = useState(undefined);
   const [userPopup, setUserPopup] = useState(undefined);
+  const [otherPopup, setOtherPopup] = useState(undefined);
 
   /* ===== RECENT SUBMISSIONS COMPONENT ===== */
   return (
@@ -23,9 +25,9 @@ function RecentSubmissions({ imageReducer }) {
       <div className="recent-submissions-header">
         <h1>Recent Submissions</h1>
         <div className="recent-submissions-btns">
-          <button onClick={ () => setGamePopup(true) }>Filter by Game</button>
-          <button onClick={ () => setUserPopup(true) }>Filter by User</button>
-          <button>Other Filters</button>
+          <button type="button" onClick={ () => setGamePopup(true) }>Filter by Game</button>
+          <button type="button" onClick={ () => setUserPopup(true) }>Filter by User</button>
+          <button type="button" onClick={ () => setOtherPopup(true) }>Other Filters</button>
         </div>
       </div>
 
@@ -43,6 +45,12 @@ function RecentSubmissions({ imageReducer }) {
       <UserFilterPopup 
         popup={ userPopup }
         setPopup={ setUserPopup }
+        searchParams={ searchParams }
+        setSearchParams={ setSearchParams }
+      />
+      <OtherFilterPopup 
+        popup={ otherPopup }
+        setPopup={ setOtherPopup }
         searchParams={ searchParams }
         setSearchParams={ setSearchParams }
       />

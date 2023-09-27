@@ -52,6 +52,56 @@
     padding: 7.5px 0;
 }
 
+.recent-submissions-popup-filter-title {
+    display: flex;
+    gap: 10px;
+}
+
+.recent-submissions-popup-filter-title button {
+    margin: auto 0;
+}
+
+.recent-submissions-popup-boolean-filters {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.recent-submissions-popup-filter-btns {
+    display: flex;
+    gap: 5px;
+}
+
+.recent-submissions-filter-btn {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.recent-submissions-filter-btn:hover {
+    background-color: #ddd;
+}
+  
+.recent-submissions-filter-btn-selected {
+    background-color: black;
+    color: #fff;
+}
+
+.recent-submissions-filter-btn-selected:hover {
+    background-color: #333333;
+}
+
+.recent-submissions-popup-submit-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.recent-submissions-popup-submit-btns button {
+    margin: 15px 0;
+}
+
 #recent-submissions-popup-empty {
     padding-top: 7.5px;
     padding-bottom: 15px;
@@ -59,4 +109,8 @@
 
 #recent-submissions-popup-selected-btn {
     align-self: flex-start;
+}
+
+#recent-submissions-popup-submit {
+    margin: 15px 0;
 }

@@ -64,6 +64,7 @@ function GameSearch({ gamesPerPage, searchBarWidth = "75%", imageReducer, gameRo
           { filters.map(filter => {
             return (
               <button 
+                type="button"
                 className={ `game-search-filter-btn${ gameTypeFilter === filter.value ? " game-search-filter-btn-selected" : "" }` }
                 onClick={ () => setGameTypeFilter(filter.value) }
                 key={ filter.name }
