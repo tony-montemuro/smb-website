@@ -41,7 +41,6 @@ const UserFilterPopup = () => {
             try {
                 const users = await queryProfileByList(ids);
                 setUsers(users);
-                console.log(users);
             } catch (error) {
                 addMessage("There was a problem fetching user data.", "error");
             };
