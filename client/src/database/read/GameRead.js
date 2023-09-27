@@ -163,7 +163,7 @@ const GameRead = () => {
         // 2.) count: the total number of games that match the user input. in some cases, this number will be larger 
         // than `games.length`
     // if the query fails, this function throws an error, which should be handled by the caller function
-    const searchForGames = async(userInput, start, end, gameTypeFilter) => {
+    const searchForGames = async (userInput, start, end, gameTypeFilter) => {
         // first, let's generate our `custom` field filter
         let customFilter = [];
         if (!gameTypeFilter || gameTypeFilter === "custom") {
@@ -195,7 +195,35 @@ const GameRead = () => {
         };
     };
 
-    return { queryGame, queryGamesForModerators, searchForGames };
+    // FUNCTION 4: queryGamesByList - code that takes an array of strings representing game primary keys, and returns the matching games
+    // PRECONDITIONS (1 parameter):
+    // 1.) abbs: an array of `abb` strings, each should correspond to a game in the db
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, then this function will simply return the game data
+    // if the query is unsuccessful, then this function will throw an error, which should be handled by the caller function
+    const queryGameByList = async abbs => {
+        try {
+            const { data: games, error } = await supabase
+                .from("game")
+                .select("abb, custom, name")
+                .in("abb", abbs)
+                .order("custom")
+                .order("id");
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            return games;
+
+        } catch (error) {
+            // error should be handled by caller function
+            throw error;
+        };
+    };
+
+    return { queryGame, queryGamesForModerators, searchForGames, queryGameByList };
 };
 
 /* ===== EXPORTS ===== */

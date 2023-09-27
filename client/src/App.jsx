@@ -161,7 +161,7 @@ function App() {
                 <Reports imageReducer={ imageReducer } />
               }/>
             </Route>
-            <Route path="recent-submissions" element={ <RecentSubmissions /> } />
+            <Route path="recent-submissions" element={ <RecentSubmissions imageReducer={ imageReducer } /> } />
           </Routes>
         </div>
       </UserContext.Provider>

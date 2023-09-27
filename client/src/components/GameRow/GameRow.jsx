@@ -3,7 +3,7 @@ import "./GameRow.css";
 import { Link } from "react-router-dom";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 
-function GameRow({ game, imageReducer, useCard, onClick = undefined }) {
+function GameRow({ game, imageReducer, useCard = false, onClick = undefined }) {
   /* ===== VARIABLES ===== */
   const BOX_WIDTH = useCard ? 200 : 50;
 

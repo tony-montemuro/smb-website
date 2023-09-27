@@ -55,9 +55,20 @@ const SubmissionRead = () => {
 
             // add filters to our query according to `searchParams`, if it's defined
             if (searchParams) {
+                // create an define object that will contain all our filters
+                const filters = {};
                 for (const [key, value] of searchParams) {
-                    query = query.eq(key, value);
+                    if (filters[key]) {
+                        filters[key].push(value);
+                    } else {
+                        filters[key] = [value];
+                    }
                 }
+
+                // add an `in` method for each key => value pair
+                Object.keys(filters).forEach(key => {
+                    query = query.in(key, filters[key]);
+                });
             }
 
             // finally, add our pagenation limits, and ordering

@@ -8,7 +8,7 @@ import SearchBarInput from "../SearchBarInput/SearchBarInput";
 
 function GameSearch({ gamesPerPage, searchBarWidth = "75%", imageReducer, gameRowOptions }) {
   /* ===== STATES & FUNCTIONS ===== */
-  const [gameTypeFilter, setGameTypeFilter] = useState("")
+  const [gameTypeFilter, setGameTypeFilter] = useState(undefined)
   const [pageNum, setPageNum] = useState(1);
   const [searchInput, setSearchInput] = useState("");
 
@@ -112,7 +112,7 @@ function GameSearch({ gamesPerPage, searchBarWidth = "75%", imageReducer, gameRo
           setPageNum={ setPageNum }
           itemName={ "Games" } 
         />
-        
+
       </div>
     </div>
 };
