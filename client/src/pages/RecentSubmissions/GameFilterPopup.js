@@ -74,7 +74,15 @@ const GameFilterPopup = () => {
         setGames(games.filter(row => row.abb !== game.abb));
     };
 
-    // FUNCTION 4: closePopup - function that simply closes the popup
+    // FUNCTION 4: resetFilter - function that sets the `games` state back to an empty array, effectively resetting it
+    // PRECONDIITONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // the `games` state is set to an empty array by calling the `setGames` setter function with an empty array as an argument
+    const resetFilter = () => {
+        setGames([]);
+    };
+
+    // FUNCTION 5: closePopup - function that simply closes the popup
     // PRECONDITIONS (1 parameter):
     // 1.) setPopup: a setter function that, when set to false, will close the popup
     // POSTCONDITIONS (1 possible outcome):
@@ -83,7 +91,7 @@ const GameFilterPopup = () => {
         setPopup(false);
     };
 
-    // FUNCTION 5: closePopupAndUpdate - function that closes the game filter popup, and updates the search params state
+    // FUNCTION 6: closePopupAndUpdate - function that closes the game filter popup, and updates the search params state
     // PRECONDITIONS (3 parameters):
     // 1.) setPopup: a setter function that, when set to false, will close the popup
     // 2.) searchParams: a URLSearchParams specifying the filters currently applied to the recent submissions page
@@ -111,7 +119,7 @@ const GameFilterPopup = () => {
         setPopup(false);
     };
     
-    return { games, fetchGames, addGame, removeGame, closePopup, closePopupAndUpdate };
+    return { games, fetchGames, addGame, removeGame, resetFilter, closePopup, closePopupAndUpdate };
 };
 
 /* ===== EXPORTS ===== */

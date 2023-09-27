@@ -76,7 +76,15 @@ const UserFilterPopup = () => {
         setUsers(users.filter(row => row.id !== user.id));
     };
 
-    // FUNCTION 4: closePopup - code that simply closes the user filter popup
+    // FUNCTION 4: resetFilter - function that sets the `users` state back to an empty array, effectively resetting it
+    // PRECONDIITONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // the `users` state is set to an empty array by calling the `setUsers` setter function with an empty array as an argument
+    const resetFilter = () => {
+        setUsers([]);
+    };
+
+    // FUNCTION 5: closePopup - code that simply closes the user filter popup
     // PRECONDITIONS (1 parameter):
     // 1.) setPopup: setter function that, when set to false, closes the popup
     // POSTCONDITIONS (1 possible outcome):
@@ -85,7 +93,7 @@ const UserFilterPopup = () => {
         setPopup(false);
     };
 
-    // FUNCTION 5: closePopupAndUpdate - function that closes the user filter popup, and updates the search params state
+    // FUNCTION 6: closePopupAndUpdate - function that closes the user filter popup, and updates the search params state
     // PRECONDITIONS (3 parameters):
     // 1.) setPopup: a setter function that, when set to false, will close the popup
     // 2.) searchParams: a URLSearchParams specifying the filters currently applied to the recent submissions page
@@ -113,7 +121,7 @@ const UserFilterPopup = () => {
         setPopup(false);
     };
 
-    return { users, fetchUsers, addUser, removeUser, closePopup, closePopupAndUpdate };
+    return { users, fetchUsers, addUser, removeUser, resetFilter, closePopup, closePopupAndUpdate };
 };
 
 /* ===== EXPORTS ===== */

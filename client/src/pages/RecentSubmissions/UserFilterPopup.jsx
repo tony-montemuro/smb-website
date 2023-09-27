@@ -6,7 +6,7 @@ import UserRow from "../../components/UserRow/UserRow.jsx";
 
 function UserFilterPopup({ popup, setPopup, searchParams, setSearchParams }) {
   /* ===== FUNCTIONS ===== */
-  const { users, fetchUsers, addUser, removeUser, closePopup, closePopupAndUpdate } = UserFilterPopupLogic();
+  const { users, fetchUsers, addUser, removeUser, resetFilter, closePopup, closePopupAndUpdate } = UserFilterPopupLogic();
 
   /* ===== VARIABLES ===== */
   const USERS_PER_PAGE = 20;
@@ -63,14 +63,13 @@ function UserFilterPopup({ popup, setPopup, searchParams, setSearchParams }) {
                 <i id="recent-submissions-popup-empty">You are not currently filtering by any users.</i>
               }
 
-              { /* Render a button that allows user to update the filters */ }
-              <button 
-                type="button"
-                onClick={ () => closePopupAndUpdate(setPopup, searchParams, setSearchParams) }
-                id="recent-submissions-popup-selected-btn"
-              >
-                Apply Filters
-              </button>
+              { /* Render a button that allows user to reset filters, as well as apply any filters */ }
+              <div className="recent-submissions-popup-submit-btns">
+                <button type="button" onClick={ resetFilter }>Reset Filter</button>
+                <button type="button" onClick={ () => closePopupAndUpdate(setPopup, searchParams, setSearchParams) }>
+                  Apply Filters
+                </button>
+              </div>
             </>
 
           :

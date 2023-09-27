@@ -94,13 +94,14 @@
 
 .recent-submissions-popup-submit-btns {
     display: flex;
-    justify-content: flex-end;
     gap: 5px;
 }
 
 .recent-submissions-popup-submit-btns button {
     margin: 15px 0;
 }
+
+.recent-submissions-popup
 
 #recent-submissions-popup-empty {
     padding-top: 7.5px;
@@ -113,4 +114,8 @@
 
 #recent-submissions-popup-submit {
     margin: 15px 0;
+}
+
+#recent-submissions-popup-submit-btns-other {
+    justify-content: flex-end;
 }

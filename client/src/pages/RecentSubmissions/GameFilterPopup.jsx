@@ -8,7 +8,7 @@ function GameFilterPopup({ popup, setPopup, searchParams, setSearchParams, image
   /* ===== STATES & FUNCTIONS ===== */
   
   // state and functions from the js file
-  const { games, fetchGames, addGame, removeGame, closePopup, closePopupAndUpdate } = GameFilterPopupLogic();
+  const { games, fetchGames, addGame, removeGame, resetFilter, closePopup, closePopupAndUpdate } = GameFilterPopupLogic();
 
   /* ===== VARIABLES ===== */
   const GAMES_PER_PAGE = 20;
@@ -66,14 +66,14 @@ function GameFilterPopup({ popup, setPopup, searchParams, setSearchParams, image
                 <i id="recent-submissions-popup-empty">You are not currently filtering by any games.</i>
               }
 
-              { /* Render a button that allows user to update the filters */ }
-              <button 
-                type="button"
-                onClick={ () => closePopupAndUpdate(setPopup, searchParams, setSearchParams) }
-                id="recent-submissions-popup-selected-btn"
-              >
-                Apply Filters
-              </button>
+              { /* Render a button that allows user to reset filters, as well as apply any filters */ }
+              <div className="recent-submissions-popup-submit-btns">
+                <button type="button" onClick={ resetFilter }>Reset Filter</button>
+                <button type="button" onClick={ () => closePopupAndUpdate(setPopup, searchParams, setSearchParams) }>
+                  Apply Filters
+                </button>
+              </div>
+              
             </>
 
           :

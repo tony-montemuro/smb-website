@@ -111,7 +111,7 @@ function OtherFilterPopup({ popup, setPopup, searchParams, setSearchParams }) {
           </div>
 
           { /* Finally, render button to update the forms (submit form), and reset all filters */ }
-          <div className="recent-submissions-popup-submit-btns">
+          <div id="recent-submissions-popup-submit-btns-other" className="recent-submissions-popup-submit-btns">
             <button type="button" onClick={ () => resetFiltersAll(defaultFilters) }>Reset Filters</button>
             <button type="submit">Apply Filters</button>
           </div>
