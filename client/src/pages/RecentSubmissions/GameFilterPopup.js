@@ -56,10 +56,12 @@ const GameFilterPopup = () => {
     // 1.) game: an object containing information about a game that does not already exist in the array
     // POSTCONDITIONS (2 possible outcomes):
     // if this is a "new" game, we add it to our array of games
-    // otherwise, this function does nothing
+    // otherwise, this function renders an error message to the user
     const addGame = game => {
         if (!(games.some(row => row.abb === game.abb))) {
             setGames(games.concat([game]));
+        } else {
+            addMessage("You have already added this game as a filter!", "error");
         }
     };
 
