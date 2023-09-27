@@ -53,7 +53,7 @@ const GameFilterPopup = () => {
 
     // FUNCTION 2: addGame - function that adds a game object to our games state
     // PRECONDITIONS (1 parameter):
-    // 1.) game: an object containing information about a game that does not already exist in the array
+    // 1.) game: an object containing information about a game
     // POSTCONDITIONS (2 possible outcomes):
     // if this is a "new" game, we add it to our array of games
     // otherwise, this function renders an error message to the user
@@ -109,7 +109,7 @@ const GameFilterPopup = () => {
         // finally, let's update states
         setSearchParams(newSearchParams);
         setPopup(false);
-    }
+    };
     
     return { games, fetchGames, addGame, removeGame, closePopup, closePopupAndUpdate };
 };
