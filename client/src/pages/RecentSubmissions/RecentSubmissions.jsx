@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import GameFilterPopup from "./GameFilterPopup.jsx";
+import UserFilterPopup from "./UserFilterPopup.jsx";
 
 function RecentSubmissions({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -12,6 +13,7 @@ function RecentSubmissions({ imageReducer }) {
   /* ===== STATES ===== */
   const [searchParams, setSearchParams] = useSearchParams();
   const [gamePopup, setGamePopup] = useState(undefined);
+  const [userPopup, setUserPopup] = useState(undefined);
 
   /* ===== RECENT SUBMISSIONS COMPONENT ===== */
   return (
@@ -22,7 +24,7 @@ function RecentSubmissions({ imageReducer }) {
         <h1>Recent Submissions</h1>
         <div className="recent-submissions-btns">
           <button onClick={ () => setGamePopup(true) }>Filter by Game</button>
-          <button>Filter by User</button>
+          <button onClick={ () => setUserPopup(true) }>Filter by User</button>
           <button>Other Filters</button>
         </div>
       </div>
@@ -37,6 +39,12 @@ function RecentSubmissions({ imageReducer }) {
         searchParams={ searchParams } 
         setSearchParams={ setSearchParams }
         imageReducer={ imageReducer } 
+      />
+      <UserFilterPopup 
+        popup={ userPopup }
+        setPopup={ setUserPopup }
+        searchParams={ searchParams }
+        setSearchParams={ setSearchParams }
       />
 
     </div>

@@ -21,7 +21,6 @@ function GameFilterPopup({ popup, setPopup, searchParams, setSearchParams, image
 
   // code that is executed when the component mounts
   useEffect(() => {
-    console.log("?");
     fetchGames(searchParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
