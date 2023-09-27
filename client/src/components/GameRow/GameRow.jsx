@@ -12,7 +12,7 @@ function GameRow({ game, imageReducer, useCard = false, onClick = undefined }) {
 
     // if useCard is true, render each game as a series of "cards" 
     return (
-      <div className="game-row-card" onClick={ onClick ? () => onClick(game) : null }>
+      <div className="game-row-card">
         <Link to={ { pathname: `/games/${ game.abb }` } }>
           <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
           <p>{ game.name } </p>
