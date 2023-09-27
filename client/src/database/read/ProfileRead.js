@@ -90,7 +90,35 @@ const ProfileRead = () => {
         };
     };
 
-    return { queryUserProfile, searchForProfiles };
+    // FUNCTION 3: queryProfileByList - code that takes an array of strings representing profile primary keys, and returns the matching
+    // profiles
+    // PRECONDITIONS (1 parameter):
+    // 1.) ids: an array of profile `id` strings, each should correspond to a profile in the db
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, then this function will simply return the profile data
+    // if the query is unsuccessful, then this function will throw an error, which should be handled by the caller function
+    const queryProfileByList = async ids => {
+        try {
+            const { data: profiles, error } = await supabase
+                .from("profile")
+                .select("country, id, username")
+                .in("id", ids)
+                .order("username");
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            return profiles;
+
+        } catch (error) {
+            // error should be handled by caller function
+            throw error;
+        };
+    };
+
+    return { queryUserProfile, searchForProfiles, queryProfileByList };
 };
 
 /* ===== EXPORTS ===== */
