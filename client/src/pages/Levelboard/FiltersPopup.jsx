@@ -16,7 +16,7 @@ function FiltersPopup({ popup, closePopup, currentFilters, defaultFilters, onApp
     {
       name: "Proof Type",
       propertyName: "live",
-      items: [{ id: true, name: "Live-recordings" }, { id: false, name: "Replays" }]
+      items: [{ id: true, name: "Live-only" }, { id: false, name: "Replays-only" }]
     },
     {
       name: "Monkey",
@@ -51,7 +51,8 @@ function FiltersPopup({ popup, closePopup, currentFilters, defaultFilters, onApp
   // states and functions from the js file
   const { 
     filters,
-    setFilters, 
+    setFilters,
+    handleArrayFilterChangeAll, 
     handleArrayFilterChange, 
     hasArrayFilterChanged, 
     handleFilterReset, 
@@ -96,9 +97,12 @@ function FiltersPopup({ popup, closePopup, currentFilters, defaultFilters, onApp
               <ArrayBasedFilter 
                 filters={ filters }
                 selectedFilter={ filter }
-                hasFilterChanged={ hasArrayFilterChanged }
-                handleFilterChange={ handleArrayFilterChange }
-                handleFilterReset={ handleFilterReset }
+                behaviors={{
+                  hasFilterChanged: hasArrayFilterChanged,
+                  handleFilterChangeAll: handleArrayFilterChangeAll,
+                  handleFilterChange: handleArrayFilterChange,
+                  handleFilterReset: handleFilterReset
+                }}
                 key={ filter.propertyName }
               />
             );

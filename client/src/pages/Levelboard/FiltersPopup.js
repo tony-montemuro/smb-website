@@ -7,23 +7,38 @@ const FiltersPopup = (defaultFilters) => {
 
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: handleArrayFilterChange - code that is executed when the user makes a change to an array-based filter
-    // PRECONDITIONS (1 parameter):
+    // FUNCTION 1: handleArrayFilterChangeAll - code that is executed when the user selects the "all" button for an array-based filter
+    // PRECONDITIONS (2 parameters)
+    // 1.) items: an array of all items in a filters set
+    // 2.) property: a string representing the name of the filter property (MUST be for an array-based filter)
+    // POSTCONDITIONS (1 possible outcome):
+    // we update the filter by calling the `setFilters` setter function
+    const handleArrayFilterChangeAll = (items, property) => {
+        setFilters({ ...filters, [property]: items });
+    };
+
+    // FUNCTION 2: handleArrayFilterChange - code that is executed when the user makes a change to an array-based filter
+    // PRECONDITIONS (3 parameters):
     // 1.) item: a string representing the item we will either filter in or out, depending on whether or not the item 
     // already existed in the filter
-    // 2.) property: a string representing the name of the filter property (MUST be for an array-based filter)
-    // POSTCONDITIONS (3 possible outcomes):
-    // if this item is not part of our filter, we add it
+    // 2.) maxItemCount: an integer representing the maximum number of items the filter accepts
+    // 3.) property: a string representing the name of the filter property (MUST be for an array-based filter)
+    // POSTCONDITIONS (4 possible outcomes):
+    // if this item is not part of our filter, and not all items are already present in the filter, we add it
     // if this item is part of our filter, and the filter has 2 or more items already, remove it
+    // if this item is part of our filter, and our filter already contains the max number of elements, simply set filter to the single
+    // property
     // if this item is part of our filter, but it's the only item remaining in the filter, do nothing
-    const handleArrayFilterChange = (item, property) => {
+    const handleArrayFilterChange = (item, maxItemCount, property) => {
         // first, define our new array, which we will modify based on the item, property, and filters state
         let newArr;
         
-        // next, we will essentially treat the proof type as a "toggle". if the type was already included in the `filters.live` array,
-        // remove it. otherwise, add it
+        // next, we will essentially treat the proof type as a "toggle". generally, if the type was already included in the `filters.live`
+        // array, remove it. otherwise, add it (more complexities described in postconditions)
         if (filters[property].includes(item)) {
-            newArr = filters[property].length > 1 ? filters[property].filter(val => val !== item) : filters[property];
+            if (filters[property].length > 1) {
+                newArr = filters[property].length === maxItemCount ? newArr = [item] : filters[property].filter(val => val !== item);
+            }
         } else {
             newArr = filters[property].concat([item]);
         }
@@ -33,7 +48,7 @@ const FiltersPopup = (defaultFilters) => {
         setFilters({ ...filters, [property]: newArr });
     };
 
-    // FUNCTION 2: hasArrayFilterChanged - code that checks whether or not an array filter defined by property has changed
+    // FUNCTION 3: hasArrayFilterChanged - code that checks whether or not an array filter defined by property has changed
     // PRECONDITIONS (1 parameter):
     // 1.) property: a string representing the name of the filter property (MUST be for an array-based filter)
     // POSTCONDITIONS (2 possible outcomes):
@@ -59,7 +74,7 @@ const FiltersPopup = (defaultFilters) => {
         return false;
     };
 
-    // FUNCTION 3: handleFilterReset - code that is executed when user requests to reset the a filter for a non-array based filter
+    // FUNCTION 4: handleFilterReset - code that is executed when user requests to reset the a filter for a non-array based filter
     // property
     // PRECONDITIONS (1 parameter):
     // 1.) property: a string representing the name of the filter property
@@ -69,8 +84,8 @@ const FiltersPopup = (defaultFilters) => {
         setFilters({ ...filters, [property]: defaultFilters[property] });
     };
 
-    // FUNCTION 4: handleFilterChange - code that is executed when the user makes a change to a non-array based filter property
-    // PRECONDITIONS (1 parameter):
+    // FUNCTION 5: handleFilterChange - code that is executed when the user makes a change to a non-array based filter property
+    // PRECONDITIONS (2 parameters):
     // 1.) val: a variable representing the value the user selected
     // 2.) property: a string representing the name of the filter property (MUST be for an non-array based filter)
     // POSTCONDITIONS (1 possible outcomes):
@@ -79,7 +94,7 @@ const FiltersPopup = (defaultFilters) => {
         setFilters({ ...filters, [property]: val });
     };
 
-    // FUNCTION 5: hasFilterChanged - code that checks whether or not a non-array based filter has changed
+    // FUNCTION 6: hasFilterChanged - code that checks whether or not a non-array based filter has changed
     // PRECONDITIONS (1 parameter):
     // 1.) property: a string representing the name of the property we want to check for changes
     // POSTCONDITIONS (2 possible outcomes):
@@ -89,7 +104,7 @@ const FiltersPopup = (defaultFilters) => {
         return filters[property] !== defaultFilters[property];
     };
 
-    // FUNCTION 6: handleFiltersResetAll - code that is executed when user requests to reset all filters
+    // FUNCTION 7: handleFiltersResetAll - code that is executed when user requests to reset all filters
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // we reset the filters by calling the setFilters() function with the defaultFilters as an argument
@@ -97,7 +112,7 @@ const FiltersPopup = (defaultFilters) => {
         setFilters(defaultFilters);
     };
 
-    // FUNCTION 7: handleApplyFilters - code that is executed when the user requests to apply filters
+    // FUNCTION 8: handleApplyFilters - code that is executed when the user requests to apply filters
     // PRECONDITIONS (2 parameters):
     // 1.) onApplyFunc: code that is executed in `Levelboard.js` when we apply filters
     // 2.) closePopup: a function we can use to close the popup, which we want to do after applying filters
@@ -112,6 +127,7 @@ const FiltersPopup = (defaultFilters) => {
     return { 
         filters, 
         setFilters,
+        handleArrayFilterChangeAll,
         handleArrayFilterChange, 
         hasArrayFilterChanged, 
         handleFilterReset,
