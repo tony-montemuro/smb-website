@@ -53,6 +53,7 @@ function UserFilter({ searchParams, setSearchParams }) {
                       user={ user }
                       disableLink={ true }
                       onClick={ removeUser }
+                      key={ user.id }
                     />
                   );
                 })}

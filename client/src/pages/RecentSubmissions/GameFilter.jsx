@@ -56,6 +56,7 @@ function GameFilter({ searchParams, setSearchParams, imageReducer }) {
                       imageReducer={ imageReducer }
                       useCard={ false }
                       onClick={ removeGame }
+                      key={ game.abb }
                     />
                   );
                 })}
