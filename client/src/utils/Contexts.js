@@ -5,5 +5,6 @@ import { createContext } from "react";
 export const GameContext = createContext();
 export const ModeratorLayoutContext = createContext();
 export const MessageContext = createContext();
+export const PopupContext = createContext();
 export const ProfileContext = createContext();
 export const UserContext = createContext();
