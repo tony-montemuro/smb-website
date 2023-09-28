@@ -7,6 +7,8 @@ import GameRow from "../../components/GameRow/GameRow.jsx";
 
 function GameFilter({ searchParams, setSearchParams, imageReducer }) {
   /* ===== CONTEXTS ===== */
+
+  // close popup function from popup context
   const { closePopup } = useContext(PopupContext);
 
   /* ===== STATES & FUNCTIONS ===== */

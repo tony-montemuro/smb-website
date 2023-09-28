@@ -44,7 +44,6 @@ const FiltersPopup = (defaultFilters) => {
         }
 
         // finally, sort & update the filters state by calling `setFilters`
-        console.log(newArr);
         newArr.sort((a, b) => a - b);
         setFilters({ ...filters, [property]: newArr });
     };

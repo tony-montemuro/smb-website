@@ -6,7 +6,7 @@ import GameFilter from "./GameFilter.jsx";
 import OtherFilterPopup from "./OtherFilterPopup.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
-import UserFilterPopup from "./UserFilterPopup.jsx";
+import UserFilter from "./UserFilter.jsx";
 
 function RecentSubmissions({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -26,6 +26,9 @@ function RecentSubmissions({ imageReducer }) {
       <Popup renderPopup={ gamePopup } setRenderPopup={ setGamePopup } width={ "60%" }>
         <GameFilter searchParams={ searchParams } setSearchParams={ setSearchParams } imageReducer={ imageReducer } />
       </Popup>
+      <Popup renderPopup={ userPopup } setRenderPopup={ setUserPopup } width={ "60%" } >
+        <UserFilter searchParams={ searchParams } setSearchParams={ setSearchParams } />
+      </Popup>
 
       { /* Recent submissions header - render the name of the page, as well as the filter buttons */ }
       <div className="recent-submissions-header">
@@ -41,12 +44,12 @@ function RecentSubmissions({ imageReducer }) {
       <RecentSubmissionsTable numSubmissions={ NUM_SUBMISSIONS } searchParams={ searchParams } />
 
       { /* Popups */ }
-      <UserFilterPopup 
+      {/* <UserFilterPopup 
         popup={ userPopup }
         setPopup={ setUserPopup }
         searchParams={ searchParams }
         setSearchParams={ setSearchParams }
-      />
+      /> */}
       <OtherFilterPopup 
         popup={ otherPopup }
         setPopup={ setOtherPopup }
