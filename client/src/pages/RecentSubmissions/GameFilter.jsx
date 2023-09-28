@@ -38,7 +38,7 @@ function GameFilter({ searchParams, setSearchParams, imageReducer }) {
       { /* Render the name of the popup */ }
       <h1>Filter By Game</h1>
 
-      <div className="recent-submissions-popup-selected">
+      <div className="recent-submissions-filter-selected">
         <h2>Filtered Games</h2>
         <p>Click a game to remove it as a filter.</p>
 
@@ -63,11 +63,11 @@ function GameFilter({ searchParams, setSearchParams, imageReducer }) {
               </div>
             :
               // Otherwise, let the user know that they have not selected any games to filter by
-              <i id="recent-submissions-popup-empty">You are not currently filtering by any games.</i>
+              <i id="recent-submissions-filter-empty">You are not currently filtering by any games.</i>
             }
 
             { /* Render a button that allows user to reset filters, as well as apply any filters */ }
-            <div className="recent-submissions-popup-submit-btns">
+            <div className="recent-submissions-filter-submit-btns">
               <button type="button" onClick={ resetFilter }>Reset Filter</button>
               <button type="button" onClick={ () => closePopupAndUpdate(closePopup, searchParams, setSearchParams) }>
                 Apply Filters

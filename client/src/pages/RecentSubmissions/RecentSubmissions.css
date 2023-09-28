@@ -9,65 +9,37 @@
     gap: 5px;
 }
 
-.recent-submissions-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 500;
-}
-
-.recent-submissions-popup-inner {
-    position: relative;
-    padding: 32px;
-    width: 100%;
-    max-width: 60%;
-    max-height: 60vh;
-    overflow-y: auto;
-    background-color: #fff;
-    border-radius: 10px;
-}
-
-.recent-submissions-popup-close-btn {
-    text-align: right;
-}
-
-.recent-submissions-popup-selected {
+.recent-submissions-filter-selected {
     display: flex;
     flex-direction: column;
 }
 
-.recent-submissions-popup-selected h2 {
+.recent-submissions-filter-selected h2 {
     margin: 0;
     padding: 7.5px 0;
 }
 
-.recent-submissions-popup-selected p {
+.recent-submissions-filter-selected p {
     margin: 0;
     padding: 7.5px 0;
 }
 
-.recent-submissions-popup-filter-title {
+.recent-submissions-filter-title {
     display: flex;
     gap: 10px;
 }
 
-.recent-submissions-popup-filter-title button {
+.recent-submissions-filter-title button {
     margin: auto 0;
 }
 
-.recent-submissions-popup-boolean-filters {
+.recent-submissions-filter-boolean {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
 }
 
-.recent-submissions-popup-filter-btns {
+.recent-submissions-filter-btns {
     display: flex;
     gap: 5px;
 }
@@ -92,30 +64,20 @@
     background-color: #333333;
 }
 
-.recent-submissions-popup-submit-btns {
+.recent-submissions-filter-submit-btns {
     display: flex;
     gap: 5px;
 }
 
-.recent-submissions-popup-submit-btns button {
+.recent-submissions-filter-submit-btns button {
     margin: 15px 0;
 }
 
-.recent-submissions-popup
-
-#recent-submissions-popup-empty {
+#recent-submissions-filter-empty {
     padding-top: 7.5px;
     padding-bottom: 15px;
 }
 
-#recent-submissions-popup-selected-btn {
-    align-self: flex-start;
-}
-
-#recent-submissions-popup-submit {
-    margin: 15px 0;
-}
-
-#recent-submissions-popup-submit-btns-other {
+#recent-submissions-filter-submit-btns-right {
     justify-content: flex-end;
 }

@@ -36,7 +36,7 @@ function UserFilter({ searchParams, setSearchParams }) {
       { /* Render name of component */ }
       <h1>Filter by User</h1>
 
-      <div className="recent-submissions-popup-selected">
+      <div className="recent-submissions-filter-selected">
         <h2>Filtered Users</h2>
         <p>Click a user to remove it as a filter.</p>
 
@@ -60,11 +60,11 @@ function UserFilter({ searchParams, setSearchParams }) {
               </div>
             :
               // Otherwise, let the user know that they have not selected any users to filter by
-              <i id="recent-submissions-popup-empty">You are not currently filtering by any users.</i>
+              <i id="recent-submissions-filter-empty">You are not currently filtering by any users.</i>
             }
 
             { /* Render a button that allows user to reset filters, as well as apply any filters */ }
-            <div className="recent-submissions-popup-submit-btns">
+            <div className="recent-submissions-filter-submit-btns">
               <button type="button" onClick={ resetFilter }>Reset Filter</button>
               <button type="button" onClick={ () => closePopupAndUpdate(closePopup, searchParams, setSearchParams) }>
                 Apply Filters

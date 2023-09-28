@@ -63,14 +63,14 @@ function OtherFilter({ searchParams, setSearchParams }) {
 
         { /* First, render the filter options for categories */ }
         <div className="recent-submissions-popup-category-filter">
-          <div className="recent-submissions-popup-filter-title">
+          <div className="recent-submissions-filter-title">
             <h2>Categories</h2>
             { filters.category.length !== defaultFilters.category.length &&
               <button type="button" onClick={ updateCategoryFilterAll }>Reset</button>
             }
           </div>
           { categories && 
-            <div className="recent-submissions-popup-filter-btns">
+            <div className="recent-submissions-filter-btns">
 
               { /* Render a special button for selecting all the categories */ }
               <button
@@ -103,14 +103,14 @@ function OtherFilter({ searchParams, setSearchParams }) {
         </div>
 
         { /* Then, we can render the remaining boolean filters */ }
-        <div className="recent-submissions-popup-boolean-filters">
+        <div className="recent-submissions-filter-boolean">
           { booleanFilters.map(filter => {
             return <BooleanFilter filter={ filter } filters={ filters } onClick={ updateBooleanFilter } key={ filter.name } />;
           })}
         </div>
 
         { /* Finally, render button to update the forms (submit form), and reset all filters */ }
-        <div id="recent-submissions-popup-submit-btns-other" className="recent-submissions-popup-submit-btns">
+        <div id="recent-submissions-filter-submit-btns-right" className="recent-submissions-filter-submit-btns">
           <button type="button" onClick={ () => resetFiltersAll(defaultFilters) }>Reset Filters</button>
           <button type="submit">Apply Filters</button>
         </div>

@@ -3,14 +3,14 @@ function BooleanFilter({ filter, filters, onClick }) {
   return (
     <div>
       { /* Render the "title" of the filter */ }
-      <div className="recent-submissions-popup-filter-title">
+      <div className="recent-submissions-filter-title">
         <h2>{ filter.title }</h2>
         { filters[filter.name] !== filter.default && 
           <button type="button" onClick={ () => onClick(filter.name, filter.default) }>Reset</button> 
         }
       </div>
 
-      <div className="recent-submissions-popup-filter-btns">
+      <div className="recent-submissions-filter-btns">
 
         { /* Button for no-filter */ }
         <button 
