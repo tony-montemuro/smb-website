@@ -2,8 +2,9 @@
 import "./RecentSubmissions.css";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import GameFilterPopup from "./GameFilterPopup.jsx";
+import GameFilter from "./GameFilter.jsx";
 import OtherFilterPopup from "./OtherFilterPopup.jsx";
+import Popup from "../../components/Popup/Popup.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import UserFilterPopup from "./UserFilterPopup.jsx";
 
@@ -21,6 +22,11 @@ function RecentSubmissions({ imageReducer }) {
   return (
     <div className="recent-submissions">
 
+      { /* Popups */ }
+      <Popup renderPopup={ gamePopup } setRenderPopup={ setGamePopup } width={ "60%" }>
+        <GameFilter searchParams={ searchParams } setSearchParams={ setSearchParams } imageReducer={ imageReducer } />
+      </Popup>
+
       { /* Recent submissions header - render the name of the page, as well as the filter buttons */ }
       <div className="recent-submissions-header">
         <h1>Recent Submissions</h1>
@@ -35,13 +41,6 @@ function RecentSubmissions({ imageReducer }) {
       <RecentSubmissionsTable numSubmissions={ NUM_SUBMISSIONS } searchParams={ searchParams } />
 
       { /* Popups */ }
-      <GameFilterPopup 
-        popup={ gamePopup } 
-        setPopup={ setGamePopup } 
-        searchParams={ searchParams } 
-        setSearchParams={ setSearchParams }
-        imageReducer={ imageReducer } 
-      />
       <UserFilterPopup 
         popup={ userPopup }
         setPopup={ setUserPopup }
