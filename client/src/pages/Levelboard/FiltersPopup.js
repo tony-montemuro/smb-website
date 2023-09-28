@@ -31,7 +31,7 @@ const FiltersPopup = (defaultFilters) => {
     // if this item is part of our filter, but it's the only item remaining in the filter, do nothing
     const handleArrayFilterChange = (item, maxItemCount, property) => {
         // first, define our new array, which we will modify based on the item, property, and filters state
-        let newArr;
+        let newArr = filters[property];
         
         // next, we will essentially treat the proof type as a "toggle". generally, if the type was already included in the `filters.live`
         // array, remove it. otherwise, add it (more complexities described in postconditions)
@@ -44,6 +44,7 @@ const FiltersPopup = (defaultFilters) => {
         }
 
         // finally, sort & update the filters state by calling `setFilters`
+        console.log(newArr);
         newArr.sort((a, b) => a - b);
         setFilters({ ...filters, [property]: newArr });
     };
@@ -124,7 +125,7 @@ const FiltersPopup = (defaultFilters) => {
         closePopup(false);
     };
 
-    return { 
+    return {
         filters, 
         setFilters,
         handleArrayFilterChangeAll,
