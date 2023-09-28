@@ -1,57 +1,16 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
-import { useContext, useState } from "react";
-import GameRead from "../../database/read/GameRead";
+import { useContext } from "react";
 
-const GameFilter = () => {
+const GameFilter = (games, dispatchFiltersData) => {
     /* ===== CONTEXTS ===== */
     
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
-    /* ===== STATES ===== */
-    const [games, setGames] = useState(undefined);
-
     /* ===== FUNCTIONS ===== */
 
-    // database functions
-    const { queryGameByList } = GameRead();
-
-    // FUNCTION 1: fetchGames - function that fetches any games that we are already fitering by
-    // PRECONDITIONS (1 parameter):
-    // 1.) searchParams: a URLSearchParams object which defines the filters on the recent submissions
-    // POSTCONDITIONS (3 possible outcomes):
-    // if any games are being filtered in the search params, and the query is a success, this function updates the `games` state by calling
-    // the `setGames` setter function
-    // if any games are being filtered in the search params, and the query fails, this function will render an error message to the user,
-    // and leave the component loading
-    // if NO games are being filtered in the search params, this function will simply update the `games` state to an empty array by calling
-    // the `setGames()` setter function with an empty array argument
-    const fetchGames = async searchParams => {
-        // first, let's get all the games from the search params, if there are any
-        const abbs = [];
-        for (const [key, value] of searchParams) {
-            if (key === "game_id") {
-                abbs.push(value);
-            }
-        }
-
-        // if there are any games in the search params, let's get all associated game objects, and update the games state
-        if (abbs.length > 0) {
-            try {
-                const games = await queryGameByList(abbs);
-                setGames(games);
-            } catch (error) {
-                addMessage("There was a problem fetching game data.", "error");
-            };
-        }
-        
-        else {
-            setGames([]);
-        }
-    };
-
-    // FUNCTION 2: addGame - function that adds a game object to our games state
+    // FUNCTION 1: addGame - function that adds a game object to our games state
     // PRECONDITIONS (1 parameter):
     // 1.) game: an object containing information about a game
     // POSTCONDITIONS (2 possible outcomes):
@@ -59,30 +18,30 @@ const GameFilter = () => {
     // otherwise, this function renders an error message to the user
     const addGame = game => {
         if (!(games.some(row => row.abb === game.abb))) {
-            setGames(games.concat([game]));
+            dispatchFiltersData({ type: "games", value: games.concat([game]) });
         } else {
             addMessage("You have already added this game as a filter!", "error");
         }
     };
 
-    // FUNCTION 3: removeGame - function that removes a game object from our games state
+    // FUNCTION 2: removeGame - function that removes a game object from our games state
     // PRECONDITIONS (1 parameter):
     // 1.) game: an object containing information about a game present in our array
     // POSTCONDITIONS (1 possible outcome):
     // the games state is updated with our games array with the game parameter filtered out
     const removeGame = game => {
-        setGames(games.filter(row => row.abb !== game.abb));
+        dispatchFiltersData({ type: "games", value: games.filter(row => row.abb !== game.abb) });
     };
 
-    // FUNCTION 4: resetFilter - function that sets the `games` state back to an empty array, effectively resetting it
+    // FUNCTION 3: resetFilter - function that sets the `games` state back to an empty array, effectively resetting it
     // PRECONDIITONS: NONE
     // POSTCONDITIONS (1 possible outcome):
-    // the `games` state is set to an empty array by calling the `setGames` setter function with an empty array as an argument
+    // the `games` state is set to an empty array by calling the `dispatchFiltersData` setter function with an empty array as an argument
     const resetFilter = () => {
-        setGames([]);
+        dispatchFiltersData({ type: "games", value: [] });
     };
 
-    // FUNCTION 5: closePopupAndUpdate - function that closes the game filter popup, and updates the search params state
+    // FUNCTION 4: closePopupAndUpdate - function that closes the game filter popup, and updates the search params state
     // PRECONDITIONS (3 parameters):
     // 1.) closePopup: a function that, when called, will simply close the popup
     // 2.) searchParams: a URLSearchParams specifying the filters currently applied to the recent submissions page
@@ -110,7 +69,7 @@ const GameFilter = () => {
         closePopup();
     };
     
-    return { games, fetchGames, addGame, removeGame, resetFilter, closePopupAndUpdate };
+    return { addGame, removeGame, resetFilter, closePopupAndUpdate };
 };
 
 /* ===== EXPORTS ===== */

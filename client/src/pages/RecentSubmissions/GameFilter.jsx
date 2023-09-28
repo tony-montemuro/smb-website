@@ -1,20 +1,20 @@
 /* ===== IMPORTS ===== */
 import { PopupContext } from "../../utils/Contexts.js";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import GameFilterLogic from "./GameFilter.js";
 import GameSearch from "../../components/GameSearch/GameSearch.jsx";
 import GameRow from "../../components/GameRow/GameRow.jsx";
 
-function GameFilter({ searchParams, setSearchParams, imageReducer }) {
+function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispatchFiltersData }) {
   /* ===== CONTEXTS ===== */
 
   // close popup function from popup context
   const { closePopup } = useContext(PopupContext);
 
-  /* ===== STATES & FUNCTIONS ===== */
+  /* ===== FUNCTIONS ===== */
   
-  // state and functions from the js file
-  const { games, fetchGames, addGame, removeGame, resetFilter, closePopupAndUpdate } = GameFilterLogic();
+  // functions from the js file
+  const { addGame, removeGame, resetFilter, closePopupAndUpdate } = GameFilterLogic(games, dispatchFiltersData);
 
   /* ===== VARIABLES ===== */
   const GAMES_PER_PAGE = 20;
@@ -22,14 +22,6 @@ function GameFilter({ searchParams, setSearchParams, imageReducer }) {
     useCard: false,
     onGameRowClick: addGame
   };
-
-  /* ===== EFFECTS ===== */
-
-  // code that is executed when the component mounts
-  useEffect(() => {
-    fetchGames(searchParams);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   /* ===== GAME FILTER COMPONENT ===== */
   return (

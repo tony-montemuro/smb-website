@@ -5,7 +5,7 @@ import BooleanFilter from "./BooleanFilter.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import OtherFilterLogic from "./OtherFilter.js";
 
-function OtherFilter({ searchParams, setSearchParams }) {
+function OtherFilter({ searchParams, setSearchParams, categories }) {
   /* ===== CONTEXTS ===== */
 
   // close popup function from context context
@@ -28,16 +28,14 @@ function OtherFilter({ searchParams, setSearchParams }) {
 
   // states & functions from the js file
   const { 
-    categories, 
     filters, 
     initializeFilters, 
-    fetchCategories, 
     updateCategoryFilterAll,
     updateCategoryFilter,
     updateBooleanFilter,
     resetFiltersAll,
     closePopupAndUpdate 
-  } = OtherFilterLogic();
+  } = OtherFilterLogic(categories);
 
   // helper functions
   const { categoryB2F } = FrontendHelper();
@@ -47,7 +45,6 @@ function OtherFilter({ searchParams, setSearchParams }) {
   // code that is executed when the component mounts
   useEffect(() => {
     initializeFilters(searchParams);
-    fetchCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

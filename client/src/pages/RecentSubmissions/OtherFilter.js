@@ -1,22 +1,11 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
-import { useContext, useState } from "react";
-import RPCRead from "../../database/read/RPCRead";
+import { useState } from "react";
 
-const OtherFilter = () => {
-    /* ===== CONTEXTS ===== */
-
-    // add message state from message context
-    const { addMessage } = useContext(MessageContext);
-
+const OtherFilter = (categories) => {
     /* ===== STATES ===== */
-    const [categories, setCategories] = useState(undefined);
     const [filters, setFilters] = useState(undefined);
 
     /* ===== FUNCTIONS ===== */
-
-    // database functions
-    const { getCategories } = RPCRead();
 
     // FUNCTION 1: initializeFilters - code that will give the `filters` state an initial value based on the searchParams state
     // PRECONDITIONS (1 parameter):
@@ -50,22 +39,7 @@ const OtherFilter = () => {
         setFilters(filters);
     };
 
-    // FUNCTION 2: fetchCategories - code that fetches the list of all valid categories
-    // PRECONDITIONS: NONE
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, this function updates the `categories` state by calling the `setCategories` setter function
-    // with the result of the query as an argument
-    // if the query is unsuccessful, this function will render an error to the user, keeping the categories loading
-    const fetchCategories = async () => {
-        try {
-            const categories = await getCategories();
-            setCategories(categories);
-        } catch (error) {
-            addMessage("Category data failed to load.", "error");
-        };
-    };
-
-    // FUNCTION 3: updateCategoryFilterAll - function that updates the category filter when user hits the "all" button
+    // FUNCTION 2: updateCategoryFilterAll - function that updates the category filter when user hits the "all" button
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the filters.category state is set equal to an empty array by calling the `setFilters` setter function
@@ -73,7 +47,7 @@ const OtherFilter = () => {
         setFilters({ ...filters, category: [] });
     };
 
-    // FUNCTION 4: updateCategoryFilter - function that updates the category filter based on the category parameter
+    // FUNCTION 3: updateCategoryFilter - function that updates the category filter based on the category parameter
     // PRECONDITIONS (1 parameter):
     // 1.) category: the name of the category we are attempting to toggle on/off
     // POSTCONDITIONS (4 possible outcomes):
@@ -96,7 +70,7 @@ const OtherFilter = () => {
         }
     };
 
-    // FUNCTION 5: updateBooleanFilter - function that updates a boolean filter based on a filter name, and value
+    // FUNCTION 4: updateBooleanFilter - function that updates a boolean filter based on a filter name, and value
     // PRECONDITIONS (2 parameters):
     // 1.) filter: a string representing the name of the filter we want to update: must be "live", "tas", or "type"
     // 2.) value: a string representing the value we wish to update the filter to
@@ -106,7 +80,7 @@ const OtherFilter = () => {
         setFilters({ ...filters, [filter]: value });
     };
 
-    // FUNCTION 6: resetFiltersAll - function that resets all the filters to their default values
+    // FUNCTION 5: resetFiltersAll - function that resets all the filters to their default values
     // PRECONDITIONS (1 parameter):
     // 1.) defaultFitlers: a filters object which represents the default value of the `filter` state
     // POSTCONDITIONS (1 possible outcome):
@@ -116,7 +90,7 @@ const OtherFilter = () => {
         setFilters(defaultFilters);
     };
 
-    // FUNCTION 7: closePopupAndUpdate - function that closes the user filter popup, and updates the search params state
+    // FUNCTION 6: closePopupAndUpdate - function that closes the user filter popup, and updates the search params state
     // PRECONDITIONS (3 parameters):
     // 1.) closePopup: a function that, when called, will simply close the popup
     // 2.) searchParams: a URLSearchParams specifying the filters currently applied to the recent submissions page
@@ -153,10 +127,8 @@ const OtherFilter = () => {
     };
 
     return { 
-        categories, 
         filters, 
         initializeFilters, 
-        fetchCategories, 
         updateCategoryFilterAll,
         updateCategoryFilter,
         updateBooleanFilter,

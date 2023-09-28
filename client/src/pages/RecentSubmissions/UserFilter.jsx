@@ -1,18 +1,20 @@
 /* ===== IMPORTS ===== */
 import { PopupContext } from "../../utils/Contexts.js";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import UserFilterLogic from "./UserFilter.js";
 import UserSearch from "../../components/UserSearch/UserSearch.jsx";
 import UserRow from "../../components/UserRow/UserRow.jsx";
 
-function UserFilter({ searchParams, setSearchParams }) {
+function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData }) {
   /* ===== CONTEXTS ===== */
 
   // close popup function from popup context
   const { closePopup } = useContext(PopupContext);
 
   /* ===== FUNCTIONS ===== */
-  const { users, fetchUsers, addUser, removeUser, resetFilter, closePopupAndUpdate } = UserFilterLogic();
+  
+  // functions from the js file
+  const { addUser, removeUser, resetFilter, closePopupAndUpdate } = UserFilterLogic(users, dispatchFiltersData);
 
   /* ===== VARIABLES ===== */
   const USERS_PER_PAGE = 20;
@@ -20,14 +22,6 @@ function UserFilter({ searchParams, setSearchParams }) {
     disableLink: true,
     onUserRowClick: addUser
   };
-
-  /* ===== EFFECTS ===== */
-
-  // code that is executed when the component mounts
-  useEffect(() => {
-    fetchUsers(searchParams);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   
   /* ===== USER FILTER COMPONENT ===== */
   return (

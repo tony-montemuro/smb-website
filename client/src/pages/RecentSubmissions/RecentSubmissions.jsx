@@ -1,10 +1,11 @@
 /* ===== IMPORTS ===== */
 import "./RecentSubmissions.css";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
 import GameFilter from "./GameFilter.jsx";
 import OtherFilter from "./OtherFilter.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
+import RecentSubmissionsLogic from "./RecentSubmissions.js";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import UserFilter from "./UserFilter.jsx";
 
@@ -12,11 +13,24 @@ function RecentSubmissions({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const NUM_SUBMISSIONS = 20;
 
-  /* ===== STATES ===== */
+  /* ===== STATES & FUNCTIONS ===== */
   const [searchParams, setSearchParams] = useSearchParams();
   const [gamePopup, setGamePopup] = useState(undefined);
   const [userPopup, setUserPopup] = useState(undefined);
   const [otherPopup, setOtherPopup] = useState(undefined);
+
+  // states & functions from the js file
+  const { filtersData, dispatchFiltersData, fetchGames, fetchUsers, fetchCategories } = RecentSubmissionsLogic();
+
+  /* ===== EFFECTS ===== */
+
+  // code that is executed when the component mounts
+  useEffect(() => {
+    fetchGames(searchParams);
+    fetchUsers(searchParams);
+    fetchCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ===== RECENT SUBMISSIONS COMPONENT ===== */
   return (
@@ -24,13 +38,24 @@ function RecentSubmissions({ imageReducer }) {
 
       { /* Popups */ }
       <Popup renderPopup={ gamePopup } setRenderPopup={ setGamePopup } width={ "60%" }>
-        <GameFilter searchParams={ searchParams } setSearchParams={ setSearchParams } imageReducer={ imageReducer } />
+        <GameFilter 
+          searchParams={ searchParams } 
+          setSearchParams={ setSearchParams } 
+          imageReducer={ imageReducer }
+          games={ filtersData.games }
+          dispatchFiltersData={ dispatchFiltersData }
+        />
       </Popup>
       <Popup renderPopup={ userPopup } setRenderPopup={ setUserPopup } width={ "60%" } >
-        <UserFilter searchParams={ searchParams } setSearchParams={ setSearchParams } />
+        <UserFilter 
+          searchParams={ searchParams } 
+          setSearchParams={ setSearchParams }
+          users={ filtersData.users }
+          dispatchFiltersData={ dispatchFiltersData }
+        />
       </Popup>
       <Popup renderPopup={ otherPopup } setRenderPopup={ setOtherPopup } width={ "60%"} >
-        <OtherFilter searchParams={ searchParams } setSearchParams={ setSearchParams } />
+        <OtherFilter searchParams={ searchParams } setSearchParams={ setSearchParams } categories={ filtersData.categories } />
       </Popup>
 
       { /* Recent submissions header - render the name of the page, as well as the filter buttons */ }
