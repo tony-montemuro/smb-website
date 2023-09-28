@@ -6,10 +6,11 @@ import { useContext, useEffect, useState } from "react";
 import DetailPopup from "../../components/DetailPopup/DetailPopup.jsx";
 import FiltersPopup from "./FiltersPopup.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
+import InsertPopup from "./InsertPopup.jsx";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
-import InsertPopup from "./InsertPopup.jsx";
 import PathHelper from "../../helper/PathHelper";
+import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import TableTabs from "../../components/TableTabs/TableTabs";
 import UpdatePopup from "./UpdatePopup.jsx";
 
@@ -48,7 +49,6 @@ function Levelboard({ imageReducer }) {
 	};
 
 	/* ===== STATES & FUNCTIONS ===== */
-	// states
 	const [level, setLevel] = useState(undefined);
 	const [filtersPopup, setFiltersPopup] = useState(false);
 	const [insertPopup, setInsertPopup] = useState(false);
@@ -62,7 +62,8 @@ function Levelboard({ imageReducer }) {
 		setupBoard,
 		applyFilters,
 		getChartTypes,
-		handleTabClick
+		handleTabClick,
+		getChartSearchParams
 	} = LevelboardLogic();
 
 	// FUNCTION 1: closePopups - general function that executes when user attempts to close a popup
@@ -179,40 +180,54 @@ function Levelboard({ imageReducer }) {
 					</div>
 				</div>
 
-				{ /* Levelboard content: render the levelboard itself. */ }
+				{ /* Levelboard content: render the levelboard itself, as well as the recent submissions table. */ }
 				<div className="levelboard-content">
-					<table>
 
-						{ /* Table header information: specifies the information displayed in each cell of the board */ }
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Name</th>
-								<th>{ capitalize(type) }</th>
-								<th>Date</th>
-								<th>Monkey</th>
-								<th>Platform</th>
-								<th>Region</th>
-								<th></th>
-								<th></th>
-								<th></th>
-							</tr>
-						</thead>
+					{ /* First, render the levelboard */ }
+					<div className="levelboard-content-chart">
+						<table>
 
-						{ /* Table body information - the submission data */ }
-						<tbody>
-							{ board.filtered.map(submission => {
-								return <LevelboardRow 
-									submission={ submission } 
-									imageReducer={ imageReducer }
-									level={ level }
-									onClickFunc={ setDetailSubmission }
-									key={ submission.id } 
-								/>
-							})}
-						</tbody>
+							{ /* Table header information: specifies the information displayed in each cell of the board */ }
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Name</th>
+									<th>{ capitalize(type) }</th>
+									<th>Date</th>
+									<th>Monkey</th>
+									<th>Platform</th>
+									<th>Region</th>
+									<th></th>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
 
-					</table>
+							{ /* Table body information - the submission data */ }
+							<tbody>
+								{ board.filtered.map(submission => {
+									return <LevelboardRow 
+										submission={ submission } 
+										imageReducer={ imageReducer }
+										level={ level }
+										onClickFunc={ setDetailSubmission }
+										key={ submission.id } 
+									/>
+								})}
+							</tbody>
+
+						</table>
+					</div>
+
+					{ /* Then, render the recent submissions table for this particular chart */ }
+					<h2>Recent Submissions</h2>
+					<RecentSubmissionsTable 
+						renderGame={ false }
+						renderLevelContext={ false }
+						numSubmissions={ 20 }
+						searchParams={ getChartSearchParams() }
+					/>
+
 				</div>
 			</div>
 

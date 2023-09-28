@@ -244,13 +244,27 @@ const Levelboard = () => {
 		}
 	};
 
+	// FUNCTION 8: getChartSearchParams - using url path information, generate the equivalent URLSearchParams object
+	// PRECONDITIONS: NONE
+	// POSTCONDITIONS (1 possible outcome):
+	// a URLSearchParams is defined with filters defined by the path, and returned
+	const getChartSearchParams = () => {
+		const searchParams = new URLSearchParams();
+		searchParams.append("game_id", abb);
+		searchParams.append("category", category);
+		searchParams.append("score", type === "score");
+		searchParams.append("level_id", levelName);
+		return searchParams;
+	};
+
 	return {
 		board,
 		userSubmissions,
 		setupBoard,
 		applyFilters,
 		getChartTypes,
-		handleTabClick
+		handleTabClick,
+		getChartSearchParams
 	};
 };  
 

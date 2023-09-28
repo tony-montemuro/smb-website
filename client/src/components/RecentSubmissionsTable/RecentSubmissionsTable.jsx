@@ -5,7 +5,7 @@ import PageControls from "../PageControls/PageControls.jsx";
 import RecentSubmissionsRow from "./RecentSubmissionsRow.jsx";
 import RecentSubmissionsTableLogic from "./RecentSubmissionsTable.js";
 
-function RecentSubmissionsTable({ renderGame = true, numSubmissions = 5, searchParams }) {
+function RecentSubmissionsTable({ renderGame = true, renderLevelContext = true, numSubmissions = 5, searchParams }) {
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
 
@@ -31,8 +31,12 @@ function RecentSubmissionsTable({ renderGame = true, numSubmissions = 5, searchP
             <th>Submitted</th>
             <th>User</th>
             { renderGame && <th>Game</th> }
-            <th>Category</th>
-            <th>Chart</th>
+            { renderLevelContext && 
+              <>
+                <th>Category</th>
+                <th>Chart</th> 
+              </>
+            }
             <th>Record</th>
             <th>TAS</th>
           </tr>
@@ -41,7 +45,14 @@ function RecentSubmissionsTable({ renderGame = true, numSubmissions = 5, searchP
         { /* Table body - for each submission, render a row in the table */ }
         <tbody>
           { submissions.data.map(submission => {
-            return <RecentSubmissionsRow submission={ submission } renderGame={ renderGame } key={ submission.id } />;
+            return (
+              <RecentSubmissionsRow 
+                submission={ submission } 
+                renderGame={ renderGame } 
+                renderLevelContext={ renderLevelContext } 
+                key={ submission.id } 
+              />
+            );
           })}
         </tbody>
 

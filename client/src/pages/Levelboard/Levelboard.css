@@ -43,7 +43,7 @@
     cursor: pointer;
 }
 
-.levelboard-content table {
+.levelboard-content-chart table {
     border: 1px solid black;
     border-collapse: collapse;
     margin-left: auto;
@@ -51,33 +51,33 @@
     min-width: 100%;
 }
 
-.levelboard-content thead {
+.levelboard-content-chart thead {
     border: 1px solid black;
 }
   
-.levelboard-content th {
+.levelboard-content-chart th {
     text-align: left;
     padding: 4px 8px;
 }
 
-.levelboard-content td {
+.levelboard-content-chart td {
     padding: 4px 8px;
 }
 
-.levelboard-content td a {
+.levelboard-content-chart td a {
     display: inline-flex;
 }
 
-.levelboard-content a {
+.levelboard-content-chart a {
     text-align: center;
 }
 
-.levelboard-content table tbody tr:hover, .levelboard-content table tbody tr:nth-child(even):hover {
+.levelboard-content-chart table tbody tr:hover, .levelboard-content-chart table tbody tr:nth-child(even):hover {
     background-color: lightgray;
     cursor: pointer;
 }
 
-.levelboard-content table tbody tr:nth-child(even) {
+.levelboard-content-chart table tbody tr:nth-child(even) {
     background-color: #f1f1f1;
 }
 
