@@ -3,7 +3,7 @@ import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import RPCRead from "../../database/read/RPCRead";
 
-const OtherFilterPopup = () => {
+const OtherFilter = () => {
     /* ===== CONTEXTS ===== */
 
     // add message state from message context
@@ -26,7 +26,7 @@ const OtherFilterPopup = () => {
     const initializeFilters = searchParams => {
         // initialize filters object with empty arrays
         const booleanFilters = ["live", "score", "tas"];
-        const filters = { categories: [] };
+        const filters = { category: [] };
         booleanFilters.forEach(filter => {
             filters[filter] = [];
         });
@@ -65,34 +65,34 @@ const OtherFilterPopup = () => {
         };
     };
 
-    // FUNCTION 3: updateCategoriesFilterAll - function that updates the category filter when user hits the "all" button
+    // FUNCTION 3: updateCategoryFilterAll - function that updates the category filter when user hits the "all" button
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
-    // the filters.categories state is set equal to an empty array by calling the `setFilters` setter function
-    const updateCategoriesFilterAll = () => {
-        setFilters({ ...filters, categories: [] });
+    // the filters.category state is set equal to an empty array by calling the `setFilters` setter function
+    const updateCategoryFilterAll = () => {
+        setFilters({ ...filters, category: [] });
     };
 
-    // FUNCTION 4: updateCategoriesFilter - function that updates the category filter based on the category parameter
+    // FUNCTION 4: updateCategoryFilter - function that updates the category filter based on the category parameter
     // PRECONDITIONS (1 parameter):
     // 1.) category: the name of the category we are attempting to toggle on/off
     // POSTCONDITIONS (4 possible outcomes):
     // if category is present in the filter already, we will generally update the filter state to the same array without the
     // category
-    // however, in the case where the categories array is ONLY the category we are trying to remove, this function does nothing
+    // however, in the case where the category array contains ONLY the category we are trying to remove, this function does nothing
     // if the category is not present in the filter array, we generally update the filter state to the same array with the category
     // appended to the end
     // however, in the case where adding an additional category means that we have ALL the categories, this function updates
-    // the categories filter to an empty array
-    const updateCategoriesFilter = category => {
-        if (filters.categories.includes(category)) {
-            const newCategories = filters.categories.filter(row => row !== category);
-            if (newCategories.length > 0) {
-                setFilters({ ...filters, categories: newCategories });
+    // the category filter to an empty array
+    const updateCategoryFilter = category => {
+        if (filters.category.includes(category)) {
+            const newCategory = filters.category.filter(row => row !== category);
+            if (newCategory.length > 0) {
+                setFilters({ ...filters, category: newCategory });
             }
         } else {
-            const newCategories = filters.categories.concat([category]);
-            setFilters({ ...filters, categories: newCategories.length !== categories.length ? newCategories : [] });
+            const newCategory = filters.category.concat([category]);
+            setFilters({ ...filters, category: newCategory.length !== categories.length ? newCategory : [] });
         }
     };
 
@@ -116,23 +116,15 @@ const OtherFilterPopup = () => {
         setFilters(defaultFilters);
     };
 
-    // FUNCTION 7: closePopup - code that simply closes the other filter popup
-    // PRECONDITIONS (1 parameter):
-    // 1.) setPopup: setter function that, when set to false, closes the popup
-    // POSTCONDITIONS (1 possible outcome):
-    // the popup is closed by calling the `setPopup` function with `false` as an argument
-    const closePopup = setPopup => {
-        setPopup(false);
-    };
-
-    // FUNCTION 8: closePopupAndUpdate - function that closes the user filter popup, and updates the search params state
+    // FUNCTION 7: closePopupAndUpdate - function that closes the user filter popup, and updates the search params state
     // PRECONDITIONS (3 parameters):
-    // 1.) setPopup: a setter function that, when set to false, will close the popup
+    // 1.) closePopup: a function that, when called, will simply close the popup
     // 2.) searchParams: a URLSearchParams specifying the filters currently applied to the recent submissions page
     // 3.) setSearchParams: a setter function we can use to update the search params
     // POSTCONDITIONS (1 possible outcome):
-    // ..., finally, the popup is closed by calling the `setPopup` function
-    const closePopupAndUpdate = (setPopup, searchParams, setSearchParams) => {
+    // given our old searchParams object, as well as the filters state, we generate a new search params object, and
+    // update the `searchParams` state. finally, we also close the popup by calling the `closePopup` function
+    const closePopupAndUpdate = (closePopup, searchParams, setSearchParams) => {
         // first, let's create an identical, new searchParams object, with all filters in `filterName` removed
         const newSearchParams = new URLSearchParams();
         for (const [key, value] of searchParams) {
@@ -144,7 +136,7 @@ const OtherFilterPopup = () => {
         // next, let's append any new filters from the `filters` state
         Object.keys(filters).forEach(filter => {
             const value = filters[filter];
-            if (filter === "categories") {
+            if (filter === "category") {
                 value.forEach(category => {
                     newSearchParams.append("category", category);
                 });
@@ -155,9 +147,9 @@ const OtherFilterPopup = () => {
             }
         });
 
-        // finally, let's update states
+        // finally, let's update the search params state, and close the popup
         setSearchParams(newSearchParams);
-        setPopup(false);
+        closePopup();
     };
 
     return { 
@@ -165,14 +157,13 @@ const OtherFilterPopup = () => {
         filters, 
         initializeFilters, 
         fetchCategories, 
-        updateCategoriesFilterAll,
-        updateCategoriesFilter,
+        updateCategoryFilterAll,
+        updateCategoryFilter,
         updateBooleanFilter,
         resetFiltersAll,
-        closePopup, 
         closePopupAndUpdate 
     };
 };
 
 /* ===== EXPORTS ===== */
-export default OtherFilterPopup;
+export default OtherFilter;

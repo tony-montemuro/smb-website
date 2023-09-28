@@ -91,7 +91,7 @@ const UserFilter = () => {
     // POSTCONDITIONS (1 possible outcome):
     // any new users stored in the `users` array are added to a new URLSearchParams object, as well as any users that were already
     // present, and we update the searchParams state by calling the `setSearchParams` function. finally, the popup is closed by calling
-    // the `setPopup` function
+    // the `closePopup` function
     const closePopupAndUpdate = (closePopup, searchParams, setSearchParams) => {
         // first, let's update the searchParams state - must recreate searchParams, but without any users
         const newSearchParams = new URLSearchParams();

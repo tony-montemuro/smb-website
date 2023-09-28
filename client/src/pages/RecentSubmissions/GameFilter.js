@@ -90,7 +90,7 @@ const GameFilter = () => {
     // POSTCONDITIONS (1 possible outcome):
     // any new games stored in the `games` array are added to a new URLSearchParams object, as well as any games that were already
     // present, and we update the searchParams state by calling the `setSearchParams` function. finally, the popup is closed by calling
-    // the `setPopup` function
+    // the `closePopup` function
     const closePopupAndUpdate = (closePopup, searchParams, setSearchParams) => {
         // first, let's update the searchParams state - must recreate searchParams, but without any games
         const newSearchParams = new URLSearchParams();
