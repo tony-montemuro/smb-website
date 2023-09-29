@@ -9,8 +9,8 @@ function Insert({ moderator, submitting, onInsert }) {
   // close popup function from popup context
   const { closePopup } = useContext(PopupContext);
 
-  /* ===== INSERT POPUP COMPONENT ===== */
-  return moderator &&
+  /* ===== INSERT COMPONENT ===== */
+  return (
     <div className="game-moderators-insert">
 
       { /* Render question to user */ }
@@ -22,7 +22,8 @@ function Insert({ moderator, submitting, onInsert }) {
         <button type="button" disabled={ submitting } onClick={ () => onInsert(moderator, closePopup) }>Yes</button>
       </div>
 
-    </div>;
+    </div>
+  );
 };
 
 /* ===== EXPORTS ===== */

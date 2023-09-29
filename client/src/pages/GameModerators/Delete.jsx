@@ -9,8 +9,8 @@ function Delete({ moderator, submitting, onDelete }) {
   // close popup from popup context
   const { closePopup } = useContext(PopupContext);
 
-  /* ===== DELETE POPUP COMPONENT ===== */
-  return moderator &&
+  /* ===== DELETE COMPONENT ===== */
+  return (
     <div className="game-moderators-delete">
 
       { /* Render question to user */ }
@@ -22,7 +22,8 @@ function Delete({ moderator, submitting, onDelete }) {
         <button type="button" disabled={ submitting } onClick={ () => onDelete(moderator, closePopup) }>Yes</button>
       </div>
 
-    </div>;
+    </div>
+  );
 };
 
 /* ===== EXPORTS ===== */
