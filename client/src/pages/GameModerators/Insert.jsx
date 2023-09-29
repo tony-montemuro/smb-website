@@ -17,7 +17,7 @@ function Insert({ moderator, submitting, onInsert }) {
       <h2>Are you sure you want to add <Username profile={ moderator } /> as a moderator?</h2>
 
       { /* Render two options user can choose from */ }
-      <div className="game-moderators-popup-btns">
+      <div className="game-moderators-btns">
         <button type="button" disabled={ submitting } onClick={ closePopup }>No</button>
         <button type="button" disabled={ submitting } onClick={ () => onInsert(moderator, closePopup) }>Yes</button>
       </div>

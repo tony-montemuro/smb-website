@@ -17,7 +17,7 @@ function Delete({ moderator, submitting, onDelete }) {
       <h2>Are you sure you want to remove <Username profile={ moderator } /> as a moderator?</h2>
 
       { /* Render two options user can choose from */ }
-      <div className="game-moderators-popup-btns">
+      <div className="game-moderators-btns">
         <button type="button" disabled={ submitting } onClick={ closePopup }>No</button>
         <button type="button" disabled={ submitting } onClick={ () => onDelete(moderator, closePopup) }>Yes</button>
       </div>
