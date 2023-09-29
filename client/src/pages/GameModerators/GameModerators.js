@@ -45,17 +45,17 @@ const GameModerators = () => {
     // FUNCTION 2: removeModerator - code that is executed when the administrator requests to remove a moderator
     // PRECONDITIONS (2 parameters):
     // 1.) moderator: the moderator in question we wish to remove
-    // 2.) setModerator: the setter function for the moderator state, which we use to close the delete popup
+    // 2.) closePopup: a function that, when called, closes the popup
     // POSTCONDITIONS (2 possible outcomes):
     // if the moderator is successfully removed, render a success message, and close the popup
     // otherwise, keep the popup open, and render an error message to the user
-    const removeModerator = async (moderator, setModerator) => {
+    const removeModerator = async (moderator, closePopup) => {
         setSubmitting(true);
         try {
             await deleteModerator(game.abb, moderator.id);
             await queryGames();
-            setModerator(null);
             addMessage("A moderator was successfully removed!", "success");
+            closePopup();
         } catch (error) {
             addMessage("There was an error trying to remove this moderator. Reloading the page is highly recommended.", "error");
         } finally {
@@ -66,17 +66,17 @@ const GameModerators = () => {
     // FUNCTION 3: addModerator - code that is executed when the administrator requests to add a moderator
     // PRECONDITIONS (2 parameters):
     // 1.) moderator: the moderator in question we wish to add
-    // 2.) setModerator: the setter function for the moderator state, which we use to close the insert popup
+    // 2.) closePopup: a function that, when called, closes the popup
     // POSTCONDITIONS (2 possible outcomes):
     // if the moderator is successfully added, render a success message, and close the popup
     // otherwise, keep the popup open, and render an error message to the user
-    const addModerator = async (moderator, setModerator) => {
+    const addModerator = async (moderator, closePopup) => {
         setSubmitting(true);
         try {
             await insertModerator(game.abb, moderator.id);
             await queryGames();
-            setModerator(null);
             addMessage("A moderator was successfully added!", "success");
+            closePopup();
         } catch (error) {
             if (error.code === "23505") {
                 addMessage("This user is already a moderator for this game!", "error");

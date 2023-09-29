@@ -1,9 +1,10 @@
 /* ===== IMPORTS ===== */
 import "./GameModerators.css";
 import { useEffect, useState } from "react";
-import DeletePopup from "./DeletePopup";
+import Delete from "./Delete";
 import GameModeratorsLogic from "./GameModerators.js";
-import InsertPopup from "./InsertPopup";
+import Insert from "./Insert";
+import Popup from "../../components/Popup/Popup.jsx";
 import SimpleGameSelect from "../../components/SimpleGameSelect/SimpleGameSelect.jsx";
 import UserRow from "../../components/UserRow/UserRow.jsx";
 import UserSearch from "../../components/UserSearch/UserSearch.jsx";
@@ -35,6 +36,20 @@ function GameModerators({ imageReducer }) {
   /* ===== GAME MODERATOR COMPONENT ===== */
   return game && games &&
     <div className="game-moderators">
+
+        { /* Popups */ }
+        <Popup renderPopup={ moderatorToRemove } setRenderPopup={ setModeratorToRemove } width={ "30%" }>
+          <Delete moderator={ moderatorToRemove } submitting={ submitting } onDelete={ removeModerator } />
+        </Popup>
+        <Popup renderPopup={ moderatorToAdd } setRenderPopup={ setModeratorToAdd } width={ "30%" } >
+          <Insert moderator={ moderatorToAdd } submitting={ submitting } onInsert={ addModerator } />
+        </Popup>
+        {/* <InsertPopup 
+          moderator={ moderatorToAdd } 
+          setModerator={ setModeratorToAdd } 
+          onInsert={ addModerator }
+          submitting={ submitting }
+        /> */}
 
       { /* Simple game select - render a column of games to select from */ }
       <SimpleGameSelect
@@ -81,20 +96,6 @@ function GameModerators({ imageReducer }) {
           <p>Select a user to add them as a moderator.</p>
           <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ options } />
         </div>
-
-        { /* Popups */ }
-        <DeletePopup 
-          moderator={ moderatorToRemove } 
-          setModerator={ setModeratorToRemove } 
-          onDelete={ removeModerator }
-          submitting={ submitting } 
-        />
-        <InsertPopup 
-          moderator={ moderatorToAdd } 
-          setModerator={ setModeratorToAdd } 
-          onInsert={ addModerator }
-          submitting={ submitting }
-        />
 
       </div>
     </div>;
