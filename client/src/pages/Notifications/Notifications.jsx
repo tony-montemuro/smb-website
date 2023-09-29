@@ -32,13 +32,6 @@ function Notifications() {
 
   /* ===== STATES & FUNCTIONS ===== */
   const [notification, setNotification] = useState(undefined);
-  const [renderNotification, setRenderNotification] = useState(false);
-
-  // FUNCTION 1: onRowClick - simple function that, when executes, will open a notification popup
-  const onRowClick = notification => {
-    setNotification(notification);
-    setRenderNotification(true);
-  };
 
   // states and functions from init file
   const { 
@@ -74,9 +67,9 @@ function Notifications() {
 
   /* ===== NOTIFICATION COMPONENT ===== */
   return notifications.all ?
-    <>
+    <div className="notifications">
       { /* Notification popup element */ }
-      <NotificationPopup renderNotif={ renderNotification } setRenderNotif={ setRenderNotification } notification={ notification } />
+      <NotificationPopup notification={ notification } setNotification={ setNotification } />
 
       { /* Notifications header */ }
       <div className="notifications-header">
@@ -158,7 +151,7 @@ function Notifications() {
                   row={ row } 
                   notifications= { notifications } 
                   pageNum={ pageNum }
-                  handleRowClick={ onRowClick } 
+                  handleRowClick={ setNotification } 
                   toggleSelection={ toggleSelection } 
                   key={ row.notif_date }
                 />;
@@ -189,7 +182,7 @@ function Notifications() {
         </div>
 
       </div>
-    </>
+    </div>
   :
 
     // Loading component

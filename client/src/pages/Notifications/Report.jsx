@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
+import { PopupContext, UserContext } from "../../utils/Contexts";
 import { useContext } from "react";
-import { UserContext } from "../../utils/Contexts";
 import CheckmarkOrX from "./CheckmarkOrX";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
@@ -9,15 +9,19 @@ import NotificationMessage from "./NotificationMessage";
 import NotificationProof from "./NotificationProof";
 import Username from "../../components/Username/Username";
 
-function Report({ notification }) {
-  /* ===== VARIABLES ===== */
-  const submission = notification.submission;
-  const type = notification.score ? "score" : "time";
-
+function Report() {
   /* ===== CONTEXTS ===== */
+
+  // popup data state from popup context
+  const { popupData } = useContext(PopupContext);
 
   // user state from user context
   const { user } = useContext(UserContext);
+
+  /* ===== VARIABLES ===== */
+  const notification = popupData;
+  const submission = notification.submission;
+  const type = notification.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
 

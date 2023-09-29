@@ -1,4 +1,6 @@
 /* ===== IMPORTS ===== */
+import { PopupContext } from "../../utils/Contexts";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckmarkOrX from "./CheckmarkOrX";
@@ -7,8 +9,14 @@ import NotificationProof from "./NotificationProof";
 import Username from "../../components/Username/Username";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
-function Update({ notification }) {
+function Update() {
+  /* ===== CONTEXTS ===== */
+
+  // popup data state from popup context
+  const { popupData } = useContext(PopupContext);
+
   /* ===== VARIABLES ===== */
+  const notification = popupData;
   const submission = notification.submission;
   const type = notification.score ? "score" : "time";
 

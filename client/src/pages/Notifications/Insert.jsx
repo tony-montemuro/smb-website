@@ -1,12 +1,20 @@
 /* ===== IMPORTS ===== */
+import { PopupContext } from "../../utils/Contexts";
+import { useContext } from "react";
 import CheckmarkOrX from "./CheckmarkOrX";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
 import NotificationProof from "./NotificationProof";
 import Username from "../../components/Username/Username";
 
-function Insert({ notification }) {
+function Insert() {
+  /* ===== CONTEXTS ===== */
+  
+  // popup data state from popup context
+  const { popupData } = useContext(PopupContext);
+
   /* ===== VARIABLES ===== */
+  const notification = popupData;
   const submission = notification.submission;
   const type = notification.score ? "score" : "time";
 

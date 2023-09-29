@@ -6,34 +6,32 @@ import Popup from "../../components/Popup/Popup.jsx";
 import Report from "./Report";
 import Update from "./Update";
 
-function NotificationPopup({ renderNotif, setRenderNotif, notification }) {
-  /* ===== VARIABLES ===== */
-  const notifType = notification ? notification.notif_type : null;
-  let popupContent = null;
-  switch (notifType) {
-    case "approve":
-      popupContent = <Approve notification={ notification } />;
-      break;
-    case "delete":
-      popupContent = <Delete notification={ notification } />;
-      break;
-    case "insert":
-      popupContent = <Insert notification={ notification } />;
-      break;
-    case "report":
-      popupContent = <Report notification={ notification } />;
-      break;
-    case "update":
-      popupContent = <Update notification={ notification } />;
-      break;
-    default:
-      return null;
+function NotificationPopup({ notification, setNotification }) {
+  /* ===== FUNCTIONS ===== */
+  
+  // FUNCTION 1: getPopupContent - code that returns the proper popup content to render according to the notification
+  const getPopupContent = notification => {
+    const notifType = notification ? notification.notif_type : null;
+    switch (notifType) {
+      case "approve":
+        return <Approve />;
+      case "delete":
+        return <Delete />;
+      case "insert":
+        return <Insert />;
+      case "report":
+        return <Report />;
+      case "update":
+        return <Update />;
+      default:
+        return null;
+    };
   };
 
   /* ===== NOTIFICATION POPUP COMPONENT ===== */
   return (
-    <Popup renderPopup={ renderNotif } setRenderPopup={ setRenderNotif } width={ "33%" }>
-      { popupContent }
+    <Popup renderPopup={ notification } setRenderPopup={ setNotification } width={ "33%" }>
+      { getPopupContent(notification) }
     </Popup>
   );
 };

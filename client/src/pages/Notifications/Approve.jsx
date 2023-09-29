@@ -1,11 +1,19 @@
 /* ===== IMPORTS ===== */
+import { PopupContext } from "../../utils/Contexts";
+import { useContext } from "react";
 import CheckmarkOrX from "./CheckmarkOrX";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
 import Username from "../../components/Username/Username.jsx";
 
-function Approve({ notification }) {
+function Approve() {
+  /* ===== CONTEXTS ===== */
+
+  // popup data state from popup context
+  const { popupData } = useContext(PopupContext);
+
   /* ===== VARIABLES ===== */
+  const notification = popupData;
   const type = notification.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */

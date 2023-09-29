@@ -1,12 +1,20 @@
 /* ===== IMPORTS ===== */
+import { PopupContext } from "../../utils/Contexts";
+import { useContext } from "react";
 import CheckmarkOrX from "./CheckmarkOrX";
 import FrontendHelper from "../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
 import NotificationMessage from "./NotificationMessage";
 import Username from "../../components/Username/Username";
 
-function Delete({ notification }) {
+function Delete() {
+  /* ===== CONTEXTS ===== */
+  
+  // popup data from popup context
+  const { popupData } = useContext(PopupContext);
+
   /* ===== VARIABLES ===== */
+  const notification = popupData;
   const type = notification.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
