@@ -10,7 +10,6 @@ const Notifications = () => {
     /* ===== VARIABLES ===== */
     const notificationsInit = {
         all: undefined,     // store all current notification objects
-        current: null,      // stores either nothing, or a notification object to display in popup view
         selected: {},       // stores the notif_dates of all the selected notifications, partitioned by page number
         submitting: true,  // a boolean flag that checks whether or not the user is attempting to delete submissions
         total: 0            // stores the total number of notifications the user has
@@ -26,7 +25,7 @@ const Notifications = () => {
         // b.) payload: an data type OR object that stores information used in the operations (type depends on field)
     // POSTCONDITIONS (3 possible outcomes):
     // if field is `reset`, the function will return the initial value of the `notifications` state (notificationsInit)
-    // if field is `all`, `current`, `submitting`, or `total`, the function simply update that field using the payload data
+    // if field is `all`, `submitting`, or `total`, the function simply update that field using the payload data
     // if field is `selected`, the payload will have an additional field called `pageNum`, which we will use to update the
     // `selected` object
     // otherwise, this reducer function does nothing
@@ -39,7 +38,7 @@ const Notifications = () => {
         }
 
         // case 2: simply update the field using payload
-        if (["all", "current", "submitting", "total"].includes(field)) {
+        if (["all", "submitting", "total"].includes(field)) {
             return {
                 ...state,
                 [field]: payload
@@ -231,16 +230,7 @@ const Notifications = () => {
         }
     };
 
-    // FUNCTION 7: handleRowClick - code that is executed when the user clicks on a notification
-    // PRECONDITIONS (1 parameter)
-    // 1.) notification: a notification object corresponding to the clicked row
-    // POSTCONDITIONS (1 possible outcome):
-    // a popup will immediately be rendered once the dispatchNotifications function is called
-    const handleRowClick = notification => {
-        dispatchNotifications({ field: "current", payload: notification });
-    };
-
-    // FUNCTION 8: changePage - code that is executed when the user attempts to change pages
+    // FUNCTION 7: changePage - code that is executed when the user attempts to change pages
     // PRECONDITIONS (1 parameter):
     // 1.) newPageNum: the page the user wants to access
     // POSTCONDITIONS (1 possible outcome):
@@ -254,14 +244,12 @@ const Notifications = () => {
     return { 
         notifications, 
         pageNum,
-        dispatchNotifications,
         updateNotifications,
         areAllNotifsSelected,
         getSelectedCount,
         toggleSelection,
         toggleSelectionAll, 
         removeSelected,
-        handleRowClick,
         changePage
     };
 };

@@ -13,22 +13,22 @@ function Popup({ renderPopup, setRenderPopup, width, children }) {
   const closePopup = () => setRenderPopup(false);
 
   /* ===== POPUP COMPONENT ===== */
- return renderPopup &&
-  <div className="popup">
-    <div className="popup-inner" style={ { maxWidth: width } }>
+  return renderPopup &&
+    <div className="popup">
+      <div className="popup-inner" style={ { maxWidth: width } }>
 
-      { /* Render button to close the popup */ }
-      <div className="popup-close">
-        <button type="button" onClick={ closePopup }>Close</button>
+        { /* Render button to close the popup */ }
+        <div className="popup-close">
+          <button type="button" onClick={ closePopup }>Close</button>
+        </div>
+
+        { /* Render component children, and give children access to the `closePopup` function */ }
+        <PopupContext.Provider value={ { closePopup } }>
+          { children }
+        </PopupContext.Provider>
+
       </div>
-
-      { /* Render component children, and give children access to the `closePopup` function */ }
-      <PopupContext.Provider value={ { closePopup } }>
-        { children }
-      </PopupContext.Provider>
-
-    </div>
-  </div>;
+    </div>;
 };
 
 /* ===== EXPORTS ===== */

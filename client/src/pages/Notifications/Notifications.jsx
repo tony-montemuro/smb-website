@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./Notifications.css";
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import NotificationsLogic from "./Notifications.js";
 import NotificationPopup from "./NotificationPopup";
@@ -30,20 +30,26 @@ function Notifications() {
   };
   const navigate = useNavigate();
 
-  /* ===== FUNCTIONS ===== */
+  /* ===== STATES & FUNCTIONS ===== */
+  const [notification, setNotification] = useState(undefined);
+  const [renderNotification, setRenderNotification] = useState(false);
+
+  // FUNCTION 1: onRowClick - simple function that, when executes, will open a notification popup
+  const onRowClick = notification => {
+    setNotification(notification);
+    setRenderNotification(true);
+  };
 
   // states and functions from init file
   const { 
     notifications, 
     pageNum,
-    dispatchNotifications,
     updateNotifications,
     areAllNotifsSelected,
     getSelectedCount,
     toggleSelection,
     toggleSelectionAll, 
     removeSelected,
-    handleRowClick,
     changePage
   } = NotificationsLogic();
 
@@ -69,6 +75,9 @@ function Notifications() {
   /* ===== NOTIFICATION COMPONENT ===== */
   return notifications.all ?
     <>
+      { /* Notification popup element */ }
+      <NotificationPopup renderNotif={ renderNotification } setRenderNotif={ setRenderNotification } notification={ notification } />
+
       { /* Notifications header */ }
       <div className="notifications-header">
         <div className="notifications-header-info">
@@ -149,7 +158,7 @@ function Notifications() {
                   row={ row } 
                   notifications= { notifications } 
                   pageNum={ pageNum }
-                  handleRowClick={ handleRowClick } 
+                  handleRowClick={ onRowClick } 
                   toggleSelection={ toggleSelection } 
                   key={ row.notif_date }
                 />;
@@ -180,9 +189,6 @@ function Notifications() {
         </div>
 
       </div>
-
-      { /* Notification popup element - will only render if the current field in the notification.current field is set */ }
-      <NotificationPopup notifications={ notifications } dispatchNotifications={ dispatchNotifications } />
     </>
   :
 

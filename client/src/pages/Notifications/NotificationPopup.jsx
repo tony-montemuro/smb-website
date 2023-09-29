@@ -1,34 +1,41 @@
 /* ===== IMPORTS ===== */
-import "./Notifications.css";
-import ApprovePopup from "./ApprovePopup";
-import InsertPopup from "./InsertPopup";
-import DeletePopup from "./DeletePopup";
-import ReportPopup from "./ReportPopup";
-import UpdatePopup from "./UpdatePopup";
+import Approve from "./Approve";
+import Insert from "./Insert";
+import Delete from "./Delete";
+import Popup from "../../components/Popup/Popup.jsx";
+import Report from "./Report";
+import Update from "./Update";
 
-function NotificationPopup({ notifications, dispatchNotifications }) {
+function NotificationPopup({ renderNotif, setRenderNotif, notification }) {
   /* ===== VARIABLES ===== */
-  const notification = notifications.current;
+  const notifType = notification ? notification.notif_type : null;
+  let popupContent = null;
+  switch (notifType) {
+    case "approve":
+      popupContent = <Approve notification={ notification } />;
+      break;
+    case "delete":
+      popupContent = <Delete notification={ notification } />;
+      break;
+    case "insert":
+      popupContent = <Insert notification={ notification } />;
+      break;
+    case "report":
+      popupContent = <Report notification={ notification } />;
+      break;
+    case "update":
+      popupContent = <Update notification={ notification } />;
+      break;
+    default:
+      return null;
+  };
 
   /* ===== NOTIFICATION POPUP COMPONENT ===== */
-  if (notification) {
-    switch (notification.notif_type) {
-      case "approve":
-        return <ApprovePopup notifications={ notifications } dispatchNotifications={ dispatchNotifications } />;
-      case "insert":
-        return <InsertPopup notifications={ notifications } dispatchNotifications={ dispatchNotifications } />;
-      case "delete":
-        return <DeletePopup notifications={ notifications } dispatchNotifications={ dispatchNotifications } />;
-      case "report":
-        return <ReportPopup notifications={ notifications } dispatchNotifications={ dispatchNotifications } />;
-      case "update":
-        return <UpdatePopup notifications={ notifications } dispatchNotifications={ dispatchNotifications } />;
-      default:
-        return null;
-    }
-  } else {
-    return null;
-  }
+  return (
+    <Popup renderPopup={ renderNotif } setRenderPopup={ setRenderNotif } width={ "33%" }>
+      { popupContent }
+    </Popup>
+  );
 };
 
 /* ===== EXPORTS ===== */
