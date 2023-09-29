@@ -39,17 +39,11 @@ function GameModerators({ imageReducer }) {
 
         { /* Popups */ }
         <Popup renderPopup={ moderatorToRemove } setRenderPopup={ setModeratorToRemove } width={ "30%" }>
-          <Delete moderator={ moderatorToRemove } submitting={ submitting } onDelete={ removeModerator } />
+          <Delete submitting={ submitting } onDelete={ removeModerator } />
         </Popup>
         <Popup renderPopup={ moderatorToAdd } setRenderPopup={ setModeratorToAdd } width={ "30%" } >
-          <Insert moderator={ moderatorToAdd } submitting={ submitting } onInsert={ addModerator } />
+          <Insert submitting={ submitting } onInsert={ addModerator } />
         </Popup>
-        {/* <InsertPopup 
-          moderator={ moderatorToAdd } 
-          setModerator={ setModeratorToAdd } 
-          onInsert={ addModerator }
-          submitting={ submitting }
-        /> */}
 
       { /* Simple game select - render a column of games to select from */ }
       <SimpleGameSelect

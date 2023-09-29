@@ -3,11 +3,14 @@ import { PopupContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import Username from "../../components/Username/Username";
 
-function Insert({ moderator, submitting, onInsert }) {
+function Insert({ submitting, onInsert }) {
   /* ===== CONTEXTS ===== */
 
-  // close popup function from popup context
-  const { closePopup } = useContext(PopupContext);
+  // popupData & close popup function from popup context
+  const { popupData, closePopup } = useContext(PopupContext);
+
+  /* ===== VARIABLES ===== */
+  const moderator = popupData;
 
   /* ===== INSERT COMPONENT ===== */
   return (

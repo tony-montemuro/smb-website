@@ -23,7 +23,7 @@ function Popup({ renderPopup, setRenderPopup, width, children }) {
         </div>
 
         { /* Render component children, and give children access to the `closePopup` function */ }
-        <PopupContext.Provider value={ { closePopup } }>
+        <PopupContext.Provider value={ { popupData: renderPopup, closePopup } }>
           { children }
         </PopupContext.Provider>
 

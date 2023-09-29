@@ -3,11 +3,14 @@ import { PopupContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import Username from "../../components/Username/Username";
 
-function Delete({ moderator, submitting, onDelete }) {
+function Delete({ submitting, onDelete }) {
   /* ===== CONTEXTS ===== */
 
-  // close popup from popup context
-  const { closePopup } = useContext(PopupContext);
+  // popup data state & close popup from popup context
+  const { popupData, closePopup } = useContext(PopupContext);
+
+  /* ===== VARIABLES ===== */
+  const moderator = popupData;
 
   /* ===== DELETE COMPONENT ===== */
   return (
