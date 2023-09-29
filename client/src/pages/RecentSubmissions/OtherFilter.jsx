@@ -1,16 +1,10 @@
 /* ===== IMPORTS ===== */
-import { PopupContext } from "../../utils/Contexts.js";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import BooleanFilter from "./BooleanFilter.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import OtherFilterLogic from "./OtherFilter.js";
 
 function OtherFilter({ searchParams, setSearchParams, categories }) {
-  /* ===== CONTEXTS ===== */
-
-  // close popup function from context context
-  const { closePopup } = useContext(PopupContext);
-
   /* ===== VARIABLES ===== */
   const defaultFilters = {
     category: [],
@@ -56,7 +50,7 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
       <h1>Other Filters</h1>
 
       { /* Form for updating the various filters */ }
-      <form onSubmit={ () => closePopupAndUpdate(closePopup, searchParams, setSearchParams) }>
+      <form onSubmit={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
 
         { /* First, render the filter options for categories */ }
         <div className="recent-submissions-popup-category-filter">

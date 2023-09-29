@@ -1,16 +1,9 @@
 /* ===== IMPORTS ===== */
-import { PopupContext } from "../../utils/Contexts.js";
-import { useContext } from "react";
 import UserFilterLogic from "./UserFilter.js";
 import UserSearch from "../../components/UserSearch/UserSearch.jsx";
 import UserRow from "../../components/UserRow/UserRow.jsx";
 
 function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData }) {
-  /* ===== CONTEXTS ===== */
-
-  // close popup function from popup context
-  const { closePopup } = useContext(PopupContext);
-
   /* ===== FUNCTIONS ===== */
   
   // functions from the js file
@@ -61,7 +54,7 @@ function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData 
             { /* Render a button that allows user to reset filters, as well as apply any filters */ }
             <div className="recent-submissions-filter-submit-btns">
               <button type="button" onClick={ resetFilter }>Reset Filter</button>
-              <button type="button" onClick={ () => closePopupAndUpdate(closePopup, searchParams, setSearchParams) }>
+              <button type="button" onClick={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
                 Apply Filters
               </button>
             </div>

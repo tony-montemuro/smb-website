@@ -1,7 +1,13 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { PopupContext } from "../../utils/Contexts";
+import { useContext, useState } from "react";
 
 const OtherFilter = (categories) => {
+    /* ===== CONTEXTS ===== */
+
+    // close popup function from popup context
+    const { closePopup } = useContext(PopupContext);
+
     /* ===== STATES ===== */
     const [filters, setFilters] = useState(undefined);
 
@@ -91,14 +97,13 @@ const OtherFilter = (categories) => {
     };
 
     // FUNCTION 6: closePopupAndUpdate - function that closes the user filter popup, and updates the search params state
-    // PRECONDITIONS (3 parameters):
-    // 1.) closePopup: a function that, when called, will simply close the popup
-    // 2.) searchParams: a URLSearchParams specifying the filters currently applied to the recent submissions page
-    // 3.) setSearchParams: a setter function we can use to update the search params
+    // PRECONDITIONS (2 parameters):
+    // 1.) searchParams: a URLSearchParams specifying the filters currently applied to the recent submissions page
+    // 2.) setSearchParams: a setter function we can use to update the search params
     // POSTCONDITIONS (1 possible outcome):
     // given our old searchParams object, as well as the filters state, we generate a new search params object, and
     // update the `searchParams` state. finally, we also close the popup by calling the `closePopup` function
-    const closePopupAndUpdate = (closePopup, searchParams, setSearchParams) => {
+    const closePopupAndUpdate = (searchParams, setSearchParams) => {
         // first, let's create an identical, new searchParams object, with all filters in `filterName` removed
         const newSearchParams = new URLSearchParams();
         for (const [key, value] of searchParams) {

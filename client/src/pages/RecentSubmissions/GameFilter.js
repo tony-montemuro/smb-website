@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { MessageContext, PopupContext } from "../../utils/Contexts";
 import { useContext } from "react";
 
 const GameFilter = (games, dispatchFiltersData) => {
@@ -8,6 +8,9 @@ const GameFilter = (games, dispatchFiltersData) => {
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
+    // close popup function from popup context
+    const { closePopup } = useContext(PopupContext);
+ 
     /* ===== FUNCTIONS ===== */
 
     // FUNCTION 1: addGame - function that adds a game object to our games state
@@ -42,15 +45,14 @@ const GameFilter = (games, dispatchFiltersData) => {
     };
 
     // FUNCTION 4: closePopupAndUpdate - function that closes the game filter popup, and updates the search params state
-    // PRECONDITIONS (3 parameters):
-    // 1.) closePopup: a function that, when called, will simply close the popup
-    // 2.) searchParams: a URLSearchParams specifying the filters currently applied to the recent submissions page
-    // 3.) setSearchParams: a setter function we can use to update the search params
+    // PRECONDITIONS (2 parameter):
+    // 1.) searchParams: a URLSearchParams specifying the filters currently applied to the recent submissions page
+    // 2.) setSearchParams: a setter function we can use to update the search params
     // POSTCONDITIONS (1 possible outcome):
     // any new games stored in the `games` array are added to a new URLSearchParams object, as well as any games that were already
     // present, and we update the searchParams state by calling the `setSearchParams` function. finally, the popup is closed by calling
     // the `closePopup` function
-    const closePopupAndUpdate = (closePopup, searchParams, setSearchParams) => {
+    const closePopupAndUpdate = (searchParams, setSearchParams) => {
         // first, let's update the searchParams state - must recreate searchParams, but without any games
         const newSearchParams = new URLSearchParams();
         for (const [key, value] of searchParams) {
