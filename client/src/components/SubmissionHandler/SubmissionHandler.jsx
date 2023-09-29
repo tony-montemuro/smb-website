@@ -2,9 +2,10 @@
 import "./SubmissionHandler.css";
 import { ModeratorLayoutContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
+import Popup from "../Popup/Popup.jsx";
 import SimpleGameSelect from "../SimpleGameSelect/SimpleGameSelect.jsx";
+import Submission from "./Submission.jsx";
 import SubmissionHandlerLogic from "./SubmissionHandler.js";
-import SubmissionPopup from "./SubmissionPopup.jsx";
 import SubmissionRow from "./SubmissionRow";
 
 function SubmissionHandler({ imageReducer, isUnapproved }) {
@@ -52,6 +53,11 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
   /* ===== SUBMISSION HANDLER COMPONENT ===== */
   return game && submissions ?
     <div className="submission-handler">
+
+      { /* Popup elements */ }
+      <Popup renderPopup={ submission } setRenderPopup={ setSubmission } width={ "70%" }>
+        <Submission submission={ submission } game={ game } isUnapproved={ isUnapproved } setSubmissions={ setSubmissions } />
+      </Popup>
 
       { /* Simple game select - Render a column of games to choose from */ }
       <SimpleGameSelect 
@@ -123,15 +129,6 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
         </div>
 
       </div>
-    
-    { /* Popup elements */ }
-    <SubmissionPopup 
-      submission={ submission } 
-      setSubmission={ setSubmission }
-      game={ game }
-      setSubmissions={ setSubmissions }
-      isUnapproved={ isUnapproved } 
-    />
 
     </div>
   :

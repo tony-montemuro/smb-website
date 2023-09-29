@@ -65,39 +65,11 @@
     flex-direction: column;
 }
 
-.submission-handler-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-}
-
-.submission-handler-popup-inner {
-    position: relative;
-    padding: 32px;
-    width: 100%;
-    max-width: 70%;
-    max-height: 75vh;
-    overflow-y: auto;
-    background-color: #fff;
-    border-radius: 10px;
-}
-
-.submission-handler-popup-close-btn {
-    text-align: right;
-}
-
-.submission-handler-popup-body {
+.submission-handler-submission {
     display: flex;
 }
 
-.submission-handler-popup-left {
+.submission-handler-submission-left {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -105,40 +77,40 @@
     text-align: center;
 }
 
-.submission-handler-popup-right {
+.submission-handler-submission-right {
     flex-basis: 30%;
     text-align: center;
 }
 
-.submission-handler-popup-form {
+.submission-handler-submission-form {
     display: inline-block;
     text-align: left;
 }
 
-.submission-handler-popup-input {
+.submission-handler-submission-input {
     margin: 10px;
     white-space: nowrap;
 }
 
-.submission-handler-popup-textarea {
+.submission-handler-submission-textarea {
     display: flex;
     flex-direction: column;
     white-space: nowrap;
 }
 
-.submission-handler-popup-buttons {
+.submission-handler-btns {
     margin: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.submission-handler-popup-buttons button {
+.submission-handler-btns button {
     margin-left: 5px;
     margin-right: 5px;
 }
 
-.submission-handler-popup-notice {
+.submission-handler-notice {
     cursor: default;
 }
 

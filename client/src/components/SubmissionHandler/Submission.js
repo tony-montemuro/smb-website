@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, ModeratorLayoutContext, PopupContext, UserContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import ApproveUpdate from "../../database/update/ApproveUpdate";
 import DateHelper from "../../helper/DateHelper";
@@ -10,7 +10,7 @@ import SubmissionDelete from "../../database/delete/SubmissionDelete";
 import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
-const SubmissionPopup = (submission, setSubmission, game, setSubmissions, isUnapproved) => {
+const Submission = (submission, game, isUnapproved, setSubmissions) => {
     /* ===== VARIABLES ===== */
     const defaultForm = { 
         values: null, 
@@ -28,6 +28,9 @@ const SubmissionPopup = (submission, setSubmission, game, setSubmissions, isUnap
 
     // dispatch games function from the moderator layout context
     const { dispatchGames } = useContext(ModeratorLayoutContext);
+
+    // close popup function from popup context
+    const { closePopup } = useContext(PopupContext);
 
     // user state from user context
     const { user } = useContext(UserContext);
@@ -108,7 +111,7 @@ const SubmissionPopup = (submission, setSubmission, game, setSubmissions, isUnap
     const handleClose = () => {
         setForm(defaultForm);
         setShowReject(false);
-        setSubmission(null);
+        closePopup();
     };
 
     // FUNCTION 5: handleCloseAndRemove - function that removes the submission from both the `submissions` state, as well as 1 count
@@ -120,7 +123,7 @@ const SubmissionPopup = (submission, setSubmission, game, setSubmissions, isUnap
     const handleCloseAndRemove = () => {
         setSubmissions(submissions => submissions.filter(row => row !== submission));
         dispatchGames({ type: isUnapproved ? "decrementUnapproved" : "decrementReported", value: game.abb });
-        handleClose(setSubmission);
+        handleClose();
     };
 
     // FUNCTION 6: isFormUnchanged - function that checks whether or not the form was unchanged
@@ -275,4 +278,4 @@ const SubmissionPopup = (submission, setSubmission, game, setSubmissions, isUnap
 };
 
 /* ===== EXPORTS ===== */
-export default SubmissionPopup;
+export default Submission;
