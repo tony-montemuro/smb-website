@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
-import { UserContext } from "../../utils/Contexts";
+import { PopupContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import EmbedHelper from "../../helper/EmbedHelper";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
@@ -9,18 +9,22 @@ import SubmissionLogic from "./Submission.js";
 import UpdatedFieldSymbol from "./UpdatedFieldSymbol";
 import Username from "../../components/Username/Username";
 
-function Submission({ submission, game, isUnapproved, setSubmissions }) {
+function Submission({ game, isUnapproved, setSubmissions }) {
   /* ===== CONTEXTS ===== */
+
+  // popup data state from popup context
+  const { popupData } = useContext(PopupContext);
 
   // user state from user context
   const { user } = useContext(UserContext);
 
   /* ===== VARIABLES ===== */
-  const category = submission && submission.level.category;
-  const type = submission && submission.score ? "score" : "time";
-  const isOwn = submission && submission.profile.id === user.profile.id;
+  const submission = popupData;
+  const category = submission.level.category;
+  const type = submission.score ? "score" : "time";
+  const isOwn = submission.profile.id === user.profile.id;
   const TEXT_AREA_ROWS = 5;
-  const creator = submission && submission.report && submission.report.creator;
+  const creator = submission.report && submission.report.creator;
 
   /* ===== FUNCTIONS ===== */
 

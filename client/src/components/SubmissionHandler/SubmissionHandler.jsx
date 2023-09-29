@@ -56,7 +56,7 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
 
       { /* Popup elements */ }
       <Popup renderPopup={ submission } setRenderPopup={ setSubmission } width={ "70%" }>
-        <Submission submission={ submission } game={ game } isUnapproved={ isUnapproved } setSubmissions={ setSubmissions } />
+        <Submission game={ game } isUnapproved={ isUnapproved } setSubmissions={ setSubmissions } />
       </Popup>
 
       { /* Simple game select - Render a column of games to choose from */ }
