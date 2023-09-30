@@ -1,19 +1,24 @@
 /* ===== IMPORTS ===== */
-import { useContext } from "react";
-import { UserContext } from "../../utils/Contexts";
+import { useContext, useState } from "react";
+import { PopupContext, UserContext } from "../../utils/Contexts";
 import CountdownTimer from "../CountdownTimer/CountdownTimer.jsx";
 import ReportFormLogic from "./ReportForm.js";
 
-function ReportForm({ submission, closePopup, submitting, setSubmitting }) {
-  /* ===== VARIABLES ===== */
-  const TEXT_AREA_ROWS = 2;
-
+function ReportForm({ updateBoard }) {
   /* ===== CONTEXTS ===== */
+
+  // popup data state from popup context
+  const { popupData } = useContext(PopupContext);
 
   // user state from user context
   const { user } = useContext(UserContext);
 
+  /* ===== VARIABLES ===== */
+  const submission = popupData;
+  const TEXT_AREA_ROWS = 2;
+
   /* ===== STATES AND FUNCTIONS ===== */
+  const [submitting, setSubmitting] = useState(false);
 
   // states and functions from js file
   const { form, handleReport, handleChange } = ReportFormLogic();
@@ -45,10 +50,10 @@ function ReportForm({ submission, closePopup, submitting, setSubmitting }) {
             <p>You have <b>{ user.profile.report_token }</b> reports left. Report counts reset in <CountdownTimer />.</p>
             
             { /* Report form */ }
-            <form onSubmit={ (e) => handleReport(e, submission, closePopup, setSubmitting) }>
+            <form onSubmit={ (e) => handleReport(e, submission, setSubmitting, updateBoard) }>
       
               { /* Message input - a text field where the user must include a message with their report */ }
-              <div className="detail-textarea-group">
+              <div className="submission-details-textarea-group">
                 <label>Message: </label>
                 <textarea 
                   value={ form.message }
@@ -62,7 +67,7 @@ function ReportForm({ submission, closePopup, submitting, setSubmitting }) {
               { form.error && <p>{ form.error }</p> }
 
               { /* Report form button */ }
-              <div className="detail-decision-btns">
+              <div className="submission-detail-decision-btns">
 
                 { /* Button that, when pressed, reports the submission */ }
                 <button type="submit" disabled={ submitting }>

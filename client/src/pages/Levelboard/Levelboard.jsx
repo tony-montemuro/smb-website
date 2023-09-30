@@ -3,7 +3,6 @@ import "./Levelboard.css";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import DetailPopup from "../../components/DetailPopup/DetailPopup.jsx";
 import Filters from "./Filters.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import Insert from "./Insert.jsx";
@@ -12,6 +11,7 @@ import LevelboardRow from "./LevelboardRow";
 import PathHelper from "../../helper/PathHelper";
 import Popup from "../../components/Popup/Popup.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
+import SubmissionDetails from "../../components/DetailPopup/SubmissionDetails.jsx";
 import TableTabs from "../../components/TableTabs/TableTabs";
 import Update from "./Update.jsx";
 
@@ -66,22 +66,6 @@ function Levelboard({ imageReducer }) {
 		getChartSearchParams
 	} = LevelboardLogic();
 
-	// FUNCTION 1: closePopups - general function that executes when user attempts to close a popup
-	// PRECONDITIONS (1 parameter):
-	// 1.) hasChanged - boolean variable that should be set to true when user's popup closure is a result of a change to db
-	// POSTCONDITIONS (2 possible outcome):
-	// if isChanged is false, simply close all popups
-	// otherwise, we want to re-setup the board with the updated data, and close popups
-	const closePopups = async hasChanged => {
-		if (hasChanged) {
-			await setupBoard(board.filters);
-		}
-		setFiltersPopup(null);
-		setInsertPopup(null);
-		setUpdateSubmissions(null);
-		setDetailSubmission(null);
-	};
-
 	/* ===== EFFECTS ===== */
 
 	// code that is executed when the page loads, when the user state is updated, or when the user
@@ -121,11 +105,9 @@ function Levelboard({ imageReducer }) {
 			<Popup renderPopup={ filtersPopup } setRenderPopup={ setFiltersPopup } width={ "60%" } >
 				<Filters currentFilters={ board.filters } defaultFilters={ defaultFilters } updateBoard={ setupBoard } />
 			</Popup>
-			<DetailPopup 
-				submission={ detailSubmission } 
-				closePopup={ closePopups }
-				level={ level }
-			/>
+			<Popup renderPopup={ detailSubmission } setRenderPopup={ setDetailSubmission } width={ "40%" } >
+				<SubmissionDetails level={ level } updateBoard={ setupBoard } />
+			</Popup>
 
 			{/* Levelboard header - Contains general information about them game and board */}
 			<div className="levelboard-header">

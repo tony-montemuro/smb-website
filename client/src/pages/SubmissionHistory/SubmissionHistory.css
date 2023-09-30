@@ -72,55 +72,6 @@
     border: none;
 }
 
-.submission-history-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.submission-history-popup-inner {
-    position: relative;
-    padding: 32px;
-    width: 100%;
-    max-width: 35%;
-    max-height: 60vh;
-    overflow-y: auto;
-    background-color: #fff;
-    border-radius: 10px;
-}
-
-.submission-history-popup-close-btn {
-    text-align: right;
-}
-
-.submission-history-popup-video {
-    height: 40vh;
-}
-
-.submission-history-popup-info {
-    list-style: none;
-    padding: 0;
-}
-
-.submission-history-popup-info {
-    list-style: none;
-    padding: 0;
-}
-
-.submission-history-popup-info li {
-    display: flex;
-    align-items: center;
-    height: 15px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
 .submission-history-input-group {
     padding-top: 10px;
     padding-bottom: 10px;

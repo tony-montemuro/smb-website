@@ -4,13 +4,14 @@ import { GameContext, MessageContext } from "../../utils/Contexts";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import DetailPopup from "../../components/DetailPopup/DetailPopup.jsx";
 import FilteredSubmissionRow from "./FilteredSubmissionRow";
 import FrontendHelper from "../../helper/FrontendHelper";
 import PathHelper from "../../helper/PathHelper";
+import Popup from "../../components/Popup/Popup.jsx";
+import SubmissionDetails from "../../components/DetailPopup/SubmissionDetails.jsx";
 import SubmissionHistoryLogic from "./SubmissionHistory";
-import Username from "../../components/Username/Username";
 import TableTabs from "../../components/TableTabs/TableTabs";
+import Username from "../../components/Username/Username";
 
 function SubmissionHistory() {
   /* ===== HELPER FUNCTIONS ====== */
@@ -46,20 +47,6 @@ function SubmissionHistory() {
 
   // states and functions from the js file
   const { submissions, runType, setRunType, fetchProfile, fetchSubmissions, handleTabClick } = SubmissionHistoryLogic();
-
-  // FUNCTION 1: closeDetailPopup - function that executes when user attempts to close the detail popup
-	// PRECONDITIONS (1 parameters):
-	// 1.) isReported - boolean variable that should be set to true when user closes detail popup from reporting the submission,
-	// false otherwise
-	// POSTCONDITIONS (2 possible outcome):
-	// if isReported is false, simply close the popup
-	// otherwise, we want to re-setup the board with the updated data, and then close the popup
-	const closeDetailPopup = async isReported => {
-		if (isReported) {
-			await fetchSubmissions();
-		}
-		setDetailSubmission(undefined);
-	};
 
   /* ===== EFFECTS ====== */
 
@@ -109,6 +96,11 @@ function SubmissionHistory() {
   /* ===== RECORD HISTORY COMPONENT ===== */
   return profile && submissions[runType] &&
     <>
+
+      { /* Popups */ }
+      <Popup renderPopup={ detailSubmission } setRenderPopup={ setDetailSubmission } width={ "40%" } >
+				<SubmissionDetails level={ level } updateBoard={ fetchSubmissions } />
+			</Popup>
 
       { /* Record History Header - Render information about the page. */ }
       <div className="submission-history-header">
@@ -181,13 +173,6 @@ function SubmissionHistory() {
           </table>
         </div>
       </div>
-
-      { /* Detail popup */ }
-      <DetailPopup 
-        submission={ detailSubmission } 
-        closePopup={ closeDetailPopup } 
-        level={ level }
-      />
     </>
    
   ;

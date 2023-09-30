@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
-import { MessageContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, PopupContext, UserContext } from "../../utils/Contexts";
 import ReportUpdate from "../../database/update/ReportUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
@@ -12,6 +12,9 @@ const ReportForm = () => {
 
     // user state & updateUser function from user context
     const { user, updateUser } = useContext(UserContext);
+
+    // close popup function from popup context
+    const { closePopup } = useContext(PopupContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -32,13 +35,13 @@ const ReportForm = () => {
     // PRECONDITIONS (4 parameters):
     // 1.) e: an event object generated when the user submits the submission form
     // 2.) submission: a submission object that contains information about the reported submission
-    // 3.) closePopup: a function called once we have reported the submission that will close the popup
-    // 4.) setSubmitting: a function that allows us to trigger the submitting state between true and false
+    // 3.) setSubmitting: a function that allows us to trigger the submitting state between true and false
+    // 4.) updateBoard: a function that, when called, will update the "board" of the parent component
     // POSTCONDITIONS (3 possible outcomes):
     // if the message is not validated, the error field of form is updated by calling setForm() function, and the function returns early
     // if the message is validated, and at least one notification fails to insert, user is alerted of the error
     // if the message is validated, and all notifications insert, the page will reload
-    const handleReport = async (e, submission, closePopup, setSubmitting) => {
+    const handleReport = async (e, submission, setSubmitting, updateBoard) => {
         // first, update the form to prevent multiple submissions
         e.preventDefault();
         setSubmitting(true);
@@ -63,12 +66,13 @@ const ReportForm = () => {
             // await report to be completed
             await insertReport(report);
         
-            // perform a concurrent call to close the popup, as well as update user data (specifically, the report token count
+            // perform a concurrent call to update board, as well as update user data (specifically, the report token count
             // should decrease)
-            await Promise.all([closePopup(true), updateUser(user.id)]);
+            await Promise.all([updateBoard(), updateUser(user.id)]);
 
-            // finally, let the user know that they successfully reported the submission
+            // finally, let the user know that they successfully reported the submission, and close the popup
             addMessage("The submission was successfully reported! Please give the moderation team a few days to look it over.", "success");
+            closePopup();
     
         } catch (error) {
             // otherwise, render an error message, and set the submitting state back to false
