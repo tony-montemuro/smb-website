@@ -199,7 +199,7 @@ function Submission({ game, isUnapproved, setSubmissions }) {
               />
 
               { /* Render an updated field symbol if the live value has been modified */ }
-              <UpdatedFieldSymbol oldVal={ submission.live } newVal={ form.values.live } />
+              <UpdatedFieldSymbol oldVal={ submission.tas } newVal={ form.values.tas } />
             </div>
 
             { /* Comment: Render a read-only textbox that allows the user to see the comment */ }
