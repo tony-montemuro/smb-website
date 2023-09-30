@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { MessageContext, PopupContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
 import DateHelper from "../../helper/DateHelper";
@@ -7,7 +7,7 @@ import LevelboardUtils from "./LevelboardUtils";
 import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
-const UpdatePopup = (level) => {
+const Update = (level) => {
     /* ===== VARIABLES ===== */
     const location = useLocation();
     const path = location.pathname.split("/");
@@ -23,6 +23,9 @@ const UpdatePopup = (level) => {
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
+
+    // close popup function from popup context
+    const { closePopup } = useContext(PopupContext);
 
     /* ===== STATES & REDUCERS ===== */
     const [form, dispatchForm] = useReducer((state, action) => {
@@ -127,16 +130,16 @@ const UpdatePopup = (level) => {
     };
 
     // FUNCTION 4: handleSubmit - function that is called when the user submits the form
-    // PRECONDITIONS (2 parameters):
+    // PRECONDITIONS (3 parameters):
     // 1.) e: an event object which is generated when the user submits the update submission form
     // 2.) submissions: an array of all submission objects belonging to the current user for the current level
-    // 3.) closePopup: a function that, when called, will update the level leaderboard, and close the popup
+    // 3.) updateBoard: a function that, when called, will update the level leaderboard
     // POSTCONDITIONS (3 possible outcomes):
     // if the form fails to validate, the function will return early, and the user will be shown the errors
     // if the form successfully validates, but the data fails to submit, the submission process is halted, and the user is displayed an
     // error message
     // if the form successfully validates, and the data successfully submits, then the page is reloaded
-    const handleSubmit = async (e, submissions, closePopup) => {
+    const handleSubmit = async (e, submissions, updateBoard) => {
         // initialize submission
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
@@ -170,11 +173,12 @@ const UpdatePopup = (level) => {
             // attempt to update the submission using updated data
             await updateSubmission(updatedData, id);
 
-            // wait for the popup to close
-            await closePopup(true);
+            // wait for the board to update
+            await updateBoard();
 
-            // finally, let the user know that they successfully submitted their submission
+            // finally, let the user know that they successfully submitted their submission, and close the popup
             addMessage("Your submission was successfully updated!", "success");
+            closePopup();
 
         } catch (error) {
             addMessage(error.message, "error");
@@ -182,19 +186,8 @@ const UpdatePopup = (level) => {
         };
     };
 
-    // FUNCTION 6: resetAndClosePopup - function that is activated when the user attempts to close the popup
-    // PRECONDITIONS (1 parameter):
-    // 1.) closePopup - function that, when called, actually closes the popup
-    // POSTCONDITIONS (1 possible outcomes):
-    // the form is set to default values by calling the dispatchForm() function with the { field: "all" } argument, and the popup
-    // is closed
-    const resetAndClosePopup = closePopup => {
-        dispatchForm({ field: "all" });
-        closePopup(false);
-    };
-
-    return { form, fillForm, handleChange, handleSubmissionChange, handleSubmit, resetAndClosePopup };
+    return { form, fillForm, handleChange, handleSubmissionChange, handleSubmit };
 };
 
 /* ===== EXPORTS ===== */
-export default UpdatePopup;
+export default Update;

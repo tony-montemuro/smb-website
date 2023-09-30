@@ -4,21 +4,22 @@ import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import DetailPopup from "../../components/DetailPopup/DetailPopup.jsx";
-import FiltersPopup from "./FiltersPopup.jsx";
+import Filters from "./Filters.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
-import InsertPopup from "./InsertPopup.jsx";
+import Insert from "./Insert.jsx";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
 import PathHelper from "../../helper/PathHelper";
+import Popup from "../../components/Popup/Popup.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import TableTabs from "../../components/TableTabs/TableTabs";
-import UpdatePopup from "./UpdatePopup.jsx";
+import Update from "./Update.jsx";
 
 function Levelboard({ imageReducer }) {
 	/* ===== CONTEXTS ===== */
 
-	// user state from user context
-  const { user } = useContext(UserContext);
+	// user state & is moderator function from user context
+  const { user, isModerator } = useContext(UserContext);
 
 	// game state from game context
   const { game } = useContext(GameContext);
@@ -60,7 +61,6 @@ function Levelboard({ imageReducer }) {
 		board,
 		userSubmissions,
 		setupBoard,
-		applyFilters,
 		getChartTypes,
 		handleTabClick,
 		getChartSearchParams
@@ -109,8 +109,25 @@ function Levelboard({ imageReducer }) {
 
 	/* ===== LEVELBOARD COMPONENT ===== */
 	return level && board.filtered && board.filters ?
-		// Levelboard header - Contains general information about them game and board
 		<div className="levelboard">
+
+			{ /* Popups */ }
+			<Popup renderPopup={ insertPopup } setRenderPopup={ setInsertPopup } width={ `${ isModerator(abb) ? "50%" : "25%" }` }>
+				<Insert level={ level } updateBoard={ setupBoard } />
+			</Popup>
+			<Popup renderPopup={ updateSubmissions } setRenderPopup={ setUpdateSubmissions } width={ "40%" } >
+				<Update level={ level } updateBoard={ setupBoard } />
+			</Popup>
+			<Popup renderPopup={ filtersPopup } setRenderPopup={ setFiltersPopup } width={ "60%" } >
+				<Filters currentFilters={ board.filters } defaultFilters={ defaultFilters } updateBoard={ setupBoard } />
+			</Popup>
+			<DetailPopup 
+				submission={ detailSubmission } 
+				closePopup={ closePopups }
+				level={ level }
+			/>
+
+			{/* Levelboard header - Contains general information about them game and board */}
 			<div className="levelboard-header">
 
 				{ /* Levelboard title - name of levelboard, as well as previous and next buttons */ }
@@ -230,30 +247,6 @@ function Levelboard({ imageReducer }) {
 
 				</div>
 			</div>
-
-			{ /* Popups */ }
-			<FiltersPopup
-				popup={ filtersPopup }
-				closePopup={ closePopups }
-				currentFilters={ board.filters }
-				defaultFilters={ defaultFilters }
-				onApplyFunc={ applyFilters }
-			/>
-			<DetailPopup 
-				submission={ detailSubmission } 
-				closePopup={ closePopups }
-				level={ level }
-			/>
-			<InsertPopup 
-				popup={ insertPopup } 
-				closePopup={ closePopups } 
-				level={ level }
-			/>
-			<UpdatePopup
-				submissions={ updateSubmissions }
-				closePopup={ closePopups }
-				level={ level }
-			/>
 
 		</div>
 	:

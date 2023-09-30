@@ -168,18 +168,20 @@ const Levelboard = () => {
 	};
 
 	// FUNCTION 4: setupBoard - given information about the path, set up the board object
-	// PRECONDITIONS (1 parameters):
-	// 1.) filters: a filter object with the following fields: 
+	// PRECONDITIONS (1 parameter):
+	// 1.) filters - an optional parameter representing a filter object with the following fields: 
 	// endDate (Date), live (array), monkeys (array), platforms (array), obsolete (boolean), regions (array), tas: (array)
+	// if this parameter is undefined, we will simply use `board.filters`
 	// POSTCONDITIONS (2 possible outcome):
 	// if the submissions successfully are retrieved, the list of submissions are generated, and all fields of `applyFilters` are
 	// updated
 	// if the submissions fail to be retrieved, an error message is rendered to the user, and the board state is NOT updated, leaving the
 	// Levelboard component stuck loading
 	const setupBoard = async filters => {
-		// first, set board to default values, and get the names of the previous and next level
-		setBoard(boardInit);
+		// first, define variables & reset board state
+		filters = filters ? filters : board.filters;
 		const adjacent = getPrevAndNext(category, levelName);
+		setBoard(boardInit);
 
 		try {
 			// get chart submissions
@@ -202,24 +204,7 @@ const Levelboard = () => {
 		}
 	};
 
-	// FUNCTION 5: applyFilters - given a filter object, apply filters, and update the board's `filtered` field
-	// PRECONDITIONS (2 parameters):
-	// 1.) filters: a filter object with the following fields: 
-	// endDate (Date), live (array), monkeys (array), platforms (array), obsolete (boolean), regions (array), tas: (array)
-	// 2.) allSubmissions: an optional parameter, that stores an array of submission objects. this should always be the value of `board.all`,
-	// but sometimes, this function is called before the `board` state updates for the first time.
-	// POSTCONDITIONS (1 possible outcomes):
-	// given the filters object, apply our filters to the array of all submissions, and update the `filters` and `filtered` field 
-	// by calling the setBoard() function
-	const applyFilters = filters => {
-		// first, let's perform the filtration process
-		const filtered = getFiltered(filters);
-
-		// finally, update the `filtered` property of the board state by calling `setBoard()`
-		setBoard({ ...board, filtered: filtered, filters: filters });
-	};
-
-	// FUNCTION 6: getChartTypes - function that generates array of valid chart types, given information about the level
+	// FUNCTION 5: getChartTypes - function that generates array of valid chart types, given information about the level
 	// PRECONDITIONS (1 parameter):
 	// 1.) level: a level object, which references the current level
 	// POSTCONDITIONS (1 possible outcome):
@@ -232,7 +217,7 @@ const Levelboard = () => {
 		}
 	};
 
-	// FUNCTION 7: handleTabClick - function that switches leaderboards based on the otherType parameter
+	// FUNCTION 6: handleTabClick - function that switches leaderboards based on the otherType parameter
 	// PRECONDITIONS (1 parameter):
 	// 1.) otherType: a string, either "score" or "time"
 	// POSTCONDITIONS (2 possible outcome):
@@ -244,7 +229,7 @@ const Levelboard = () => {
 		}
 	};
 
-	// FUNCTION 8: getChartSearchParams - using url path information, generate the equivalent URLSearchParams object
+	// FUNCTION 7: getChartSearchParams - using url path information, generate the equivalent URLSearchParams object
 	// PRECONDITIONS: NONE
 	// POSTCONDITIONS (1 possible outcome):
 	// a URLSearchParams is defined with filters defined by the path, and returned
@@ -261,7 +246,6 @@ const Levelboard = () => {
 		board,
 		userSubmissions,
 		setupBoard,
-		applyFilters,
 		getChartTypes,
 		handleTabClick,
 		getChartSearchParams

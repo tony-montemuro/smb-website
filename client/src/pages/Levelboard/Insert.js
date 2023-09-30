@@ -1,14 +1,14 @@
 /* ===== IMPORTS ===== */
+import { MessageContext, PopupContext, UserContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
-import { MessageContext, UserContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
 import FrontendHelper from "../../helper/FrontendHelper";
 import LevelboardUtils from "./LevelboardUtils";
 import SubmissionUpdate from "../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../helper/ValidationHelper";
 
-const InsertPopup = (level) => {
+const Insert = (level) => {
     /* ===== VARIABLES ===== */
     const location = useLocation();
     const path = location.pathname.split("/");
@@ -33,6 +33,9 @@ const InsertPopup = (level) => {
 
     // user state from user context
     const { user } = useContext(UserContext);
+
+    // close popup function from popup context
+    const { closePopup } = useContext(PopupContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -152,16 +155,16 @@ const InsertPopup = (level) => {
     };
 
     // FUNCTION 6: handleSubmit - function that validates and submits a record to the database
-	// PRECONDITIONS (2 parameters):
+	// PRECONDITIONS (3 parameters):
 	// 1.) e: an event object generated when the user submits the submission form
     // 2.) timerType: a string representing the time of timer of the chart. only really relevent for time charts
-    // 3.) closePopup: a function that, when called, will update the level leaderboard, and close the popup
+    // 3.) updateBoard: a function that, when called, updates the board state displaying all the submissions
 	// POSTCONDITIONS (3 possible outcomes):
     // if the submission fails to validate, the function will update the error field of the form state with any new form errors,
     // and return early
 	// if the submission is validated, and the submission is successful, the page is reloaded
 	// if the submission is validated, but the submission fails, and error message is rendered, and page does NOT reload
-	const handleSubmit = async (e, timerType, closePopup) => {
+	const handleSubmit = async (e, timerType, updateBoard) => {
 		// initialize submission
 		e.preventDefault();
 		dispatchForm({ field: "submitting", value: true });
@@ -209,31 +212,22 @@ const InsertPopup = (level) => {
             // attempt to submit the submission, and grab submission id from db response
             await insertSubmission(submission);
 
-            // wait for the popup to close
-            await closePopup(true);
+            // wait for the board to update
+            await updateBoard();
 
-            // finally, let the user know that they successfully submitted their submission
+            // finally, let the user know that they successfully submitted their submission, and close popup
             addMessage("Your submission was successful!", "success");
+            closePopup();
 
         } catch (error) {
+            // otherwise, render an error message, and keep popup open
             addMessage(error.message, "error");
             dispatchForm({ field: "submitting", value: false });
         };
 	};
 
-    // FUNCTION 7: resetAndClosePopup - function that is activated when the user attempts to close the popup
-    // PRECONDITIONS (1 parameter):
-    // 1.) closePopup - function that, when called, actually closes the popup
-    // POSTCONDITIONS (1 possible outcomes):
-    // the form is set to default values by calling the dispatchForm() function with the { field: "all" } argument, and the popup
-    // is closed
-    const resetAndClosePopup = closePopup => {
-        dispatchForm({ field: "all" });
-        closePopup(false);
-    };
-
-    return { form, fillForm, handleChange, onUserRowClick, handleSubmit, resetAndClosePopup }; 
+    return { form, fillForm, handleChange, onUserRowClick, handleSubmit }; 
 };
 
 /* ===== EXPORTS ===== */
-export default InsertPopup;
+export default Insert;

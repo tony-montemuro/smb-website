@@ -1,7 +1,14 @@
 /* ===== IMPORTS ===== */
+import { PopupContext } from "../../utils/Contexts";
+import { useContext } from "react";
 import { useState } from "react";
 
-const FiltersPopup = (defaultFilters) => {
+const Filters = (defaultFilters) => {
+    /* ===== CONTEXTS ===== */
+
+    // close popup state from popup context
+    const { closePopup } = useContext(PopupContext);
+
     /* ===== STATES ===== */
     const [filters, setFilters] = useState(undefined);
 
@@ -113,15 +120,14 @@ const FiltersPopup = (defaultFilters) => {
     };
 
     // FUNCTION 8: handleApplyFilters - code that is executed when the user requests to apply filters
-    // PRECONDITIONS (2 parameters):
-    // 1.) onApplyFunc: code that is executed in `Levelboard.js` when we apply filters
-    // 2.) closePopup: a function we can use to close the popup, which we want to do after applying filters
+    // PRECONDITIONS (1 parameter):
+    // 1.) a function that, when called, updates the levelboard
     // POSTCONDITIONS (1 possible outcome):
-    // we apply filters by calling the `onApplyFunc` with our `filters` state as a parameter, and close the popup by calling
-    // the `setPopup` function with the false argument
-    const handleApplyFilters = (onApplyFunc, closePopup) => {
-        onApplyFunc(filters);
-        closePopup(false);
+    // we apply filters by calling the `updateBoard` with our `filters` state as a parameter, and close the popup by calling
+    // the `closePopup` function
+    const handleApplyFilters = async updateBoard => {
+        await updateBoard(filters);
+        closePopup();
     };
 
     return {
@@ -139,4 +145,4 @@ const FiltersPopup = (defaultFilters) => {
 };
 
 /* ===== EXPORTS ===== */
-export default FiltersPopup;
+export default Filters;
