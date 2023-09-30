@@ -14,7 +14,7 @@ function ModeratorContainer({ imageReducer }) {
     <div className="game-layout-body-info">
       { game.profile.map(profile => {
         return (
-          <div className="game-layout-body-info-moderator-wrapper">
+          <div className="game-layout-body-info-moderator-wrapper" key={ profile.id }>
             <DetailedUsername profile={ profile } imageReducer={ imageReducer } key={ profile.id } />
           </div>
         );
