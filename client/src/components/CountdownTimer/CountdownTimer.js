@@ -1,8 +1,14 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { UserContext } from "../../utils/Contexts.js";
+import { useContext, useState } from "react";
 import TimeHelper from "../../helper/TimeHelper";
 
 const CountdownTimer = () => {
+    /* ===== CONTEXTS ===== */
+
+    // user state & update user function from user context
+    const { user, updateUser } = useContext(UserContext);
+
     /* ===== FUNCTIONS ===== */
 
     // helper functions
@@ -45,11 +51,20 @@ const CountdownTimer = () => {
     // FUNCTION 2: updateRemainingTime - function that updates the remainingTime hook
     // PRECONDITIONS (1 condition):
     // this function should be called every second to keep the remainingTime state hook updated
-    // POSTCONDITIONS (1 possible outcome):
-    // the difference in time between the current time and midnight is computed, and the setRemainingTime hook is updated
+    // POSTCONDITIONS (2 possible outcome):
+    // this function will always fetch the difference in time between the current time and midnight, and the setRemainingTime 
+    // hook is updated using the result as a parameter. however, a special case occurs at midnight UTC, where we additionally
+    // also want to update the user state
     const updateRemainingTime = () => {
         // Update the remainingTime state hook
-        setRemainingTime(getTimeRemaining());
+        const timer = getTimeRemaining();
+        setRemainingTime(timer);
+
+        // special case: time has hit midnight UTC. in this case, we want to update the user state, since their report tokens
+        // should be refreshed back to their default value
+        if (timer.hours === "00" && timer.minutes === "00" && timer.seconds === "00") {
+            updateUser(user.id);
+        }
     };
 
     return { remainingTime, updateRemainingTime };
