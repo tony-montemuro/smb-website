@@ -33,19 +33,17 @@ function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData 
             { users.length > 0 ?
 
               // Render a user row for each user
-              <div className="recent-submissions-popup-selected-items">
-                { users.map(user => {
-                  return (
-                    <UserRow
-                      user={ user }
-                      disableLink={ true }
-                      onClick={ removeUser }
-                      key={ user.id }
-                    />
-                  );
-                })}
+              users.map(user => {
+                return (
+                  <UserRow
+                    user={ user }
+                    disableLink={ true }
+                    onClick={ removeUser }
+                    key={ user.id }
+                  />
+                );
+              })
 
-              </div>
             :
               // Otherwise, let the user know that they have not selected any users to filter by
               <i id="recent-submissions-filter-empty">You are not currently filtering by any users.</i>

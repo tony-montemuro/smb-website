@@ -25,7 +25,7 @@ function ReportForm({ updateBoard }) {
 
   /* ===== REPORT FORM COMPONENT ===== */
   return (
-    <div className="detail-popup-report">
+    <div className="submission-details-report">
 
       { submission.report ?
 

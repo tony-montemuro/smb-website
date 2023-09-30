@@ -33,20 +33,18 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
             { games.length > 0 ?
 
               // Render a game row for each game
-              <div className="recent-submissions-popup-selected-items">
-                { games.map(game => {
-                  return (
-                    <GameRow
-                      game={ game }
-                      imageReducer={ imageReducer }
-                      useCard={ false }
-                      onClick={ removeGame }
-                      key={ game.abb }
-                    />
-                  );
-                })}
+              games.map(game => {
+                return (
+                  <GameRow
+                    game={ game }
+                    imageReducer={ imageReducer }
+                    useCard={ false }
+                    onClick={ removeGame }
+                    key={ game.abb }
+                  />
+                );
+              })
 
-              </div>
             :
               // Otherwise, let the user know that they have not selected any games to filter by
               <i id="recent-submissions-filter-empty">You are not currently filtering by any games.</i>

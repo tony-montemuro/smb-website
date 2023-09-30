@@ -53,7 +53,7 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
       <form onSubmit={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
 
         { /* First, render the filter options for categories */ }
-        <div className="recent-submissions-popup-category-filter">
+        <div>
           <div className="recent-submissions-filter-title">
             <h2>Categories</h2>
             { filters.category.length !== defaultFilters.category.length &&
