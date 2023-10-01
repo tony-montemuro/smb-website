@@ -1,31 +1,23 @@
 const TimeHelper = () => {
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: getTimeDifference - given a lower and upper timestamp, find the difference in time between the two
-    // PRECONDITIONS (2 parameters):
-    // 1.) lower: an integer representing a timestamp in miliseconds. must be less or equal to upper
-    // 2.) upper: an integer representing a timestamp in miliseconds. must be greater than or equal to lower
-    // POSTCONDITIONS (1 possible outcome, 1 return):
-    // an object is returned the stores the seconds, minutes, hours, and days remaining between lower and upper
-    const getTimeDifference = (lower, upper) => {
-        // compute time difference
-        const timeDifference = upper-lower;
+    // FUNCTION 1: getTimeToMidnightUTC - function that computes, based on the client's time, how long until midnight UTC in ms
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // a single integer is returned representing the difference in time between midnight UTC and the current time in miliseconds
+    const getTimeToMidnightUTC = () => {
+        // define our two dates
+        const current = new Date();
+        const midnight = new Date();
 
-        // convert time difference to hours, minutes, and seconds (note: timeDifference is in ms)
-        const seconds = Math.floor((timeDifference/1000)%60);
-        const minutes = Math.floor((timeDifference/1000/60)%60);
-        const hours = Math.floor((timeDifference/1000/60/60)%24);
-        const days = Math.floor((timeDifference/1000/60/60/24));
+        // set the time to the next midnight in UTC
+        midnight.setUTCHours(24, 0, 0, 0);
 
-        return {
-            seconds: seconds,
-            minutes: minutes,
-            hours: hours,
-            days: days
-        };
+        // return the difference
+        return midnight-current;
     };
 
-    return { getTimeDifference };
+    return { getTimeToMidnightUTC };
 };
 
 /* ===== EXPORTS ===== */

@@ -1,9 +1,10 @@
 /* ===== IMPORTS ===== */
 import { supabase } from "./database/SupabaseClient";
-import { useReducer, useState } from "react";
+import { useReducer, useRef, useState } from "react";
 import NotificationRead from "./database/read/NotificationRead";
 import ProfileRead from "./database/read/ProfileRead";
 import Session from "./database/authentication/Session";
+import TimeHelper from "./helper/TimeHelper";
 
 const App = (addMessage) => {
   /* ===== VARIABLES ===== */
@@ -16,6 +17,9 @@ const App = (addMessage) => {
     games: {},
     users: {}
   }
+
+  /* ===== REFS ===== */
+  const timeoutRef = useRef(null);
 
   /* ===== STATES & REDUCERS ===== */
   const [user, setUser] = useState(defaultUser);
@@ -37,6 +41,9 @@ const App = (addMessage) => {
   // database function used to retrieve the current session
   const { getSession } = Session();
 
+  // helper funcitons
+  const { getTimeToMidnightUTC } = TimeHelper();
+
   // FUNCTION 1: updateUser - async function that loads user data based on a uuid user id
   // PRECONDITIONS (1 parameter):
   // 1.) userId: a unique uuid value that belongs to exactly one authenticated user
@@ -46,9 +53,21 @@ const App = (addMessage) => {
   // notification count & profile, and update the user state by calling the setUser() function
   // if the session object is null, we call the setUser() function with the default user object
   const updateUser = async userId => {
+    // first, clear timeout, if one exists
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
     // two different cases: a null userId, or a userId belonging to a user
     if (userId) {
       try {
+        // first, update the `timeoutRef` if user id is defined
+        const timeToMidnight = getTimeToMidnightUTC();
+        timeoutRef.current = setTimeout(() => {
+          updateUser(userId);
+        }, timeToMidnight);
+
         // concurrently make all necessary database calls
         const [count, profile] = await Promise.all(
           [queryNotificationCount(), queryUserProfile(userId, addMessage)]
@@ -58,7 +77,7 @@ const App = (addMessage) => {
         setUser({
           id: userId,
           notificationCount: count,
-          profile: profile
+          profile
         });
 
       } catch (error) {
