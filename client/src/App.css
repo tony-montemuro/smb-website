@@ -1,13 +1,24 @@
 :root {
     --navbar-height: 75px;
+    --color-background: 17 22 24;
+    --color-link: 230 230 230;
+    --color-link-hover: 77 42 86;
 }
 
 body {
     margin: 0;
+    font-family: 'Gabarito', cursive;
+    background-color: rgb(var(--color-background));
+    color: white;
 }
 
 a {
-    color: blue;
+    color: rgb(var(--color-link));
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(var(--color-link-hover));
 }
 
 button {
