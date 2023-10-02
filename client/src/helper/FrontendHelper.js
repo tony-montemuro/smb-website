@@ -198,7 +198,20 @@ const FrontendHelper = () => {
         };
     };
 
-    return { capitalize, cleanLevelName, dateB2F, secondsToHours, recordB2F, getTimeAgo, categoryB2F, runTypeB2F };
+    // FUNCTION 10: kebabToTitle - function that converts a kebab string to a title string
+    // PRECONDITIONS (1 parameter):
+    // 1.) kebab: a string in the kebab format
+    // POSTCONDITIONS (1 possible outcome):
+    // a string is returned in title format
+    const kebabToTitle = kebab => {
+        const words = kebab.split("-");
+        for (let i = 0; i < words.length; i++) {
+            words[i] = capitalize(words[i]);
+        }
+        return words.join(" ");
+    };
+
+    return { capitalize, cleanLevelName, dateB2F, secondsToHours, recordB2F, getTimeAgo, categoryB2F, runTypeB2F, kebabToTitle };
 };
 
 export default FrontendHelper;

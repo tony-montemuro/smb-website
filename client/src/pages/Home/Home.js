@@ -1,8 +1,12 @@
 /* ===== IMPORTS ===== */
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PostRead from "../../database/read/PostRead";
 
 const Home = () => {
+    /* ===== VARIABLES ===== */
+    const navigate = useNavigate();
+
     /* ===== STATES ===== */
     const [posts, setPosts] = useState(undefined);
  
@@ -29,7 +33,16 @@ const Home = () => {
         setPosts(posts);
     };
 
-    return { posts, getPosts };
+    // FUNCTION 2: navigateToGame - code that navigates a user to a game page given a game object
+    // PRECONDITIONS (1 parameter):
+    // 1.) game: an object which contains information about a game
+    // POSTCONDITIONS (1 possible outcome):
+    // navigate the user to the page associated with `game`
+    const navigateToGame = game => {
+        navigate(`/games/${ game.abb }`);
+    }
+
+    return { posts, getPosts, navigateToGame };
 };
 
 /* ===== EXPORTS ===== */

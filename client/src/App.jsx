@@ -83,7 +83,7 @@ function App() {
 
           { /* App routes */ }
           <Routes>
-            <Route path="/" element={ <Home /> }/>
+            <Route path="/" element={ <Home imageReducer={ imageReducer } /> }/>
             <Route path="/games" element={<GameSelect imageReducer={ imageReducer } />}/>
             <Route path="/users" element={ <Users imageReducer={ imageReducer } /> } />
             <Route path="/news" element={ <News /> } />

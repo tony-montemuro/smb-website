@@ -1,0 +1,74 @@
+/* ===== GENERAL STYLING ===== */
+
+.home {
+    display: flex;
+    align-items: flex-start;
+}
+
+.home h1 {
+    margin: 0;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+    flex: 1;
+}
+
+.container {
+    border-radius: var(--container-border-radius);
+    background-color: rgb(var(--color-container));
+}
+
+.containerHeader {
+    background-color: rgb(var(--color-header));
+    border-top-left-radius: var(--container-border-radius);
+    border-top-right-radius: var(--container-border-radius);
+    padding: 20px 0;
+}
+
+.containerHeader h1 {
+    padding-left: 10px;
+}
+
+.containerBody {
+    padding: 10px;
+}
+
+.right {
+    padding: 10px;
+    width: 450px;
+}
+
+.postExpand {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.postInfo {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.postBody {
+    margin-bottom: 10px;
+}
+
+/* ===== MEDIA QUERY FOR NON-DESKTOP DEVICES ===== */
+
+@media (max-width: 1200px) {
+    .home {
+        flex-direction: column;
+    }
+
+    .left {
+        width: 100%;
+    }
+
+    .right {
+        width: 100%;
+    }
+}
