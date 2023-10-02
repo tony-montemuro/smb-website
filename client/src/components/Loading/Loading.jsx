@@ -4,7 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 function Loading() {
   /* ===== LOADING COMPONENT ===== */
   return (
-    <div className="center-contents">
+    <div className="center">
       <CircularProgress />
     </div>
   );
