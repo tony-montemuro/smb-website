@@ -4,7 +4,9 @@ import styles from "./Home.module.css";
 import GameSearch from "../../components/GameSearch/GameSearch.jsx";
 import HomeContainer from "./HomeContainer.jsx";
 import HomeLogic from "./Home.js";
-import NewsPost from "./NewsPost";
+import Items from "../../components/Items/Items.jsx";
+import Loading from "../../components/Loading/Loading.jsx";
+import NewsPost from "./NewsPost.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 
 function Home({ imageReducer }) {
@@ -29,7 +31,7 @@ function Home({ imageReducer }) {
   }, []);
 
   /* ===== HOME COMPONENT ===== */
-  return posts &&
+  return (
     <div className={ styles.home }>
 
       { /* Left - render a game search component, as well as a recent submissions table */ }
@@ -46,13 +48,22 @@ function Home({ imageReducer }) {
       {/* Right - render the 3 most recent news posts */}
       <div className={ styles.right }>
         <HomeContainer name={ "news" }>
-          { posts.map(post => {
-            return <NewsPost post={ post } key={ post.id } />;
-          })}
+          { posts ?
+            <Items items={ posts } emptyMessage={ "No posts have been created yet!" }>
+              <div className={ styles.posts }>
+                { posts.map(post => {
+                  return <NewsPost post={ post } key={ post.id } />;
+                })}
+              </div>
+            </Items>
+          :
+            <Loading />
+          }
         </HomeContainer>
       </div>
 
     </div>
+  );
 };
 
 /* ===== EXPORTS ===== */

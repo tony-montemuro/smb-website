@@ -36,3 +36,9 @@ button[disabled] {
 .app {
     padding: 10px;
 }
+
+.center-contents {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

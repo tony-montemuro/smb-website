@@ -42,19 +42,10 @@
     width: 450px;
 }
 
-.postExpand {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.postInfo {
-    display: block;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.postBody {
-    margin-bottom: 10px;
+.posts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 /* ===== MEDIA QUERY FOR NON-DESKTOP DEVICES ===== */
