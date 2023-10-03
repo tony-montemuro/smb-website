@@ -1,6 +1,8 @@
 /* ===== IMPORTS ===== */
-import "./Popup.css";
+import { red } from "@mui/material/colors";
 import { PopupContext } from "../../utils/Contexts";
+import styles from "./Popup.module.css";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 function Popup({ renderPopup, setRenderPopup, width, children }) {
   /* ===== FUNCTIONS ===== */
@@ -14,12 +16,14 @@ function Popup({ renderPopup, setRenderPopup, width, children }) {
 
   /* ===== POPUP COMPONENT ===== */
   return renderPopup &&
-    <div className="popup">
-      <div className="popup-inner" style={ { maxWidth: width } }>
+    <div className={ styles.popup }>
+      <div className={ styles.inner } style={ { maxWidth: width } }>
 
         { /* Render button to close the popup */ }
-        <div className="popup-close">
-          <button type="button" onClick={ closePopup }>Close</button>
+        <div id={ styles.close }>
+          <button type="button" onClick={ closePopup }>
+            <CloseRoundedIcon fontSize="large" sx={ { color: red[500] } } />
+          </button>
         </div>
 
         { /* Render component children, and give children access to the `closePopup` function */ }
