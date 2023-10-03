@@ -1,7 +1,16 @@
 const DiscordLogo = () => {
     /* ===== FUNCTIONS ===== */
+
+    // FUNCTION 1: handleClick - code that executes when the discord logo component is clicked
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: an event object that is generated when the user clicks the component
+    // POSTCONDITIONS (1 possible outcome):
+    // the `stopPropagation` method is executed to prevent `onClick` code from parent components from running
+    const handleClick = e => {
+        e.stopPropagation();
+    };
     
-    // FUNCTION 1: alertDiscord - function that will alert the user of a discord account
+    // FUNCTION 2: alertDiscord - function that will alert the user of a discord account
     // PRECONDITIONS (1 parameter):
     // 1.) discord: a string value, representing a discord username.
     // POSTCONDITIONS (1 possible outcome):
@@ -10,7 +19,7 @@ const DiscordLogo = () => {
         alert(`Discord username: ${ discord }`);
     };
 
-    return { alertDiscord };
+    return { handleClick, alertDiscord };
 };
 
 /* ===== EXPORTS ===== */
