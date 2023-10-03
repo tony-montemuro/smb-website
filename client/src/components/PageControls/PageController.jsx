@@ -66,19 +66,30 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
         </div>
 
         { /* Render buttons for each relevant page */ }
-        <ButtonList buttons={ [{ name: "1", value: 1 }] } current={ pageNum } setCurrent={ setPageNum } />
+        <ButtonList 
+          buttons={ [{ name: "1", value: 1 }] } 
+          current={ pageNum } 
+          setCurrent={ setPageNum } 
+          hasPadding={ false } 
+        />
         { middlePages.length > 0 && middlePages[0] !== 2 && 
           <span className={ styles.spread }>...</span> 
         }
         <ButtonList 
           buttons={ middlePages.map(page => ({ name: `${ page }`, value: page })) } 
           current={ pageNum } 
-          setCurrent={ setPageNum } 
+          setCurrent={ setPageNum }
+          hasPadding={ false }
         />
         { middlePages.length > 0 && middlePages[middlePages.length-1] !== maxPage-1 &&
           <span className={ styles.spread }>...</span>
         }
-        <ButtonList buttons={ [{ name: `${ maxPage }`, value: maxPage }] } current={ pageNum } setCurrent={ setPageNum } />
+        <ButtonList 
+          buttons={ [{ name: `${ maxPage }`, value: maxPage }] } 
+          current={ pageNum } 
+          setCurrent={ setPageNum } 
+          hasPadding={ false }  
+        />
 
         { /* Next page button */ }
         <div className={ styles.moveBtn }>

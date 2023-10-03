@@ -1,10 +1,13 @@
 /* ===== IMPORTS ===== */
 import styles from "./ButtonList.module.css";
 
-function ButtonList({ buttons, current, setCurrent }) {
+function ButtonList({ buttons, current, setCurrent, hasPadding = true }) {
+  /* ===== VARIABLES ===== */
+  const style = { padding: hasPadding ? "5px" : "0" };
+
   /* ===== BUTTON LIST COMPONENT ===== */
   return (
-    <div className={ `${ styles.buttonList } center` }>
+    <div className={ `${ styles.buttonList } center` } style={ style }>
       { buttons.map(button => {
         return (
           <button 
