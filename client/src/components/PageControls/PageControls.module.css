@@ -1,0 +1,12 @@
+.pageControls {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.viewer {
+    display: flex;
+    align-items: center;
+    justify-self: flex-start;
+}

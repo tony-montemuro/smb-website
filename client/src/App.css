@@ -31,10 +31,20 @@ a:hover {
 button {
     cursor: pointer;
     font-family: 'Gabarito', cursive;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: rgb(var(--color-text));
+    white-space: nowrap;
+}
+
+button:hover {
+    background-color: rgb(var(--color-link-hover));
 }
 
 button[disabled] {
     cursor: default;
+    background-color: rgb(var(--color-text));
 }
 
 .app {

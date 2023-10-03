@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
+import styles from "./PageController.module.css";
+import ButtonList from "../ButtonList/ButtonList.jsx";
 import PageControlsLogic from "./PageControls.js";
-import PageNumberButton from "./PageNumberButton.jsx";
 
 function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDropdown }) {
   /* ===== FUNCTIONS ===== */
@@ -9,11 +10,12 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
   const { getMaxPage, getMiddlePages } = PageControlsLogic();
 
   /* ===== PAGE CONTROLLER COMPONENT ===== */
+
+  // Dropdown page controller - render buttons to navigate to previous and next page, as well as a dropdown for the user to select
+  // any valid page. Better for small page counts!
   if (useDropdown) {
     return (
-      // Dropdown page controller - render buttons to navigate to the previous and next page, as well as a dropdown for the
-      // user to select any valid page. Better for small page counts
-      <div className="page-controller">
+      <div className={ styles.pageController }>
 
         { /* Previous page button */ }
         <button 
@@ -42,46 +44,52 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
 
       </div>
     );
-  } else {
+  } 
+  
+  // Page Number page controller - render a button for the first page, the last page, and a button for each page between 
+  // [pageNum, pageNum+5]
+  else {
     const maxPage = getMaxPage(totalItems, itemsPerPage);
     const middlePages = getMiddlePages(pageNum, maxPage);
-
     return (
-      // Page controller - render a button for the first page, the last page, and a button for each page between [pageNum, pageNum+5]
-      <div className="page-controller">
+      <div className={ styles.pageController }>
 
         { /* Previous page button */ }
-        <button 
-          type="button"
-          onClick={ () => setPageNum(pageNum-1) } 
-          disabled={ pageNum <= 1 }
-        >
-          Previous Page
-        </button>
+        <div className={ styles.moveBtn }>
+          <button 
+            type="button"
+            onClick={ () => setPageNum(pageNum-1) } 
+            disabled={ pageNum <= 1 }
+          >
+            Previous Page
+          </button>
+        </div>
 
-        { /* Render button for first page */ }
-        <PageNumberButton currentPageNum={ pageNum } pageNum={ 1 } setPageNum={ setPageNum } />
-
-        { middlePages.length > 0 && middlePages[0] !== 2 && <span className="page-controller-spread">...</span> }
-
-        { /* Render the "middle" page buttons */ }
-        { middlePages.map(page => {
-          return <PageNumberButton currentPageNum={ pageNum } pageNum={ page } setPageNum={ setPageNum } key={ page } />;
-        })}
-
-        { middlePages.length > 0 && middlePages[middlePages.length-1] !== maxPage-1 && <span className="page-controller-spread">...</span> }
-
-        { /* Render button for last page */ }
-        <PageNumberButton currentPageNum={ pageNum } pageNum={ maxPage } setPageNum={ setPageNum } />
+        { /* Render buttons for each relevant page */ }
+        <ButtonList buttons={ [{ name: "1", value: 1 }] } current={ pageNum } setCurrent={ setPageNum } />
+        { middlePages.length > 0 && middlePages[0] !== 2 && 
+          <span className={ styles.spread }>...</span> 
+        }
+        <ButtonList 
+          buttons={ middlePages.map(page => ({ name: `${ page }`, value: page })) } 
+          current={ pageNum } 
+          setCurrent={ setPageNum } 
+        />
+        { middlePages.length > 0 && middlePages[middlePages.length-1] !== maxPage-1 &&
+          <span className={ styles.spread }>...</span>
+        }
+        <ButtonList buttons={ [{ name: `${ maxPage }`, value: maxPage }] } current={ pageNum } setCurrent={ setPageNum } />
 
         { /* Next page button */ }
-        <button 
-          type="button"
-          onClick={ () => setPageNum(pageNum+1) } 
-          disabled={ pageNum >= getMaxPage(totalItems, itemsPerPage) }
-        >
-          Next Page
-        </button>
+        <div className={ styles.moveBtn }>
+          <button 
+            type="button"
+            onClick={ () => setPageNum(pageNum+1) } 
+            disabled={ pageNum >= getMaxPage(totalItems, itemsPerPage) }
+          >
+            Next Page
+          </button>
+        </div>
 
       </div>
     );

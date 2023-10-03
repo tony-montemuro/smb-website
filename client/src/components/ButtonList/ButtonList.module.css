@@ -2,22 +2,10 @@
     padding: 5px;
     gap: 5px;
 }
-
-.btn {
-    white-space: nowrap;
-    background-color: #f0f0f0;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-}
-
-.btn:hover {
-    background-color: rgb(var(--color-link-hover));
-}
   
 .selected {
     background-color: rgb(var(--color-nav));
-    color: #fff;
+    color: rgb(var(--color-text));
 }
 
 .selected:hover {

@@ -1,0 +1,17 @@
+.pageController {
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+}
+
+.pageController select {
+    width: 50px;
+}
+
+.spread {
+    margin-top: auto;
+}
+
+.moveBtn {
+    padding: 5px;
+}

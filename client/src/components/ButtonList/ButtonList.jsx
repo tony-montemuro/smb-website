@@ -8,9 +8,9 @@ function ButtonList({ buttons, current, setCurrent }) {
       { buttons.map(button => {
         return (
           <button 
-            type="button" 
+            type="button"
             onClick={ () => setCurrent(button.value) }
-            className={ `${ styles.btn }${ current === button.value ? ` ${ styles.selected }` : "" }` }
+            className={ `${ current === button.value ? ` ${ styles.selected }` : "" }` }
           >
             { button.name }
           </button>

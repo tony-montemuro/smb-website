@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import "./PageControls.css";
+import styles from "./PageControls.module.css";
 import PageControlsLogic from "./PageControls.js";
 import PageController from "./PageController";
 
@@ -11,10 +11,10 @@ function PageControls({ totalItems, itemsPerPage, pageNum, setPageNum, itemName,
   
   /* ===== PAGE CONTROLS COMPONENT ===== */
   return totalItems > itemsPerPage &&
-    <div className="page-controls">
+    <div className={ styles.pageControls }>
 
       { /* Page viewer - render the set of pages shown on the current page */ }
-      <div className="page-viewer">
+      <div className={ styles.viewer }>
         Showing { (getStartAndEnd(itemsPerPage, pageNum, totalItems).start)+1 } to&nbsp;
         { Math.min(((getStartAndEnd(itemsPerPage, pageNum, totalItems).end)+1), totalItems) } of { totalItems } { itemName }
       </div>
