@@ -1,6 +1,8 @@
 /* ===== IMPORTS ===== */
 import "./UserSearch.css";
 import { useEffect, useState } from "react";
+import Items from "../Items/Items.jsx";
+import Loading from "../Loading/Loading.jsx";
 import PageControls from "../PageControls/PageControls.jsx";
 import SearchBarInput from "../SearchBarInput/SearchBarInput";
 import UserSearchLogic from "./UserSearch.js";
@@ -33,43 +35,43 @@ function UserSearch({ usersPerPage, searchBarWidth = "100%", imageReducer = null
   }, [searchInput]);
 
   /* ===== USER SEARCH BAR COMPONENT ===== */
-  return users.data &&
-    <div className="user-search">
+  return (
+    <>
 
       { /* Search bar input for searching for users */ }
       <SearchBarInput itemType={ "user" } input={ searchInput } setInput={ setSearchInput } width={ searchBarWidth } />
 
-      <div className="users-search-results">
+      {/* Search results - render the user search results here */}
+      { users.data ?
+        <Items items={ users.data } emptyMessage={ "No users match your search." }>
+          { users.data.map(user => {
+              return (
+                <UserRow 
+                  user={ user }
+                  imageReducer={ imageReducer } 
+                  disableLink={ userRowOptions.disableLink }
+                  isDetailed={ userRowOptions.isDetailed } 
+                  onClick={ userRowOptions.onUserRowClick }
+                  key={ user.id } 
+                />
+              );
+            })}
+        </Items>
+      :
+        <Loading />
+      }
 
-        {/* Render a UserRow component for each user that exists in the `data` array */}
-        { users.data.length > 0 ?
-          users.data.map(user => {
-            return (
-              <UserRow 
-                user={ user }
-                imageReducer={ imageReducer } 
-                disableLink={ userRowOptions.disableLink }
-                isDetailed={ userRowOptions.isDetailed } 
-                onClick={ userRowOptions.onUserRowClick }
-                key={ user.id } 
-              />
-            );
-          })
-        :
-          // If no user data, just render a message to the user letting them know 
-          <div className="users-search-empty">No users match your search.</div>
-        }
+      { /* Pagination controls - Render controls for search results */ }
+      <PageControls
+        totalItems={ users.total }
+        itemsPerPage={ usersPerPage }
+        pageNum={ pageNum }
+        setPageNum={ setPageNum }
+        itemName={ "Users" } 
+      />
 
-        { /* Render pagination controls */ }
-        <PageControls
-          totalItems={ users.total }
-          itemsPerPage={ usersPerPage }
-          pageNum={ pageNum }
-          setPageNum={ setPageNum }
-          itemName={ "Users" } 
-        />
-      </div>
-    </div>
+    </>
+  );
 };
 
 /* ===== EXPORTS ===== */

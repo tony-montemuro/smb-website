@@ -11,7 +11,7 @@ const UserSearch = () => {
     const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
-    const [users, setUsers] = useState({ data: undefined, total: 9999999999 }); // set total to some arbitrarily large number for now
+    const [users, setUsers] = useState({ data: undefined, total: 0 });
 
     /* ===== FUNCTIONS ===== */
 
