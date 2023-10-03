@@ -9,6 +9,9 @@ import Username from "../Username/Username.jsx";
 import YT from "../../img/yt-logo.png";
 
 function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = false, onClick }) {
+  /* ===== VARIABLES ===== */
+  const SOCIAL_SIZE = 40;
+
   /* ===== USER ROW COMPONENT ===== */
 
   // If the `isDetailed` flag is set to false, simply render a row containing the `Username` component associated with each user
@@ -32,10 +35,10 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
       >
         <DetailedUsername imageReducer={ imageReducer } profile={ user } disableLink={ true } />
         <div className={ styles.socials }>
-          <SocialLink name="youtube" username={ user.youtube_handle } logo={ YT } />
-          <SocialLink name="twitch" username={ user.twitch_username } logo={ Twitch } />
-          <SocialLink name="twitter" username={ user.twitter_handle } logo={ Twitter } />
-          <DiscordLogo discord={ user.discord } />
+          <SocialLink name="youtube" username={ user.youtube_handle } logo={ YT } size={ SOCIAL_SIZE } />
+          <SocialLink name="twitch" username={ user.twitch_username } logo={ Twitch } size={ SOCIAL_SIZE } />
+          <SocialLink name="twitter" username={ user.twitter_handle } logo={ Twitter } size={ SOCIAL_SIZE } />
+          <DiscordLogo discord={ user.discord } size={ SOCIAL_SIZE } />
         </div>
       </div>
     );

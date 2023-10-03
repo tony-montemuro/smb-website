@@ -1,3 +1,8 @@
+/* ===== IMPORTS ===== */
+import Twitch from "../../img/Twitch.jsx";
+import X from "../../img/X.jsx";
+import Youtube from "../../img/Youtube.jsx";
+
 const SocialLink = () => {
     /* ===== FUNCTIONS ===== */
 
@@ -30,7 +35,26 @@ const SocialLink = () => {
         };
     };
 
-    return { handleClick, getLink };
+    // FUNCTION 3: getLogo - function that takes a social media name, and returns the code for it's logo
+    // PRECONDITIONS (1 parameter):
+    // 1.) name: a string representing the name of a social media platform; should be one of the following strings:
+    // "youtube", "twitch", "twitter"
+    // POSTCONDTIONS (1 possible outcome):
+    // the appropriate logo is returned
+    const getLogo = name => {
+        switch (name) {
+            case "youtube":
+                return <Youtube />;
+            case "twitch":
+                return <Twitch />;
+            case "twitter":
+                return <X />;
+            default:
+                return null;
+        };
+    };
+
+    return { handleClick, getLink, getLogo };
 };
 
 /* ===== EXPORTS ===== */

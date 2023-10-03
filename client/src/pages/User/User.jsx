@@ -9,8 +9,8 @@ import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import SocialLink from "../../components/SocialLink/SocialLink.jsx";
 import Twitch from "../../img/twitch-logo.png";
-import Twitter from "../../img/twitter-logo.png";
 import YT from "../../img/yt-logo.png";
+import X from "../../img/X.jsx";
 
 function User({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -19,6 +19,7 @@ function User({ imageReducer }) {
   const { profile } = useContext(ProfileContext);
 
   /* ===== VARIABLES ===== */
+  const SOCIAL_SIZE = 50;
   const searchParams = new URLSearchParams();
   searchParams.append("profile_id", profile.id);
 
@@ -36,10 +37,10 @@ function User({ imageReducer }) {
           { /* Render socials if any exist. */ }
           { profile.youtube_handle || profile.twitch_username || profile.twitter_handle || profile.discord ?
             <div className="user-info-socials">
-              <SocialLink name="youtube" username={ profile.youtube_handle } logo={ YT } />
-              <SocialLink name="twitch" username={ profile.twitch_username } logo={ Twitch } />
-              <SocialLink name="twitter" username={ profile.twitter_handle } logo={ Twitter } />
-              <DiscordLogo discord={ profile.discord } />
+              <SocialLink name="youtube" username={ profile.youtube_handle } logo={ YT } size={ SOCIAL_SIZE } />
+              <SocialLink name="twitch" username={ profile.twitch_username } logo={ Twitch } size={ SOCIAL_SIZE } />
+              <SocialLink name="twitter" username={ profile.twitter_handle } logo={ X } size={ SOCIAL_SIZE } />
+              <DiscordLogo discord={ profile.discord } size={ SOCIAL_SIZE } />
             </div>
           :
 

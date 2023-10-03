@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
 import styles from "./DiscordLogo.module.css";
-import Discord from "../../img/discord-logo.png";
+import Discord from "../../img/Discord.jsx";
 import DiscordLogoLogic from "./DiscordLogo.js";
 
-function DiscordLogo({ discord }) {
+function DiscordLogo({ discord, size }) {
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file
@@ -11,9 +11,9 @@ function DiscordLogo({ discord }) {
 
   /* ===== DISCORD COMPONENT ===== */
   return discord &&
-    <div className={ styles.discord } onClick={ (e) => handleClick(e) }>
-      <button type="button" onClick={ () => alertDiscord(discord) }>
-        <img className={ styles.logo } alt="discord-logo" src={ Discord }></img>
+    <div className={ `${ styles.discord } center` } onClick={ (e) => handleClick(e) } style={ { width: `${ size }px`, height: `${ size }px` } }>
+      <button type="button" onClick={ () => alertDiscord(discord) } title="Discord">
+        <Discord />
       </button>
     </div>;
 };
