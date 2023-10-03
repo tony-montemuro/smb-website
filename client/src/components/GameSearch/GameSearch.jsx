@@ -1,8 +1,10 @@
 /* ===== IMPORTS ===== */
-import "./GameSearch.css";
 import { useEffect, useState } from "react";
+import styles from "./GameSearch.module.css";
 import GameRow from "../GameRow/GameRow";
 import GameSearchLogic from "./GameSearch.js";
+import Items from "../Items/Items.jsx";
+import Loading from "../Loading/Loading.jsx";
 import PageControls from "../PageControls/PageControls.jsx";
 import SearchBarInput from "../SearchBarInput/SearchBarInput";
 
@@ -21,8 +23,9 @@ function GameSearch({ gamesPerPage, searchBarWidth = "75%", imageReducer, gameRo
     { name: "Main Games", value: "main" }, 
     { name: "Custom Games", value: "custom" }
   ];
-  let gameTypes = [];
+  let gameTypes = undefined;
   if (games.data) {
+    gameTypes = [];
     games.data.forEach(game => {
       const gameType = game.custom ? "Custom" : "Main";
       if (!(gameTypes.includes(gameType))) {
@@ -50,22 +53,18 @@ function GameSearch({ gamesPerPage, searchBarWidth = "75%", imageReducer, gameRo
   }, [searchInput, gameTypeFilter]);
 
   /* ===== GAMES SEARCH BAR COMPONENT ===== */
-  return games.data &&
-    <div className="game-search">
+  return (
+    <div className={ styles.gameSearch }>
 
-      { /* Render a container for the filter options */ }
-      <div className="game-search-filters">
-
-        { /* Search bar input for searching for games */ }
+      { /* Filters - render the various filters to game search, including the search bar, and buttons to filter by type */ }
+      <div className={ styles.filters }>
         <SearchBarInput itemType={ "game" } input={ searchInput } setInput={ setSearchInput } width={ searchBarWidth } />
-
-        { /* Render buttons to allow user to filter games by their type */ }
-        <div className="game-search-filter-btns">
+        <div className={ `${ styles.filterBtns } center` }>
           { filters.map(filter => {
             return (
               <button 
                 type="button"
-                className={ `game-search-filter-btn${ gameTypeFilter === filter.value ? " game-search-filter-btn-selected" : "" }` }
+                className={ `${ styles.filterBtn }${ gameTypeFilter === filter.value ? ` ${ styles.selected }` : "" }` }
                 onClick={ () => setGameTypeFilter(filter.value) }
                 key={ filter.name }
               >
@@ -73,49 +72,47 @@ function GameSearch({ gamesPerPage, searchBarWidth = "75%", imageReducer, gameRo
               </button>
             );
           })}
-
         </div>
-
       </div>
 
-      { /* Render the game search results */ }
-      <div className="game-search-results">
-
-        { /* Render a game select menu for each game type. */ }
-        { gameTypes.map(type => {
-          return (
-            <div key={ type } className="game-search-body">
-              <h2>{ type } Games</h2>
-              <div className={ gameRowOptions.useCard ? "game-search-cards" : "game-search-items" }>
-
-                { /* Filter and map the game types to the screen as a Game Row. */ }
-                { games.data.filter(game => type === "Custom" ? game.custom : !game.custom).map(game => {
-                  return (
-                    <GameRow
-                      game={ game }
-                      imageReducer={ imageReducer } 
-                      useCard={ gameRowOptions.useCard } 
-                      onClick={ gameRowOptions.onGameRowClick }
-                      key={ game.abb }
-                    />
-                  );
-                })}
-
+      { /* Search results - render the game search results here for main and/or custom games */ }
+      { gameTypes ?
+        <Items items={ gameTypes } emptyMessage={ "No games exist that match your filters." }>
+          { gameTypes.map(type => {
+            return (
+              <div key={ type } className={ styles.body }>
+                <h2>{ type } Games</h2>
+                <div className={ gameRowOptions.useCard ? styles.cards : "" }>
+                  { games.data.filter(game => type === "Custom" ? game.custom : !game.custom).map(game => {
+                    return (
+                      <GameRow
+                        game={ game }
+                        imageReducer={ imageReducer } 
+                        useCard={ gameRowOptions.useCard } 
+                        onClick={ gameRowOptions.onGameRowClick }
+                        key={ game.abb }
+                      />
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-        )})}
+          )})}
+        </Items>
+      :
+        <Loading />
+      }
 
-        { /* Render pagination controls */ }
-        <PageControls
-          totalItems={ games.total }
-          itemsPerPage={ gamesPerPage }
-          pageNum={ pageNum }
-          setPageNum={ setPageNum }
-          itemName={ "Games" } 
-        />
+      { /* Pagination controls - Render controls for search results */ }
+      <PageControls
+        totalItems={ games.total }
+        itemsPerPage={ gamesPerPage }
+        pageNum={ pageNum }
+        setPageNum={ setPageNum }
+        itemName={ "Games" } 
+      />
 
-      </div>
     </div>
+  );
 };
 
 /* ===== EXPORTS ===== */

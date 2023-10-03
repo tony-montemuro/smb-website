@@ -1,44 +1,44 @@
-.game-search {
+.gameSearch {
     width: 100%;
     margin: 0 auto;
 }
 
-.game-search-filters {
+.filters {
     display: flex;
     justify-content: space-between;
 }
 
-.game-search-filter-btns {
-    display: flex;
+.filterBtns {
+    padding-left: 10px;
     gap: 5px;
-    align-items: center;
 }
 
-.game-search-filter-btn {
+.filterBtn {
+    white-space: nowrap;
     background-color: #f0f0f0;
     border: none;
     padding: 5px 10px;
     border-radius: 4px;
 }
 
-.game-search-filter-btn:hover {
+.filterBtn:hover {
     background-color: #ddd;
 }
   
-.game-search-filter-btn-selected {
+.selected {
     background-color: black;
     color: #fff;
 }
 
-.game-search-filter-btn-selected:hover {
+.selected:hover {
     background-color: #333333;
 }
 
-.game-select-body {
-    width: 85%;
+.body {
+    width: 100%;
 }
 
-.game-search-cards {
+.cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
 }

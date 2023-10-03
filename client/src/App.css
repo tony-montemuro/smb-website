@@ -27,6 +27,7 @@ a:hover {
 
 button {
     cursor: pointer;
+    font-family: 'Gabarito', cursive;
 }
 
 button[disabled] {

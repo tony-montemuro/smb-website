@@ -5,13 +5,16 @@ import GameRead from "../../database/read/GameRead.js";
 import PageControls from "../PageControls/PageControls.js";
 
 const GameSearch = () => {
+    /* ===== VARIABLES ===== */
+    const defaultGames = { data: undefined, total: 0 };
+
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
-    const [games, setGames] = useState({ data: undefined, total: 0 });
+    const [games, setGames] = useState(defaultGames);
 
     /* ===== FUNCTIONS ===== */
 
@@ -31,16 +34,13 @@ const GameSearch = () => {
     // if the query is a success, we use `games` and `count` to update the games state hook by calling the `setGames()` function
     // if the query was a failure, simply render an error to the client
     const updateResults = async (userInput, gamesPerPage, pageNum, gameTypeFilter) => {
-        // first, compute the range of games to grab based on the parameters
+        setGames(defaultGames);
         const { start, end } = getStartAndEnd(gamesPerPage, pageNum);
 
         try {
-            // attempt to grab all relevant games, and update the users state hook by calling the setGames() function
             const { games, count } = await searchForGames(userInput, start, end, gameTypeFilter);
             setGames({ data: games, total: count });
-
         } catch (error) {
-            // render an error message to the client
             addMessage("Game data failed to load.", "error");
         }
     };
