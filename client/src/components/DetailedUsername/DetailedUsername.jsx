@@ -3,7 +3,7 @@ import "./DetailedUsername.css";
 import Avatar from "../Avatar/Avatar.jsx";
 import Username from "../Username/Username";
 
-function DetailedUsername({ imageReducer, profile }) {
+function DetailedUsername({ imageReducer, profile, disableLink = false }) {
   /* ===== VARIABLES ===== */
   const IMG_LENGTH = 60;
 
@@ -11,7 +11,7 @@ function DetailedUsername({ imageReducer, profile }) {
   return (
     <div className="detailed-username">
       <Avatar profileId={ profile.id } size={ IMG_LENGTH } imageReducer={ imageReducer } />
-      <Username profile={ profile } />
+      <Username profile={ profile } disableLink={ disableLink } />
     </div>
   );
 };
