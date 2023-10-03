@@ -23,10 +23,8 @@ function SearchBarInput({ itemType, input, setInput, width = null }) {
       { /* Search bar icon: an icon, which is initially just for decoration, turns into a clickable icon when user enters any text. */ }
       <div className={ styles.icon }>
         { input.length > 0 ?
-          <button type="button" className={ styles.clear } onClick={ () => setInput("") }>
-            <div className="center">
-              <ClearRoundedIcon />
-            </div>
+          <button type="button" className={ `${ styles.clear } center` } onClick={ () => setInput("") }>
+            <ClearRoundedIcon />
           </button> 
         :
           <SearchRoundedIcon sx={ { opacity: 0.85 } } />
