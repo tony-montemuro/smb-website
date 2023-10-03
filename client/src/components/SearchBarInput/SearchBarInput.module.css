@@ -45,3 +45,7 @@
     height: 100%;
     color: red
 }
+
+.clear:hover {
+    background-color: rgb(var(--color-container-selected));
+}
