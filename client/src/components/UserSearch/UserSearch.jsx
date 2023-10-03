@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
-import "./UserSearch.css";
 import { useEffect, useState } from "react";
+import styles from "./UserSearch.module.css";
 import Items from "../Items/Items.jsx";
 import Loading from "../Loading/Loading.jsx";
 import PageControls from "../PageControls/PageControls.jsx";
@@ -44,18 +44,20 @@ function UserSearch({ usersPerPage, searchBarWidth = "100%", imageReducer = null
       {/* Search results - render the user search results here */}
       { users.data ?
         <Items items={ users.data } emptyMessage={ "No users match your search." }>
-          { users.data.map(user => {
-              return (
-                <UserRow 
-                  user={ user }
-                  imageReducer={ imageReducer } 
-                  disableLink={ userRowOptions.disableLink }
-                  isDetailed={ userRowOptions.isDetailed } 
-                  onClick={ userRowOptions.onUserRowClick }
-                  key={ user.id } 
-                />
-              );
-            })}
+          <div className={ styles.results }>
+            { users.data.map(user => {
+                return (
+                  <UserRow 
+                    user={ user }
+                    imageReducer={ imageReducer } 
+                    disableLink={ userRowOptions.disableLink }
+                    isDetailed={ userRowOptions.isDetailed } 
+                    onClick={ userRowOptions.onUserRowClick }
+                    key={ user.id } 
+                  />
+                );
+              })}
+          </div>
         </Items>
       :
         <Loading />

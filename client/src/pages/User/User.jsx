@@ -4,14 +4,13 @@ import { Link } from "react-router-dom";
 import { ProfileContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import BoxArt from "../../components/BoxArt/BoxArt.jsx";
-import Discord from "../../img/discord-logo.png";
+import DiscordLogo from "../../components/DiscordLogo/DiscordLogo.jsx";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import SocialLink from "../../components/SocialLink/SocialLink.jsx";
 import Twitch from "../../img/twitch-logo.png";
 import Twitter from "../../img/twitter-logo.png";
 import YT from "../../img/yt-logo.png";
-import UserHelper from "../../helper/UserHelper";
 
 function User({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -22,11 +21,6 @@ function User({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const searchParams = new URLSearchParams();
   searchParams.append("profile_id", profile.id);
-
-  /* ===== FUNCTIONS ===== */
-
-  // functions from user js file
-  const { alertDiscord } = UserHelper();
 
   /* ===== USER COMPONENT ===== */
   return (
@@ -45,16 +39,7 @@ function User({ imageReducer }) {
               <SocialLink name="youtube" username={ profile.youtube_handle } logo={ YT } />
               <SocialLink name="twitch" username={ profile.twitch_username } logo={ Twitch } />
               <SocialLink name="twitter" username={ profile.twitter_handle } logo={ Twitter } />
-
-              { /* Discord is not a link, but a button. So, it is handled here. User is not required to have a discord.
-              Only render discord information if it exists */ }
-              { profile.discord &&
-                <div className="user-info-discord">
-                  <button type="button" className="user-discord-button" onClick={ () => alertDiscord(profile.discord) }>
-                    <img className="social-media-logo" alt="discord-logo" src={ Discord }></img>
-                  </button>
-                </div>
-              }
+              <DiscordLogo discord={ profile.discord } />
             </div>
           :
 

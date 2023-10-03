@@ -1,0 +1,16 @@
+.discord button {
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    text-align: center;
+    margin: 0 3px;
+}
+
+.discord button:hover {
+    background-color: transparent;
+}
+
+.logo {
+    width: 40px;
+    height: auto;
+}

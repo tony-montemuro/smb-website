@@ -1,4 +1,4 @@
-const UserHelper = () => {
+const DiscordLogo = () => {
     /* ===== FUNCTIONS ===== */
     
     // FUNCTION 1: alertDiscord - function that will alert the user of a discord account
@@ -14,4 +14,4 @@ const UserHelper = () => {
 };
 
 /* ===== EXPORTS ===== */
-export default UserHelper;
+export default DiscordLogo;

@@ -22,7 +22,7 @@ const UserSearch = () => {
     const { getStartAndEnd } = PageControls();
 
     // FUNCTION 1: updateResults - function that return all profiles whose username have a substring that matches userInput
-    // PRECONDITIONS (2 parameters):
+    // PRECONDITIONS (3 parameters):
     // 1.) userInput: a string created by the user, which we attempt to "match" (via substring) to a username in the db
     // 2.) usersPerPage: an integer that specifies the number of users that should render on each page
     // 3.) pageNum: an integer that specifies the page number the user is currently on

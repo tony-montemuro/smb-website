@@ -1,0 +1,20 @@
+.userRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 4px;
+}
+
+.hoverable:hover {
+    background-color: rgb(var(--color-container-selected));
+    cursor: pointer;
+}
+
+.socials {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.socials a {
+    margin: 0 3px;
+}

@@ -23,32 +23,11 @@
 
 .user-info-socials {
     display: flex;
+    justify-content: space-between;
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: 50px;
     margin-right: 50px;
-}
-
-.user-info-socials .social-link {
-    flex: 1;
-    display: flex;
-    align-items: center;
-}
-
-.user-info-discord {
-    flex: 1;
-    display: flex;
-    align-items: center;
-}
-
-.user-discord-button {
-    padding: 0;
-    border: none;
-    width: 50px;
-    height: 32px;
-    background-color: white;
-    text-align: center;
-    margin: 0 auto;
 }
 
 .user-about-me p {
