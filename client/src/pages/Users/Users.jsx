@@ -1,13 +1,18 @@
 /* ===== IMPORTS ===== */
 import "./Users.css";
+import UsersLogic from "./Users.js";
 import UserSearch from "../../components/UserSearch/UserSearch.jsx";
 
 function Users({ imageReducer }) {
+  /* ===== FUNCTIONS ===== */
+  const { navigateToUser } = UsersLogic();
+
   /* ===== VARIABLES ===== */
   const USERS_PER_PAGE = 10;
   const options = {
     isDetailed: true,
-    disableLink: false
+    disableLink: false,
+    onUserRowClick: navigateToUser
   };
 
   /* ===== USERS COMPONENT ===== */

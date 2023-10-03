@@ -8,7 +8,7 @@ import Twitter from "../../img/twitter-logo.png";
 import Username from "../Username/Username.jsx";
 import YT from "../../img/yt-logo.png";
 
-function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = false, onClick = undefined }) {
+function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = false, onClick }) {
   /* ===== USER ROW COMPONENT ===== */
 
   // If the `isDetailed` flag is set to false, simply render a row containing the `Username` component associated with each user
@@ -16,7 +16,7 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
     return (
       <div
         className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" }` } 
-        onClick={ onClick ? () => onClick(user) : null }
+        onClick={ () => onClick(user) }
       >
         <Username profile={ user } disableLink={ disableLink } />
       </div>
@@ -28,9 +28,9 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
     return (
       <div 
         className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" }` } 
-        onClick={ onClick ? () => onClick(user) : null }
+        onClick={ () => onClick(user) }
       >
-        <DetailedUsername imageReducer={ imageReducer } profile={ user } />
+        <DetailedUsername imageReducer={ imageReducer } profile={ user } disableLink={ true } />
         <div className={ styles.socials }>
           <SocialLink name="youtube" username={ user.youtube_handle } logo={ YT } />
           <SocialLink name="twitch" username={ user.twitch_username } logo={ Twitch } />
@@ -38,7 +38,7 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
           <DiscordLogo discord={ user.discord } />
         </div>
       </div>
-    )
+    );
   }
 };
 
