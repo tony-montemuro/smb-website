@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useEffect, useState } from "react";
 import styles from "./GameSearch.module.css";
+import ButtonList from "../ButtonList/ButtonList.jsx";
 import GameRow from "../GameRow/GameRow";
 import GameSearchLogic from "./GameSearch.js";
 import Items from "../Items/Items.jsx";
@@ -8,7 +9,7 @@ import Loading from "../Loading/Loading.jsx";
 import PageControls from "../PageControls/PageControls.jsx";
 import SearchBarInput from "../SearchBarInput/SearchBarInput";
 
-function GameSearch({ gamesPerPage, searchBarWidth = "75%", imageReducer, gameRowOptions }) {
+function GameSearch({ gamesPerPage, searchBarWidth = "100%", imageReducer, gameRowOptions }) {
   /* ===== STATES & FUNCTIONS ===== */
   const [gameTypeFilter, setGameTypeFilter] = useState(undefined)
   const [pageNum, setPageNum] = useState(1);
@@ -18,9 +19,9 @@ function GameSearch({ gamesPerPage, searchBarWidth = "75%", imageReducer, gameRo
   const { games, updateResults } = GameSearchLogic();
 
   /* ===== VARIABLES ===== */
-  const filters = [
-    { name: "Both", value: undefined }, 
-    { name: "Main Games", value: "main" }, 
+  const buttons = [
+    { name: "Both", value: undefined },
+    { name: "Main Games", value: "main" },
     { name: "Custom Games", value: "custom" }
   ];
   let gameTypes = undefined;
@@ -59,20 +60,7 @@ function GameSearch({ gamesPerPage, searchBarWidth = "75%", imageReducer, gameRo
       { /* Filters - render the various filters to game search, including the search bar, and buttons to filter by type */ }
       <div className={ styles.filters }>
         <SearchBarInput itemType={ "game" } input={ searchInput } setInput={ setSearchInput } width={ searchBarWidth } />
-        <div className={ `${ styles.filterBtns } center` }>
-          { filters.map(filter => {
-            return (
-              <button 
-                type="button"
-                className={ `${ styles.filterBtn }${ gameTypeFilter === filter.value ? ` ${ styles.selected }` : "" }` }
-                onClick={ () => setGameTypeFilter(filter.value) }
-                key={ filter.name }
-              >
-                { filter.name }
-              </button>
-            );
-          })}
-        </div>
+        <ButtonList buttons={ buttons } current={ gameTypeFilter } setCurrent={ setGameTypeFilter } />
       </div>
 
       { /* Search results - render the game search results here for main and/or custom games */ }

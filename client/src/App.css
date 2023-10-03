@@ -1,10 +1,12 @@
 :root {
-    --color-background: 17 22 24;
-    --color-container: 53 50 61;
-    --color-text: 249 249 249;
-    --color-link: 230 230 230;
-    --color-link-hover: 77 42 86;
-    --color-header: 39 16 31;
+    --color-background: 17, 22, 24;
+    --color-container: 53, 50, 61;
+    --color-link: 230, 230, 230;
+    --color-link-hover: 205, 205, 205;
+    --color-header: 39, 16, 31;
+    --color-nav: 58, 19, 68;
+    --color-nav-hover: 77, 42, 86;
+    --color-text: 249, 249, 249;
     --container-border-radius: 15px;
     --navbar-height: 75px;
 }
