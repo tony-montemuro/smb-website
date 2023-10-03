@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import "./GameRow.css";
+import styles from "./GameRow.module.css";
 import { Link } from "react-router-dom";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 
@@ -12,7 +12,7 @@ function GameRow({ game, imageReducer, useCard = false, onClick = undefined }) {
 
     // if useCard is true, render each game as a series of "cards" 
     return (
-      <div className="game-row-card">
+      <div className={ styles.card }>
         <Link to={ { pathname: `/games/${ game.abb }` } }>
           <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
           <p>{ game.name } </p>
@@ -24,7 +24,7 @@ function GameRow({ game, imageReducer, useCard = false, onClick = undefined }) {
 
     // Otherwise, just render a normal row
     return (
-      <div className="game-row-item" onClick={ onClick ? () => onClick(game) : null }>
+      <div className={ styles.item } onClick={ onClick ? () => onClick(game) : null }>
         <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
         <p>{ game.name } </p>
       </div>

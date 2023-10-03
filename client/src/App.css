@@ -1,6 +1,7 @@
 :root {
     --color-background: 17, 22, 24;
     --color-container: 53, 50, 61;
+    --color-container-selected: 81, 78, 89;
     --color-link: 230, 230, 230;
     --color-link-hover: 205, 205, 205;
     --color-header: 39, 16, 31;

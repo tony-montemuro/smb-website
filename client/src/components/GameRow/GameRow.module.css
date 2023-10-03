@@ -1,20 +1,20 @@
-.game-row-card {
+.card {
     justify-self: start;
 }
 
-.game-row-card p {
+.card p {
     text-align: center;
 }
 
-.game-row-item {
+.item {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 5px;
-    padding: 10px 5px;
+    padding: 8px 4px;
 }
 
-.game-row-item:hover {
-    background-color: #ddd;
+.item:hover {
+    background-color: rgba(var(--color-container-selected), 0.5);
     cursor: pointer;
 }
