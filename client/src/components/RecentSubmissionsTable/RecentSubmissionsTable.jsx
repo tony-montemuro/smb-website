@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import "./RecentSubmissionsTable.css";
+import style from "./RecentSubmissionsTable.module.css";
 import { useEffect, useState } from "react";
 import PageControls from "../PageControls/PageControls.jsx";
 import RecentSubmissionsRow from "./RecentSubmissionsRow.jsx";
@@ -14,7 +14,7 @@ function RecentSubmissionsTable({ renderGame = true, renderLevelContext = true, 
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component mounts, or when the searchParams are updated
+  // code that is executed when the component mounts OR when the pageNum is updated OR when the searchParams are updated
   useEffect(() => {
     fetchRecentSubmissions(numSubmissions, searchParams ? searchParams : new URLSearchParams(), pageNum);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -22,7 +22,7 @@ function RecentSubmissionsTable({ renderGame = true, renderLevelContext = true, 
 
   /* ===== RECENT SUBMISSIONS TABLE COMPONENT ===== */
   return (
-    <div className="recent-submissions-table">
+    <div className={ style.recentSubmissionsTable }>
       <table>
 
         { /* Table header - render information about what is present in each column */ }
@@ -67,6 +67,7 @@ function RecentSubmissionsTable({ renderGame = true, renderLevelContext = true, 
         itemName={ "Submissions" } 
         useDropdown={ false }
       />
+
     </div>
   );
 };
