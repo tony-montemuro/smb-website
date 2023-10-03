@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import styles from "./GameFilter.module.css";
+import styles from "./ListFilters.module.css";
 import GameFilterLogic from "./GameFilter.js";
 import GameSearch from "../../../components/GameSearch/GameSearch.jsx";
 import GameRow from "../../../components/GameRow/GameRow.jsx";
@@ -21,7 +21,7 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
 
   /* ===== GAME FILTER COMPONENT ===== */
   return (
-    <div className={ styles.gameFilter }>
+    <div className={ styles.filter }>
 
       { /* Render name of the popup */ }
       <div className={ styles.section }>
@@ -30,7 +30,7 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
 
       <hr />
 
-      { /* Next, render the set of all games that the user wants / already has filtered */ }
+      { /* Next, render the set of all games that the user wants / has already has filtered */ }
       <div className={ styles.section }>
         <h2>Filtered Games</h2>
         <p>Click a game to remove it as a filter.</p>

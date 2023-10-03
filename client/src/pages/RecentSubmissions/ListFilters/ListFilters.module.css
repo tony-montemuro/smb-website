@@ -1,4 +1,4 @@
-.gameFilter h1 {
+.filter h1 {
     margin: 0;
 }
 
@@ -6,12 +6,12 @@
     padding: 8px 0;
 }
 
-.gameFilter h2, .gameFilter p {
+.section h2, .section p {
     margin: 0;
     padding: 8px 0;
 }
 
-.gameFilter hr {
+.section hr {
     height: 2px;
     background-color: rgba(var(--color-container-selected), 0.8);
     border: none;
