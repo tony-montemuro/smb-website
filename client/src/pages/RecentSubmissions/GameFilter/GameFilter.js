@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, PopupContext } from "../../utils/Contexts";
+import { MessageContext, PopupContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 
 const GameFilter = (games, dispatchFiltersData) => {
