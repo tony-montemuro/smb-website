@@ -35,8 +35,8 @@ function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData 
         <h2>Filtered Users</h2>
         <p>Click a user to remove it as a filter.</p>
         { users ?
-          <Items items={ users } emptyMessage={ "You are not currently filtering by any users" }>
-            <>
+          <>
+            <Items items={ users } emptyMessage={ "You are not currently filtering by any users" }>
               { users.map(user => {
                 return (
                   <UserRow
@@ -47,14 +47,14 @@ function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData 
                   />
                 );
               })}
-              <div className={ styles.btns }>
-                <button type="button" onClick={ resetFilter }>Reset Filter</button>
-                <button type="button" onClick={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
-                  Apply Filters
-                </button>
-              </div>
-            </>
-          </Items>
+            </Items>
+            <div className={ styles.btns }>
+              <button type="button" onClick={ resetFilter }>Reset Filter</button>
+              <button type="button" onClick={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
+                Apply Filters
+              </button>
+            </div>
+          </>
         :
           <Loading />
         }
