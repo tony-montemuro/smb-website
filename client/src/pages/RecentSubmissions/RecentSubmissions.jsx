@@ -2,6 +2,7 @@
 import "./RecentSubmissions.css";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import styles from "./RecentSubmissions.module.css";
 import GameFilter from "./GameFilter.jsx";
 import OtherFilter from "./OtherFilter.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
@@ -34,7 +35,7 @@ function RecentSubmissions({ imageReducer }) {
 
   /* ===== RECENT SUBMISSIONS COMPONENT ===== */
   return (
-    <div className="recent-submissions">
+    <div className={ styles.recentSubmissions }>
 
       { /* Popups */ }
       <Popup renderPopup={ gamePopup } setRenderPopup={ setGamePopup } width={ "60%" }>
@@ -59,9 +60,9 @@ function RecentSubmissions({ imageReducer }) {
       </Popup>
 
       { /* Recent submissions header - render the name of the page, as well as the filter buttons */ }
-      <div className="recent-submissions-header">
+      <div className={ styles.header }>
         <h1>Recent Submissions</h1>
-        <div className="recent-submissions-btns">
+        <div className={ styles.btns }>
           <button type="button" onClick={ () => setGamePopup(true) }>Filter by Game</button>
           <button type="button" onClick={ () => setUserPopup(true) }>Filter by User</button>
           <button type="button" onClick={ () => setOtherPopup(true) }>Other Filters</button>

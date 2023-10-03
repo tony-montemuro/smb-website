@@ -1,0 +1,15 @@
+.recentSubmissions {
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btns {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
