@@ -1,19 +1,18 @@
 /* ===== IMPORTS ===== */
-import "./SocialLink.css";
+import styles from "./SocialLink.module.css";
 import SocialLinkLogic from "./SocialLink.js";
 
 function SocialLink({ name, username, logo }) {
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file
-  const { getLink } = SocialLinkLogic();
+  const { handleClick, getLink } = SocialLinkLogic();
 
   /* ===== SOCIAL LINK COMPONENT ===== */
-  // if a username exists, create a fancy link that allows the user to navigate to that location
   return username && 
-    <div className="social-link">
+    <div onClick={ (e) => handleClick(e) }>
       <a href={ getLink(name, username) } target="_blank" rel="noopener noreferrer">
-        <img className="social-media-logo" src={ logo } alt={ `${ name }-logo` } />
+        <img className={ styles.logo } src={ logo } alt={ `${ name }-logo` } />
       </a>
     </div>
 };
