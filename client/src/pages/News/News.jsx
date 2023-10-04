@@ -9,7 +9,7 @@ import PageControls from "../../components/PageControls/PageControls.jsx";
 
 function News() {
   /* ===== VARIABLES ===== */
-  const POSTS_PER_PAGE = 3;
+  const POSTS_PER_PAGE = 5;
 
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
@@ -29,14 +29,14 @@ function News() {
   return (
     <div className={ styles.news }>
 
-      {/* Render information about this page */}
+      {/* News header - Render information about this page */}
       <h1>News</h1>
-      <p>Below is the list of all news posts created by SMB Elite moderators, ordered from most recent to least recent.</p>
+      <p>Below is the list of all news posts created by SMB Elite administrators, ordered from most recent to least recent.</p>
 
-      { /* Render each post */ }
+      { /* News body - Render each post */ }
       { posts.data ?
         <Items items={ posts.data } emptyMessage={ "No posts exist!" }>
-          { posts.data.map((post, index) => {
+          { posts.data.map(post => {
             return <NewsPost post={ post } key={ post.id } />;
           })}
           <PageControls 
