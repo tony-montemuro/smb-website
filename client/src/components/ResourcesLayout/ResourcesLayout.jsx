@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import "./ResourcesLayout.css";
 import { Outlet } from "react-router-dom";
 import styles from "./ResourcesLayout.module.css";
 import PageItem from "./PageItem";
