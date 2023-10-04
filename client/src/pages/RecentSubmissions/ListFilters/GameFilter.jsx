@@ -70,7 +70,6 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
       </div>
       <GameSearch 
         gamesPerPage={ GAMES_PER_PAGE }
-        searchBarWidth={ "50%" }
         imageReducer={ imageReducer }
         gameRowOptions={ gameRowOptions }
       />

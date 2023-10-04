@@ -9,7 +9,7 @@ import Loading from "../Loading/Loading.jsx";
 import PageControls from "../PageControls/PageControls.jsx";
 import SearchBarInput from "../SearchBarInput/SearchBarInput";
 
-function GameSearch({ gamesPerPage, searchBarWidth = "100%", imageReducer, gameRowOptions }) {
+function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
   /* ===== STATES & FUNCTIONS ===== */
   const [gameTypeFilter, setGameTypeFilter] = useState(undefined)
   const [pageNum, setPageNum] = useState(1);
@@ -59,7 +59,7 @@ function GameSearch({ gamesPerPage, searchBarWidth = "100%", imageReducer, gameR
 
       { /* Filters - render the various filters to game search, including the search bar, and buttons to filter by type */ }
       <div className={ styles.filters }>
-        <SearchBarInput itemType={ "game" } input={ searchInput } setInput={ setSearchInput } width={ searchBarWidth } />
+        <SearchBarInput itemType={ "game" } input={ searchInput } setInput={ setSearchInput } />
         <ButtonList buttons={ buttons } current={ gameTypeFilter } setCurrent={ setGameTypeFilter } />
       </div>
 

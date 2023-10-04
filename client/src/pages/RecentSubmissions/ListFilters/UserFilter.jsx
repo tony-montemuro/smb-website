@@ -69,7 +69,6 @@ function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData 
       </div>
       <UserSearch 
         usersPerPage={ USERS_PER_PAGE }
-        searchBarWidth={ "100%" }
         userRowOptions={ userRowOptions }
       />
 

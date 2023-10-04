@@ -6,6 +6,7 @@
     border: 2px solid rgba(var(--color-text), 0.5);
     border-radius: 5px;
     caret-color: rgb(var(--color-text));
+    width: 100%;
 }
 
 .searchbarInput input {

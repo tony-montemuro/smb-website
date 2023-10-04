@@ -3,13 +3,12 @@ import styles from "./SearchBarInput.module.css";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
-function SearchBarInput({ itemType, input, setInput, width = null }) {
-  /* ===== VARIABLES ===== */
-  const theme = width ? { width: width } : {};
+function SearchBarInput({ itemType, input, setInput }) {
+
 
   /* ===== SEARCH BAR INPUT COMPONENT ===== */
   return (
-    <div className={ styles.searchbarInput } style={ theme }>
+    <div className={ styles.searchbarInput }>
 
       { /* Search bar text input: allows a user to type some text name, which will apply some filter when a change is detected. */ }
       <input

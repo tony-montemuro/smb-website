@@ -8,7 +8,7 @@ import SearchBarInput from "../SearchBarInput/SearchBarInput";
 import UserSearchLogic from "./UserSearch.js";
 import UserRow from "../UserRow/UserRow.jsx";
 
-function UserSearch({ usersPerPage, searchBarWidth = "100%", imageReducer = null, userRowOptions }) {
+function UserSearch({ usersPerPage, imageReducer = null, userRowOptions }) {
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
   const [searchInput, setSearchInput] = useState("");
@@ -39,7 +39,7 @@ function UserSearch({ usersPerPage, searchBarWidth = "100%", imageReducer = null
     <>
 
       { /* Search bar input for searching for users */ }
-      <SearchBarInput itemType={ "user" } input={ searchInput } setInput={ setSearchInput } width={ searchBarWidth } />
+      <SearchBarInput itemType={ "user" } input={ searchInput } setInput={ setSearchInput } />
 
       {/* Search results - render the user search results here */}
       { users.data ?
