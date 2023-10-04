@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import { useEffect } from "react";
 import styles from "./Home.module.css";
+import Container from "../../components/Container/Container.jsx";
 import GameSearch from "../../components/GameSearch/GameSearch.jsx";
-import HomeContainer from "./HomeContainer.jsx";
 import HomeLogic from "./Home.js";
 import Items from "../../components/Items/Items.jsx";
 import Loading from "../../components/Loading/Loading.jsx";
@@ -36,17 +36,17 @@ function Home({ imageReducer }) {
 
       { /* Left - render a game search component, as well as a recent submissions table */ }
       <div className={ styles.left }>
-        <HomeContainer name={ "games" }>
+        <Container name={ "Games" } href={ "/games" }>
           <GameSearch gamesPerPage={ GAMES_PER_PAGE } imageReducer={ imageReducer } gameRowOptions={ gameRowOptions } />
-        </HomeContainer>
-        <HomeContainer name={ "recent-submissions" }>
+        </Container>
+        <Container name={ "Recent Submissions" } href={ "/recent-submissions" }>
           <RecentSubmissionsTable />
-        </HomeContainer>
+        </Container>
       </div>
 
       {/* Right - render the 3 most recent news posts */}
       <div className={ styles.right }>
-        <HomeContainer name={ "news" }>
+        <Container name={ "News" } href={ "/news" }>
           { posts ?
             <Items items={ posts } emptyMessage={ "No posts have been created yet!" }>
               <div className={ styles.posts }>
@@ -58,7 +58,7 @@ function Home({ imageReducer }) {
           :
             <Loading />
           }
-        </HomeContainer>
+        </Container>
       </div>
 
     </div>

@@ -1,0 +1,23 @@
+.container {
+    border-radius: var(--container-border-radius);
+    background-color: rgb(var(--color-container));
+}
+
+.header {
+    background-color: rgb(var(--color-header));
+    border-top-left-radius: var(--container-border-radius);
+    border-top-right-radius: var(--container-border-radius);
+    padding: 20px 0;
+}
+
+.header h1 {
+    padding-left: 10px;
+}
+
+.header h2 {
+    padding-left: 10px;
+}
+
+.body {
+    padding: 10px;
+}
