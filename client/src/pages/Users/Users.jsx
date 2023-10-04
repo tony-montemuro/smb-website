@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import "./Users.css";
+import styles from "./Users.module.css";
 import UsersLogic from "./Users.js";
 import UserSearch from "../../components/UserSearch/UserSearch.jsx";
 
@@ -17,25 +17,14 @@ function Users({ imageReducer }) {
 
   /* ===== USERS COMPONENT ===== */
   return (
-    <div className="users">
-
-      { /* Users header - render the name of the page, it's description, and a searchbar */ }
-      <div className="users-header">
-
-        { /* Page name and description */ }
-        <h1>Users</h1>
-        <p>Below is a list of all SMB Elite users. This page provides an easy way to access any user profile.</p>
-
-      </div>
-
-      { /* Now, render the user search component */ }
+    <div className={ styles.users }>
+      <h1>Users</h1>
+      <p>Below is a list of all SMB Elite users. This page provides an easy way to access any user profile.</p>
       <UserSearch
         usersPerPage={ USERS_PER_PAGE }
-        searchBarWidth={ "40%" }
         imageReducer={ imageReducer }
         userRowOptions={ options }
       />
-
     </div>
   );
 };
