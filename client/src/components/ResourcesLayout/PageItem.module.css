@@ -1,0 +1,25 @@
+.pageItem {
+    padding: 0;
+    padding-top: 5px;
+}
+
+.pageItem h2 {
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.pageItem li {
+    padding: 5px 0;
+    cursor: pointer;
+    width: fit-content;
+    text-decoration: none;
+}
+
+.headerList h2 {
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    width: fit-content;
+}

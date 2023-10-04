@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./ResourcesLayout.css";
 import { Outlet } from "react-router-dom";
+import styles from "./ResourcesLayout.module.css";
 import PageItem from "./PageItem";
 import ResourcesLayoutLogic from "./ResourcesLayout.js";
 
@@ -10,12 +11,11 @@ function ResourcesLayout() {
 
   /* ===== RESOURCES LAYOUT COMPONENT ===== */
   return (
-    <div className="resources-layout">
+    <div className={ styles.resourcesLayout }>
 
       { /* Resources layout sidebar - render the page controls here.  */ }
-      <div className="resources-layout-sidebar">
-        <h1>Resources</h1>
-        <ul className="resources-layout-page-list">
+      <div className={ styles.sidebar }>
+        <ul className={ styles.sidebarList }>
           { pages.map(page => {
             return (
               <PageItem 
@@ -31,7 +31,7 @@ function ResourcesLayout() {
       </div>
 
       { /* Resources layout content - render the resources page here (the actual content) */ }
-      <div className="resources-layout-content">
+      <div className={ styles.content }>
         <Outlet />
       </div>
       

@@ -1,0 +1,24 @@
+.resourcesLayout {
+    --resources-layout-padding: 20px;
+    display: flex;
+    padding: var(--resources-layout-padding);
+}
+
+.sidebar {
+    top: calc(var(--navbar-height) + var(--resources-layout-padding));
+    height: 100%;
+    z-index: 1;
+    position: -webkit-sticky;
+    position: sticky;
+    padding-right: 10px;
+}
+
+.sidebar ul {
+    margin: 0;
+    padding-inline-start: 0;
+    list-style: none;
+}
+
+.content {
+    flex: 1; 
+}

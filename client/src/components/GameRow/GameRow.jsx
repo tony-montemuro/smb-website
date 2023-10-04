@@ -6,7 +6,6 @@ import BoxArt from "../BoxArt/BoxArt.jsx";
 function GameRow({ game, imageReducer, useCard = false, onClick = undefined, index = 0 }) {
   /* ===== VARIABLES ===== */
   const BOX_WIDTH = useCard ? 200 : 50;
-  console.log(index);
 
   /* ===== GAME ROW COMPONENT ===== */
   if (useCard) {

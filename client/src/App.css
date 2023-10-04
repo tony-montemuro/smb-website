@@ -56,10 +56,6 @@ select {
     outline: none;
 }
 
-.app {
-    padding: 10px;
-}
-
 .center {
     display: flex;
     align-items: center;
