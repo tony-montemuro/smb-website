@@ -1,0 +1,17 @@
+.news {
+    padding: 20px;
+}
+
+.post {
+    background-color: rgb(var(--color-container));
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: var(--container-border-radius);
+}
+
+.post hr {
+    height: 2px;
+    margin: 20px 0;
+    background-color: rgba(var(--color-container-selected));
+    border: none;
+}

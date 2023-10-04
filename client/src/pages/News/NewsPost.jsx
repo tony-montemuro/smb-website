@@ -1,4 +1,5 @@
 /* ===== IMPORTS ===== */
+import styles from "./News.module.css";
 import FrontendHelper from "../../helper/FrontendHelper";
 import Username from "../../components/Username/Username";
 
@@ -8,35 +9,24 @@ function NewsPost({ post }) {
 
   /* ===== NEWS POST COMPONENT ===== */
   return (
-    <div className="news-post">
+    <div className={ styles.post }>
 
       { /* Posts header - includes the name of the post, and information about the post */ }
-      <div className="news-post-header">
-        
-        { /* Post title */ }
-        <h2>{ post.title }</h2>
+      <h2>{ post.title }</h2>
+      <span>
+        <b>posted { getTimeAgo(post.posted_at) } by&nbsp;
+        <Username profile={ post.profile } /></b>
+      </span>
 
-        { /* Post information */ }
-        <span>
-          <b>posted { getTimeAgo(post.posted_at) } by&nbsp;
-          <Username profile={ post.profile } /></b>
-        </span>
-      </div>
+      <hr />
 
-      { /* Post body - includes the body of the post, and a link (if there is one) */ }
-      <div className="news-post-body">
-
-        { /* Post body */ }
-        { post.body.map((line, index) => {
-          return <p key={ index }>{ line }</p>;
-        })}
-
-        { /* Post link */ }
-        { post.link && post.link.length > 0 &&
-          <a href={ post.link } target="_blank" rel="noopener noreferrer">{ post.link_description }</a>
-        }
-
-      </div>
+      { /* Post body - render the contents of the post, as well as a link, if one was included */ }
+      { post.body.map((line, index) => {
+        return <p key={ index }>{ line }</p>;
+      })}
+      { post.link && post.link.length > 0 &&
+        <a href={ post.link } target="_blank" rel="noopener noreferrer">{ post.link_description }</a>
+      }
 
     </div>
   );

@@ -1,13 +1,15 @@
 /* ===== IMPORTS ===== */
-import "./News.css";
 import { useEffect, useState } from "react";
+import styles from "./News.module.css";
+import Items from "../../components/Items/Items.jsx";
+import Loading from "../../components/Loading/Loading.jsx";
 import NewsLogic from "./News.js";
 import NewsPost from "./NewsPost";
 import PageControls from "../../components/PageControls/PageControls.jsx";
 
 function News() {
   /* ===== VARIABLES ===== */
-  const POSTS_PER_PAGE = 5;
+  const POSTS_PER_PAGE = 3;
 
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
@@ -24,36 +26,33 @@ function News() {
   }, [pageNum]);
 
   /* ===== NEWS COMPONENT ===== */
-  return posts.data ?
-    <div className="news">
+  return (
+    <div className={ styles.news }>
 
-      { /* News header - render the name of the page, as well as a short description */ }
-      <div className="news-header">
-        <h1>News</h1>
-        <p>Below is the list of all news posts created by SMB Elite moderators, ordered from most recent to least recent.</p>
-      </div>
+      {/* Render information about this page */}
+      <h1>News</h1>
+      <p>Below is the list of all news posts created by SMB Elite moderators, ordered from most recent to least recent.</p>
 
-      { /* News body - render each post */ }
-      <div className="news-body">
-        { posts.data.map(post => {
-          return <NewsPost post={ post } key={ post.id } />;
-        })}
-
-        { /* Render pagination controls at the bottom of this container */ }
-        <PageControls 
-          totalItems={ posts.total }
-          itemsPerPage={ POSTS_PER_PAGE }
-          pageNum={ pageNum }
-          setPageNum={ setPageNum }
-          itemName={ "Posts" } 
-        />
-
-      </div>
+      { /* Render each post */ }
+      { posts.data ?
+        <Items items={ posts.data } emptyMessage={ "No posts exist!" }>
+          { posts.data.map((post, index) => {
+            return <NewsPost post={ post } key={ post.id } />;
+          })}
+          <PageControls 
+            totalItems={ posts.total }
+            itemsPerPage={ POSTS_PER_PAGE }
+            pageNum={ pageNum }
+            setPageNum={ setPageNum }
+            itemName={ "Posts" } 
+          />
+        </Items>
+      :
+        <Loading />
+      }
 
     </div>
-  :
-    // Loading component
-    <p>Loading...</p>;
+  );
 };
 
 /* ===== EXPORTS ===== */

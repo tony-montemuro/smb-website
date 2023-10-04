@@ -43,7 +43,6 @@ function Home({ imageReducer }) {
           <RecentSubmissionsTable />
         </HomeContainer>
       </div>
-      
 
       {/* Right - render the 3 most recent news posts */}
       <div className={ styles.right }>
