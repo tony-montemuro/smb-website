@@ -2,11 +2,13 @@
     --color-background: 17, 22, 24;
     --color-container: 53, 50, 61;
     --color-container-selected: 81, 78, 89;
+    --color-even: 0, 0, 0, 0.07;
     --color-link: 230, 230, 230;
     --color-link-hover: 205, 205, 205;
     --color-header: 39, 16, 31;
     --color-nav: 58, 19, 68;
     --color-nav-hover: 77, 42, 86;
+    --color-odd: 0, 0, 0, 0.18;
     --color-text: 249, 249, 249;
     --container-border-radius: 15px;
     --navbar-height: 75px;
@@ -55,4 +57,12 @@ button[disabled] {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.even {
+    background-color: rgba(var(--color-even));
+}
+
+.odd {
+    background-color: rgba(var(--color-odd));
 }

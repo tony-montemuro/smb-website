@@ -5,7 +5,7 @@ import DiscordLogo from "../DiscordLogo/DiscordLogo.jsx";
 import SocialLink from "../SocialLink/SocialLink.jsx";
 import Username from "../Username/Username.jsx";
 
-function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = false, onClick }) {
+function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = false, onClick, index = 0 }) {
   /* ===== VARIABLES ===== */
   const SOCIAL_SIZE = 40;
 
@@ -15,7 +15,7 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
   if (!isDetailed) {
     return (
       <div
-        className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" }` } 
+        className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" } ${ index % 2 === 1 ? "odd" : "even" }` } 
         onClick={ () => onClick(user) }
       >
         <Username profile={ user } disableLink={ disableLink } />
@@ -27,7 +27,7 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
   else {
     return (
       <div 
-        className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" }` } 
+        className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" } ${ index % 2 === 1 ? "odd" : "even" }` } 
         onClick={ () => onClick(user) }
       >
         <DetailedUsername imageReducer={ imageReducer } profile={ user } disableLink={ true } />

@@ -45,7 +45,7 @@ function UserSearch({ usersPerPage, imageReducer = null, userRowOptions }) {
       { users.data ?
         <Items items={ users.data } emptyMessage={ "No users match your search." }>
           <div className={ styles.results }>
-            { users.data.map(user => {
+            { users.data.map((user, index) => {
                 return (
                   <UserRow 
                     user={ user }
@@ -53,6 +53,7 @@ function UserSearch({ usersPerPage, imageReducer = null, userRowOptions }) {
                     disableLink={ userRowOptions.disableLink }
                     isDetailed={ userRowOptions.isDetailed } 
                     onClick={ userRowOptions.onUserRowClick }
+                    index={ index }
                     key={ user.id } 
                   />
                 );

@@ -37,13 +37,14 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
         { games ?
           <>
             <Items items={ games } emptyMessage={ "You are not currently filtering by any games." }>
-              { games.map(game => {
+              { games.map((game, index) => {
                   return (
                     <GameRow
                       game={ game }
                       imageReducer={ imageReducer }
                       useCard={ false }
                       onClick={ removeGame }
+                      index={ index }
                       key={ game.abb }
                     />
                   );

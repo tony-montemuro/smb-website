@@ -71,13 +71,14 @@ function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
               <div key={ type } className={ styles.body }>
                 <h2>{ type } Games</h2>
                 <div className={ gameRowOptions.useCard ? styles.cards : "" }>
-                  { games.data.filter(game => type === "Custom" ? game.custom : !game.custom).map(game => {
+                  { games.data.filter(game => type === "Custom" ? game.custom : !game.custom).map((game, index) => {
                     return (
                       <GameRow
                         game={ game }
                         imageReducer={ imageReducer } 
                         useCard={ gameRowOptions.useCard } 
                         onClick={ gameRowOptions.onGameRowClick }
+                        index={ index }
                         key={ game.abb }
                       />
                     );

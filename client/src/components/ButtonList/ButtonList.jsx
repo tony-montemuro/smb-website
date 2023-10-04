@@ -14,7 +14,7 @@ function ButtonList({ buttons, current, setCurrent, hasPadding = true }) {
             type="button"
             onClick={ () => setCurrent(button.value) }
             className={ `${ current === button.value ? ` ${ styles.selected }` : "" }` }
-            key={ button.value }
+            key={ button.name }
           >
             { button.name }
           </button>
