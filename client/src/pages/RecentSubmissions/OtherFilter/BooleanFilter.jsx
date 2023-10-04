@@ -1,21 +1,24 @@
+/* ===== IMPORTS ===== */
+import styles from "./OtherFilter.module.css";
+
 function BooleanFilter({ filter, filters, onClick }) {
   /* ===== BOOLEAN FILTER COMPONENT ===== */
   return (
     <div>
       { /* Render the "title" of the filter */ }
-      <div className="recent-submissions-filter-title">
+      <div className={ styles.title }>
         <h2>{ filter.title }</h2>
         { filters[filter.name] !== filter.default && 
           <button type="button" onClick={ () => onClick(filter.name, filter.default) }>Reset</button> 
         }
       </div>
 
-      <div className="recent-submissions-filter-btns">
+      <div className={ styles.btns }>
 
         { /* Button for no-filter */ }
         <button 
           type="button"
-          className={ `recent-submissions-filter-btn${ filters[filter.name] === null ? " recent-submissions-filter-btn-selected" : "" }` }
+          className={ filters[filter.name] === null ? styles.selected : "" }
           onClick={ () => onClick(filter.name, null) }
         >
           All
@@ -24,7 +27,7 @@ function BooleanFilter({ filter, filters, onClick }) {
         { /* Button for "true" filter */ }
         <button 
           type="button"
-          className={ `recent-submissions-filter-btn${ filters[filter.name] === true ? " recent-submissions-filter-btn-selected" : "" }` }
+          className={ filters[filter.name] === true ? styles.selected : "" }
           onClick={ () => onClick(filter.name, true) }
         >
           { filter.true }-only
@@ -33,7 +36,7 @@ function BooleanFilter({ filter, filters, onClick }) {
         { /* Button for "false" filter */ }
         <button 
           type="button"
-          className={ `recent-submissions-filter-btn${ filters[filter.name] === false ? " recent-submissions-filter-btn-selected" : "" }` }
+          className={ filters[filter.name] === false ? styles.selected : "" }
           onClick={ () => onClick(filter.name, false) }
         >
           { filter.false }-only

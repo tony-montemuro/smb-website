@@ -1,10 +1,9 @@
 /* ===== IMPORTS ===== */
-import "./RecentSubmissions.css";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import styles from "./RecentSubmissions.module.css";
 import GameFilter from "./ListFilters/GameFilter.jsx";
-import OtherFilter from "./OtherFilter.jsx";
+import OtherFilter from "./OtherFilter/OtherFilter.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
 import RecentSubmissionsLogic from "./RecentSubmissions.js";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";

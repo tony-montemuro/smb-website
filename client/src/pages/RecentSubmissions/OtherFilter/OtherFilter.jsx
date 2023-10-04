@@ -1,7 +1,9 @@
 /* ===== IMPORTS ===== */
 import { useEffect } from "react";
+import styles from "./OtherFilter.module.css";
 import BooleanFilter from "./BooleanFilter.jsx";
-import FrontendHelper from "../../helper/FrontendHelper.js";
+import FrontendHelper from "../../../helper/FrontendHelper.js";
+import Loading from "../../../components/Loading/Loading.jsx";
 import OtherFilterLogic from "./OtherFilter.js";
 
 function OtherFilter({ searchParams, setSearchParams, categories }) {
@@ -44,31 +46,27 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
 
   /* ===== OTHER FILTER COMPONENT ===== */
   return filters &&
-    <div className="recent-submissions-other-filter">
-
-      { /* Render the "title" of the popup */ }
-      <h1>Other Filters</h1>
-
-      { /* Form for updating the various filters */ }
+    <>
+      <h1 id={ styles.header }>Other Filters</h1>
       <form onSubmit={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
+        <div className={ styles.filters }>
 
-        { /* First, render the filter options for categories */ }
-        <div>
-          <div className="recent-submissions-filter-title">
+          { /* First, render the filter options for categories */ }
+          <div className={ styles.title }>
             <h2>Categories</h2>
             { filters.category.length !== defaultFilters.category.length &&
               <button type="button" onClick={ updateCategoryFilterAll }>Reset</button>
             }
           </div>
-          { categories && 
-            <div className="recent-submissions-filter-btns">
+          { categories ?
+            <div className={ styles.btns }>
 
-              { /* Render a special button for selecting all the categories */ }
+              { /* Render button to select all categories */ }
               <button
                 type="button"
                 key="all"
                 onClick={ updateCategoryFilterAll }
-                className={ `recent-submissions-filter-btn${ filters.category.length === 0 ? " recent-submissions-filter-btn-selected" : "" }` }
+                className={ filters.category.length === 0 ? styles.selected : "" }
               >
                 All
               </button>
@@ -82,7 +80,7 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
                     type="button"
                     key={ category }
                     onClick={ () => updateCategoryFilter(category) }
-                    className={ `recent-submissions-filter-btn${ filters.category.length === 0 || filters.category.includes(category) ? " recent-submissions-filter-btn-selected" : "" }` }
+                    className={ filters.category.length === 0 || filters.category.includes(category) ? styles.selected : "" }
                   >
                     { categoryB2F(category) }
                   </button>
@@ -90,24 +88,26 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
               })}
 
             </div>
+          :
+            <Loading />
           }
-        </div>
 
-        { /* Then, we can render the remaining boolean filters */ }
-        <div className="recent-submissions-filter-boolean">
-          { booleanFilters.map(filter => {
-            return <BooleanFilter filter={ filter } filters={ filters } onClick={ updateBooleanFilter } key={ filter.name } />;
-          })}
+          { /* Then, we can render the remaining boolean filters */ }
+          <div className={ styles.boolean }>
+            { booleanFilters.map(filter => {
+              return <BooleanFilter filter={ filter } filters={ filters } onClick={ updateBooleanFilter } key={ filter.name } />;
+            })}
+          </div>
         </div>
 
         { /* Finally, render button to update the forms (submit form), and reset all filters */ }
-        <div id="recent-submissions-filter-submit-btns-right" className="recent-submissions-filter-submit-btns">
+        <div id={ styles.right } className={ styles.btns }>
           <button type="button" onClick={ () => resetFiltersAll(defaultFilters) }>Reset Filters</button>
           <button type="submit">Apply Filters</button>
         </div>
 
       </form>
-    </div>;
+    </>;
 };
 
 /* ===== EXPORTS ===== */

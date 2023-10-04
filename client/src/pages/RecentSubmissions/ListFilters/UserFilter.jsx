@@ -31,7 +31,7 @@ function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData 
       <hr />
 
       { /* Next, render the set of all users that the user wants / has already filtered by */ }
-      <div className="recent-submissions-filter-selected">
+      <div className={ styles.section }>
         <h2>Filtered Users</h2>
         <p>Click a user to remove it as a filter.</p>
         { users ?

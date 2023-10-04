@@ -1,0 +1,41 @@
+#header {
+    margin: 0;
+    padding: 5px 0;
+}
+
+.title {
+    display: flex;
+    gap: 10px;
+}
+
+.title button {
+    margin: auto 0;
+}
+
+.filters {
+    padding: 10px 0;
+}
+
+.btns {
+    display: flex;
+    gap: 5px;
+}
+
+.selected {
+    background-color: rgb(var(--color-nav));
+    color: rgb(var(--color-text));
+}
+
+.selected:hover {
+    background-color: rgb(var(--color-nav-hover));
+}
+
+.boolean {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+#right {
+    justify-content: flex-end;
+}
