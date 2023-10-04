@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
-import Twitch from "../../img/Twitch.jsx";
-import X from "../../img/X.jsx";
-import Youtube from "../../img/Youtube.jsx";
+import Twitch from "../../assets/svg/Twitch.jsx";
+import X from "../../assets/svg/X.jsx";
+import Youtube from "../../assets/svg/Youtube.jsx";
 
 const SocialLink = () => {
     /* ===== FUNCTIONS ===== */

@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import styles from "./DiscordLogo.module.css";
-import Discord from "../../img/Discord.jsx";
+import Discord from "../../assets/svg/Discord.jsx";
 import DiscordLogoLogic from "./DiscordLogo.js";
 
 function DiscordLogo({ discord, size }) {

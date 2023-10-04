@@ -8,9 +8,6 @@ import DiscordLogo from "../../components/DiscordLogo/DiscordLogo.jsx";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import SocialLink from "../../components/SocialLink/SocialLink.jsx";
-import Twitch from "../../img/twitch-logo.png";
-import YT from "../../img/yt-logo.png";
-import X from "../../img/X.jsx";
 
 function User({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -37,9 +34,9 @@ function User({ imageReducer }) {
           { /* Render socials if any exist. */ }
           { profile.youtube_handle || profile.twitch_username || profile.twitter_handle || profile.discord ?
             <div className="user-info-socials">
-              <SocialLink name="youtube" username={ profile.youtube_handle } logo={ YT } size={ SOCIAL_SIZE } />
-              <SocialLink name="twitch" username={ profile.twitch_username } logo={ Twitch } size={ SOCIAL_SIZE } />
-              <SocialLink name="twitter" username={ profile.twitter_handle } logo={ X } size={ SOCIAL_SIZE } />
+              <SocialLink name="youtube" username={ profile.youtube_handle } size={ SOCIAL_SIZE } />
+              <SocialLink name="twitch" username={ profile.twitch_username } size={ SOCIAL_SIZE } />
+              <SocialLink name="twitter" username={ profile.twitter_handle } size={ SOCIAL_SIZE } />
               <DiscordLogo discord={ profile.discord } size={ SOCIAL_SIZE } />
             </div>
           :

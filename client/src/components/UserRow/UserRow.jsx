@@ -3,10 +3,7 @@ import styles from "./UserRow.module.css";
 import DetailedUsername from "../DetailedUsername/DetailedUsername";
 import DiscordLogo from "../DiscordLogo/DiscordLogo.jsx";
 import SocialLink from "../SocialLink/SocialLink.jsx";
-import Twitch from "../../img/twitch-logo.png";
-import Twitter from "../../img/twitter-logo.png";
 import Username from "../Username/Username.jsx";
-import YT from "../../img/yt-logo.png";
 
 function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = false, onClick }) {
   /* ===== VARIABLES ===== */
@@ -35,9 +32,9 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
       >
         <DetailedUsername imageReducer={ imageReducer } profile={ user } disableLink={ true } />
         <div className={ styles.socials }>
-          <SocialLink name="youtube" username={ user.youtube_handle } logo={ YT } size={ SOCIAL_SIZE } />
-          <SocialLink name="twitch" username={ user.twitch_username } logo={ Twitch } size={ SOCIAL_SIZE } />
-          <SocialLink name="twitter" username={ user.twitter_handle } logo={ Twitter } size={ SOCIAL_SIZE } />
+          <SocialLink name="youtube" username={ user.youtube_handle } size={ SOCIAL_SIZE } />
+          <SocialLink name="twitch" username={ user.twitch_username } size={ SOCIAL_SIZE } />
+          <SocialLink name="twitter" username={ user.twitter_handle } size={ SOCIAL_SIZE } />
           <DiscordLogo discord={ user.discord } size={ SOCIAL_SIZE } />
         </div>
       </div>
