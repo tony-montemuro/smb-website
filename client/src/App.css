@@ -52,6 +52,10 @@ button[disabled] {
     background-color: rgb(var(--color-button));
 }
 
+select {
+    outline: none;
+}
+
 .app {
     padding: 10px;
 }

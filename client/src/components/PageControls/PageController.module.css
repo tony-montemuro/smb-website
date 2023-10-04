@@ -6,6 +6,7 @@
 
 .pageController select {
     width: 50px;
+    background-color: rgb(var(--color-button));
 }
 
 .spread {
