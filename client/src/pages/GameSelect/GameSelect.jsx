@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import "./GameSelect.css";
+import styles from "./GameSelect.module.css";
 import GameSearch from "../../components/GameSearch/GameSearch.jsx";
 
 function GameSelect({ imageReducer }) {
@@ -9,20 +9,13 @@ function GameSelect({ imageReducer }) {
 
   /* ===== GAME SELECT COMPONENT ===== */
   return (
-    <div className="game-select">
-
-      { /* Page Header - render the name of the page */ }
-      <div className="game-select-header">
-        <h1>Games</h1>
-      </div>
-
-      { /* Game Search component */ }
+    <div className={ styles.gameSelect }>
+      <h1>Games</h1>
       <GameSearch 
         gamesPerPage={ GAMES_PER_PAGE }
         imageReducer={ imageReducer }
         gameRowOptions={ gameRowOptions }
       />
-      
     </div>
   );
 };
