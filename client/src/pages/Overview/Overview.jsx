@@ -52,9 +52,11 @@ function Overview({ imageReducer }) {
       { /* Render a container for each section of this page */ }
       { headers.map(header => {
         return (
-          <Container title={ cleanLevelName(header) } isLargeHeader={ false } key={ header }>
-            { getContent(header) }
-          </Container>
+          <div id={ header } key={ header }>
+            <Container title={ cleanLevelName(header) } isLargeHeader={ false }>
+              { getContent(header) }
+            </Container>
+          </div>
         );
       })}
       

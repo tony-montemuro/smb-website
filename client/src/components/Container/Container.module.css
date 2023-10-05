@@ -10,11 +10,8 @@
     padding: 20px 0;
 }
 
-.header h1 {
-    padding-left: 10px;
-}
-
-.header h2 {
+.header h1, .header h2 {
+    margin: 0;
     padding-left: 10px;
 }
 

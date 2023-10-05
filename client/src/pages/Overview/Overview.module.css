@@ -4,9 +4,12 @@
     gap: 10px;
 }
 
-.overview h2 {
-    display: flex;
-    margin: 0;
+.overview strong {
+    text-shadow: 0 0 3px rgb(200, 200, 200);
+}
+
+.content {
+    font-size: 20px;
 }
 
 .boxartContainer {
