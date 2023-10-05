@@ -16,6 +16,11 @@
     text-decoration: none;
 }
 
+.pageItem h2:hover, .pageItem li:hover {
+    text-decoration: underline;
+    color: rgb(var(--color-text-hover));
+}
+
 .headerList h2 {
     margin: 0;
     padding: 0;

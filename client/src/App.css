@@ -12,6 +12,7 @@
     --color-nav-hover: 77, 42, 86;
     --color-odd: 0, 0, 0, 0.18;
     --color-text: 249, 249, 249;
+    --color-text-hover: 220, 220, 220;
     --container-border-radius: 15px;
     --navbar-height: 75px;
 }

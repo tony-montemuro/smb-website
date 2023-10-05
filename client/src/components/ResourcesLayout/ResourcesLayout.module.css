@@ -2,15 +2,18 @@
     --resources-layout-padding: 20px;
     display: flex;
     padding: var(--resources-layout-padding);
+    gap: 20px;
 }
 
 .sidebar {
+    background-color: rgb(var(--color-container));
+    border-radius: var(--container-border-radius);
+    padding: 10px;
     top: calc(var(--navbar-height) + var(--resources-layout-padding));
     height: 100%;
     z-index: 1;
     position: -webkit-sticky;
     position: sticky;
-    padding-right: 20px;
 }
 
 .sidebar ul {
