@@ -1,0 +1,24 @@
+.overview {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.overview h2 {
+    display: flex;
+    margin: 0;
+}
+
+.boxartContainer {
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.boxart {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+}
