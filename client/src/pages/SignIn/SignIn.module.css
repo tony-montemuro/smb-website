@@ -1,0 +1,47 @@
+.signIn {
+    display: flex;
+    height: calc(100vh - var(--navbar-height));
+    align-items: center;
+    overflow: hidden;
+}
+
+.left {
+    padding: 20px;
+    flex: 1;
+}
+
+.right {
+    height: calc(100vh - var(--navbar-height));
+    width: 1300px;
+    filter: sepia(100%) saturate(300%) brightness(62%) hue-rotate(220deg);
+}
+
+.right img {
+    border-radius: var(--container-border-radius);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== MEDIA QUERY FOR NON-1080P DEVICES ===== */
+
+@media (max-width: 1800px) {
+    .left {
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto;
+        max-width: 800px;
+    }
+
+    .right {
+        display: none;
+    }
+}
+
+/* ===== MEDIA QUERY FOR NON-DESKTOP DEVICES ===== */
+
+@media (max-width: 1200px) {
+    .left {
+        max-width: 350px;
+    }
+}

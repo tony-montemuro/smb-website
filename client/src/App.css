@@ -14,12 +14,13 @@
     --color-text: 249, 249, 249;
     --color-text-hover: 220, 220, 220;
     --container-border-radius: 15px;
+    --font: 'Gabarito', cursive;
     --navbar-height: 75px;
 }
 
 body {
     margin: 0;
-    font-family: 'Gabarito', cursive;
+    font-family: var(--font);
     background-color: rgb(var(--color-background));
     color: rgb(var(--color-text));
 }
@@ -36,7 +37,7 @@ a:hover {
 
 button {
     cursor: pointer;
-    font-family: 'Gabarito', cursive;
+    font-family: var(--font);
     border: none;
     padding: 5px 10px;
     border-radius: 4px;
