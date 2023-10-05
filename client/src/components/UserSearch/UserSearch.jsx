@@ -71,6 +71,7 @@ function UserSearch({ usersPerPage, imageReducer = null, userRowOptions }) {
         pageNum={ pageNum }
         setPageNum={ setPageNum }
         itemName={ "Users" } 
+        useDropdown={ false }
       />
 
     </>

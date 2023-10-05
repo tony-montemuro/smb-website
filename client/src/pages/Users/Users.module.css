@@ -1,3 +1,9 @@
 .users {
     padding: 20px;
 }
+
+.body {
+    background-color: rgb(var(--color-container));
+    border-radius: var(--container-border-radius);
+    padding: 15px;
+}
