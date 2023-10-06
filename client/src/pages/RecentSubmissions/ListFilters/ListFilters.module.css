@@ -11,12 +11,6 @@
     padding: 8px 0;
 }
 
-.section hr {
-    height: 2px;
-    background-color: rgba(var(--color-container-selected), 0.8);
-    border: none;
-}
-
 .btns {
     display: flex;
     gap: 5px;

@@ -54,8 +54,10 @@ button[disabled] {
     background-color: rgb(var(--color-button));
 }
 
-select {
-    outline: none;
+hr {
+    height: 2px;
+    background-color: rgba(var(--color-container-selected), 0.8);
+    border: none;
 }
 
 .center {

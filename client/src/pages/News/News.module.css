@@ -10,8 +10,5 @@
 }
 
 .post hr {
-    height: 2px;
     margin: 20px 0;
-    background-color: rgba(var(--color-container-selected));
-    border: none;
 }
