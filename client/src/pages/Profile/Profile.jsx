@@ -4,10 +4,11 @@ import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Profile.module.css";
-import AvatarInfoForm from "./AvatarInfoForm/AvatarInfoForm.jsx";
-import EmailInfoForm from "./EmailInfoForm/EmailInfoForm.jsx";
+import AvatarInfoForm from "./SimpleForms/AvatarInfoForm.jsx";
+import EmailInfoForm from "./SimpleForms/EmailInfoForm.jsx";
 import Loading from "../../components/Loading/Loading.jsx";
 import ProfileLogic from "./Profile.js";
+import SignoutForm from "./SimpleForms/SignoutForm.jsx";
 import UserInfoForm from "./UserInfoForm/UserInfoForm.jsx";
 
 function Profile({ imageReducer }) {
@@ -69,6 +70,7 @@ function Profile({ imageReducer }) {
         <div className={ styles.right }>
           <AvatarInfoForm imageReducer={ imageReducer } />
           <EmailInfoForm />
+          <SignoutForm />
         </div>
           
       </div>

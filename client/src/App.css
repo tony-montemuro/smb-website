@@ -67,6 +67,11 @@ hr {
     justify-content: center;
 }
 
+.inline-icon {
+    display: inline;
+    vertical-align: middle;
+}
+
 .even {
     background-color: rgba(var(--color-even));
 }

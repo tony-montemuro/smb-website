@@ -1,9 +1,13 @@
-#form {
+.form {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-#form button {
+.form button {
     width: fit-content;
+}
+
+#error {
+    color: rgb(var(--color-error));
 }

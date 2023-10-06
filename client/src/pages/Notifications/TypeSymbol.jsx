@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import FiberNewOutlinedIcon from '@mui/icons-material/FiberNewOutlined';
-import FrontendHelper from '../../helper/FrontendHelper';
-import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import FiberNewOutlinedIcon from "@mui/icons-material/FiberNewOutlined";
+import FrontendHelper from "../../helper/FrontendHelper";
+import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 
 function TypeSymbol({ type }) {

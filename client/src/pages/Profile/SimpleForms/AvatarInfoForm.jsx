@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useContext, useRef } from "react";
 import { UserContext } from "../../../utils/Contexts";
-import styles from "./AvatarInfoForm.module.css";
+import styles from "./SimpleForms.module.css";
 import Avatar from "../../../components/Avatar/Avatar.jsx";
 import AvatarInfoFormLogic from "./AvatarInfoForm.js";
 import Container from "../../../components/Container/Container.jsx";
@@ -24,10 +24,10 @@ function AvatarInfoForm({ imageReducer }) {
   /* ===== AVATAR INFO FORM COMPONENT ===== */
   return (
     <Container title="Upload Avatar" isLargeHeader={ false }>
-      <form id={ styles.form } onSubmit={ (e) => submitAvatar(e, avatarRef, imageReducer) }>
+      <form className={ styles.form } onSubmit={ (e) => submitAvatar(e, avatarRef, imageReducer) }>
         <span><b>Note:</b> Must be JPEG or PNG, and cannot exceed 5 MB. If your avatar does not update immediately, give it some time.</span>
         <Avatar profileId={ user.profile ? user.profile.id : null } size={ IMG_LENGTH } imageReducer={ imageReducer } />
-        <div id={ styles.input }>
+        <div>
           <label htmlFor="avatar-update"></label>
           <input
             type="file"
@@ -37,7 +37,7 @@ function AvatarInfoForm({ imageReducer }) {
           />
         </div>
         { form.error && <b id={ styles.error }>Error: { form.error }</b> }
-        <button id={ styles.button } type="submit" disabled={ form.uploading }>Save</button>
+        <button type="submit" disabled={ form.uploading }>Save</button>
       </form>
     </Container>
   );
