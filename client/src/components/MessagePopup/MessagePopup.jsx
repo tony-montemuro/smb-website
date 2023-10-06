@@ -6,7 +6,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 function MessagePopup({ message, onClose }) {
   /* ===== VARIABLES ===== */
   const typeStyle = {
-    backgroundColor: message.type === "success" ? "rgba(76, 175, 80, 0.85)" : "rgba(244, 67, 54, 0.85)",
+    backgroundColor: message.type === "success" ? "rgba(76, 175, 80, 0.85)" : "rgb(var(--color-error), 0.85)",
   };
 
   /* ===== FUNCTIONS ===== */

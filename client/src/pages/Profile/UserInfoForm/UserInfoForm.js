@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, UserContext } from "../../../utils/Contexts";
 import { useContext, useReducer } from "react";
-import ProfileUtils from "./ProfileUtils.js";
-import ProfileUpdate from "../../database/update/ProfileUpdate";
+import ProfileUtils from "../ProfileUtils.js";
+import ProfileUpdate from "../../../database/update/ProfileUpdate";
 
 const UserInfoForm = () => {
     /* ===== CONTEXTS ===== */
@@ -84,6 +84,19 @@ const UserInfoForm = () => {
         dispatchForm({ field: "user", value: { [id]: value } });
     };
 
+    // FUNCTION 3: handleBirthdayChange - handle a change to the birthday field in the user info form
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: an event object that is generated when the user makes a change to the birthday field of the user form fields
+    // POSTCONDITIONS (1 possible outcome):
+    // the birthday field is updated using the date the user selected by the date picker
+    const handleBirthdayChange = e => {
+        const { $d: date } = e;
+        const year = date.getFullYear();
+        const month = String(date.getMonth()+1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        dispatchForm({ field: "user", value: { birthday: `${ year }-${ month }-${ day }` } });
+    };
+
     // FUNCTION 3: uploadUserInfo - function that validates, processes, & uploads the form containing the user info (upsert)
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object that is generated when the user submits the form
@@ -158,6 +171,7 @@ const UserInfoForm = () => {
         form,
         initForm,
         handleChange,
+        handleBirthdayChange,
         uploadUserInfo
     };
 };

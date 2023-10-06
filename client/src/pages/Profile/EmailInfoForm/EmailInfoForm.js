@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { MessageContext } from "../../../utils/Contexts";
 import { useContext, useState } from "react";
-import EmailLogin from "../../database/authentication/EmailLogin";
-import ValidationHelper from "../../helper/ValidationHelper";
+import EmailLogin from "../../../database/authentication/EmailLogin";
+import ValidationHelper from "../../../helper/ValidationHelper";
 
 const EmailInfoForm = () => {
     /* ===== VARIABLES ===== */

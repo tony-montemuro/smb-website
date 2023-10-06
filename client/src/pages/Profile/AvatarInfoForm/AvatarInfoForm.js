@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, UserContext } from "../../../utils/Contexts";
 import { useContext, useReducer } from "react";
-import Download from "../../database/storage/Download";
-import ProfileUtils from "./ProfileUtils";
-import Upload from "../../database/storage/Upload";
+import Download from "../../../database/storage/Download";
+import ProfileUtils from "../ProfileUtils";
+import Upload from "../../../database/storage/Upload";
 
 const AvatarInfoForm = () => {
     /* ===== VARIABLES ===== */

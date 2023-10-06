@@ -1,0 +1,33 @@
+.form {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form h3 {
+    margin-top: 5px;
+    margin-bottom: 2px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.form hr {
+    margin: 10px 0;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 3px 0;
+}
+
+.input input, .input textarea, .input select, .input button {
+    margin: 0;
+    width: 400px;
+}
+
+.input label {
+    display: block;
+}
