@@ -1,3 +1,5 @@
+/* ===== GENERAL STYLING ===== */
+
 .profile {
     padding: 20px;
 }
@@ -13,6 +15,8 @@
     flex-direction: column;
     gap: 10px;
 }
+
+/* ===== MEDIA QUERIES FOR CELL PHONES ===== */
 
 @media (max-width: 767px) {
     .body {

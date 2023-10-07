@@ -66,20 +66,13 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
     };
 
     // FUNCTION 3: validateAvatar - determine if user has uploaded a valid avatar
-    // PRECONDITIONS (2 parameters):
+    // PRECONDITIONS (1 parameter):
     // 1.) avatarRef: a ref to the image input for avatar form
-    // 2.) profile: a profile object that is either defined or undefined. if undefined, this indicates that the user has not yet
-    // created their profile
     // POSTCONDTIONS (1 parameter):
     // 1.) error: error: a string that gives information as to why their image is problematic, if there is any problems.
     // if this string returns undefined, it means no errors were detected
-    const validateAvatar = async (avatarRef, profile) => {
-        // first, check if the user has created a profile. if they have not, return an error message
-        if (!profile) {
-            return "Please edit your profile information before choosing an avatar.";
-        }
-
-        // next, check if the user actually chose a file. cannot upload a non-existant image as an avatar
+    const validateAvatar = async avatarRef => {
+        // first, check if the user actually chose a file. cannot upload a non-existant image as an avatar
         if (!avatarRef.current.files || avatarRef.current.files.length === 0) {
             return "You must select an image to upload.";
         }
@@ -110,7 +103,7 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
     // if the file is a jpg or jpeg, and the conversion is successful, an new File object is returned, storing the image converted to
     // a png
     // if the file is a jpg or jpeg, and the conversion is a failure, the promise resolves to an error, which is handled by the caller function
-    const convertToPNG = async (file) => {
+    const convertToPNG = async file => {
         if (file.type === "image/jpeg" || file.type === "image/jpg") {
             return new Promise((resolve, reject) => {
                 // create our image file
@@ -170,7 +163,7 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
 
         try {
             // validate the user uploaded avatar
-            const error = await validateAvatar(avatarRef, user.profile);
+            const error = await validateAvatar(avatarRef);
 
             // if there is an error, return early
             dispatchForm({ field: "error", value: error });
