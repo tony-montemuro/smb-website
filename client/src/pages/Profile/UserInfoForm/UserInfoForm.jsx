@@ -100,7 +100,6 @@ function UserInfoForm({ countries }) {
           label="Birthday"
           format="YYYY-MM-DD"
           minDate={ dayjs(BIRTHDAY_MIN_DATE) }
-          monthsPerRow={ 4 }
           value={ form.user.birthday ? dayjs(form.user.birthday) : form.user.birthday }
           onChange={ handleBirthdayChange }
           slotProps={{
