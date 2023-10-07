@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import "./Profile.css";
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
