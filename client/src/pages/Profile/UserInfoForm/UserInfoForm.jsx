@@ -103,12 +103,10 @@ function UserInfoForm({ countries }) {
           monthsPerRow={ 4 }
           value={ form.user.birthday ? dayjs(form.user.birthday) : form.user.birthday }
           onChange={ handleBirthdayChange }
-          slotProps={{ 
-            error: false,
+          slotProps={{
             field: { clearable: true },
             textField: { variant: "filled" }
           }}
-          views={['year', 'month', 'day']}
         />
 
         <hr />
