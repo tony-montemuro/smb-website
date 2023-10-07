@@ -72,6 +72,10 @@ hr {
     vertical-align: middle;
 }
 
+input[type=file], input[type=file]::-webkit-file-upload-button {
+    cursor: pointer; 
+}
+
 .even {
     background-color: rgba(var(--color-even));
 }

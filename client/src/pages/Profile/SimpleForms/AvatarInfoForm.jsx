@@ -26,7 +26,11 @@ function AvatarInfoForm({ imageReducer }) {
   return (
     <Container title="Upload Avatar" isLargeHeader={ false }>
       <form className={ styles.form } onSubmit={ (e) => submitAvatar(e, avatarRef, imageReducer) }>
-        <span><b>Note:</b> Must be JPEG or PNG, and cannot exceed the dimensions { MAX_IMG_LENGTH }x{ MAX_IMG_LENGTH }. If your avatar does not update immediately, give it some time.</span>
+        <span>
+          <strong>Note: </strong>
+          Must be JPEG or PNG, and cannot exceed the dimensions <strong>{ MAX_IMG_LENGTH }x{ MAX_IMG_LENGTH }</strong>.
+          If your avatar does not update immediately, give it some time.
+        </span>
         <Avatar profileId={ user.profile ? user.profile.id : null } size={ IMG_LENGTH } imageReducer={ imageReducer } />
         <div>
           <label htmlFor="avatar-update"></label>
