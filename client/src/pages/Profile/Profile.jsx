@@ -55,7 +55,7 @@ function Profile({ imageReducer }) {
   }, [user]);
 
   /* ===== PROFILE COMPONENT ===== */
-  return user.id && countries ?
+  return user.id ?
     <div className={ styles.profile }>
       <h1>Profile Settings</h1>
       <div className={ styles.body }> 
@@ -67,7 +67,7 @@ function Profile({ imageReducer }) {
 
         { /* Profile right - render the avatar info form, and email info form */ }
         <div className={ styles.right }>
-          <AvatarInfoForm imageReducer={ imageReducer } />
+          { user.profile && <AvatarInfoForm imageReducer={ imageReducer } /> }
           <EmailInfoForm />
           <SignoutForm />
         </div>
