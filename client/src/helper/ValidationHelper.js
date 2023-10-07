@@ -47,28 +47,30 @@ const ValidationHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 3: validateProof - given a proof string, validate the proof
+    // FUNCTION 3: validateVideoUrl - given a video url, validate that it's either a youtube, twitch, or twitter video
     // PRECONDITIONS (1 parameter):
-    // 1.) proof: a string value representing the proof of the submission
-    // POSTCONDITIONS (1 return, 2 possible outcomes):
-    // if the proof is determined to be invalid, return a string that contains the error message
+    // 1.) url: a string value representing a video url
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the video is determined to be non-valid, return a string that contains the error message
     // if the proof is determined to be valid, return undefined
-    const validateProof = proof => {
-        // check if the proof field is non-null
-        if (!proof) {
-            return "Proof is required.";
+    const validateVideoUrl = url => {
+        if (!twitchPattern.test(url) && !youtubePattern.test(url) && !twitterPatttern.test(url)) {
+            return "Proof must be a valid YouTube, Twitch, or X (Twitter) video URL.";
         }
-
-        // check if proof is a valid youtube, twitch, or twitter url
-        if (!twitchPattern.test(proof) && !youtubePattern.test(proof) && !twitterPatttern.test(proof)) {
-            return "Proof must be a valid YouTube, Twitch, or X (Twitter) URL.";
-        }
-
-        // if we made it this far, the comment is valid! return undefined, since there is no error
         return undefined;
     };
 
-    // FUNCTION 4: validateComment - given a comment string, validate the comment
+    // FUNCTION 4: validateProof - given a proof string, validate the proof
+    // PRECONDITIONS (1 parameter):
+    // 1.) proof: a string value representing the proof of the submission
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the proof is determined to be invalid, return a string that contains the error message
+    // if the proof is determined to be valid, return undefined
+    const validateProof = proof => {
+        return proof ? validateVideoUrl(proof) : "Proof is required.";
+    };
+
+    // FUNCTION 5: validateComment - given a comment string, validate the comment
     // PRECONDITIONS (1 parameter):
     // 1.) comment: a string value representing the comment of the submission
     // POSTCONDITIONS (1 return, 2 possible outcomes):
@@ -84,7 +86,7 @@ const ValidationHelper = () => {
         return undefined;
     };
 
-    return { validateEmail, validateMessage, validateProof, validateComment };
+    return { validateEmail, validateMessage, validateVideoUrl, validateProof, validateComment };
 };
 
 /* ===== EXPORTS ===== */
