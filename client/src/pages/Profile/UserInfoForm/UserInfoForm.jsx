@@ -5,6 +5,7 @@ import { UserContext } from "../../../utils/Contexts.js";
 import dayjs from "dayjs";
 import styles from "./UserInfoForm.module.css";
 import Container from "../../../components/Container/Container.jsx";
+import SectionTitle from "./SectionTitle.jsx";
 import TextField from "@mui/material/TextField";
 import UserInfoFormLogic from "./UserInfoForm.js";
 
@@ -27,12 +28,19 @@ function UserInfoForm({ countries }) {
 
   // user state from user context
   const { user } = useContext(UserContext);
-  
 
   /* ===== STATES & FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { form, initForm, handleChange, handleBirthdayChange, uploadUserInfo } = UserInfoFormLogic();
+  const { 
+    form, 
+    initForm, 
+    handleChange, 
+    handleBirthdayChange,
+    hasChanged, 
+    handleReset,
+    uploadUserInfo 
+  } = UserInfoFormLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -48,10 +56,10 @@ function UserInfoForm({ countries }) {
       <form className={ styles.form } onSubmit={ uploadUserInfo }>
 
         { /* Profile section - the general information describing a profile */ }
-        <h3>Profile</h3>
+        <SectionTitle title="profile" hasChanged={ hasChanged } onClick={ handleReset } />
         <TextField 
           color={ form.error.username ? "error" : "primary" }
-          error={ form.error.username ? true : false }
+          error={ form.error.username }
           fullWidth
           id="username"
           inputProps={ { minLength: USERNAME_LENGTH_MIN, maxLength: USERNAME_LENGTH_MAX } }
@@ -111,7 +119,7 @@ function UserInfoForm({ countries }) {
         <hr />
 
         { /* Socials section - any social media platforms the user might want to link to */ }
-        <h3>Socials</h3>
+        <SectionTitle title="socials" hasChanged={ hasChanged } onClick={ handleReset } />
         <TextField 
           color={ form.error.youtube_handle ? "error" : "primary" }
           error={ form.error.youtube_handle ? true : false }
@@ -168,7 +176,7 @@ function UserInfoForm({ countries }) {
         <hr />
 
         { /* Featured video section - allows user to enter a featured video to include on their profile */ }
-        <h3>Featured Video</h3>
+        <SectionTitle title="featured_video" hasChanged={ hasChanged } onClick={ handleReset } />
         <TextField 
           color={ form.error.featured_video ? "error" : "primary" }
           error={ form.error.featured_video ? true : false }
@@ -198,7 +206,10 @@ function UserInfoForm({ countries }) {
         />
 
         { /* Form button: button user uses to complete the form. Will disable while application processes form. */ }
-        <button type="submit" disabled={ form.uploading }>{ user.profile ? "Update " : "Create " }Profile</button>
+        <div className={ styles.btns }>
+          <button type="button" disabled={ !hasChanged() || form.uploading } onClick={ handleReset }>Reset All</button>
+          <button type="submit" disabled={ form.uploading }>{ user.profile ? "Update " : "Create " }Profile</button>
+        </div>
 
       </form>
     </Container>
