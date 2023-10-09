@@ -1,11 +1,15 @@
 .gameHeader {
     display: flex;
     justify-content: space-between;
+    background-color: rgb(var(--color-container));
+    border-radius: var(--container-border-radius);
+    padding: 10px;
 }
 
 .left {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .left ul {
