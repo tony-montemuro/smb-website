@@ -8,15 +8,23 @@
 
 .left {
     display: flex;
-    gap: 10px;
     align-items: center;
+    gap: 10px;
 }
 
-.left ul {
-    list-style-type: none;
-    padding: 0;
+.left h1 {
+    margin: 10px 0;
 }
 
-.left ul li {
-    margin-bottom: 12px;
+.info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 5px;
+}
+
+.info span {
+   display: inline-flex;
+   align-items: center;
+   height: 30px;
 }

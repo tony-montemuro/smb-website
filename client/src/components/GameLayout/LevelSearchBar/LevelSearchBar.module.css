@@ -22,7 +22,7 @@
     width: 100%;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     box-sizing: border-box;
-    border-radius: 5px;;
+    border-radius: 5px;
     scrollbar-width: thin;
     scrollbar-color: rgba(var(--color-container-selected), 0.5) transparent;
 }

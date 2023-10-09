@@ -1,5 +1,4 @@
 /* ===== IMPORTS ====== */
-import "./GameLayout.css";
 import { GameContext, MessageContext } from "../../utils/Contexts";
 import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
