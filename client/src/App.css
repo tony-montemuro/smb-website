@@ -18,6 +18,7 @@
     --container-border-radius: 15px;
     --font: 'Gabarito', cursive;
     --navbar-height: 75px;
+    --searchbar-height: 30px;
 }
 
 body {

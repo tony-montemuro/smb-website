@@ -1,4 +1,5 @@
 .gameLayout {
+    --header-height: 207px;
     display: flex;
     flex-direction: column;
     gap: 10px;

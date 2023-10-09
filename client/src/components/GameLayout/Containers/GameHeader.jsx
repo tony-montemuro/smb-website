@@ -10,7 +10,7 @@ import Username from "../../Username/Username.jsx";
 
 function GameHeader({ imageReducer }) {
   /* ===== VARIABLES ===== */
-  const BOX_WIDTH = 150;
+  const BOX_WIDTH = 146;
 
   /* ===== CONTEXTS ===== */
   

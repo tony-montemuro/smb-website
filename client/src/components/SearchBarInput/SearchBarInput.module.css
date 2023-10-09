@@ -1,5 +1,5 @@
 .searchbarInput {
-    height: 30px;
+    height: var(--searchbar-height);
     display: flex;
     margin-left: 0;
     margin-right: 0;

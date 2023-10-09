@@ -41,12 +41,10 @@ function LevelSearchBar() {
 
       { /* Only render search results if the filtered state has any elements. */ }
       { filtered && hasElements() &&
-        <div className={ styles.resultsWrapper }>
-          <div className={ styles.results }>
-            { categories.map(category => {
-              return <LevelSearchBarCategory category={ category } filtered={ filtered } />;
-            })}
-          </div>
+        <div className={ styles.results }>
+          { categories.map(category => {
+            return <LevelSearchBarCategory category={ category } filtered={ filtered } />;
+          })}
         </div>
       }
 

@@ -1,25 +1,14 @@
 .searchbar {
     display: flex;
     flex-direction: column;
-    width: 400px;
+    width: 350px;
     box-sizing: border-box;
 }
 
-.resultsWrapper {
-    flex: 1;
-    position: relative;
-}
-
 .results {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
+    max-height: calc(var(--header-height) - var(--searchbar-height));
     overflow-y: auto;
     z-index: 10;
-    width: 100%;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     box-sizing: border-box;
     border-radius: 5px;
