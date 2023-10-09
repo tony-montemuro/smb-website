@@ -71,7 +71,7 @@ function GameLayout({ imageReducer }) {
         </Link>
 
         { /* Render information about the game: */ }
-        <GameHeaderInfo game={ game } />
+        <GameHeaderInfo />
 
         { /* Render the level search bar */ }
         <LevelSearchBar />
@@ -92,7 +92,7 @@ function GameLayout({ imageReducer }) {
             <h2>Rankings</h2>
           </div>
           { getGameCategories(game).map(category => {
-            return <GameLayoutInfo category={ category }  game={ game } key={ category } />
+            return <GameLayoutInfo category={ category } key={ category } />
           })}
           <div className="game-layout-info-container-header">
             <h2>Moderators</h2>

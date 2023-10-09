@@ -1,9 +1,16 @@
 /* ===== IMPORTS ====== */
+import { GameContext } from "../../utils/Contexts";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 
-function GameLayoutInfo({ category, game }) {
+function GameLayoutInfo({ category }) {
+  /* ===== CONTEXTS ===== */
+  
+  // game state from game context
+  const { game } = useContext(GameContext);
+
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
   const { getCategoryTypes, isPracticeMode } = GameHelper();

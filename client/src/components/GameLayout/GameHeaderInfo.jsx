@@ -1,9 +1,16 @@
 /* ===== IMPORTS ===== */
+import { GameContext } from "../../utils/Contexts";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import Username from "../Username/Username";
 import DownloadIcon from "@mui/icons-material/Download";
 
-function GameHeaderInfo({ game }) {
+function GameHeaderInfo() {
+  /* ===== CONTEXTS ===== */
+
+  // game state from game context
+  const { game } = useContext(GameContext);
+
   /* ===== GAME HEADER INFO COMPONENT ===== */
   return (
     <div className="game-layout-header-info">
