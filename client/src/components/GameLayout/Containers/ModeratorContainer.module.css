@@ -1,0 +1,4 @@
+.moderator:hover {
+    background-color: rgba(var(--color-container-hover));
+    cursor: pointer;
+}

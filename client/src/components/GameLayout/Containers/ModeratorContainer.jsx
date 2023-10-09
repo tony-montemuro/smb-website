@@ -1,9 +1,15 @@
 /* ===== IMPORTS ===== */
 import { GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
-import DetailedUsername from "../../DetailedUsername/DetailedUsername";
+import { useNavigate } from "react-router-dom";
+import styles from "./ModeratorContainer.module.css";
+import Items from "../../Items/Items.jsx";
+import UserRow from "../../UserRow/UserRow.jsx";
 
 function ModeratorContainer({ imageReducer }) {
+  /* ===== VARIABLES ===== */
+  const navigate = useNavigate();
+
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -11,15 +17,23 @@ function ModeratorContainer({ imageReducer }) {
 
   /* ===== MODERATOR CONTAINER COMPONENT ===== */
   return (
-    <div className="game-layout-body-info">
-      { game.profile.map(profile => {
-        return (
-          <div className="game-layout-body-info-moderator-wrapper" key={ profile.id }>
-            <DetailedUsername profile={ profile } imageReducer={ imageReducer } key={ profile.id } />
-          </div>
-        );
-      })}
-    </div>
+    <Items items={ game.profile } emptyMessage="This game has no moderators.">
+      <div className={ styles.moderators }>
+        { game.profile.map((profile, index) => {
+          return (
+            <UserRow 
+              user={ profile } 
+              imageReducer={ imageReducer } 
+              isDetailed={ true } 
+              disableLink={ true } 
+              onClick={ () => navigate(`/user/${ profile.id }`) }
+              index={ index }
+              key={ profile.id }
+            />
+          );
+        })}
+      </div>
+    </Items>
   );
 
 };

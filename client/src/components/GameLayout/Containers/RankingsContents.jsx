@@ -6,7 +6,7 @@ import styles from "./RankingsContainer.module.css";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import GameHelper from "../../../helper/GameHelper";
 
-function GameLayoutInfo({ category }) {
+function RankingsContents({ category }) {
   /* ===== CONTEXTS ===== */
   
   // game state from game context
@@ -29,14 +29,14 @@ function GameLayoutInfo({ category }) {
   return (
     <div className={ styles.rankingsContainer }>
       <div className={ styles.rows }>
-        
+
         { /* Render the name of the category */ }
         <h2 className={ styles.row }>{ categoryB2F(category) }</h2>
 
         { /* For each ranking in the category, render a row containing the name of the ranking, and buttons to each page */ }
         { rankings.map(ranking => {
           return (
-            <div className={ styles.row } key={ rankings.name }>
+            <div className={ styles.row } key={ ranking.name }>
               <span>{ ranking.name }</span>
               <div className={ styles.btns }>
                 { types.map(type => {
@@ -64,4 +64,4 @@ function GameLayoutInfo({ category }) {
 };
 
 /* ===== EXPORTS ===== */
-export default GameLayoutInfo;
+export default RankingsContents;
