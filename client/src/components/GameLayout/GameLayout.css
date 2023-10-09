@@ -17,61 +17,6 @@
     margin-bottom: 12px;
 }
 
-.game-layout-level-searchbar {
-    width: 400px;
-    margin-left: auto;
-    margin-bottom: auto;
-}
-
-.game-layout-level-searchbar-results {
-    position: absolute;
-    z-index: 10;
-    background-color: white;
-    border: none;
-    margin-top: 5px;
-    width: 400px;
-    max-height: 180px;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    overflow: hidden;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.game-layout-level-searchbar-category {
-    margin: 10px;
-}
-
-.game-layout-level-searchbar-result {
-    padding-left: 5px;
-    width: 100%;
-    height: 30px;
-    display: inline-flex;
-    align-items: center;
-}
-
-.game-layout-level-searchbar-result-name {
-    display: flex;
-    height: 100%;
-    width: 70%;
-    text-align: left;
-    line-height: 30px;
-}
-
-.game-layout-level-searchbar-result button {
-    margin: 5px;
-}
-
-.game-layout-level-searchbar-result-empty {
-    width: 15%;
-}
-
-.game-layout-level-searchbar-results::-webkit-scrollbar {
-    display: none;
-}
-
 .game-layout-body {
     display: flex;
 }

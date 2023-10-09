@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { GameContext } from "../../../utils/Contexts.js";
 import { useContext, useEffect } from "react";
+import styles from "./LevelSearchBar.module.css";
 import GameHelper from "../../../helper/GameHelper.js";
 import SearchBarInput from "../../SearchBarInput/SearchBarInput.jsx";
 import LevelSearchBarCategory from "./LevelSearchBarCategory";
@@ -21,7 +22,7 @@ function LevelSearchBar() {
   /* ===== FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { filtered, searchInput, setSearchInput, handleFilter, hasElements, onResultClick } = LevelSearchBarLogic();
+  const { filtered, searchInput, setSearchInput, handleFilter, hasElements } = LevelSearchBarLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -33,22 +34,22 @@ function LevelSearchBar() {
 
   /* ===== LEVEL SEARCH BAR COMPONENT ===== */
   return (
-    <div className="game-layout-level-searchbar">
+    <div className={ styles.searchbar }>
 
       { /* Render the search bar input */ }
       <SearchBarInput itemType={ "level" } input={ searchInput } setInput={ setSearchInput } />
 
       { /* Only render search results if the filtered state has any elements. */ }
       { filtered && hasElements() &&
-      
-        // The results of the search, which are stored in the filtered array. This state will be updated each time
-        // the user makes a keystroke. Note: only the first 5 results from each category will be rendered.
-        <div className="game-layout-level-searchbar-results">
-          { categories.map(category => {
-            return <LevelSearchBarCategory category={ category } filtered={ filtered } onResultClick={ onResultClick } />;
-          })}
-        </div> 
+        <div className={ styles.resultsWrapper }>
+          <div className={ styles.results }>
+            { categories.map(category => {
+              return <LevelSearchBarCategory category={ category } filtered={ filtered } />;
+            })}
+          </div>
+        </div>
       }
+
     </div>
   );
 };

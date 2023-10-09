@@ -1,7 +1,6 @@
 /* ===== IMPORTS ===== */
 import { GameContext } from "../../../utils/Contexts";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import GameHelper from "../../../helper/GameHelper";
 
@@ -17,7 +16,6 @@ const LevelSearchBar = () => {
 
     /* ===== VARIABLES ===== */
     const categories = getGameCategories(game);
-    const navigate = useNavigate();
 
     /* ===== STATES ===== */
     const [filtered, setFiltered] = useState(undefined);
@@ -55,11 +53,10 @@ const LevelSearchBar = () => {
     };
 
     // FUNCTION 2: hasElements - function that determines if the filtered object has any elements in it
-    // PRECONDITIONS (1 condition):
-    // this function should be run each time the LevelSearchBar component is rerendered, to determine if search results should render
+    // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
-    // if one or more elements exists in the object, TRUE is returned
-    // otherwise, FALSE is returned
+    // if one or more elements exists in the object, `true` is returned
+    // otherwise, `false` is returned
     const hasElements = () => {
         for (const category in filtered) {
             if (filtered[category].length > 0) {
@@ -69,20 +66,7 @@ const LevelSearchBar = () => {
         return false;
     };
 
-    // FUNCTION 3: onResultClick - function that is called when the user clicks a search result
-    // PRECONDITIONS (4 parameters):
-    // 1.) abb: a string representing the unique identifier for a game
-    // 2.) category: a string representing a valid category
-    // 3.) type: a string, either "score" or "time"
-    // 4.) levelName: a string representing the name of a level belonging to abb's game
-    // POSTCONDITIONS (1 possible outcome):
-    // the user is navigated to the levelboard given the parameters, and the search input hook is set to an empty string
-    const onResultClick = (abb, category, type, levelName) => {
-        navigate(`/games/${ abb }/${ category }/${ type }/${ levelName }`);
-        setSearchInput("");
-    };
-
-    return { filtered, searchInput, setSearchInput, handleFilter, hasElements, onResultClick };
+    return { filtered, searchInput, setSearchInput, handleFilter, hasElements };
 };
 
 /* ===== EXPORTS ===== */
