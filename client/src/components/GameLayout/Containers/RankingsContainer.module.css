@@ -1,0 +1,21 @@
+.rankingsContainer h2 {
+    margin: 0;
+}
+
+.rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 5px 0;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btns {
+    display: flex;
+    gap: 5px;
+}

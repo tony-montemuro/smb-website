@@ -5,12 +5,13 @@ import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./GameLayout.module.css";
+import Container from "../Container/Container.jsx";
 import GameHeader from "./Containers/GameHeader.jsx";
 import GameHelper from "../../helper/GameHelper";
-import GameLayoutInfo from "./Containers/GameLayoutInfo.jsx";
 import GameLayoutLogic from "./GameLayout.js";
 import Loading from "../../components/Loading/Loading.jsx";
 import ModeratorContainer from "./Containers/ModeratorContainer";
+import RankingsContent from "./Containers/RankingsContents.jsx";
 
 function GameLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -62,29 +63,24 @@ function GameLayout({ imageReducer }) {
     <div className={ styles.gameLayout }>
       { game ?
         <GameContext.Provider value={ { game } }>
-
           <GameHeader imageReducer={ imageReducer } />
-    
-          {/* Game Layout Body - Render specific page information, as well as sidebar */}
-          <div className="game-layout-body">
-    
-            {/* Game Layout Content - The actual page itself. */}
-            <div className="game-layout-body-content">
+          <div className={ styles.body }>
+
+            { /* Left - render the content of the game layout */ }
+            <div className={ styles.bodyLeft }>
               <Outlet />
             </div>
-    
-            { /* Game Layout Info - a set of links used to navigate various game pages. */ }
-            <div className="game-layout-info-container">
-              <div className="game-layout-info-container-header">
-                <h2>Rankings</h2>
-              </div>
-              { getGameCategories(game).map(category => {
-                return <GameLayoutInfo category={ category } key={ category } />
-              })}
-              <div className="game-layout-info-container-header">
-                <h2>Moderators</h2>
+
+            { /* Right - render the sidebar, which includes things such as the rankings, game moderators, etc. */ }
+            <div className={ styles.bodyRight }>
+              <Container title="Rankings" isLargeHeader={ true }>
+                { getGameCategories(game).map(category => {
+                  return <RankingsContent category={ category } key={ category } />
+                })}
+              </Container>
+              <Container title="Moderators" isLargeHeader={ true }>
                 <ModeratorContainer imageReducer={ imageReducer } />
-              </div>
+              </Container>
             </div>
 
           </div>

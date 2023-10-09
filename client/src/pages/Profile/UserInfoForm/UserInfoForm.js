@@ -142,7 +142,6 @@ const UserInfoForm = () => {
             const day = String(date.getDate()).padStart(2, "0");
             birthday = `${ year }-${ month }-${ day }`;
         }
-        console.log(birthday);
         dispatchForm({ field: "user", value: { birthday } });
     };
 
