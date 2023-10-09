@@ -1,0 +1,8 @@
+.typeBtns {
+    display: flex;
+    gap: 5px;
+}
+
+.typeBtns button {
+    margin: 0;
+}
