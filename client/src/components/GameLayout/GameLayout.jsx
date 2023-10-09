@@ -1,24 +1,22 @@
 /* ===== IMPORTS ====== */
 import "./GameLayout.css";
 import { GameContext, MessageContext } from "../../utils/Contexts";
-import { Link } from "react-router-dom";
 import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BoxArt from "../BoxArt/BoxArt.jsx";
-import GameHeaderInfo from "./GameHeaderInfo";
+import styles from "./GameLayout.module.css";
+import GameHeader from "./Containers/GameHeader.jsx";
 import GameHelper from "../../helper/GameHelper";
-import GameLayoutInfo from "./GameLayoutInfo";
+import GameLayoutInfo from "./Containers/GameLayoutInfo.jsx";
 import GameLayoutLogic from "./GameLayout.js";
-import LevelSearchBar from "./LevelSearchBar.jsx";
-import ModeratorContainer from "./ModeratorContainer";
+import Loading from "../../components/Loading/Loading.jsx";
+import ModeratorContainer from "./Containers/ModeratorContainer";
 
 function GameLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const params = useParams();
   const { abb } = params;
   const navigate = useNavigate();
-  const BOX_WIDTH = 150;
 
   /* ===== CONTEXTS ====== */
 
@@ -60,51 +58,42 @@ function GameLayout({ imageReducer }) {
   }, []);
 
   /* ===== GAME LAYOUT COMPONENT ===== */
-  return game ?
-    <GameContext.Provider value={ { game } }>
-      {/* Game Layout Header - Render general game information at top of each game page */}
-      <div className="game-layout-header">
+  return (
+    <div className={ styles.gameLayout }>
+      { game ?
+        <GameContext.Provider value={ { game } }>
 
-        { /* Render the box art */ }
-        <Link to={ `/games/${ game.abb }` }>
-          <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
-        </Link>
+          <GameHeader imageReducer={ imageReducer } />
+    
+          {/* Game Layout Body - Render specific page information, as well as sidebar */}
+          <div className="game-layout-body">
+    
+            {/* Game Layout Content - The actual page itself. */}
+            <div className="game-layout-body-content">
+              <Outlet />
+            </div>
+    
+            { /* Game Layout Info - a set of links used to navigate various game pages. */ }
+            <div className="game-layout-info-container">
+              <div className="game-layout-info-container-header">
+                <h2>Rankings</h2>
+              </div>
+              { getGameCategories(game).map(category => {
+                return <GameLayoutInfo category={ category } key={ category } />
+              })}
+              <div className="game-layout-info-container-header">
+                <h2>Moderators</h2>
+                <ModeratorContainer imageReducer={ imageReducer } />
+              </div>
+            </div>
 
-        { /* Render information about the game: */ }
-        <GameHeaderInfo />
-
-        { /* Render the level search bar */ }
-        <LevelSearchBar />
-
-      </div>
-
-      {/* Game Layout Body - Render specific page information, as well as sidebar */}
-      <div className="game-layout-body">
-
-        {/* Game Layout Content - The actual page itself. */}
-        <div className="game-layout-body-content">
-          <Outlet />
-        </div>
-
-        { /* Game Layout Info - a set of links used to navigate various game pages. */ }
-        <div className="game-layout-info-container">
-          <div className="game-layout-info-container-header">
-            <h2>Rankings</h2>
           </div>
-          { getGameCategories(game).map(category => {
-            return <GameLayoutInfo category={ category } key={ category } />
-          })}
-          <div className="game-layout-info-container-header">
-            <h2>Moderators</h2>
-            <ModeratorContainer imageReducer={ imageReducer } />
-          </div>
-        </div>
-        
-      </div>
-    </GameContext.Provider>
-  :
-    // Loading component
-    <p>Loading...</p>
+        </GameContext.Provider>
+      :
+        <Loading />
+      }
+    </div>
+  );
 };
 
 /* ===== EXPORTS ===== */

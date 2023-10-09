@@ -1,0 +1,18 @@
+.gameHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left {
+    display: flex;
+    gap: 10px;
+}
+
+.left ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.left ul li {
+    margin-bottom: 12px;
+}

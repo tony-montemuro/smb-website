@@ -1,9 +1,9 @@
 /* ===== IMPORTS ====== */
-import { GameContext } from "../../utils/Contexts";
+import { GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import FrontendHelper from "../../helper/FrontendHelper";
-import GameHelper from "../../helper/GameHelper";
+import FrontendHelper from "../../../helper/FrontendHelper";
+import GameHelper from "../../../helper/GameHelper";
 
 function GameLayoutInfo({ category }) {
   /* ===== CONTEXTS ===== */

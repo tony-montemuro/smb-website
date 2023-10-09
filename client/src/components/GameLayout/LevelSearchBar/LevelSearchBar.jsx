@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
-import { GameContext } from "../../utils/Contexts.js";
+import { GameContext } from "../../../utils/Contexts.js";
 import { useContext, useEffect } from "react";
-import GameHelper from "../../helper/GameHelper.js";
-import SearchBarInput from "../SearchBarInput/SearchBarInput.jsx";
+import GameHelper from "../../../helper/GameHelper.js";
+import SearchBarInput from "../../SearchBarInput/SearchBarInput.jsx";
 import LevelSearchBarCategory from "./LevelSearchBarCategory";
 import LevelSearchBarLogic from "./LevelSearchBar.js";
 

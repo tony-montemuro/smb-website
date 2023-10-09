@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
-import { GameContext } from "../../utils/Contexts";
+import { GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
-import DetailedUsername from "../DetailedUsername/DetailedUsername";
+import DetailedUsername from "../../DetailedUsername/DetailedUsername";
 
 function ModeratorContainer({ imageReducer }) {
   /* ===== CONTEXTS ===== */

@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
-import { GameContext } from "../../utils/Contexts";
+import { GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
-import FrontendHelper from "../../helper/FrontendHelper.js";
-import LevelboardButton from "../LevelboardButton/LevelboardButton.jsx";
+import FrontendHelper from "../../../helper/FrontendHelper.js";
+import LevelboardButton from "../../LevelboardButton/LevelboardButton.jsx";
 
 function LevelSearchBarCategory({ category, filtered, onResultClick }) {
   /* ===== CONTEXTS ===== */
