@@ -53,7 +53,7 @@ function Overview({ imageReducer }) {
       { headers.map(header => {
         return (
           <div id={ header } key={ header }>
-            <Container title={ cleanLevelName(header) } isLargeHeader={ false }>
+            <Container title={ cleanLevelName(header) }>
               { getContent(header) }
             </Container>
           </div>
