@@ -1,6 +1,6 @@
-function TableContent({ items, emptyMessage, numRows, children }) {
+function TableContent({ items, emptyMessage, numCols, children }) {
   /* ===== TABLE CONTENT COMPONENT ===== */
-  return items.length > 0 ? children : <tr><td rowSpan={ numRows } style={ { textAlign: "center" } }>{ emptyMessage }</td></tr>;
+  return items.length > 0 ? children : <tr><td colSpan={ numCols }>{ emptyMessage }</td></tr>;
 };
 
 /* ===== EXPORTS ===== */
