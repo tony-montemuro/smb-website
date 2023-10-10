@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import style from "./RecentSubmissionsTable.module.css";
 import { useEffect, useState } from "react";
 import PageControls from "../PageControls/PageControls.jsx";
 import RecentSubmissionsRow from "./RecentSubmissionsRow.jsx";
@@ -22,41 +21,44 @@ function RecentSubmissionsTable({ renderGame = true, renderLevelContext = true, 
 
   /* ===== RECENT SUBMISSIONS TABLE COMPONENT ===== */
   return (
-    <div className={ style.recentSubmissionsTable }>
-      <table>
+    <>
+      <div className="table">
+        <table>
 
-        { /* Table header - render information about what is present in each column */ }
-        <thead>
-          <tr>
-            <th>Submitted</th>
-            <th>User</th>
-            { renderGame && <th>Game</th> }
-            { renderLevelContext && 
-              <>
-                <th>Category</th>
-                <th>Chart</th> 
-              </>
-            }
-            <th>Record</th>
-            <th>TAS</th>
-          </tr>
-        </thead>
+          { /* Table header - render information about what is present in each column */ }
+          <thead>
+            <tr>
+              <th>Submitted</th>
+              <th>User</th>
+              { renderGame && <th>Game</th> }
+              { renderLevelContext && 
+                <>
+                  <th>Category</th>
+                  <th>Chart</th> 
+                </>
+              }
+              <th>Record</th>
+              <th>TAS</th>
+            </tr>
+          </thead>
 
-        { /* Table body - for each submission, render a row in the table */ }
-        <tbody>
-          { submissions.data.map(submission => {
-            return (
-              <RecentSubmissionsRow 
-                submission={ submission } 
-                renderGame={ renderGame } 
-                renderLevelContext={ renderLevelContext } 
-                key={ submission.id } 
-              />
-            );
-          })}
-        </tbody>
+          { /* Table body - for each submission, render a row in the table */ }
+          <tbody>
+            { submissions.data.map(submission => {
+              return (
+                <RecentSubmissionsRow 
+                  submission={ submission } 
+                  renderGame={ renderGame } 
+                  renderLevelContext={ renderLevelContext } 
+                  key={ submission.id } 
+                />
+              );
+            })}
+          </tbody>
 
-      </table>
+        </table>
+
+      </div>
 
       {/* Finally, render the page controls at the bottom of the page */}
       <PageControls 
@@ -67,8 +69,7 @@ function RecentSubmissionsTable({ renderGame = true, renderLevelContext = true, 
         itemName={ "Submissions" } 
         useDropdown={ false }
       />
-
-    </div>
+    </>
   );
 };
 

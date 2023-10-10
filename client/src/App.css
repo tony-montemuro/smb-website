@@ -1,3 +1,5 @@
+/* ===== CSS VARIABLES ===== */
+
 :root {
     --color-background: 17, 22, 24;
     --color-button: 203, 195, 227;
@@ -6,13 +8,13 @@
     --color-container-hover: 255, 255, 255, 0.13;
     --color-container-selected: 75, 70, 80;
     --color-error: 244, 67, 54;
-    --color-even: 0, 0, 0, 0.07;
+    --color-even: 0, 0, 0, 0.18;
     --color-link: 226, 187, 236;
     --color-link-hover: 196, 153, 255;
     --color-header: 39, 16, 31;
     --color-nav: 58, 19, 68;
     --color-nav-hover: 77, 42, 86;
-    --color-odd: 0, 0, 0, 0.18;
+    --color-odd: 0, 0, 0, 0.07;
     --color-text: 249, 249, 249;
     --color-text-hover: 220, 220, 220;
     --container-border-radius: 15px;
@@ -20,6 +22,8 @@
     --navbar-height: 75px;
     --searchbar-height: 30px;
 }
+
+/* ===== HTML TAGS ===== */
 
 body {
     margin: 0;
@@ -63,19 +67,16 @@ hr {
     border: none;
 }
 
+input[type=file], input[type=file]::-webkit-file-upload-button {
+    cursor: pointer; 
+}
+
+/* ===== GLOBAL CLASSES ===== */
+
 .center {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.inline-icon {
-    display: inline;
-    vertical-align: middle;
-}
-
-input[type=file], input[type=file]::-webkit-file-upload-button {
-    cursor: pointer; 
 }
 
 .even {
@@ -84,4 +85,66 @@ input[type=file], input[type=file]::-webkit-file-upload-button {
 
 .odd {
     background-color: rgba(var(--color-odd));
+}
+
+.inline-icon {
+    display: inline;
+    vertical-align: middle;
+}
+
+.table {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table table {
+    width: 100%;
+    table-layout: auto;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table thead {
+    background-color: rgb(var(--color-container));
+}
+
+.table th {
+    text-align: left;
+    padding: 4px 8px;
+}
+
+.table tbody {
+    background-color: rgb(var(--color-container));
+}
+
+.table tr:first-child th:first-child {
+    border-top-left-radius: var(--container-border-radius);
+}
+
+.table tr:first-child th:last-child {
+    border-top-right-radius: var(--container-border-radius);
+}
+
+.table tr:last-child td:first-child {
+    border-bottom-left-radius: var(--container-border-radius);
+}
+
+.table tr:last-child td:last-child {
+    border-bottom-right-radius: var(--container-border-radius);
+}
+
+.table thead tr {
+    background-color: rgba(var(--color-even));
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: rgba(var(--color-even));
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: rgba(var(--color-odd));
+}
+
+.table td {
+    padding: 4px 8px;
 }

@@ -71,12 +71,12 @@ function MedalTable({ imageReducer }) {
   return (
     <Container title={ `${ capitalize(type) } Medal Table` } largeTitle>
       <h2 className={ styles.header }>{ categoryB2F(category) }</h2>
-      <div className={ styles.table }>
+      <div className="table">
         <table>
           
           { /* Table header - specifies the information displayed in each cell of the medal table */ }
           <thead>
-            <tr className="odd">
+            <tr>
               <th>Position</th>
               <th>Name</th>
               <th>Platinum</th>
@@ -95,7 +95,7 @@ function MedalTable({ imageReducer }) {
                 numCols={ TABLE_LENGTH }
               >
                 { medalTable.map((row, index) => {
-                  return <MedalTableRow row={ row } index={ index } imageReducer={ imageReducer } key={ row.profile.id } />;
+                  return <MedalTableRow row={ row } imageReducer={ imageReducer } key={ row.profile.id } />;
                 })}
               </TableContent>
             :
