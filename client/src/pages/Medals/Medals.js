@@ -32,15 +32,11 @@ const Medals = () => {
         // first, reset medal table state to undefined
         setMedalTable(undefined);
 
+        // then, attempt to query the database for the medals data
         try {
-            // query database for the medals array
             const medals = await getMedals(abb, category, type);
-
-            // update the medals state
             setMedalTable(medals);
-
         } catch (error) {
-            // if the submissions fail to be fetched, let's render an error specifying the issue
 			addMessage("Failed to fetch medal table data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
         }
     };

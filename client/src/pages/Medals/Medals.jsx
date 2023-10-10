@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
-import "./Medals.css";
 import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import styles from "./Medals.module.css";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 import MedalsLogic from "./Medals.js";
@@ -64,25 +64,15 @@ function Medals({ imageReducer }) {
   }, [location.pathname]);
       
   /* ===== MEDALS COMPONENT ===== */
-  return medalTable ?
-    // Medals Header - Displays the name of the game, as well as buttons to navigate to related pages.
+  return (
     <>
-      <div className="medals-header">
-
-        { /* Game Title */ }
-        <h1>{ categoryB2F(category) } - { capitalize(type) } Medal Table</h1>
-
+      <div className={ styles.header }>
+        <h1>{ capitalize(type) } Medal Table</h1>
+        <h2>{ categoryB2F(category) }</h2>
       </div>
-
-      { /*  Medals Body - Render both the score and time medal tables. */ }
-      <div className="medals-body">
-        <MedalTable table={ medalTable } imageReducer={ imageReducer } />
-      </div>
-
+      <MedalTable table={ medalTable } imageReducer={ imageReducer } />
     </>
-  :
-    // Loading component
-    <p>Loading...</p>
+  );
 };
 
 /* ===== EXPORTS ===== */
