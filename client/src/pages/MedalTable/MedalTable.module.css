@@ -3,52 +3,10 @@
     padding-bottom: 10px;
 }
 
-.table {
-    width: 100%;
-    overflow-x: auto;
-}
-
-.table table {
-    table-layout: auto;
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-}
-
-.table th {
-    text-align: left;
-    padding: 4px 8px;
-}
-
-.table tr:first-child th:first-child {
-    border-top-left-radius: var(--container-border-radius);
-}
-
-.table tr:first-child th:last-child {
-    border-top-right-radius: var(--container-border-radius);
-}
-
-.table tr:last-child td:first-child {
-    border-bottom-left-radius: var(--container-border-radius);
-}
-
-.table tr:last-child td:last-child {
-    border-bottom-right-radius: var(--container-border-radius);
-}
-
-.table td {
-    padding: 4px 8px;
-}
-
-.medals-empty {
-    font-style: italic;
-    text-align: center;
-}
-
 /* ===== MEDIA QUERIES FOR PHONES ===== */
 
 @media (max-width: 600px) {
-    .table img {
+    .medalTable img {
         display: none;
     };
 }

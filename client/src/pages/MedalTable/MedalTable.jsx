@@ -71,7 +71,7 @@ function MedalTable({ imageReducer }) {
   return (
     <Container title={ `${ capitalize(type) } Medal Table` } largeTitle>
       <h2 className={ styles.header }>{ categoryB2F(category) }</h2>
-      <div className="table">
+      <div className={ `table ${ styles.medalTable }` }>
         <table>
           
           { /* Table header - specifies the information displayed in each cell of the medal table */ }
