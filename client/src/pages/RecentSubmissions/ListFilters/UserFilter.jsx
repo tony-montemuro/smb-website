@@ -37,13 +37,14 @@ function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData 
         { users ?
           <>
             <Items items={ users } emptyMessage={ "You are not currently filtering by any users" }>
-              { users.map(user => {
+              { users.map((user, index) => {
                 return (
                   <UserRow
                     user={ user }
                     disableLink={ true }
                     onClick={ removeUser }
                     key={ user.id }
+                    index={ index }
                   />
                 );
               })}

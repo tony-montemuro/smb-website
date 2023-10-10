@@ -3,11 +3,17 @@ import styles from "./UserRow.module.css";
 import DetailedUsername from "../DetailedUsername/DetailedUsername";
 import DiscordLogo from "../DiscordLogo/DiscordLogo.jsx";
 import SocialLink from "../SocialLink/SocialLink.jsx";
+import StylesHelper from "../../helper/StylesHelper";
 import Username from "../Username/Username.jsx";
 
 function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = false, onClick, index = 0 }) {
   /* ===== VARIABLES ===== */
   const SOCIAL_SIZE = 40;
+
+  /* ===== FUNCTIONS ===== */
+
+  // helper functions
+  const { indexToParity } = StylesHelper();
 
   /* ===== USER ROW COMPONENT ===== */
 
@@ -15,7 +21,7 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
   if (!isDetailed) {
     return (
       <div
-        className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" } ${ index % 2 === 1 ? "odd" : "even" }` } 
+        className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" } ${ indexToParity(index) }` } 
         onClick={ () => onClick(user) }
       >
         <Username profile={ user } disableLink={ disableLink } />
@@ -27,7 +33,7 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
   else {
     return (
       <div 
-        className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" } ${ index % 2 === 1 ? "odd" : "even" }` } 
+        className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" } ${ indexToParity(index) }` } 
         onClick={ () => onClick(user) }
       >
         <DetailedUsername imageReducer={ imageReducer } profile={ user } disableLink={ true } />

@@ -2,10 +2,16 @@
 import styles from "./GameRow.module.css";
 import { Link } from "react-router-dom";
 import BoxArt from "../BoxArt/BoxArt.jsx";
+import StylesHelper from "../../helper/StylesHelper.js";
 
 function GameRow({ game, imageReducer, useCard = false, onClick = undefined, index = 0 }) {
   /* ===== VARIABLES ===== */
   const BOX_WIDTH = useCard ? 200 : 50;
+
+  /* ===== FUNCTIONS ===== */
+
+  // helper functions
+  const { indexToParity } = StylesHelper();
 
   /* ===== GAME ROW COMPONENT ===== */
   if (useCard) {
@@ -24,7 +30,7 @@ function GameRow({ game, imageReducer, useCard = false, onClick = undefined, ind
 
     // Otherwise, just render a normal row
     return (
-      <div className={ `${ styles.item } ${ index % 2 === 1 ? "odd" : "even" }` } onClick={ onClick ? () => onClick(game) : null }>
+      <div className={ `${ styles.item } ${ indexToParity(index) }` } onClick={ onClick ? () => onClick(game) : null }>
         <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
         <p>{ game.name } </p>
       </div>
