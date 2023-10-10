@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
 import styles from "./ButtonList.module.css";
 
-function ButtonList({ buttons, current, setCurrent, hasPadding = true }) {
-  /* ===== VARIABLES ===== */
-  const style = { padding: hasPadding ? "5px" : "0" };
+function ButtonList({ buttons, current, setCurrent, hasPadding = true, wrap = false }) {
+  /* ===== VARIABLES ===== */ 
+  const style = { padding: hasPadding ? "5px" : "0", flexWrap: wrap ? "wrap" : "nowrap" };
 
   /* ===== BUTTON LIST COMPONENT ===== */
   return (

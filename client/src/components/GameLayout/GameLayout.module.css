@@ -1,12 +1,15 @@
+/* ===== GENERAL STYLING ===== */
+
 .gameLayout {
     --header-height: 207px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
     padding: 20px;
 }
 
 .body {
+    flex-wrap: wrap;
     display: flex;
     gap: 20px;
 }
@@ -19,10 +22,22 @@
     width: 350px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
 }
 
 .rankings h2 {
     margin: 0;
     padding: 5px 0;
+}
+
+/* ===== MEDIA QUERIES FOR SMALLER DEVICES ===== */
+
+@media (max-width: 1067px) {
+    .bodyLeft {
+        width: 100%;
+    }
+
+    .bodyRight {
+        width: 100%;
+    }
 }

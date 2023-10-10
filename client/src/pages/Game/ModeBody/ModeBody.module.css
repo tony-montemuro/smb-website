@@ -1,0 +1,22 @@
+.name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 12px 8px;
+}
+
+.name:hover {
+    background-color: rgba(var(--color-container-hover));
+}
+
+.name h3 {
+    margin: 0;
+}
+
+.levels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 6px;
+}

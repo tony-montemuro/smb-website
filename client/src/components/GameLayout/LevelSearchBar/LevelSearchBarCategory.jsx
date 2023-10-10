@@ -3,6 +3,7 @@ import { GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import styles from "./LevelSearchBar.module.css";
 import FrontendHelper from "../../../helper/FrontendHelper.js";
+import StylesHelper from "../../../helper/StylesHelper.js";
 import TypeButtons from "../../TypeButtons/TypeButtons.jsx";
 
 function LevelSearchBarCategory({ category, filtered }) {
@@ -12,7 +13,10 @@ function LevelSearchBarCategory({ category, filtered }) {
   const { game } = useContext(GameContext);
 
   /* ===== FUNCTIONS ===== */
+
+  // helper funcitons
   const { categoryB2F, cleanLevelName } = FrontendHelper();
+  const { indexToParity } = StylesHelper();
 
   /* ===== LEVEL SEARCH BAR CATEGORY ===== */
   return filtered[category].length > 0 &&
@@ -25,7 +29,7 @@ function LevelSearchBarCategory({ category, filtered }) {
       { /* Then, render the first 5 levels within that category */ }
       { filtered[category].slice(0, 5).map((level, index) => {
         return (
-          <div className={ `${ styles.result } ${ index % 2 === 0 ? "even" : "odd" }` } key={ level.name }>
+          <div className={ `${ styles.result } ${ indexToParity(index) }` } key={ level.name }>
             <span>{ cleanLevelName(level.name) }</span>
             <TypeButtons abb={ game.abb } category={ category } level={ level } />
           </div>

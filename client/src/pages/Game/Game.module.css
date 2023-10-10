@@ -1,0 +1,47 @@
+.game {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.half {
+    flex: 1;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info ol {
+    padding-inline-start: 20px;
+}
+
+.rules {
+    min-width: 360px;
+}
+
+.charts {
+    flex: 1;
+}
+
+.chartsBody {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modes {
+    background-color: rgb(var(--color-nav));
+}
+
+@media (max-width: 1067px) {
+    .half {
+        width: 100%;
+    }
+
+    .recent {
+        display: none;
+    }
+}
