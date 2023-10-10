@@ -1,9 +1,6 @@
 .gameHeader {
     display: flex;
     justify-content: space-between;
-    background-color: rgb(var(--color-container));
-    border-radius: var(--container-border-radius);
-    padding: 10px;
 }
 
 .left {

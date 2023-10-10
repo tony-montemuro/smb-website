@@ -5,16 +5,15 @@
 
 .header {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     background-color: rgb(var(--color-header));
     border-top-left-radius: var(--container-border-radius);
     border-top-right-radius: var(--container-border-radius);
-    padding: 20px 0;
+    padding: 20px 10px;
 }
 
 .header h1, .header h2 {
     margin: 0;
-    padding-left: 10px;
 }
 
 .body {

@@ -3,6 +3,7 @@ import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./Medals.module.css";
+import Container from "../../components/Container/Container.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 import MedalsLogic from "./Medals.js";
@@ -65,13 +66,10 @@ function Medals({ imageReducer }) {
       
   /* ===== MEDALS COMPONENT ===== */
   return (
-    <>
-      <div className={ styles.header }>
-        <h1>{ capitalize(type) } Medal Table</h1>
-        <h2>{ categoryB2F(category) }</h2>
-      </div>
+    <Container title={ `${ capitalize(type) } Medal Table` } largeTitle>
+      <h2 className={ styles.header }>{ categoryB2F(category) }</h2>
       <MedalTable table={ medalTable } imageReducer={ imageReducer } />
-    </>
+    </Container>
   );
 };
 

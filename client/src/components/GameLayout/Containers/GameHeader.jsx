@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import styles from "./GameHeader.module.css";
 import BoxArt from "../../BoxArt/BoxArt.jsx";
+import Container from "../../Container/Container.jsx";
 import DownloadIcon from "@mui/icons-material/Download";
 import LevelSearchBar from "../LevelSearchBar/LevelSearchBar.jsx";
 import Username from "../../Username/Username.jsx";
@@ -19,35 +20,38 @@ function GameHeader({ imageReducer }) {
   
   /* ===== GAME HEADER COMPONENT ===== */
   return (
-    <header className={ styles.gameHeader }>
-      <div className={ styles.left }>
+    <Container>
+      <div className={ styles.gameHeader }>
+        <div className={ styles.left }>
 
-        { /* Render the box art */ }
-        <Link to={ `/games/${ game.abb }` }>
-          <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
-        </Link>
-
-        { /* Render the name of the game, and it's information */ }
-        <div className={ styles.info }>
+          { /* Render the box art */ }
           <Link to={ `/games/${ game.abb }` }>
-            <h1>{ game.name }</h1>
+            <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
           </Link>
-          { game.custom && <span>Custom Game by:&nbsp;&nbsp;<Username profile={ game.creator } /></span> }
-          <span>Release Date: { game.release_date }</span>
-          { game.custom &&
-            <span>Game Download:
-              <a href={ game.download } target="_blank" rel="noopener noreferrer">
-                <DownloadIcon className="inline-icon" />
-              </a>
-            </span>
-          }
+
+          { /* Render the name of the game, and it's information */ }
+          <div className={ styles.info }>
+            <Link to={ `/games/${ game.abb }` }>
+              <h1>{ game.name }</h1>
+            </Link>
+            { game.custom && <span>Custom Game by:&nbsp;&nbsp;<Username profile={ game.creator } /></span> }
+            <span>Release Date: { game.release_date }</span>
+            { game.custom &&
+              <span>Game Download:
+                <a href={ game.download } target="_blank" rel="noopener noreferrer">
+                  <DownloadIcon className="inline-icon" />
+                </a>
+              </span>
+            }
+          </div>
+
         </div>
 
+        { /* Render level search bar */ }
+        <LevelSearchBar />
+        
       </div>
-
-      { /* Render level search bar */ }
-      <LevelSearchBar />
-    </header>
+    </Container>
   );
 };
 

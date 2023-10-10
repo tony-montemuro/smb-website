@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import styles from "./Container.module.css";
 
-function Container({ title, subtitle, largeTitle, href, children }) {
+function Container({ title, largeTitle, href, children }) {
   /* ===== FUNCTIONS ===== */
 
   // FUNCTION 1: getTitle - simple function that will return JSX depending on the url parameter
@@ -20,7 +20,6 @@ function Container({ title, subtitle, largeTitle, href, children }) {
       { title && 
         <div className={ styles.header }>
           { largeTitle ? <h1>{ getTitle() }</h1> : <h2>{ getTitle() }</h2> }
-          { subtitle && <h2>{ subtitle }</h2> }
         </div>
       }
       <div className={ styles.body }>

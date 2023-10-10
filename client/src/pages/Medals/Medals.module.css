@@ -1,13 +1,6 @@
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-}
-
-.header h1, .header h2 {
     margin: 0;
-    padding: 10px 0;
-    line-height: 1;
+    padding-bottom: 10px;
 }
 
 .table {
