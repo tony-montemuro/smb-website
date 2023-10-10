@@ -1,0 +1,28 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}
+
+.header h2 {
+    margin: 0;
+}
+
+.filter {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.filter input[type=checkbox] {
+    margin: 0;
+}
+
+/* ===== MEDIA QUERIES FOR PHONES ===== */
+
+@media (max-width: 402px) {
+    .totalizer img {
+        display: none;
+    };
+}

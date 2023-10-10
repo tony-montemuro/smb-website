@@ -94,7 +94,7 @@ function MedalTable({ imageReducer }) {
                 emptyMessage={ "There have been no live submissions to this game's category!" } 
                 numCols={ TABLE_LENGTH }
               >
-                { medalTable.map((row, index) => {
+                { medalTable.map(row => {
                   return <MedalTableRow row={ row } imageReducer={ imageReducer } key={ row.profile.id } />;
                 })}
               </TableContent>

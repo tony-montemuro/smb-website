@@ -1,12 +1,15 @@
 /* ===== IMPORTS ===== */
-import "./Totalizer.css";
 import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import styles from "./Totalizer.module.css";
+import Container from "../../components/Container/Container.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
+import LoadingTable from "../../components/LoadingTable/LoadingTable.jsx";
+import TableContent from "../../components/TableContent/TableContent";
 import TotalizerLogic from "./Totalizer.js";
-import TotalizerTable from "./TotalizerTable";
+import TotalizerRow from "./TotalizerRow.jsx";
 
 function Totalizer({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -22,6 +25,7 @@ function Totalizer({ imageReducer }) {
   const { getGameCategories, getCategoryTypes, isPracticeMode } = GameHelper();
 
   /* ===== VARIABLES ===== */
+  const TABLE_LENGTH = 3;
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
@@ -31,6 +35,7 @@ function Totalizer({ imageReducer }) {
   const types = getCategoryTypes(game, category);
 
   /* ===== STATES AND FUNCTIONS ===== */
+  const [tableState, setTableState] = useState(game.live_preference ? "live" : "all");
 
   // states and functions from the js file
   const {
@@ -63,23 +68,56 @@ function Totalizer({ imageReducer }) {
   }, [location.pathname]);
 
   /* ===== TOTALIZER COMPONENT ===== */
-  return totals ? 
-    <>
+  return (
+    <Container title={ `${ capitalize(type) } Totalizer` } largeTitle>
 
-    { /* Totalizer Header - Render the title of the totalizer. */ }
-      <div className="totalizer-header">
-        <h1>{ categoryB2F(category) } - { capitalize(type) } Totalizer</h1>
+      { /* Totalizer header - render the category, as well as an input for user to swap between live-only and all */ }
+      <div className={ styles.header }>
+        <h2>{ categoryB2F(category) }</h2>
+        <div className={ styles.filter }>
+          <label htmlFor="filter">Live-{ type }s only: </label>
+          <input
+            id="filter"
+            type="checkbox"
+            checked={ tableState === "live" }
+            onChange={ () => setTableState(tableState === "live" ? "all" : "live") }
+          />
+        </div>
       </div>
 
-      { /* Totalizer Body - Render the { type } totalizer table. */ }
-      <div className="totalizer-body">
-        <TotalizerTable type={ type } totals={ totals } imageReducer={ imageReducer } />
-      </div>
+      <div className={ `table ${ styles.totalizer }` }>
+        <table>
+        
+          { /* Table header - specifies the information displayed in each cell of the board */ }
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Name</th>
+              <th>Total { capitalize(type) }</th>
+            </tr>
+          </thead>
 
-    </>
-  :
-    // Loading component
-    <p>Loading...</p>
+          { /* Table body - render a row for each totals object in the array. */ }
+          <tbody>
+            { totals ? 
+              <TableContent 
+                items={ totals[tableState] } 
+                emptyMessage={ `There have been no ${ tableState === "live" ? "live" : "" } submissions to this game's category!` }
+                numCols={ TABLE_LENGTH }
+              >
+                { totals[tableState].map(row => {
+                  return <TotalizerRow row={ row } imageReducer={ imageReducer } key={ row.profile.id } />
+                })}
+              </TableContent>
+            :
+              <LoadingTable numCols={ TABLE_LENGTH } />
+            }
+          </tbody>
+
+        </table>
+      </div>
+    </Container>
+  );
 };
 
 /* ===== EXPORTS ===== */

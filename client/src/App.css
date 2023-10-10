@@ -67,6 +67,12 @@ hr {
     border: none;
 }
 
+input[type=checkbox] {
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+}
+
 input[type=file], input[type=file]::-webkit-file-upload-button {
     cursor: pointer; 
 }
