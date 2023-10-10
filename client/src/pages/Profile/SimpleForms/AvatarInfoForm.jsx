@@ -24,7 +24,7 @@ function AvatarInfoForm({ imageReducer }) {
 
   /* ===== AVATAR INFO FORM COMPONENT ===== */
   return (
-    <Container title="Upload Avatar" isLargeHeader={ false }>
+    <Container title="Upload Avatar">
       <form className={ styles.form } onSubmit={ (e) => submitAvatar(e, avatarRef, imageReducer) }>
         <span>
           <strong>Note: </strong>

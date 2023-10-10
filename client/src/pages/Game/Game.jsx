@@ -66,7 +66,7 @@ function Game() {
       <div className={ styles.half }>
         <div className={ styles.info }>
           <div className={ styles.rules }>
-            <Container title="Rules" isLargeHeader={ true }>
+            <Container title="Rules" largeTitle>
               <ol>
                 { game.rule.map(row => {
                   return <li key={ row.id }>{ row.rule_name }</li>
@@ -75,7 +75,7 @@ function Game() {
             </Container>
           </div>
           <div className={ styles.recent }>
-            <Container title="Recent Submissions" href={ `/recent-submissions?game_id=${ abb }` } isLargeHeader={ true }>
+            <Container title="Recent Submissions" href={ `/recent-submissions?game_id=${ abb }` } largeTitle>
               <RecentSubmissionsTable renderGame={ false } searchParams={ searchParams } />
             </Container>
           </div>
@@ -84,7 +84,7 @@ function Game() {
 
       { /* Game charts - Specifies the category of levels, and renders a list of charts to select. */ }
       <div className={ styles.charts }>
-        <Container title="Charts" isLargeHeader={ true }>
+        <Container title="Charts" largeTitle>
           <div className={ styles.chartsBody }>
             { categories.length > 1 &&
               <ButtonList

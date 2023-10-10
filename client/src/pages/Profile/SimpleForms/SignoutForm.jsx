@@ -19,7 +19,7 @@ function SignoutForm() {
 
   /* ===== SIGNOUT FORM COMPONENT ====== */
   return (
-    <Container title="Sign Out" isLargeHeader={ false }>
+    <Container title="Sign Out">
       <div className={ styles.form }>
         { user.profile && 
           <span>

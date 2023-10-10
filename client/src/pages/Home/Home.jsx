@@ -36,17 +36,17 @@ function Home({ imageReducer }) {
 
       { /* Left - render a game search component, as well as a recent submissions table */ }
       <div className={ styles.left }>
-        <Container title={ "Games" } href={ "/games" }>
+        <Container title={ "Games" } href={ "/games" } largeTitle>
           <GameSearch gamesPerPage={ GAMES_PER_PAGE } imageReducer={ imageReducer } gameRowOptions={ gameRowOptions } />
         </Container>
-        <Container title={ "Recent Submissions" } href={ "/recent-submissions" }>
+        <Container title={ "Recent Submissions" } href={ "/recent-submissions" } largeTitle>
           <RecentSubmissionsTable />
         </Container>
       </div>
 
       {/* Right - render the 3 most recent news posts */}
       <div className={ styles.right }>
-        <Container title={ "News" } href={ "/news" }>
+        <Container title={ "News" } href={ "/news" } largeTitle>
           { posts ?
             <Items items={ posts } emptyMessage={ "No posts have been created yet!" }>
               <div className={ styles.posts }>

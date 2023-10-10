@@ -72,12 +72,12 @@ function GameLayout({ imageReducer }) {
 
             { /* Right - render the sidebar, which includes things such as the rankings, game moderators, etc. */ }
             <div className={ styles.bodyRight }>
-              <Container title="Rankings" isLargeHeader={ true }>
+              <Container title="Rankings" largeTitle>
                 { getGameCategories(game).map(category => {
                   return <RankingsContent category={ category } key={ category } />
                 })}
               </Container>
-              <Container title="Moderators" isLargeHeader={ true }>
+              <Container title="Moderators" largeTitle>
                 <ModeratorContainer imageReducer={ imageReducer } />
               </Container>
             </div>

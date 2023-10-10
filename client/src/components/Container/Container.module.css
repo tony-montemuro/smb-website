@@ -4,6 +4,8 @@
 }
 
 .header {
+    display: flex;
+    justify-content: space-between;
     background-color: rgb(var(--color-header));
     border-top-left-radius: var(--container-border-radius);
     border-top-right-radius: var(--container-border-radius);

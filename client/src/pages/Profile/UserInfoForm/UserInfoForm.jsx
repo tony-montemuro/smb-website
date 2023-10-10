@@ -55,7 +55,7 @@ function UserInfoForm({ countries }) {
 
   /* ===== USER INFO FORM COMPONENT ===== */
   return (
-    <Container title={ `${ user.profile ? "Update " : "" }Profile Information` } isLargeHeader={ false }>
+    <Container title={ `${ user.profile ? "Update " : "" }Profile Information` }>
       { form.user && form.countries ?
         <form className={ styles.form } onSubmit={ uploadUserInfo }>
 
