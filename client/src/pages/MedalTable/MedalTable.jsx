@@ -2,14 +2,16 @@
 import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import styles from "./Medals.module.css";
+import styles from "./MedalTable.module.css";
 import Container from "../../components/Container/Container.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
-import MedalsLogic from "./Medals.js";
-import MedalTable from "./MedalTable";
+import LoadingTable from "../../components/LoadingTable/LoadingTable.jsx";
+import MedalTableLogic from "./MedalTable.js";
+import MedalTableRow from "./MedalTableRow.jsx";
+import TableContent from "../../components/TableContent/TableContent.jsx";
 
-function Medals({ imageReducer }) {
+function MedalTable({ imageReducer }) {
   /* ===== CONTEXTS ===== */
 
   // game state from game context
@@ -23,6 +25,7 @@ function Medals({ imageReducer }) {
   const { getGameCategories, getCategoryTypes, isPracticeMode } = GameHelper();
 
   /* ===== VARIABLES ===== */
+  const TABLE_LENGTH = 6;
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
@@ -38,7 +41,7 @@ function Medals({ imageReducer }) {
   const { 
     medalTable,
     fetchMedals
-  } = MedalsLogic();
+  } = MedalTableLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -68,10 +71,43 @@ function Medals({ imageReducer }) {
   return (
     <Container title={ `${ capitalize(type) } Medal Table` } largeTitle>
       <h2 className={ styles.header }>{ categoryB2F(category) }</h2>
-      <MedalTable table={ medalTable } imageReducer={ imageReducer } />
+      <div className={ styles.table }>
+        <table>
+          
+          { /* Table header - specifies the information displayed in each cell of the medal table */ }
+          <thead>
+            <tr className="odd">
+              <th>Position</th>
+              <th>Name</th>
+              <th>Platinum</th>
+              <th>Gold</th>
+              <th>Silver</th>
+              <th>Bronze</th>
+            </tr>
+          </thead>
+
+          { /* Table body - render a row for each medals table object in the table array. */ }
+          <tbody>
+            { medalTable ?
+              <TableContent 
+                items={ medalTable } 
+                emptyMessage={ "There have been no live submissions to this game's category!" } 
+                numCols={ TABLE_LENGTH }
+              >
+                { medalTable.map((row, index) => {
+                  return <MedalTableRow row={ row } index={ index } imageReducer={ imageReducer } key={ row.profile.id } />;
+                })}
+              </TableContent>
+            :
+              <LoadingTable numCols={ TABLE_LENGTH } />
+            }
+          </tbody>
+          
+        </table>
+      </div>
     </Container>
   );
 };
 
 /* ===== EXPORTS ===== */
-export default Medals;
+export default MedalTable;

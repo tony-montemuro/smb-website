@@ -18,7 +18,7 @@ import GameSelect from "./pages/GameSelect/GameSelect.jsx";
 import GettingStarted from "./pages/GettingStarted/GettingStarted.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
-import Medals from "./pages/Medals/Medals.jsx";
+import MedalTable from "./pages/MedalTable/MedalTable.jsx";
 import MessagePopup from "./components/MessagePopup/MessagePopup.jsx";
 import MessagePopupLogic from "./components/MessagePopup/MessagePopup.js";
 import Moderator from "./pages/Moderator/Moderator.jsx";
@@ -102,10 +102,10 @@ function App() {
                   <Route index element={ <Game /> } />
                   <Route path=":category" element={ <Game /> }/>
                   <Route path=":category/medals/score" element={
-                    <Medals imageReducer={ imageReducer } />
+                    <MedalTable imageReducer={ imageReducer } />
                   }/>
                   <Route path=":category/medals/time" element={
-                    <Medals imageReducer={ imageReducer } />
+                    <MedalTable imageReducer={ imageReducer } />
                   }/>
                   <Route path=":category/totalizer/score" element={
                     <Totalizer imageReducer={ imageReducer } />

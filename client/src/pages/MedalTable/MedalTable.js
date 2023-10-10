@@ -3,7 +3,7 @@ import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import RPCRead from "../../database/read/RPCRead";
 
-const Medals = () => {
+const MedalTable = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
@@ -48,4 +48,4 @@ const Medals = () => {
 };
 
 /* ===== EXPORTS ===== */
-export default Medals;
+export default MedalTable;
