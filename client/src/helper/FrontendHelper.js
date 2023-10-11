@@ -207,7 +207,7 @@ const FrontendHelper = () => {
     const timerType2TimeUnit = timerType => {
         if (["sec", "sec_csec"].includes(timerType)) return "second";
         if (["min", "min_sec", "min_sec_csec"].includes(timerType)) return "minute";
-        if (["hour", "hour_min", "hour_min_sec", "hour_min_sec_csec"]) return "hour";
+        if (["hour", "hour_min", "hour_min_sec", "hour_min_sec_csec"].includes(timerType)) return "hour";
         return undefined;
     };
 
