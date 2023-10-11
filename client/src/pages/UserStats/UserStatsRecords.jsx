@@ -44,15 +44,15 @@ function UserStatsRecords({ rankings }) {
             <tbody>
               { rankings[mode].map(row => {
                 return (
-                  <tr key={ row.level }>
+                  <tr key={ row.level.name }>
 
                     { /* Element 1 - Level [which includes a link to the chart] */ }
                     <td>
                       <Link
-                        to={ { pathname: `/games/${ abb }/${ category }/${ type }/${ row.level }` } }
+                        to={ { pathname: `/games/${ abb }/${ category }/${ type }/${ row.level.name }` } }
                         className="stats-records-links"
                       >
-                        { cleanLevelName(row.level) }
+                        { cleanLevelName(row.level.name) }
                       </Link>
                     </td>
 
