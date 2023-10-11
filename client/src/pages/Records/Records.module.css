@@ -1,0 +1,15 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+.header h2 {
+    margin: 0;
+}
+
+.filter {
+    display: flex;
+    justify-content: center;
+}

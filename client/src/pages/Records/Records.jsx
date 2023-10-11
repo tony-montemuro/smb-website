@@ -1,12 +1,14 @@
 /* ===== IMPORTS ====== */
-import "./Records.css";
 import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
+import styles from "./Records.module.css";
+import Container from "../../components/Container/Container.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
+import Loading from "../../components/Loading/Loading.jsx";
 import RecordsLogic from "./Records.js";
-import RecordTable from "./RecordTable";
+import RecordTable from "./RecordTable/RecordTable.jsx";
 
 function Records() {
   /* ===== CONTEXTS ===== */
@@ -31,12 +33,13 @@ function Records() {
   const types = getCategoryTypes(game, category);
 
   /* ===== STATES AND FUNCTIONS ===== */
-  const [allLiveFilter, setAllLiveFilter] = useState(game.live_preference ? "live" : "all");
+  const [filter, setFilter] = useState(game.live_preference ? "live" : "all");
 
   // states and functions from js file
   const {
     recordTable,
     fetchRecords,
+    allGreater,
     numNotLive
   } = RecordsLogic();
 
@@ -64,43 +67,44 @@ function Records() {
   }, [location.pathname]);
 
   /* ===== RECORDS COMPONENT ===== */
-  return recordTable ?
-    <>
-      { /* Records Header - Displays the name of the game, as well as buttons to navigate to related pages. */ }
-      <div className="records-header">
+  return (
+    <Container title={ `${ capitalize(type) } World Records` } largeTitle>
 
-        { /* Game Title */ }
-        <h1>{ categoryB2F(category) } - { capitalize(type) } World Records</h1>
-
-      </div>
-
-      { /* Records - Render a record table for each mode. */ }
-      <div className="records-body">
-
-        { /* Live-input: Toggle records page between rendering all records and just live records */ }
-        <div className="records-input">
+      { /* Records header - render the category & an input for user to swap between live-only and all */ }
+      <div className={ styles.header }>
+        <h2>{ categoryB2F(category) }</h2>
+        <div className={ styles.filter }>
           <label htmlFor="live">Live-records only: </label>
           <input
             id="live"
             type="checkbox"
-            checked={ allLiveFilter === "live" }
-            onChange={ () => setAllLiveFilter(allLiveFilter === "live" ? "all" : "live") }
+            checked={ filter === "live" }
+            onChange={ () => setFilter(filter === "live" ? "all" : "live") }
+            disabled={ !recordTable }
           />
         </div>
-
-        <p><i>There are</i> <b>{ numNotLive() }</b> <i>level(s) where the live record is worse than the overall record.</i></p>
-
-        { /* Render a record table for each mode based on the allLiveFilter */ }
-        { Object.keys(recordTable[allLiveFilter]).map(mode => {
-          return <RecordTable mode={ mode } allLiveFilter={ allLiveFilter } recordTable={ recordTable } key={ mode } />
-        })}
-
       </div>
+
+      { /* Render a record table for each mode, if the `recordTable` state is defined */ }
+      { recordTable ?
+        <>
+          <p><em>There are </em><strong>{ numNotLive() }</strong><em> level(s) where the live record is worse than the overall record.</em></p>
+          { Object.keys(recordTable[filter]).map(mode => {
+            return <RecordTable 
+              recordTable={ recordTable }
+              filter={ filter }
+              mode={ mode } 
+              allGreater={ allGreater } 
+              key={ mode } 
+            />
+          })}
+        </>
+      :
+        <Loading />
+      }
       
-    </>
-  :
-    // Loading component
-    <p>Loading...</p>
+    </Container>
+  );
 };
 
 /* ===== EXPORTS ===== */

@@ -99,9 +99,10 @@ const FrontendHelper = () => {
     };
 
     // FUNCTION 6: recordB2F - ("record backend-to-frontend") convert record from back-end format to front-end format
-    // PRECONDITION (2 parameters): 
-    // 1.) record is a float number with at most two decimal places (should only have decimals if the type is "score")
-    // 2.) type is either "score" or "time"
+    // PRECONDITION (3 parameters): 
+    // 1.) record: a float number with at most two decimal places (should only have decimals if the type is "score")
+    // 2.) type: a string, either "score" or "time"
+    // 3.) timerType: a string representing the time of timer of the chart. only really relevent for time charts
     // POSTCONDITION (2 possible outcomes):
     // if the type is time, we convert to a suitable format based on the time type, convert to string, and return
     // if the type is score, return a string representing a formatted integer (includes commas)
@@ -198,20 +199,29 @@ const FrontendHelper = () => {
         };
     };
 
-    // FUNCTION 10: kebabToTitle - function that converts a kebab string to a title string
+    // FUNCTION 10: timerType2TimeUnit - ("timer type to timer unit") convers a timer type string to it's time unit
     // PRECONDITIONS (1 parameter):
-    // 1.) kebab: a string in the kebab format
+    // 1.) timerType: a string representing the time of timer of the chart
     // POSTCONDITIONS (1 possible outcome):
-    // a string is returned in title format
-    const kebabToTitle = kebab => {
-        const words = kebab.split("-");
-        for (let i = 0; i < words.length; i++) {
-            words[i] = capitalize(words[i]);
-        }
-        return words.join(" ");
+    // the highest unit of time of the timer type is return as a string
+    const timerType2TimeUnit = timerType => {
+        if (["sec", "sec_csec"].includes(timerType)) return "second";
+        if (["min", "min_sec", "min_sec_csec"].includes(timerType)) return "minute";
+        if (["hour", "hour_min", "hour_min_sec", "hour_min_sec_csec"]) return "hour";
+        return undefined;
     };
 
-    return { capitalize, cleanLevelName, dateB2F, secondsToHours, recordB2F, getTimeAgo, categoryB2F, runTypeB2F, kebabToTitle };
+    return { 
+        capitalize,
+        cleanLevelName,
+        dateB2F,
+        secondsToHours, 
+        recordB2F,
+        getTimeAgo,
+        categoryB2F,
+        runTypeB2F,
+        timerType2TimeUnit
+    };
 };
 
 export default FrontendHelper;

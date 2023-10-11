@@ -33,34 +33,28 @@ const Records = () => {
         // first, reset record table state to default value (undefined)
         setRecordTable(undefined);
 
+        // then, attempt to query the database for the records data: both for all submissions, and live-only submissions
         try {
-            // get create our array of promises (we want to call `getRecords` for all submissions, and live-only submissions)
             const promises = [false, true].map(liveOnly => {
                 return getRecords(game.abb, category, type, liveOnly);
             });
             const [all, live] = await Promise.all(promises);
-
-            // create a records object that stores both tables, and update recordTable by calling setRecordTable()
             setRecordTable({ all, live });
-
         } catch (error) {
-            // if the submissions fail to be fetched, let's render an error specifying the issue
 			addMessage("Failed to fetch world record data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
         }
     };
 
     // FUNCTION 2: allGreater - given a mode and index, determine if the "all" record is better than the live record
-    // PRECONDITIONS (3 parameters):
-    // 1.) records: an object that stores the record tables for both all records and live records
-    // 2.) mode: a string representing one of the game modes
-    // 3.) index: an integer representing the index of one of the levels within a mode
-    // POSTCONDITIONS (1 return, 1 possible outcome):
-    // 1.) the allRecord and liveRecord are fetched from the records object. if the allRecord is greater than liveRecord, true is returned.
+    // PRECONDITIONS (2 parameters):
+    // 1.) mode: a string representing one of the game modes
+    // 2.) index: an integer representing the index of one of the levels within a mode
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the allRecord is greater than liveRecord, true is returned
     // otherwise, false is returned
-    const allGreater = (records, mode, index) => {
-        // determine both the live and record based on the mode and index parameters
-        const allRecord = records.all[mode][index].record;
-        const liveRecord = records.live[mode][index].record;
+    const allGreater = (mode, index) => {
+        const allRecord = recordTable.all[mode][index].record;
+        const liveRecord = recordTable.live[mode][index].record;
         return allRecord > liveRecord;
     };
 
@@ -70,19 +64,13 @@ const Records = () => {
     // POSTCONDITIONS (1 return, 1 possible outcome):
     // 1.) num: an integer count of every record where the all record is greater than the live record is returned
     const numNotLive = () => {
-        // initialize a num variable
         let num = 0;
-
-        // iterate through each mode in the record table
         Object.keys(recordTable.all).forEach(mode => {
-
-            // iterate through each level, and count up all the records where all is greater than live
-            for (let i = 0; i < recordTable.all[mode].length; i++) {
-                num += allGreater(recordTable, mode, i);
+            const levels = recordTable.all[mode];
+            for (let index = 0; index < levels.length; index++) {
+                num += Number(allGreater(mode, index));
             }
-
         });
-        
         return num;
     };
 
