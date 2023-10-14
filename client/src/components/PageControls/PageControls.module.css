@@ -10,3 +10,15 @@
     align-items: center;
     justify-self: flex-start;
 }
+
+/* ===== MEDIA QUERY FOR PHONES ===== */
+
+@media (max-width: 525px) {
+    .pageControls {
+        justify-content: center;
+    }
+    
+    .viewer {
+        display: none;
+    }
+}

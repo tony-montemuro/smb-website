@@ -61,7 +61,7 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
             onClick={ () => setPageNum(pageNum-1) } 
             disabled={ pageNum <= 1 }
           >
-            Previous Page
+            { "<-" }
           </button>
         </div>
 
@@ -98,7 +98,7 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
             onClick={ () => setPageNum(pageNum+1) } 
             disabled={ pageNum >= getMaxPage(totalItems, itemsPerPage) }
           >
-            Next Page
+            { "->" }
           </button>
         </div>
 
