@@ -1,3 +1,5 @@
+/* ===== GENERAL STYLING ===== */
+
 .game {
     display: flex;
     flex-wrap: wrap;
@@ -35,6 +37,8 @@
 .modes {
     background-color: rgb(var(--color-nav));
 }
+
+/* ===== MEDIA QUERIEY FOR SMALL DEVICES ===== */
 
 @media (max-width: 1067px) {
     .half {
