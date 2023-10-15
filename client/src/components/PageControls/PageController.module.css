@@ -1,5 +1,9 @@
+/* ===== GENERAL STYLING ===== */
+
 .pageController {
     display: flex;
+    max-width: 100%;
+    justify-content: space-between;
     gap: 5px;
     padding: 5px;
 }
@@ -9,10 +13,31 @@
     background-color: rgb(var(--color-button));
 }
 
-.spread {
-    margin-top: auto;
+.pageController button {
+    height: 100%;
 }
 
-.moveBtn {
-    padding: 5px;
+.pageBtns {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+}
+
+.spread {
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
+}
+
+/* ===== MEDIA QUERY FOR PHONES ===== */
+
+@media (max-width: 525px) {
+    .dropdown {
+        gap: 10px;
+        width: 100%;
+    }
+
+    .dropdown button, .dropdown select {
+        flex: 1;
+    }
 }

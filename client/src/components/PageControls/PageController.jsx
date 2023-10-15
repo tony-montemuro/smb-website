@@ -15,7 +15,7 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
   // any valid page. Better for small page counts!
   if (useDropdown) {
     return (
-      <div className={ styles.pageController }>
+      <div className={ `${ styles.pageController } ${ styles.dropdown }` }>
 
         { /* Previous page button */ }
         <button 
@@ -23,7 +23,7 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
           onClick={ () => setPageNum(pageNum-1) } 
           disabled={ pageNum <= 1 }
         >
-          Previous Page
+          ←
         </button>
 
         { /* Page selector */ }
@@ -39,7 +39,7 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
           onClick={ () => setPageNum(pageNum+1) } 
           disabled={ pageNum >= getMaxPage(totalItems, itemsPerPage) }
         >
-          Next Page
+          →
         </button>
 
       </div>
@@ -55,52 +55,50 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
       <div className={ styles.pageController }>
 
         { /* Previous page button */ }
-        <div className={ styles.moveBtn }>
-          <button 
-            type="button"
-            onClick={ () => setPageNum(pageNum-1) } 
-            disabled={ pageNum <= 1 }
-          >
-            { "<-" }
-          </button>
-        </div>
+        <button 
+          type="button"
+          onClick={ () => setPageNum(pageNum-1) } 
+          disabled={ pageNum <= 1 }
+        >
+          ←
+        </button>
 
         { /* Render buttons for each relevant page */ }
-        <ButtonList 
-          buttons={ [{ name: "1", value: 1 }] } 
-          current={ pageNum } 
-          setCurrent={ setPageNum } 
-          hasPadding={ false } 
-        />
-        { middlePages.length > 0 && middlePages[0] !== 2 && 
-          <span className={ styles.spread }>...</span> 
-        }
-        <ButtonList 
-          buttons={ middlePages.map(page => ({ name: `${ page }`, value: page })) } 
-          current={ pageNum } 
-          setCurrent={ setPageNum }
-          hasPadding={ false }
-        />
-        { middlePages.length > 0 && middlePages[middlePages.length-1] !== maxPage-1 &&
-          <span className={ styles.spread }>...</span>
-        }
-        <ButtonList 
-          buttons={ [{ name: `${ maxPage }`, value: maxPage }] } 
-          current={ pageNum } 
-          setCurrent={ setPageNum } 
-          hasPadding={ false }  
-        />
+        <div className={ styles.pageBtns }>
+          <ButtonList 
+            buttons={ [{ name: "1", value: 1 }] } 
+            current={ pageNum } 
+            setCurrent={ setPageNum } 
+            hasPadding={ false } 
+          />
+          { middlePages.length > 0 && middlePages[0] !== 2 && 
+            <span className={ styles.spread }>...</span> 
+          }
+          <ButtonList 
+            buttons={ middlePages.map(page => ({ name: `${ page }`, value: page })) } 
+            current={ pageNum } 
+            setCurrent={ setPageNum }
+            hasPadding={ false }
+          />
+          { middlePages.length > 0 && middlePages[middlePages.length-1] !== maxPage-1 &&
+            <span className={ styles.spread }>...</span>
+          }
+          <ButtonList 
+            buttons={ [{ name: `${ maxPage }`, value: maxPage }] } 
+            current={ pageNum } 
+            setCurrent={ setPageNum } 
+            hasPadding={ false }  
+          />
+        </div>
 
         { /* Next page button */ }
-        <div className={ styles.moveBtn }>
-          <button 
-            type="button"
-            onClick={ () => setPageNum(pageNum+1) } 
-            disabled={ pageNum >= getMaxPage(totalItems, itemsPerPage) }
-          >
-            { "->" }
-          </button>
-        </div>
+        <button 
+          type="button"
+          onClick={ () => setPageNum(pageNum+1) } 
+          disabled={ pageNum >= getMaxPage(totalItems, itemsPerPage) }
+        >
+          →
+        </button>
 
       </div>
     );
