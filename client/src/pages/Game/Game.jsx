@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Game.module.css";
 import ButtonList from "../../components/ButtonList/ButtonList.jsx";
 import Container from "../../components/Container/Container.jsx";
@@ -30,8 +30,13 @@ function Game() {
   const abb = path[2];
   const category = path[3];
   const categories = getGameCategories(game);
-  const searchParams = new URLSearchParams();
-  searchParams.append("game_id", abb);
+  
+  /* ===== MEMOS ===== */
+  const searchParams = useMemo(() => {
+    const params = new URLSearchParams();
+    params.append("game_id", abb);
+    return params;
+  }, [abb]);
 
   /* ===== STATES ===== */
   const [selectedCategory, setSelectedCategory] = useState(category ? category : "main");

@@ -2,7 +2,7 @@
 import "./User.css";
 import { Link } from "react-router-dom";
 import { ProfileContext } from "../../utils/Contexts";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import BoxArt from "../../components/BoxArt/BoxArt.jsx";
 import DiscordLogo from "../../components/DiscordLogo/DiscordLogo.jsx";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
@@ -17,8 +17,13 @@ function User({ imageReducer }) {
 
   /* ===== VARIABLES ===== */
   const SOCIAL_SIZE = 50;
-  const searchParams = new URLSearchParams();
-  searchParams.append("profile_id", profile.id);
+
+  /* ===== MEMOS ===== */
+  const searchParams = useMemo(() => {
+    const params = new URLSearchParams();
+    params.append("profile_id", profile.id);
+    return params;
+  }, [profile.id]);
 
   /* ===== USER COMPONENT ===== */
   return (

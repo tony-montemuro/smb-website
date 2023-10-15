@@ -1,11 +1,20 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { MessageContext } from "../../utils/Contexts";
+import { useContext, useState } from "react";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import PageControls from "../PageControls/PageControls.js";
 
 const RecentSubmissionsTable = () => {
+    /* ===== VARIABLES ===== */
+    const defaultSubmissions = { data: undefined, total: 0 };
+
     /* ===== STATES ===== */
-    const [submissions, setSubmissions] = useState({ data: [], total: 0 });
+    const [submissions, setSubmissions] = useState(defaultSubmissions);
+
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -24,12 +33,17 @@ const RecentSubmissionsTable = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the array of submissions, as well as the total count, are returned, and the `submissions` states is updated by calling `setSubmissions`
     const fetchRecentSubmissions = async (numRows, searchParams, pageNumber) => {
-        // first, compute the range of submissions to grab based on the parameters
+        // first, reset the submissions state to default value before we query the db, and calculate start and end values
+        setSubmissions(defaultSubmissions);
         const { start, end } = getStartAndEnd(numRows, pageNumber);
 
-        // using this, we can query recent submissions, & update the submissions state
-        const { submissions, count } = await queryRecentSubmissions(start, end, searchParams);
-        setSubmissions({ data: submissions, total: count });
+        // next, attempt to query the database for recent submissions
+        try {
+            const { submissions, count } = await queryRecentSubmissions(start, end, searchParams);
+            setSubmissions({ data: submissions, total: count });
+        } catch (error) {
+            addMessage("There was a problem loading the recent submissions.", "error");
+        }
     };
 
     return { submissions, fetchRecentSubmissions };

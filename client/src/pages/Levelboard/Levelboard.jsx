@@ -2,7 +2,7 @@
 import "./Levelboard.css";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Filters from "./Filters.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import Insert from "./Insert.jsx";
@@ -65,6 +65,12 @@ function Levelboard({ imageReducer }) {
 		handleTabClick,
 		getChartSearchParams
 	} = LevelboardLogic();
+
+	/* ===== MEMOS ===== */
+	const searchParams = useMemo(() => {
+		return getChartSearchParams();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [abb, category, type, levelName]);
 
 	/* ===== EFFECTS ===== */
 
@@ -224,7 +230,7 @@ function Levelboard({ imageReducer }) {
 						renderGame={ false }
 						renderLevelContext={ false }
 						numSubmissions={ 20 }
-						searchParams={ getChartSearchParams() }
+						searchParams={ searchParams }
 					/>
 
 				</div>

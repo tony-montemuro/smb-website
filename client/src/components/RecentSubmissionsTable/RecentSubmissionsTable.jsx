@@ -1,10 +1,17 @@
 /* ===== IMPORTS ===== */
 import { useEffect, useState } from "react";
+import LoadingTable from "../LoadingTable/LoadingTable.jsx";
 import PageControls from "../PageControls/PageControls.jsx";
 import RecentSubmissionsRow from "./RecentSubmissionsRow.jsx";
 import RecentSubmissionsTableLogic from "./RecentSubmissionsTable.js";
+import TableContent from "../TableContent/TableContent.jsx";
 
 function RecentSubmissionsTable({ renderGame = true, renderLevelContext = true, numSubmissions = 5, searchParams }) {
+  /* ===== VARIABLES ===== */
+  let NUM_COLS = 4;
+  if (renderGame) NUM_COLS += 1;
+  if (renderLevelContext) NUM_COLS += 2;
+
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
 
@@ -44,16 +51,22 @@ function RecentSubmissionsTable({ renderGame = true, renderLevelContext = true, 
 
           { /* Table body - for each submission, render a row in the table */ }
           <tbody>
-            { submissions.data.map(submission => {
-              return (
-                <RecentSubmissionsRow 
-                  submission={ submission } 
-                  renderGame={ renderGame } 
-                  renderLevelContext={ renderLevelContext } 
-                  key={ submission.id } 
-                />
-              );
-            })}
+            { submissions.data ?
+              <TableContent items={ submissions.data } emptyMessage="No recent submissions!" numCols={ NUM_COLS }>
+                { submissions.data.map(submission => {
+                  return (
+                    <RecentSubmissionsRow 
+                      submission={ submission } 
+                      renderGame={ renderGame } 
+                      renderLevelContext={ renderLevelContext } 
+                      key={ submission.id } 
+                    />
+                  );
+                })}
+              </TableContent>
+            :
+              <LoadingTable numCols={ NUM_COLS } />
+            }
           </tbody>
 
         </table>

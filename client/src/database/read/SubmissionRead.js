@@ -1,14 +1,7 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
 import { supabase } from "../SupabaseClient";
-import { useContext } from "react";
 
 const SubmissionRead = () => {
-    /* ===== CONTEXTS ===== */
-
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
-
     /* ===== FUNCTIONS ===== */
 
     // FUNCTION 1: queryRecentSubmissions - function that retrieves the most recent submissions in the database, given parameters to the
@@ -20,7 +13,7 @@ const SubmissionRead = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the (end-start) most recent submissions from the database matching the filters in `searchParams` are returned,
     // sorted from most recent to least recent, as well as the total number of submissions that match the filters
-    // if the query is a failure, the user is alerted of the error, and an empty array & a count of 0 are returned
+    // if the query is a failure, this function throws an error, which is expected to be handled by the caller function
     const queryRecentSubmissions = async (start, end, searchParams) => {
         // first, we define our base query
         let query = supabase
@@ -87,8 +80,7 @@ const SubmissionRead = () => {
             return { submissions, count };
 
         } catch (error) {
-            addMessage("Recent submissions failed to load.", "error");
-            return { submissions: [], count: 0 };
+            throw error;
         };
     };
 
