@@ -1,0 +1,12 @@
+.userLayout {
+    display: flex;
+    padding: 20px;
+}
+
+.left {
+    max-width: 360px;
+}
+
+.right {
+    flex: 1;
+}

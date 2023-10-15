@@ -1,10 +1,11 @@
 /* ===== IMPORTS ===== */
 import "./UserLayout.css";
-import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { MessageContext, ProfileContext } from "../../utils/Contexts";
-import { useContext, useEffect, useState } from "react";
-import Avatar from "../Avatar/Avatar.jsx";
+import { useContext, useEffect, useState } from "react"; 
+import styles from "./UserLayout.module.css";
 import UserLayoutLogic from "./UserLayout.js";
+import UserOverview from "./UserOverview/UserOverview.jsx";
 import UserStatsDirectory from "./UserStatsDirectory.jsx";
 
 function UserLayout({ imageReducer }) {
@@ -13,7 +14,6 @@ function UserLayout({ imageReducer }) {
   const location = useLocation();
   const { profileId } = params;
   const navigate = useNavigate();
-  const IMG_WIDTH = 300;
 
   /* ===== CONTEXTS ===== */
 
@@ -55,37 +55,16 @@ function UserLayout({ imageReducer }) {
 
   /* ===== USER LAYOUT COMPONENT ===== */ 
   return profile &&
-    <div className="user-layout">
+    <div className={ styles.userLayout }>
 
-      { /* User Layout Sidebar - Sidebar user can use to navigate the user pages.  */ }
-      <div className="user-layout-sidebar">
-
-        { /* User Layout Profile - Render general information about the user. */ }
-        <div className="user-layout-profile">
-
-          { /* User avatar and name - link back to the main user page. */ }
-          <Link to={ `/user/${ profile.id }` }>
-            <Avatar profileId={ profile.id } size={ IMG_WIDTH } imageReducer={ imageReducer }  />
-            <h2>{ profile.username }</h2>
-          </Link>
-
-          { /* User country - render the user's country flag and name, if they exist. */ }
-          { profile.country &&
-            <div className="user-layout-country">
-              <span className={ `fi fi-${ profile.country.iso2.toLowerCase() }` }></span>
-              <p>&nbsp;{ profile.country.name }</p>
-            </div>
-          }
-
-        </div>
-
-        { /* Render navigation directory */ }
+      { /* User Layout Left - Sidebar user can use to navigate the user pages.  */ }
+      <div className={ styles.left }>
+        <UserOverview profile={ profile } imageReducer={ imageReducer } />
         <UserStatsDirectory imageReducer={ imageReducer } profile={ profile } />
-
       </div>
 
       { /* User layout content -  The actual page itself. */ }
-      <div className="user-layout-content">
+      <div className={ styles.right }>
         <ProfileContext.Provider value={ { profile } } >
           <Outlet />
         </ProfileContext.Provider>
