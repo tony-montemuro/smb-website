@@ -152,5 +152,6 @@ input[type=file], input[type=file]::-webkit-file-upload-button {
 }
 
 .table td {
+    text-align: left;
     padding: 4px 8px;
 }
