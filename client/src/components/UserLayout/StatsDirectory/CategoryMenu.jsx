@@ -17,7 +17,7 @@ function CategoryMenu({ type, games, selectedGame, setSelectedGame, imageReducer
   const { indexToParity } = StylesHelper();
 
   /* ====== CATEGORY MENU COMPONENT ===== */
-  return (
+  return games.length > 0 &&
     <div className={ styles.menu } key={ type }>
 
       { /* Render the name of the menu (based on the type parameter) */ }
@@ -56,7 +56,6 @@ function CategoryMenu({ type, games, selectedGame, setSelectedGame, imageReducer
       </div>
 
     </div>
-  );
 };
 
 /* ===== EXPORTS ===== */
