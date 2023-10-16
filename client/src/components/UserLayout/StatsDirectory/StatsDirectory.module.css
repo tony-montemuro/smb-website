@@ -3,11 +3,11 @@
     flex-direction: column;
     position: -webkit-sticky;
     position: sticky;
-    top: var(--navbar-height);
+    top: calc(var(--navbar-height) + 20px);
 }
 
 .body {
-    --remaining-space: calc(calc(100vh - var(--navbar-height)) - 40px);
+    --remaining-space: calc(calc(100vh - var(--navbar-height)) - 60px);
     overflow-y: auto;
     max-height: calc(var(--remaining-space) - 78px);
     scrollbar-width: thin;
