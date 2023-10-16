@@ -28,7 +28,7 @@ AS $$
         ) g
       ) moderated_games,
       (
-        SELECT json_agg(jsonb_build_object(
+        SELECT COALESCE (json_agg(jsonb_build_object(
           'abb', g.abb,
           'categories', (
             SELECT json_agg(jsonb_build_object(
@@ -49,7 +49,7 @@ AS $$
           'custom', g.custom,
           'name', g.name,
           'live_preference', g.live_preference
-        ) ORDER BY g.id) AS submitted_games
+        ) ORDER BY g.id), '[]'::json) AS submitted_games
         FROM (
           SELECT DISTINCT ON (s.game_id) s.game_id AS abb, g.custom, g.id, g.live_preference, g.name
           FROM submission s
