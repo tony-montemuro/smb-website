@@ -15,3 +15,16 @@
 .right {
     flex: 1;
 }
+
+/* ===== MEDIA QUERIES FOR SMALLER DEVICES ===== */
+
+@media (max-width: 1000px) {
+    .userLayout {
+        flex-direction: column;
+    }
+
+    .left {
+        width: 100%;
+        max-width: 100%;
+    }
+}

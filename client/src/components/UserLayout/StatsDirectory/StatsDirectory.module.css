@@ -1,11 +1,39 @@
 .statsDirectory {
-    height: calc(100vh - var(--navbar-height));
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     position: -webkit-sticky;
     position: sticky;
     top: var(--navbar-height);
+}
+
+.body {
+    --remaining-space: calc(calc(100vh - var(--navbar-height)) - 40px);
+    overflow-y: auto;
+    max-height: calc(var(--remaining-space) - 78px);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--color-container-selected), 0.5) transparent;
+}
+
+.body::-webkit-scrollbar {
+    width: 1.5vh;
+    background-color: rgb(var(--color-container));
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.body::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--color-container-selected), 0.5);
+    border: 0.5vh solid transparent;
+    border-radius: 10px;
+    background-clip: padding-box;
+}
+
+.body::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--color-container-selected));
+}
+
+.body::-webkit-scrollbar-track {
+    background-color: transparent;
 }
 
 .menu {
@@ -51,4 +79,17 @@
 .links {
     display: flex;
     gap: 5px;
+}
+
+/* ===== MEDIA QUERIES FOR SMALLER DEVICES ===== */
+
+@media (max-width: 1000px) {
+    .userLayout {
+        flex-direction: column;
+    }
+
+    .left {
+        width: 100%;
+        max-width: 100%;
+    }
 }
