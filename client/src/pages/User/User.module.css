@@ -1,0 +1,41 @@
+.user {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.user h2 {
+    margin: 0;
+    padding: 10px 0;
+}
+
+.user p {
+    margin: 0;
+    padding: 10px 0;
+}
+
+.socials {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.user-about-me p {
+    text-align: left;
+    margin-left: 5px;
+    margin-right: 5px;
+    word-wrap: break-word;
+}
+
+.video {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    height: 45vh;
+}
+
+.twitter {
+    display: flex;
+    justify-content: center;
+}
