@@ -264,7 +264,7 @@ const RPCRead = () => {
     const getProfile = async profileId => {
         try {
             const { data: profile, error } = await supabase.rpc("get_profile", {
-                profile_id: profileId
+                p_id: profileId
             });
 
             // error handling
