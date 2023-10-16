@@ -1,11 +1,18 @@
 /* ===== IMPORTS ===== */
+import { ProfileContext } from "../../../utils/Contexts";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
 import styles from "./UserOverview.module.css";
 import Avatar from "../../Avatar/Avatar.jsx";
 import Container from "../../Container/Container.jsx";
 import CountryFlag from "../../CountryFlag/CountryFlag.jsx";
 
-function UserOverview({ profile, imageReducer }) {
+function UserOverview({ imageReducer }) {
+  /* ===== CONTEXTS ===== */
+
+  // profile state from profile context
+  const { profile } = useContext(ProfileContext);
+
   /* ===== VARIABLES ===== */
   const IMG_WIDTH = 300;
 

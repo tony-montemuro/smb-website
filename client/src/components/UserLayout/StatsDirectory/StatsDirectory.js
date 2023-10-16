@@ -16,7 +16,7 @@ const StatsDirectory = () => {
     // into two arrays: split by "main" and "custom"
     const initUserGames = profile => {
         // split submissions based on 'custom' field
-        const main = [], custom = [];;
+        const main = [], custom = [];
         profile.submitted_games.forEach(game => {
             game.custom ? custom.push(game) : main.push(game);
         });

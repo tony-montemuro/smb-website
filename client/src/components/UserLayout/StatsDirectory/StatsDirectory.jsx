@@ -1,12 +1,18 @@
 /* ===== IMPORTS ===== */
-import { useEffect, useState } from "react";
+import { ProfileContext } from "../../../utils/Contexts";
+import { useContext, useEffect, useState } from "react";
 import styles from "./StatsDirectory.module.css";
 import Container from "../../Container/Container.jsx";
 import Items from "../../Items/Items.jsx";
 import StatsDirectoryLogic from "./StatsDirectory.js";
 import CategoryMenu from "./CategoryMenu";
 
-function StatsDirectory({ imageReducer, profile }) {
+function StatsDirectory({ imageReducer }) {
+  /* ===== CONTEXTS ===== */
+
+  // profile state from profile context
+  const { profile } = useContext(ProfileContext);
+
   /* ===== STATES & FUNCTIONS ===== */
   const [selectedGame, setSelectedGame] = useState(undefined);
 

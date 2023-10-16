@@ -3,6 +3,7 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { MessageContext, ProfileContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react"; 
 import styles from "./UserLayout.module.css";
+import Loading from "../Loading/Loading.jsx";
 import StatsDirectory from "./StatsDirectory/StatsDirectory.jsx";
 import UserLayoutLogic from "./UserLayout.js";
 import UserOverview from "./UserOverview/UserOverview.jsx";
@@ -30,10 +31,8 @@ function UserLayout({ imageReducer }) {
   // code that is executed when the component mounts, or when the pathname is updated
   useEffect(() => {
     async function initProfile() {
-      // fetch profile from database
       const profile = await fetchProfile(profileId);
 
-      // if profile is defined, we can proceed
       if (profile !== undefined) {
         // if profile is a null object, it means no profile exists that corresponds with `profileId`. we will print an error message,
         // and navigate to the home screen
@@ -43,7 +42,7 @@ function UserLayout({ imageReducer }) {
           return;
         }
 
-        // update the profile state hook
+        // if we made it this far, update the profile state hook
         setProfile(profile);
       }
     };
@@ -53,23 +52,25 @@ function UserLayout({ imageReducer }) {
   }, [location.pathname]);
 
   /* ===== USER LAYOUT COMPONENT ===== */ 
-  return profile &&
-    <div className={ styles.userLayout }>
+  return profile ?
+    <ProfileContext.Provider value={ { profile } } >
+      <div className={ styles.userLayout }>
 
-      { /* User Layout Left - Sidebar user can use to navigate the user pages.  */ }
-      <div className={ styles.left }>
-        <UserOverview profile={ profile } imageReducer={ imageReducer } />
-        <StatsDirectory imageReducer={ imageReducer } profile={ profile } />
-      </div>
+        { /* User Layout Left - Sidebar user can use to navigate the user pages.  */ }
+        <div className={ styles.left }>
+          <UserOverview imageReducer={ imageReducer } />
+          <StatsDirectory imageReducer={ imageReducer } />
+        </div>
 
-      { /* User layout content -  The actual page itself. */ }
-      <div className={ styles.right }>
-        <ProfileContext.Provider value={ { profile } } >
+        { /* User layout content -  The actual page itself. */ }
+        <div className={ styles.right }>
           <Outlet />
-        </ProfileContext.Provider>
-      </div>
+        </div>
 
-    </div>
+      </div>
+    </ProfileContext.Provider>
+  :
+    <Loading />
 };  
 
 /* ===== EXPORTS ===== */
