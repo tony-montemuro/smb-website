@@ -1,12 +1,11 @@
 /* ===== IMPORTS ===== */
-import "./UserLayout.css";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { MessageContext, ProfileContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react"; 
 import styles from "./UserLayout.module.css";
+import StatsDirectory from "./StatsDirectory/StatsDirectory.jsx";
 import UserLayoutLogic from "./UserLayout.js";
 import UserOverview from "./UserOverview/UserOverview.jsx";
-import UserStatsDirectory from "./UserStatsDirectory.jsx";
 
 function UserLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -60,7 +59,7 @@ function UserLayout({ imageReducer }) {
       { /* User Layout Left - Sidebar user can use to navigate the user pages.  */ }
       <div className={ styles.left }>
         <UserOverview profile={ profile } imageReducer={ imageReducer } />
-        <UserStatsDirectory imageReducer={ imageReducer } profile={ profile } />
+        <StatsDirectory imageReducer={ imageReducer } profile={ profile } />
       </div>
 
       { /* User layout content -  The actual page itself. */ }

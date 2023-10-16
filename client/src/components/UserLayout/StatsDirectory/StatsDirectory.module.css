@@ -1,0 +1,54 @@
+.statsDirectory {
+    height: calc(100vh - var(--navbar-height));
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    position: -webkit-sticky;
+    position: sticky;
+    top: var(--navbar-height);
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.menu h2 {
+    margin: 0;
+    padding: 10px 0;
+}
+
+.game {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.game:hover {
+    background-color: rgba(var(--color-container-hover));
+}
+
+.gameLeft {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.category {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px;
+    min-height: 84px;
+}
+
+.links {
+    display: flex;
+    gap: 5px;
+}

@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useState } from "react";
 
-const UserStatsDirectory = () => {
+const StatsDirectory = () => {
     /* ===== STATES ===== */
     const [userGames, setUserGames] = useState(undefined);
 
@@ -20,8 +20,6 @@ const UserStatsDirectory = () => {
         profile.submitted_games.forEach(game => {
             game.custom ? custom.push(game) : main.push(game);
         });
-
-        // update user games state
         setUserGames({ main, custom });
     };
 
@@ -29,4 +27,4 @@ const UserStatsDirectory = () => {
 };
 
 /* ===== EXPORTS ===== */
-export default UserStatsDirectory;
+export default StatsDirectory;

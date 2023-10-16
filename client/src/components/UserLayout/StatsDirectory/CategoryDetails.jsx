@@ -1,28 +1,31 @@
 /* ===== IMPORTS ===== */
 import { useNavigate } from "react-router-dom";
-import FrontendHelper from "../../helper/FrontendHelper";
-import GameHelper from "../../helper/GameHelper";
+import styles from "./StatsDirectory.module.css";
+import FrontendHelper from "../../../helper/FrontendHelper";
+import GameHelper from "../../../helper/GameHelper";
+import StylesHelper from "../../../helper/StylesHelper";
 
-function UserStatsCategory({ game, category }) {
-  /* ===== HELPER FUNCTIONS ===== */
-  
+function CategoryDetails({ game, category, index }) {
+  /* ===== FUNCTIONS ===== */
+
   // helper functions
-  const { categoryB2F, capitalize } = FrontendHelper();
+  const { capitalize, categoryB2F } = FrontendHelper();
   const { getCategoryTypes } = GameHelper();
+  const { indexToParity } = StylesHelper();
 
   /* ===== VARIABLES ===== */
   const types = getCategoryTypes(game, category);
   const navigate = useNavigate();
 
-  /* ===== USER STATS CATEGORY COMPONENT ===== */
+  /* ===== CATEGORY DETAILS COMPONENT ===== */
   return (
-    <div className="user-layout-category">
+    <div className={ `${ styles.category } ${ indexToParity(index) }` }>
 
       { /* First, render the name of the category */ }
       <h3>{ categoryB2F(category) }</h3>
 
       { /* Then, for each type in the category, render a button to navigate to the user's stats for { game.abb }, category, type */ }
-      <div className="user-layout-category-links">
+      <div className={ styles.links }>
         { types.map(type => {
           return ( 
             <button 
@@ -41,4 +44,4 @@ function UserStatsCategory({ game, category }) {
 };
 
 /* ===== EXPORTS ===== */
-export default UserStatsCategory;
+export default CategoryDetails;
