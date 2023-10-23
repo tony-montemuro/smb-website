@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FilteredSubmissionRow from "./FilteredSubmissionRow";
 import FrontendHelper from "../../helper/FrontendHelper";
-import PathHelper from "../../helper/PathHelper";
+import GameHelper from "../../helper/GameHelper";
 import Popup from "../../components/Popup/Popup.jsx";
 import SubmissionDetails from "../../components/DetailPopup/SubmissionDetails.jsx";
 import SubmissionHistoryLogic from "./SubmissionHistory";
@@ -16,7 +16,7 @@ import Username from "../../components/Username/Username";
 function SubmissionHistory() {
   /* ===== HELPER FUNCTIONS ====== */
   const { capitalize, cleanLevelName, runTypeB2F } = FrontendHelper();
-  const { fetchLevelFromGame } = PathHelper();
+  const { fetchLevelFromGame } = GameHelper();
 
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();

@@ -153,7 +153,30 @@ const GameHelper = () => {
         return ["main", "misc"].includes(category);
     };
 
-    return { cleanGameObject, getGameCategories, getCategoryTypes, getRelevantModes, isPracticeMode };
+    // FUNCTION 6: fetchLevelFromGame: given a game object, level name, & category, determine if the level is present in the object, and
+    // return it
+	// PRECONDITIONS (4 parameters):
+	// 1.) game: an object containing information about the game defined in the path
+	// 2.) levelName: a string corresponding to the name of a level, also defined in the path
+    // 3.) category: a string value representing a valid category
+	// 4.) type: a string value, either "score" or "time"
+	// POSTCONDITIONS (2 outcomes):
+	// if the level is found in the game object, return the corresponding level object
+	// otherwise, just return null
+	const fetchLevelFromGame = (game, levelName, category, type) => {
+		for (const mode of game.mode) {				// for each mode in the game object
+			if (mode.category === category) {
+				for (const level of mode.level) {	// for each level in the mode object
+					if (level.name === levelName && (level.chart_type === type || level.chart_type === "both")) {
+						return level;
+					}
+				}
+			}
+		}
+		return null;
+	};
+
+    return { cleanGameObject, getGameCategories, getCategoryTypes, getRelevantModes, isPracticeMode, fetchLevelFromGame };
 };
 
 /* ===== EXPORTS ===== */

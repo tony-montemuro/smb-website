@@ -1,10 +1,10 @@
 /* ===== IMPORTS ===== */
 import { supabase } from "./database/SupabaseClient";
 import { useReducer, useRef, useState } from "react";
+import DateHelper from "./helper/DateHelper";
 import NotificationRead from "./database/read/NotificationRead";
 import ProfileRead from "./database/read/ProfileRead";
 import Session from "./database/authentication/Session";
-import TimeHelper from "./helper/TimeHelper";
 
 const App = (addMessage) => {
   /* ===== VARIABLES ===== */
@@ -42,7 +42,7 @@ const App = (addMessage) => {
   const { getSession } = Session();
 
   // helper funcitons
-  const { getTimeToMidnightUTC } = TimeHelper();
+  const { getTimeToMidnightUTC } = DateHelper();
 
   // FUNCTION 1: updateUser - async function that loads user data based on a uuid user id
   // PRECONDITIONS (1 parameter):

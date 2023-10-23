@@ -8,7 +8,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import Insert from "./Insert.jsx";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
-import PathHelper from "../../helper/PathHelper";
+import GameHelper from "../../helper/GameHelper";
 import Popup from "../../components/Popup/Popup.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import SubmissionDetails from "../../components/DetailPopup/SubmissionDetails.jsx";
@@ -29,7 +29,7 @@ function Levelboard({ imageReducer }) {
 
 	/* ===== HELPER FUNCTIONS ===== */
 	const { capitalize, cleanLevelName, dateB2F } = FrontendHelper();
-	const { fetchLevelFromGame } = PathHelper();
+	const { fetchLevelFromGame } = GameHelper();
 
 	/* ===== VARIABLES ===== */
 	const navigate = useNavigate();

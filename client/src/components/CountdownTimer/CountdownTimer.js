@@ -1,12 +1,12 @@
 /* ===== IMPORTS ===== */
 import { useState } from "react";
-import TimeHelper from "../../helper/TimeHelper";
+import DateHelper from "../../helper/DateHelper";
 
 const CountdownTimer = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { getTimeToMidnightUTC } = TimeHelper();
+    const { getTimeToMidnightUTC } = DateHelper();
 
     // FUNCTION 1: getTimeRemaining - function that returns an object that describes the time remaining until midnight UTC
     // PRECONDITIONS: NONE
