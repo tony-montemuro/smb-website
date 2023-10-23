@@ -9,7 +9,7 @@ const ScrollHelper = () => {
     const scrollToId = id => {
         const root = document.querySelector(":root");
         const section = document.querySelector(`#${ id }`);
-        const yOffset = -parseInt((getComputedStyle(root).getPropertyValue("--navbar-height")))-5;
+        const yOffset = -parseInt((getComputedStyle(root).getPropertyValue("--navbar-height")))-20;
         const y = section.getBoundingClientRect().top + window.scrollY + yOffset;
         window.scrollTo({ top: y, behavior: "smooth" });
     };
