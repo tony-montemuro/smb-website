@@ -1,12 +1,15 @@
 /* ===== IMPORTS ===== */
-import { useNavigate } from "react-router-dom";
 import styles from "./StatsDirectory.module.css";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import GameHelper from "../../../helper/GameHelper";
 import StylesHelper from "../../../helper/StylesHelper";
+import UserLayoutLogic from "../UserLayout.js";
 
 function CategoryDetails({ game, category, index }) {
   /* ===== FUNCTIONS ===== */
+
+  // functions from the js file
+  const { onStatsClick } = UserLayoutLogic();
 
   // helper functions
   const { capitalize, categoryB2F } = FrontendHelper();
@@ -15,7 +18,6 @@ function CategoryDetails({ game, category, index }) {
 
   /* ===== VARIABLES ===== */
   const types = getCategoryTypes(game, category);
-  const navigate = useNavigate();
 
   /* ===== CATEGORY DETAILS COMPONENT ===== */
   return (
@@ -30,7 +32,7 @@ function CategoryDetails({ game, category, index }) {
           return ( 
             <button 
               type="button"
-              onClick={ () => navigate(`${ game.abb }/${ category }/${ type }`) }
+              onClick={ () => onStatsClick(game.abb, category, type) }
               key={ type }
             >
               { capitalize(type) }

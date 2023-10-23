@@ -6,6 +6,7 @@ import styles from "./UserOverview.module.css";
 import Avatar from "../../Avatar/Avatar.jsx";
 import Container from "../../Container/Container.jsx";
 import CountryFlag from "../../CountryFlag/CountryFlag.jsx";
+import UserLayoutLogic from "../UserLayout.js";
 
 function UserOverview({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -16,16 +17,21 @@ function UserOverview({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const IMG_WIDTH = 300;
 
+  /* ===== FUNCTIONS ===== */
+
+  // functions from the js file
+  const { scrollToRight } = UserLayoutLogic();
+
   /* ===== USER OVERVIEW COMPONENT ===== */
   return (
     <Container>
       <div className={ styles.userOverview }>
 
         { /* User avatar and name - link back to the main user page. */ }
-        <Link to={ `/user/${ profile.id }` }>
+        <Link to={ `/user/${ profile.id }` } onClick={ scrollToRight }>
           <Avatar profileId={ profile.id } size={ IMG_WIDTH } imageReducer={ imageReducer }  />
         </Link>
-        <Link to={ `/user/${ profile.id }` }>
+        <Link to={ `/user/${ profile.id }` } onClick={ scrollToRight }>
           <h2>{ profile.username }</h2>
         </Link>
 

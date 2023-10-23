@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import ScrollHelper from "../../helper/ScrollHelper";
 
 const ResourcesLayout = () => {
     /* ===== VARIABLES ===== */
@@ -24,20 +25,10 @@ const ResourcesLayout = () => {
 
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: handleHeaderClick - function that is called when a user selects a header from the sidebar
-    // PRECONDITIONS (1 parameter):
-    // 1.) header: a string which corresponds to the id of a header on one of the resource pages
-    // POSTCONDITIONS (1 possible outcome):
-    // using vanilla JS, we scroll to the section based on the header parameter
-    const handleHeaderClick = header => {
-        const root = document.querySelector(":root");
-        const section = document.querySelector(`#${ header }`);
-        const yOffset = -parseInt((getComputedStyle(root).getPropertyValue("--navbar-height")))-5;
-        const y = section.getBoundingClientRect().top + window.scrollY + yOffset;
-        window.scrollTo({ top: y, behavior: "smooth" });
-    };
+    // helper functions
+    const { scrollToId } = ScrollHelper();
 
-    // FUNCTION 2: handlePageClick - function that is called when user selects a page from the sidebar
+    // FUNCTION 1: handlePageClick - function that is called when user selects a page from the sidebar
     // PRECONDITIONS (1 parameter):
     // 1.) page: a string which corresponds to the name of a resources page
     // POSTCONDITIONS (2 possible outcomes):
@@ -48,11 +39,11 @@ const ResourcesLayout = () => {
             setCurrentPage(name);
             navigate(`${ name }`);
         } else {
-            handleHeaderClick(name);
+            scrollToId(name);
         }
     };
 
-    return { pages, currentPage, handleHeaderClick, handlePageClick };
+    return { pages, currentPage, handlePageClick };
 };
 
 /* ===== EXPORTS ===== */

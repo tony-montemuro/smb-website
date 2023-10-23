@@ -17,7 +17,7 @@ const UserStats = () => {
     // database functions
     const { getTotals, getMedals, getUserRankings } = RPCRead();
 
-    // FUNCTION 3: fetchUserStats - given path information & game object, fetch the stats object
+    // FUNCTION 1: fetchUserStats - given path information & game object, fetch the stats object
     // PRECONDITIONS (3 parameters):
     // 1.) game: an object containing information about the game defined in the path
     // 2.) profileId: an integer representing the id of the user who's info we want to query

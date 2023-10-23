@@ -63,7 +63,7 @@ function UserLayout({ imageReducer }) {
         </div>
 
         { /* User layout content -  The actual page itself. */ }
-        <div className={ styles.right }>
+        <div className={ styles.right } id="user-layout-right">
           <Outlet />
         </div>
 

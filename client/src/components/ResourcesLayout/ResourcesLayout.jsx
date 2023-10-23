@@ -3,10 +3,14 @@ import { Outlet } from "react-router-dom";
 import styles from "./ResourcesLayout.module.css";
 import PageItem from "./PageItem";
 import ResourcesLayoutLogic from "./ResourcesLayout.js";
+import ScrollHelper from "../../helper/ScrollHelper";
 
 function ResourcesLayout() {
   /* ===== VARIABLES ===== */
-  const { pages, currentPage, handleHeaderClick, handlePageClick } = ResourcesLayoutLogic();
+  const { pages, currentPage, handlePageClick } = ResourcesLayoutLogic();
+
+  /* ===== FUNCTIONS ===== */
+  const { scrollToId } = ScrollHelper();
 
   /* ===== RESOURCES LAYOUT COMPONENT ===== */
   return (
@@ -20,7 +24,7 @@ function ResourcesLayout() {
               <PageItem 
                 page={ page }
                 currentPage={ currentPage }
-                headerClickFunc={ handleHeaderClick }
+                headerClickFunc={ scrollToId }
                 pageClickFunc={ handlePageClick } 
                 key={ page.name } 
               />

@@ -1,0 +1,36 @@
+.stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 5px 0;
+}
+
+.stats h2, .stats h3, .records h2, .records h3 {
+    margin: 0;
+}
+
+.slim {
+    width: auto !important;
+}
+
+.records {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.name {
+    width: 40%;
+}
+
+.record {
+    width: 20%;
+}
+
+.position {
+    width: 20%;
+}
+
+.date {
+    width: 20%;
+}
