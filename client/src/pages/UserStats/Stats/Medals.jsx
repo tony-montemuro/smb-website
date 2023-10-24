@@ -15,7 +15,7 @@ function Medals({ medals, filter }) {
   return (
     <div className={ styles.stats }>
       <h2>{ capitalize(type) } Medals</h2>
-      <span><em><strong>Note:</strong> Medals counts are computed using live records only!</em></span>
+      <span><em><strong>Note:</strong> Medal counts are computed using live-{ type }s only!</em></span>
 
       { medals ?
         <div className="table">
