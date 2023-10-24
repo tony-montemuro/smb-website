@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { PopupContext } from "../../../utils/Contexts";
 import { useContext } from "react";
+import styles from "./Popups.module.css";
 import CheckmarkOrX from "./CheckmarkOrX";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
@@ -25,7 +26,7 @@ function Insert() {
 
   /* ===== INSERT COMPONENT ===== */
   return (
-    <div className="notifications-insert">
+    <>
 
       { /* Popup header - includes a link to the moderator's user page */ }
       <h2>
@@ -33,45 +34,26 @@ function Insert() {
         &nbsp;has submitted the following submission on your behalf: 
       </h2>
 
-      { /* Notification details */ }
-      <div className="notifications-details-wrapper">
-        <div className="notifications-details">
+      { /* Notification details - render the basic info, as well as more specific information that the moderator inserted */ }
+      <div className={ styles.detailsWrapper }>
+        <div className={ styles.details }>
           <ul>
-
-            { /* Render basic information about submission - includes the game, as well as level */ }
             <NotificationBasicInfo notification={ notification } />
-
-            { /* Render the record */ }
             <li>
               { capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }
             </li>
-            
-            { /* Render the submission date */ }
             <li>Date: { dateB2F(submission.submitted_at) }</li>
-
-            { /* Render the monkey used in the submission */ }
             <li>Monkey: { submission.monkey.monkey_name }</li>
-
-            { /* Render the platform of the submission */ }
             <li>Platform: { submission.platform.platform_name }</li>
-
-            { /* Render the region of the submission */ }
             <li>Region: { submission.region.region_name }</li>
-
-            { /* Render the proof of the submission */ }
             <li><NotificationProof proof={ submission.proof } /></li>
-
-            { /* Render whether or not the submission was live */ }
             <li>Live Proof: <CheckmarkOrX isChecked={ submission.live } /></li>
-
-            { /* Render whether or not the submission used TAS */ }
             <li>TAS: <CheckmarkOrX isChecked={ submission.tas } /></li>
-
           </ul>
         </div>
       </div>
 
-    </div>
+    </>
   );
 };
 

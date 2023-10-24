@@ -1,0 +1,37 @@
+.detailsWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.details {
+    display: inline-block;
+    align-items: left;
+}
+
+.details ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.details li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 5px;
+    min-height: 26px;
+}
+
+.details span {
+    padding: 3px;
+    display: flex;
+    align-items: center;
+}
+
+.details li a {
+    display: inline-flex;
+}
+
+.updated {
+    background-color: yellow;
+    color: black;
+}

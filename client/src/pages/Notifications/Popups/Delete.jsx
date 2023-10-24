@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { PopupContext } from "../../../utils/Contexts";
 import { useContext } from "react";
+import styles from "./Popups.module.css";
 import CheckmarkOrX from "./CheckmarkOrX";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
@@ -24,7 +25,7 @@ function Delete() {
 
   /* ===== DELETE COMPONENT ===== */
   return (
-    <div className="notifications-delete">
+    <>
 
       { /* Popup header - includes a link to the moderator's user page */ }
       <h2>
@@ -32,30 +33,23 @@ function Delete() {
         &nbsp;has removed the following submission: 
       </h2>
 
-      { /* Notification details */ }
-      <div className="notifications-details-wrapper">
-        <div className="notifications-details">
+      { /* Notification details - render the basic info, record, and tas status */ }
+      <div className={ styles.detailsWrapper }>
+        <div className={ styles.details }>
           <ul>
-
-            { /* Render basic information about submission - includes the game, as well as level */ }
             <NotificationBasicInfo notification={ notification } />
-
-            { /* Render the record */ }
             <li>
               { capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }
             </li>
-
-            { /* Render whether or not the submission used TAS */ }
             <li>TAS: <CheckmarkOrX isChecked={ notification.tas } /></li>
-
           </ul>
         </div>
       </div>
 
-      { /* Render the message associated with the submission, if there is one. */ }
+      { /* Render the message associated with the deletion, if there is one. */ }
       <NotificationMessage message={ notification.message } notification={ notification } />
 
-    </div>
+    </>
   );
 };
 
