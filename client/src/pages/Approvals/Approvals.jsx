@@ -3,7 +3,7 @@ import SubmissionHandler from "../../components/SubmissionHandler/SubmissionHand
 
 function Approvals({ imageReducer }) {
   /* ===== APPROVALS COMPONENT ===== */
-  return <SubmissionHandler imageReducer={ imageReducer } isUnapproved={ true } />;
+  return <SubmissionHandler imageReducer={ imageReducer } isUnapproved />;
 };
 
 /* ===== EXPORTS ===== */
