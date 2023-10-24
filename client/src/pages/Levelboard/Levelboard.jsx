@@ -11,7 +11,7 @@ import LevelboardRow from "./LevelboardRow";
 import GameHelper from "../../helper/GameHelper";
 import Popup from "../../components/Popup/Popup.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
-import SubmissionDetails from "../../components/DetailPopup/SubmissionDetails.jsx";
+import SubmissionDetails from "../../components/SubmissionDetails/SubmissionDetails.jsx";
 import TableTabs from "../../components/TableTabs/TableTabs";
 import Update from "./Update.jsx";
 

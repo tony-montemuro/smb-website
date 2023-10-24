@@ -8,7 +8,7 @@ import FilteredSubmissionRow from "./FilteredSubmissionRow";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 import Popup from "../../components/Popup/Popup.jsx";
-import SubmissionDetails from "../../components/DetailPopup/SubmissionDetails.jsx";
+import SubmissionDetails from "../../components/SubmissionDetails/SubmissionDetails.jsx";
 import SubmissionHistoryLogic from "./SubmissionHistory";
 import TableTabs from "../../components/TableTabs/TableTabs";
 import Username from "../../components/Username/Username";
