@@ -40,7 +40,7 @@ function Home({ imageReducer }) {
           <GameSearch gamesPerPage={ GAMES_PER_PAGE } imageReducer={ imageReducer } gameRowOptions={ gameRowOptions } />
         </Container>
         <Container title="Recent Submissions" href="/recent-submissions" largeTitle>
-          <RecentSubmissionsTable />
+          <RecentSubmissionsTable renderGame renderLevelContext />
         </Container>
       </div>
 

@@ -227,8 +227,6 @@ function Levelboard({ imageReducer }) {
 					{ /* Then, render the recent submissions table for this particular chart */ }
 					<h2>Recent Submissions</h2>
 					<RecentSubmissionsTable 
-						renderGame={ false }
-						renderLevelContext={ false }
 						numSubmissions={ 20 }
 						searchParams={ searchParams }
 					/>

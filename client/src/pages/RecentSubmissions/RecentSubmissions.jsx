@@ -69,7 +69,7 @@ function RecentSubmissions({ imageReducer }) {
       </div>
 
       { /* Render a recent submissions table */ }
-      <RecentSubmissionsTable numSubmissions={ NUM_SUBMISSIONS } searchParams={ searchParams } />
+      <RecentSubmissionsTable numSubmissions={ NUM_SUBMISSIONS } searchParams={ searchParams } renderGame renderLevelContext />
 
     </div>
   );

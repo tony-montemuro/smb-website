@@ -6,7 +6,7 @@ import RecentSubmissionsRow from "./RecentSubmissionsRow.jsx";
 import RecentSubmissionsTableLogic from "./RecentSubmissionsTable.js";
 import TableContent from "../TableContent/TableContent.jsx";
 
-function RecentSubmissionsTable({ renderGame = true, renderLevelContext = true, numSubmissions = 5, searchParams }) {
+function RecentSubmissionsTable({ numSubmissions = 5, searchParams, renderGame, renderLevelContext }) {
   /* ===== VARIABLES ===== */
   let NUM_COLS = 4;
   if (renderGame) NUM_COLS += 1;

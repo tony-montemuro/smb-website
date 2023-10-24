@@ -76,7 +76,7 @@ function User({ imageReducer }) {
 
       { /* Recent submissions - Render the user's recent submissions */ }
       <Container title="Recent Submissions" href={ `/recent-submissions?profile_id=${ profile.id }` } largeTitle>
-        <RecentSubmissionsTable searchParams={ searchParams } />
+        <RecentSubmissionsTable searchParams={ searchParams } renderGame renderLevelContext />
       </Container>
 
       { /* Games moderated - Render each game the user moderators, if at least one exists */ }

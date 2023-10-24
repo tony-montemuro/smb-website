@@ -81,7 +81,7 @@ function Game() {
           </div>
           <div className={ styles.recent }>
             <Container title="Recent Submissions" href={ `/recent-submissions?game_id=${ abb }` } largeTitle>
-              <RecentSubmissionsTable renderGame={ false } searchParams={ searchParams } />
+              <RecentSubmissionsTable searchParams={ searchParams } renderLevelContext />
             </Container>
           </div>
         </div>
