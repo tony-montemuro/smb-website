@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import styles from "./ButtonList.module.css";
 
-function ButtonList({ buttons, current, setCurrent, hasPadding = true, wrap = false }) {
+function ButtonList({ buttons, current, setCurrent, hasPadding, wrap }) {
   /* ===== VARIABLES ===== */ 
   const style = { padding: hasPadding ? "5px" : "0", flexWrap: wrap ? "wrap" : "nowrap" };
 

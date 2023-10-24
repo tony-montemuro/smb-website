@@ -96,7 +96,7 @@ function Game() {
                 buttons={ categories.map(category => ({ name: categoryB2F(category), value: category })) }
                 current={ selectedCategory }
                 setCurrent={ handleChange }
-                wrap={ true }
+                wrap
               />
             }
             <div className={ styles.modes }>

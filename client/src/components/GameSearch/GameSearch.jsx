@@ -60,7 +60,7 @@ function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
       { /* Filters - render the various filters to game search, including the search bar, and buttons to filter by type */ }
       <div className={ styles.filters }>
         <SearchBarInput itemType="game" input={ searchInput } setInput={ setSearchInput } />
-        <ButtonList buttons={ buttons } current={ gameTypeFilter } setCurrent={ setGameTypeFilter } />
+        <ButtonList buttons={ buttons } current={ gameTypeFilter } setCurrent={ setGameTypeFilter } hasPadding />
       </div>
 
       { /* Search results - render the game search results here for main and/or custom games */ }

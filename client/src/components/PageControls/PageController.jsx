@@ -69,7 +69,6 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
             buttons={ [{ name: "1", value: 1 }] } 
             current={ pageNum } 
             setCurrent={ setPageNum } 
-            hasPadding={ false } 
           />
           { middlePages.length > 0 && middlePages[0] !== 2 && 
             <span className={ styles.spread }>...</span> 
@@ -78,7 +77,6 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
             buttons={ middlePages.map(page => ({ name: `${ page }`, value: page })) } 
             current={ pageNum } 
             setCurrent={ setPageNum }
-            hasPadding={ false }
           />
           { middlePages.length > 0 && middlePages[middlePages.length-1] !== maxPage-1 &&
             <span className={ styles.spread }>...</span>
@@ -87,7 +85,6 @@ function PageController({ totalItems, itemsPerPage, pageNum, setPageNum, useDrop
             buttons={ [{ name: `${ maxPage }`, value: maxPage }] } 
             current={ pageNum } 
             setCurrent={ setPageNum } 
-            hasPadding={ false }  
           />
         </div>
 
