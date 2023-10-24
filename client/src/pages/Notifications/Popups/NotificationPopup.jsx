@@ -24,7 +24,7 @@ function NotificationPopup({ notification, setNotification }) {
 
   /* ===== NOTIFICATION POPUP COMPONENT ===== */
   return (
-    <Popup renderPopup={ notification } setRenderPopup={ setNotification } width={ "33%" }>
+    <Popup renderPopup={ notification } setRenderPopup={ setNotification } width="500px">
       { getPopupContent(notification) }
     </Popup>
   );
