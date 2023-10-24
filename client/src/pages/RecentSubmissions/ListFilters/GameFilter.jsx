@@ -36,7 +36,7 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
         <p>Click a game to remove it as a filter.</p>
         { games ?
           <>
-            <Items items={ games } emptyMessage={ "You are not currently filtering by any games." }>
+            <Items items={ games } emptyMessage="You are not currently filtering by any games.">
               { games.map((game, index) => {
                   return (
                     <GameRow

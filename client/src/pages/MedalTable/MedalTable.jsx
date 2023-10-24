@@ -91,7 +91,7 @@ function MedalTable({ imageReducer }) {
             { medalTable ?
               <TableContent 
                 items={ medalTable } 
-                emptyMessage={ "There have been no live submissions to this game's category!" } 
+                emptyMessage="There have been no live submissions to this game's category!"
                 numCols={ TABLE_LENGTH }
               >
                 { medalTable.map(row => {

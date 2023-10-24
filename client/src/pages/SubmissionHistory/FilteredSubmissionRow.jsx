@@ -21,7 +21,7 @@ function FilteredSubmissionRow({ submission, level, onClickFunc }) {
       <td>{ getTimeAgo(submission.id) }</td>
 
       { /* Record - render the record itself */ }
-      <td><DetailedRecord submission={ submission } iconSize={ "small" } timerType={ level.timer_type } /></td>
+      <td><DetailedRecord submission={ submission } iconSize="small" timerType={ level.timer_type } /></td>
 
       { /* Monkey name - render the monkey of the submission */ }
       <td>{ submission.monkey.monkey_name }</td>

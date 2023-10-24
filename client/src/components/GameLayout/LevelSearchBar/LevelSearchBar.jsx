@@ -37,7 +37,7 @@ function LevelSearchBar() {
     <div className={ styles.searchbar }>
 
       { /* Render the search bar input */ }
-      <SearchBarInput itemType={ "level" } input={ searchInput } setInput={ setSearchInput } />
+      <SearchBarInput itemType="level" input={ searchInput } setInput={ setSearchInput } />
 
       { /* Only render search results if the filtered state has any elements. */ }
       { filtered && hasElements() &&

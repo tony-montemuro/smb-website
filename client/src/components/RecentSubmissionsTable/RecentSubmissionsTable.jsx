@@ -79,7 +79,7 @@ function RecentSubmissionsTable({ renderGame = true, renderLevelContext = true, 
         itemsPerPage={ numSubmissions }
         pageNum={ pageNum }
         setPageNum={ setPageNum }
-        itemName={ "Submissions" } 
+        itemName="Submissions" 
         useDropdown={ false }
       />
     </>

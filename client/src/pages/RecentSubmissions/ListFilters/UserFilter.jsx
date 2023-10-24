@@ -36,7 +36,7 @@ function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData 
         <p>Click a user to remove it as a filter.</p>
         { users ?
           <>
-            <Items items={ users } emptyMessage={ "You are not currently filtering by any users" }>
+            <Items items={ users } emptyMessage="You are not currently filtering by any users.">
               { users.map((user, index) => {
                 return (
                   <UserRow

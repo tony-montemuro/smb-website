@@ -40,7 +40,7 @@ function SubmissionDetails({ level, updateBoard }) {
       { /* Popup header - render the name of the level, the record, and the username */ }
       <h1>
         { cleanLevelName(levelName) }:&nbsp;
-        <DetailedRecord submission={ submission } iconSize={ "large" } timerType={ level.timer_type } /> by&nbsp;
+        <DetailedRecord submission={ submission } iconSize="large" timerType={ level.timer_type } /> by&nbsp;
         <Username profile={ profile } />
       </h1>
 

@@ -24,7 +24,7 @@ function LevelboardRow({ submission, imageReducer, level, onClickFunc }) {
 
       { /* Render the record */ }
       <td>
-        <DetailedRecord submission={ submission } iconSize={ "medium" } timerType={ level.timer_type } />
+        <DetailedRecord submission={ submission } iconSize="medium" timerType={ level.timer_type } />
       </td>
 
       { /* Render the submission date */ }

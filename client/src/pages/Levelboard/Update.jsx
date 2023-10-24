@@ -78,7 +78,7 @@ function Update({ level, updateBoard }) {
                       onClick={ () => handleSubmissionChange(submission.id, submissions) }
                     >
                       <td>{ dateB2F(submission.submitted_at) }</td>
-                      <td>{ <DetailedRecord submission={ submission } iconSize={ "small" } timerType={ level.timer_type } /> }</td>
+                      <td>{ <DetailedRecord submission={ submission } iconSize="small" timerType={ level.timer_type } /> }</td>
                       <td>{ submission.tas && "TAS" }</td>
                     </tr>
                   );
@@ -94,7 +94,7 @@ function Update({ level, updateBoard }) {
                 itemsPerPage={ SUBMISSIONS_PER_TABLE }
                 pageNum={ pageNum }
                 setPageNum={ setPageNum }
-                itemsName={ "Submissions" }
+                itemsName="Submissions"
               />
             </div>
             

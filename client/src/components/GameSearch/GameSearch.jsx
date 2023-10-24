@@ -59,13 +59,13 @@ function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
 
       { /* Filters - render the various filters to game search, including the search bar, and buttons to filter by type */ }
       <div className={ styles.filters }>
-        <SearchBarInput itemType={ "game" } input={ searchInput } setInput={ setSearchInput } />
+        <SearchBarInput itemType="game" input={ searchInput } setInput={ setSearchInput } />
         <ButtonList buttons={ buttons } current={ gameTypeFilter } setCurrent={ setGameTypeFilter } />
       </div>
 
       { /* Search results - render the game search results here for main and/or custom games */ }
       { gameTypes ?
-        <Items items={ gameTypes } emptyMessage={ "No games exist that match your filters." }>
+        <Items items={ gameTypes } emptyMessage="No games exist that match your filters.">
           { gameTypes.map(type => {
             return (
               <div key={ type } className={ styles.body }>
@@ -97,7 +97,7 @@ function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
         itemsPerPage={ gamesPerPage }
         pageNum={ pageNum }
         setPageNum={ setPageNum }
-        itemName={ "Games" } 
+        itemName="Games"
       />
 
     </div>

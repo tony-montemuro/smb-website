@@ -85,7 +85,7 @@ function UserInfoForm({ countries }) {
             value={ form.user.country }
             variant="filled"
           >
-            <option key={ "null" } value={ "" }></option>
+            <option key="null" value=""></option>
             { form.countries.map(country => {
               return (
                 <option value={ country.iso2 } key={ country.iso2 }>{ country.name }</option>

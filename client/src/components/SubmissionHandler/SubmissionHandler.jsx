@@ -55,7 +55,7 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
     <div className="submission-handler">
 
       { /* Popup elements */ }
-      <Popup renderPopup={ submission } setRenderPopup={ setSubmission } width={ "70%" }>
+      <Popup renderPopup={ submission } setRenderPopup={ setSubmission } width="70%">
         <Submission game={ game } isUnapproved={ isUnapproved } setSubmissions={ setSubmissions } />
       </Popup>
 

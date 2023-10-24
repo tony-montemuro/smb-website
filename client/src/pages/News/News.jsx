@@ -35,7 +35,7 @@ function News() {
 
       { /* News body - Render each post */ }
       { posts.data ?
-        <Items items={ posts.data } emptyMessage={ "No posts exist!" }>
+        <Items items={ posts.data } emptyMessage="No posts exist!">
           { posts.data.map(post => {
             return <NewsPost post={ post } key={ post.id } />;
           })}
@@ -44,7 +44,7 @@ function News() {
             itemsPerPage={ POSTS_PER_PAGE }
             pageNum={ pageNum }
             setPageNum={ setPageNum }
-            itemName={ "Posts" } 
+            itemName="Posts"
           />
         </Items>
       :

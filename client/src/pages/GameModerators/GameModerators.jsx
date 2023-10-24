@@ -37,13 +37,13 @@ function GameModerators({ imageReducer }) {
   return game && games &&
     <div className="game-moderators">
 
-        { /* Popups */ }
-        <Popup renderPopup={ moderatorToRemove } setRenderPopup={ setModeratorToRemove } width={ "30%" }>
-          <Delete submitting={ submitting } onDelete={ removeModerator } />
-        </Popup>
-        <Popup renderPopup={ moderatorToAdd } setRenderPopup={ setModeratorToAdd } width={ "30%" } >
-          <Insert submitting={ submitting } onInsert={ addModerator } />
-        </Popup>
+      { /* Popups */ }
+      <Popup renderPopup={ moderatorToRemove } setRenderPopup={ setModeratorToRemove } width="30%">
+        <Delete submitting={ submitting } onDelete={ removeModerator } />
+      </Popup>
+      <Popup renderPopup={ moderatorToAdd } setRenderPopup={ setModeratorToAdd } width="30%">
+        <Insert submitting={ submitting } onInsert={ addModerator } />
+      </Popup>
 
       { /* Simple game select - render a column of games to select from */ }
       <SimpleGameSelect

@@ -48,7 +48,7 @@ function Home({ imageReducer }) {
       <div className={ styles.right }>
         <Container title="News" href="/news" largeTitle>
           { posts ?
-            <Items items={ posts } emptyMessage={ "No posts have been created yet!" }>
+            <Items items={ posts } emptyMessage="No posts have been created yet!">
               <div className={ styles.posts }>
                 { posts.map(post => {
                   return <NewsPost post={ post } key={ post.id } />;

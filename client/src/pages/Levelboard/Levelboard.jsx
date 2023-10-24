@@ -105,13 +105,13 @@ function Levelboard({ imageReducer }) {
 			<Popup renderPopup={ insertPopup } setRenderPopup={ setInsertPopup } width={ `${ isModerator(abb) ? "50%" : "25%" }` }>
 				<Insert level={ level } updateBoard={ setupBoard } />
 			</Popup>
-			<Popup renderPopup={ updateSubmissions } setRenderPopup={ setUpdateSubmissions } width={ "40%" } >
+			<Popup renderPopup={ updateSubmissions } setRenderPopup={ setUpdateSubmissions } width="40%" >
 				<Update level={ level } updateBoard={ setupBoard } />
 			</Popup>
-			<Popup renderPopup={ filtersPopup } setRenderPopup={ setFiltersPopup } width={ "60%" } >
+			<Popup renderPopup={ filtersPopup } setRenderPopup={ setFiltersPopup } width="60%" >
 				<Filters currentFilters={ board.filters } defaultFilters={ defaultFilters } updateBoard={ setupBoard } />
 			</Popup>
-			<Popup renderPopup={ detailSubmission } setRenderPopup={ setDetailSubmission } width={ "40%" } >
+			<Popup renderPopup={ detailSubmission } setRenderPopup={ setDetailSubmission } width="40%" >
 				<SubmissionDetails level={ level } updateBoard={ setupBoard } />
 			</Popup>
 

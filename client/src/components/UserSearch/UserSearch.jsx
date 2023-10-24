@@ -39,11 +39,11 @@ function UserSearch({ usersPerPage, imageReducer = null, userRowOptions }) {
     <>
 
       { /* Search bar input for searching for users */ }
-      <SearchBarInput itemType={ "user" } input={ searchInput } setInput={ setSearchInput } />
+      <SearchBarInput itemType="user" input={ searchInput } setInput={ setSearchInput } />
 
       {/* Search results - render the user search results here */}
       { users.data ?
-        <Items items={ users.data } emptyMessage={ "No users match your search." }>
+        <Items items={ users.data } emptyMessage="No users match your search.">
           <div className={ styles.results }>
             { users.data.map((user, index) => {
                 return (
@@ -70,7 +70,7 @@ function UserSearch({ usersPerPage, imageReducer = null, userRowOptions }) {
         itemsPerPage={ usersPerPage }
         pageNum={ pageNum }
         setPageNum={ setPageNum }
-        itemName={ "Users" } 
+        itemName="Users" 
         useDropdown={ false }
       />
 
