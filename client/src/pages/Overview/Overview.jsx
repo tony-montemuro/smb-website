@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import "./Overview.css";
 import { Emulators, General, PausingRule, ProofRequirements, Regions, ReplayErrors, ScoreCalculation, Types } from "./Content.jsx";
 import styles from "./Overview.module.css";
 import Container from "../../components/Container/Container.jsx";
