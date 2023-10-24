@@ -1,0 +1,36 @@
+.notifications {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+}
+
+.header ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: inline-block;
+    text-align: left;
+}
+
+.message {
+    display: flex;
+    align-items: center;
+    padding: 3px 0;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.delete {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.controls {
+    padding: 5px 0;
+}

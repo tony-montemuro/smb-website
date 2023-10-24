@@ -1,0 +1,16 @@
+.tableRow td {
+    cursor: pointer;
+}
+
+tr.tableRow:hover td {
+    background-color: rgba(var(--color-container-hover));
+}
+
+td.checkbox {
+    cursor: auto;
+}
+
+.type {
+    display: flex;
+    align-items: center;
+}
