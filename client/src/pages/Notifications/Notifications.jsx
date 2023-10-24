@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import styles from "./Notifications.module.css";
+import Container from "../../components/Container/Container.jsx";
 import LoadingTable from "../../components/LoadingTable/LoadingTable";
 import NotificationsLogic from "./Notifications.js";
 import NotificationPopup from "./Popups/NotificationPopup";
@@ -76,18 +77,20 @@ function Notifications() {
       { /* Notifications header - render the name of the page, as well as information for each notification type */ }
       <div className={ styles.header }>
         <h1>Notifications</h1>
-        <ul>
-          { Object.keys(messages).map(type => {
-            return (
-              <li key={ type }>
-                <div className={ styles.message }>
-                  <TypeSymbol type={ type } />&emsp;
-                  <span>{ messages[type] }</span>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <Container>
+          <ul>
+            { Object.keys(messages).map(type => {
+              return (
+                <li key={ type }>
+                  <div className={ styles.message }>
+                    <TypeSymbol type={ type } />&emsp;
+                    <span>{ messages[type] }</span>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </Container>        
       </div>
 
       { /* Notifications body - render the list of notifications */ }

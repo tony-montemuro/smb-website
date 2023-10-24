@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import { Link } from "react-router-dom";
 import { PopupContext, UserContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import styles from "./Popups.module.css";
@@ -43,7 +42,6 @@ function Report() {
       <div className={ styles.detailsWrapper }>
         <div className={ styles.details }>
           <ul>
-            <li>User:&nbsp;<Link to={ `/user/${ submission.profile.id }`}>{ submission.profile.username }</Link></li>
             <NotificationBasicInfo notification={ notification } />
             <li>{ capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }</li>
             <li>Date: { dateB2F(submission.submitted_at) }</li>
