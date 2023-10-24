@@ -24,10 +24,10 @@ function ModeratorContainer({ imageReducer }) {
             <UserRow 
               user={ profile } 
               imageReducer={ imageReducer } 
-              isDetailed={ true } 
-              disableLink={ true } 
               onClick={ () => navigate(`/user/${ profile.id }`) }
               index={ index }
+              isDetailed
+              disableLink
               key={ profile.id }
             />
           );

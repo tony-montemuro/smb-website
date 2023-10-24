@@ -55,7 +55,7 @@ function Insert({ level, updateBoard }) {
       { isModerator(abb) &&
         <div className="levelboard-profile-select">
           <h2>Select a User</h2>
-          <UserRow user={ user.profile } disableLink={ true } onClick={ onUserRowClick } />
+          <UserRow user={ user.profile } onClick={ onUserRowClick } disableLink />
           <h3>OR</h3>
           <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ userRowOptions } />
         </div>

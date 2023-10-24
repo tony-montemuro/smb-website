@@ -6,7 +6,7 @@ import SocialLink from "../SocialLink/SocialLink.jsx";
 import StylesHelper from "../../helper/StylesHelper";
 import Username from "../Username/Username.jsx";
 
-function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = false, onClick, index = 0 }) {
+function UserRow({ user, imageReducer = null, onClick, index = 0, isDetailed, disableLink }) {
   /* ===== VARIABLES ===== */
   const SOCIAL_SIZE = 40;
 

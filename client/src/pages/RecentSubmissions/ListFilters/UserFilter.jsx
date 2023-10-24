@@ -41,10 +41,10 @@ function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData 
                 return (
                   <UserRow
                     user={ user }
-                    disableLink={ true }
                     onClick={ removeUser }
-                    key={ user.id }
                     index={ index }
+                    disableLink
+                    key={ user.id }
                   />
                 );
               })}

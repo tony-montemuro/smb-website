@@ -50,10 +50,10 @@ function UserSearch({ usersPerPage, imageReducer = null, userRowOptions }) {
                   <UserRow 
                     user={ user }
                     imageReducer={ imageReducer } 
-                    disableLink={ userRowOptions.disableLink }
-                    isDetailed={ userRowOptions.isDetailed } 
                     onClick={ userRowOptions.onUserRowClick }
                     index={ index }
+                    disableLink={ userRowOptions.disableLink }
+                    isDetailed={ userRowOptions.isDetailed } 
                     key={ user.id } 
                   />
                 );

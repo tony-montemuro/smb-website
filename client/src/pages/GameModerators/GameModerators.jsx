@@ -70,8 +70,8 @@ function GameModerators({ imageReducer }) {
                 return (
                   <UserRow  
                     user={ moderator }
-                    disableLink={ true }
                     onClick={ setModeratorToRemove }
+                    disableLink
                   />
                 );
               })}
