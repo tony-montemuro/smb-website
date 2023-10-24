@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 import StylesHelper from "../../helper/StylesHelper.js";
 
-function GameRow({ game, imageReducer, useCard = false, onClick = undefined, index = 0 }) {
+function GameRow({ game, imageReducer, useCard, onClick = undefined, index = 0 }) {
   /* ===== VARIABLES ===== */
   const BOX_WIDTH = useCard ? 200 : 50;
 

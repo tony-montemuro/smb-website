@@ -42,7 +42,6 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
                     <GameRow
                       game={ game }
                       imageReducer={ imageReducer }
-                      useCard={ false }
                       onClick={ removeGame }
                       index={ index }
                       key={ game.abb }
