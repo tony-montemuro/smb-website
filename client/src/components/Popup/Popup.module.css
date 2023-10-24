@@ -47,9 +47,8 @@
 }
 
 #close {
-    position: absolute;
-    top: var(--pad);
-    right: var(--pad);
+    display: flex;
+    justify-content: flex-end;
 }
 
 #close button {
