@@ -3,7 +3,7 @@ import "./Username.css";
 import { Link } from "react-router-dom";
 import CountryFlag from "../CountryFlag/CountryFlag";
 
-function Username({ profile, disableLink = false }) {
+function Username({ profile, disableLink }) {
   /* ===== USERNAME COMPONENT ===== */
   return (
     <div className="username">

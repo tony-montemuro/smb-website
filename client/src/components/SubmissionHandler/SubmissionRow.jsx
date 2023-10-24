@@ -33,7 +33,7 @@ function SubmissionRow({ submission, onClick, isUnapproved }) {
       { !isUnapproved &&
         <td>
           <div>
-            <Username profile={ creator } disableLink={ true } />
+            <Username profile={ creator } disableLink />
           </div>
         </td>
       }
@@ -41,7 +41,7 @@ function SubmissionRow({ submission, onClick, isUnapproved }) {
       { /* Render the username of the person who submitted it */ }
       <td>
         <div>
-          <Username profile={ profile } disableLink={ true } />
+          <Username profile={ profile } disableLink />
         </div>
       </td>
 
