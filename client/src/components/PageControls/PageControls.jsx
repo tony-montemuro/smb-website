@@ -3,7 +3,7 @@ import styles from "./PageControls.module.css";
 import PageControlsLogic from "./PageControls.js";
 import PageController from "./PageController";
 
-function PageControls({ totalItems, itemsPerPage, pageNum, setPageNum, itemName, useDropdown = true }) {
+function PageControls({ totalItems, itemsPerPage, pageNum, setPageNum, itemName, useDropdown }) {
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file

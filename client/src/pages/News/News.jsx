@@ -45,6 +45,7 @@ function News() {
             pageNum={ pageNum }
             setPageNum={ setPageNum }
             itemName="Posts"
+            useDropdown
           />
         </Items>
       :

@@ -98,6 +98,7 @@ function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
         pageNum={ pageNum }
         setPageNum={ setPageNum }
         itemName="Games"
+        useDropdown
       />
 
     </div>

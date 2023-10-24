@@ -80,7 +80,6 @@ function RecentSubmissionsTable({ renderGame = true, renderLevelContext = true, 
         pageNum={ pageNum }
         setPageNum={ setPageNum }
         itemName="Submissions" 
-        useDropdown={ false }
       />
     </>
   );

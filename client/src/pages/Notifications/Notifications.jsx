@@ -166,6 +166,7 @@ function Notifications() {
             pageNum={ pageNum }
             setPageNum={ changePage }
             itemName="Notifications"
+            useDropdown
           />
         </div>
 
