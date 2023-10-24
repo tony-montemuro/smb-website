@@ -36,7 +36,7 @@ function UserRow({ user, imageReducer = null, isDetailed = false, disableLink = 
         className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" } ${ indexToParity(index) }` } 
         onClick={ () => onClick(user) }
       >
-        <DetailedUsername imageReducer={ imageReducer } profile={ user } disableLink={ true } />
+        <DetailedUsername imageReducer={ imageReducer } profile={ user } disableLink />
         <div className={ styles.socials }>
           <SocialLink name="youtube" username={ user.youtube_handle } size={ SOCIAL_SIZE } />
           <SocialLink name="twitch" username={ user.twitch_username } size={ SOCIAL_SIZE } />

@@ -3,7 +3,7 @@ import "./DetailedUsername.css";
 import Avatar from "../Avatar/Avatar.jsx";
 import Username from "../Username/Username";
 
-function DetailedUsername({ imageReducer, profile, disableLink = false }) {
+function DetailedUsername({ imageReducer, profile, disableLink }) {
   /* ===== VARIABLES ===== */
   const IMG_LENGTH = 60;
 
