@@ -2,7 +2,7 @@
 import Approve from "./Approve";
 import Insert from "./Insert";
 import Delete from "./Delete";
-import Popup from "../../components/Popup/Popup.jsx";
+import Popup from "../../../components/Popup/Popup.jsx";
 import Report from "./Report";
 import Update from "./Update";
 
@@ -13,18 +13,12 @@ function NotificationPopup({ notification, setNotification }) {
   const getPopupContent = notification => {
     const notifType = notification ? notification.notif_type : null;
     switch (notifType) {
-      case "approve":
-        return <Approve />;
-      case "delete":
-        return <Delete />;
-      case "insert":
-        return <Insert />;
-      case "report":
-        return <Report />;
-      case "update":
-        return <Update />;
-      default:
-        return null;
+      case "approve": return <Approve />;
+      case "delete": return <Delete />;
+      case "insert": return <Insert />;
+      case "report": return <Report />;
+      case "update": return <Update />;
+      default: return null;
     };
   };
 

@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import styles from "./NotificationTableRow.module.css";
-import FrontendHelper from "../../helper/FrontendHelper";
-import TypeSymbol from "./TypeSymbol";
+import FrontendHelper from "../../../helper/FrontendHelper";
+import TypeSymbol from "../TypeSymbol";
 
 function NotificationTableRow({ row, notifications, pageNum, handleRowClick, toggleSelection }) {
   /* ===== VARIABLES ===== */

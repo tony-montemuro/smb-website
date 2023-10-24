@@ -1,12 +1,12 @@
 /* ===== IMPORTS ===== */
-import { PopupContext } from "../../utils/Contexts";
+import { PopupContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckmarkOrX from "./CheckmarkOrX";
-import FrontendHelper from "../../helper/FrontendHelper";
+import FrontendHelper from "../../../helper/FrontendHelper";
 import NotificationProof from "./NotificationProof";
-import Username from "../../components/Username/Username";
+import Username from "../../../components/Username/Username";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
 function Update() {

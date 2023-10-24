@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
-import { PopupContext, UserContext } from "../../utils/Contexts";
+import { PopupContext, UserContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import CheckmarkOrX from "./CheckmarkOrX";
-import FrontendHelper from "../../helper/FrontendHelper";
+import FrontendHelper from "../../../helper/FrontendHelper";
 import NotificationBasicInfo from "./NotificationBasicInfo";
 import NotificationMessage from "./NotificationMessage";
 import NotificationProof from "./NotificationProof";
-import Username from "../../components/Username/Username";
+import Username from "../../../components/Username/Username.jsx";
 
 function Report() {
   /* ===== CONTEXTS ===== */

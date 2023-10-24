@@ -25,6 +25,10 @@
     gap: 10px;
 }
 
+.body input[type="checkbox"]:disabled {
+    cursor: auto;
+}
+
 .delete {
     display: flex;
     align-items: center;

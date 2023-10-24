@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import styles from "./Notifications.module.css";
+import LoadingTable from "../../components/LoadingTable/LoadingTable";
 import NotificationsLogic from "./Notifications.js";
-import NotificationPopup from "./NotificationPopup";
-import NotificationTableRow from "./NotificationTableRow";
+import NotificationPopup from "./Popups/NotificationPopup";
+import NotificationTableRow from "./NotificationTableRow/NotificationTableRow.jsx";
 import PageControls from "../../components/PageControls/PageControls.jsx";
 import TableContent from "../../components/TableContent/TableContent.jsx";
 import TypeSymbol from "./TypeSymbol";
@@ -68,7 +69,7 @@ function Notifications() {
   }, [user, pageNum]);
 
   /* ===== NOTIFICATION COMPONENT ===== */
-  return notifications.all ?
+  return (
     <div className={ styles.notifications }>
       { /* Notification popup element */ }
       <NotificationPopup notification={ notification } setNotification={ setNotification } />
@@ -90,9 +91,14 @@ function Notifications() {
         </ul>
       </div>
 
+      { /* Notifications body - render the list of notifications */ }
       <div className={ styles.body }>
         <div className={ styles.delete }>
-          <button type="button" onClick={ removeSelected } disabled={ getSelectedCount() === 0 || notifications.submitting }>
+          <button 
+            type="button" 
+            onClick={ removeSelected } 
+            disabled={ !notifications.all || getSelectedCount() === 0 || notifications.submitting }
+          >
             Delete
           </button>
 
@@ -112,8 +118,8 @@ function Notifications() {
                 <th>
                   <input
                     type="checkbox"
-                    checked={ notifications.all.length > 0 && areAllNotifsSelected(pageNum) }
-                    disabled={ notifications.all.length === 0 }
+                    checked={ notifications.all !== undefined && notifications.all.length > 0 && areAllNotifsSelected(pageNum) }
+                    disabled={ !notifications.all || notifications.all.length === 0 }
                     onChange={ () => toggleSelectionAll(pageNum) }
                   />
                 </th>
@@ -129,18 +135,22 @@ function Notifications() {
 
             { /* Table body - render a row for each notification */ }
             <tbody>
-              <TableContent items={ notifications.all } emptyMessage="You have no notifications!" numCols={ TABLE_WIDTH }>
-                { notifications.all.map(row => {
-                  return <NotificationTableRow 
-                    row={ row } 
-                    notifications= { notifications } 
-                    pageNum={ pageNum }
-                    handleRowClick={ setNotification } 
-                    toggleSelection={ toggleSelection } 
-                    key={ row.notif_date }
-                  />;
-                })}
-              </TableContent>
+              { notifications.all ? 
+                <TableContent items={ notifications.all } emptyMessage="You have no notifications!" numCols={ TABLE_WIDTH }>
+                  { notifications.all.map(row => {
+                    return <NotificationTableRow 
+                      row={ row } 
+                      notifications= { notifications } 
+                      pageNum={ pageNum }
+                      handleRowClick={ setNotification } 
+                      toggleSelection={ toggleSelection } 
+                      key={ row.notif_date }
+                    />;
+                  })}
+                </TableContent>
+              :
+                <LoadingTable numCols={ TABLE_WIDTH } />
+              }
             </tbody>
 
           </table>
@@ -159,10 +169,7 @@ function Notifications() {
 
       </div>
     </div>
-  :
-
-    // Loading component
-    <p>Loading...</p>
+  );
 };
 
 /* ===== EXPORTS ===== */
