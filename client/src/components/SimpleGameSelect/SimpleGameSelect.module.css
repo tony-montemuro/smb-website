@@ -1,0 +1,27 @@
+.simpleGameSelect {
+    display: flex;
+    flex-direction: column;
+    position: -webkit-sticky;
+    position: sticky;
+    top: calc(var(--navbar-height) + calc(var(--navbar-height)/2) + 20px);
+    width: 360px;
+}
+
+.tabs {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.tab {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.active {
+    cursor: default;
+}

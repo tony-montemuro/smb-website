@@ -1,33 +1,32 @@
 /* ===== IMPORTS ===== */
-import "./SimpleGameSelect.css";
-import BoxArt from "../BoxArt/BoxArt.jsx";
+import styles from "./SimpleGameSelect.module.css";
+import Container from "../Container/Container.jsx";
+import GameRow from "../GameRow/GameRow.jsx";
 
 function SimpleGameSelect({ games, game, setGame, imageReducer, countType = null }) {
   /* ===== SIMPLE GAME SELECT COMPONENT ===== */
   return (
-    <div className="simple-game-select">
+    <div className={ styles.simpleGameSelect }>
+      <Container title="Games" largeTitle>
 
-      { /* Render the component title */ }
-      <div className="simple-game-select-title">
-        <h2>Select a Game:</h2>
-      </div>
-
-      { /* Render, for each game, a selectable tab */ }
-      <div className="simple-game-select-tabs">
-        { games.map(gameObj => {
-          const num = countType && gameObj[countType];
-          return (
-            <div
-              className={ `simple-game-select-tab${ gameObj.abb === game.abb ? " simple-game-select-tab-active" : "" }` }
-              onClick={ () => setGame(gameObj) }
-              key={ gameObj.abb }
-            >
-              <BoxArt game={ gameObj } imageReducer={ imageReducer } width={ 50 } />
-              <span>{ gameObj.name }{ num && num > 0 ? ` (${ num })` : "" }</span>
-            </div>
-          );
-        })}
-      </div>
+        { /* For each game that the user moderates, render a game row that will update the administrator view when clicked */ }
+        <div className={ styles.tabs }>
+          { games.map((gameObj, index) => {
+            const num = countType && gameObj[countType];
+            return (
+              <GameRow 
+                game={ gameObj }
+                imageReducer={ imageReducer }
+                onClick={ setGame }
+                index={ index }
+                extraContent={ num ? `(${ num })` : undefined }
+                selectedGame={ game.abb }
+                key={ gameObj.abb }
+              />
+            );
+          })}
+        </div>
+      </Container>
 
     </div>
   );

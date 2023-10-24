@@ -14,7 +14,15 @@
     padding: 8px 4px;
 }
 
-.item:hover {
+.item:not(.selected):hover {
     background-color: rgba(var(--color-container-selected), 0.5);
     cursor: pointer;
+}
+
+.selected {
+    background-color: rgb(var(--color-container-selected));
+}
+
+.selected:hover {
+    cursor: default;
 }

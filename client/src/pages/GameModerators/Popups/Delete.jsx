@@ -1,7 +1,8 @@
 /* ===== IMPORTS ===== */
-import { PopupContext } from "../../utils/Contexts";
+import { PopupContext } from "../../../utils/Contexts";
 import { useContext } from "react";
-import Username from "../../components/Username/Username";
+import styles from "./Popups.module.css";
+import Username from "../../../components/Username/Username";
 
 function Delete({ submitting, onDelete }) {
   /* ===== CONTEXTS ===== */
@@ -14,18 +15,13 @@ function Delete({ submitting, onDelete }) {
 
   /* ===== DELETE COMPONENT ===== */
   return (
-    <div className="game-moderators-delete">
-
-      { /* Render question to user */ }
+    <>
       <h2>Are you sure you want to remove <Username profile={ moderator } /> as a moderator?</h2>
-
-      { /* Render two options user can choose from */ }
-      <div className="game-moderators-btns">
-        <button type="button" disabled={ submitting } onClick={ closePopup }>No</button>
-        <button type="button" disabled={ submitting } onClick={ () => onDelete(moderator, closePopup) }>Yes</button>
+      <div className={ `center ${ styles.btns }` }>
+        <button type="button" id="cancel" disabled={ submitting } onClick={ closePopup }>Cancel</button>
+        <button type="button" disabled={ submitting } onClick={ () => onDelete(moderator, closePopup) }>Remove</button>
       </div>
-
-    </div>
+    </>
   );
 };
 

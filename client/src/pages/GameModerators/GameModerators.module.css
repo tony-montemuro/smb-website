@@ -1,0 +1,14 @@
+.gameModerators {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.content {
+    flex: 1;
+}
+
+.content h2, .content p {
+    margin: 0;
+    padding-bottom: 10px
+}

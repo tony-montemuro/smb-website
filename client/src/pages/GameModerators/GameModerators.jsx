@@ -1,9 +1,11 @@
 /* ===== IMPORTS ===== */
-import "./GameModerators.css";
 import { useEffect, useState } from "react";
-import Delete from "./Delete";
+import styles from "./GameModerators.module.css";
+import Container from "../../components/Container/Container.jsx";
+import Delete from "./Popups/Delete.jsx";
 import GameModeratorsLogic from "./GameModerators.js";
-import Insert from "./Insert";
+import Insert from "./Popups/Insert.jsx";
+import Items from "../../components/Items/Items.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
 import SimpleGameSelect from "../../components/SimpleGameSelect/SimpleGameSelect.jsx";
 import UserRow from "../../components/UserRow/UserRow.jsx";
@@ -24,6 +26,7 @@ function GameModerators({ imageReducer }) {
     onUserRowClick: setModeratorToAdd
   };
   const USERS_PER_PAGE = 20;
+  const WIDTH = "600px";
 
   /* ===== EFFECTS ===== */
 
@@ -35,13 +38,13 @@ function GameModerators({ imageReducer }) {
   
   /* ===== GAME MODERATOR COMPONENT ===== */
   return game && games &&
-    <div className="game-moderators">
+    <div className={ styles.gameModerators }>
 
       { /* Popups */ }
-      <Popup renderPopup={ moderatorToRemove } setRenderPopup={ setModeratorToRemove } width="30%">
+      <Popup renderPopup={ moderatorToRemove } setRenderPopup={ setModeratorToRemove } width={ WIDTH }>
         <Delete submitting={ submitting } onDelete={ removeModerator } />
       </Popup>
-      <Popup renderPopup={ moderatorToAdd } setRenderPopup={ setModeratorToAdd } width="30%">
+      <Popup renderPopup={ moderatorToAdd } setRenderPopup={ setModeratorToAdd } width={ WIDTH }>
         <Insert submitting={ submitting } onInsert={ addModerator } />
       </Popup>
 
@@ -54,44 +57,34 @@ function GameModerators({ imageReducer }) {
       />
 
       { /* Game moderators current - render both the list of current moderators, and a user search to add new moderators */ }
-      <div className="game-moderators-content">
-        <h1>Game Moderators</h1>
+      <div className={ styles.content }>
+        <Container title={ game.name } largeTitle>
 
-        { /* Render list of all current moderators */ }
-        <div className="game-moderators-container">
+          { /* Section #1: render the current moderators for the particular game, and allow administrator to remove if needed */ }
           <h2>Current Moderators</h2>
+          <Items items={ game.moderators } emptyMessage="This game has no moderators! You should add at least one.">
+            <p>Select a moderator to remove them.</p>
+            { game.moderators.map(moderator => {
+              return (
+                <UserRow  
+                  user={ moderator }
+                  onClick={ setModeratorToRemove }
+                  disableLink
+                />
+              );
+            })}
+          </Items>
 
-          { /* If at least 1 moderator exists, render it */ }
-          { game.moderators.length > 0 ?
+          <hr />
 
-            <div className="game-moderators-list">
-              <p>Select a moderator to remove them.</p>
-              { game.moderators.map(moderator => {
-                return (
-                  <UserRow  
-                    user={ moderator }
-                    onClick={ setModeratorToRemove }
-                    disableLink
-                  />
-                );
-              })}
-            </div>
-          :
-
-          // Otherwise, render message to admin that they should add some
-          <p className="game-moderators-current-empty">This game has no moderators! You should at at least one.</p> 
-          }
-
-        </div>
-
-        { /* Render the ability to search for users to add them as moderators */ }
-        <div className="game-moderators-container">
+          { /* Section #2: render the list of users to search through, and allow administrator to add if needed */ }
           <h2>Add New Moderator</h2>
           <p>Select a user to add them as a moderator.</p>
           <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ options } />
-        </div>
 
+        </Container>
       </div>
+
     </div>;
 };
 

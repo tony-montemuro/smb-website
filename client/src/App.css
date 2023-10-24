@@ -52,13 +52,12 @@ button {
     white-space: nowrap;
 }
 
-button:hover {
+button:not(:disabled):hover {
     background-color: rgb(var(--color-button-hover));
 }
 
 button[disabled] {
     cursor: default;
-    background-color: rgb(var(--color-button));
 }
 
 hr {
@@ -154,4 +153,22 @@ input[type=file], input[type=file]::-webkit-file-upload-button {
 .table td {
     text-align: left;
     padding: 4px 8px;
+}
+
+/* ===== GLOBAL IDS ===== */
+
+#cancel {
+    color: rgb(var(--color-text));
+    border: 1px solid rgb(var(--color-text));
+    background-color: transparent;
+    padding: 4px 9px;
+}
+
+#cancel:not(:disabled):hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+#cancel:disabled {
+    color: #ccc;
+    border-color: #ccc;
 }
