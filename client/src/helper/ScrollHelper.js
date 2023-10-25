@@ -1,3 +1,4 @@
+/* ===== IMPORTS ===== */
 import StylesHelper from "./StylesHelper";
 
 const ScrollHelper = () => {
