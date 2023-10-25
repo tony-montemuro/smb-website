@@ -30,8 +30,7 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
   const { 
     submissions,
     setSubmissions,
-    fetchSubmissions,
-    isClickable
+    fetchSubmissions
   } = SubmissionHandlerLogic(isUnapproved);
 
   /* ===== EFFECTS ===== */
@@ -106,7 +105,7 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
                     { submissions.map(submission => {
                       return <SubmissionRow 
                         submission={ submission } 
-                        onClick={ isClickable(submission) ? setSubmission : null }
+                        onClick={ setSubmission }
                         isUnapproved={ isUnapproved }
                         key={ submission.id } 
                       />

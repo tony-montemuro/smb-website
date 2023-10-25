@@ -1,27 +1,29 @@
 /* ===== IMPORTS ===== */
+import styles from "./SubmissionHandler.module.css";
 import FrontendHelper from "../../helper/FrontendHelper";
 import SubmissionHandlerLogic from "./SubmissionHandler.js";
 import Username from "../../components/Username/Username.jsx"
 
 function SubmissionRow({ submission, onClick, isUnapproved }) {
-  /* ===== VARIABLES ===== */
-  const profile = submission.profile;
-  const level = submission.level;
-  const creator = !isUnapproved ? submission.report.creator : undefined;
-  const type = submission.score ? "score" : "time";
-
   /* ===== FUNCTIONS ===== */
 
   // helper functions
   const { getTimeAgo, capitalize, cleanLevelName, recordB2F, categoryB2F } = FrontendHelper();
   const { isClickable } = SubmissionHandlerLogic(isUnapproved);
+  
+  /* ===== VARIABLES ===== */
+  const canClick = isClickable(submission);
+  const profile = submission.profile;
+  const level = submission.level;
+  const creator = !isUnapproved ? submission.report.creator : undefined;
+  const type = submission.score ? "score" : "time";
 
-  /* ===== SUBMISSION ROW ===== */
+  /* ===== SUBMISSION ROW COMPONENT ===== */
   return (
     <tr 
-      className={ !isClickable(submission) ? "submission-handler-not-clickable" : "" } 
-      onClick={ () => onClick(submission) } 
-      disabled={ true }
+      className={ !canClick ? styles.notClickable : "" } 
+      onClick={ canClick ? () => onClick(submission) : null } 
+      title={ !canClick ? "Unable to handle reported submissions that you submitted or reported." : null }
     >
 
       { /* Render how long ago the submission was submitted */ }

@@ -13,3 +13,14 @@
 .content {
     flex: 1;
 }
+
+.notClickable {
+    background-color: #f0f0f0;
+    opacity: 0.6;
+    cursor: default;
+}
+
+.content tbody tr:not(.notClickable):hover {
+    background-color: rgba(var(--color-container-selected), 0.5);
+    cursor: pointer;
+}
