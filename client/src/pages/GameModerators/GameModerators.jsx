@@ -18,7 +18,7 @@ function GameModerators({ imageReducer }) {
   const [moderatorToAdd, setModeratorToAdd] = useState(undefined);
 
   // states and functions from the js file
-  const { game, games, submitting, setGame, queryGames, removeModerator, addModerator } = GameModeratorsLogic();
+  const { game, games, submitting, queryGames, setGameAndScroll, removeModerator, addModerator } = GameModeratorsLogic();
 
   /* ===== VARIABLES ===== */
   const options = {
@@ -54,13 +54,13 @@ function GameModerators({ imageReducer }) {
         <SimpleGameSelect
           games={ games }
           game={ game }
-          setGame={ setGame }
+          setGame={ setGameAndScroll }
           imageReducer={ imageReducer }
         />
       </div>
 
       { /* Game moderators current - render both the list of current moderators, and a user search to add new moderators */ }
-      <div className={ styles.content }>
+      <div id="content" className={ styles.content }>
 
         { game && games ?  
           <Container title={ game.name } largeTitle>
@@ -75,6 +75,7 @@ function GameModerators({ imageReducer }) {
                     user={ moderator }
                     onClick={ setModeratorToRemove }
                     disableLink
+                    key={ moderator.id }
                   />
                 );
               })}

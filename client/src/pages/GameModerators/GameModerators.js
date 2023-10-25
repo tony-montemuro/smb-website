@@ -4,6 +4,8 @@ import { useContext, useState } from "react";
 import GameRead from "../../database/read/GameRead";
 import GameProfileDelete from "../../database/delete/GameProfileDelete";
 import GameProfileUpdate from "../../database/update/GameProfileUpdate";
+import ScrollHelper from "../../helper/ScrollHelper";
+import StylesHelper from "../../helper/StylesHelper";
 
 const GameModerators = () => {
     /* ===== CONTEXTS ===== */
@@ -23,6 +25,10 @@ const GameModerators = () => {
     const { deleteModerator } = GameProfileDelete();
     const { insertModerator } = GameProfileUpdate();
 
+    // helper functions
+    const { scrollToId } = ScrollHelper();
+    const { getNavbarHeight } = StylesHelper();
+
     // FUNCTION 1: queryGames - code that is executed when the `GameModerators` component mounts, or when the game state is updated
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
@@ -38,7 +44,21 @@ const GameModerators = () => {
         };
     };
 
-    // FUNCTION 2: removeModerator - code that is executed when the administrator requests to remove a moderator
+    // FUNCTION 2: setGameAndScroll - code that is executed when the administrator selects a game
+    // PRECONDITIONS (1 parameter):
+    // 1.) game: a game object, which belongs to the game the user selected
+    // POSTCONDITIONS (1 possible outcome):
+    // the game state is updated, and the user is scrolled to the moderation editor
+    const setGameAndScroll = game => {
+        setGame(game);
+        let tabsHeight = getNavbarHeight()/2;
+        if (window.innerWidth <= 800) {
+            tabsHeight *= 3;
+        }
+        scrollToId("content", tabsHeight);
+    };
+
+    // FUNCTION 3: removeModerator - code that is executed when the administrator requests to remove a moderator
     // PRECONDITIONS (2 parameters):
     // 1.) moderator: the moderator in question we wish to remove
     // 2.) closePopup: a function that, when called, closes the popup
@@ -59,7 +79,7 @@ const GameModerators = () => {
         };
     };
 
-    // FUNCTION 3: addModerator - code that is executed when the administrator requests to add a moderator
+    // FUNCTION 4: addModerator - code that is executed when the administrator requests to add a moderator
     // PRECONDITIONS (2 parameters):
     // 1.) moderator: the moderator in question we wish to add
     // 2.) closePopup: a function that, when called, closes the popup
@@ -84,7 +104,7 @@ const GameModerators = () => {
         };
     };
 
-    return { game, games, submitting, setGame, queryGames, removeModerator, addModerator };
+    return { game, games, submitting, queryGames, setGameAndScroll, removeModerator, addModerator };
 };
 
 /* ===== EXPORTS ===== */

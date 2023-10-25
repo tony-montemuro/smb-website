@@ -10,7 +10,16 @@ const StylesHelper = () => {
         return index % 2 === 1 ? "odd" : "even";
     };
 
-    return { indexToParity };
+    // FUNCTION 2: getNavbarHeight - function that returns the scrollbar height, a CSS variable
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // the navbar height (px value) is returned as an integer
+    const getNavbarHeight = () => {
+        const root = document.querySelector(":root");
+        return parseInt(getComputedStyle(root).getPropertyValue("--navbar-height"));
+    };
+
+    return { indexToParity, getNavbarHeight };
 };
 
 /* ===== EXPORTS ===== */
