@@ -44,4 +44,15 @@
     .tabs {
         flex-direction: column;
     }
+
+    .tab {
+        border-top: 1px solid rgba(var(--color-text), 0.5);
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+    }
+
+    .tab:last-child {
+        border-bottom: 1px solid rgba(var(--color-text), 0.5);
+    }
 }
