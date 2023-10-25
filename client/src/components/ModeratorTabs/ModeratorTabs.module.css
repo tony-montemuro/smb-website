@@ -37,3 +37,11 @@
 .tab:not(.active):hover {
     cursor: pointer;
 }
+
+/* ===== MEDIA QUERIES FOR SMALLER DEVICES ===== */
+
+@media (max-width: 800px) {
+    .tabs {
+        flex-direction: column;
+    }
+}

@@ -6,7 +6,6 @@
 }
 
 .left {
-    max-width: 360px;
     width: 360px;
     display: flex;
     flex-direction: column;
@@ -19,4 +18,16 @@
 .content h2, .content p {
     margin: 0;
     padding-bottom: 10px
+}
+
+/* ===== MEDIA QUERIES FOR SMALLER DEVICES ===== */
+
+@media (max-width: 800px) {
+    .left {
+        width: 100%;
+    }
+
+    .gameModerators {
+        flex-direction: column;
+    }
 }
