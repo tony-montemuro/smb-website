@@ -30,13 +30,9 @@ const GameModerators = () => {
     // if the games are unsuccessfully queried, render an error message, which should keep the component loading
     const queryGames = async () => {
         try {
-            // attempt to fetch games data from db
             const games = await queryGamesForModerators();
-
-            // update both the game and games states
             setGame(game ? games.find(row => row.abb === game.abb) : games[0]);
             setGames(games);
-
         } catch (error) {
             addMessage("There was an error fetching the moderator data for each game.", "error");
         };
