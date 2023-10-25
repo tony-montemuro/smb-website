@@ -1,13 +1,18 @@
 /* ===== IMPORTS ===== */
-import "./Post.css";
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "./Post.module.css";
 import PostLogic from "./Post.js";
+import TextField from "@mui/material/TextField";
 
 function Post() {
   /* ===== VARIABLES ===== */
-  const NUM_ROWS = 20;
+  const TITLE_MAX_LENGTH = 200;
+  const BODY_MAX_LENGTH = 3000;
+  const BODY_HEIGHT = 25;
+  const LINK_MAX_LENGTH = 256;
+  const LINK_DESCRIPTION_MAX_LENGTH = 100;
   const navigate = useNavigate();
 
   /* ===== CONTEXTS ===== */
@@ -38,78 +43,67 @@ function Post() {
 
   /* ===== POST COMPONENT ===== */
   return (
-    <div className="post">
-
-      { /* Post header: render the name of the page, as well as a short description */ }
+    <div className={ styles.post }>
       <h1>Create Post</h1>
 
-      <div className="post-form">
+      { /* Post form: this is where the user can create their post - title, body, link, & link description */ }
+      <form className={ styles.form } onSubmit={ onPostSubmit }>
+        <TextField 
+          color="primary"
+          fullWidth
+          id="title"
+          inputProps={ { maxLength: TITLE_MAX_LENGTH } }
+          label="Title"
+          placeholder="Must be under 200 characters"
+          onChange={ handleChange }
+          required
+          value={ form.values.title }
+          variant="filled"
+        />
+        <TextField
+          color="primary"
+          fullWidth
+          id="body"
+          inputProps={ { maxLength: BODY_MAX_LENGTH } }
+          label="Body"
+          multiline
+          placeholder="Must be under 3000 characters"
+          rows={ BODY_HEIGHT }
+          onChange={ handleChange }
+          required
+          value={ form.values.body }
+          variant="filled"
+        />
+        <TextField 
+          color="primary"
+          fullWidth
+          id="link"
+          inputProps={ { maxLength: LINK_MAX_LENGTH } }
+          label="Link"
+          placeholder="Must be under 256 characters"
+          onChange={ handleChange }
+          type="url"
+          value={ form.values.link }
+          variant="filled"
+        />
+        <TextField 
+          color={ form.error ? "error" : "primary" }
+          error={ form.error !== undefined }
+          fullWidth
+          id="link_description"
+          inputProps={ { maxLength: LINK_DESCRIPTION_MAX_LENGTH } }
+          helperText={ form.error }
+          label="Link Description"
+          placeholder="Must be under 100 characters"
+          onChange={ handleChange }
+          value={ form.values.link_description }
+          variant="filled"
+        />
 
-        { /* Post form: this is where the user can create their post */ }
-        <form onSubmit={ onPostSubmit }>
+        { /* Post form submit - when pressed, the post will be uploaded */ }
+        <button type="submit" disabled={ form.submitting }>Upload Post</button>
 
-          {/* Title input - allows user to enter a post title */}
-          <div className="post-input-group">
-            <label htmlFor="title">Title: </label>
-            <input
-              id="title" 
-              type="text"
-              value={ form.values.title }
-              onChange={ handleChange }
-            />
-
-            { /* If the title has an error message, render it here. */ }
-            { form.error.title && <p>Error: { form.error.title }</p> }
-          </div>
-
-          { /* Body body - allows user to write the body of the post */ }
-          <div className="post-input-group">
-            <label htmlFor="body">Body:</label>
-            <textarea
-              id="body"
-              value={ form.values.body }
-              onChange={ handleChange }
-              rows={ NUM_ROWS }
-            >
-            </textarea>
-
-            { /* If the body has an error message, render it here. */ }
-            { form.error.body && <p>Error: { form.error.body }</p> }
-          </div>
-
-          { /* Link input - allows user to include a link with their post */ }
-          <div className="post-input-group">
-            <label htmlFor="link">Link (optional): </label>
-            <input
-              id="link" 
-              type="url"
-              value={ form.values.link }
-              onChange={ handleChange }
-            />
-
-            { /* If the link has an error message, render it here. */ }
-            { form.error.link && <p>Error: { form.error.link }</p> }
-          </div>
-
-          { /* Link description input - allows user to include a description of the link in their post */ }
-          <div className="post-input-group">
-            <label htmlFor="link_description">Link Description (optional): </label>
-            <input
-              id="link_description" 
-              type="text"
-              value={ form.values.link_description }
-              onChange={ handleChange }
-            />
-
-            { /* If the link description has an error message, render it here. */ }
-            { form.error.link_description && <p>Error: { form.error.link_description }</p> }
-          </div>
-
-          { /* Post form submit - when pressed, the post will be uploaded */ }
-          <button type="submit" disabled={ form.submitting }>Upload Post</button>
-
-        </form>
-      </div>
+      </form>
     </div>
   );
 };
