@@ -6,6 +6,7 @@ import Delete from "./Popups/Delete.jsx";
 import GameModeratorsLogic from "./GameModerators.js";
 import Insert from "./Popups/Insert.jsx";
 import Items from "../../components/Items/Items.jsx";
+import Loading from "../../components/Loading/Loading.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
 import SimpleGameSelect from "../../components/SimpleGameSelect/SimpleGameSelect.jsx";
 import UserRow from "../../components/UserRow/UserRow.jsx";
@@ -37,7 +38,7 @@ function GameModerators({ imageReducer }) {
   }, []);
   
   /* ===== GAME MODERATOR COMPONENT ===== */
-  return game && games &&
+  return (
     <div className={ styles.gameModerators }>
 
       { /* Popups */ }
@@ -60,34 +61,41 @@ function GameModerators({ imageReducer }) {
 
       { /* Game moderators current - render both the list of current moderators, and a user search to add new moderators */ }
       <div className={ styles.content }>
-        <Container title={ game.name } largeTitle>
 
-          { /* Section #1: render the current moderators for the particular game, and allow administrator to remove if needed */ }
-          <h2>Current Moderators</h2>
-          <Items items={ game.moderators } emptyMessage="This game has no moderators! You should add at least one.">
-            <p>Select a moderator to remove them.</p>
-            { game.moderators.map(moderator => {
-              return (
-                <UserRow  
-                  user={ moderator }
-                  onClick={ setModeratorToRemove }
-                  disableLink
-                />
-              );
-            })}
-          </Items>
+        { game && games ?  
+          <Container title={ game.name } largeTitle>
 
-          <hr />
+            { /* Section #1: render the current moderators for the particular game, and allow administrator to remove if needed */ }
+            <h2>Current Moderators</h2>
+            <Items items={ game.moderators } emptyMessage="This game has no moderators! You should add at least one.">
+              <p>Select a moderator to remove them.</p>
+              { game.moderators.map(moderator => {
+                return (
+                  <UserRow  
+                    user={ moderator }
+                    onClick={ setModeratorToRemove }
+                    disableLink
+                  />
+                );
+              })}
+            </Items>
 
-          { /* Section #2: render the list of users to search through, and allow administrator to add if needed */ }
-          <h2>Add New Moderator</h2>
-          <p>Select a user to add them as a moderator.</p>
-          <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ options } />
+            <hr />
 
-        </Container>
+            { /* Section #2: render the list of users to search through, and allow administrator to add if needed */ }
+            <h2>Add New Moderator</h2>
+            <p>Select a user to add them as a moderator.</p>
+            <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ options } />
+
+          </Container>
+        :
+          <Loading />
+        }
+        
       </div>
 
-    </div>;
+    </div>
+  );
 };
 
 /* ===== EXPORTS ===== */
