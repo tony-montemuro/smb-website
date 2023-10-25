@@ -3,8 +3,8 @@
     flex-direction: column;
     position: -webkit-sticky;
     position: sticky;
-    top: calc(var(--navbar-height) + calc(var(--navbar-height)/2) + 20px);
-    width: 360px;
+    top: calc(var(--navbar-height) + var(--navbar-height)/2 + 21px);
+    width: 100%;
 }
 
 .tabs {

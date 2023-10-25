@@ -1,6 +1,6 @@
 .nav-wrapper {
     display: flex;
-    height: 75px;
+    height: var(--navbar-height);
     position: -webkit-sticky;
     position: sticky;
     top: 0;

@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useLocation } from "react-router-dom";
+import styles from "./ModeratorTabs.module.css";
 import ModeratorTabLogic from "./ModeratorTab.js";
 
 function ModeratorTab({ tab }) {
@@ -16,7 +17,7 @@ function ModeratorTab({ tab }) {
   /* ===== MODERATOR TAB COMPONENT ===== */
   return (
     <div 
-      className={ `moderator-tab${ currentPageType === pageType ? " moderator-tab-active" : "" }` }
+      className={ `${ styles.tab }${ currentPageType === pageType ? ` ${ styles.active }` : "" }` }
       onClick={ () => handleTabClick(pageType) }
     >
       { content }

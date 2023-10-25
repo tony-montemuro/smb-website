@@ -49,12 +49,14 @@ function GameModerators({ imageReducer }) {
       </Popup>
 
       { /* Simple game select - render a column of games to select from */ }
-      <SimpleGameSelect
-        games={ games }
-        game={ game }
-        setGame={ setGame }
-        imageReducer={ imageReducer }
-      />
+      <div className={ styles.left }>
+        <SimpleGameSelect
+          games={ games }
+          game={ game }
+          setGame={ setGame }
+          imageReducer={ imageReducer }
+        />
+      </div>
 
       { /* Game moderators current - render both the list of current moderators, and a user search to add new moderators */ }
       <div className={ styles.content }>
