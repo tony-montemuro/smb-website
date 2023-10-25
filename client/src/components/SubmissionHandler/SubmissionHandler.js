@@ -22,13 +22,23 @@ const SubmissionHandler = (isUnapproved) => {
 
     // FUNCTION 1: fetchSubmissions - code that is executed each time the game state / isUnapproved parameter is updated
     // PRECONDITIONS (1 parameter):
-    // 1.) game: a string corresponding to the primary key of a game
-    // POSTCONDITIONS (2 possible outcomes):
+    // 1.) game: a game object which contains information about the game
+    // POSTCONDITIONS (3 possible outcomes):
+    // if the game has no unapproved / reported submissions, then simply update the submissions state to an empty array, and return early
     // if the query is successful, an array of submissions for that game is returned (either unapproved or reported)
     // otherwise, an error is returned, and we render an error message to the user
-    const fetchSubmissions = async abb => {
+    const fetchSubmissions = async game => {
+        // special case: unapproved is true and the game has no unapproved submissions, or unapproved is false and the game has no
+        // reported submissions. in this case, we can go ahead and just update the submissions state to an empty array, and return
+        if ((isUnapproved && game.unapproved === 0) || (!isUnapproved && game.reported === 0)) {
+            setSubmissions([]);
+            return;
+        }
+
+        // general case: reset the submission state to undefined, and attempt to query the unapproved / reported submissions
+        setSubmissions(undefined);
         try {
-            const query = isUnapproved ? getUnapprovedByGame(abb) : getReportedByGame(abb);
+            const query = isUnapproved ? getUnapprovedByGame(game.abb) : getReportedByGame(game.abb);
             const submissions = await query;
             setSubmissions(submissions);
         } catch (error) {

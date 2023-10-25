@@ -1,0 +1,16 @@
+.submissionHandler {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    min-height: calc(100vh - (var(--navbar-height) + var(--navbar-height)/2 + 41px));
+}
+
+.left {
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
