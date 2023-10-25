@@ -2,7 +2,6 @@
     display: flex;
     gap: 20px;
     padding: 20px;
-    min-height: calc(100vh - (var(--navbar-height) + var(--navbar-height)/2 + 41px));
 }
 
 .left {
