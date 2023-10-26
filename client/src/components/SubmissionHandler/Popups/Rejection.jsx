@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { PopupContext, UserContext } from "../../../utils/Contexts.js";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import styles from "./Submission.module.css";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import IconButton from "@mui/material/IconButton";
@@ -15,14 +15,29 @@ function Rejection({ form, clearMessage, handleChange, setShowReject, onReject }
   // user state from user context
   const { user } = useContext(UserContext);
 
+  /* ===== REFS ===== */
+  const rejectionRef = useRef(null);
+
   /* ===== VARIABLES ===== */
   const submission = popupData;
   const isOwn = submission.profile.id === user.profile.id;
   const TEXT_AREA_ROWS = 2;
 
+  /* ===== EFFECTS ===== */
+
+  // code that is executed when the component mounts
+  useEffect(() => {
+    // must use `setTimeout` as a hacky solution to get scroll behavior working
+    let timer = setTimeout(() => {
+      rejectionRef.current.scrollIntoView({ behavior: "smooth" });
+    }, 0);
+
+    return () => clearTimeout(timer); 
+  }, []);
+
   /* ===== REJECTION COMPONENT ===== */
   return (
-    <div className={ styles.rejection }>
+    <div ref={ rejectionRef } className={ styles.rejection }>
 
       { /* Render information about rejections */ }
       <div className={ styles.rejectionHeader }>

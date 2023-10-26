@@ -66,24 +66,30 @@ function Submission({ game, isUnapproved, setSubmissions }) {
   return form.values &&
     <div className={ styles.submission }>
 
-      { /* If submission is reported, render the reasoning left by the creator of the report. */ }
-      { !isUnapproved &&
-        <>
-          <h1>
-            The following submission was reported by&nbsp;
-            <Username profile={ creator } />.
-          </h1>
-          <p>They left the following message with the report: "{ submission.report.message }"</p>
-        </>
-      }
-      <h1>
-        <Link to={ `/games/${ game.abb }/${ category }/${ type }/${ submission.level.name }` }>
-          { cleanLevelName(submission.level.name) }
-        </Link>
-        &nbsp;-&nbsp;
-        { recordB2F(submission.record, type, submission.level.timer_type) } by <Username profile={ submission.profile } /> 
-      </h1>
+      { /* Header - render the basic submission information, and any report data, if the submission was reporeted */ }
+      <div className={ styles.header }>
+        <h1>
+          <Link to={ `/games/${ game.abb }/${ category }/${ type }/${ submission.level.name }` }>
+            { cleanLevelName(submission.level.name) }
+          </Link>
+          :&nbsp;
+          { recordB2F(submission.record, type, submission.level.timer_type) } by <Username profile={ submission.profile } /> 
+        </h1>
 
+        { /* If submission is reported, render the reasoning left by the creator of the report. */ }
+        { !isUnapproved &&
+          <>
+            <h2>
+              The following submission was reported by&nbsp;
+              <Username profile={ creator } />.
+            </h2>
+            <p>They left the following message with the report: "{ submission.report.message }"</p>
+          </>
+        }
+
+      </div>
+
+      { /* Body - render the submission, as well as a form to update certain fields */ }
       <div className={ styles.body }>
 
         { /* Left side - contains the embeded video player */ }
@@ -105,14 +111,16 @@ function Submission({ game, isUnapproved, setSubmissions }) {
                 value={ submission.all_position }
                 variant="filled"
               />
-              <TextField 
-                fullWidth
-                id="position"
-                inputProps={ { readOnly: true } }
-                label="Live Position"
-                value={ submission.position }
-                variant="filled"
-              />
+              { submission.position && 
+                <TextField 
+                  fullWidth
+                  id="position"
+                  inputProps={ { readOnly: true } }
+                  label="Live Position"
+                  value={ submission.position }
+                  variant="filled"
+                />
+              }
               <DatePicker 
                 disableFuture
                 label="Date"
@@ -242,13 +250,14 @@ function Submission({ game, isUnapproved, setSubmissions }) {
 
               { /* Two buttons: one for approving the submission, and one for deleting. */ }
               <div className={ styles.btns }>
-                <button type="submit" disabled={ showReject } onClick={ (e) => onApproveClick(e) }>Approve Submission</button>
-                <button type="button" disabled={ showReject } onClick={ () => setShowReject(true) }>Reject Submission</button>
+                <button type="submit" disabled={ showReject } onClick={ (e) => onApproveClick(e) }>Approve</button>
+                <button type="button" disabled={ showReject } onClick={ () => setShowReject(true) }>Reject</button>
               </div>
 
             </div>
           </form>
         </div>
+
       </div>
 
       { /* If show reject is set to true, render rejection prompt. */ }
