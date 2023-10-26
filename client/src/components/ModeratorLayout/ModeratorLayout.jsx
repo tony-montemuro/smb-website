@@ -3,6 +3,7 @@ import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Loading from "../Loading/Loading.jsx";
 import ModeratorLogic from "./ModeratorLayout.js";
 import ModeratorTabs from "../ModeratorTabs/ModeratorTabs.jsx";
 
@@ -57,20 +58,13 @@ function ModeratorLayout() {
   }, [user]);
 
   /* ===== MODERATOR LAYOUT COMPONENT ===== */
-  return isModerator() && games &&
+  return isModerator() && games ?
     <ModeratorLayoutContext.Provider value={ { games, dispatchGames } }>
-      <div className="moderator-layout">
-
-        { /* Moderator tabs - render tabs we can use to navigate the moderation hub */ }
-        <ModeratorTabs tabs={ tabs } />
-
-        { /* Moderation Layout Content: renders the contents of the page based on the URL */ }
-        <div className="moderator-layout-content">
-          <Outlet />
-        </div>
-
-      </div>
+      <ModeratorTabs tabs={ tabs } />
+      <Outlet />
     </ModeratorLayoutContext.Provider>
+  :
+    <Loading />
 };
 
 /* ===== EXPORTS ===== */
