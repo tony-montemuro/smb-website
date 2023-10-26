@@ -1,3 +1,5 @@
+/* ===== GENERAL STYLING ===== */
+
 .submission {
     display: flex;
     flex-direction: column;
@@ -55,4 +57,20 @@
 
 .rejectionHeader h2, .rejectionHeader p {
     margin: 0;
+}
+
+/* ===== STYLING FOR MOBILE DEVICES ===== */
+
+@media (max-width: 1067px) {
+    .body {
+        flex-direction: column;
+    }
+
+    .left {
+        height: 200px;
+    }
+
+    .right {
+        width: 100%;
+    }
 }

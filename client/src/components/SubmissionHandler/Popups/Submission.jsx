@@ -93,7 +93,7 @@ function Submission({ game, isUnapproved, setSubmissions }) {
       <div className={ styles.body }>
 
         { /* Left side - contains the embeded video player */ }
-        <div className={ styles.left } style={ getUrlType(submission.proof) !== "twitter" ? { height: "50vh" } : null }>
+        <div className={ styles.left } style={ getUrlType(submission.proof) !== "twitter" ? { height: "60vh" } : null }>
           <EmbededVideo url={ submission.proof } />
         </div>
 
