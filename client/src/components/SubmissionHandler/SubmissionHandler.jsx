@@ -22,14 +22,16 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
 
   /* ===== STATES & FUNCTIONS ===== */
   const [submission, setSubmission] = useState(undefined);
-  const [game, setGame] = useState(undefined);
   const [sortedGames, setSortedGames] = useState(undefined);
 
   // states & functions from the js file
   const { 
+    game,
     submissions,
+    setGame,
     setSubmissions,
-    fetchSubmissions
+    fetchSubmissions,
+    setGameAndScroll
   } = SubmissionHandlerLogic(isUnapproved);
 
   /* ===== EFFECTS ===== */
@@ -66,14 +68,14 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
         <SimpleGameSelect
           games={ sortedGames } 
           game={ game } 
-          setGame={ setGame } 
+          setGame={ setGameAndScroll } 
           imageReducer={ imageReducer } 
           countType={ isUnapproved ? "unapproved" : "reported" }
         />
       </div>
       
       { /* Submission handler content - the bulk of this page */ }
-      <div className={ styles.content }>
+      <div id="content" className={ styles.content }>
 
         <Container title={ isUnapproved ? "New Submissions" : "Reported Submissions" } largeTitle>
           <p>Please go through and approve or reject each { isUnapproved ? "new" : "reported" } submission.</p>

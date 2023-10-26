@@ -2,10 +2,13 @@
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import RPCRead from "../../database/read/RPCRead";
+import ScrollHelper from "../../helper/ScrollHelper";
+import StylesHelper from "../../helper/StylesHelper";
 
 const SubmissionHandler = (isUnapproved) => {
     /* ===== STATES ===== */
     const [submissions, setSubmissions] = useState(undefined);
+    const [game, setGame] = useState(undefined);
 
     /* ===== CONTEXTS ===== */
 
@@ -19,6 +22,10 @@ const SubmissionHandler = (isUnapproved) => {
 
     // database functions
     const { getUnapprovedByGame, getReportedByGame } = RPCRead();
+
+    // helper functions
+    const { getNavbarHeight } = StylesHelper();
+    const { scrollToId } = ScrollHelper();
 
     // FUNCTION 1: fetchSubmissions - code that is executed each time the game state / isUnapproved parameter is updated
     // PRECONDITIONS (1 parameter):
@@ -57,11 +64,28 @@ const SubmissionHandler = (isUnapproved) => {
         return !(!isUnapproved && (submission.profile_id === user.profile.id || submission.report.creator.id === user.profile.id));
     }
 
+    // FUNCTION 3: setGameAndScroll - code that is executed when the moderator selects a game
+    // PRECONDITIONS (1 parameter):
+    // 1.) game: a game object, which belongs to the game the user selected
+    // POSTCONDITIONS (1 possible outcome):
+    // the game state is updated, and the user is scrolled to the submission table
+    const setGameAndScroll = game => {
+        setGame(game);
+        let tabsHeight = getNavbarHeight()/2;
+        if (window.innerWidth <= 800) {
+            tabsHeight *= 3;
+        }
+        scrollToId("content", tabsHeight);
+    };
+
     return { 
+        game,
         submissions,
+        setGame,
         setSubmissions,
         fetchSubmissions,
-        isClickable
+        isClickable,
+        setGameAndScroll
     };
 };
 
