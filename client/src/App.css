@@ -155,20 +155,18 @@ input[type=file], input[type=file]::-webkit-file-upload-button {
     padding: 4px 8px;
 }
 
-/* ===== GLOBAL IDS ===== */
-
-#cancel {
+.cancel {
     color: rgb(var(--color-text));
     border: 1px solid rgb(var(--color-text));
     background-color: transparent;
     padding: 4px 9px;
 }
 
-#cancel:not(:disabled):hover {
+.cancel:not(:disabled):hover {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-#cancel:disabled {
+.cancel:disabled {
     color: #ccc;
     border-color: #ccc;
 }

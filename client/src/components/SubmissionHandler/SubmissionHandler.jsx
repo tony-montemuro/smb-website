@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import "./SubmissionHandler.css";
 import { ModeratorLayoutContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import styles from "./SubmissionHandler.module.css";
@@ -7,7 +6,7 @@ import Container from "../Container/Container.jsx";
 import LoadingTable from "../LoadingTable/LoadingTable.jsx";
 import Popup from "../Popup/Popup.jsx";
 import SimpleGameSelect from "../SimpleGameSelect/SimpleGameSelect.jsx";
-import Submission from "./Submission.jsx";
+import Submission from "./Popups/Submission.jsx";
 import SubmissionHandlerLogic from "./SubmissionHandler.js";
 import SubmissionRow from "./SubmissionRow";
 import TableContent from "../TableContent/TableContent";

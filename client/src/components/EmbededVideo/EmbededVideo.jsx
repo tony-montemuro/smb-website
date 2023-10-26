@@ -49,7 +49,7 @@ function EmbededVideo({ url }) {
 
     // CASE 4: Twitter: render an embeded tweet if the urlType is "twitter"
     case "twitter":
-      return <Tweet id={ getTweetId(url) } />
+      return <Tweet id={ getTweetId(url) } />;
 
     // DEFAULT CASE: render an error message if an embed is not supported (urlType is not youtube, twitch-vod, twitch-clip, or twitter)
     default:

@@ -1,0 +1,54 @@
+.submission {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.body {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+}
+
+.right {
+    width: 360px;
+}
+
+.formWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.formWrapper button {
+    width: fit-content;
+}
+
+.btns {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+}
+
+.rejection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rejectionHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rejectionHeader h2, .rejectionHeader p {
+    margin: 0;
+}

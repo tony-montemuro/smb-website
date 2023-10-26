@@ -1,14 +1,14 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, ModeratorLayoutContext, PopupContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, ModeratorLayoutContext, PopupContext, UserContext } from "../../../utils/Contexts";
 import { useContext, useState } from "react";
-import ApproveUpdate from "../../database/update/ApproveUpdate";
-import DateHelper from "../../helper/DateHelper";
-import FrontendHelper from "../../helper/FrontendHelper";
-import NotificationUpdate from "../../database/update/NotificationUpdate";
-import ReportDelete from "../../database/delete/ReportDelete";
-import SubmissionDelete from "../../database/delete/SubmissionDelete";
-import SubmissionUpdate from "../../database/update/SubmissionUpdate";
-import ValidationHelper from "../../helper/ValidationHelper";
+import ApproveUpdate from "../../../database/update/ApproveUpdate";
+import DateHelper from "../../../helper/DateHelper";
+import FrontendHelper from "../../../helper/FrontendHelper";
+import NotificationUpdate from "../../../database/update/NotificationUpdate";
+import ReportDelete from "../../../database/delete/ReportDelete";
+import SubmissionDelete from "../../../database/delete/SubmissionDelete";
+import SubmissionUpdate from "../../../database/update/SubmissionUpdate";
+import ValidationHelper from "../../../helper/ValidationHelper";
 
 const Submission = (submission, game, isUnapproved, setSubmissions) => {
     /* ===== VARIABLES ===== */
@@ -90,11 +90,28 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
 
         // general case: updating a field
         else {
-            setForm({ ...form, values: { ...form.values, [id]: value } })
+            setForm({ ...form, values: { ...form.values, [id]: value } });
         }
     };
 
-    // FUNCTION 3: handleToggle - code that executes each time the user toggles the "Clear Comment" option
+    // FUNCTION 3: handleSubmittedAtChange - handle a change to the `submitted_at` field in the submission form
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: an event object that is generated when the user makes a change to the `submitted_at` field of the submission form
+    // POSTCONDITIONS (1 possible outcome):
+    // the `submitted_at` field is updated using the date the user selected by the date picker
+    const handleSubmittedAtChange = e => {
+        let submitted_at = null;
+        if (e) {
+            let { $d: date } = e;
+            const year = date.getFullYear();
+            const month = String(date.getMonth()+1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            submitted_at = `${ year }-${ month }-${ day }`;
+        }
+        setForm({ ...form, values: { ...form.values, submitted_at } });
+    };
+
+    // FUNCTION 4: handleToggle - code that executes each time the user toggles the "Clear Comment" option
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the toggle is not activated before this function runs, the toggle will enable, and the comment will clear
@@ -104,7 +121,15 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
         setClearToggle(!clearToggle);
     };
 
-    // FUNCTION 4: handleClose - function that runs to close the component
+    // FUNCTION 5: clearMessage - code to clear the message field
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // the message field is set to an empty string
+    const clearMessage = () => {
+        setForm({ ...form, values: { ...form.values, message: "" } });
+    }
+
+    // FUNCTION 6: handleClose - function that runs to close the component
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the form is set back to it's default values, and the popup is closed
@@ -114,7 +139,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
         closePopup();
     };
 
-    // FUNCTION 5: handleCloseAndRemove - function that removes the submission from both the `submissions` state, as well as 1 count
+    // FUNCTION 7: handleCloseAndRemove - function that removes the submission from both the `submissions` state, as well as 1 count
     // from the `games` state, and closes the popup
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
@@ -126,7 +151,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
         handleClose();
     };
 
-    // FUNCTION 6: isFormUnchanged - function that checks whether or not the form was unchanged
+    // FUNCTION 8: isFormUnchanged - function that checks whether or not the form was unchanged
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if not a single form value is different than the value in submission, we return true
@@ -142,7 +167,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
             && form.values.comment === submission.comment;
     };
 
-    // FUNCTION 7: approveSubmission - function that runs when the user approves a submission with NO changes to it
+    // FUNCTION 9: approveSubmission - function that runs when the user approves a submission with NO changes to it
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the submission approval is successful, we close the popup and render a success message to the user
@@ -158,7 +183,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
         };
     };
 
-    // FUNCTION 8: approveAndUpdateSubmission - function that runs when the user approves a submission with SOME changes to it
+    // FUNCTION 10: approveAndUpdateSubmission - function that runs when the user approves a submission with SOME changes to it
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if both queries succeed, we close the popup and render a success message to the user
@@ -205,7 +230,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
         };
     };
 
-    // FUNCTION 9: onApproveClick - function that runs when the user hits the "approve" button
+    // FUNCTION 11: onApproveClick - function that runs when the user hits the "approve" button
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object that is generated when the user submits the form
     // POSTCONDITIONS (2 possible outcomes):
@@ -220,7 +245,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
         }
     };
 
-    // FUNCTION 10: onRejectClick - function that runs when the user hits the "Yes, Reject" button
+    // FUNCTION 12: onRejectClick - function that runs when the user hits the "Yes, Reject" button
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object that is generated when the user submits the form
     // POSTCONDITIONS (2 possible outcomes):
@@ -266,11 +291,12 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
     return { 
         form, 
         showReject, 
-        clearToggle,
         setShowReject, 
         fillForm, 
         handleChange, 
+        handleSubmittedAtChange,
         handleToggle,
+        clearMessage,
         handleClose,
         onApproveClick,
         onRejectClick

@@ -18,7 +18,7 @@ function Delete({ submitting, onDelete }) {
     <>
       <h2>Are you sure you want to remove <Username profile={ moderator } /> as a moderator?</h2>
       <div className={ `center ${ styles.btns }` }>
-        <button type="button" id="cancel" disabled={ submitting } onClick={ closePopup }>Cancel</button>
+        <button type="button" className="cancel" disabled={ submitting } onClick={ closePopup }>Cancel</button>
         <button type="button" disabled={ submitting } onClick={ () => onDelete(moderator, closePopup) }>Remove</button>
       </div>
     </>
