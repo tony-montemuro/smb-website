@@ -23,6 +23,7 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
   /* ===== STATES & FUNCTIONS ===== */
   const [submission, setSubmission] = useState(undefined);
   const [sortedGames, setSortedGames] = useState(undefined);
+  const [submitting, setSubmitting] = useState(false);
 
   // states & functions from the js file
   const { 
@@ -59,8 +60,14 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
     <div className={ styles.submissionHandler }>
 
       { /* Popup elements */ }
-      <Popup renderPopup={ submission } setRenderPopup={ setSubmission } width="1200px">
-        <Submission game={ game } isUnapproved={ isUnapproved } setSubmissions={ setSubmissions } />
+      <Popup renderPopup={ submission } setRenderPopup={ setSubmission } width="1200px" disableClose={ submitting }>
+        <Submission 
+          game={ game } 
+          isUnapproved={ isUnapproved } 
+          setSubmissions={ setSubmissions } 
+          submitting={ submitting }
+          setSubmitting={ setSubmitting }
+        />
       </Popup>
 
       { /* Simple game select - Render a column of games to choose from */ }

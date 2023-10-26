@@ -10,7 +10,7 @@ import SubmissionDelete from "../../../database/delete/SubmissionDelete";
 import SubmissionUpdate from "../../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../../helper/ValidationHelper";
 
-const Submission = (submission, game, isUnapproved, setSubmissions) => {
+const Submission = (submission, game, isUnapproved, setSubmissions, setSubmitting) => {
     /* ===== VARIABLES ===== */
     const defaultForm = { 
         values: null, 
@@ -136,6 +136,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
     const handleClose = () => {
         setForm(defaultForm);
         setShowReject(false);
+        setSubmitting(false);
         closePopup();
     };
 
@@ -204,6 +205,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
         if (Object.values(error).some(row => row !== undefined)) {
             setForm({ ...form, error: error });
             addMessage("One or more form fields had errors.", "error");
+            setSubmitting(false);
             return;
         }
 
@@ -238,6 +240,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
     // otherwise, we run the `updateSubmission` function
     const onApproveClick = e => {
         e.preventDefault();
+        setSubmitting(true);
         if (isFormUnchanged()) {
             approveSubmission();
         } else {
@@ -253,6 +256,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions) => {
     // if either query fails, render an error message to the user
     const onRejectClick = async e => {
         e.preventDefault();
+        setSubmitting(true);
         try {
             // first, attempt to delete the submission
             await deleteSubmission(submission.id);

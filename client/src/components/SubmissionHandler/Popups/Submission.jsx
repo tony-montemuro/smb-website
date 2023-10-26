@@ -20,7 +20,7 @@ import SubmissionLogic from "./Submission.js";
 import TextField from "@mui/material/TextField";
 import Username from "../../../components/Username/Username";
 
-function Submission({ game, isUnapproved, setSubmissions }) {
+function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitting }) {
   /* ===== CONTEXTS ===== */
 
   // popup data state from popup context
@@ -40,7 +40,7 @@ function Submission({ game, isUnapproved, setSubmissions }) {
   const { 
     form, 
     showReject, 
-    setShowReject, 
+    setShowReject,
     fillForm, 
     handleChange, 
     handleSubmittedAtChange,
@@ -48,7 +48,7 @@ function Submission({ game, isUnapproved, setSubmissions }) {
     clearMessage,
     onApproveClick,
     onRejectClick
-  } = SubmissionLogic(submission, game, isUnapproved, setSubmissions);
+  } = SubmissionLogic(submission, game, isUnapproved, setSubmissions, setSubmitting);
 
   // helper functions
   const { cleanLevelName, recordB2F, dateB2F } = FrontendHelper();
@@ -246,12 +246,12 @@ function Submission({ game, isUnapproved, setSubmissions }) {
               />
 
               { /* Button used to reset the form back to it's original values */ }
-              <button className="cancel" type="button" onClick={ () => fillForm() }>Reset Values</button>
+              <button className="cancel" type="button" onClick={ () => fillForm() } disabled={ submitting }>Reset Values</button>
 
               { /* Two buttons: one for approving the submission, and one for deleting. */ }
               <div className={ styles.btns }>
-                <button type="submit" disabled={ showReject } onClick={ (e) => onApproveClick(e) }>Approve</button>
-                <button type="button" disabled={ showReject } onClick={ () => setShowReject(true) }>Reject</button>
+                <button type="submit" disabled={ showReject || submitting } onClick={ (e) => onApproveClick(e) }>Approve</button>
+                <button type="button" disabled={ showReject || submitting } onClick={ () => setShowReject(true) }>Reject</button>
               </div>
 
             </div>
