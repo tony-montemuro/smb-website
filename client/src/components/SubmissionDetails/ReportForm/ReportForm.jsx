@@ -1,8 +1,10 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
-import { PopupContext, UserContext } from "../../utils/Contexts";
-import CountdownTimer from "../CountdownTimer/CountdownTimer.jsx";
+import { PopupContext, UserContext } from "../../../utils/Contexts";
+import styles from "./ReportForm.module.css";
+import CountdownTimer from "../../CountdownTimer/CountdownTimer.jsx";
 import ReportFormLogic from "./ReportForm.js";
+import TextField from "@mui/material/TextField";
 
 function ReportForm({ updateBoard }) {
   /* ===== CONTEXTS ===== */
@@ -15,23 +17,24 @@ function ReportForm({ updateBoard }) {
 
   /* ===== VARIABLES ===== */
   const submission = popupData;
+  const MESSAGE_MAX_LENGTH = 100;
   const TEXT_AREA_ROWS = 2;
 
   /* ===== STATES AND FUNCTIONS ===== */
   const [submitting, setSubmitting] = useState(false);
 
   // states and functions from js file
-  const { form, handleReport, handleChange } = ReportFormLogic();
+  const { message, handleReport, handleChange } = ReportFormLogic();
 
   /* ===== REPORT FORM COMPONENT ===== */
   return (
-    <div className="submission-details-report">
-
+    <>
       { submission.report ?
 
         // If the submission is already reported, render a message letting the user know they are unable to report it again
         <h2>This submission has already been reported, so it cannot be reported again.
         Please wait for moderator to handle this submission.</h2>
+
       :
         submission.profile.id === user.profile.id ?
 
@@ -39,48 +42,42 @@ function ReportForm({ updateBoard }) {
           <h2>You cannot report your own submission.</h2>
 
         :
-
-          // Otherwise, render the report form
           <>
-            { /* Report form header */ }
+            { /* Report form information - tell the user about reporting this submission */ }
             <h2>If this submission has issues, report it here.</h2>
-      
-            { /* Report form description */ }
             <span>In your message, please explain your reasoning for reporting the submission. Be specific!</span>
             <p>You have <b>{ user.profile.report_token }</b> reports left. Report counts reset in <CountdownTimer />.</p>
             
-            { /* Report form */ }
+            { /* Report form - allow user to leave a message with the report */ }
             <form onSubmit={ (e) => handleReport(e, submission, setSubmitting, updateBoard) }>
-      
-              { /* Message input - a text field where the user must include a message with their report */ }
-              <div className="submission-details-textarea-group">
-                <label>Message: </label>
-                <textarea 
-                  value={ form.message }
-                  onChange={ handleChange }
+              <div className={ styles.formWrapper }>
+
+                { /* Render a text field for the user to enter a message with their report */ }
+                <TextField
+                  fullWidth
+                  helperText={ `${ message.length }/${ MESSAGE_MAX_LENGTH }` }
+                  id="message"
+                  inputProps={ { maxLength: MESSAGE_MAX_LENGTH } }
+                  label="Message"
+                  multiline
+                  placeholder="Must be under 100 characters"
+                  required
                   rows={ TEXT_AREA_ROWS }
-                >
-                </textarea>
-              </div>
-      
-              { /* Render the form error under this input, if an error is defined */ }
-              { form.error && <p>{ form.error }</p> }
-
-              { /* Report form button */ }
-              <div className="submission-detail-decision-btns">
-
+                  onChange={ handleChange }
+                  value={ message }
+                  variant="filled"
+                />
+        
                 { /* Button that, when pressed, reports the submission */ }
                 <button type="submit" disabled={ submitting }>
                   Submit Report
                 </button>
 
               </div>
-      
             </form>
           </>
       }
-
-    </div>
+    </>
   );
 };
 

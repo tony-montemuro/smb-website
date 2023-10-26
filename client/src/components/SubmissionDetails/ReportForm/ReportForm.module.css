@@ -1,0 +1,10 @@
+.formWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.formWrapper button {
+    width: fit-content;
+    margin: 0 auto;
+}

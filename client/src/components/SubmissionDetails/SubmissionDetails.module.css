@@ -1,0 +1,28 @@
+.video {
+    height: 40vh;
+}
+
+.details {
+    list-style: none;
+    padding: 0;
+}
+
+.details li {
+    display: flex;
+    align-items: center;
+    height: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 18px;
+}
+
+.label {
+    text-decoration: underline;
+}
+
+.svgWrapper {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    width: 100%;
+}

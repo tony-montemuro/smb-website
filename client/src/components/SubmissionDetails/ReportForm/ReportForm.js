@@ -1,12 +1,11 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
-import { MessageContext, PopupContext, UserContext } from "../../utils/Contexts";
-import ReportUpdate from "../../database/update/ReportUpdate";
-import ValidationHelper from "../../helper/ValidationHelper";
+import { MessageContext, PopupContext, UserContext } from "../../../utils/Contexts";
+import ReportUpdate from "../../../database/update/ReportUpdate";
 
 const ReportForm = () => {
     /* ===== VARIABLES ===== */
-    const formInit = { message: "", error: null };
+    const messageInit = "";
 
     /* ===== CONTEXTS ===== */
 
@@ -20,15 +19,12 @@ const ReportForm = () => {
     const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
-    const [form, setForm] = useState(formInit);
+    const [message, setMessage] = useState(messageInit);
 
     /* ===== FUNCTIONS ===== */
 
     // database functions
     const { insertReport } = ReportUpdate();
-
-    // helper functions
-    const { validateMessage } = ValidationHelper();
 
     // FUNCTION 1 - handleReport: given the report object, send an array of reports to all moderators, and the owner
     // of the submission
@@ -37,40 +33,28 @@ const ReportForm = () => {
     // 2.) submission: a submission object that contains information about the reported submission
     // 3.) setSubmitting: a function that allows us to trigger the submitting state between true and false
     // 4.) updateBoard: a function that, when called, will update the "board" of the parent component
-    // POSTCONDITIONS (3 possible outcomes):
-    // if the message is not validated, the error field of form is updated by calling setForm() function, and the function returns early
-    // if the message is validated, and at least one notification fails to insert, user is alerted of the error
-    // if the message is validated, and all notifications insert, the page will reload
+    // POSTCONDITIONS (2 possible outcomes):
+    // if at least one query fails, user is alerted of the error, and the popup remains open
+    // if all queries are successful, the popup will close, and the user will be notified that everything was a success
     const handleReport = async (e, submission, setSubmitting, updateBoard) => {
         // first, update the form to prevent multiple submissions
         e.preventDefault();
         setSubmitting(true);
-
-        // next, verify that the message is valid
-        const error = validateMessage(form.message, true);
-        if (error) {
-            setSubmitting(false);
-            addMessage(error, "error");
-            return;
-        }
     
         // define our report object
         const report = {
             submission_id: submission.id,
             creator_id: user.profile.id,
-            message: form.message
+            message: message
         };
           
         // now, let's add the report to the database
         try {
-            // await report to be completed
             await insertReport(report);
         
             // perform a concurrent call to update board, as well as update user data (specifically, the report token count
             // should decrease)
             await Promise.all([updateBoard(), updateUser(user.id)]);
-
-            // finally, let the user know that they successfully reported the submission, and close the popup
             addMessage("The submission was successfully reported! Please give the moderation team a few days to look it over.", "success");
             closePopup();
     
@@ -81,17 +65,16 @@ const ReportForm = () => {
         }
     };
 
-    // FUNCTION 2 - handleChange: given the event object, update the form state each time a user makes a change
+    // FUNCTION 2 - handleChange: given the event object, update the message state each time a user makes a change
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object generated when the user makes a change to the message form
     // POSTCONDITIONS (1 possible outcome):
-    // the form state is updated by calling the setForm() function. the error field is set to null, and
-    // the message field is set to the current value of the form
-    const handleChange = (e) => {
-        setForm({ error: null, message: e.target.value });
+    // the message state is updated by calling the setMessage() function to the current value of the form
+    const handleChange = e => {
+        setMessage(e.target.value);
     };
 
-    return { form, handleReport, handleChange };
+    return { message, handleReport, handleChange };
 };
 
 /* ===== EXPORTS ===== */
