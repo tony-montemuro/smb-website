@@ -21,7 +21,7 @@ function SubmissionRow({ submission, onClick, isUnapproved }) {
   /* ===== SUBMISSION ROW COMPONENT ===== */
   return (
     <tr 
-      className={ !canClick ? styles.notClickable : "" } 
+      className={ !canClick ? styles.notClickable : styles.clickable } 
       onClick={ canClick ? () => onClick(submission) : null } 
       title={ !canClick ? "Unable to handle reported submissions that you submitted or reported." : null }
     >

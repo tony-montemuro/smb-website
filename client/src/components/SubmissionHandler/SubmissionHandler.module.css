@@ -22,7 +22,7 @@
     cursor: default;
 }
 
-.content tbody tr:not(.notClickable):hover {
+.content tbody tr.clickable:hover {
     background-color: rgba(var(--color-container-selected), 0.5);
     cursor: pointer;
 }
