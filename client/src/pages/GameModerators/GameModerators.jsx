@@ -42,10 +42,10 @@ function GameModerators({ imageReducer }) {
     <div className={ styles.gameModerators }>
 
       { /* Popups */ }
-      <Popup renderPopup={ moderatorToRemove } setRenderPopup={ setModeratorToRemove } width={ WIDTH }>
+      <Popup renderPopup={ moderatorToRemove } setRenderPopup={ setModeratorToRemove } width={ WIDTH } disableClose={ submitting }>
         <Delete submitting={ submitting } onDelete={ removeModerator } />
       </Popup>
-      <Popup renderPopup={ moderatorToAdd } setRenderPopup={ setModeratorToAdd } width={ WIDTH }>
+      <Popup renderPopup={ moderatorToAdd } setRenderPopup={ setModeratorToAdd } width={ WIDTH } disableClose={ submitting }>
         <Insert submitting={ submitting } onInsert={ addModerator } />
       </Popup>
 
