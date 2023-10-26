@@ -3,7 +3,7 @@ function TableContent({ items, emptyMessage, numCols, children }) {
   return items.length > 0 ? 
     children
   : 
-    <tr>
+    <tr id="empty">
       <td style={ { textAlign: "center" } } colSpan={ numCols }>
         <em>{ emptyMessage }</em>
       </td>

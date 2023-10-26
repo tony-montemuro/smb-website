@@ -1,0 +1,33 @@
+.levelboard {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.middleTitle {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+}
+
+.optionsBtns {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.chart tbody tr.chartRow:hover {
+    background-color: rgba(var(--color-container-selected), 0.5);
+    cursor: pointer;
+}

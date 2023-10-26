@@ -1,0 +1,17 @@
+.tabs {
+    display: flex;
+}
+
+.tab {
+    width: 90px;
+    height: 40px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.active {
+    cursor: default;
+    background-color: rgb(var(--color-button-hover));
+}

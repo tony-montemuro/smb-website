@@ -3,15 +3,19 @@ import "./Levelboard.css";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";
+import styles from "./Levelboard.module.css";
+import Container from "../../components/Container/Container.jsx";
 import Filters from "./Filters.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import Insert from "./Insert.jsx";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
+import LoadingTable from "../../components/LoadingTable/LoadingTable.jsx";
 import GameHelper from "../../helper/GameHelper";
 import Popup from "../../components/Popup/Popup.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import SubmissionDetails from "../../components/SubmissionDetails/SubmissionDetails.jsx";
+import TableContent from "../../components/TableContent/TableContent.jsx";
 import TableTabs from "../../components/TableTabs/TableTabs";
 import Update from "./Update.jsx";
 
@@ -48,6 +52,8 @@ function Levelboard({ imageReducer }) {
 		regions: game.region.map(region => region.id),
 		tas: [false]
 	};
+	const buttonWidth = "60px";
+	const TABLE_WIDTH = 10;
 
 	/* ===== STATES & FUNCTIONS ===== */
 	const [level, setLevel] = useState(undefined);
@@ -99,7 +105,7 @@ function Levelboard({ imageReducer }) {
 
 	/* ===== LEVELBOARD COMPONENT ===== */
 	return level && board.filtered && board.filters ?
-		<div className="levelboard">
+		<div className={ styles.levelboard }>
 
 			{ /* Popups */ }
 			<Popup renderPopup={ insertPopup } setRenderPopup={ setInsertPopup } width={ `${ isModerator(abb) ? "50%" : "25%" }` }>
@@ -115,54 +121,34 @@ function Levelboard({ imageReducer }) {
 				<SubmissionDetails level={ level } updateBoard={ setupBoard } />
 			</Popup>
 
-			{/* Levelboard header - Contains general information about them game and board */}
-			<div className="levelboard-header">
+			<Container>
 
 				{ /* Levelboard title - name of levelboard, as well as previous and next buttons */ }
-				<div className="levelboard-title">
-
-					{ /* Previous level button */ }
-					<div className="levelboard-title-btn">
-						{ board.adjacent.prev && 
-							<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.prev }` }>
-								<button type="button">←Prev</button>
-							</Link>
-						}
-					</div>
-
-					{ /* Levelboard title */ }
-					<div className="levelboard-title-name">
+				<div className={ styles.title }>
+					{ board.adjacent.prev ?
+						<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.prev }` }>
+							<button type="button">←Prev</button>
+						</Link>
+						:
+						<div style={ { width: buttonWidth } }></div>
+					}
+					<div className={ styles.middleTitle }>
 						<h1>{ cleanLevelName(level.name) }</h1>
 					</div>
-
-					{ /* Next level button */ }
-					<div className="levelboard-title-btn">
-						{ board.adjacent.next &&
-							<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.next }` }>
-								<button type="button">Next→</button>
-							</Link>
-						}
-					</div>
-					
+					{ board.adjacent.next ?
+						<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.next }` }>
+							<button type="button">Next→</button>
+						</Link>
+						:
+						<div style={ { width: buttonWidth } }></div>
+					}
 				</div>
-			</div>
 
-			{ /* Levelboard container - div container wrapping the levelboard table, as well as the type tabs. */ }
-			<div className="levelboard-container">
-
-				<div className="levelboard-options">
-
-					{ /* Levelboard tabs: The type tabs for the levelboard. Will only render a tab if the level has a board for it. */ }
+				{ /* Levelboard options - render the type tabs, as well as filter, update, and submit buttons (if applicable) */ }
+				<div className={ styles.options }>
 					<TableTabs elements={ getChartTypes(level) } current={ type } handleClick={ handleTabClick } />
-
-					{ /* Levelboard buttons - contains many buttons related to the game that levelboard belongs to */ }
-					<div className="levelboard-buttons">
-
-						{ /* Levelboard filters - contains a button to pull up the filters popup box */ }
+					<div className={ styles.optionsBtns }>
 						<button type="button" onClick={ () => setFiltersPopup(true) }>Filters</button>
-
-						{ /* Button that pulls up the update submission popup. NOTE: this button should only render if the user has a profile,
-						and at least 1 submission on the current levelboard. */ }
 						{ user.profile && userSubmissions.length > 0 &&
 							<button 
 								type="button" 
@@ -171,8 +157,6 @@ function Levelboard({ imageReducer }) {
 								Update Submission(s)
 							</button>
 						}
-
-						{ /* Button that pulls up the submission popup. NOTE: this button should only render if the user has a profile. */ }
 						{ user.profile && 
 							<button 
 								type="button" 
@@ -181,15 +165,12 @@ function Levelboard({ imageReducer }) {
 								Submit { capitalize(type) }
 							</button>
 						}
-
 					</div>
 				</div>
 
-				{ /* Levelboard content: render the levelboard itself, as well as the recent submissions table. */ }
-				<div className="levelboard-content">
-
-					{ /* First, render the levelboard */ }
-					<div className="levelboard-content-chart">
+				{ /* Levelboard chart - render the submissions for this chart */ }
+				<div className={ styles.chart }>
+					<div className="table">
 						<table>
 
 							{ /* Table header information: specifies the information displayed in each cell of the board */ }
@@ -210,33 +191,43 @@ function Levelboard({ imageReducer }) {
 
 							{ /* Table body information - the submission data */ }
 							<tbody>
-								{ board.filtered.map(submission => {
-									return <LevelboardRow 
-										submission={ submission } 
-										imageReducer={ imageReducer }
-										level={ level }
-										onClickFunc={ setDetailSubmission }
-										key={ submission.id } 
-									/>
-								})}
+								{ board.filtered ?
+									<TableContent 
+										items={ board.filtered } 
+										emptyMessage={ board.all.length > 0 ? "No submissions match your filters." : "There have been no submissions to this chart." }
+										numCols={ TABLE_WIDTH }
+									>
+										{ board.filtered.map(submission => {
+											return <LevelboardRow 
+												submission={ submission } 
+												imageReducer={ imageReducer }
+												level={ level }
+												onClickFunc={ setDetailSubmission }
+												key={ submission.id } 
+											/>
+										})}
+									</TableContent>
+								:
+									<LoadingTable numCols={ TABLE_WIDTH } />
+								}
 							</tbody>
 
 						</table>
 					</div>
-
-					{ /* Then, render the recent submissions table for this particular chart */ }
-					<h2>Recent Submissions</h2>
-					<RecentSubmissionsTable 
-						numSubmissions={ 20 }
-						searchParams={ searchParams }
-					/>
-
 				</div>
-			</div>
+
+			</Container>
+
+			{ /* Then, render the recent submissions table for this particular chart */ }
+			<Container title="Recent Submissions" largeTitle>
+				<RecentSubmissionsTable 
+					numSubmissions={ 20 }
+					searchParams={ searchParams }
+				/>
+			</Container>
 
 		</div>
 	:
-
 		// Loading component
 		<p>Loading...</p>
 };
