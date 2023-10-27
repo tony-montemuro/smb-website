@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, PopupContext } from "../../utils/Contexts";
+import { MessageContext, PopupContext } from "../../../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
-import DateHelper from "../../helper/DateHelper";
-import LevelboardUtils from "./LevelboardUtils";
-import SubmissionUpdate from "../../database/update/SubmissionUpdate";
-import ValidationHelper from "../../helper/ValidationHelper";
+import DateHelper from "../../../../helper/DateHelper";
+import LevelboardUtils from "../../LevelboardUtils";
+import SubmissionUpdate from "../../../../database/update/SubmissionUpdate";
+import ValidationHelper from "../../../../helper/ValidationHelper";
 
-const Update = (level) => {
+const Update = (level, setSubmitting) => {
     /* ===== VARIABLES ===== */
     const location = useLocation();
     const path = location.pathname.split("/");
@@ -16,7 +16,7 @@ const Update = (level) => {
     const formInit = {
 		values: null,
 		error: { proof: null, comment: null },
-        submitting: false
+        submission: null
 	};
 
     /* ===== CONTEXTS ===== */
@@ -55,16 +55,16 @@ const Update = (level) => {
     const { submission2Form } = LevelboardUtils();
     const { validateProof, validateComment } = ValidationHelper();
 
-    // FUNCTION 1 - fillForm - function that is called when the popup activates
+    // FUNCTION 1: handleSubmissionChange - function that runs when the user wants to change the submission
     // PRECONDITIONS (1 parameter):
-    // 1.) submissions: an array of all submission objects belonging to the current user for the current level
-    // POSTCONDITIONS (1 possible outcome)
-    // the submission is transformed into a format compatible with the form, and is updated by calling the dispatchForm() function
-	const fillForm = submissions => {
-        const submission = submissions[0];
-		const formVals = submission2Form(submission, type, level, category, submission.profile);
-		dispatchForm({ field: "values", value: formVals });
-	};
+    // 1.) submission: a submission object, which the user wishes to switch to
+    // POSTCONDITIONS (1 possible outcome):
+    // we use the `id` parameter to fetch the submission we want to change to, and update the form accordingly
+    const handleSubmissionChange = submission => {
+        const formVals = submission2Form(submission, type, level, category, submission.profile);
+        dispatchForm({ field: "values", value: formVals });
+        dispatchForm({ field: "submission", value: submission });
+    };
 
     // FUNCTION 2: handleChange - function that is called whenever the user makes any change to the form
     // PRECONDITIONS (1 parameter):
@@ -87,19 +87,24 @@ const Update = (level) => {
         }
     };
 
-    // FUNCTION 3: handleSubmissionChange - function that runs when the user wants to change the submission
+    // FUNCTION 3: handleSubmittedAtChange - handle a change to the `submitted_at` field in the submission form
     // PRECONDITIONS (1 parameter):
-    // 1.) id: a string in the timestamptz postgreSQL format representing the unique id of one of the submissions in `submissions`
-    // 2.) submissions: an array of all submission objects belonging to the current user for the current level
+    // 1.) e: an event object that is generated when the user makes a change to the `submitted_at` field of the submission form
     // POSTCONDITIONS (1 possible outcome):
-    // we use the `id` parameter to fetch the submission we want to change to, and update the form accordingly
-    const handleSubmissionChange = (id, submissions) => {
-        const submission = submissions.find(submission => submission.id === id);
-        const formVals = submission2Form(submission, type, level, category, submission.profile);
-        dispatchForm({ field: "values", value: formVals });
+    // the `submitted_at` field is updated using the date the user selected by the date picker
+    const handleSubmittedAtChange = e => {
+        let submitted_at = null;
+        if (e) {
+            let { $d: date } = e;
+            const year = date.getFullYear();
+            const month = String(date.getMonth()+1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            submitted_at = `${ year }-${ month }-${ day }`;
+        }
+        dispatchForm({ field: "values", value: { submitted_at } });
     };
 
-    // FUNCTION 3: getUpdateFromForm - takes form data, and extracts only the updatable information
+    // FUNCTION 4: getUpdateFromForm - takes form data, and extracts only the updatable information
     // PRECONDITIONS (4 parameters):
     // 1.) formVals: an object that stores the updated submission form values
     // 2.) date: a string representing the backend date of a submission
@@ -129,7 +134,7 @@ const Update = (level) => {
         return updatedData;
     };
 
-    // FUNCTION 4: handleSubmit - function that is called when the user submits the form
+    // FUNCTION 5: handleSubmit - function that is called when the user submits the form
     // PRECONDITIONS (3 parameters):
     // 1.) e: an event object which is generated when the user submits the update submission form
     // 2.) submissions: an array of all submission objects belonging to the current user for the current level
@@ -142,7 +147,7 @@ const Update = (level) => {
     const handleSubmit = async (e, submissions, updateBoard) => {
         // initialize submission
 		e.preventDefault();
-		dispatchForm({ field: "submitting", value: true });
+		setSubmitting(true);
 
         // create an error object that will store error messages for each field value that needs to
 		// be validated
@@ -156,7 +161,7 @@ const Update = (level) => {
         // if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
 		if (Object.values(error).some(row => row !== undefined)) {
-            dispatchForm({ field: "submitting", value: false });
+            setSubmitting(false);
             addMessage("One or more form fields had errors.", "error");
             return;
         }
@@ -182,11 +187,12 @@ const Update = (level) => {
 
         } catch (error) {
             addMessage(error.message, "error");
-            dispatchForm({ field: "submitting", value: false });
+        } finally {
+            setSubmitting(false);
         };
     };
 
-    return { form, fillForm, handleChange, handleSubmissionChange, handleSubmit };
+    return { form, handleSubmissionChange, handleChange, handleSubmittedAtChange, handleSubmit };
 };
 
 /* ===== EXPORTS ===== */

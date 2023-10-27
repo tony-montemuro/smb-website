@@ -1,0 +1,35 @@
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 12px;
+}
+
+.header h1, .header h2 {
+    margin: 0;
+}
+
+.formWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.row:hover {
+    background-color: rgba(var(--color-container-selected), 0.5) !important;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: rgb(var(--color-container-selected)) !important;
+}
+
+.selected:hover {
+    cursor: default;
+}
+
+.submitBtns {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}

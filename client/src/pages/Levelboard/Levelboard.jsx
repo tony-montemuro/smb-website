@@ -17,7 +17,7 @@ import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/Rece
 import SubmissionDetails from "../../components/SubmissionDetails/SubmissionDetails.jsx";
 import TableContent from "../../components/TableContent/TableContent.jsx";
 import TableTabs from "../../components/TableTabs/TableTabs";
-import Update from "./Update.jsx";
+import Update from "./Popups/Update/Update.jsx";
 
 function Levelboard({ imageReducer }) {
 	/* ===== CONTEXTS ===== */
@@ -61,6 +61,7 @@ function Levelboard({ imageReducer }) {
 	const [insertPopup, setInsertPopup] = useState(false);
 	const [updateSubmissions, setUpdateSubmissions] = useState(undefined);
 	const [detailSubmission, setDetailSubmission] = useState(undefined);
+	const [submitting, setSubmitting] = useState(false);
 
 	// states and functions from js file
 	const { 
@@ -111,8 +112,8 @@ function Levelboard({ imageReducer }) {
 			<Popup renderPopup={ insertPopup } setRenderPopup={ setInsertPopup } width={ `${ isModerator(abb) ? "50%" : "25%" }` }>
 				<Insert level={ level } updateBoard={ setupBoard } />
 			</Popup>
-			<Popup renderPopup={ updateSubmissions } setRenderPopup={ setUpdateSubmissions } width="40%" >
-				<Update level={ level } updateBoard={ setupBoard } />
+			<Popup renderPopup={ updateSubmissions } setRenderPopup={ setUpdateSubmissions } width="40%" disableClose={ submitting } >
+				<Update level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />
 			</Popup>
 			<Popup renderPopup={ filtersPopup } setRenderPopup={ setFiltersPopup } width="60%" >
 				<Filters currentFilters={ board.filters } defaultFilters={ defaultFilters } updateBoard={ setupBoard } />
