@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Levelboard.module.css";
 import Container from "../../components/Container/Container.jsx";
-import Filters from "./Filters.jsx";
+import Filters from "./Popups/Filters/Filters.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import Insert from "./Insert.jsx";
 import LevelboardLogic from "./Levelboard.js";

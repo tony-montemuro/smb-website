@@ -1,19 +1,13 @@
-#header {
-    margin: 0;
-    padding: 5px 0;
-}
-
-.title {
-    display: flex;
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
 }
 
-.title button {
-    margin: auto 0;
-}
-
-.filters {
-    padding: 10px 0;
+.header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .btns {
@@ -30,12 +24,9 @@
     background-color: rgb(var(--color-nav-hover)) !important;
 }
 
-.boolean {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
-#right {
+.footer {
+    display: flex;
     justify-content: flex-end;
+    gap: 5px;
+    padding-top: 20px;
 }

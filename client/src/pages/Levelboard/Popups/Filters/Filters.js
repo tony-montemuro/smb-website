@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { PopupContext } from "../../utils/Contexts";
+import { PopupContext } from "../../../../utils/Contexts";
 import { useContext } from "react";
 import { useState } from "react";
 
@@ -101,6 +101,23 @@ const Filters = (defaultFilters) => {
         setFilters({ ...filters, [property]: val });
     };
 
+    // FUNCTION 3: handleEndDateChange - handle a change to the `endDate` field in the submission form
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: an event object that is generated when the user makes a change to the `endDate` field of the submission form
+    // POSTCONDITIONS (1 possible outcome):
+    // the `endDate` field is updated using the date the user selected by the date picker
+    const handleEndDateChange = e => {
+        let endDate = null;
+        if (e) {
+            let { $d: date } = e;
+            const year = date.getFullYear();
+            const month = String(date.getMonth()+1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            endDate = `${ year }-${ month }-${ day }`;
+        }
+        setFilters({ ...filters, endDate });
+    };
+
     // FUNCTION 6: hasFilterChanged - code that checks whether or not a non-array based filter has changed
     // PRECONDITIONS (1 parameter):
     // 1.) property: a string representing the name of the property we want to check for changes
@@ -138,6 +155,7 @@ const Filters = (defaultFilters) => {
         hasArrayFilterChanged, 
         handleFilterReset,
         handleFilterChange, 
+        handleEndDateChange,
         hasFilterChanged, 
         handleFiltersResetAll,
         handleApplyFilters
