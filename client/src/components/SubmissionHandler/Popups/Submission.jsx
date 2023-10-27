@@ -31,7 +31,8 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
   const category = submission.level.category;
   const type = submission.score ? "score" : "time";
   const creator = submission.report && submission.report.creator;
-  const TEXT_AREA_ROWS = 2;
+  const COMMENT_MAX_LENGTH = 100;
+  const COMMENT_ROWS = 2;
   const updateFieldText = "This field has been updated.";
 
   /* ===== FUNCTIONS ===== */
@@ -229,7 +230,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 fullWidth
                 helperText={ form.values.comment !== submission.comment ? updateFieldText : null }
                 id="comment"
-                inputProps={ { readOnly: true } }
+                inputProps={ { maxLength: COMMENT_MAX_LENGTH, readOnly: true } }
                 InputProps={ { 
                   endAdornment: submission.comment ? (
                     <IconButton size="small" onClick={ handleToggle }>
@@ -239,7 +240,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 } }
                 label="Comment"
                 multiline
-                rows={ TEXT_AREA_ROWS }
+                rows={ COMMENT_ROWS }
                 onChange={ handleChange }
                 value={ form.values.comment }
                 variant="filled"

@@ -21,7 +21,8 @@ function Rejection({ form, clearMessage, handleChange, setShowReject, onReject }
   /* ===== VARIABLES ===== */
   const submission = popupData;
   const isOwn = submission.profile.id === user.profile.id;
-  const TEXT_AREA_ROWS = 2;
+  const MESSAGE_MAX_LENGTH = 100;
+  const MESSAGE_ROWS = 2;
 
   /* ===== EFFECTS ===== */
 
@@ -59,6 +60,7 @@ function Rejection({ form, clearMessage, handleChange, setShowReject, onReject }
             <TextField
               fullWidth
               id="message"
+              inputProps={ { maxLength: MESSAGE_MAX_LENGTH } }
               InputProps={ { 
                 endAdornment: form.values.message.length > 0 ? (
                   <IconButton size="small" onClick={ clearMessage }>
@@ -69,7 +71,7 @@ function Rejection({ form, clearMessage, handleChange, setShowReject, onReject }
               label="Message"
               multiline
               placeholder="Must be under 100 characters"
-              rows={ TEXT_AREA_ROWS }
+              rows={ MESSAGE_ROWS }
               onChange={ handleChange }
               value={ form.values.message }
               variant="filled"
