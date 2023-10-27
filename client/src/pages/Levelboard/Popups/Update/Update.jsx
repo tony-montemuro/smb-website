@@ -105,10 +105,13 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
       { /* Update submission form */ }
       <form onSubmit={ (e) => handleSubmit(e, submissions, updateBoard) }>
         <div className={ styles.formWrapper }>
+
+          { /* If the submission has been approved, render a disclaimer */ }
           { form.values.approved &&
             <p><b>Note:</b> Since this submission has been approved by a moderator, any updates will revoke it's approval.</p>
           }
 
+          { /* Render the various fields to update the submission */ }
           <TextField 
             fullWidth
             helperText="This field cannot be updated."
@@ -235,19 +238,19 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
               variant="filled"
             />
 
-          { /* Form submission button: submits the form. NOTE: button is disabled if the submitting field of form is true. */ }
+          { /* Form submission btns: reset or submit the form. */ }
           <div className={ styles.submitBtns }>
             <button 
               className="cancel" 
               type="button" 
               onClick={ () => handleSubmissionChange(form.submission) }
               disabled={ submitting }
-
             >
               Reset
             </button>
             <button type="submit" disabled={ submitting }>Update</button>
           </div>
+          
         </div>
 
       </form>
