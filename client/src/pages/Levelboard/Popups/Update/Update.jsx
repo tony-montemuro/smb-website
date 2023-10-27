@@ -232,6 +232,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
               id="comment"
               label="Comment"
               multiline
+              placeholder="Must be under 100 characters"
               rows={ COMMENT_ROWS }
               onChange={ handleChange }
               value={ form.values.comment }
@@ -250,7 +251,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             </button>
             <button type="submit" disabled={ submitting }>Update</button>
           </div>
-          
+
         </div>
 
       </form>
