@@ -7,7 +7,7 @@ import styles from "./Levelboard.module.css";
 import Container from "../../components/Container/Container.jsx";
 import Filters from "./Popups/Filters/Filters.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
-import Insert from "./Insert.jsx";
+import Insert from "./Popups/Insert/Insert.jsx";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
 import LoadingTable from "../../components/LoadingTable/LoadingTable.jsx";
@@ -109,8 +109,13 @@ function Levelboard({ imageReducer }) {
 		<div className={ styles.levelboard }>
 
 			{ /* Popups */ }
-			<Popup renderPopup={ insertPopup } setRenderPopup={ setInsertPopup } width={ `${ isModerator(abb) ? "50%" : "25%" }` }>
-				<Insert level={ level } updateBoard={ setupBoard } />
+			<Popup 
+				renderPopup={ insertPopup } 
+				setRenderPopup={ setInsertPopup } 
+				width={ `${ isModerator(abb) ? "50%" : "25%" }` } 
+				disableClose={ submitting }
+			>
+				<Insert level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />
 			</Popup>
 			<Popup renderPopup={ updateSubmissions } setRenderPopup={ setUpdateSubmissions } width="40%" disableClose={ submitting } >
 				<Update level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />

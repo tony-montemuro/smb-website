@@ -39,6 +39,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
   const type = location.pathname.split("/")[4];
   const updateFieldText = "This field has been updated.";
   const COMMENT_ROWS = 2;
+  const COMMENT_MAX_LENGTH = 100;
   const SUBMISSIONS_PER_TABLE = 5;
 
   /* ===== EFFECTS ===== */
@@ -194,50 +195,52 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             label="Proof"
             placeholder="Must be a YouTube, Twitch, or X (Twitter) URL"
             onChange={ handleChange }
+            type="url"
             value={ form.values.proof }
             variant="filled"
           />
           <FormGroup>
-              <FormControlLabel 
-                control={ 
-                  <Checkbox 
-                    checked={ form.values.live } 
-                    id="live" 
-                    onChange={ handleChange } 
-                    inputProps={{ "aria-label": "controlled" }} 
-                  />
-                } 
-                label="Live Proof" 
-              />
-              { form.values.live !== form.submission.live && <FormHelperText>{ updateFieldText }</FormHelperText> }
-            </FormGroup>
-            <FormGroup>
-              <FormControlLabel 
-                control={ 
-                  <Checkbox 
-                    checked={ form.values.tas } 
-                    id="tas" 
-                    onChange={ handleChange } 
-                    inputProps={{ "aria-label": "controlled" }} 
-                  />
-                } 
-                label="TAS" 
-              />
-              { form.values.tas !== form.submission.tas  && <FormHelperText>{ updateFieldText }</FormHelperText> }
-            </FormGroup>
-            <TextField
-              color={ form.values.comment !== form.submission.comment ? "success" : "primary" }
-              fullWidth
-              helperText={ form.values.comment !== form.submission.comment ? updateFieldText : null }
-              id="comment"
-              label="Comment"
-              multiline
-              placeholder="Must be under 100 characters"
-              rows={ COMMENT_ROWS }
-              onChange={ handleChange }
-              value={ form.values.comment }
-              variant="filled"
+            <FormControlLabel 
+              control={ 
+                <Checkbox 
+                  checked={ form.values.live } 
+                  id="live" 
+                  onChange={ handleChange } 
+                  inputProps={{ "aria-label": "controlled" }} 
+                />
+              } 
+              label="Live Proof" 
             />
+            { form.values.live !== form.submission.live && <FormHelperText>{ updateFieldText }</FormHelperText> }
+          </FormGroup>
+          <FormGroup>
+            <FormControlLabel 
+              control={ 
+                <Checkbox 
+                  checked={ form.values.tas } 
+                  id="tas" 
+                  onChange={ handleChange } 
+                  inputProps={{ "aria-label": "controlled" }} 
+                />
+              } 
+              label="TAS" 
+            />
+            { form.values.tas !== form.submission.tas  && <FormHelperText>{ updateFieldText }</FormHelperText> }
+          </FormGroup>
+          <TextField
+            color={ form.values.comment !== form.submission.comment ? "success" : "primary" }
+            fullWidth
+            helperText={ form.values.comment !== form.submission.comment ? updateFieldText : null }
+            id="comment"
+            inputProps={ { maxLength: COMMENT_MAX_LENGTH } }
+            label="Comment"
+            multiline
+            placeholder="Must be under 100 characters"
+            rows={ COMMENT_ROWS }
+            onChange={ handleChange }
+            value={ form.values.comment }
+            variant="filled"
+          />
 
           { /* Form submission btns: reset or submit the form. */ }
           <div className={ styles.submitBtns }>

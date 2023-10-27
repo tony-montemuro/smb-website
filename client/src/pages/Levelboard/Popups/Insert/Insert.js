@@ -1,14 +1,14 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, PopupContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, PopupContext, UserContext } from "../../../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
-import DateHelper from "../../helper/DateHelper";
-import FrontendHelper from "../../helper/FrontendHelper";
-import LevelboardUtils from "./LevelboardUtils";
-import SubmissionUpdate from "../../database/update/SubmissionUpdate";
-import ValidationHelper from "../../helper/ValidationHelper";
+import DateHelper from "../../../../helper/DateHelper";
+import FrontendHelper from "../../../../helper/FrontendHelper";
+import LevelboardUtils from "../../LevelboardUtils";
+import SubmissionUpdate from "../../../../database/update/SubmissionUpdate";
+import ValidationHelper from "../../../../helper/ValidationHelper";
 
-const Insert = (level) => {
+const Insert = (level, setSubmitting) => {
     /* ===== VARIABLES ===== */
     const location = useLocation();
     const path = location.pathname.split("/");
@@ -25,8 +25,7 @@ const Insert = (level) => {
             proof: null, 
             comment: null, 
             message: null 
-        },
-		submitting: false
+        }
 	};
 
     /* ===== CONTEXTS ===== */
@@ -84,6 +83,7 @@ const Insert = (level) => {
     // by calling the dispatchForm() function
 	const fillForm = level => {
 		const formVals = submission2Form(null, type, level, category, user.profile);
+        console.log(formVals);
 		dispatchForm({ field: "values", value: formVals });
 	};
 
@@ -108,7 +108,24 @@ const Insert = (level) => {
         }
     };
 
-    // FUNCTION 3: onUserRowClick - function that is called when a moderator selects a user
+    // FUNCTION 3: handleSubmittedAtChange - handle a change to the `submitted_at` field in the submission form
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: an event object that is generated when the user makes a change to the `submitted_at` field of the submission form
+    // POSTCONDITIONS (1 possible outcome):
+    // the `submitted_at` field is updated using the date the user selected by the date picker
+    const handleSubmittedAtChange = e => {
+        let submitted_at = null;
+        if (e) {
+            let { $d: date } = e;
+            const year = date.getFullYear();
+            const month = String(date.getMonth()+1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            submitted_at = `${ year }-${ month }-${ day }`;
+        }
+        dispatchForm({ field: "values", value: { submitted_at } });
+    };
+
+    // FUNCTION 4: onUserRowClick - function that is called when a moderator selects a user
     // PRECONDITIONS (1 parameter):
     // 1.) profile: a profile object, containing at least the id, username, and country fields
     // POSTCONDITIONS (2 possible outcomes):
@@ -121,7 +138,7 @@ const Insert = (level) => {
         }
     };
 
-    // FUNCTION 4: getDateOfSubmission - given date from form data, determine new, backend-formatted submission date
+    // FUNCTION 5: getDateOfSubmission - given date from form data, determine new, backend-formatted submission date
     // PRECONDITIONS (1 parameter):
     // 1.) submittedAt: the date of the submission, coming from `form.values.submitted_at`
     // POSTCONDITIONS (2 possible outcomes):
@@ -132,7 +149,7 @@ const Insert = (level) => {
         return submittedAt === currDate ? null : dateF2B(submittedAt);
     };
 
-    // FUNCTION 5: getSubmissionFromForm  - takes form values, and generates a new object with formatting ready for submission
+    // FUNCTION 6: getSubmissionFromForm  - takes form values, and generates a new object with formatting ready for submission
     // PRECONDITIONS (2 parameters):
     // 1.) formVals: an object containing data generated from the submission form
     // 2.) date: a string representing the date of the submission (backend format), or null. if the date is null, this means that
@@ -154,7 +171,7 @@ const Insert = (level) => {
         return submission;
     };
 
-    // FUNCTION 6: handleSubmit - function that validates and submits a record to the database
+    // FUNCTION 7: handleSubmit - function that validates and submits a record to the database
 	// PRECONDITIONS (3 parameters):
 	// 1.) e: an event object generated when the user submits the submission form
     // 2.) timerType: a string representing the time of timer of the chart. only really relevent for time charts
@@ -167,7 +184,7 @@ const Insert = (level) => {
 	const handleSubmit = async (e, timerType, updateBoard) => {
 		// initialize submission
 		e.preventDefault();
-		dispatchForm({ field: "submitting", value: true });
+		setSubmitting(true);
 
 		// create an error object that will store error messages for each field value that needs to
 		// be validated
@@ -191,7 +208,7 @@ const Insert = (level) => {
 		// if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
 		if (Object.values(error).some(e => e !== undefined)) {
-            dispatchForm({ field: "submitting", value: false });
+            setSubmitting(false);
             addMessage("One or more form fields had errors.", "error");
             return;
         }
@@ -222,11 +239,12 @@ const Insert = (level) => {
         } catch (error) {
             // otherwise, render an error message, and keep popup open
             addMessage(error.message, "error");
-            dispatchForm({ field: "submitting", value: false });
+        } finally {
+            setSubmitting(false);
         };
 	};
 
-    return { form, fillForm, handleChange, onUserRowClick, handleSubmit }; 
+    return { form, fillForm, handleChange, handleSubmittedAtChange, onUserRowClick, handleSubmit }; 
 };
 
 /* ===== EXPORTS ===== */

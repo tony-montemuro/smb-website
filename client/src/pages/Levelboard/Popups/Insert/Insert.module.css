@@ -1,0 +1,22 @@
+.insert {
+    display: flex;
+    gap: 20px;
+}
+
+.profile {
+    flex: 1;
+}
+
+.submit {
+    flex: 1;
+}
+
+.formWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.user {
+    font-size: 20px;
+}

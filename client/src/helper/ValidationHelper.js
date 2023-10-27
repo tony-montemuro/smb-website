@@ -55,7 +55,7 @@ const ValidationHelper = () => {
     // if the proof is determined to be valid, return undefined
     const validateVideoUrl = url => {
         if (!twitchPattern.test(url) && !youtubePattern.test(url) && !twitterPatttern.test(url)) {
-            return "Proof must be a valid YouTube, Twitch, or X (Twitter) video URL.";
+            return "Not a valid YouTube, Twitch, or X (Twitter) video URL.";
         }
         return undefined;
     };
