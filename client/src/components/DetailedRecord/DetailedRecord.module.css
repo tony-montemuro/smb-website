@@ -1,0 +1,8 @@
+.detailedRecord {
+    white-space: nowrap;
+}
+
+.aligned {
+    display: inline-block;
+    vertical-align: middle;
+}

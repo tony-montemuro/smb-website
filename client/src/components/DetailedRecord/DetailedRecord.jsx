@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { Link, useLocation } from "react-router-dom";
 import { red } from "@mui/material/colors";
+import styles from "./DetailedRecord.module.css";
 import CheckIcon from "@mui/icons-material/Check";
 import FrontendHelper from "../../helper/FrontendHelper";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
@@ -22,11 +23,11 @@ function DetailedRecord({ submission, iconSize, timerType }) {
 
   /* ===== LEVELBOARD RECORD COMPONENT ===== */
   return (
-    <span className="levelboard-record">
+    <span className={ styles.detailedRecord }>
 
       { /* If submission is approved, render a checkbox next to the record */ }
       { submission.approve ? 
-        <div className="levelboard-aligned-span">
+        <div className="inline-icon">
           <CheckIcon 
             fontSize={ iconSize }
             titleAccess="This submission has been approved by a moderator."
@@ -36,7 +37,7 @@ function DetailedRecord({ submission, iconSize, timerType }) {
 
         // If submission has a report, render a warning icon next to the record 
         submission.report ?
-          <div className="levelboard-aligned-span">
+          <div className="inline-icon">
             <WarningRoundedIcon 
               fontSize={ iconSize }
               titleAccess="This submission has been reported." 
