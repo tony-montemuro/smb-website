@@ -1,13 +1,14 @@
-.cached-page-controls {
+.cachedPageControls {
+    padding: 5px;
     display: flex;
     justify-content: space-between;
 }
 
-.cached-page-controller {
+.controller {
     display: flex;
     gap: 5px;
 }
 
-.cached-page-controls select {
+.controller select {
     width: 50px;
 }
