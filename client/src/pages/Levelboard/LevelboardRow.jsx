@@ -28,14 +28,14 @@ function LevelboardRow({ submission, imageReducer, level, onClickFunc }) {
       <td>{ submission.region.region_name }</td>
       <td>
         { submission.proof && 
-          <div className="levelboard-svg-wrapper">
+          <div className={ styles.svgWrapper }>
             <VideocamIcon titleAccess="Has proof" sx={{ color: "black" }} />
           </div>
         }
       </td>
       <td>
         { submission.comment && 
-          <div className="levelboard-svg-wrapper">
+          <div className={ styles.svgWrapper }>
             <ChatBubbleRoundedIcon titleAccess={ submission.comment } fontSize="small" />
           </div>
         }

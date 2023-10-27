@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import "./Levelboard.css";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";

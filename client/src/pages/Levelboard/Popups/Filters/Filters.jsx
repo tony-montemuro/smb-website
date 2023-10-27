@@ -135,7 +135,7 @@ function Filters({ currentFilters, defaultFilters, updateBoard }) {
 
           { /* Levelboard filter header - render the name of the filter, as well as a reset button if the filter has been modified
           from default value */ }
-          <div className="levelboard-filter-header">
+          <div className={ styles.header }>
             <h2>End Date</h2>
             { hasFilterChanged("endDate") && 
               <button type="button" onClick={ () => handleFilterReset("endDate") }>Reset</button>

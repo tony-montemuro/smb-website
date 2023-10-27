@@ -31,3 +31,10 @@
     background-color: rgba(var(--color-container-selected), 0.5);
     cursor: pointer;
 }
+
+.svgWrapper {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    width: 100%;
+}
