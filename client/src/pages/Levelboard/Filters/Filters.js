@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { PopupContext } from "../../../../utils/Contexts";
+import { PopupContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import { useState } from "react";
 

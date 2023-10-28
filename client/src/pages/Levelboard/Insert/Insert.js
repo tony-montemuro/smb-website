@@ -1,12 +1,12 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, PopupContext, UserContext } from "../../../../utils/Contexts";
+import { MessageContext, PopupContext, UserContext } from "../../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
-import DateHelper from "../../../../helper/DateHelper";
-import FrontendHelper from "../../../../helper/FrontendHelper";
-import LevelboardUtils from "../../LevelboardUtils";
-import SubmissionUpdate from "../../../../database/update/SubmissionUpdate";
-import ValidationHelper from "../../../../helper/ValidationHelper";
+import DateHelper from "../../../helper/DateHelper";
+import FrontendHelper from "../../../helper/FrontendHelper";
+import LevelboardUtils from "../LevelboardUtils";
+import SubmissionUpdate from "../../../database/update/SubmissionUpdate";
+import ValidationHelper from "../../../helper/ValidationHelper";
 
 const Insert = (level, setSubmitting) => {
     /* ===== VARIABLES ===== */

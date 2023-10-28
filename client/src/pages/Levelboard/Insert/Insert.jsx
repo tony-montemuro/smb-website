@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { GameContext, UserContext } from "../../../../utils/Contexts";
+import { GameContext, UserContext } from "../../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import dayjs from "dayjs";
@@ -8,13 +8,13 @@ import styles from "./Insert.module.css";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
-import FrontendHelper from "../../../../helper/FrontendHelper";
+import FrontendHelper from "../../../helper/FrontendHelper";
 import InsertLogic from "./Insert.js";
 import RecordInput from "./RecordInput";
 import TextField from "@mui/material/TextField";
-import Username from "../../../../components/Username/Username.jsx";
-import UserRow from "../../../../components/UserRow/UserRow";
-import UserSearch from "../../../../components/UserSearch/UserSearch.jsx";
+import Username from "../../../components/Username/Username.jsx";
+import UserRow from "../../../components/UserRow/UserRow";
+import UserSearch from "../../../components/UserSearch/UserSearch.jsx";
 
 function Insert({ level, updateBoard, submitting, setSubmitting }) {
   /* ===== CONTEXTS ===== */

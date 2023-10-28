@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { GameContext } from "../../../../utils/Contexts";
+import { GameContext } from "../../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import dayjs from "dayjs";
 import styles from "./Filters.module.css";

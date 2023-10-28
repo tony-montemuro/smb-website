@@ -1,17 +1,17 @@
 /* ===== IMPORTS ===== */
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { GameContext, PopupContext } from "../../../../utils/Contexts";
+import { GameContext, PopupContext } from "../../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import dayjs from "dayjs";
 import styles from "./Update.module.css";
-import CachedPageControls from "../../../../components/CachedPageControls/CachedPageControls.jsx";
+import CachedPageControls from "../../../components/CachedPageControls/CachedPageControls.jsx";
 import Checkbox from "@mui/material/Checkbox";
-import DetailedRecord from "../../../../components/DetailedRecord/DetailedRecord";
+import DetailedRecord from "../../../components/DetailedRecord/DetailedRecord";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import FormHelperText from "@mui/material/FormHelperText";
-import FrontendHelper from "../../../../helper/FrontendHelper";
+import FrontendHelper from "../../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 import UpdateLogic from "./Update.js";
 
