@@ -49,12 +49,12 @@ const ValidationHelper = () => {
 
     // FUNCTION 3: validateVideoUrl - given a video url, validate that it's either a youtube, twitch, or twitter video
     // PRECONDITIONS (1 parameter):
-    // 1.) url: a string value representing a video url
+    // 1.) url: a string value representing a video url; also may be an empty string
     // POSTCONDITIONS (2 possible outcomes):
     // if the video is determined to be non-valid, return a string that contains the error message
     // if the proof is determined to be valid, return undefined
     const validateVideoUrl = url => {
-        if (!twitchPattern.test(url) && !youtubePattern.test(url) && !twitterPatttern.test(url)) {
+        if (url && !twitchPattern.test(url) && !youtubePattern.test(url) && !twitterPatttern.test(url)) {
             return "Not a valid YouTube, Twitch, or X (Twitter) video URL.";
         }
         return undefined;
@@ -77,16 +77,27 @@ const ValidationHelper = () => {
     // if the comment is determined to be invalid, return a string that contains the error message
     // if the comment is determined to be valid, return undefined
     const validateComment = comment => {
-        // check if the comment is greater than 100 characters long
         if (comment.length > 100) {
             return "Comment must be 100 characters or less.";
         }
-
-        // if we made it this far, the comment is valid! return undefined, since there is no error
         return undefined;
     };
 
-    return { validateEmail, validateMessage, validateVideoUrl, validateProof, validateComment };
+    // FUNCTION 6: validateDate - given a date string, validate that it's a valid format
+    // PRECONDITIONS (1 parameter):
+    // 1.) date: a string representing a data, in a front-end YYYY-MM-DD format
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the date is determined to be invalid, return a string that contains the error message
+    // if the date is determined to be valid, return undefined
+    const validateDate = date => {
+        if (date.includes("NaN")) {
+            return "Please select a date.";
+        }
+        
+        return undefined;
+    }
+
+    return { validateEmail, validateMessage, validateVideoUrl, validateProof, validateComment, validateDate };
 };
 
 /* ===== EXPORTS ===== */

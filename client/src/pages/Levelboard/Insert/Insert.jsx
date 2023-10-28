@@ -91,6 +91,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting }) {
             { /* Render all necessary inputs for a submission */ }
             <RecordInput form={ form } handleChange={ handleChange } timerType={ level.timer_type } />
             <DatePicker 
+              color={ form.error.submitted_at ? "error" : "primary" }
               disableFuture
               label="Date"
               format="YYYY-MM-DD"
@@ -98,7 +99,8 @@ function Insert({ level, updateBoard, submitting, setSubmitting }) {
               value={ form.values.submitted_at ? dayjs(form.values.submitted_at) : form.values.submitted_at }
               onChange={ handleSubmittedAtChange }
               slotProps={{
-                textField: { 
+                textField: {
+                  helperText: form.error.submitted_at ? form.error.submitted_at : null, 
                   fullWidth: true,
                   required: true,
                   variant: "filled"
@@ -189,7 +191,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting }) {
             <TextField
               disabled={ user.profile.id !== form.values.profile.id }
               fullWidth
-              helperText={ `${ form.values.comment.length }/${ COMMENT_MAX_LENGTH }` }
+              helperText={ user.profile.id === form.values.profile.id ? `${ form.values.comment.length }/${ COMMENT_MAX_LENGTH }` : "This field cannot be updated." }
               id="comment"
               inputProps={{ maxLength: COMMENT_MAX_LENGTH }}
               label="Comment"
