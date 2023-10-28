@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, PopupContext } from "../../../utils/Contexts";
+import { GameContext, MessageContext, PopupContext } from "../../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
+import FrontendHelper from "../../../helper/FrontendHelper";
 import DateHelper from "../../../helper/DateHelper";
-import LevelboardUtils from "../LevelboardUtils";
 import SubmissionUpdate from "../../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../../helper/ValidationHelper";
 
@@ -15,11 +15,14 @@ const Update = (level, setSubmitting) => {
     const type = path[4];
     const formInit = {
 		values: null,
-		error: { proof: null, comment: null },
+		error: { proof: null, submitted_at: null },
         submission: null
 	};
 
     /* ===== CONTEXTS ===== */
+
+    // game state from game context
+    const { game } = useContext(GameContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -29,20 +32,20 @@ const Update = (level, setSubmitting) => {
 
     /* ===== STATES & REDUCERS ===== */
     const [form, dispatchForm] = useReducer((state, action) => {
-		switch (action.field) {
-			case "values":
-				return {
-					...state,
-					[action.field]: {
-						...state[action.field],
-						...action.value
-					}
-				};
-            case "all":
-                return formInit;
-			default:
-				return { ...state, [action.field]: action.value };
-		}
+        const field = action.field, value = action.value;
+        if (field === "values" || field === "error") {
+            return {
+                ...state,
+                [field]: {
+                    ...state[field],
+                    ...value
+                }
+            };
+        }
+        if (field === "all") {
+            return formInit;
+        }
+        return { ...state, [field]: value };
 	}, formInit);
 
     /* ===== FUNCTIONS ===== */
@@ -52,21 +55,47 @@ const Update = (level, setSubmitting) => {
 
     // helper functions
     const { getDateOfSubmission } = DateHelper();
-    const { submission2Form } = LevelboardUtils();
-    const { validateProof, validateComment } = ValidationHelper();
+    const { dateB2F, recordB2F } = FrontendHelper();
+    const { validateVideoUrl, validateDate } = ValidationHelper();
 
-    // FUNCTION 1: handleSubmissionChange - function that runs when the user wants to change the submission
+    // FUNCTION 1: submission2Form ("submission to form") - function that generates the form object given a submission
+    // PRECONDITIONS (1 parameter):
+    // 1.) submission: the submission object we wish to convert to the "form" form
+    // POSTCONDITIONS (1 possible outcome):
+    // take the submission object, and convert it to a form compatible with the update submission form
+    const submission2Form = submission => {
+        return {
+            id: submission.id,
+            record: recordB2F(submission.record, type, level.timer_type),
+            score: submission.score,
+            monkey_id: submission.monkey.id,
+            platform_id: submission.platform.id,
+            region_id: submission.region.id,
+            live: submission.live,
+            proof: submission.proof,
+            comment: submission.comment ? submission.comment : "",
+            profile_id: submission.profile.id,
+            game_id: game.abb,
+            level_id: level.name,
+            category: category,
+            submitted_at: dateB2F(submission.submitted_at),
+            tas: submission.tas,
+            approved: submission.approve ? true : false
+        };
+    }
+
+    // FUNCTION 2: handleSubmissionChange - function that runs when the user wants to change the submission
     // PRECONDITIONS (1 parameter):
     // 1.) submission: a submission object, which the user wishes to switch to
     // POSTCONDITIONS (1 possible outcome):
     // we use the `id` parameter to fetch the submission we want to change to, and update the form accordingly
     const handleSubmissionChange = submission => {
-        const formVals = submission2Form(submission, type, level, category, submission.profile);
+        const formVals = submission2Form(submission);
         dispatchForm({ field: "values", value: formVals });
         dispatchForm({ field: "submission", value: submission });
     };
 
-    // FUNCTION 2: handleChange - function that is called whenever the user makes any change to the form
+    // FUNCTION 3: handleChange - function that is called whenever the user makes any change to the form
     // PRECONDITIONS (1 parameter):
 	// 1.) e: an event object generated when the user makes a change to the form
 	// POSTCONDITIONS (2 possible outcomes):
@@ -81,13 +110,16 @@ const Update = (level, setSubmitting) => {
             dispatchForm({ field: "values", value: { [id]: checked } });
         } 
         
-        // otherwise, we simply use the `value` property as our updated value
+        // otherwise, we simply use the `value` property as our updated value, and update error state if necessary
         else {
             dispatchForm({ field: "values", value: { [id]: value } });
+            if (Object.keys(form.error).includes(id)) {
+                dispatchForm({ field: "error", value: { [id]: null } });
+            }
         }
     };
 
-    // FUNCTION 3: handleSubmittedAtChange - handle a change to the `submitted_at` field in the submission form
+    // FUNCTION 4: handleSubmittedAtChange - handle a change to the `submitted_at` field in the submission form
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object that is generated when the user makes a change to the `submitted_at` field of the submission form
     // POSTCONDITIONS (1 possible outcome):
@@ -102,9 +134,10 @@ const Update = (level, setSubmitting) => {
             submitted_at = `${ year }-${ month }-${ day }`;
         }
         dispatchForm({ field: "values", value: { submitted_at } });
+        dispatchForm({ field: "error", value: { submitted_at: null } });
     };
 
-    // FUNCTION 4: getUpdateFromForm - takes form data, and extracts only the updatable information
+    // FUNCTION 5: getUpdateFromForm - takes form data, and extracts only the updatable information
     // PRECONDITIONS (4 parameters):
     // 1.) formVals: an object that stores the updated submission form values
     // 2.) date: a string representing the backend date of a submission
@@ -134,7 +167,7 @@ const Update = (level, setSubmitting) => {
         return updatedData;
     };
 
-    // FUNCTION 5: handleSubmit - function that is called when the user submits the form
+    // FUNCTION 6: handleSubmit - function that is called when the user submits the form
     // PRECONDITIONS (3 parameters):
     // 1.) e: an event object which is generated when the user submits the update submission form
     // 2.) submissions: an array of all submission objects belonging to the current user for the current level
@@ -147,7 +180,6 @@ const Update = (level, setSubmitting) => {
     const handleSubmit = async (e, submissions, updateBoard) => {
         // initialize submission
 		e.preventDefault();
-		setSubmitting(true);
 
         // create an error object that will store error messages for each field value that needs to
 		// be validated
@@ -155,30 +187,25 @@ const Update = (level, setSubmitting) => {
 		Object.keys(form.error).forEach(field => error[field] = undefined);
 
         // perform form validation
-		error.proof = validateProof(form.values.proof);
-		error.comment = validateComment(form.values.comment);
+		error.proof = validateVideoUrl(form.values.proof);
+		error.submitted_at = validateDate(form.values.submitted_at);
 
         // if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
 		if (Object.values(error).some(row => row !== undefined)) {
-            setSubmitting(false);
             addMessage("One or more form fields had errors.", "error");
             return;
         }
 
-        // finally, let's convert the date from the front-end format, to the backend format.
+        // if we made it this far, no errors were detected, we can begin our submission process
+        setSubmitting(true);
         const submission = submissions.find(submission => submission.id === form.values.id);
 		const backendDate = getDateOfSubmission(form.values.submitted_at, submission.submitted_at);
-
-        // if we made it this far, no errors were detected, generate our submission data
-		const id = submission.id;
 		const updatedData = getUpdateFromForm(form.values, backendDate);
-
+        const id = submission.id;
         try {
-            // attempt to update the submission using updated data
+            // attempt to update the submission using updated data, and update the board
             await updateSubmission(updatedData, id);
-
-            // wait for the board to update
             await updateBoard();
 
             // finally, let the user know that they successfully submitted their submission, and close the popup
@@ -186,7 +213,9 @@ const Update = (level, setSubmitting) => {
             closePopup();
 
         } catch (error) {
+            // if there was an error during this process, render it to the user
             addMessage(error.message, "error");
+
         } finally {
             setSubmitting(false);
         };

@@ -51,7 +51,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
   }, []); 
   
   /* ===== UPDATE COMPONENT ===== */
-  return form.values &&
+  return form.values && form.submission &&
     <>
       <div className={ styles.header }>
         <h1>Update Submission</h1>
@@ -123,6 +123,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             variant="filled"
           />
           <DatePicker 
+            color={ form.error.submitted_at ? "error" : "primary" }
             disableFuture
             label="Date"
             format="YYYY-MM-DD"
@@ -133,7 +134,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
               textField: { 
                 color: form.values.submitted_at !== dateB2F(form.submission.submitted_at) ? "success" : "primary",
                 fullWidth: true,
-                helperText: form.values.submitted_at !== dateB2F(form.submission.submitted_at) ? updateFieldText : null,
+                helperText: form.error.submitted_at ? form.error.submitted_at : (form.values.submitted_at !== dateB2F(form.submission.submitted_at) ? updateFieldText : null),
                 required: true,
                 variant: "filled"
               }
@@ -188,9 +189,9 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             ))}
           </TextField>
           <TextField 
-            color={ form.values.proof !== form.submission.proof ? "success" : "primary" }
+            color={ form.error.proof ? "error" : (form.values.proof !== form.submission.proof ? "success" : "primary") }
             fullWidth
-            helperText={ form.values.proof !== form.submission.proof ? updateFieldText : null }
+            helperText={ form.error.proof ? form.error.proof : (form.values.proof !== form.submission.proof ? updateFieldText : null) }
             id="proof"
             label="Proof"
             placeholder="Must be a YouTube, Twitch, or X (Twitter) URL"
