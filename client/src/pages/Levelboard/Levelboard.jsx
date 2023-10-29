@@ -131,7 +131,7 @@ function Levelboard({ imageReducer }) {
 			<Container>
 
 				{ /* Levelboard title - name of levelboard, as well as previous and next buttons */ }
-				<div className={ styles.title }>
+				<div className={ `center ${ styles.title}` }>
 
 					{ /* Previous level button */ }
 					{ board.adjacent && board.adjacent.prev ?
@@ -143,7 +143,7 @@ function Levelboard({ imageReducer }) {
 					}
 
 					{ /* Level name */ }
-					<div className={ styles.middleTitle }>
+					<div className={ `center ${ styles.middleTitle }` }>
 						<h1>{ cleanLevelName(level.name) }</h1>
 					</div>
 

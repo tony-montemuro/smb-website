@@ -5,15 +5,14 @@
 }
 
 .title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    gap: 7px;
+    width: 100%;
 }
 
 .middleTitle {
     flex: 1;
-    display: flex;
-    justify-content: center;
+    text-align: center;
+    hyphens: auto;
 }
 
 .options {
