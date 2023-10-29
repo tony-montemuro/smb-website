@@ -13,7 +13,7 @@ function CachedPageControls({ items, itemsPerPage, pageNum, setPageNum, itemsNam
     <div className={ styles.cachedPageControls }>
 
       { /* Cached page viewer - render the set of pages shown on the current page */ }
-      <span>
+      <span className={ styles.viewer }>
         Showing { getStartAndEnd(itemsPerPage, items.length, pageNum).start } to&nbsp;
         { getStartAndEnd(itemsPerPage, items.length, pageNum).end } of { items.length } { itemsName }
       </span>
@@ -26,7 +26,7 @@ function CachedPageControls({ items, itemsPerPage, pageNum, setPageNum, itemsNam
           onClick={ () => setPageNum(pageNum-1) } 
           disabled={ pageNum <= 1 }
         >
-          Previous Page
+          ←
         </button>
         <select value={ pageNum } onChange={ (e) => setPageNum(parseInt(e.target.value)) }>
           { [...Array(getMaxPage(items.length, itemsPerPage)).keys()].map(num => {
@@ -38,7 +38,7 @@ function CachedPageControls({ items, itemsPerPage, pageNum, setPageNum, itemsNam
           onClick={ () => setPageNum(pageNum+1) } 
           disabled={ pageNum >= getMaxPage(items.length, itemsPerPage) }
         >
-          Next Page
+          →
         </button>
       </div>
 

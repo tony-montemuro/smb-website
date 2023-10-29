@@ -1,3 +1,4 @@
+/* ===== GENERAL STYLING ===== */
 .cachedPageControls {
     padding: 5px;
     display: flex;
@@ -11,4 +12,22 @@
 
 .controller select {
     width: 50px;
+    background-color: rgb(var(--color-button));
+}
+
+/* ===== MEDIA QUERY FOR MOBILE DEVICES ===== */
+
+@media (max-width: 525px) {
+    .viewer {
+        display: none;
+    }
+
+    .controller {
+        width: 100%;
+        gap: 10px;
+    }
+
+    .controller button, .controller select {
+        flex: 1;
+    }
 }
