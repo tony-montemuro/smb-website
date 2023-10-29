@@ -20,7 +20,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
   const [pageNum, setPageNum] = useState(1);
 
   // states and functions from the js file
-  const { form, handleChange, handleSubmittedAtChange, handleSubmissionChange, handleSubmit } = UpdateLogic(level, setSubmitting);
+  const { form, handleChange, handleSubmittedAtChange, handleSubmissionChange, isFormUnchanged, handleSubmit } = UpdateLogic(level, setSubmitting);
 
   // helper functions
   const { capitalize, dateB2F } = FrontendHelper();
@@ -249,9 +249,9 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
               className="cancel" 
               type="button" 
               onClick={ () => handleSubmissionChange(form.submission) }
-              disabled={ submitting }
+              disabled={ submitting || isFormUnchanged() }
             >
-              Reset
+              Reset Values
             </button>
             <button type="submit" disabled={ submitting }>Update</button>
           </div>

@@ -139,7 +139,23 @@ const Update = (level, setSubmitting) => {
         dispatchForm({ field: "error", value: { submitted_at: null } });
     };
 
-    // FUNCTION 5: getUpdateFromForm - takes form data, and extracts only the updatable information
+    // FUNCTION 5: isFormUnchanged - function that checks whether or not the form was unchanged
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if not a single form value is different than the value in submission, we return true
+    // otherwise, return false
+    const isFormUnchanged = () => {
+        return form.values.submitted_at === dateB2F(form.submission.submitted_at)
+            && parseInt(form.values.region_id) === form.submission.region.id
+            && parseInt(form.values.monkey_id) === form.submission.monkey.id
+            && parseInt(form.values.platform_id) === form.submission.platform.id
+            && form.values.proof === form.submission.proof
+            && form.values.live === form.submission.live
+            && form.values.tas === form.submission.tas
+            && form.values.comment === form.submission.comment;
+    };
+
+    // FUNCTION 6: getUpdateFromForm - takes form data, and extracts only the updatable information
     // PRECONDITIONS (4 parameters):
     // 1.) formVals: an object that stores the updated submission form values
     // 2.) date: a string representing the backend date of a submission
@@ -169,7 +185,7 @@ const Update = (level, setSubmitting) => {
         return updatedData;
     };
 
-    // FUNCTION 6: handleSubmit - function that is called when the user submits the form
+    // FUNCTION 7: handleSubmit - function that is called when the user submits the form
     // PRECONDITIONS (3 parameters):
     // 1.) e: an event object which is generated when the user submits the update submission form
     // 2.) submissions: an array of all submission objects belonging to the current user for the current level
@@ -223,7 +239,7 @@ const Update = (level, setSubmitting) => {
         };
     };
 
-    return { form, handleSubmissionChange, handleChange, handleSubmittedAtChange, handleSubmit };
+    return { form, handleSubmissionChange, handleChange, handleSubmittedAtChange, isFormUnchanged, handleSubmit };
 };
 
 /* ===== EXPORTS ===== */
