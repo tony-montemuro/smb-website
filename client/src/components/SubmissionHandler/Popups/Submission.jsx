@@ -34,6 +34,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
   const COMMENT_MAX_LENGTH = 100;
   const COMMENT_ROWS = 2;
   const updateFieldText = "This field has been updated.";
+  const immutableText = "This field cannot be updated.";
 
   /* ===== FUNCTIONS ===== */
 
@@ -47,6 +48,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
     handleSubmittedAtChange,
     handleToggle, 
     clearMessage,
+    isFormUnchanged,
     onApproveClick,
     onRejectClick
   } = SubmissionLogic(submission, game, isUnapproved, setSubmissions, setSubmitting);
@@ -106,6 +108,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
               { /* The various fields of the form, which describe the submission */ }
               <TextField 
                 fullWidth
+                helperText={ immutableText }
                 id="all_position"
                 inputProps={ { readOnly: true } }
                 label="Position"
@@ -115,6 +118,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
               { submission.position && 
                 <TextField 
                   fullWidth
+                  helperText={ immutableText }
                   id="position"
                   inputProps={ { readOnly: true } }
                   label="Live Position"
@@ -123,6 +127,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 />
               }
               <DatePicker 
+                color={ form.error.submitted_at ? "error" : (form.values.submitted_at !== dateB2F(submission.submitted_at) ? "success" : "primary") }
                 disableFuture
                 label="Date"
                 format="YYYY-MM-DD"
@@ -131,9 +136,8 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 onChange={ handleSubmittedAtChange }
                 slotProps={{
                   textField: { 
-                    color: form.values.submitted_at !== dateB2F(submission.submitted_at) ? "success" : "primary",
                     fullWidth: true,
-                    helperText: form.values.submitted_at !== dateB2F(submission.submitted_at) ? updateFieldText : null,
+                    helperText: form.error.submitted_at ? form.error.submitted_at : (form.values.submitted_at !== dateB2F(submission.submitted_at) ? updateFieldText : null),
                     variant: "filled"
                   }
                 }}
@@ -187,9 +191,9 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 ))}
               </TextField>
               <TextField 
-                color={ form.values.proof !== submission.proof ? "success" : "primary" }
+                color={ form.error.proof ? "error" : (form.values.proof !== submission.proof ? "success" : "primary") }
                 fullWidth
-                helperText={ form.values.proof !== submission.proof ? updateFieldText : null }
+                helperText={ form.error.proof ? form.error.proof : (form.values.proof !== submission.proof ? updateFieldText : null) }
                 id="proof"
                 label="Proof"
                 placeholder="Must be a YouTube, Twitch, or X (Twitter) URL"
@@ -247,7 +251,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
               />
 
               { /* Button used to reset the form back to it's original values */ }
-              <button className="cancel" type="button" onClick={ () => fillForm() } disabled={ submitting }>Reset Values</button>
+              <button className="cancel" type="button" onClick={ () => fillForm() } disabled={ submitting || isFormUnchanged() }>Reset Values</button>
 
               { /* Two buttons: one for approving the submission, and one for deleting. */ }
               <div className={ styles.btns }>

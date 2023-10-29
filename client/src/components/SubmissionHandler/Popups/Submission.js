@@ -12,13 +12,10 @@ import ValidationHelper from "../../../helper/ValidationHelper";
 
 const Submission = (submission, game, isUnapproved, setSubmissions, setSubmitting) => {
     /* ===== VARIABLES ===== */
+    const defaultError = { proof: null, submitted_at: null };
     const defaultForm = { 
         values: null, 
-        error: {
-            proof: null,
-            comment: null,
-            message: null
-        }
+        error: defaultError
     };
 
     /* ===== CONTEXTS ===== */
@@ -44,7 +41,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     
     // helper functions
     const { dateB2F } = FrontendHelper();
-    const { validateProof, validateComment, validateMessage } = ValidationHelper();
+    const { validateVideoUrl, validateDate } = ValidationHelper();
     const { getDateOfSubmission } = DateHelper();
 
     // database functions
@@ -59,17 +56,20 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     // POSTCONDITIONS (1 possible outcome):
     // using data from the submission object, we fill the form values, and also set the clearForm value back to false
     const fillForm = () => {
-        setForm({ ...form, values: {
-            submitted_at: dateB2F(submission.submitted_at),
-            region_id: submission.region.id.toString(),
-            monkey_id: submission.monkey.id.toString(),
-            platform_id: submission.platform.id.toString(),
-            proof: submission.proof,
-            live: submission.live,
-            tas: submission.tas,
-            comment: submission.comment,
-            message: ""
-        }});
+        setForm({ 
+            values: {
+                submitted_at: dateB2F(submission.submitted_at),
+                region_id: submission.region.id.toString(),
+                monkey_id: submission.monkey.id.toString(),
+                platform_id: submission.platform.id.toString(),
+                proof: submission.proof,
+                live: submission.live,
+                tas: submission.tas,
+                comment: submission.comment,
+                message: ""
+            },
+            error: defaultError
+        });
         setClearToggle(false);
     };
 
@@ -90,7 +90,11 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
 
         // general case: updating a field
         else {
-            setForm({ ...form, values: { ...form.values, [id]: value } });
+            setForm({ 
+                ...form, 
+                values: { ...form.values, [id]: value }, 
+                error: Object.keys(form.error).includes(id) ? { ...form.error, [id]: null } : { ...form.error } 
+            });
         }
     };
 
@@ -136,7 +140,6 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     const handleClose = () => {
         setForm(defaultForm);
         setShowReject(false);
-        setSubmitting(false);
         closePopup();
     };
 
@@ -196,19 +199,18 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         Object.keys(form.error).forEach(field => error[field] = undefined);
 
         // validate necessary fields
-        error.proof = validateProof(form.values.proof);
-        error.comment = validateComment(form.values.comment);
-        error.message = validateMessage(form.values.message, false);
+        error.proof = validateVideoUrl(form.values.proof);
+        error.submitted_at = validateDate(form.values.submitted_at);
 
         // if any fields returned an error, let's render a message, update the `error.fields` object by calling the setForm() function,
         // and return early
         if (Object.values(error).some(row => row !== undefined)) {
             setForm({ ...form, error: error });
             addMessage("One or more form fields had errors.", "error");
-            setSubmitting(false);
             return;
         }
 
+        setSubmitting(true);
         try {
             // first, update submission with values from the form
             const { message, submitted_at, ...payload } = form.values;
@@ -229,6 +231,8 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
             } else {
                 addMessage("There was a problem updating this submission.", "error");
             }
+        } finally {
+            setSubmitting(false);
         };
     };
 
@@ -240,7 +244,6 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     // otherwise, we run the `updateSubmission` function
     const onApproveClick = e => {
         e.preventDefault();
-        setSubmitting(true);
         if (isFormUnchanged()) {
             approveSubmission();
         } else {
@@ -289,6 +292,8 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
             } else {
                 addMessage("The submission successfully was rejected, but the notification system failed to notify the user.", "error");
             }
+        } finally {
+            setSubmitting(false);
         };
     };
 
@@ -302,6 +307,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         handleToggle,
         clearMessage,
         handleClose,
+        isFormUnchanged,
         onApproveClick,
         onRejectClick
     };
