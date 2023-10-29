@@ -1,3 +1,4 @@
+/* ===== GENERAL STYLING ===== */
 .levelboard {
     display: flex;
     flex-direction: column;
@@ -19,12 +20,14 @@
 .options {
     display: flex;
     justify-content: space-between;
+    gap: 10px;
 }
 
 .optionsBtns {
     display: flex;
     align-items: center;
     gap: 5px;
+    flex-wrap: wrap;
 }
 
 .chart tbody tr.chartRow:hover {

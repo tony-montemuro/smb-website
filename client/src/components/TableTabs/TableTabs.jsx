@@ -1,5 +1,4 @@
 /* ===== IMPORTS ===== */
-import "./TableTabs.css";
 import styles from "./TableTabs.module.css";
 
 function TableTabs({ elements, current, handleClick }) {

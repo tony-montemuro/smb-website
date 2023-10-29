@@ -1,5 +1,7 @@
+/* ===== GENERAL STYLING ===== */
 .tabs {
     display: flex;
+    align-items: flex-end;
 }
 
 .tab {
@@ -14,4 +16,13 @@
 .active {
     cursor: default;
     background-color: rgb(var(--color-button-hover));
+}
+
+/* ===== MEDIA QUERIES FOR SMALLER DEVICES ===== */
+
+@media (max-width: 620px) {
+    .tab {
+        width: 50px;
+        height: 30px;
+    }
 }
