@@ -1,3 +1,4 @@
+/* ===== GENERAL STYLING ===== */
 .insert {
     display: flex;
     gap: 20px;
@@ -19,4 +20,12 @@
 
 .user {
     font-size: 20px;
+}
+
+/* ===== MEDIA QUERY FOR SMALLER DEVICES ===== */
+
+@media (max-width: 800px) {
+    .insert {
+        flex-direction: column;
+    }
 }

@@ -113,7 +113,7 @@ function Levelboard({ imageReducer }) {
 			<Popup 
 				renderPopup={ insertPopup } 
 				setRenderPopup={ setInsertPopup } 
-				width={ `${ isModerator(abb) ? "50%" : "25%" }` } 
+				width={ `${ isModerator(abb) ? "1000px" : "500px" }` } 
 				disableClose={ submitting }
 			>
 				<Insert level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />
