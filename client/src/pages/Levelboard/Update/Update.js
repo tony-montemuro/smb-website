@@ -13,9 +13,10 @@ const Update = (level, setSubmitting) => {
     const path = location.pathname.split("/");
     const category = path[3];
     const type = path[4];
+    const errorInit = { proof: null, submitted_at: null };
     const formInit = {
 		values: null,
-		error: { proof: null, submitted_at: null },
+		error: errorInit,
         submission: null
 	};
 
@@ -93,6 +94,7 @@ const Update = (level, setSubmitting) => {
         const formVals = submission2Form(submission);
         dispatchForm({ field: "values", value: formVals });
         dispatchForm({ field: "submission", value: submission });
+        dispatchForm({ field: "error", value: errorInit });
     };
 
     // FUNCTION 3: handleChange - function that is called whenever the user makes any change to the form
