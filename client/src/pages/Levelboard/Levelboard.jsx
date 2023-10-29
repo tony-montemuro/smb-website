@@ -118,7 +118,7 @@ function Levelboard({ imageReducer }) {
 			>
 				<Insert level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />
 			</Popup>
-			<Popup renderPopup={ updateSubmissions } setRenderPopup={ setUpdateSubmissions } width="40%" disableClose={ submitting } >
+			<Popup renderPopup={ updateSubmissions } setRenderPopup={ setUpdateSubmissions } width="800px" disableClose={ submitting } >
 				<Update level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />
 			</Popup>
 			<Popup renderPopup={ filtersPopup } setRenderPopup={ setFiltersPopup } width="1100px" >
