@@ -1,3 +1,4 @@
+/* ===== GENERAL STYLING ===== */
 .options {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -29,4 +30,12 @@
     justify-content: flex-end;
     gap: 5px;
     padding-top: 20px;
+}
+
+/* ===== MEDIA QUERY FOR SMALLER DEVICE ===== */
+
+@media (max-width: 715px) {
+    .options {
+        grid-template-columns: 1fr;
+    }
 }
