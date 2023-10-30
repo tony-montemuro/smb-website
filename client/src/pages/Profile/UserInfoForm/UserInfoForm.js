@@ -126,6 +126,9 @@ const UserInfoForm = () => {
     const handleChange = e => {
         const { id, value } = e.target;
         dispatchForm({ field: "user", value: { [id]: value } });
+        if (Object.keys(form.error).includes(id)) {
+            dispatchForm({ field: "error", value: { [id]: null } });
+        }
     };
 
     // FUNCTION 4: handleBirthdayChange - handle a change to the birthday field in the user info form

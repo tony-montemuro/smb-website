@@ -24,6 +24,7 @@ function UserInfoForm({ countries }) {
   const USERNAME_LENGTH_MAX = 20;
   const YOUTUBE_LENGTH_MIN = 4;
   const YOUTUBE_LENGTH_MAX = 31;
+  const FEATURED_VIDEO_LENGTH_MAX = 256;
 
   /* ===== CONTEXTS ===== */
 
@@ -67,7 +68,7 @@ function UserInfoForm({ countries }) {
             fullWidth
             id="username"
             inputProps={ { minLength: USERNAME_LENGTH_MIN, maxLength: USERNAME_LENGTH_MAX } }
-            helperText={ form.error.username }
+            helperText={ form.error.username ? form.error.username : `${ form.user.username.length }/${ USERNAME_LENGTH_MAX }` }
             label="Username"
             placeholder="Between 4 and 20 characters..."
             onChange={ handleChange }
@@ -93,9 +94,8 @@ function UserInfoForm({ countries }) {
             })}
           </TextField>
           <TextField
-            color={ form.error.bio ? "error" : "primary" }
-            error={ form.error.bio ? true : false }
             fullWidth
+            helperText={ `${ form.user.bio.length }/${ TEXT_AREA_LENGTH_MAX }` }
             id="bio"
             inputProps={ { maxLength: TEXT_AREA_LENGTH_MAX } }
             label="About Me"
@@ -186,6 +186,7 @@ function UserInfoForm({ countries }) {
             error={ form.error.featured_video ? true : false }
             fullWidth
             id="featured_video"
+            inputProps={ { maxLength: FEATURED_VIDEO_LENGTH_MAX } }
             helperText={ form.error.featured_video }
             label="Featured Video"
             placeholder="Any video you like"
@@ -199,7 +200,7 @@ function UserInfoForm({ countries }) {
             fullWidth
             id="video_description"
             inputProps={ { maxLength: TEXT_AREA_LENGTH_MAX } }
-            helperText={ form.error.video_description }
+            helperText={ form.error.video_description ? form.error.video_description : `${ form.user.video_description.length }/${ TEXT_AREA_LENGTH_MAX }` }
             label="Video Description"
             multiline
             placeholder="Include a description of the video"
