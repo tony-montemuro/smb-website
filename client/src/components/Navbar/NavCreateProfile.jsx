@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useNavigate } from "react-router-dom";
+import styles from "./Navbar.module.css";
 
 function NavCreateProfile() {
   /* ===== VARIABLES ===== */
@@ -9,8 +10,7 @@ function NavCreateProfile() {
   return (
     <button 
       type="button" 
-      id="nav-create-btn" 
-      className="nav-button" 
+      className={ styles.btn }
       title="Create Profile"
       onClick={ () => navigate("/profile")
     }>

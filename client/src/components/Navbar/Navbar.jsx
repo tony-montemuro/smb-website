@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import "./Navbar.css";
+import styles from "./Navbar.module.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../utils/Contexts";
@@ -16,46 +16,23 @@ function Navbar({ imageReducer }) {
 
   /* ===== NAVBAR COMPONENT ===== */
   return (
-    <div className="nav-wrapper">
-      <nav className="nav">
+    <div className={ styles.navWrapper }>
+      <nav className={ styles.nav }>
 
         { /* Link to the homepage - left side of navbar */ }
-        <div className="nav-logo-container">
+        <div className={ styles.logo }>
           <Link to="/" title="Home">
             <Logo />
           </Link>
         </div>
 
-        { /* Nav list - various links, including games, resources, and support page. */ }
-        <div className="nav-list">
-          <ul>
-
-            { /* Link to the games page */ }
-            <li>
-              <Link to="/games" title="Games">Games</Link>
-            </li>
-
-            { /* Link to the users page */ }
-            <li>
-              <Link to="/users" title="Users">Users</Link>
-            </li>
-
-            { /* Link to the news page */ }
-            <li>
-              <Link to="/news" title="News">News</Link>
-            </li>
-
-            { /* Link to the resources page */ }
-            <li>
-              <Link to="/resources" title="Resources">Resources</Link>
-            </li>
-
-            { /* Link to the support page */ }
-            <li>
-              <Link to="/support" title="Support">Support</Link>
-            </li>
-
-          </ul>
+        { /* List - various links, including games, users, news, resources, support page. */ }
+        <div className={ styles.list }>
+          <Link to="/games" title="Games">Games</Link>
+          <Link to="/users" title="Users">Users</Link>
+          <Link to="/news" title="News">News</Link>
+          <Link to="/resources" title="Resources">Resources</Link>
+          <Link to="/support" title="Support">Support</Link>
         </div>
 
         {/* 3 cases:

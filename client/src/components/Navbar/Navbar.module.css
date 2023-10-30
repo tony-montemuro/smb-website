@@ -1,0 +1,123 @@
+.navWrapper {
+    display: flex;
+    height: var(--navbar-height);
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav { 
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    color: white;
+    background-color: rgb(var(--color-nav));
+    position: relative;
+}
+
+.logo {
+    width: 100px;
+}
+
+.logo a {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding-left: .25rem;
+    padding-right: .25rem;
+    height: 100%;
+}
+
+.logo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.list {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+}
+
+.list a {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding-left: .25rem;
+    padding-right: .25rem;
+    height: 100%;
+}
+
+.list a:hover {
+    background-color: rgb(var(--color-nav-hover));
+}
+
+.btn {
+    background-color: transparent;
+    border: none;
+    color: rgb(var(--color-text));
+    padding: 4px;
+}
+
+.btn:hover {
+    background-color: rgb(var(--color-nav-hover)) !important;
+}
+
+.profile {
+    display: flex;
+    gap: 5px;
+}
+
+.avatarLinkWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.avatarWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.details {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.usernameWrapper {
+    padding-left: 7px;
+}
+
+.profileLinks {
+    display: flex;
+}
+
+.profileLink {
+    display: flex;
+    justify-content: center;
+    min-width: 40px;
+}
+
+.profileLink button {
+    display: flex;
+    color: rgb(var(--color-link))
+}
+
+.profileLink button:hover {
+    color: rgb(var(--color-link-hover));
+    background-color: transparent !important;
+}
+
+.svgWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
