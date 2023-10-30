@@ -1,3 +1,4 @@
+/* ===== GENERAL STYLING ===== */
 .navWrapper {
     display: flex;
     height: var(--navbar-height);
@@ -20,6 +21,36 @@
     width: 100px;
 }
 
+.mobileLogo {
+    display: none;
+    height: var(--navbar-height);
+    padding-left: 0.5em;
+}
+
+.mobileLogo:hover {
+    cursor: pointer;
+}
+
+#simpleLogo {
+    display: flex;
+    align-items: center;
+}
+
+#simpleLogo svg {
+    width: 45px;
+    height: 50%;
+}
+
+#hamburger {
+    display: flex;
+    align-items: center;
+}
+
+#hamburger svg {
+    width: 30px;
+    height: 40%;
+}
+
 .logo a {
     color: inherit;
     text-decoration: none;
@@ -38,7 +69,7 @@
 .list {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 1em;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -120,4 +151,64 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.dropdown {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 500;
+    overflow: hidden;
+}
+
+.dropdownInner {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    background-color: rgb(var(--color-container));
+    touch-action: none;
+}
+
+.dropdownClose {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 7px;
+    padding-right: 7px;
+}
+
+.dropdownLinks {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em;
+    gap: 1em;
+}
+
+.dropdown.open {
+    display: flex;
+}
+
+/* ===== MEDIA QUERY FOR SMALLER DEVICES ===== */
+@media (max-width: 940px) {
+    .logo, .list {
+        display: none;
+    }
+
+    .mobileLogo {
+        display: flex;
+    }
+}
+
+/* ===== MEDIA QUERY FOR MOBILE DEVICES ===== */
+@media (max-width: 500px) {
+    .dropdownInner {
+        width: 100%;
+    }
 }

@@ -1,18 +1,62 @@
 /* ===== IMPORTS ===== */
 import styles from "./Navbar.module.css";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../utils/Contexts";
 import Logo from "../../assets/svg/Logo.jsx";
+import MobileLogo from "./Mobile/MobileLogo.jsx";
 import NavCreateProfile from "./NavCreateProfile";
 import NavProfile from "./NavProfile";
 import NavSignIn from "./NavSignIn";
 
 function Navbar({ imageReducer }) {  
+  /* ===== VARIABLES ===== */
+  const dropdownCutoff = 900;
+
   /* ===== CONTEXTS ===== */
 
   // user state from user context
   const { user } = useContext(UserContext);
+
+  /* ===== STATES ===== */
+  const [isOpen, setIsOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  /* ===== EFFECTS ===== */
+
+  // code that executes when the component mounts
+  useEffect(() => {
+    // function to update the `windowWidth` state
+    const updateWindowWidth = () => setWindowWidth(window.innerWidth);
+
+    // add event listener for window resize
+    window.addEventListener("resize", updateWindowWidth);
+
+    // clean up function for when component unmounts
+    return () => window.removeEventListener("resize", updateWindowWidth);
+  }, []);
+
+  // code that is executed each time the `isOpen` state is changed
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "visible";
+    }
+    
+    // Cleanup function
+    return () => {
+      document.body.style.overflow = "hidden";
+    };
+  }, [isOpen]);
+
+  // code that is executed each time the window width updates
+  useEffect(() => {
+    // if windowWidth exceeds the dropdownCutoff limit, `isOpen` should be false
+    if (windowWidth > dropdownCutoff) {
+      setIsOpen(false);
+    }
+  }, [windowWidth]);
 
   /* ===== NAVBAR COMPONENT ===== */
   return (
@@ -25,6 +69,9 @@ function Navbar({ imageReducer }) {
             <Logo />
           </Link>
         </div>
+        
+        { /* Mobile logo, which should render in place of the standard logo once the screen goes below `dropdownCutoff`px */ }
+        <MobileLogo isOpen={ isOpen } setIsOpen={ setIsOpen } />
 
         { /* List - various links, including games, users, news, resources, support page. */ }
         <div className={ styles.list }>
