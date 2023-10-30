@@ -1,12 +1,12 @@
 /* ===== IMPORTS ===== */
 import { useNavigate } from "react-router-dom";
-import styles from "./Navbar.module.css";
+import styles from "./Profile.module.css";
 
-function NavCreateProfile() {
+function CreateProfile() {
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
 
-  /* ===== NAV CREATE PROFILE ===== */
+  /* ===== CREATE PROFILE COMPONENT ===== */
   return (
     <button 
       type="button" 
@@ -20,4 +20,4 @@ function NavCreateProfile() {
 };
 
 /* ===== EXPORTS ===== */
-export default NavCreateProfile;
+export default CreateProfile;

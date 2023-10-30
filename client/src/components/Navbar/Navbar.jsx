@@ -1,23 +1,12 @@
 /* ===== IMPORTS ===== */
 import styles from "./Navbar.module.css";
-import { Link } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../utils/Contexts";
-import Logo from "../../assets/svg/Logo.jsx";
-import MobileLogo from "./Mobile/MobileLogo.jsx";
-import NavCreateProfile from "./NavCreateProfile";
-import NavProfile from "./NavProfile";
-import NavSignIn from "./NavSignIn";
-import MobileProfile from "./Mobile/MobileProfile";
+import { useEffect, useState } from "react";
+import NavLogo from "./NavLogo.jsx";
+import NavProfile from "./NavProfile.jsx";
 
 function Navbar({ imageReducer }) {  
   /* ===== VARIABLES ===== */
-  const dropdownCutoff = 940;
-
-  /* ===== CONTEXTS ===== */
-
-  // user state from user context
-  const { user } = useContext(UserContext);
+  const dropdownCutoff = 940; // measured in pixels
 
   /* ===== STATES ===== */
   const [isLogoOpen, setIsLogoOpen] = useState(false);
@@ -66,45 +55,22 @@ function Navbar({ imageReducer }) {
     <div className={ styles.navWrapper }>
       <nav className={ styles.nav }>
 
-        { windowWidth > dropdownCutoff ?
-          <>
-            { /* Link to the homepage - left side of navbar */ }
-            <div className={ styles.logo }>
-              <Link to="/" title="Home">
-                <Logo />
-              </Link>
-            </div>
-            
-    
-            { /* List - various links, including games, users, news, resources, support page. */ }
-            <div className={ styles.list }>
-              <Link to="/games" title="Games">Games</Link>
-              <Link to="/users" title="Users">Users</Link>
-              <Link to="/news" title="News">News</Link>
-              <Link to="/resources" title="Resources">Resources</Link>
-              <Link to="/support" title="Support">Support</Link>
-            </div>
-          </>
-        :
-          <MobileLogo isOpen={ isLogoOpen } setIsOpen={ setIsLogoOpen } />
-        }
+        { /* Render the dynamic `NavLogo` component on the left-side of the navbar */ }
+        <NavLogo 
+          windowWidth={ windowWidth }
+          dropdownCutoff={ dropdownCutoff }
+          isOpen={ isLogoOpen }
+          setIsOpen={ setIsLogoOpen }
+        />
 
-        {/* 3 cases:
-          1.) User is authenticated and has a profile: render the NavProfile component.
-          2.) User is authenticated, but has not created a profile: Render a simple button that navigates to the profile page. 
-          3.) User is not authenticatged: Render the Login component. 
-        */}
-        { user.id ? 
-          user.profile ?
-            windowWidth > dropdownCutoff ? 
-              <NavProfile imageReducer={ imageReducer } /> 
-            : 
-              <MobileProfile isOpen={ isProfileOpen } setIsOpen={ setIsProfileOpen } imageReducer={ imageReducer } />   
-          :
-            <NavCreateProfile />
-        :
-          <NavSignIn />
-        }
+        { /* Render the dynamic `NavProfile` component on the right-side of the navbar */ }
+        <NavProfile
+          windowWidth={ windowWidth }
+          dropdownCutoff={ dropdownCutoff }
+          isOpen={ isProfileOpen }
+          setIsOpen={ setIsProfileOpen }
+          imageReducer={ imageReducer }  
+        />
 
       </nav>
     </div>

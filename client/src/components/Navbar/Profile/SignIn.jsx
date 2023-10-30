@@ -1,12 +1,12 @@
 /* ===== IMPORTS ===== */
 import { useNavigate } from "react-router-dom";
-import styles from "./Navbar.module.css";
+import styles from "./Profile.module.css";
 
-function NavSignIn() {
+function SignIn() {
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
 
-  /* ===== NAV SIGN IN ===== */
+  /* ===== SIGN IN COMPONENT ===== */
   return (
     <button 
       type="button" 
@@ -20,4 +20,4 @@ function NavSignIn() {
 };
 
 /* ===== EXPORTS ===== */
-export default NavSignIn;
+export default SignIn;
