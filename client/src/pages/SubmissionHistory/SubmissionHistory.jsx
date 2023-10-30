@@ -104,14 +104,14 @@ function SubmissionHistory() {
         { profile && level ?
 
           // Header - render message describing the page
-          <h3 className={ styles.header }>
+          <h2>
             The following is the list of all submissions by&nbsp;
             <>
               <Username profile={ profile } />
               &nbsp;to&nbsp;
               <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }` }>{ cleanLevelName(levelName) } ({ capitalize(type) })</Link>:
             </>
-          </h3>
+          </h2>
 
           :
             <Loading />

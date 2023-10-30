@@ -1,12 +1,13 @@
-.header {
-    margin: 0;
-    padding: 5px 0;
-}
-
 .containerBody {
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+.containerBody h2 {
+    font-size: 21px;
+    margin: 0;
+    padding: 5px 0;
 }
 
 .containerBody tbody tr.row:hover {
