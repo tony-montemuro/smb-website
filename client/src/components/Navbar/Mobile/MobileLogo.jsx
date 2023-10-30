@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
-import styles from "../Navbar.module.css";
+import styles from "./Mobile.module.css";
 import CloseButton from "../../CloseButton/CloseButton.jsx";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import SimpleLogo from "../../../assets/svg/SimpleLogo.jsx";

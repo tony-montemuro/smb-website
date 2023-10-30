@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../../utils/Contexts";
-import styles from "../Navbar.module.css";
+import styles from "./Mobile.module.css";
 import Avatar from "../../Avatar/Avatar.jsx";
 import CloseButton from "../../CloseButton/CloseButton.jsx";
 import Signout from "../../../database/authentication/Signout";
