@@ -16,7 +16,11 @@
 
 .active {
     cursor: default;
-    background-color: rgb(var(--color-button-hover));
+    background-color: rgb(var(--color-button-selected));
+}
+
+.active:hover {
+    background-color: rgb(var(--color-button-selected)) !important;
 }
 
 /* ===== MEDIA QUERIES FOR SMALLER DEVICES ===== */

@@ -8,5 +8,5 @@
 }
 
 .selected:hover {
-    background-color: rgb(var(--color-nav-hover));
+    background-color: rgb(var(--color-nav-hover)) !important;
 }
