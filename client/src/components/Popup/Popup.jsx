@@ -1,8 +1,7 @@
 /* ===== IMPORTS ===== */
-import { red } from "@mui/material/colors";
 import { PopupContext } from "../../utils/Contexts";
 import styles from "./Popup.module.css";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import CloseButton from "../CloseButton/CloseButton.jsx";
 
 function Popup({ renderPopup, setRenderPopup, width, disableClose, children }) {
   /* ===== FUNCTIONS ===== */
@@ -20,10 +19,8 @@ function Popup({ renderPopup, setRenderPopup, width, disableClose, children }) {
       <div className={ styles.inner } style={ { maxWidth: width } }>
 
         { /* Render button to close the popup */ }
-        <div id={ styles.close }>
-          <button id={ disableClose ? styles.disabled : null } type="button" onClick={ closePopup } disabled={ disableClose }>
-            <CloseRoundedIcon fontSize="large" sx={ { color: red[500] } } />
-          </button>
+        <div className={ styles.close }>
+          <CloseButton onClose={ closePopup } disableClose={ disableClose } />
         </div>
 
         { /* Render component children, and give children access to the `closePopup` function */ }

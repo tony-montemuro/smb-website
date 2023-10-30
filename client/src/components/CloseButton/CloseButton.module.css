@@ -1,0 +1,19 @@
+#disabled {
+    opacity: 0.6;
+}
+
+.close {
+    padding: 0;
+    border: 2px solid red;
+    border-radius: 19.5px;
+    background-color: transparent;
+}
+
+.close svg {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.close:not(#disabled):hover {
+    background-color: rgb(var(--color-container-selected));
+}

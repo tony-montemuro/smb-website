@@ -46,27 +46,7 @@
     background-color: transparent;
 }
 
-#disabled {
-    opacity: 0.6;
-}
-
-#close {
+.close {
     display: flex;
     justify-content: flex-end;
-}
-
-#close button {
-    padding: 0;
-    background-color: transparent;
-    border: 2px solid red;
-    border-radius: 19.5px;
-}
-
-#close svg {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-#close button:not(#disabled):hover {
-    background-color: rgb(var(--color-container-selected));
 }
