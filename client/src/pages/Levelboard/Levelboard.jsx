@@ -14,6 +14,7 @@ import GameHelper from "../../helper/GameHelper";
 import Loading from "../../components/Loading/Loading.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
+import ScrollHelper from "../../helper/ScrollHelper";
 import SubmissionDetails from "../../components/SubmissionDetails/SubmissionDetails.jsx";
 import TableContent from "../../components/TableContent/TableContent.jsx";
 import TableTabs from "../../components/TableTabs/TableTabs";
@@ -34,6 +35,7 @@ function Levelboard({ imageReducer }) {
 	/* ===== HELPER FUNCTIONS ===== */
 	const { capitalize, cleanLevelName, dateB2F } = FrontendHelper();
 	const { fetchLevelFromGame } = GameHelper();
+	const { scrollToTop } = ScrollHelper();
 
 	/* ===== VARIABLES ===== */
 	const navigate = useNavigate();
@@ -81,6 +83,12 @@ function Levelboard({ imageReducer }) {
 	}, [abb, category, type, levelName]);
 
 	/* ===== EFFECTS ===== */
+
+	// code that is executed when the component mounts
+	useEffect(() => {
+		scrollToTop();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	// code that is executed when the page loads, when the user state is updated, or when the user
   // switches levels

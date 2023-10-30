@@ -9,6 +9,7 @@ import GameHelper from "../../helper/GameHelper";
 import Loading from "../../components/Loading/Loading.jsx";
 import RecordsLogic from "./Records.js";
 import RecordTable from "./RecordTable/RecordTable.jsx";
+import ScrollHelper from "../../helper/ScrollHelper";
 
 function Records() {
   /* ===== CONTEXTS ===== */
@@ -22,6 +23,7 @@ function Records() {
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
   const { getGameCategories, getCategoryTypes } = GameHelper();
+  const { scrollToTop } = ScrollHelper();
 
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
@@ -61,8 +63,9 @@ function Records() {
       return;
     }
 
-    // if we made it past the special case, let's go ahead and fetch all records
+    // if we made it past the special case, let's go ahead and fetch all records, and scroll window back to top
     fetchRecords(game, category, type);
+    scrollToTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 

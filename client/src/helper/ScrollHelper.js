@@ -21,7 +21,18 @@ const ScrollHelper = () => {
         window.scrollTo({ top: y, behavior: "smooth" });
     };
 
-    return { scrollToId };
+    // FUNCTION 2: scrollToTop - code that scrolls to the top of the page
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // once this code is executed, the page will be smoothly scrolled to the top automatically
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    };
+
+    return { scrollToId, scrollToTop };
 };
 
 /* ===== EXPORTS ===== */

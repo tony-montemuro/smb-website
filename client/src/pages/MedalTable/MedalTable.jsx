@@ -9,6 +9,7 @@ import GameHelper from "../../helper/GameHelper";
 import LoadingTable from "../../components/LoadingTable/LoadingTable.jsx";
 import MedalTableLogic from "./MedalTable.js";
 import MedalTableRow from "./MedalTableRow.jsx";
+import ScrollHelper from "../../helper/ScrollHelper";
 import TableContent from "../../components/TableContent/TableContent.jsx";
 
 function MedalTable({ imageReducer }) {
@@ -23,6 +24,7 @@ function MedalTable({ imageReducer }) {
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
   const { getGameCategories, getCategoryTypes, isPracticeMode } = GameHelper();
+  const { scrollToTop } = ScrollHelper();
 
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 6;
@@ -61,9 +63,9 @@ function MedalTable({ imageReducer }) {
       return;
     }
 
-    // if we made it past the special case, let's go ahead and fetch the medal table
+    // if we made it past the special case, let's go ahead and fetch the medal table, and scroll to top of page
     fetchMedals(abb, category, type);
-
+    scrollToTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
       

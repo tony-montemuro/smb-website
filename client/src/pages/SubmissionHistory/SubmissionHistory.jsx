@@ -8,6 +8,7 @@ import FilteredSubmissionRow from "./FilteredSubmissionRow";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 import Popup from "../../components/Popup/Popup.jsx";
+import ScrollHelper from "../../helper/ScrollHelper";
 import SubmissionDetails from "../../components/SubmissionDetails/SubmissionDetails.jsx";
 import SubmissionHistoryLogic from "./SubmissionHistory";
 import TableTabs from "../../components/TableTabs/TableTabs";
@@ -17,6 +18,7 @@ function SubmissionHistory() {
   /* ===== HELPER FUNCTIONS ====== */
   const { capitalize, cleanLevelName, runTypeB2F } = FrontendHelper();
   const { fetchLevelFromGame } = GameHelper();
+  const { scrollToTop } = ScrollHelper();
 
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
@@ -84,6 +86,7 @@ function SubmissionHistory() {
     }
 
     validatePath();
+    scrollToTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

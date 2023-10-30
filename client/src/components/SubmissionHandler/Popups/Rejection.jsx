@@ -29,7 +29,7 @@ function Rejection({ form, clearMessage, handleChange, setShowReject, onReject }
   // code that is executed when the component mounts
   useEffect(() => {
     // must use `setTimeout` as a hacky solution to get scroll behavior working
-    let timer = setTimeout(() => {
+    const timer = setTimeout(() => {
       rejectionRef.current.scrollIntoView({ behavior: "smooth" });
     }, 0);
 

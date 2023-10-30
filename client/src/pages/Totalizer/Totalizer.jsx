@@ -7,6 +7,7 @@ import Container from "../../components/Container/Container.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 import LoadingTable from "../../components/LoadingTable/LoadingTable.jsx";
+import ScrollHelper from "../../helper/ScrollHelper";
 import TableContent from "../../components/TableContent/TableContent";
 import TotalizerLogic from "./Totalizer.js";
 import TotalizerRow from "./TotalizerRow.jsx";
@@ -23,6 +24,7 @@ function Totalizer({ imageReducer }) {
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
   const { getGameCategories, getCategoryTypes, isPracticeMode } = GameHelper();
+  const { scrollToTop } = ScrollHelper();
 
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 3;
@@ -61,9 +63,9 @@ function Totalizer({ imageReducer }) {
       return;
     }
 
-    // if we made it past the special case, let's go ahead and compute the totals
+    // if we made it past the special case, let's go ahead and compute the totals, and scroll to top of page
     fetchTotals(game, category, type);
-
+    scrollToTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
