@@ -1,7 +1,20 @@
 /* ===== IMPORTS ===== */
+import { useEffect } from "react";
 import styles from "./Moderator.module.css";
+import ScrollHelper from "../../helper/ScrollHelper";
 
 function Moderator() {
+  /* ===== FUNCTIONS ===== */
+
+  // helper functions
+  const { scrollToTop } = ScrollHelper();
+
+  // code that is executed when the component mounts
+  useEffect(() => {
+    scrollToTop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /* ===== MODERATOR COMPONENT ===== */
   return (
     <div className={ styles.moderator }>
@@ -48,6 +61,7 @@ function Moderator() {
       <div className={ styles.body }>
         <strong>Administrators</strong> are the highest level of user on SMB Elite. They are able to perform moderator actions for all games, as well as some additional privileges. Build enough trust as a moderator, and you may qualify to become an administrator!
       </div>
+
     </div>
   );
 };
