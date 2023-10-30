@@ -1,0 +1,6 @@
+.username {
+    display: inline-flex;
+    white-space: nowrap;
+    gap: 4px;
+    align-items: center;
+}

@@ -1,12 +1,12 @@
 /* ===== IMPORTS ====== */
-import "./Username.css";
 import { Link } from "react-router-dom";
+import styles from "./Username.module.css";
 import CountryFlag from "../CountryFlag/CountryFlag";
 
 function Username({ profile, disableLink }) {
   /* ===== USERNAME COMPONENT ===== */
   return (
-    <div className="username">
+    <div className={ styles.username }>
 
       { /* Render the countries flag, if it exists */ }
       <CountryFlag country={ profile.country } />
