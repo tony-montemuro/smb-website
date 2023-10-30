@@ -8,10 +8,11 @@ import MobileLogo from "./Mobile/MobileLogo.jsx";
 import NavCreateProfile from "./NavCreateProfile";
 import NavProfile from "./NavProfile";
 import NavSignIn from "./NavSignIn";
+import MobileProfile from "./Mobile/MobileProfile";
 
 function Navbar({ imageReducer }) {  
   /* ===== VARIABLES ===== */
-  const dropdownCutoff = 900;
+  const dropdownCutoff = 940;
 
   /* ===== CONTEXTS ===== */
 
@@ -19,7 +20,8 @@ function Navbar({ imageReducer }) {
   const { user } = useContext(UserContext);
 
   /* ===== STATES ===== */
-  const [isOpen, setIsOpen] = useState(false);
+  const [isLogoOpen, setIsLogoOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   /* ===== EFFECTS ===== */
@@ -36,9 +38,9 @@ function Navbar({ imageReducer }) {
     return () => window.removeEventListener("resize", updateWindowWidth);
   }, []);
 
-  // code that is executed each time the `isOpen` state is changed
+  // code that is executed each time the `isLogoOpen` OR `isProfileOpen` state are changed
   useEffect(() => {
-    if (isOpen) {
+    if (isLogoOpen || isProfileOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "visible";
@@ -48,13 +50,14 @@ function Navbar({ imageReducer }) {
     return () => {
       document.body.style.overflow = "hidden";
     };
-  }, [isOpen]);
+  }, [isLogoOpen, isProfileOpen]);
 
   // code that is executed each time the window width updates
   useEffect(() => {
-    // if windowWidth exceeds the dropdownCutoff limit, `isOpen` should be false
+    // if windowWidth exceeds the dropdownCutoff limit, `isLogoOpen` and `isProfileOpen` should be false
     if (windowWidth > dropdownCutoff) {
-      setIsOpen(false);
+      setIsLogoOpen(false);
+      setIsProfileOpen(false);
     }
   }, [windowWidth]);
 
@@ -71,7 +74,7 @@ function Navbar({ imageReducer }) {
         </div>
         
         { /* Mobile logo, which should render in place of the standard logo once the screen goes below `dropdownCutoff`px */ }
-        <MobileLogo isOpen={ isOpen } setIsOpen={ setIsOpen } />
+        <MobileLogo isOpen={ isLogoOpen } setIsOpen={ setIsLogoOpen } />
 
         { /* List - various links, including games, users, news, resources, support page. */ }
         <div className={ styles.list }>
@@ -89,7 +92,10 @@ function Navbar({ imageReducer }) {
         */}
         { user.id ? 
           user.profile ?
-            <NavProfile imageReducer={ imageReducer } />
+            <>
+              <NavProfile imageReducer={ imageReducer } />
+              <MobileProfile isOpen={ isProfileOpen } setIsOpen={ setIsProfileOpen } imageReducer={ imageReducer } />
+            </>
           :
             <NavCreateProfile />
         :

@@ -10,7 +10,7 @@ function MobileLogo({ isOpen, setIsOpen }) {
   return (
     <>
 
-      {/* Simplified logo, which will activate dropdown */}
+      {/* Simplified logo, which will activate dropdown when pressed */}
       <div className={ styles.mobileLogo } onClick={ () => setIsOpen(true) }>
         <div id={ styles.simpleLogo }>
           <SimpleLogo />
@@ -23,7 +23,7 @@ function MobileLogo({ isOpen, setIsOpen }) {
 
       { /* Dropdown element, which should only render if `isOpen` is set to true */ }
       <div className={ `${ styles.dropdown }${ isOpen ? ` ${ styles.open }` : "" }` }>
-        <div className={ styles.dropdownInner }>
+        <div className={ `${ styles.dropdownInner } ${ styles.innerLeft }` }>
           <div className={ styles.dropdownClose }>
             <CloseButton onClose={ () => setIsOpen(false) } />
           </div>

@@ -24,7 +24,7 @@
 .mobileLogo {
     display: none;
     height: var(--navbar-height);
-    padding-left: 0.5em;
+    padding: 0 0.5em;
 }
 
 .mobileLogo:hover {
@@ -163,18 +163,30 @@
     background-color: rgba(0, 0, 0, 0.7);
     justify-content: center;
     align-items: center;
-    z-index: 500;
+    z-index: 2000;
     overflow: hidden;
 }
 
 .dropdownInner {
     height: 100%;
     position: absolute;
-    top: 0;
-    left: 0;
     width: 300px;
     background-color: rgb(var(--color-container));
     touch-action: none;
+}
+
+.dropdownInner hr {
+    width: 100%;
+}
+
+.innerLeft {
+    top: 0;
+    left: 0;
+}
+
+.innerRight {
+    top: 0;
+    right: 0;
 }
 
 .dropdownClose {
@@ -195,9 +207,19 @@
     display: flex;
 }
 
+#signout {
+    color: rgb(var(--color-link));
+}
+
+#signout:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color: rgb(var(--color-link-hover));
+}
+
 /* ===== MEDIA QUERY FOR SMALLER DEVICES ===== */
 @media (max-width: 940px) {
-    .logo, .list {
+    .logo, .list, .profile {
         display: none;
     }
 
