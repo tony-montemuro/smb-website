@@ -4,6 +4,7 @@ import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Post.module.css";
 import PostLogic from "./Post.js";
+import ScrollHelper from "../../helper/ScrollHelper";
 import TextField from "@mui/material/TextField";
 
 function Post() {
@@ -28,6 +29,9 @@ function Post() {
   // states and functions from the js file
   const { form, handleChange, onPostSubmit } = PostLogic();
 
+  // helper functions
+  const { scrollToTop } = ScrollHelper();
+
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts
@@ -38,6 +42,7 @@ function Post() {
       navigate("/");
       return;
     }
+    scrollToTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

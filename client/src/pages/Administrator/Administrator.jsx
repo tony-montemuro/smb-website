@@ -1,7 +1,22 @@
 /* ===== IMPORTS ===== */
+import { useEffect } from "react";
 import styles from "./Administrator.module.css";
+import ScrollHelper from "../../helper/ScrollHelper";
 
 function Administrator() {
+  /* ===== FUNCTIONS ===== */
+
+  // helper functions
+  const { scrollToTop } = ScrollHelper();
+
+  /* ===== EFFECTS ===== */
+
+  // code that executes when the component mounts
+  useEffect(() => {
+    scrollToTop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /* ===== ADMINISTRATOR COMPONENT ===== */
   return (
     <div className={ styles.administrator }>

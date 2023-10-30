@@ -9,6 +9,8 @@ function Moderator() {
   // helper functions
   const { scrollToTop } = ScrollHelper();
 
+  /* ===== EFFECTS ===== */
+
   // code that is executed when the component mounts
   useEffect(() => {
     scrollToTop();
