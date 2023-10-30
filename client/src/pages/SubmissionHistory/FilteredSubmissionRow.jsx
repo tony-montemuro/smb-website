@@ -1,4 +1,5 @@
 /* ===== IMPORTS ===== */
+import styles from "./SubmissionHistory.module.css";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import CheckIcon from "@mui/icons-material/Check";
 import DetailedRecord from "../../components/DetailedRecord/DetailedRecord.jsx";
@@ -13,7 +14,7 @@ function FilteredSubmissionRow({ submission, level, onClickFunc }) {
 
   /* ===== FILTERED SUBMISSION ROW COMPONENT ===== */
   return (
-    <tr onClick={ () => onClickFunc(submission) }>
+    <tr className={ styles.row } onClick={ () => onClickFunc(submission) }>
       { /* Date - render the submission date provided by the submitter */ }
       <td>{ dateB2F(submission.submitted_at) }</td>
 
@@ -35,7 +36,7 @@ function FilteredSubmissionRow({ submission, level, onClickFunc }) {
       { /* Proof - render a videocam svg that links to the proof, if there is any */ }
       <td>
         { submission.proof && 
-          <div className="submission-history-svg-wrapper">
+          <div className={ styles.svgWrapper }>
             <VideocamIcon titleAccess="Has proof" sx={{ color: "black" }} />
           </div>
         }
@@ -44,7 +45,7 @@ function FilteredSubmissionRow({ submission, level, onClickFunc }) {
       { /* Comment - render submission comment, if there is one */ }
       <td>
         { submission.comment &&
-          <div className="submission-history-svg-wrapper">
+          <div className={ styles.svgWrapper }>
             <ChatBubbleRoundedIcon titleAccess={ submission.comment } fontSize="small" />
           </div>
         }
@@ -53,7 +54,7 @@ function FilteredSubmissionRow({ submission, level, onClickFunc }) {
       { /* Live status - Render checkbox if live */ }
       <td>
         { submission.live && 
-          <div className="submission-history svg-wrapper">
+          <div className={ styles.svgWrapper }>
             <CheckIcon titleAccess="Live proof" />
           </div>
         }

@@ -2,6 +2,7 @@
 .tabs {
     display: flex;
     align-items: flex-end;
+    text-align: center;
 }
 
 .tab {
@@ -22,7 +23,7 @@
 
 @media (max-width: 620px) {
     .tab {
-        width: 50px;
+        width: 70px;
         height: 30px;
     }
 }

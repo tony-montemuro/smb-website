@@ -59,15 +59,12 @@ const SubmissionHistory = () => {
             // attempt to grab the submissions
             const submissions = await getChartSubmissionsByProfile(abb, category, levelName, type, profileId);
 
-            // if query is successful, next split submissions into two arrays: normal, and tas
+            // if query is successful, next split submissions into two arrays: normal, and tas, and update submission state
             const normal = submissions.filter(submission => !submission.tas);
             const tas = submissions.filter(submission => submission.tas);
-
-            // update submission state hook by calling the setSubmissions() function
             setSubmissions({ normal, tas });
 
         } catch (error) {
-            // if submissions fail to load, render an error message
             addMessage("Failed to fetch / update submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error")
         }
     };
@@ -83,7 +80,6 @@ const SubmissionHistory = () => {
             navigate(`/games/${ abb }/${ category }/${ type }/${ levelName }/${ profileId }/${ otherRunType }`);
         }
     };
-
 
     return { submissions, runType, setRunType, fetchProfile, fetchSubmissions, handleTabClick };
 };
