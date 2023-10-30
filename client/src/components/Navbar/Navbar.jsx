@@ -66,24 +66,28 @@ function Navbar({ imageReducer }) {
     <div className={ styles.navWrapper }>
       <nav className={ styles.nav }>
 
-        { /* Link to the homepage - left side of navbar */ }
-        <div className={ styles.logo }>
-          <Link to="/" title="Home">
-            <Logo />
-          </Link>
-        </div>
-        
-        { /* Mobile logo, which should render in place of the standard logo once the screen goes below `dropdownCutoff`px */ }
-        <MobileLogo isOpen={ isLogoOpen } setIsOpen={ setIsLogoOpen } />
-
-        { /* List - various links, including games, users, news, resources, support page. */ }
-        <div className={ styles.list }>
-          <Link to="/games" title="Games">Games</Link>
-          <Link to="/users" title="Users">Users</Link>
-          <Link to="/news" title="News">News</Link>
-          <Link to="/resources" title="Resources">Resources</Link>
-          <Link to="/support" title="Support">Support</Link>
-        </div>
+        { windowWidth > dropdownCutoff ?
+          <>
+            { /* Link to the homepage - left side of navbar */ }
+            <div className={ styles.logo }>
+              <Link to="/" title="Home">
+                <Logo />
+              </Link>
+            </div>
+            
+    
+            { /* List - various links, including games, users, news, resources, support page. */ }
+            <div className={ styles.list }>
+              <Link to="/games" title="Games">Games</Link>
+              <Link to="/users" title="Users">Users</Link>
+              <Link to="/news" title="News">News</Link>
+              <Link to="/resources" title="Resources">Resources</Link>
+              <Link to="/support" title="Support">Support</Link>
+            </div>
+          </>
+        :
+          <MobileLogo isOpen={ isLogoOpen } setIsOpen={ setIsLogoOpen } />
+        }
 
         {/* 3 cases:
           1.) User is authenticated and has a profile: render the NavProfile component.
@@ -92,10 +96,10 @@ function Navbar({ imageReducer }) {
         */}
         { user.id ? 
           user.profile ?
-            <>
-              <NavProfile imageReducer={ imageReducer } />
-              <MobileProfile isOpen={ isProfileOpen } setIsOpen={ setIsProfileOpen } imageReducer={ imageReducer } />
-            </>
+            windowWidth > dropdownCutoff ? 
+              <NavProfile imageReducer={ imageReducer } /> 
+            : 
+              <MobileProfile isOpen={ isProfileOpen } setIsOpen={ setIsProfileOpen } imageReducer={ imageReducer } />   
           :
             <NavCreateProfile />
         :

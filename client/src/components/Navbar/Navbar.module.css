@@ -22,7 +22,7 @@
 }
 
 .mobileLogo {
-    display: none;
+    display: flex;
     height: var(--navbar-height);
     padding: 0 0.5em;
 }
@@ -215,17 +215,6 @@
     cursor: pointer;
     text-decoration: underline;
     color: rgb(var(--color-link-hover));
-}
-
-/* ===== MEDIA QUERY FOR SMALLER DEVICES ===== */
-@media (max-width: 940px) {
-    .logo, .list, .profile {
-        display: none;
-    }
-
-    .mobileLogo {
-        display: flex;
-    }
 }
 
 /* ===== MEDIA QUERY FOR MOBILE DEVICES ===== */
