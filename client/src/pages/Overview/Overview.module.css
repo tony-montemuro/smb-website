@@ -1,3 +1,5 @@
+/* ===== GENERAL STYLING ===== */
+
 .overview {
     display: flex;
     flex-direction: column;
@@ -13,15 +15,28 @@
 }
 
 .boxartContainer {
-    padding: 5px 0;
+    padding-bottom: 10px;
     display: flex;
     justify-content: space-around;
-    text-align: center;
 }
 
 .boxart {
     display: flex;
     flex-direction: column;
-    text-align: center;
     gap: 5px;
+}
+
+/* ===== MEDIA QUERY FOR MOBILE DEVICES ===== */
+
+@media (max-width: 530px) {
+    .boxartContainer {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding-bottom: 15px;
+    }
+
+    .boxart {
+        align-items: center;
+    }
 }
