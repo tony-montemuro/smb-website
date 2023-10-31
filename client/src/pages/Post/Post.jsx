@@ -56,6 +56,7 @@ function Post() {
         <TextField 
           color="primary"
           fullWidth
+          helperText={ `${ form.values.title.length }/${ TITLE_MAX_LENGTH }` }
           id="title"
           inputProps={ { maxLength: TITLE_MAX_LENGTH } }
           label="Title"
@@ -68,6 +69,7 @@ function Post() {
         <TextField
           color="primary"
           fullWidth
+          helperText={ `${ form.values.body.length }/${ BODY_MAX_LENGTH }` }
           id="body"
           inputProps={ { maxLength: BODY_MAX_LENGTH } }
           label="Body"
@@ -82,6 +84,7 @@ function Post() {
         <TextField 
           color="primary"
           fullWidth
+          helperText={ `${ form.values.link.length }/${ LINK_MAX_LENGTH }` }
           id="link"
           inputProps={ { maxLength: LINK_MAX_LENGTH } }
           label="Link"
@@ -95,9 +98,9 @@ function Post() {
           color={ form.error ? "error" : "primary" }
           error={ form.error !== undefined }
           fullWidth
+          helperText={ form.error ? form.error : `${ form.values.link_description.length }/${ LINK_DESCRIPTION_MAX_LENGTH }` }
           id="link_description"
           inputProps={ { maxLength: LINK_DESCRIPTION_MAX_LENGTH } }
-          helperText={ form.error }
           label="Link Description"
           placeholder="Must be under 100 characters"
           onChange={ handleChange }

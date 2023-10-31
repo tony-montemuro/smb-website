@@ -35,7 +35,11 @@ const Post = () => {
     // the form state is updated depending on the id of the e.target object
     const handleChange = e => {
         const { id, value } = e.target;
-        setForm({ ...form, submitted: false, values: { ...form.values, [id]: value } });
+        setForm({ 
+            ...form, 
+            error: id === "link_description" ? undefined : form.error,
+            submitted: false, values: { ...form.values, [id]: value }
+        });
     };
 
     // FUNCTION 2: validateLinkDescription - determine if link description is valid
