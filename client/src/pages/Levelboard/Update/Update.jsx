@@ -52,9 +52,12 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
   
   /* ===== UPDATE COMPONENT ===== */
   return form.values && form.submission &&
-    <>
+    <div className={ styles.update }>
       <div className={ styles.header }>
         <h1>Update Submission</h1>
+
+        <hr />
+        
         <h2>Select Submission:</h2>
       </div>
 
@@ -260,7 +263,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
 
       </form>
   
-    </>
+    </div>
 };
 
 /* ===== EXPORTS ===== */

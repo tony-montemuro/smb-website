@@ -1,3 +1,5 @@
+/* ===== GENERAL STYLING ===== */
+
 .levelboard {
     display: flex;
     flex-direction: column;
@@ -38,4 +40,12 @@
     align-items: center;
     flex: 1;
     width: 100%;
+}
+
+/* ===== MEDIA QUERY FOR MOBILE DEVICES ===== */
+
+@media (max-width: 550px) {
+    .options {
+        flex-direction: column-reverse;
+    }
 }

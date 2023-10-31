@@ -32,10 +32,23 @@
     padding-top: var(--app-padding);
 }
 
+#bottomDivide {
+    display: none;
+}
+
 /* ===== MEDIA QUERY FOR SMALLER DEVICE ===== */
 
 @media (max-width: 715px) {
     .options {
         grid-template-columns: 1fr;
+        padding-bottom: 10px;
+    }
+
+    #bottomDivide {
+        display: block;
+    }
+
+    .footer {
+        justify-content: center;
     }
 }

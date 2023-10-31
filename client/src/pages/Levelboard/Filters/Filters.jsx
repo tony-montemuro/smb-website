@@ -78,6 +78,8 @@ function Filters({ currentFilters, defaultFilters, updateBoard }) {
     <>
       <h1>Filters</h1>
 
+      <hr />
+
       { /* Levelboard filters options - render the various filter options here */ }
       <div className={ styles.options }>
 
@@ -161,9 +163,11 @@ function Filters({ currentFilters, defaultFilters, updateBoard }) {
 
       </div>
 
+      <hr id={ styles.bottomDivide } />
+
       { /* Levelboard filter buttons - allow the user to either apply the filters, or reset them to default values */ }
       <div className={ styles.footer }>
-        <button type="button" onClick={ handleFiltersResetAll }>Reset filters</button>
+        <button type="button" className="cancel" onClick={ handleFiltersResetAll }>Reset filters</button>
         <button type="button" onClick={ () => handleApplyFilters(updateBoard) }>Apply filters</button>
       </div>
 

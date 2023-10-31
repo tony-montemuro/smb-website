@@ -1,8 +1,17 @@
+.update {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.update hr {
+    width: 100%;
+}
+
 .header {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding-bottom: 12px;
 }
 
 .header h1, .header h2 {
