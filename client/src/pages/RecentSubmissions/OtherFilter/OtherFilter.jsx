@@ -48,6 +48,9 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
   return filters &&
     <>
       <h1 id={ styles.header }>Other Filters</h1>
+
+      <hr />
+
       <form onSubmit={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
         <div className={ styles.filters }>
 
@@ -59,7 +62,7 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
             }
           </div>
           { categories ?
-            <div className={ styles.btns }>
+            <div id={ styles.categoryBtns } className={ styles.btns }>
 
               { /* Render button to select all categories */ }
               <button
@@ -100,9 +103,11 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
           </div>
         </div>
 
+        <hr id={ styles.bottomDivide } />
+
         { /* Finally, render button to update the forms (submit form), and reset all filters */ }
         <div id={ styles.right } className={ styles.btns }>
-          <button type="button" onClick={ () => resetFiltersAll(defaultFilters) }>Reset Filters</button>
+          <button type="button" className="cancel" onClick={ () => resetFiltersAll(defaultFilters) }>Reset Filters</button>
           <button type="submit">Apply Filters</button>
         </div>
 

@@ -37,7 +37,7 @@ function RecentSubmissions({ imageReducer }) {
     <div className={ styles.recentSubmissions }>
 
       { /* Popups */ }
-      <Popup renderPopup={ gamePopup } setRenderPopup={ setGamePopup } width="60%">
+      <Popup renderPopup={ gamePopup } setRenderPopup={ setGamePopup } width="1200px">
         <GameFilter 
           searchParams={ searchParams } 
           setSearchParams={ setSearchParams } 
@@ -46,7 +46,7 @@ function RecentSubmissions({ imageReducer }) {
           dispatchFiltersData={ dispatchFiltersData }
         />
       </Popup>
-      <Popup renderPopup={ userPopup } setRenderPopup={ setUserPopup } width="60%" >
+      <Popup renderPopup={ userPopup } setRenderPopup={ setUserPopup } width="1200px" >
         <UserFilter 
           searchParams={ searchParams } 
           setSearchParams={ setSearchParams }
@@ -54,7 +54,7 @@ function RecentSubmissions({ imageReducer }) {
           dispatchFiltersData={ dispatchFiltersData }
         />
       </Popup>
-      <Popup renderPopup={ otherPopup } setRenderPopup={ setOtherPopup } width="60%" >
+      <Popup renderPopup={ otherPopup } setRenderPopup={ setOtherPopup } width="1200px" >
         <OtherFilter searchParams={ searchParams } setSearchParams={ setSearchParams } categories={ filtersData.categories } />
       </Popup>
 

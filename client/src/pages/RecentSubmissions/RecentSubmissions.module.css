@@ -1,3 +1,5 @@
+/* ===== GENERAL STYLING ===== */
+
 .recentSubmissions {
     padding: var(--app-padding);
 }
@@ -5,6 +7,12 @@
 .header {
     display: flex;
     justify-content: space-between;
+    padding: var(--app-padding) 0;
+    gap: 10px;
+}
+
+.header h1 {
+    margin: 0;
 }
 
 .btns {
@@ -12,4 +20,12 @@
     flex-direction: row;
     gap: 5px;
     align-items: center;
+}
+
+/* ===== MEDIA QUERY FOR SMALLER DEVICES ===== */
+
+@media (max-width: 670px) {
+    .header {
+        flex-direction: column;
+    }
 }

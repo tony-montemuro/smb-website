@@ -32,6 +32,5 @@
 @media (max-width: 600px) {
     .filters {
         flex-direction: column;
-        gap: 0px;
     }
 }

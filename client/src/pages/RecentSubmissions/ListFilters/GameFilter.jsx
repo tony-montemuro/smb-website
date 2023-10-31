@@ -50,7 +50,7 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
                 })}
             </Items>
             <div className={ styles.btns }>
-              <button type="button" onClick={ resetFilter }>Reset Filter</button>
+              <button type="button" className="cancel" onClick={ resetFilter }>Reset Filter</button>
               <button type="button" onClick={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
                 Apply Filters
               </button>
