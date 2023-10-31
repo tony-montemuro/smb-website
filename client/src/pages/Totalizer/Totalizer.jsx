@@ -72,51 +72,54 @@ function Totalizer({ imageReducer }) {
   /* ===== TOTALIZER COMPONENT ===== */
   return (
     <Container title={ `${ capitalize(type) } Totalizer` } largeTitle>
+      <div className={ styles.totalizer }>
 
-      { /* Totalizer header - render the category, as well as an input for user to swap between live-only and all */ }
-      <div className={ styles.header }>
-        <h2>{ categoryB2F(category) }</h2>
-        <div className={ styles.filter }>
-          <label htmlFor="filter">Live-{ type }s only: </label>
-          <input
-            id="filter"
-            type="checkbox"
-            checked={ tableState === "live" }
-            onChange={ () => setTableState(tableState === "live" ? "all" : "live") }
-          />
+        { /* Totalizer header - render the category, as well as an input for user to swap between live-only and all */ }
+        <div className={ styles.header }>
+          <h2>{ categoryB2F(category) }</h2>
+          <div className={ styles.filter }>
+            <label htmlFor="filter">Live-{ type }s only: </label>
+            <input
+              id="filter"
+              type="checkbox"
+              checked={ tableState === "live" }
+              onChange={ () => setTableState(tableState === "live" ? "all" : "live") }
+            />
+          </div>
         </div>
-      </div>
 
-      <div className={ `table ${ styles.totalizer }` }>
-        <table>
+        <div className={ `table ${ styles.totalizerTable }` }>
+          <table>
+          
+            { /* Table header - specifies the information displayed in each cell of the board */ }
+            <thead>
+              <tr>
+                <th>Position</th>
+                <th>Name</th>
+                <th>Total { capitalize(type) }</th>
+              </tr>
+            </thead>
+
+            { /* Table body - render a row for each totals object in the array. */ }
+            <tbody>
+              { totals ? 
+                <TableContent 
+                  items={ totals[tableState] } 
+                  emptyMessage={ `There have been no ${ tableState === "live" ? "live" : "" } submissions to this game's category!` }
+                  numCols={ TABLE_LENGTH }
+                >
+                  { totals[tableState].map(row => {
+                    return <TotalizerRow row={ row } imageReducer={ imageReducer } key={ row.profile.id } />
+                  })}
+                </TableContent>
+              :
+                <LoadingTable numCols={ TABLE_LENGTH } />
+              }
+            </tbody>
+
+          </table>
+        </div>
         
-          { /* Table header - specifies the information displayed in each cell of the board */ }
-          <thead>
-            <tr>
-              <th>Position</th>
-              <th>Name</th>
-              <th>Total { capitalize(type) }</th>
-            </tr>
-          </thead>
-
-          { /* Table body - render a row for each totals object in the array. */ }
-          <tbody>
-            { totals ? 
-              <TableContent 
-                items={ totals[tableState] } 
-                emptyMessage={ `There have been no ${ tableState === "live" ? "live" : "" } submissions to this game's category!` }
-                numCols={ TABLE_LENGTH }
-              >
-                { totals[tableState].map(row => {
-                  return <TotalizerRow row={ row } imageReducer={ imageReducer } key={ row.profile.id } />
-                })}
-              </TableContent>
-            :
-              <LoadingTable numCols={ TABLE_LENGTH } />
-            }
-          </tbody>
-
-        </table>
       </div>
     </Container>
   );

@@ -1,8 +1,15 @@
+/* ===== GENERAL STYLING ===== */
+
+.totalizer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 10px;
 }
 
 .header h2 {
@@ -19,10 +26,20 @@
     margin: 0;
 }
 
-/* ===== MEDIA QUERIES FOR PHONES ===== */
+/* ===== MEDIA QUERY FOR SMALLER DEVICE ===== */
+
+@media (max-width: 550px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+
+/* ===== MEDIA QUERY FOR PHONES ===== */
 
 @media (max-width: 402px) {
-    .totalizer img {
+    .totalizerTable img {
         display: none;
     };
 }
