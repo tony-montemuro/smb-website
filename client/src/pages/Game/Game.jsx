@@ -70,15 +70,13 @@ function Game() {
       { /* Game Info - Render the game rules, and recent submissions */ }
       <div className={ styles.half }>
         <div className={ styles.info }>
-          <div className={ styles.rules }>
-            <Container title="Rules" largeTitle>
-              <ol>
-                { game.rule.map(row => {
-                  return <li key={ row.id }>{ row.rule_name }</li>
-                })}
-              </ol>
-            </Container>
-          </div>
+          <Container title="Rules" largeTitle>
+            <ol>
+              { game.rule.map(row => {
+                return <li key={ row.id }>{ row.rule_name }</li>
+              })}
+            </ol>
+          </Container>
           <div className={ styles.recent }>
             <Container title="Recent Submissions" href={ `/recent-submissions?game_id=${ abb }` } largeTitle>
               <RecentSubmissionsTable searchParams={ searchParams } renderLevelContext />

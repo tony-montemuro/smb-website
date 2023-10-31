@@ -20,10 +20,6 @@
     padding-inline-start: 20px;
 }
 
-.rules {
-    min-width: 360px;
-}
-
 .charts {
     flex: 1;
 }

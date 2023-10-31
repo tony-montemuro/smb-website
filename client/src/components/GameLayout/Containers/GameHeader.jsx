@@ -25,9 +25,11 @@ function GameHeader({ imageReducer }) {
         <div className={ styles.left }>
 
           { /* Render the box art */ }
-          <Link to={ `/games/${ game.abb }` }>
-            <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
-          </Link>
+          <div id={ styles.boxart }>
+            <Link to={ `/games/${ game.abb }` }>
+              <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
+            </Link>
+          </div>
 
           { /* Render the name of the game, and it's information */ }
           <div className={ styles.info }>

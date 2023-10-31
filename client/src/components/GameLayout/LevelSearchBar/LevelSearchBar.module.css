@@ -50,3 +50,12 @@
     margin: 0;
     padding: 10px 0;
 }
+
+/* ===== MEDIA QUERY FOR MOBILE DEVICES ===== */
+
+@media (max-width: 680px) {
+    .searchbar {
+        width: 100%;
+        height: 200px;
+    }
+}

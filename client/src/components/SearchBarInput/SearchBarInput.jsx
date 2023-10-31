@@ -4,8 +4,6 @@ import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
 function SearchBarInput({ itemType, input, setInput }) {
-
-
   /* ===== SEARCH BAR INPUT COMPONENT ===== */
   return (
     <div className={ styles.searchbarInput }>
