@@ -1,3 +1,5 @@
+/* ===== GENERAL STYLING ===== */
+
 .gameSearch {
     width: 100%;
     margin: 0 auto;
@@ -6,32 +8,13 @@
 .filters {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 5px;
 }
 
 .filterBtns {
     padding-left: 10px;
     gap: 5px;
-}
-
-.filterBtn {
-    white-space: nowrap;
-    background-color: #f0f0f0;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-}
-
-.filterBtn:hover {
-    background-color: #ddd;
-}
-  
-.selected {
-    background-color: black;
-    color: #fff;
-}
-
-.selected:hover {
-    background-color: #333333;
 }
 
 .body {
@@ -42,4 +25,13 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
+}
+
+/* ===== MEDIA QUERY FOR SMALLER DEVICES ===== */
+
+@media (max-width: 600px) {
+    .filters {
+        flex-direction: column;
+        gap: 0px;
+    }
 }
