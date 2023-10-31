@@ -13,3 +13,18 @@
     display: flex;
     justify-content: center;
 }
+
+/* ===== MEDIA QUERY FOR SMALLER DEVICE ===== */
+
+@media (max-width: 550px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    #message {
+        margin: 0;
+        padding-top: 8px;
+    }
+}

@@ -91,7 +91,9 @@ function Records() {
       { /* Render a record table for each mode, if the `recordTable` state is defined */ }
       { recordTable ?
         <>
-          <p><em>There are </em><strong>{ numNotLive() }</strong><em> level(s) where the live record is worse than the overall record.</em></p>
+          <p id={ styles.message }>
+            <em>There are </em><strong>{ numNotLive() }</strong><em> level(s) where the live record is worse than the overall record.</em>
+          </p>
           { Object.keys(recordTable[filter]).map(mode => {
             return <RecordTable 
               recordTable={ recordTable }
