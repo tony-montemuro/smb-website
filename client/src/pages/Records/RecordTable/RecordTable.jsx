@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import styles from "../Records.module.css";
+import styles from "./RecordTable.module.css";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import RecordTableRow from "./RecordTableRow";
@@ -18,7 +18,7 @@ function RecordTable({ recordTable, filter, mode, allGreater }) {
     <div>
       <h3>{ cleanLevelName(mode) }</h3>
       <div className="table">
-        <table className={ styles.recordsTable } key={ mode }>
+        <table className={ styles.recordTable } key={ mode }>
 
           { /* Record table header - specifies the information displayed in each cell of the record table */ }
           <thead>

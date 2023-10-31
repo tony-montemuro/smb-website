@@ -1,0 +1,15 @@
+.recordTable {
+    table-layout: fixed !important;
+}
+
+.recordTable th:nth-child(1), .recordTable td:nth-child(1) {
+    width: 35%;
+}
+
+.recordTable th:nth-child(2), .recordTable td:nth-child(2) {
+    width: 20%;
+}
+
+.recordTable th:nth-child(3), .recordTable td:nth-child(3) {
+    width: 50%;
+}
