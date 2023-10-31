@@ -5,7 +5,7 @@
   color: #fff;
   padding: 10px;
   border-radius: 4px;
-  z-index: 1000;
+  z-index: var(--z-high);
   width: 85%;
   top: calc(var(--navbar-height) + 10px);
   position: fixed;

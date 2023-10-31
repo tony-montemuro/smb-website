@@ -22,6 +22,10 @@
     --font: 'Gabarito', cursive;
     --navbar-height: 76px;
     --searchbar-height: 30px;
+    --z-low: 1;
+    --z-medium: 2;
+    --z-high: 3;
+    --z-top: 4;
 }
 
 /* ===== HTML TAGS ===== */

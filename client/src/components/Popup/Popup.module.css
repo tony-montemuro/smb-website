@@ -8,7 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 500;
+    z-index: var(--z-top);
 }
 
 .inner {
