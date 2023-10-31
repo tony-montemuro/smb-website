@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import "./DetailedUsername.css";
+import styles from "./DetailedUsername.module.css";
 import Avatar from "../Avatar/Avatar.jsx";
 import Username from "../Username/Username";
 
@@ -9,7 +9,7 @@ function DetailedUsername({ imageReducer, profile, disableLink }) {
 
   /* ===== DETAILED USERNAME COMPONENT ===== */
   return (
-    <div className="detailed-username">
+    <div className={ styles.detailedUsername }>
       <Avatar profileId={ profile.id } size={ IMG_LENGTH } imageReducer={ imageReducer } />
       <Username profile={ profile } disableLink={ disableLink } />
     </div>
