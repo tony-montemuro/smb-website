@@ -8,7 +8,7 @@ import Username from "../Username/Username.jsx";
 
 function UserRow({ user, imageReducer = null, onClick, index = 0, isDetailed, disableLink }) {
   /* ===== VARIABLES ===== */
-  const SOCIAL_SIZE = 40;
+  const SOCIAL_SIZE = 35;
 
   /* ===== FUNCTIONS ===== */
 

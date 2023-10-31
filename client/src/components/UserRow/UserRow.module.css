@@ -1,7 +1,11 @@
+/* ===== GENERAL STYLING ===== */
+
 .userRow {
     display: flex;
     justify-content: space-between;
     padding: 8px 4px;
+    padding-right: 6px;
+    gap: 10px;
 }
 
 .hoverable:hover {
@@ -18,4 +22,13 @@
 
 .socials a {
     margin: 0 3px;
+}
+
+/* ===== MEDIA QUERY FOR MOBILE DEVICES ===== */
+
+@media (max-width: 430px) {
+    .socials {
+        display: grid;
+        grid-template-columns: 35px 35px;
+    }
 }
