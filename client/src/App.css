@@ -1,6 +1,7 @@
 /* ===== CSS VARIABLES ===== */
 
 :root {
+    --app-padding: 20px;
     --color-background: 17, 22, 24;
     --color-button: 203, 195, 227;
     --color-button-hover: 190, 180, 210;

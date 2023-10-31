@@ -2,8 +2,8 @@
 
 .submissionHandler {
     display: flex;
-    padding: 20px;
-    gap: 20px;
+    padding: var(--app-padding);
+    gap: var(--app-padding);
 }
 
 .left {

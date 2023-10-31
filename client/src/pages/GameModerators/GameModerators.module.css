@@ -1,7 +1,7 @@
 .gameModerators {
     display: flex;
-    gap: 20px;
-    padding: 20px;
+    gap: var(--app-padding);
+    padding: var(--app-padding);
 }
 
 .left {

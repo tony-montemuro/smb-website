@@ -1,5 +1,5 @@
 .moderator {
-    padding: 20px;
+    padding: var(--app-padding);
 }
 
 .body {

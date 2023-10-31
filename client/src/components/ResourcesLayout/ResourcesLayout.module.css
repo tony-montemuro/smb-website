@@ -1,15 +1,14 @@
 .resourcesLayout {
-    --resources-layout-padding: 20px;
     display: flex;
-    padding: var(--resources-layout-padding);
-    gap: 20px;
+    padding: var(--app-padding);
+    gap: var(--app-padding);
 }
 
 .sidebar {
     background-color: rgb(var(--color-container));
     border-radius: var(--container-border-radius);
     padding: 10px;
-    top: calc(var(--navbar-height) + var(--resources-layout-padding));
+    top: calc(var(--navbar-height) + var(--app-padding));
     height: 100%;
     position: -webkit-sticky;
     position: sticky;

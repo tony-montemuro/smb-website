@@ -3,7 +3,7 @@
     flex-direction: column;
     position: -webkit-sticky;
     position: sticky;
-    top: calc(var(--navbar-height) + 20px);
+    top: calc(var(--navbar-height) + var(--app-padding));
 }
 
 .body {

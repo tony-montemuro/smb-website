@@ -1,5 +1,5 @@
 .news {
-    padding: 20px;
+    padding: var(--app-padding);
 }
 
 .post {

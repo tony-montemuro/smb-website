@@ -3,7 +3,7 @@
 .game {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: var(--app-padding);
 }
 
 .half {
@@ -13,7 +13,7 @@
 .info {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--app-padding);
 }
 
 .info ol {

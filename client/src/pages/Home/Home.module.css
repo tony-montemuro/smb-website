@@ -3,18 +3,18 @@
 .home {
     display: flex;
     align-items: flex-start;
+    padding: var(--app-padding);
+    gap: var(--app-padding);
 }
 
 .left {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 10px;
+    gap: var(--app-padding);
     flex: 1;
 }
 
 .right {
-    padding: 10px;
     width: 450px;
 }
 

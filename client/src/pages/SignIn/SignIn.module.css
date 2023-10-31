@@ -6,7 +6,7 @@
 }
 
 .left {
-    padding: 20px;
+    padding: var(--app-padding);
     flex: 1;
 }
 

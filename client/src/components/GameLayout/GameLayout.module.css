@@ -4,14 +4,14 @@
     --header-height: 207px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 20px;
+    gap: var(--app-padding);
+    padding: var(--app-padding);
 }
 
 .body {
     flex-wrap: wrap;
     display: flex;
-    gap: 20px;
+    gap: var(--app-padding);
 }
 
 .bodyLeft {
@@ -22,7 +22,7 @@
     width: 350px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--app-padding);
 }
 
 .rankings h2 {

@@ -14,7 +14,7 @@
 .body {
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    gap: var(--app-padding);
 }
 
 .left {

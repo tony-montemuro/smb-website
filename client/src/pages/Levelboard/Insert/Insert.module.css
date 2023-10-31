@@ -1,7 +1,7 @@
 /* ===== GENERAL STYLING ===== */
 .insert {
     display: flex;
-    gap: 20px;
+    gap: var(--app-padding);
 }
 
 .profile {
