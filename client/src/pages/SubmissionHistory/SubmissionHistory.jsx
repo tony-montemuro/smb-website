@@ -95,7 +95,7 @@ function SubmissionHistory() {
   return (
     <>
       { /* Popups */ }
-      <Popup renderPopup={ detailSubmission } setRenderPopup={ setDetailSubmission } width="40%" >
+      <Popup renderPopup={ detailSubmission } setRenderPopup={ setDetailSubmission } width="800px" >
 				<SubmissionDetails level={ level } updateBoard={ fetchSubmissions } />
 			</Popup>
 
