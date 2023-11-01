@@ -233,6 +233,7 @@ function Levelboard({ imageReducer }) {
 												submission={ submission } 
 												imageReducer={ imageReducer }
 												level={ level }
+												worldRecord={ board.filtered[0].record }
 												onClickFunc={ setDetailSubmission }
 												key={ submission.id } 
 											/>
