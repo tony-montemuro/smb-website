@@ -28,13 +28,6 @@
     word-wrap: break-word;
 }
 
-.video {
-    display: flex;
-    margin-left: auto;
-    margin-right: auto;
-    height: 50vh;
-}
-
 .twitter {
     display: flex;
     justify-content: center;

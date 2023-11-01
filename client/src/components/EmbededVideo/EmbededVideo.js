@@ -6,6 +6,7 @@ const EmbededVideo = () => {
     const hostName = window.location.hostname;
 
     /* ===== FUNCTIONS ===== */
+
     // FUNCTION 1: getUrlType - function that takes a url as input, and returns it's type
     // PRECONDITIONS (1 parameter):
     // 1.) url: a string representing a url

@@ -1,10 +1,28 @@
+.submissionDetails {
+    display: flex;
+    flex-direction: column;
+}
+
+.submissionDetails h1,
+.submissionDetails h2,
+.submissionDetails h3,
+.submissionDetails p {
+    margin: 0;
+    padding: 5px 0;
+}
+
+.submissionDetails hr {
+    width: 100%;
+}
+
 .video {
-    height: 40vh;
+    padding: 10px 0;
 }
 
 .details {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .details li {

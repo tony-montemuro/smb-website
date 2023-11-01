@@ -4,7 +4,6 @@ import { useContext } from "react";
 import styles from "./User.module.css";
 import Container from "../../components/Container/Container.jsx";
 import DiscordLogo from "../../components/DiscordLogo/DiscordLogo.jsx";
-import EmbedHelper from "../../helper/EmbedHelper";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import GameRow from "../../components/GameRow/GameRow.jsx";
 import Items from "../../components/Items/Items.jsx";
@@ -25,9 +24,6 @@ function User({ imageReducer }) {
   
   // memos & functions from the js file
   const { searchParams, socials, details, onGameRowClick } = UserLogic(); 
-
-  // helper functions
-  const { getUrlType } = EmbedHelper();
 
   /* ===== USER COMPONENT ===== */
   return (
@@ -65,9 +61,7 @@ function User({ imageReducer }) {
       {/* Featured video - Render the user's featured video, if there is one */}
       { profile.featured_video &&
         <Container title="Featured Video" largeTitle>
-          <div className={ getUrlType(profile.featured_video) !== "twitter" ? styles.video : styles.twitter }>
-            <EmbededVideo url={ profile.featured_video } />
-          </div>
+          <EmbededVideo url={ profile.featured_video } />
           { profile.video_description &&
             <p>{ profile.video_description }</p>
           }

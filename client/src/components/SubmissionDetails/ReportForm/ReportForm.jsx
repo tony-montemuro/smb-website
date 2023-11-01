@@ -45,7 +45,7 @@ function ReportForm({ updateBoard }) {
           <>
             { /* Report form information - tell the user about reporting this submission */ }
             <h2>If this submission has issues, report it here.</h2>
-            <span>In your message, please explain your reasoning for reporting the submission. Be specific!</span>
+            <p>In your message, please explain your reasoning for reporting the submission. Be specific!</p>
             <p>You have <b>{ user.profile.report_token }</b> reports left. Report counts reset in <CountdownTimer />.</p>
             
             { /* Report form - allow user to leave a message with the report */ }

@@ -6,7 +6,6 @@ import styles from "./SubmissionDetails.module.css";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import DetailedRecord from "../DetailedRecord/DetailedRecord.jsx";
-import EmbedHelper from "../../helper/EmbedHelper";
 import EmbededVideo from "../EmbededVideo/EmbededVideo.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import ReportForm from "./ReportForm/ReportForm.jsx";
@@ -31,7 +30,6 @@ function SubmissionDetails({ level, updateBoard }) {
 
   // helper functions
   const { dateB2F, cleanLevelName } = FrontendHelper();
-  const { getUrlType } = EmbedHelper();
 
   /* ===== SUBMISSION DETAILS COMPONENT ===== */
   return (
@@ -47,10 +45,14 @@ function SubmissionDetails({ level, updateBoard }) {
       { /* Render a special message if the submission used tools. */ }
       { submission.tas && <p><b>Note:</b> This run is tool-assisted (TAS), and will not count toward any rankings.</p> }
 
+      <hr />
+
       { /* Submission details video - render the embeded video within this container */ }
-      <div className={ getUrlType(submission.proof) !== "twitter" ? styles.video : "" }>
+      <div className={ styles.video }>
         <EmbededVideo url={ submission.proof } />
       </div>
+
+      <hr />
 
       { /* Submission details info - render the submission details within this unordered list */ }
       <ul className={ styles.details }>

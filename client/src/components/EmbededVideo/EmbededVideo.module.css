@@ -1,0 +1,41 @@
+.embededVideo {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-top: 56.25%;
+}
+
+.player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.embededTweet {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.missing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.missing h3 {
+    margin: 0;
+}
+
+.missing a {
+    overflow-wrap: anywhere;
+}
+
+.url {
+    display: flex;
+}

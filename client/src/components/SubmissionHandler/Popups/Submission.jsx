@@ -8,7 +8,6 @@ import styles from "./Submission.module.css";
 import AddIcon from "@mui/icons-material/Add";
 import Checkbox from "@mui/material/Checkbox";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import EmbedHelper from "../../../helper/EmbedHelper";
 import EmbededVideo from "../../../components/EmbededVideo/EmbededVideo.jsx";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
@@ -55,7 +54,6 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
 
   // helper functions
   const { cleanLevelName, recordB2F, dateB2F } = FrontendHelper();
-  const { getUrlType } = EmbedHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -96,8 +94,9 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
       <div className={ styles.body }>
 
         { /* Left side - contains the embeded video player */ }
-        <div className={ styles.left } style={ getUrlType(submission.proof) !== "twitter" ? { height: "60vh" } : null }>
+        <div className={ styles.left }>
           <EmbededVideo url={ submission.proof } />
+          { !submission.proof && <h3><em>Please keep this in mind as you make your decision!</em></h3> }
         </div>
 
         { /* Right side - contains the submission form */ }
