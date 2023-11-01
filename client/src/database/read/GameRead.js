@@ -178,7 +178,7 @@ const GameRead = () => {
                 .from("game")
                 .select("abb, custom, name", { count: "exact" })
                 .in("custom", customFilter)
-                .ilike("name", `%${ userInput }%`)
+                .or(`name.ilike.%${ userInput }%,abb.ilike.%${ userInput }%`)
                 .order("custom")
                 .order("id")
                 .range(start, end);
