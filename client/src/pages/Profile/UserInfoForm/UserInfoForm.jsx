@@ -212,7 +212,7 @@ function UserInfoForm({ countries }) {
 
           { /* Form button: button user uses to complete the form. Will disable while application processes form. */ }
           <div className={ styles.btns }>
-            { user.profile && <button type="button" disabled={ !hasChanged() || form.uploading } onClick={ handleReset }>Reset All</button> }
+            { user.profile && <button type="button" className="cancel" disabled={ !hasChanged() || form.uploading } onClick={ handleReset }>Reset All</button> }
             <button type="submit" disabled={ form.uploading }>{ user.profile ? "Update " : "Create " }Profile</button>
           </div>
 

@@ -5,6 +5,7 @@ import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import DetailedRecord from "../../components/DetailedRecord/DetailedRecord";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername";
 import FrontendHelper from "../../helper/FrontendHelper";
+import LiveIcon from "../../assets/svg/Icons/LiveIcon.jsx";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
 function LevelboardRow({ submission, imageReducer, level, worldRecord, onClickFunc }) {
@@ -12,6 +13,7 @@ function LevelboardRow({ submission, imageReducer, level, worldRecord, onClickFu
 
   // helper functions
   const { getTimeAgo, recordB2F } = FrontendHelper();
+  console.log(submission);
 
   /* ===== VARIABLES ===== */
   const location = useLocation();
@@ -40,12 +42,12 @@ function LevelboardRow({ submission, imageReducer, level, worldRecord, onClickFu
       </td>
       <td>{ getTimeAgo(submission.submitted_at) }</td>
       <td>{ submission.monkey.monkey_name }</td>
-      <td>{ submission.platform.platform_abb }</td>
+      <td title={ submission.platform.platform_name }>{ submission.platform.platform_abb }</td>
       <td>{ submission.region.region_name }</td>
       <td>
         { submission.proof && 
           <div className={ styles.svgWrapper }>
-            <VideocamIcon titleAccess="Has proof" sx={{ color: "black" }} />
+            { submission.live ? <LiveIcon /> : <VideocamIcon titleAccess="Has proof" /> }
           </div>
         }
       </td>
@@ -56,7 +58,7 @@ function LevelboardRow({ submission, imageReducer, level, worldRecord, onClickFu
           </div>
         }
       </td>
-      <td>
+      <td title="Tool-assisted speedrun">
         { submission.tas && "TAS" }
       </td>
     </tr>
