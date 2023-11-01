@@ -12,22 +12,30 @@ function UserSearch({ usersPerPage, imageReducer = null, userRowOptions }) {
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
   const [searchInput, setSearchInput] = useState("");
+  const [isComponentMounted, setIsComponentMounted] = useState(false);
 
   // states and functions from the js file
-  const { users, updateResults } = UserSearchLogic();
+  const { users, searchUsers } = UserSearchLogic();
 
   /* ===== EFFECTS ===== */
 
+  // code that is excuted when the component mounts
+  useEffect(() => {
+    setIsComponentMounted(true);
+  }, []);
+
   // code that is executed when the component mounts OR when user makes changes pages AND/OR makes a change to the search bar
   useEffect(() => {
-    updateResults(searchInput, usersPerPage, pageNum);
+    if (isComponentMounted) {
+      searchUsers(searchInput, usersPerPage, pageNum);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNum]);
 
   // code that is executed when the component mounts OR when users makes a change to searchbar input
   useEffect(() => {
     if (pageNum === 1) {
-      updateResults(searchInput, usersPerPage, pageNum);
+      searchUsers(searchInput, usersPerPage, pageNum);
     } else {
       setPageNum(1);
     }

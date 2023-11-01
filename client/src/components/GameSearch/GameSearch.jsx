@@ -14,9 +14,10 @@ function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
   const [gameTypeFilter, setGameTypeFilter] = useState(undefined)
   const [pageNum, setPageNum] = useState(1);
   const [searchInput, setSearchInput] = useState("");
+  const [isComponentMounted, setIsComponentMounted] = useState(false);
 
   // states and functions from the js file
-  const { games, updateResults } = GameSearchLogic();
+  const { games, searchGames } = GameSearchLogic();
 
   /* ===== VARIABLES ===== */
   const buttons = [
@@ -37,16 +38,23 @@ function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component mounts OR when user makes changes pages AND/OR makes a change to the search bar
+  // code that is executed when the component mounts
   useEffect(() => {
-    updateResults(searchInput, gamesPerPage, pageNum, gameTypeFilter);
+    setIsComponentMounted(true);
+  }, []);
+
+  // code that is executed when user changes pages AND/OR makes a change to the search bar
+  useEffect(() => {
+    if (isComponentMounted) {
+      searchGames(searchInput, gamesPerPage, pageNum, gameTypeFilter);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNum]);
 
   // code that is executed when the component mounts OR when users makes a change to searchbar input
   useEffect(() => {
     if (pageNum === 1) {
-      updateResults(searchInput, gamesPerPage, pageNum, gameTypeFilter);
+      searchGames(searchInput, gamesPerPage, pageNum, gameTypeFilter);
     } else {
       setPageNum(1);
     }
