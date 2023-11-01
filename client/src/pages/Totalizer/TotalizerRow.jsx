@@ -1,17 +1,20 @@
 /* ===== IMPORTS ===== */
 import { useLocation } from "react-router-dom";
+import styles from "./Totalizer.module.css";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 
-function TotalizerRow({ row, imageReducer }) {
-  /* ===== VARIABLES ===== */
-  const location = useLocation();
-  const type = location.pathname.split("/")[5];
-
+function TotalizerRow({ row, topTotal, imageReducer }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
   const { secondsToHours } = FrontendHelper();
+  
+  /* ===== VARIABLES ===== */
+  const location = useLocation();
+  const type = location.pathname.split("/")[5];
+  const difference = type === "score" ? topTotal-row.total : row.total-topTotal;
+  const totalDifference = secondsToHours(difference, type);
 
   /* ===== TOTALIZER ROW COMPONENT ===== */
   return (
@@ -20,7 +23,19 @@ function TotalizerRow({ row, imageReducer }) {
       <td>
         <DetailedUsername imageReducer={ imageReducer } profile={ row.profile } />
       </td>
-      <td>{ secondsToHours(row.total, type) }</td>
+      <td>
+        <div className={ styles.total }>
+          { secondsToHours(row.total, type) }
+          { row.position !== 1 && 
+            <span 
+              className={ styles.difference }
+              title={ `${ totalDifference } ${ type === "score" ? "points" : "hours" } off first place` }
+            >
+              -{ totalDifference }
+            </span> 
+          }
+        </div>
+      </td>
     </tr>  
   );
 };

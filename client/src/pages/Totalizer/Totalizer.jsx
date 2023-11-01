@@ -109,7 +109,7 @@ function Totalizer({ imageReducer }) {
                   numCols={ TABLE_LENGTH }
                 >
                   { totals[tableState].map(row => {
-                    return <TotalizerRow row={ row } imageReducer={ imageReducer } key={ row.profile.id } />
+                    return <TotalizerRow row={ row } topTotal={ totals[tableState][0].total } imageReducer={ imageReducer } key={ row.profile.id } />
                   })}
                 </TableContent>
               :

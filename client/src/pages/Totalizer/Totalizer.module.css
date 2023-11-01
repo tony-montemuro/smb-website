@@ -26,6 +26,16 @@
     margin: 0;
 }
 
+.total {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.difference {
+    font-size: 12px;
+}
+
 /* ===== MEDIA QUERY FOR SMALLER DEVICE ===== */
 
 @media (max-width: 550px) {

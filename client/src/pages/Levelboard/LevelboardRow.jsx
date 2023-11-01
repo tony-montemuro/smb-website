@@ -28,12 +28,14 @@ function LevelboardRow({ submission, imageReducer, level, worldRecord, onClickFu
       <td>
         <div className={ styles.record }>
           <DetailedRecord submission={ submission } iconSize="medium" timerType={ level.timer_type } />
-          <span 
-            className={ styles.difference } 
-            title={ `${ worldRecordDiff } ${ type === "score" ? "points" : "seconds" } off first place` }
-          >
-            { submission.position !== 1 && `-${ worldRecordDiff }` }
-          </span>
+            { submission.position !== 1 &&
+              <span 
+                className={ styles.difference } 
+                title={ `${ worldRecordDiff } ${ type === "score" ? "points" : "seconds" } off first place` }
+              >
+                -{ worldRecordDiff } 
+              </span> 
+            }
         </div>
       </td>
       <td>{ getTimeAgo(submission.submitted_at) }</td>
