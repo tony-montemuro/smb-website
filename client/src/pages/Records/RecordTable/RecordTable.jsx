@@ -23,9 +23,9 @@ function RecordTable({ recordTable, filter, mode, allGreater }) {
           { /* Record table header - specifies the information displayed in each cell of the record table */ }
           <thead>
             <tr>
-              <th>Level Name</th>
-              <th>{ capitalize(type) }</th>
-              <th>Player(s)</th>
+              <th className={ styles.level }>Level Name</th>
+              <th className={ styles.type }>{ capitalize(type) }</th>
+              <th className={ styles.players }>Player(s)</th>
             </tr>
           </thead>
 

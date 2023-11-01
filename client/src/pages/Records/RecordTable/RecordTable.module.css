@@ -1,15 +1,11 @@
-.recordTable {
-    table-layout: fixed !important;
-}
-
-.recordTable th:nth-child(1), .recordTable td:nth-child(1) {
+.level {
     width: 35%;
 }
 
-.recordTable th:nth-child(2), .recordTable td:nth-child(2) {
+.record {
     width: 20%;
 }
 
-.recordTable th:nth-child(3), .recordTable td:nth-child(3) {
+.players {
     width: 50%;
 }

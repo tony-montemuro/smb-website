@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { Fragment } from "react";
 import { Link, useLocation } from "react-router-dom";
+import styles from "./RecordTable.module.css";
 import FrontendHelper from "../../../helper/FrontendHelper.js";
 import Username from "../../../components/Username/Username.jsx";
 
@@ -22,12 +23,12 @@ function RecordTableRow({ row, filter, allRecord, isAllGreater }) {
   /* ===== RECORD TABLE ROW ===== */
   return (
     <tr key={ row.level.name }>
-      <td>
+      <td className={ styles.level }>
         <Link to={ `/games/${ abb }/${ category }/${ type }/${ row.level.name }` }>
           { cleanLevelName(row.level.name) }
         </Link>
       </td>
-      <td>
+      <td className={ styles.record }>
         { row.record && recordB2F(row.record, type, row.level.timer_type) } 
         { row.record && filter === "live" && isAllGreater && 
           <span 
@@ -37,7 +38,7 @@ function RecordTableRow({ row, filter, allRecord, isAllGreater }) {
           </span>
         }
       </td>
-      <td>
+      <td className={ styles.players }>
         { row.profiles.map((profile, index) => {
           return (
             <Fragment key={ profile.id }>
