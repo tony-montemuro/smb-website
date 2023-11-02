@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../../utils/Contexts";
 import styles from "./Profile.module.css";
-import AbcIcon from "@mui/icons-material/Abc";
 import Avatar from "../../Avatar/Avatar.jsx";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import ModIcon from "../../../assets/svg/Icons/ModIcon.jsx";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded';
@@ -84,7 +84,7 @@ function ProfileExplorer({ imageReducer }) {
           { isModerator() &&
             <div className={ styles.profileLink }>
               <Link to="/moderator" className="center">
-                <AbcIcon titleAccess="Moderator Hub" />
+                <ModIcon />
               </Link>
             </div>
           }
