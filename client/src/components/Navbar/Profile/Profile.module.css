@@ -2,12 +2,14 @@
 .btn {
     background-color: transparent;
     border: none;
-    color: rgb(var(--color-text));
+    color: rgb(var(--color-link));
     padding: 4px;
+    font-size: 16px;
 }
 
 .btn:hover {
     background-color: rgb(var(--color-nav-hover)) !important;
+    color: rgb(var(--color-link-hover));
 }
 
 .details {
