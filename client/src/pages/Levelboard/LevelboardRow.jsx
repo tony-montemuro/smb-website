@@ -13,7 +13,6 @@ function LevelboardRow({ submission, imageReducer, level, worldRecord, onClickFu
 
   // helper functions
   const { getTimeAgo, recordB2F } = FrontendHelper();
-  console.log(submission);
 
   /* ===== VARIABLES ===== */
   const location = useLocation();

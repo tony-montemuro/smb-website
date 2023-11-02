@@ -58,19 +58,22 @@ function User({ imageReducer }) {
 
       </Container>
 
-      {/* Featured video - Render the user's featured video, if there is one */}
-      { profile.featured_video &&
-        <Container title="Featured Video" largeTitle>
-          <EmbededVideo url={ profile.featured_video } />
-          { profile.video_description &&
-            <p>{ profile.video_description }</p>
-          }
-        </Container>
-      }
-
-      { /* Recent submissions - Render the user's recent submissions */ }
-      <Container title="Recent Submissions" href={ `/recent-submissions?profile_id=${ profile.id }` } largeTitle>
-        <RecentSubmissionsTable searchParams={ searchParams } renderGame renderLevelContext />
+      { /* Roles - Render all the user's roles */ }
+      <Container title="Roles" largeTitle>
+        { profile.administrator &&
+          <>
+            <h2>Site Administrator</h2>
+            <p>This user is responsible for maintaining SMBElite.</p>
+          </>
+        }
+        { profile.moderated_games.length > 0 &&
+          <>
+            <h2>Game Moderator</h2>
+            <p>This user is responsible for moderating the charts of at least <strong>1</strong> game. To see the specific list of games, go to the <strong>Game Moderators</strong> section.</p>
+          </>
+        }
+        <h2>Normal User</h2>
+        <p>This user has all of the privileges granted to newly registered users: submitting scores/times, updating submissions, reporting submissions, & updating their personal profile.</p>
       </Container>
 
       { /* Games moderated - Render each game the user moderators, if at least one exists */ }
@@ -89,6 +92,21 @@ function User({ imageReducer }) {
           })}
         </Container>
       }
+
+      {/* Featured video - Render the user's featured video, if there is one */}
+      { profile.featured_video &&
+        <Container title="Featured Video" largeTitle>
+          <EmbededVideo url={ profile.featured_video } />
+          { profile.video_description &&
+            <p>{ profile.video_description }</p>
+          }
+        </Container>
+      }
+
+      { /* Recent submissions - Render the user's recent submissions */ }
+      <Container title="Recent Submissions" href={ `/recent-submissions?profile_id=${ profile.id }` } largeTitle>
+        <RecentSubmissionsTable searchParams={ searchParams } renderGame renderLevelContext />
+      </Container>
 
     </div>
   );
