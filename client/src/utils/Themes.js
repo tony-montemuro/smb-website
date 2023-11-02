@@ -12,7 +12,7 @@ export const MuiTheme = createTheme({
             main: "rgb(var(--color-link))"
         },
         secondary: {
-        main: "#039be5"
+            main: "#039be5"
         }
     },
     typography: {

@@ -58,8 +58,12 @@ button {
     white-space: nowrap;
 }
 
-button:not(:disabled):hover {
+button:hover {
     background-color: rgb(var(--color-button-hover));
+}
+
+button[disabled]:hover {
+    background-color: inherit;
 }
 
 button[disabled] {

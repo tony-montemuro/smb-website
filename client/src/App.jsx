@@ -36,6 +36,7 @@ import ResourcesLayout from "./components/ResourcesLayout/ResourcesLayout.jsx";
 import SignIn from "./pages/SignIn/SignIn.jsx";
 import SubmissionHistory from "./pages/SubmissionHistory/SubmissionHistory.jsx";
 import Support from "./pages/Support/Support.jsx";
+import Toast from "./components/Toast/Toast.jsx";
 import Totalizer from "./pages/Totalizer/Totalizer.jsx";
 import User from "./pages/User/User.jsx";
 import Users from "./pages/Users/Users.jsx";
@@ -50,12 +51,15 @@ function App() {
 
   // states and functions from the app js file
   const {
-    user,
+    user, 
+    toastContent,
     images,
     dispatchImages,
     updateUser,
     isModerator,
-    callSessionListener
+    callSessionListener,
+    addToastMessage,
+    handleClose
   } = AppLogic(addMessage);
 
   /* ===== VARIABLES ===== */
@@ -87,6 +91,8 @@ function App() {
                 message={ message } 
                 onClose={ handleMessageClose }
               />
+              <button onClick={ () => addToastMessage("Your record was successfully submitted!", "success", null) }>Test</button>
+              <Toast toastContent={ toastContent } handleClose={ handleClose } />
 
               { /* App routes */ }
               <Routes>
