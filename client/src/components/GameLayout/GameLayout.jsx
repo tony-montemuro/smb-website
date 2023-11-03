@@ -1,5 +1,5 @@
 /* ===== IMPORTS ====== */
-import { GameContext, MessageContext } from "../../utils/Contexts";
+import { GameContext, ToastContext } from "../../utils/Contexts";
 import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -20,8 +20,8 @@ function GameLayout({ imageReducer }) {
 
   /* ===== CONTEXTS ====== */
 
-  // add message function from message context
-  const { addMessage } = useContext(MessageContext);
+  // add message function from toast context
+  const { addToastMessage } = useContext(ToastContext);
 
   /* ===== STATES ===== */
   const [game, setGame] = useState(undefined);
@@ -44,7 +44,7 @@ function GameLayout({ imageReducer }) {
       
       // if game does not exist, render error message and navigate back home
       if (!game) {
-        addMessage("Game does not exist.", "error");
+        addToastMessage("Game does not exist.", "error", 6000);
         navigate("/");
         return;
       }

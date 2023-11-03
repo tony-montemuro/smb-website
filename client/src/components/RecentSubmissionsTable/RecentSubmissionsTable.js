@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { ToastContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import PageControls from "../PageControls/PageControls.js";
@@ -13,8 +13,8 @@ const RecentSubmissionsTable = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -42,7 +42,7 @@ const RecentSubmissionsTable = () => {
             const { submissions, count } = await queryRecentSubmissions(start, end, searchParams);
             setSubmissions({ data: submissions, total: count });
         } catch (error) {
-            addMessage("There was a problem loading the recent submissions.", "error");
+            addToastMessage("Recent submissions data failing to load.", "error", 7000);
         }
     };
 

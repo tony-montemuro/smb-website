@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
+import { ModeratorLayoutContext, ToastContext, UserContext } from "../../utils/Contexts";
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -31,12 +31,12 @@ function ModeratorLayout() {
   const navigate = useNavigate();
 
   /* ===== CONTEXTS ===== */
-  
+
+  // add message function from toast context
+  const { addToastMessage } = useContext(ToastContext);
+
   // user state & is moderator function from user context
   const { user, isModerator } = useContext(UserContext);
-
-  // add message function from message context
-  const { addMessage } = useContext(MessageContext);
 
   /* ===== EFFECTS ===== */
 
@@ -46,7 +46,7 @@ function ModeratorLayout() {
     if (user.id !== undefined) {
       // if user is not logged in or a moderator of at least 1 game, render error, navigate to homepage, and render early
       if (!(isModerator())) {
-        addMessage("Forbidden access.", "error");
+        addToastMessage("Forbidden access.", "error", 5000);
         navigate("/");
         return;
       }

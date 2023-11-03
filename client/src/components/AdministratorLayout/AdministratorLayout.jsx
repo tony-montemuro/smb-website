@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, UserContext } from "../../utils/Contexts.js";
+import { ToastContext, UserContext } from "../../utils/Contexts.js";
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -26,8 +26,8 @@ function AdministratorLayout() {
 
   /* ===== CONTEXTS ===== */
 
-  // add message state from message context
-  const { addMessage } = useContext(MessageContext);
+  // add message function from toast context
+  const { addToastMessage } = useContext(ToastContext);
 
   // user state from user context
   const { user } = useContext(UserContext);
@@ -40,7 +40,7 @@ function AdministratorLayout() {
     if (user.id !== undefined) {
       // if user is not logged in or is not an administrator, render error, navigate to homepage, and render early
       if (!user.profile || !user.profile.administrator) {
-        addMessage("Forbidden access.", "error");
+        addToastMessage("Forbidden access.", "error", 5000);
         navigate("/");
         return;
       }

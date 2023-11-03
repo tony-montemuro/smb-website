@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { ToastContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import GameRead from "../../database/read/GameRead.js";
 import PageControls from "../PageControls/PageControls.js";
@@ -10,8 +10,8 @@ const GameSearch = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [games, setGames] = useState(defaultGames);
@@ -61,7 +61,7 @@ const GameSearch = () => {
             setGames({ data: games, total: count });
             if (games.length === 0) setBadSearch(badSearch => badSearch ? badSearch : userInput);
         } catch (error) {
-            addMessage("Game data failed to load.", "error");
+            addToastMessage("Games data failing to load.", "error", 6000);
         }
     };
 
