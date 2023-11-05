@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, MessageContext } from "../../utils/Contexts";
+import { GameContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Game.module.css";
@@ -15,9 +15,6 @@ function Game() {
 
   // game state from game context
   const { game } = useContext(GameContext);
-
-  // add message function from message context
-  const { addMessage } = useContext(MessageContext);
 
   /* ===== HELPER FUNCTIONS ===== */
   const { categoryB2F } = FrontendHelper();
@@ -56,8 +53,8 @@ function Game() {
   useEffect(() => {
     // special case: we are attempting to access a game page with a non-valid category
     if (category && !(categories.includes(category))) {
-      addMessage("The page you requested does not exist.", "error");
-      navigate("/");
+      setSelectedCategory("main");
+      navigate(`/games/${ abb }`);
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

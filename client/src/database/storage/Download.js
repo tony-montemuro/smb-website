@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { ToastContext } from "../../utils/Contexts";
 import { supabase } from "../SupabaseClient";
 import { useContext } from "react";
 
 const Download = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -31,7 +31,7 @@ const Download = () => {
             return URL.createObjectURL(data);
 
         } catch (error) {
-            addMessage("Resource(s) failed to load.", "error");
+            addToastMessage("One or more image resources failed to load.", "error", 7000);
             return null;
         }
     };

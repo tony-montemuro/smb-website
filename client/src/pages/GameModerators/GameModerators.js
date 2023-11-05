@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { ToastContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import GameRead from "../../database/read/GameRead";
 import GameProfileDelete from "../../database/delete/GameProfileDelete";
@@ -10,8 +10,8 @@ import StylesHelper from "../../helper/StylesHelper";
 const GameModerators = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [game, setGame] = useState(undefined);
@@ -40,7 +40,7 @@ const GameModerators = () => {
             setGame(game ? games.find(row => row.abb === game.abb) : games[0]);
             setGames(games);
         } catch (error) {
-            addMessage("There was an error fetching the moderator data for each game.", "error");
+            addToastMessage("There was an error fetching the moderator data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 
@@ -70,10 +70,10 @@ const GameModerators = () => {
         try {
             await deleteModerator(game.abb, moderator.id);
             await queryGames();
-            addMessage("A moderator was successfully removed!", "success");
+            addToastMessage("Moderator was successfully removed!", "success", 5000);
             closePopup();
         } catch (error) {
-            addMessage("There was an error trying to remove this moderator. Refreshing the page is highly recommended.", "error");
+            addToastMessage("There was an error trying to remove this moderator. Refreshing the page is highly recommended.", "error", 8000);
         } finally {
             setSubmitting(false);
         };
@@ -91,13 +91,13 @@ const GameModerators = () => {
         try {
             await insertModerator(game.abb, moderator.id);
             await queryGames();
-            addMessage("A moderator was successfully added!", "success");
+            addToastMessage("Moderator was successfully added!", "success", 5000);
             closePopup();
         } catch (error) {
             if (error.code === "23505") {
-                addMessage("This user is already a moderator for this game!", "error");
+                addToastMessage("This user is already a moderator for this game!", "error", 5000);
             } else {
-                addMessage("There was an error trying to add this moderator. Refreshing the page is highly recommended.", "error");   
+                addToastMessage("There was an error trying to add this moderator. Refreshing the page is highly recommended.", "error", 8000);   
             }
         } finally {
             setSubmitting(false);
