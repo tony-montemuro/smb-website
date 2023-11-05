@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { ToastContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import RPCRead from "../../database/read/RPCRead";
@@ -10,9 +10,9 @@ const UserLayout = () => {
     const navigate = useNavigate();
 
     /* ===== CONTEXTS ===== */
-
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
     
@@ -34,7 +34,7 @@ const UserLayout = () => {
             const profile = await getProfile(profileId);
             return profile;
         } catch (error) {
-            addMessage("There was an issue fetching this users data.", "error");
+            addToastMessage("There was an issue fetching this users information.", "error", 7000);
             return undefined;
         };
     };

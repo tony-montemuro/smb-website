@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { ToastContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import PageControls from "../PageControls/PageControls.js";
 import ProfileRead from "../../database/read/ProfileRead";
@@ -10,8 +10,8 @@ const UserSearch = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [users, setUsers] = useState(defaultUsers);
@@ -59,7 +59,7 @@ const UserSearch = () => {
             setUsers({ data: profiles, total: count });
             if (profiles.length === 0) setBadSearch(badSearch => badSearch ? badSearch : userInput);
         } catch (error) {
-            addMessage("Profiles failed to load.", "error");
+            addToastMessage("Users data failing to load.", "error", 6000);
         };
     };
 

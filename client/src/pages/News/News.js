@@ -1,11 +1,17 @@
 /* ===== IMPORTS ===== */
-import { useState } from "react";
+import { ToastContext } from "../../utils/Contexts.js";
+import { useContext, useState } from "react";
 import PostRead from "../../database/read/PostRead";
 import PageControls from "../../components/PageControls/PageControls.js";
 
 const News = () => {
+    /* ===== CONTEXTS ===== */
+
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
+
     /* ===== STATES ===== */
-    const [posts, setPosts] = useState({ data: undefined, total: 9999999999 }); // set total to some arbitrarily large number for now
+    const [posts, setPosts] = useState({ data: undefined, total: 0 });
 
     /* ===== FUNCTIONS ===== */
 
@@ -25,19 +31,21 @@ const News = () => {
         // first, compute the range of posts to grab based on the parameters
         const { start, end } = getStartAndEnd(num, pageNumber);
 
-        // then, we can grab the posts given our range, as well as the total number of posts
-        const { postList, count } = await queryPosts(start, end);
-        
-        // next, split each post body into "lines", so that formatting can be preserved according to new line characters
-        for (let post of postList) {
-            post.body = post.body.split("\n");
-        }
+        try {
+            const { postList, count } = await queryPosts(start, end);
+            
+            // next, split each post body into "lines", so that formatting can be preserved according to new line characters
+            for (let post of postList) {
+                post.body = post.body.split("\n");
+            }
+            setPosts({ 
+                data: postList,
+                total: count
+            });
 
-        // finally, update the posts state hook
-        setPosts({ 
-            data: postList,
-            total: count
-        });
+        } catch (error) {
+            addToastMessage("News posts failed to load. If reloading the page does not work, the system may be experiencing an outage.", "error", 10000);
+        }
     };
 
     return { posts, getPosts };

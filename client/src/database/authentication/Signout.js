@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { ToastContext } from "../../utils/Contexts";
 import { supabase } from "../SupabaseClient";
 import { useContext } from "react";
 
 const Signout = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -28,11 +28,10 @@ const Signout = () => {
             }
 
             // if sign out was a success, let's inform the user
-            addMessage("You have successfully logged out!", "success");
+            addToastMessage("You have successfully logged out!", "success", 7000);
 
         } catch (error) {
-            // if there was any error in the sign out phase, inform the user
-            addMessage(error.message, "error");
+            addToastMessage("There was a problem logging you out.", "error", 7000);
         }
     };
 
