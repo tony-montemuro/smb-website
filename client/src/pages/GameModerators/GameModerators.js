@@ -73,7 +73,7 @@ const GameModerators = () => {
             addMessage("A moderator was successfully removed!", "success");
             closePopup();
         } catch (error) {
-            addMessage("There was an error trying to remove this moderator. Reloading the page is highly recommended.", "error");
+            addMessage("There was an error trying to remove this moderator. Refreshing the page is highly recommended.", "error");
         } finally {
             setSubmitting(false);
         };
@@ -97,7 +97,7 @@ const GameModerators = () => {
             if (error.code === "23505") {
                 addMessage("This user is already a moderator for this game!", "error");
             } else {
-                addMessage("There was an error trying to add this moderator. Reloading the page is highly recommended.", "error");   
+                addMessage("There was an error trying to add this moderator. Refreshing the page is highly recommended.", "error");   
             }
         } finally {
             setSubmitting(false);

@@ -59,8 +59,8 @@ function App() {
     isModerator,
     callSessionListener,
     addToastMessage,
-    handleClose
-  } = AppLogic(addMessage);
+    handleToastClose
+  } = AppLogic();
 
   /* ===== VARIABLES ===== */
   const imageReducer = { reducer: images, dispatchImages: dispatchImages };
@@ -92,7 +92,7 @@ function App() {
                   message={ message } 
                   onClose={ handleMessageClose }
                 />
-                <Toast toastContent={ toastContent } handleClose={ handleClose } />
+                <Toast toastContent={ toastContent } handleClose={ handleToastClose } />
 
                 { /* App routes */ }
                 <Routes>

@@ -84,7 +84,7 @@ const ModeratorLayout = () => {
             const games = await getUnapprovedCounts(filteredGames);
             dispatchGames({ type: "all", value: games });
         } catch (error) {
-            addToastMessage("Submission metadata failed to load. If reloading the page does not work, the system may be experiencing an outage.", "error", 10000);
+            addToastMessage("Submission metadata failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
             dispatchGames({ type: "all", value: [] });
         };
     };

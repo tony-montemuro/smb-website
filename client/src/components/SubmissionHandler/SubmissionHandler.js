@@ -49,7 +49,7 @@ const SubmissionHandler = (isUnapproved) => {
             const submissions = await query;
             setSubmissions(submissions);
         } catch (error) {
-            addToastMessage("Submission data failed to load. If reloading the page does not work, the system may be experiencing an outage.", "error", 10000);
+            addToastMessage("Submission data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 

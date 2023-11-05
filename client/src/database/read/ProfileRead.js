@@ -7,8 +7,7 @@ const ProfileRead = () => {
     // FUNCTION 1: queryUserProfile - async function that makes a call to supabase to get the profile object for a given user
     // PRECONDITIONS (1 parameter):
     // 1.) userId - a string corresponding to the uuid of a user, typically the currently signed-in user
-    // 2.) addMessage - a function that is used to add messages to the messages array defined in `App.js`. used in the event
-    // of an authenticated user who has no profile yet
+    // 2.) addMessage - a function that is used to render message to user. used in the case of a new authenticated user w/no profile
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the profile object is simply returned
     // otherwise, an error is thrown to be handled by the caller function
@@ -46,7 +45,7 @@ const ProfileRead = () => {
         } catch (error) {
             // special case: user is authenticated, but has not created a profile yet
             if (error.code === "PGRST116") {
-                addMessage("Welcome to SMBElite! Please create your profile to get started!", "success");
+                addMessage("Welcome to SMBElite! Please create your profile to get started!", "success", 15000);
                 return null;
             } 
             
