@@ -16,7 +16,7 @@ function Toast({ toastContent, handleClose }) {
       action={ <Action handleClose={ handleClose } /> }
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       autoHideDuration={ timer }
-      message={ toastContent }
+      message={ message }
       onClose={ handleClose }
       open={ open }
     >

@@ -92,7 +92,6 @@ function App() {
                   message={ message } 
                   onClose={ handleMessageClose }
                 />
-                <button onClick={ () => addToastMessage("Your record was successfully submitted!", "success", null) }>Test</button>
                 <Toast toastContent={ toastContent } handleClose={ handleClose } />
 
                 { /* App routes */ }

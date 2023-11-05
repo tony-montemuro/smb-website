@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, UserContext } from "../../utils/Contexts";
+import { ToastContext, UserContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import RPCRead from "../../database/read/RPCRead";
 import ScrollHelper from "../../helper/ScrollHelper";
@@ -12,8 +12,8 @@ const SubmissionHandler = (isUnapproved) => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     // user state & update user function from user context
     const { user } = useContext(UserContext);
@@ -49,7 +49,7 @@ const SubmissionHandler = (isUnapproved) => {
             const submissions = await query;
             setSubmissions(submissions);
         } catch (error) {
-            addMessage("Submission data failed to load.", "error");
+            addToastMessage("Submission data failed to load. If reloading the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 
