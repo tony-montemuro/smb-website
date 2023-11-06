@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { ToastContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import RPCRead from "../../database/read/RPCRead";
@@ -19,8 +19,8 @@ const SubmissionHistory = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [submissions, setSubmissions] = useState(submissionsInit);
@@ -44,7 +44,7 @@ const SubmissionHistory = () => {
             const profile = await getProfile(profileId);
             return profile;
         } catch (error) {
-            addMessage("There was an issue fetching this users data.", "error");
+            addToastMessage("Failed to fetch some or all of Submission History data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
             return undefined;
         };
     };
@@ -65,7 +65,7 @@ const SubmissionHistory = () => {
             setSubmissions({ normal, tas });
 
         } catch (error) {
-            addMessage("Failed to fetch / update submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error")
+            addToastMessage("Failed to fetch some or all of Submission History data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
         }
     };
 

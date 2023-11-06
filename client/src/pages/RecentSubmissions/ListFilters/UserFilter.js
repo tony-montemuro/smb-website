@@ -1,15 +1,15 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, PopupContext } from "../../../utils/Contexts";
+import { PopupContext, ToastContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 
 const UserFilter = (users, dispatchFiltersData) => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
-
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
+
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -23,7 +23,7 @@ const UserFilter = (users, dispatchFiltersData) => {
         if (!(users.some(row => row.id === user.id))) {
             dispatchFiltersData({ type: "users", value: users.concat([user]) });
         } else {
-            addMessage("You have already added this user as a filter!", "error");
+            addToastMessage("You are already filtering by this user.", "error", 6000);
         }
     };
 

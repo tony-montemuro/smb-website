@@ -73,7 +73,7 @@ const GameModerators = () => {
             addToastMessage("Moderator was successfully removed!", "success", 5000);
             closePopup();
         } catch (error) {
-            addToastMessage("There was an error trying to remove this moderator. Refreshing the page is highly recommended.", "error", 8000);
+            addToastMessage("There was an error trying to remove this moderator. Try refreshing the page.", "error", 8000);
         } finally {
             setSubmitting(false);
         };
@@ -97,7 +97,7 @@ const GameModerators = () => {
             if (error.code === "23505") {
                 addToastMessage("This user is already a moderator for this game!", "error", 5000);
             } else {
-                addToastMessage("There was an error trying to add this moderator. Refreshing the page is highly recommended.", "error", 8000);   
+                addToastMessage("There was an error trying to add this moderator. Try refreshing the page.", "error", 8000);   
             }
         } finally {
             setSubmitting(false);

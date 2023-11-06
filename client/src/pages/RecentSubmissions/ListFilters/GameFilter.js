@@ -1,15 +1,15 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, PopupContext } from "../../../utils/Contexts";
+import { PopupContext, ToastContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 
 const GameFilter = (games, dispatchFiltersData) => {
     /* ===== CONTEXTS ===== */
-    
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
 
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
+
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
  
     /* ===== FUNCTIONS ===== */
 
@@ -23,7 +23,7 @@ const GameFilter = (games, dispatchFiltersData) => {
         if (!(games.some(row => row.abb === game.abb))) {
             dispatchFiltersData({ type: "games", value: games.concat([game]) });
         } else {
-            addMessage("You have already added this game as a filter!", "error");
+            addToastMessage("You are already filtering by this game.", "error", 6000);
         }
     };
 
