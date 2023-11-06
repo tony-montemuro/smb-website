@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../../utils/Contexts";
 import { useContext, useState } from "react";
-import EmailLogin from "../../../database/authentication/EmailLogin";
+import Email from "../../../database/authentication/Email";
 import ValidationHelper from "../../../helper/ValidationHelper";
 
 const EmailInfoForm = () => {
@@ -22,7 +22,7 @@ const EmailInfoForm = () => {
     const { validateEmail } = ValidationHelper();
 
     // database functions
-    const { updateEmail } = EmailLogin();
+    const { updateEmail } = Email();
 
     // FUNCTION 1: handleChange - handle changes to the email form
     // PRECONDITIONS (1 parameter):
