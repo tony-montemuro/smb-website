@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { isBefore } from "date-fns";
-import { MessageContext, UserContext } from "../../utils/Contexts";
+import { UserContext, ToastContext } from "../../utils/Contexts";
 import { useContext, useReducer, useState } from "react";
 import NotificationDelete from "../../database/delete/NotificationDelete";
 import NotificationRead from "../../database/read/NotificationRead";
@@ -62,8 +62,8 @@ const Notifications = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     // user state & update user function from user context
     const { user, updateUser } = useContext(UserContext);
@@ -106,7 +106,7 @@ const Notifications = () => {
 
         } catch (error) {
             // render an error message to the client
-            addMessage("Your notifications failed to load.", "error");
+            addToastMessage("Notifications failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 
@@ -221,10 +221,10 @@ const Notifications = () => {
             setPageNum(1);
 
             // finally, render a success message to the user
-            addMessage("Notifications successfully deleted.", "success");
+            addToastMessage("Notifications successfully deleted!", "success", 5000);
 
         } catch (error) {
-            addMessage("One or more notifications failed to delete. Refresh the page and try again.", "error");
+            addToastMessage("One or more notifications failed to delete. Refresh the page and try again.", "error", 10000);
         } finally {
             dispatchNotifications({ field: "submitting", payload: false });
         }

@@ -1,7 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, UserContext } from "../../utils/Contexts";
-import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import styles from "./Post.module.css";
 import PostLogic from "./Post.js";
 import ScrollHelper from "../../helper/ScrollHelper";
@@ -14,15 +12,6 @@ function Post() {
   const BODY_HEIGHT = 25;
   const LINK_MAX_LENGTH = 256;
   const LINK_DESCRIPTION_MAX_LENGTH = 100;
-  const navigate = useNavigate();
-
-  /* ===== CONTEXTS ===== */
-
-  // add message function from message context
-  const { addMessage } = useContext(MessageContext);
-
-  // user state from user context
-  const { user } = useContext(UserContext);
 
   /* ===== STATES & FUNCTIONS ===== */
   
@@ -36,12 +25,6 @@ function Post() {
 
   // code that is executed when the component mounts
   useEffect(() => {
-    // if moderator is not also an administrator, render an error message, and navigate back to home page
-    if (!user.profile.administrator) {
-      addMessage("Forbidden access.", "error");
-      navigate("/");
-      return;
-    }
     scrollToTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

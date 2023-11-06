@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, MessageContext } from "../../utils/Contexts";
+import { GameContext, ToastContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import styles from "./Totalizer.module.css";
@@ -18,8 +18,8 @@ function Totalizer({ imageReducer }) {
   // game state from game context
   const { game } = useContext(GameContext);
 
-  // add message function from message context
-  const { addMessage } = useContext(MessageContext);
+  // add message function from toast context
+  const { addToastMessage } = useContext(ToastContext);
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
@@ -31,6 +31,7 @@ function Totalizer({ imageReducer }) {
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
+  const abb = path[2];
   const category = path[3];
   const type = path[5];
   const categories = getGameCategories(game);
@@ -51,15 +52,15 @@ function Totalizer({ imageReducer }) {
   useEffect(() => {
     // special case #1: we are attempting to access a totalizer page with a non-valid category or non-practice mode category
     if (!(categories.includes(category) && isPracticeMode(category))) {
-      addMessage("The page you requested does not exist.", "error");
-      navigate("/");
+      addToastMessage("Ranking does not exist.", "error", 5000);
+      navigate(`/games/${ abb }`);
       return;
     }
 
     // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
     if (!(types.includes(type))) {
-      addMessage("The page you requested does not exist.", "error");
-      navigate("/");
+      addToastMessage("Ranking does not exist.", "error", 5000);
+      navigate(`/games/${ abb }`);
       return;
     }
 

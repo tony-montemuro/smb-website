@@ -45,7 +45,7 @@ const ProfileRead = () => {
         } catch (error) {
             // special case: user is authenticated, but has not created a profile yet
             if (error.code === "PGRST116") {
-                addMessage("Welcome to SMBElite! Please create your profile to get started!", "success", 15000);
+                addMessage("Welcome to SMBElite! Please create your profile to get started!", "info", 15000);
                 return null;
             } 
             

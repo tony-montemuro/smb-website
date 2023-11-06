@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { MessageContext, UserContext } from "../../utils/Contexts";
+import { ToastContext, UserContext } from "../../utils/Contexts";
 import styles from "./Notifications.module.css";
 import Container from "../../components/Container/Container.jsx";
 import LoadingTable from "../../components/LoadingTable/LoadingTable";
@@ -18,8 +18,8 @@ function Notifications() {
   // user state from user context
   const { user } = useContext(UserContext);
 
-  // addMessage function from message context
-  const { addMessage } = useContext(MessageContext);
+  // add message function from toast context
+  const { addToastMessage } = useContext(ToastContext);
 
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 7;
@@ -57,7 +57,7 @@ function Notifications() {
       // if not user.id (meaning user is null), current user is not authenticated. thus, deny
       // access to this page.
       if (!user.id) {
-        addMessage("You cannot access this page.", "error");
+        addToastMessage("Forbidden access.", "error", 5000);
         navigate("/");
         return;
       }

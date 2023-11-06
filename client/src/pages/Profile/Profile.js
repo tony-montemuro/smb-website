@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { ToastContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import CountriesRead from "../../database/read/CountriesRead";
 
 const Profile = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -25,7 +25,7 @@ const Profile = () => {
             const countries = await queryCountries();
             return countries;
         } catch (error) {
-            addMessage("There was an issue fetching some of your data.", "error");
+            addToastMessage("There was an issue fetching some of your data.", "error", 7000);
             return undefined;
         };
     };
