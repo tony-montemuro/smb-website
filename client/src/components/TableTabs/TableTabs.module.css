@@ -20,7 +20,7 @@
 }
 
 .active:hover {
-    background-color: rgb(var(--color-button-selected)) !important;
+    background-color: rgb(var(--color-button-selected));
 }
 
 /* ===== MEDIA QUERIES FOR SMALLER DEVICES ===== */
