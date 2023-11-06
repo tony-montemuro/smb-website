@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../../utils/Contexts";
+import { ToastContext } from "../../../utils/Contexts";
 import { useContext, useState } from "react";
 import EmailLogin from "../../../database/authentication/EmailLogin";
 import ValidationHelper from "../../../helper/ValidationHelper";
@@ -10,8 +10,8 @@ const EmailInfoForm = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== STATES  ===== */
     const [email, setEmail] = useState(defaultEmailState);
@@ -31,7 +31,7 @@ const EmailInfoForm = () => {
     // the `name` field of the email state hook is updated based on e.value
     const handleChange = (e) => {
         const { value } = e.target;
-        setEmail({ ...email, name: value });
+        setEmail({ ...email, error: undefined, name: value });
     };
 
     // FUNCTION 2: handleEmailUpdate - handles an attempt at updating the email
@@ -49,7 +49,7 @@ const EmailInfoForm = () => {
         const error = validateEmail(email.name);
         if (error) {
             setEmail({ ...email, error: error });
-            addMessage(error, "error");
+            addToastMessage("There was a problem with the email you provided.", "error", 7000);
             return;
         }
 
@@ -60,11 +60,11 @@ const EmailInfoForm = () => {
             await updateEmail(email.name);
 
             // if there are no errors, we can complete the function
-            addMessage(`An email has been sent to both your current address, as well as ${ email.name }.`, "success");
+            addToastMessage(`An email has been sent to both your current address, as well as ${ email.name }.`, "success", 7000);
             setEmail({ ...email, error: undefined, submitting: false });
 
         } catch (error) {
-            addMessage(error.message, "error");
+            addToastMessage("There was a problem sending the reset emails. If refreshing the page does not work, the email system may be experiencing an outage.", "error", 11000);
             setEmail({ ...email, error: error.message, submitting: false });
         }
     };
