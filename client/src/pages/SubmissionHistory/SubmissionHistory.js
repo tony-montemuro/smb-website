@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ToastContext } from "../../utils/Contexts";
+import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import RPCRead from "../../database/read/RPCRead";
@@ -19,8 +19,8 @@ const SubmissionHistory = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
     const [submissions, setSubmissions] = useState(submissionsInit);

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, ToastContext } from "../../utils/Contexts";
+import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import styles from "./Totalizer.module.css";
@@ -18,8 +18,8 @@ function Totalizer({ imageReducer }) {
   // game state from game context
   const { game } = useContext(GameContext);
 
-  // add message function from toast context
-  const { addMessage } = useContext(ToastContext);
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();

@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
-import { ToastContext } from "../../utils/Contexts";
+import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import RPCRead from "../../database/read/RPCRead";
 
 const MedalTable = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
     const [medalTable, setMedalTable] = useState(undefined);

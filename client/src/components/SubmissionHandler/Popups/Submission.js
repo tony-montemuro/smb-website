@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ModeratorLayoutContext, PopupContext, ToastContext, UserContext } from "../../../utils/Contexts";
+import { MessageContext, ModeratorLayoutContext, PopupContext, UserContext } from "../../../utils/Contexts";
 import { useContext, useState } from "react";
 import ApproveUpdate from "../../../database/update/ApproveUpdate";
 import DateHelper from "../../../helper/DateHelper";
@@ -20,14 +20,14 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
 
     /* ===== CONTEXTS ===== */
 
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     // dispatch games function from the moderator layout context
     const { dispatchGames } = useContext(ModeratorLayoutContext);
 
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
-
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
 
     // user state from user context
     const { user } = useContext(UserContext);

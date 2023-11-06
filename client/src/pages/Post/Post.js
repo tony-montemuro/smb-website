@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
-import { ToastContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import PostUpdate from "../../database/update/PostUpdate";
 
 const Post = () => {
@@ -14,8 +14,8 @@ const Post = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
  
     // user state from user context
     const { user } = useContext(UserContext);

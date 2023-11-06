@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
-import { ToastContext } from "../../utils/Contexts";
+import { MessageContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import CountriesRead from "../../database/read/CountriesRead";
 
 const Profile = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== FUNCTIONS ===== */
 

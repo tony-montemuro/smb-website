@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ToastContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Profile.module.css";
@@ -16,8 +16,8 @@ function Profile({ imageReducer }) {
 
   /* ===== CONTEXTS ===== */
 
-  // add message function from toast context
-  const { addMessage } = useContext(ToastContext);
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
 
   // user state from user context
   const { user } = useContext(UserContext);

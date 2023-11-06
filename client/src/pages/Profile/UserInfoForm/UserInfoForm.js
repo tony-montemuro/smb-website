@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ToastContext, UserContext } from "../../../utils/Contexts";
+import { MessageContext, UserContext } from "../../../utils/Contexts";
 import { discordPattern, usernamePattern, twitchUsernamePattern, twitterHandlePattern, youtubeHandlePattern } from "../../../utils/RegexPatterns";
 import { useContext, useReducer } from "react";
 import ProfileUpdate from "../../../database/update/ProfileUpdate";
@@ -24,8 +24,8 @@ const UserInfoForm = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     // user state and update user function from user context
     const { user, updateUser } = useContext(UserContext);

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ToastContext } from "../../utils/Contexts";
+import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import PageControls from "../PageControls/PageControls.js";
@@ -13,8 +13,8 @@ const RecentSubmissionsTable = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== FUNCTIONS ===== */
 

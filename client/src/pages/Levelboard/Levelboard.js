@@ -2,7 +2,7 @@
 import { isBefore } from "date-fns";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { GameContext, ToastContext, UserContext } from "../../utils/Contexts";
+import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
 import FrontendHelper from "../../helper/FrontendHelper";
 import RPCRead from "../../database/read/RPCRead";
@@ -13,8 +13,8 @@ const Levelboard = () => {
 	// game state from game context
 	const { game } = useContext(GameContext);
 
-	// add message function from toast context
-	const { addMessage } = useContext(ToastContext);
+	// add message function from message context
+	const { addMessage } = useContext(MessageContext);
 
 	// user state from user context
 	const { user } = useContext(UserContext);

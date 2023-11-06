@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, PopupContext, ToastContext } from "../../../utils/Contexts";
+import { GameContext, PopupContext, MessageContext } from "../../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../../helper/FrontendHelper";
@@ -28,8 +28,8 @@ const Update = (level, setSubmitting) => {
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES & REDUCERS ===== */
     const [form, dispatchForm] = useReducer((state, action) => {

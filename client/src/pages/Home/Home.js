@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ToastContext } from "../../utils/Contexts";
+import { MessageContext } from "../../utils/Contexts";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import PostRead from "../../database/read/PostRead";
@@ -7,8 +7,8 @@ import PostRead from "../../database/read/PostRead";
 const Home = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== VARIABLES ===== */
     const navigate = useNavigate();

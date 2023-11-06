@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ProfileContext, ToastContext } from "../../utils/Contexts";
+import { ProfileContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react"; 
 import styles from "./UserLayout.module.css";
 import Loading from "../Loading/Loading.jsx";
@@ -17,8 +17,8 @@ function UserLayout({ imageReducer }) {
 
   /* ===== CONTEXTS ===== */
 
-  // add message function from toast context
-  const { addMessage } = useContext(ToastContext)
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext)
   
   /* ===== STATES ===== */
   const [profile, setProfile] = useState(undefined);

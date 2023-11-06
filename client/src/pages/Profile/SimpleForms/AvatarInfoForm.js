@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ToastContext, UserContext } from "../../../utils/Contexts";
+import { MessageContext, UserContext } from "../../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import Download from "../../../database/storage/Download";
 import Upload from "../../../database/storage/Upload";
@@ -10,8 +10,8 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     // user state from user context
     const { user } = useContext(UserContext);

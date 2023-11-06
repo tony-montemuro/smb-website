@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ToastContext } from "../../utils/Contexts.js";
+import { MessageContext } from "../../utils/Contexts.js";
 import { useContext, useState } from "react";
 import PostRead from "../../database/read/PostRead";
 import PageControls from "../../components/PageControls/PageControls.js";
@@ -7,8 +7,8 @@ import PageControls from "../../components/PageControls/PageControls.js";
 const News = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
     const [posts, setPosts] = useState({ data: undefined, total: 0 });

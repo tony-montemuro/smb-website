@@ -1,5 +1,5 @@
 /* ===== IMPORTS ====== */
-import { GameContext, ToastContext } from "../../utils/Contexts";
+import { GameContext, MessageContext } from "../../utils/Contexts";
 import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -20,8 +20,8 @@ function GameLayout({ imageReducer }) {
 
   /* ===== CONTEXTS ====== */
 
-  // add message function from toast context
-  const { addMessage } = useContext(ToastContext);
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES ===== */
   const [game, setGame] = useState(undefined);

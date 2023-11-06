@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
-import { PopupContext, ToastContext, UserContext } from "../../../utils/Contexts";
+import { PopupContext, MessageContext, UserContext } from "../../../utils/Contexts";
 import ReportUpdate from "../../../database/update/ReportUpdate";
 
 const ReportForm = () => {
@@ -9,11 +9,11 @@ const ReportForm = () => {
 
     /* ===== CONTEXTS ===== */
 
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
-
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
 
     // user state & updateUser function from user context
     const { user, updateUser } = useContext(UserContext);

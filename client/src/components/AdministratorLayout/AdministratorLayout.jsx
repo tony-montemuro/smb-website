@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ToastContext, UserContext } from "../../utils/Contexts.js";
+import { MessageContext, UserContext } from "../../utils/Contexts.js";
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +27,7 @@ function AdministratorLayout() {
   /* ===== CONTEXTS ===== */
 
   // add message function from toast context
-  const { addMessage } = useContext(ToastContext);
+  const { addMessage } = useContext(MessageContext);
 
   // user state from user context
   const { user } = useContext(UserContext);

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ModeratorLayoutContext, ToastContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -32,8 +32,8 @@ function ModeratorLayout() {
 
   /* ===== CONTEXTS ===== */
 
-  // add message function from toast context
-  const { addMessage } = useContext(ToastContext);
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
 
   // user state & is moderator function from user context
   const { user, isModerator } = useContext(UserContext);

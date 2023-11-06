@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { UserContext, ToastContext } from "../../utils/Contexts";
+import { UserContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import RPCRead from "../../database/read/RPCRead";
 
@@ -62,8 +62,8 @@ const ModeratorLayout = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     // user state from user context
     const { user } = useContext(UserContext);

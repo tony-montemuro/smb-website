@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { PopupContext, ToastContext } from "../../../utils/Contexts";
+import { PopupContext, MessageContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 
 const UserFilter = (users, dispatchFiltersData) => {
@@ -8,8 +8,8 @@ const UserFilter = (users, dispatchFiltersData) => {
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== FUNCTIONS ===== */
 

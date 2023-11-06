@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { ToastContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import styles from "./Notifications.module.css";
 import Container from "../../components/Container/Container.jsx";
 import LoadingTable from "../../components/LoadingTable/LoadingTable";
@@ -14,12 +14,12 @@ import TypeSymbol from "./TypeSymbol";
 
 function Notifications() {
   /* ===== CONTEXTS ===== */
+
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
   
   // user state from user context
   const { user } = useContext(UserContext);
-
-  // add message function from toast context
-  const { addMessage } = useContext(ToastContext);
 
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 7;

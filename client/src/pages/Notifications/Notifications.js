@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { isBefore } from "date-fns";
-import { UserContext, ToastContext } from "../../utils/Contexts";
+import { UserContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useReducer, useState } from "react";
 import NotificationDelete from "../../database/delete/NotificationDelete";
 import NotificationRead from "../../database/read/NotificationRead";
@@ -62,8 +62,8 @@ const Notifications = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     // user state & update user function from user context
     const { user, updateUser } = useContext(UserContext);

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ToastContext, UserContext } from "../../utils/Contexts";
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import RPCRead from "../../database/read/RPCRead";
 import ScrollHelper from "../../helper/ScrollHelper";
@@ -12,8 +12,8 @@ const SubmissionHandler = (isUnapproved) => {
 
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     // user state & update user function from user context
     const { user } = useContext(UserContext);

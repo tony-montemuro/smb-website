@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ToastContext } from "../../utils/Contexts";
+import { MessageContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import GameRead from "../../database/read/GameRead";
 import ProfileRead from "../../database/read/ProfileRead";
@@ -8,8 +8,8 @@ import RPCRead from "../../database/read/RPCRead";
 const RecentSubmissions = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== VARIABLES ===== */
     const defaultFiltersData = {

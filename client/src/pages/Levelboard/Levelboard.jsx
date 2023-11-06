@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, ToastContext, UserContext } from "../../utils/Contexts";
+import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Levelboard.module.css";
@@ -26,8 +26,8 @@ function Levelboard({ imageReducer }) {
 	// game state from game context
   const { game } = useContext(GameContext);
 
-	// add message function from toast context
-	const { addMessage } = useContext(ToastContext);
+	// add message function from message context
+	const { addMessage } = useContext(MessageContext);
 
 	// user state & is moderator function from user context
   const { user, isModerator } = useContext(UserContext);

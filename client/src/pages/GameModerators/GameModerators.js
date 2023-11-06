@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ToastContext } from "../../utils/Contexts";
+import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import GameRead from "../../database/read/GameRead";
 import GameProfileDelete from "../../database/delete/GameProfileDelete";
@@ -10,8 +10,8 @@ import StylesHelper from "../../helper/StylesHelper";
 const GameModerators = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from toast context
-    const { addMessage } = useContext(ToastContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
     const [game, setGame] = useState(undefined);

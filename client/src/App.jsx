@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./App.css";
-import { UserContext, ToastContext } from "./utils/Contexts";
+import { MessageContext, UserContext } from "./utils/Contexts";
 import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import Administrator from "./pages/Administrator/Administrator.jsx";
@@ -66,7 +66,7 @@ function App() {
 
   /* ===== APP COMPONENT ===== */
   return (
-    <ToastContext.Provider value={ { addMessage } }>
+    <MessageContext.Provider value={ { addMessage } }>
       <UserContext.Provider value={ { user, updateUser, isModerator } }>
         <Navbar imageReducer={ imageReducer } />
         <div className="app">
@@ -159,7 +159,7 @@ function App() {
 
         </div>
       </UserContext.Provider>
-    </ToastContext.Provider>
+    </MessageContext.Provider>
   );
 };
 
