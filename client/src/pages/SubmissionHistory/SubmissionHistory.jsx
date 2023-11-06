@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, MessageContext } from "../../utils/Contexts";
+import { GameContext, ToastContext } from "../../utils/Contexts";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -42,8 +42,8 @@ function SubmissionHistory() {
   // game state from game context
   const { game } = useContext(GameContext);
 
-  // add message function from message context
-  const { addMessage } = useContext(MessageContext);
+  // add message function from toast context
+  const { addToastMessage } = useContext(ToastContext);
 
   /* ===== STATES & FUNCTIONS ====== */
 
@@ -66,9 +66,9 @@ function SubmissionHistory() {
       );
 			
 			// if no level or profile exists, we will print an error message, and navigate to the home screen
-			if (!level) {
-				addMessage("Page does not exist.", "error");
-				navigate("/");
+			if (!level || profile === null) {
+				addToastMessage("Submission History does not exist.", "error", 5000);
+				navigate(level ? `/games/${ abb }/${ category }/${ type }/${ levelName }` : `/games/${ abb }`);
 				return;
 			}
 

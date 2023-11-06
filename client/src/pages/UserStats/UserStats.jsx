@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, ProfileContext } from "../../utils/Contexts";
+import { ProfileContext, ToastContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./UserStats.module.css";
@@ -15,11 +15,11 @@ import UserStatsLogic from "./UserStats.js";
 function UserStats() {
   /* ===== CONTEXTS ===== */
 
-  // add message function from message context
-  const { addMessage } = useContext(MessageContext);
-
   // profiles state from profile context
   const { profile } = useContext(ProfileContext);
+
+  // add message function from toast context
+  const { addToastMessage } = useContext(ToastContext);
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
@@ -33,7 +33,7 @@ function UserStats() {
   const abb = path[3];
   const category = path[4];
   const type = path[5];
-  const errorMessage = "The page you requested does not exist";
+  const errorMessage = "User page does not exist.";
 
   /* ===== STATES & FUNCTIONS ===== */
   const [game, setGame] = useState(undefined);
@@ -55,7 +55,7 @@ function UserStats() {
 
     // if either do not match, handle the error, and navigate to the home screen
     if (!game) {
-      addMessage(errorMessage, "error");
+      addToastMessage(errorMessage, "error", 5000);
       navigate("/");
       return;
     }
@@ -63,7 +63,7 @@ function UserStats() {
     // special case #1: we are attempting to access a user stats page with a non-valid category
     const categories = getGameCategories(game);
     if (!(categories.includes(category))) {
-      addMessage(errorMessage, "error");
+      addToastMessage(errorMessage, "error", 5000);
       navigate("/");
       return;
     }
@@ -71,7 +71,7 @@ function UserStats() {
     // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
     const types = getCategoryTypes(game, category);
     if (!(types.includes(type))) {
-      addMessage(errorMessage, "error");
+      addToastMessage(errorMessage, "error", 5000);
       navigate("/");
       return;
     }

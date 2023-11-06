@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts"; 
+import { ToastContext } from "../../utils/Contexts"; 
 import { useContext, useState } from "react";
 import RPCRead from "../../database/read/RPCRead";
 
 const Totalizer = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== STATES & REDUCERS ===== */
     const [totals, setTotals] = useState(undefined);
@@ -39,7 +39,7 @@ const Totalizer = () => {
             const [all, live] = await Promise.all(promises);
             setTotals({ all, live });
         } catch (error) {
-			addMessage("Failed to fetch totalizer data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+			addToastMessage("Failed to fetch totalizer data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 

@@ -1,13 +1,13 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { ToastContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import RPCRead from "../../database/read/RPCRead";
 
 const UserStats = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [stats, setStats] = useState(undefined);
@@ -62,13 +62,10 @@ const UserStats = () => {
                     total: liveTotal
                 }
             };
-            
-            // update the stats state hook
             setStats(stats);
 
         } catch (error) {
-            // if the submissions fail to be fetched, let's render an error specifying the issue
-			addMessage("Failed to fetch user data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+			addToastMessage("Failed to fetch user data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 
