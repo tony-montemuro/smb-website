@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, UserContext } from "../../utils/Contexts";
+import { ToastContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Profile.module.css";
@@ -16,11 +16,11 @@ function Profile({ imageReducer }) {
 
   /* ===== CONTEXTS ===== */
 
+  // add message function from toast context
+  const { addToastMessage } = useContext(ToastContext);
+
   // user state from user context
   const { user } = useContext(UserContext);
-
-  // add message function from message context
-  const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES ===== */
   const [countries, setCountries] = useState(undefined);
@@ -38,7 +38,7 @@ function Profile({ imageReducer }) {
       // if not user.id (meaning user is null), current user is not authenticated. thus, deny
       // access to this page.
       if (!user.id) {
-        addMessage("You cannot access this page.", "error");
+        addToastMessage("Forbidden access.", "error", 5000);
         navigate("/");
         return;
       }

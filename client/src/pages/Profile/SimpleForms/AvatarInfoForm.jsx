@@ -41,7 +41,7 @@ function AvatarInfoForm({ imageReducer }) {
             ref={ avatarRef }
           />
         </div>
-        { form.error && <b id={ styles.error }>Error: { form.error }</b> }
+        { form.error && <b id={ styles.error }>{ form.error }</b> }
         <button type="submit" disabled={ form.uploading }>Upload</button>
       </form>
     </Container>
