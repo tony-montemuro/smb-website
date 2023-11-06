@@ -13,7 +13,7 @@ const ReportForm = () => {
     const { closePopup } = useContext(PopupContext);
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     // user state & updateUser function from user context
     const { user, updateUser } = useContext(UserContext);
@@ -55,12 +55,12 @@ const ReportForm = () => {
             // perform a concurrent call to update board, as well as update user data (specifically, the report token count
             // should decrease)
             await Promise.all([updateBoard(), updateUser(user.id)]);
-            addToastMessage("The submission was successfully reported! Please give the moderation team a few days to look it over.", "success", 10000);
+            addMessage("The submission was successfully reported! Please give the moderation team a few days to look it over.", "success", 10000);
             closePopup();
     
         } catch (error) {
             // otherwise, render an error message, and set the submitting state back to false
-            addToastMessage("There was a problem reporting this submission.", "error", 8000);
+            addMessage("There was a problem reporting this submission.", "error", 8000);
 
         } finally {
             setSubmitting(false);

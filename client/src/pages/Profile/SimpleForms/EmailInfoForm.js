@@ -11,7 +11,7 @@ const EmailInfoForm = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== STATES  ===== */
     const [email, setEmail] = useState(defaultEmailState);
@@ -49,7 +49,7 @@ const EmailInfoForm = () => {
         const error = validateEmail(email.name);
         if (error) {
             setEmail({ ...email, error: error });
-            addToastMessage("There was a problem with the email you provided.", "error", 7000);
+            addMessage("There was a problem with the email you provided.", "error", 7000);
             return;
         }
 
@@ -60,11 +60,11 @@ const EmailInfoForm = () => {
             await updateEmail(email.name);
 
             // if there are no errors, we can complete the function
-            addToastMessage(`An email has been sent to both your current address, as well as ${ email.name }.`, "success", 7000);
+            addMessage(`An email has been sent to both your current address, as well as ${ email.name }.`, "success", 7000);
             setEmail({ ...email, error: undefined, submitting: false });
 
         } catch (error) {
-            addToastMessage("There was a problem sending the reset emails. If refreshing the page does not work, the email system may be experiencing an outage.", "error", 11000);
+            addMessage("There was a problem sending the reset emails. If refreshing the page does not work, the email system may be experiencing an outage.", "error", 11000);
             setEmail({ ...email, error: error.message, submitting: false });
         }
     };

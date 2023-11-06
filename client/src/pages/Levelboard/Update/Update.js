@@ -29,7 +29,7 @@ const Update = (level, setSubmitting) => {
     const { closePopup } = useContext(PopupContext);
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== STATES & REDUCERS ===== */
     const [form, dispatchForm] = useReducer((state, action) => {
@@ -211,7 +211,7 @@ const Update = (level, setSubmitting) => {
         // if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
 		if (Object.values(error).some(row => row !== undefined)) {
-            addToastMessage("One or more form fields had errors.", "error", 7000);
+            addMessage("One or more form fields had errors.", "error", 7000);
             return;
         }
 
@@ -227,11 +227,11 @@ const Update = (level, setSubmitting) => {
             await updateBoard();
 
             // finally, let the user know that they successfully submitted their submission, and close the popup
-            addToastMessage("Your submission was successfully updated!", "success", 5000);
+            addMessage("Your submission was successfully updated!", "success", 5000);
             closePopup();
 
         } catch (error) {
-            addToastMessage("Ther was a problem updating your submission. Try refreshing the page.", "error", 8000);
+            addMessage("Ther was a problem updating your submission. Try refreshing the page.", "error", 8000);
 
         } finally {
             setSubmitting(false);

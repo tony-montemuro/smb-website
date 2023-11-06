@@ -7,7 +7,7 @@ const MedalTable = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [medalTable, setMedalTable] = useState(undefined);
@@ -37,7 +37,7 @@ const MedalTable = () => {
             const medals = await getMedals(abb, category, type);
             setMedalTable(medals);
         } catch (error) {
-			addToastMessage("Failed to load medal table. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+			addMessage("Failed to load medal table. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         }
     };
 

@@ -27,7 +27,7 @@ function AdministratorLayout() {
   /* ===== CONTEXTS ===== */
 
   // add message function from toast context
-  const { addToastMessage } = useContext(ToastContext);
+  const { addMessage } = useContext(ToastContext);
 
   // user state from user context
   const { user } = useContext(UserContext);
@@ -40,7 +40,7 @@ function AdministratorLayout() {
     if (user.id !== undefined) {
       // if user is not logged in or is not an administrator, render error, navigate to homepage, and render early
       if (!user.profile || !user.profile.administrator) {
-        addToastMessage("Forbidden access.", "error", 5000);
+        addMessage("Forbidden access.", "error", 5000);
         navigate("/");
         return;
       }

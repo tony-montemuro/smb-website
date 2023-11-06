@@ -15,7 +15,7 @@ const Post = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
  
     // user state from user context
     const { user } = useContext(UserContext);
@@ -78,7 +78,7 @@ const Post = () => {
 		error = validateLinkDescription(form.values.link, form.values.link_description);
         setForm({ ...form, error: error });
 		if (error) {
-            addToastMessage("The Link Description field has an error.", "error", 7000);
+            addMessage("The Link Description field has an error.", "error", 7000);
             return;
         }
 
@@ -89,9 +89,9 @@ const Post = () => {
         try {
             await insertPost({ ...form.values, profile_id: user.profile.id });
             setForm({ ...form, submitted: true });
-            addToastMessage("Post successfully uploaded!", "success", 5000);
+            addMessage("Post successfully uploaded!", "success", 5000);
         } catch (error) {
-            addToastMessage("Post failed to upload. Try reloading the page.", "error", 7000);
+            addMessage("Post failed to upload. Try reloading the page.", "error", 7000);
         } finally {
             setForm({ ...form, submitting: false });
         }

@@ -11,7 +11,7 @@ const GameSearch = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [games, setGames] = useState(defaultGames);
@@ -61,7 +61,7 @@ const GameSearch = () => {
             setGames({ data: games, total: count });
             if (games.length === 0) setBadSearch(badSearch => badSearch ? badSearch : userInput);
         } catch (error) {
-            addToastMessage("Games data failing to load.", "error", 6000);
+            addMessage("Games data failing to load.", "error", 6000);
         }
     };
 

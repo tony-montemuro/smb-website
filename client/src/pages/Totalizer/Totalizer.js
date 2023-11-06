@@ -7,7 +7,7 @@ const Totalizer = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== STATES & REDUCERS ===== */
     const [totals, setTotals] = useState(undefined);
@@ -39,7 +39,7 @@ const Totalizer = () => {
             const [all, live] = await Promise.all(promises);
             setTotals({ all, live });
         } catch (error) {
-			addToastMessage("Failed to fetch totalizer data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+			addMessage("Failed to fetch totalizer data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 

@@ -33,7 +33,7 @@ function ModeratorLayout() {
   /* ===== CONTEXTS ===== */
 
   // add message function from toast context
-  const { addToastMessage } = useContext(ToastContext);
+  const { addMessage } = useContext(ToastContext);
 
   // user state & is moderator function from user context
   const { user, isModerator } = useContext(UserContext);
@@ -46,7 +46,7 @@ function ModeratorLayout() {
     if (user.id !== undefined) {
       // if user is not logged in or a moderator of at least 1 game, render error, navigate to homepage, and render early
       if (!(isModerator())) {
-        addToastMessage("Forbidden access.", "error", 5000);
+        addMessage("Forbidden access.", "error", 5000);
         navigate("/");
         return;
       }

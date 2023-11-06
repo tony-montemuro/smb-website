@@ -7,7 +7,7 @@ const Download = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -31,7 +31,7 @@ const Download = () => {
             return URL.createObjectURL(data);
 
         } catch (error) {
-            addToastMessage("One or more image resources failed to load.", "error", 7000);
+            addMessage("One or more image resources failed to load.", "error", 7000);
             return null;
         }
     };

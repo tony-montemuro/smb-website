@@ -21,7 +21,7 @@ function GameLayout({ imageReducer }) {
   /* ===== CONTEXTS ====== */
 
   // add message function from toast context
-  const { addToastMessage } = useContext(ToastContext);
+  const { addMessage } = useContext(ToastContext);
 
   /* ===== STATES ===== */
   const [game, setGame] = useState(undefined);
@@ -44,7 +44,7 @@ function GameLayout({ imageReducer }) {
       
       // if game does not exist, render error message and navigate back home
       if (!game) {
-        addToastMessage("Game does not exist.", "error", 6000);
+        addMessage("Game does not exist.", "error", 6000);
         navigate("/");
         return;
       }

@@ -37,7 +37,7 @@ const Insert = (level, setSubmitting) => {
     const { closePopup } = useContext(PopupContext);
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     // user state from user context
     const { user } = useContext(UserContext);
@@ -362,11 +362,11 @@ const Insert = (level, setSubmitting) => {
 		// if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
 		if (Object.values(error).some(e => e !== undefined)) {
-            addToastMessage("One or more form fields had errors.", "error", 7000);
+            addMessage("One or more form fields had errors.", "error", 7000);
             return;
         }
         if (allBlank) {
-            addToastMessage("Cannot submit without a time.", "error", 7000);
+            addMessage("Cannot submit without a time.", "error", 7000);
             return;
         }
 
@@ -379,11 +379,11 @@ const Insert = (level, setSubmitting) => {
             await updateBoard();
 
             // finally, let the user know that they successfully submitted their submission, and close popup
-            addToastMessage("Your submission was successful!", "success", 5000);
+            addMessage("Your submission was successful!", "success", 5000);
             closePopup();
 
         } catch (error) {
-            addToastMessage("There was a problem adding your submission. Try refreshing the page.", "error", 8000);
+            addMessage("There was a problem adding your submission. Try refreshing the page.", "error", 8000);
 
         } finally {
             setSubmitting(false);

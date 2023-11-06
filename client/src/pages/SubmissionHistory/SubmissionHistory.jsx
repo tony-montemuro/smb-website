@@ -43,7 +43,7 @@ function SubmissionHistory() {
   const { game } = useContext(GameContext);
 
   // add message function from toast context
-  const { addToastMessage } = useContext(ToastContext);
+  const { addMessage } = useContext(ToastContext);
 
   /* ===== STATES & FUNCTIONS ====== */
 
@@ -67,7 +67,7 @@ function SubmissionHistory() {
 			
 			// if no level or profile exists, we will print an error message, and navigate to the home screen
 			if (!level || profile === null) {
-				addToastMessage("Submission History does not exist.", "error", 5000);
+				addMessage("Submission History does not exist.", "error", 5000);
 				navigate(level ? `/games/${ abb }/${ category }/${ type }/${ levelName }` : `/games/${ abb }`);
 				return;
 			}

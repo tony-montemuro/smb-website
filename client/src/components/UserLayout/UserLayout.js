@@ -12,7 +12,7 @@ const UserLayout = () => {
     /* ===== CONTEXTS ===== */
     
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
     
@@ -34,7 +34,7 @@ const UserLayout = () => {
             const profile = await getProfile(profileId);
             return profile;
         } catch (error) {
-            addToastMessage("There was an issue fetching this users information.", "error", 7000);
+            addMessage("There was an issue fetching this users information.", "error", 7000);
             return undefined;
         };
     };

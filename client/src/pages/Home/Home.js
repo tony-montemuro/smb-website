@@ -8,7 +8,7 @@ const Home = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== VARIABLES ===== */
     const navigate = useNavigate();
@@ -36,7 +36,7 @@ const Home = () => {
             }
             setPosts(posts);
         } catch (error) {
-            addToastMessage("News posts failed to load.", "error", 7000);
+            addMessage("News posts failed to load.", "error", 7000);
         }
     };
 

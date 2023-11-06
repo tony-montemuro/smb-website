@@ -8,7 +8,7 @@ const News = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [posts, setPosts] = useState({ data: undefined, total: 0 });
@@ -44,7 +44,7 @@ const News = () => {
             });
 
         } catch (error) {
-            addToastMessage("News posts failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+            addMessage("News posts failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         }
     };
 

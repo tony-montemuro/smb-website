@@ -9,7 +9,7 @@ const RecentSubmissions = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== VARIABLES ===== */
     const defaultFiltersData = {
@@ -72,7 +72,7 @@ const RecentSubmissions = () => {
             try {
                 games = await queryGameByList(abbs);
             } catch (error) {
-                addToastMessage("One or more filters has broken due loading failures.", "error", 7000);
+                addMessage("One or more filters has broken due loading failures.", "error", 7000);
                 games = null;
             };
         }
@@ -104,7 +104,7 @@ const RecentSubmissions = () => {
             try {
                 users = await queryProfileByList(ids);
             } catch (error) {
-                addToastMessage("One or more filters has broken due loading failures.", "error", 7000);
+                addMessage("One or more filters has broken due loading failures.", "error", 7000);
                 users = null;
             };
         }
@@ -122,7 +122,7 @@ const RecentSubmissions = () => {
             const categories = await getCategories();
             dispatchFiltersData({ type: "categories", value: categories });
         } catch (error) {
-            addToastMessage("One or more filters has broken due loading failures.", "error", 7000);
+            addMessage("One or more filters has broken due loading failures.", "error", 7000);
         };
     };
 

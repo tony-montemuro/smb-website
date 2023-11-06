@@ -27,7 +27,7 @@ function Levelboard({ imageReducer }) {
   const { game } = useContext(GameContext);
 
 	// add message function from toast context
-	const { addToastMessage } = useContext(ToastContext);
+	const { addMessage } = useContext(ToastContext);
 
 	// user state & is moderator function from user context
   const { user, isModerator } = useContext(UserContext);
@@ -99,7 +99,7 @@ function Levelboard({ imageReducer }) {
 			
 			// if not, we will print an error message, and navigate to the home screen
 			if (!level) {
-				addToastMessage("Chart does not exist.", "error", 5000);
+				addMessage("Chart does not exist.", "error", 5000);
 				navigate(`/games/${ abb }`);
 				return;
 			}

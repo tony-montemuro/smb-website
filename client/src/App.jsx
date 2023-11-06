@@ -15,6 +15,7 @@ import GettingStarted from "./pages/GettingStarted/GettingStarted.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
 import MedalTable from "./pages/MedalTable/MedalTable.jsx";
+import Message from "./components/Message/Message.jsx";
 import Moderator from "./pages/Moderator/Moderator.jsx";
 import ModeratorLayout from "./components/ModeratorLayout/ModeratorLayout.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
@@ -30,7 +31,6 @@ import ResourcesLayout from "./components/ResourcesLayout/ResourcesLayout.jsx";
 import SignIn from "./pages/SignIn/SignIn.jsx";
 import SubmissionHistory from "./pages/SubmissionHistory/SubmissionHistory.jsx";
 import Support from "./pages/Support/Support.jsx";
-import Toast from "./components/Toast/Toast.jsx";
 import Totalizer from "./pages/Totalizer/Totalizer.jsx";
 import User from "./pages/User/User.jsx";
 import Users from "./pages/Users/Users.jsx";
@@ -49,7 +49,7 @@ function App() {
     updateUser,
     isModerator,
     callSessionListener,
-    addToastMessage,
+    addMessage,
     handleToastClose
   } = AppLogic();
 
@@ -66,17 +66,13 @@ function App() {
 
   /* ===== APP COMPONENT ===== */
   return (
-    <ToastContext.Provider value={ { addToastMessage } }>
+    <ToastContext.Provider value={ { addMessage } }>
       <UserContext.Provider value={ { user, updateUser, isModerator } }>
-
-        { /* Render the navbar at the top of the application */ }
         <Navbar imageReducer={ imageReducer } />
-
-        { /* The app div is a set of routes, as well as any messages. Each route corresponds to a page. */ }
         <div className="app">
 
-          { /* Render the message popup (will only render if the message object is initialized) */ }
-          <Toast toastContent={ toastContent } handleClose={ handleToastClose } />
+          { /* Render the message component (will only render if open field in `toastContent` is true) */ }
+          <Message toastContent={ toastContent } handleClose={ handleToastClose } />
 
           { /* App routes */ }
           <Routes>
@@ -160,6 +156,7 @@ function App() {
             </Route>
             <Route path="recent-submissions" element={ <RecentSubmissions imageReducer={ imageReducer } /> } />
           </Routes>
+
         </div>
       </UserContext.Provider>
     </ToastContext.Provider>

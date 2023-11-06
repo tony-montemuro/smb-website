@@ -11,7 +11,7 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     // user state from user context
     const { user } = useContext(UserContext);
@@ -168,7 +168,7 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
             // if there is an error, return early
             dispatchForm({ field: "error", value: error });
             if (error) {
-                addToastMessage("There was a problem uploading your avatar.", "error", 5000);
+                addMessage("There was a problem uploading your avatar.", "error", 5000);
                 return;
             }
 
@@ -181,10 +181,10 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
 
             // re-download the new image & update the global image state, and render a success message
             await updateImageByProfileId(user.profile.id, imageReducer, true);
-            addToastMessage("Avatar successfully uploaded. If it is not showing up, give it some time and reload the page.", "success", 9000);
+            addMessage("Avatar successfully uploaded. If it is not showing up, give it some time and reload the page.", "success", 9000);
             
         } catch (error) {
-            addToastMessage("There was a problem uploading your avatar. Refresh the page and try again.", "error", 10000);
+            addMessage("There was a problem uploading your avatar. Refresh the page and try again.", "error", 10000);
         } finally {
             avatarRef.current.value = "";
             dispatchForm({ field: "uploading", value: false });

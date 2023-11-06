@@ -19,7 +19,7 @@ function UserStats() {
   const { profile } = useContext(ProfileContext);
 
   // add message function from toast context
-  const { addToastMessage } = useContext(ToastContext);
+  const { addMessage } = useContext(ToastContext);
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
@@ -55,7 +55,7 @@ function UserStats() {
 
     // if either do not match, handle the error, and navigate to the home screen
     if (!game) {
-      addToastMessage(errorMessage, "error", 5000);
+      addMessage(errorMessage, "error", 5000);
       navigate("/");
       return;
     }
@@ -63,7 +63,7 @@ function UserStats() {
     // special case #1: we are attempting to access a user stats page with a non-valid category
     const categories = getGameCategories(game);
     if (!(categories.includes(category))) {
-      addToastMessage(errorMessage, "error", 5000);
+      addMessage(errorMessage, "error", 5000);
       navigate("/");
       return;
     }
@@ -71,7 +71,7 @@ function UserStats() {
     // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
     const types = getCategoryTypes(game, category);
     if (!(types.includes(type))) {
-      addToastMessage(errorMessage, "error", 5000);
+      addMessage(errorMessage, "error", 5000);
       navigate("/");
       return;
     }

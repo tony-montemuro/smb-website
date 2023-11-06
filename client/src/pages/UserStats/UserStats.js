@@ -7,7 +7,7 @@ const UserStats = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [stats, setStats] = useState(undefined);
@@ -65,7 +65,7 @@ const UserStats = () => {
             setStats(stats);
 
         } catch (error) {
-			addToastMessage("Failed to fetch user data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+			addMessage("Failed to fetch user data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 

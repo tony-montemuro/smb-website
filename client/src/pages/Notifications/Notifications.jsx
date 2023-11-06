@@ -19,7 +19,7 @@ function Notifications() {
   const { user } = useContext(UserContext);
 
   // add message function from toast context
-  const { addToastMessage } = useContext(ToastContext);
+  const { addMessage } = useContext(ToastContext);
 
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 7;
@@ -57,7 +57,7 @@ function Notifications() {
       // if not user.id (meaning user is null), current user is not authenticated. thus, deny
       // access to this page.
       if (!user.id) {
-        addToastMessage("Forbidden access.", "error", 5000);
+        addMessage("Forbidden access.", "error", 5000);
         navigate("/");
         return;
       }

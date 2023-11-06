@@ -14,7 +14,7 @@ const RecentSubmissionsTable = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -42,7 +42,7 @@ const RecentSubmissionsTable = () => {
             const { submissions, count } = await queryRecentSubmissions(start, end, searchParams);
             setSubmissions({ data: submissions, total: count });
         } catch (error) {
-            addToastMessage("Recent submissions data failing to load.", "error", 7000);
+            addMessage("Recent submissions data failing to load.", "error", 7000);
         }
     };
 

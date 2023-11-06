@@ -46,7 +46,7 @@ const App = () => {
   // helper funcitons
   const { getTimeToMidnightUTC } = DateHelper();
 
-  // FUNCTION 1: addToastMessage - function that takes a message and it's property, and opens a toast component
+  // FUNCTION 1: addMessage - function that takes a message and it's property, and opens a toast component
   // PRECONDITIONS (3 parameters):
   // 1.) message: a string value containing the message to be rendered to the client
   // 2.) severity: a string value specifying the "severity" of the message, which has impacts on styling. typically either
@@ -54,7 +54,7 @@ const App = () => {
   // 3.) timer: an integer representing how long the toast should remain open before closing, in ms
   // POSTCONDITIONS (1 possible outcome):
   // a new object is greated using the three parameters, and the object is set as the new message
-  const addToastMessage = (message, severity, timer) => {
+  const addMessage = (message, severity, timer) => {
     setToastContent({
       message,
       open: true,
@@ -101,7 +101,7 @@ const App = () => {
 
         // concurrently make all necessary database calls
         const [count, profile] = await Promise.all(
-          [queryNotificationCount(), queryUserProfile(userId, addToastMessage)]
+          [queryNotificationCount(), queryUserProfile(userId, addMessage)]
         );
 
         // update the user state
@@ -113,7 +113,7 @@ const App = () => {
 
       } catch (error) {
         // if there is an error, we want to render a message to the user
-        addToastMessage("User information failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 15000);
+        addMessage("User information failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 15000);
       }
       
     } else {
@@ -158,7 +158,7 @@ const App = () => {
 
     } catch (error) {
       // otherwise, render an error message
-      addToastMessage("Session data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 15000);
+      addMessage("Session data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 15000);
     }
 
     // listener for changes to the auth state
@@ -179,7 +179,7 @@ const App = () => {
     toastContent,
     images,
     dispatchImages,
-    addToastMessage,
+    addMessage,
     handleToastClose,
     updateUser,
     isModerator,

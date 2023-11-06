@@ -18,7 +18,7 @@ function UserLayout({ imageReducer }) {
   /* ===== CONTEXTS ===== */
 
   // add message function from toast context
-  const { addToastMessage } = useContext(ToastContext)
+  const { addMessage } = useContext(ToastContext)
   
   /* ===== STATES ===== */
   const [profile, setProfile] = useState(undefined);
@@ -37,7 +37,7 @@ function UserLayout({ imageReducer }) {
         // if profile is a null object, it means no profile exists that corresponds with `profileId`. we will print an error message,
         // and navigate to the home screen
         if (!profile) {
-          addToastMessage("The requested user does not exist.", "error", 7000);
+          addMessage("The requested user does not exist.", "error", 7000);
           navigate("/users");
           return;
         }

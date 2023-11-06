@@ -14,7 +14,7 @@ const Levelboard = () => {
 	const { game } = useContext(GameContext);
 
 	// add message function from toast context
-	const { addToastMessage } = useContext(ToastContext);
+	const { addMessage } = useContext(ToastContext);
 
 	// user state from user context
 	const { user } = useContext(UserContext);
@@ -201,7 +201,7 @@ const Levelboard = () => {
 			);
 
 		} catch (error) {
-			addToastMessage("Failed to fetch / update chart data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+			addMessage("Failed to fetch / update chart data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
 		}
 	};
 

@@ -7,7 +7,7 @@ const Signout = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -28,10 +28,10 @@ const Signout = () => {
             }
 
             // if sign out was a success, let's inform the user
-            addToastMessage("You have successfully logged out!", "success", 7000);
+            addMessage("You have successfully logged out!", "success", 7000);
 
         } catch (error) {
-            addToastMessage("There was a problem logging you out.", "error", 7000);
+            addMessage("There was a problem logging you out.", "error", 7000);
         }
     };
 

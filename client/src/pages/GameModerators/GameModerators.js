@@ -11,7 +11,7 @@ const GameModerators = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [game, setGame] = useState(undefined);
@@ -40,7 +40,7 @@ const GameModerators = () => {
             setGame(game ? games.find(row => row.abb === game.abb) : games[0]);
             setGames(games);
         } catch (error) {
-            addToastMessage("There was an error fetching the moderator data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+            addMessage("There was an error fetching the moderator data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 
@@ -70,10 +70,10 @@ const GameModerators = () => {
         try {
             await deleteModerator(game.abb, moderator.id);
             await queryGames();
-            addToastMessage("Moderator was successfully removed!", "success", 5000);
+            addMessage("Moderator was successfully removed!", "success", 5000);
             closePopup();
         } catch (error) {
-            addToastMessage("There was an error trying to remove this moderator. Try refreshing the page.", "error", 8000);
+            addMessage("There was an error trying to remove this moderator. Try refreshing the page.", "error", 8000);
         } finally {
             setSubmitting(false);
         };
@@ -91,13 +91,13 @@ const GameModerators = () => {
         try {
             await insertModerator(game.abb, moderator.id);
             await queryGames();
-            addToastMessage("Moderator was successfully added!", "success", 5000);
+            addMessage("Moderator was successfully added!", "success", 5000);
             closePopup();
         } catch (error) {
             if (error.code === "23505") {
-                addToastMessage("This user is already a moderator for this game!", "error", 5000);
+                addMessage("This user is already a moderator for this game!", "error", 5000);
             } else {
-                addToastMessage("There was an error trying to add this moderator. Try refreshing the page.", "error", 8000);   
+                addMessage("There was an error trying to add this moderator. Try refreshing the page.", "error", 8000);   
             }
         } finally {
             setSubmitting(false);

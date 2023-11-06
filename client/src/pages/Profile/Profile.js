@@ -7,7 +7,7 @@ const Profile = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -25,7 +25,7 @@ const Profile = () => {
             const countries = await queryCountries();
             return countries;
         } catch (error) {
-            addToastMessage("There was an issue fetching some of your data.", "error", 7000);
+            addMessage("There was an issue fetching some of your data.", "error", 7000);
             return undefined;
         };
     };

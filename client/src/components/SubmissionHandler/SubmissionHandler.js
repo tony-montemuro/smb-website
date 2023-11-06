@@ -13,7 +13,7 @@ const SubmissionHandler = (isUnapproved) => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     // user state & update user function from user context
     const { user } = useContext(UserContext);
@@ -49,7 +49,7 @@ const SubmissionHandler = (isUnapproved) => {
             const submissions = await query;
             setSubmissions(submissions);
         } catch (error) {
-            addToastMessage("Submission data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+            addMessage("Submission data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 

@@ -63,7 +63,7 @@ const Notifications = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     // user state & update user function from user context
     const { user, updateUser } = useContext(UserContext);
@@ -106,7 +106,7 @@ const Notifications = () => {
 
         } catch (error) {
             // render an error message to the client
-            addToastMessage("Notifications failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+            addMessage("Notifications failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 
@@ -221,10 +221,10 @@ const Notifications = () => {
             setPageNum(1);
 
             // finally, render a success message to the user
-            addToastMessage("Notifications successfully deleted!", "success", 5000);
+            addMessage("Notifications successfully deleted!", "success", 5000);
 
         } catch (error) {
-            addToastMessage("One or more notifications failed to delete. Refresh the page and try again.", "error", 10000);
+            addMessage("One or more notifications failed to delete. Refresh the page and try again.", "error", 10000);
         } finally {
             dispatchNotifications({ field: "submitting", payload: false });
         }

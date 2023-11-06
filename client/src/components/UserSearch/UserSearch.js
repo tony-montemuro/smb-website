@@ -11,7 +11,7 @@ const UserSearch = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [users, setUsers] = useState(defaultUsers);
@@ -59,7 +59,7 @@ const UserSearch = () => {
             setUsers({ data: profiles, total: count });
             if (profiles.length === 0) setBadSearch(badSearch => badSearch ? badSearch : userInput);
         } catch (error) {
-            addToastMessage("Users data failing to load.", "error", 6000);
+            addMessage("Users data failing to load.", "error", 6000);
         };
     };
 

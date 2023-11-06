@@ -3,7 +3,7 @@ import Action from "./Action.jsx";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 
-function Toast({ toastContent, handleClose }) {
+function Message({ toastContent, handleClose }) {
   /* ===== VARIABLES ===== */
   const message = toastContent.message;
   const open = toastContent.open;
@@ -33,4 +33,4 @@ function Toast({ toastContent, handleClose }) {
 };
 
 /* ===== EXPORTS ===== */
-export default Toast;
+export default Message;

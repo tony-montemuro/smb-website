@@ -19,7 +19,7 @@ function Totalizer({ imageReducer }) {
   const { game } = useContext(GameContext);
 
   // add message function from toast context
-  const { addToastMessage } = useContext(ToastContext);
+  const { addMessage } = useContext(ToastContext);
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
@@ -52,14 +52,14 @@ function Totalizer({ imageReducer }) {
   useEffect(() => {
     // special case #1: we are attempting to access a totalizer page with a non-valid category or non-practice mode category
     if (!(categories.includes(category) && isPracticeMode(category))) {
-      addToastMessage("Ranking does not exist.", "error", 5000);
+      addMessage("Ranking does not exist.", "error", 5000);
       navigate(`/games/${ abb }`);
       return;
     }
 
     // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
     if (!(types.includes(type))) {
-      addToastMessage("Ranking does not exist.", "error", 5000);
+      addMessage("Ranking does not exist.", "error", 5000);
       navigate(`/games/${ abb }`);
       return;
     }

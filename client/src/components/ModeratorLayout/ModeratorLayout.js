@@ -63,7 +63,7 @@ const ModeratorLayout = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     // user state from user context
     const { user } = useContext(UserContext);
@@ -84,7 +84,7 @@ const ModeratorLayout = () => {
             const games = await getUnapprovedCounts(filteredGames);
             dispatchGames({ type: "all", value: games });
         } catch (error) {
-            addToastMessage("Submission metadata failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+            addMessage("Submission metadata failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
             dispatchGames({ type: "all", value: [] });
         };
     };

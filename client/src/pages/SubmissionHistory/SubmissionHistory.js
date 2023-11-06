@@ -20,7 +20,7 @@ const SubmissionHistory = () => {
     /* ===== CONTEXTS ===== */
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== STATES ===== */
     const [submissions, setSubmissions] = useState(submissionsInit);
@@ -44,7 +44,7 @@ const SubmissionHistory = () => {
             const profile = await getProfile(profileId);
             return profile;
         } catch (error) {
-            addToastMessage("Failed to fetch some or all of Submission History data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
+            addMessage("Failed to fetch some or all of Submission History data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
             return undefined;
         };
     };
@@ -65,7 +65,7 @@ const SubmissionHistory = () => {
             setSubmissions({ normal, tas });
 
         } catch (error) {
-            addToastMessage("Failed to fetch some or all of Submission History data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
+            addMessage("Failed to fetch some or all of Submission History data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
         }
     };
 

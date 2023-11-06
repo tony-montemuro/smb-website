@@ -18,7 +18,7 @@ function Records() {
   const { game } = useContext(GameContext);
 
   // add message function from toast context
-  const { addToastMessage } = useContext(ToastContext);
+  const { addMessage } = useContext(ToastContext);
 
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize, categoryB2F } = FrontendHelper();
@@ -52,14 +52,14 @@ function Records() {
   useEffect(() => {
     // special case #1: we are attempting to access a records page with a non-valid category
     if (!(categories.includes(category))) {
-      addToastMessage("Ranking does not exist.", "error", 5000);
+      addMessage("Ranking does not exist.", "error", 5000);
       navigate(`/games/${ abb }`);
       return;
     }
 
     // special case #2: we are attempting to access a records page with a valid category, but an invalid type
     if (!(types.includes(type))) {
-      addToastMessage("Ranking does not exist.", "error", 5000);
+      addMessage("Ranking does not exist.", "error", 5000);
       navigate(`/games/${ abb }`);
       return;
     }

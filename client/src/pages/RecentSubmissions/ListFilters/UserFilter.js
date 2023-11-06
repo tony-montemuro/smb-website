@@ -9,7 +9,7 @@ const UserFilter = (users, dispatchFiltersData) => {
     const { closePopup } = useContext(PopupContext);
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
 
     /* ===== FUNCTIONS ===== */
 
@@ -23,7 +23,7 @@ const UserFilter = (users, dispatchFiltersData) => {
         if (!(users.some(row => row.id === user.id))) {
             dispatchFiltersData({ type: "users", value: users.concat([user]) });
         } else {
-            addToastMessage("You are already filtering by this user.", "error", 6000);
+            addMessage("You are already filtering by this user.", "error", 6000);
         }
     };
 

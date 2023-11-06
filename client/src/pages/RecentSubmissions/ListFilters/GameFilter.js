@@ -9,7 +9,7 @@ const GameFilter = (games, dispatchFiltersData) => {
     const { closePopup } = useContext(PopupContext);
 
     // add message function from toast context
-    const { addToastMessage } = useContext(ToastContext);
+    const { addMessage } = useContext(ToastContext);
  
     /* ===== FUNCTIONS ===== */
 
@@ -23,7 +23,7 @@ const GameFilter = (games, dispatchFiltersData) => {
         if (!(games.some(row => row.abb === game.abb))) {
             dispatchFiltersData({ type: "games", value: games.concat([game]) });
         } else {
-            addToastMessage("You are already filtering by this game.", "error", 6000);
+            addMessage("You are already filtering by this game.", "error", 6000);
         }
     };
 
