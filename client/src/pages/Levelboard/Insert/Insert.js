@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, MessageContext, PopupContext, UserContext } from "../../../utils/Contexts";
+import { GameContext, PopupContext, ToastContext, UserContext } from "../../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
 import DateHelper from "../../../helper/DateHelper";
@@ -33,11 +33,11 @@ const Insert = (level, setSubmitting) => {
     // game state from game context
     const { game } = useContext(GameContext);
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
-
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
+
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     // user state from user context
     const { user } = useContext(UserContext);
@@ -362,11 +362,11 @@ const Insert = (level, setSubmitting) => {
 		// if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
 		if (Object.values(error).some(e => e !== undefined)) {
-            addMessage("One or more form fields had errors.", "error");
+            addToastMessage("One or more form fields had errors.", "error", 7000);
             return;
         }
         if (allBlank) {
-            addMessage("Cannot submit without a time.", "error");
+            addToastMessage("Cannot submit without a time.", "error", 7000);
             return;
         }
 
@@ -379,12 +379,11 @@ const Insert = (level, setSubmitting) => {
             await updateBoard();
 
             // finally, let the user know that they successfully submitted their submission, and close popup
-            addMessage("Your submission was successful!", "success");
+            addToastMessage("Your submission was successful!", "success", 5000);
             closePopup();
 
         } catch (error) {
-            // otherwise, render an error message, and keep popup open
-            addMessage(error.message, "error");
+            addToastMessage("There was a problem adding your submission. Try refreshing the page.", "error", 8000);
 
         } finally {
             setSubmitting(false);

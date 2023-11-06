@@ -2,7 +2,7 @@
 import { isBefore } from "date-fns";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
+import { GameContext, ToastContext, UserContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
 import FrontendHelper from "../../helper/FrontendHelper";
 import RPCRead from "../../database/read/RPCRead";
@@ -13,8 +13,8 @@ const Levelboard = () => {
 	// game state from game context
 	const { game } = useContext(GameContext);
 
-	// add message function from message context
-	const { addMessage } = useContext(MessageContext);
+	// add message function from toast context
+	const { addToastMessage } = useContext(ToastContext);
 
 	// user state from user context
 	const { user } = useContext(UserContext);
@@ -193,14 +193,15 @@ const Levelboard = () => {
 			// finally, we can update state hooks (board & user submissions)
 			setBoard({ adjacent, all, filters, filtered });
 			setUserSubmissions(user.profile ? 
-				all.filter(submission => submission.profile.id === user.profile.id)
+				all
+				.filter(submission => submission.profile.id === user.profile.id)
+				.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at))
 			: 
 				[]
 			);
 
 		} catch (error) {
-			// if the submissions fail to be fetched, let's render an error specifying the issue
-			addMessage("Failed to fetch / update chart data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+			addToastMessage("Failed to fetch / update chart data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
 		}
 	};
 
