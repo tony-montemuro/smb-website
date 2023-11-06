@@ -43,14 +43,14 @@ function App() {
   // states and functions from the app js file
   const {
     user, 
-    toastContent,
+    messageContent,
     images,
     dispatchImages,
+    addMessage,
+    handleMessageClose,
     updateUser,
     isModerator,
-    callSessionListener,
-    addMessage,
-    handleToastClose
+    callSessionListener
   } = AppLogic();
 
   /* ===== VARIABLES ===== */
@@ -71,8 +71,8 @@ function App() {
         <Navbar imageReducer={ imageReducer } />
         <div className="app">
 
-          { /* Render the message component (will only render if open field in `toastContent` is true) */ }
-          <Message toastContent={ toastContent } handleClose={ handleToastClose } />
+          { /* Render the message component (will only render if open field in `messageContent` is true) */ }
+          <Message messageContent={ messageContent } handleClose={ handleMessageClose } />
 
           { /* App routes */ }
           <Routes>

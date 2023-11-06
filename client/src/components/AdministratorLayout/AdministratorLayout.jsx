@@ -26,7 +26,7 @@ function AdministratorLayout() {
 
   /* ===== CONTEXTS ===== */
 
-  // add message function from toast context
+  // add message function from message context
   const { addMessage } = useContext(MessageContext);
 
   // user state from user context

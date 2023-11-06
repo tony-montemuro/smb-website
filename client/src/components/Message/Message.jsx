@@ -3,14 +3,14 @@ import Action from "./Action.jsx";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 
-function Message({ toastContent, handleClose }) {
+function Message({ messageContent, handleClose }) {
   /* ===== VARIABLES ===== */
-  const message = toastContent.message;
-  const open = toastContent.open;
-  const severity = toastContent.severity;
-  const timer = toastContent.timer;
+  const message = messageContent.message;
+  const open = messageContent.open;
+  const severity = messageContent.severity;
+  const timer = messageContent.timer;
 
-  /* ===== TOAST COMPONENT ===== */
+  /* ===== MESSAGE COMPONENT ===== */
   return (
     <Snackbar 
       action={ <Action handleClose={ handleClose } /> }
