@@ -21,6 +21,7 @@ import ModeratorLayout from "./components/ModeratorLayout/ModeratorLayout.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
 import News from "./pages/News/News.jsx";
 import Notifications from "./pages/Notifications/Notifications.jsx";
+import PasswordReset from "./pages/PasswordReset/PasswordReset.jsx";
 import Post from "./pages/Post/Post.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import Overview from "./pages/Overview/Overview.jsx";
@@ -155,6 +156,7 @@ function App() {
               }/>
             </Route>
             <Route path="recent-submissions" element={ <RecentSubmissions imageReducer={ imageReducer } /> } />
+            <Route path="password-reset" element={ <PasswordReset /> } />
           </Routes>
 
         </div>
