@@ -30,12 +30,13 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
 
       <hr />
 
-      { /* Next, render the set of all games that the user wants / has already has filtered */ }
-      <div className={ styles.section }>
-        <h2>Filtered Games</h2>
-        <p>Click a game to remove it as a filter.</p>
-        { games ?
-          <>
+      { games ?
+        <>
+
+          {/* Next, render the set of all games that the user wants / has already has filtered */}
+          <div className={ styles.section }>
+            <h2>Filtered Games</h2>
+            <p>Click a game to remove it as a filter.</p>
             <Items items={ games } emptyMessage="You are not currently filtering by any games.">
               { games.map((game, index) => {
                   return (
@@ -55,25 +56,25 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
                 Apply Filters
               </button>
             </div>
-          </>
-        :
-          <Loading />
-        }
-      </div>
+          </div>
+    
+          <hr />
+    
+          { /* Render a game search component to select a game to filter by */ }
+          <div className={ styles.section }>
+            <h2>Add Games</h2>
+            <p>Click a game to add it as a filter.</p>
+          </div>
+          <GameSearch 
+            gamesPerPage={ GAMES_PER_PAGE }
+            imageReducer={ imageReducer }
+            gameRowOptions={ gameRowOptions }
+          />
 
-      <hr />
-
-      { /* Render a game search component to select a game to filter by */ }
-      <div className={ styles.section }>
-        <h2>Add Games</h2>
-        <p>Click a game to add it as a filter.</p>
-      </div>
-      <GameSearch 
-        gamesPerPage={ GAMES_PER_PAGE }
-        imageReducer={ imageReducer }
-        gameRowOptions={ gameRowOptions }
-      />
-
+        </>
+      :
+        <Loading />
+      }
     </div>
   );
 };

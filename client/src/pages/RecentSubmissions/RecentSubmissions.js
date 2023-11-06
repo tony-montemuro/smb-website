@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { ToastContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import GameRead from "../../database/read/GameRead";
 import ProfileRead from "../../database/read/ProfileRead";
@@ -8,8 +8,8 @@ import RPCRead from "../../database/read/RPCRead";
 const RecentSubmissions = () => {
     /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // add message function from toast context
+    const { addToastMessage } = useContext(ToastContext);
 
     /* ===== VARIABLES ===== */
     const defaultFiltersData = {
@@ -72,8 +72,8 @@ const RecentSubmissions = () => {
             try {
                 games = await queryGameByList(abbs);
             } catch (error) {
-                addMessage("There was a problem fetching game data.", "error");
-                return;
+                addToastMessage("One or more filters has broken due loading failures.", "error", 7000);
+                games = null;
             };
         }
         dispatchFiltersData({ type: "games", value: games });
@@ -104,8 +104,8 @@ const RecentSubmissions = () => {
             try {
                 users = await queryProfileByList(ids);
             } catch (error) {
-                addMessage("There was a problem fetching user data.", "error");
-                return;
+                addToastMessage("One or more filters has broken due loading failures.", "error", 7000);
+                users = null;
             };
         }
         dispatchFiltersData({ type: "users", value: users });
@@ -122,7 +122,7 @@ const RecentSubmissions = () => {
             const categories = await getCategories();
             dispatchFiltersData({ type: "categories", value: categories });
         } catch (error) {
-            addMessage("Category data failed to load.", "error");
+            addToastMessage("One or more filters has broken due loading failures.", "error", 7000);
         };
     };
 

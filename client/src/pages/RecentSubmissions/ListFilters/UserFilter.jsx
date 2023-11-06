@@ -30,49 +30,56 @@ function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData 
 
       <hr />
 
-      { /* Next, render the set of all users that the user wants / has already filtered by */ }
-      <div className={ styles.section }>
-        <h2>Filtered Users</h2>
-        <p>Click a user to remove it as a filter.</p>
-        { users ?
-          <>
-            <Items items={ users } emptyMessage="You are not currently filtering by any users.">
-              { users.map((user, index) => {
-                return (
-                  <UserRow
-                    user={ user }
-                    onClick={ removeUser }
-                    index={ index }
-                    disableLink
-                    key={ user.id }
-                  />
-                );
-              })}
-            </Items>
-            <div className={ styles.btns }>
-              <button type="button" className="cancel" onClick={ resetFilter }>Reset Filter</button>
-              <button type="button" onClick={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
-                Apply Filters
-              </button>
-            </div>
-          </>
-        :
-          <Loading />
-        }
-      </div>
+      { users ?
+        <>
 
-      <hr />
-      
-      { /* Render a user search component to select a user to filter by */ }
-      <div className={ styles.section }>
-        <h2>Add Users</h2>
-        <p>Click a user to add it as a filter.</p>
-      </div>
-      <UserSearch 
-        usersPerPage={ USERS_PER_PAGE }
-        userRowOptions={ userRowOptions }
-      />
+          { /* Next, render the set of all users that the user wants / has already filtered by */ }
+          <div className={ styles.section }>
+            <h2>Filtered Users</h2>
+            <p>Click a user to remove it as a filter.</p>
+            { users ?
+              <>
+                <Items items={ users } emptyMessage="You are not currently filtering by any users.">
+                  { users.map((user, index) => {
+                    return (
+                      <UserRow
+                        user={ user }
+                        onClick={ removeUser }
+                        index={ index }
+                        disableLink
+                        key={ user.id }
+                      />
+                    );
+                  })}
+                </Items>
+                <div className={ styles.btns }>
+                  <button type="button" className="cancel" onClick={ resetFilter }>Reset Filter</button>
+                  <button type="button" onClick={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
+                    Apply Filters
+                  </button>
+                </div>
+              </>
+            :
+              <Loading />
+            }
+          </div>
 
+          <hr />
+          
+          { /* Render a user search component to select a user to filter by */ }
+          <div className={ styles.section }>
+            <h2>Add Users</h2>
+            <p>Click a user to add it as a filter.</p>
+          </div>
+          <UserSearch 
+            usersPerPage={ USERS_PER_PAGE }
+            userRowOptions={ userRowOptions }
+          />
+
+        </>
+      :
+        <Loading />
+      }
     </div>
   );
 };
