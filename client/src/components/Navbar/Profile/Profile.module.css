@@ -8,7 +8,7 @@
 }
 
 .btn:hover {
-    background-color: rgb(var(--color-nav-hover)) !important;
+    background-color: rgb(var(--color-nav-hover));
     color: rgb(var(--color-link-hover));
 }
 
@@ -55,5 +55,5 @@
 
 .profileLink button:hover {
     color: rgb(var(--color-link-hover));
-    background-color: transparent !important;
+    background-color: transparent;
 }

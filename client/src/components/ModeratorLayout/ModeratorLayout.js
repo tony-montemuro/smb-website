@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, UserContext } from "../../utils/Contexts";
+import { UserContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import RPCRead from "../../database/read/RPCRead";
 
@@ -62,7 +62,7 @@ const ModeratorLayout = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // addMessage function from message context
+    // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
     // user state from user context
@@ -84,7 +84,7 @@ const ModeratorLayout = () => {
             const games = await getUnapprovedCounts(filteredGames);
             dispatchGames({ type: "all", value: games });
         } catch (error) {
-            addMessage("Failed to load game metadata.", "error");
+            addMessage("Submission metadata failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
             dispatchGames({ type: "all", value: [] });
         };
     };

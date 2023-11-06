@@ -4,7 +4,7 @@ import { useContext } from "react";
 
 const GameFilter = (games, dispatchFiltersData) => {
     /* ===== CONTEXTS ===== */
-    
+
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
@@ -23,7 +23,7 @@ const GameFilter = (games, dispatchFiltersData) => {
         if (!(games.some(row => row.abb === game.abb))) {
             dispatchFiltersData({ type: "games", value: games.concat([game]) });
         } else {
-            addMessage("You have already added this game as a filter!", "error");
+            addMessage("You are already filtering by this game.", "error", 6000);
         }
     };
 

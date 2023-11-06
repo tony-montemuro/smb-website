@@ -31,12 +31,12 @@ function ModeratorLayout() {
   const navigate = useNavigate();
 
   /* ===== CONTEXTS ===== */
-  
-  // user state & is moderator function from user context
-  const { user, isModerator } = useContext(UserContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
+
+  // user state & is moderator function from user context
+  const { user, isModerator } = useContext(UserContext);
 
   /* ===== EFFECTS ===== */
 
@@ -46,7 +46,7 @@ function ModeratorLayout() {
     if (user.id !== undefined) {
       // if user is not logged in or a moderator of at least 1 game, render error, navigate to homepage, and render early
       if (!(isModerator())) {
-        addMessage("Forbidden access.", "error");
+        addMessage("Forbidden access.", "error", 5000);
         navigate("/");
         return;
       }

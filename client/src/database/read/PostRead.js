@@ -1,21 +1,14 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
 import { supabase } from "../SupabaseClient";
-import { useContext } from "react";
 
 const PostRead = () => {
-    /* ===== CONTEXTS ===== */
-
-    // add message function from the message context
-    const { addMessage } = useContext(MessageContext);
-
     /* ===== FUNCTIONS ===== */
 
     // FUNCTION 1: queryRecentPosts - function that retrieves the 3 most recent posts in the database, and returns them
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the 3 most recent posts from the database are returned, sorted from most recent to least recent
-    // if the query is a failure, the user is alerted of the error, and an empty array is returned
+    // if the query is a failure, throw an error, which should be handled by the caller function
     const queryRecentPosts = async () => {
         try {
             const { data: posts, error } = await supabase
@@ -45,8 +38,8 @@ const PostRead = () => {
             return posts;
 
         } catch (error) {
-            addMessage("News posts failed to load.", "error");
-            return [];
+            // error should be handled by the caller function
+            throw error;
         };
     };
 
@@ -56,7 +49,7 @@ const PostRead = () => {
     // 2.) end: an integer representing the index of the last post we should query
     // POSTCONDITIONS (2 possible outcomes, 2 returns):
     // if the query is successful, the list of posts, as well as the number of total posts, is returned
-    // if the query is a failure, the user is alerted of the error, and an empty array, as well as a count of 0, are returned
+    // if the query is a failure, throw an error, which should be handled by the caller function
     const queryPosts = async (start, end) => {
         try {
             const { data: postList, count, error } = await supabase
@@ -88,8 +81,8 @@ const PostRead = () => {
             return { postList: postList, count: count };
 
         } catch (error) {
-            addMessage("News posts failed to load. Please reload the page to try again.", "error");
-            return { postList: [], count: 0 };
+            // error should be handled by the caller function
+            throw error;
         };
     };
 

@@ -362,11 +362,11 @@ const Insert = (level, setSubmitting) => {
 		// if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
 		if (Object.values(error).some(e => e !== undefined)) {
-            addMessage("One or more form fields had errors.", "error");
+            addMessage("One or more form fields had errors.", "error", 7000);
             return;
         }
         if (allBlank) {
-            addMessage("Cannot submit without a time.", "error");
+            addMessage("Cannot submit without a time.", "error", 7000);
             return;
         }
 
@@ -379,12 +379,11 @@ const Insert = (level, setSubmitting) => {
             await updateBoard();
 
             // finally, let the user know that they successfully submitted their submission, and close popup
-            addMessage("Your submission was successful!", "success");
+            addMessage("Your submission was successful!", "success", 5000);
             closePopup();
 
         } catch (error) {
-            // otherwise, render an error message, and keep popup open
-            addMessage(error.message, "error");
+            addMessage("There was a problem adding your submission. Try refreshing the page.", "error", 8000);
 
         } finally {
             setSubmitting(false);

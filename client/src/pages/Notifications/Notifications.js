@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { isBefore } from "date-fns";
-import { MessageContext, UserContext } from "../../utils/Contexts";
+import { UserContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useReducer, useState } from "react";
 import NotificationDelete from "../../database/delete/NotificationDelete";
 import NotificationRead from "../../database/read/NotificationRead";
@@ -106,7 +106,7 @@ const Notifications = () => {
 
         } catch (error) {
             // render an error message to the client
-            addMessage("Your notifications failed to load.", "error");
+            addMessage("Notifications failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 
@@ -221,10 +221,10 @@ const Notifications = () => {
             setPageNum(1);
 
             // finally, render a success message to the user
-            addMessage("Notifications successfully deleted.", "success");
+            addMessage("Notifications successfully deleted!", "success", 5000);
 
         } catch (error) {
-            addMessage("One or more notifications failed to delete. Refresh the page and try again.", "error");
+            addMessage("One or more notifications failed to delete. Refresh the page and try again.", "error", 10000);
         } finally {
             dispatchNotifications({ field: "submitting", payload: false });
         }

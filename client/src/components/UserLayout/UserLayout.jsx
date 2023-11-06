@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { MessageContext, ProfileContext } from "../../utils/Contexts";
+import { ProfileContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react"; 
 import styles from "./UserLayout.module.css";
 import Loading from "../Loading/Loading.jsx";
@@ -18,7 +18,7 @@ function UserLayout({ imageReducer }) {
   /* ===== CONTEXTS ===== */
 
   // add message function from message context
-  const { addMessage } = useContext(MessageContext);
+  const { addMessage } = useContext(MessageContext)
   
   /* ===== STATES ===== */
   const [profile, setProfile] = useState(undefined);
@@ -37,8 +37,8 @@ function UserLayout({ imageReducer }) {
         // if profile is a null object, it means no profile exists that corresponds with `profileId`. we will print an error message,
         // and navigate to the home screen
         if (!profile) {
-          addMessage("User does not exist.", "error");
-          navigate("/");
+          addMessage("The requested user does not exist.", "error", 7000);
+          navigate("/users");
           return;
         }
 

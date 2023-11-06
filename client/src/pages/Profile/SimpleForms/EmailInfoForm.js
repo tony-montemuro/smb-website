@@ -31,7 +31,7 @@ const EmailInfoForm = () => {
     // the `name` field of the email state hook is updated based on e.value
     const handleChange = (e) => {
         const { value } = e.target;
-        setEmail({ ...email, name: value });
+        setEmail({ ...email, error: undefined, name: value });
     };
 
     // FUNCTION 2: handleEmailUpdate - handles an attempt at updating the email
@@ -49,7 +49,7 @@ const EmailInfoForm = () => {
         const error = validateEmail(email.name);
         if (error) {
             setEmail({ ...email, error: error });
-            addMessage(error, "error");
+            addMessage("There was a problem with the email you provided.", "error", 7000);
             return;
         }
 
@@ -60,11 +60,11 @@ const EmailInfoForm = () => {
             await updateEmail(email.name);
 
             // if there are no errors, we can complete the function
-            addMessage(`An email has been sent to both your current address, as well as ${ email.name }.`, "success");
+            addMessage(`An email has been sent to both your current address, as well as ${ email.name }.`, "success", 7000);
             setEmail({ ...email, error: undefined, submitting: false });
 
         } catch (error) {
-            addMessage(error.message, "error");
+            addMessage("There was a problem sending the reset emails. If refreshing the page does not work, the email system may be experiencing an outage.", "error", 11000);
             setEmail({ ...email, error: error.message, submitting: false });
         }
     };

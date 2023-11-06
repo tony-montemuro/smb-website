@@ -42,7 +42,7 @@ const RecentSubmissionsTable = () => {
             const { submissions, count } = await queryRecentSubmissions(start, end, searchParams);
             setSubmissions({ data: submissions, total: count });
         } catch (error) {
-            addMessage("There was a problem loading the recent submissions.", "error");
+            addMessage("Recent submissions data failing to load.", "error", 7000);
         }
     };
 

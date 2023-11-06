@@ -24,11 +24,11 @@ const UserInfoForm = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // user state and update user function from user context
-    const { user, updateUser } = useContext(UserContext);
-
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
+
+    // user state and update user function from user context
+    const { user, updateUser } = useContext(UserContext);
 
     /* ===== REDUCERS ===== */
 
@@ -348,7 +348,7 @@ const UserInfoForm = () => {
         // if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
         if (Object.values(error).some(e => e !== undefined)) {
-            addMessage("One or more form fields had errors.", "error");
+            addMessage("One or more form fields had errors.", "error", 7000);
             return;
         }
 
@@ -364,19 +364,19 @@ const UserInfoForm = () => {
             // attempt to upload user info. if it's a success, we also update user state, and render a success message
             await upsertUserInfo(userInfo);
             await updateUser(user.id);
-            addMessage("Profile information has successfully updated!", "success");
+            addMessage("Profile information has successfully updated!", "success", 5000);
 
         } catch (error) {
             // special case: user attempted to update their username to a non-unique name
             if (error.code === "23505") {
-                addMessage("This username is already taken.", "error");
+                addMessage("This username is already taken.", "error", 5000);
                 error.username = "Username must be unique.";
                 dispatchForm({ field: "error", value: error });
             } 
             
             // general case: render an error message, and reset the uploading flag
             else {
-                addMessage("There was an error updating your profile. Please try again.", "error");
+                addMessage("There was an error updating your profile. Try refreshing the page.", "error", 10000);
             }
 
         } finally {

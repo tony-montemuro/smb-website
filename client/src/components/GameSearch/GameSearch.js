@@ -61,7 +61,7 @@ const GameSearch = () => {
             setGames({ data: games, total: count });
             if (games.length === 0) setBadSearch(badSearch => badSearch ? badSearch : userInput);
         } catch (error) {
-            addMessage("Game data failed to load.", "error");
+            addMessage("Games data failing to load.", "error", 6000);
         }
     };
 

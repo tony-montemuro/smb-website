@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, MessageContext, PopupContext } from "../../../utils/Contexts";
+import { GameContext, PopupContext, MessageContext } from "../../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../../helper/FrontendHelper";
@@ -25,11 +25,11 @@ const Update = (level, setSubmitting) => {
     // game state from game context
     const { game } = useContext(GameContext);
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
-
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES & REDUCERS ===== */
     const [form, dispatchForm] = useReducer((state, action) => {
@@ -211,7 +211,7 @@ const Update = (level, setSubmitting) => {
         // if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
 		if (Object.values(error).some(row => row !== undefined)) {
-            addMessage("One or more form fields had errors.", "error");
+            addMessage("One or more form fields had errors.", "error", 7000);
             return;
         }
 
@@ -227,12 +227,11 @@ const Update = (level, setSubmitting) => {
             await updateBoard();
 
             // finally, let the user know that they successfully submitted their submission, and close the popup
-            addMessage("Your submission was successfully updated!", "success");
+            addMessage("Your submission was successfully updated!", "success", 5000);
             closePopup();
 
         } catch (error) {
-            // if there was an error during this process, render it to the user
-            addMessage(error.message, "error");
+            addMessage("Ther was a problem updating your submission. Try refreshing the page.", "error", 8000);
 
         } finally {
             setSubmitting(false);

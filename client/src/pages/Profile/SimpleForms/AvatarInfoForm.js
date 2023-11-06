@@ -55,7 +55,7 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
                 const width = img.width;
                 const height = img.height;
                 if (width > MAX_IMG_LENGTH || height > MAX_IMG_LENGTH) {
-                    reject(`Image dimensions are too large: (${ width }x${ height }). Image must be within ${ MAX_IMG_LENGTH }x${ MAX_IMG_LENGTH }.`);
+                    reject(`Avatar dimensions are too large: (${ width }x${ height }). Avatar must be within ${ MAX_IMG_LENGTH }x${ MAX_IMG_LENGTH }.`);
                 } else {
                     resolve();
                 }
@@ -74,7 +74,7 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
     const validateAvatar = async avatarRef => {
         // first, check if the user actually chose a file. cannot upload a non-existant image as an avatar
         if (!avatarRef.current.files || avatarRef.current.files.length === 0) {
-            return "You must select an image to upload.";
+            return "You must select an avatar to upload.";
         }
 
         // get information about the file from the avatar ref hook
@@ -113,7 +113,7 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
                 img.onload = () => {
                     // create canvas
                     const canvas = document.createElement("canvas");
-                    const ctx = canvas.getContext('2d');
+                    const ctx = canvas.getContext("2d");
 
                     // set canvas size
                     canvas.width = img.width;
@@ -168,7 +168,7 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
             // if there is an error, return early
             dispatchForm({ field: "error", value: error });
             if (error) {
-                addMessage(error, "error");
+                addMessage("There was a problem uploading your avatar.", "error", 5000);
                 return;
             }
 
@@ -181,10 +181,10 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
 
             // re-download the new image & update the global image state, and render a success message
             await updateImageByProfileId(user.profile.id, imageReducer, true);
-            addMessage("Avatar successfully uploaded. If it is not showing up, give it some time and reload the page.", "success");
+            addMessage("Avatar successfully uploaded. If it is not showing up, give it some time and reload the page.", "success", 9000);
             
         } catch (error) {
-            addMessage(error.message, "error");
+            addMessage("There was a problem uploading your avatar. Refresh the page and try again.", "error", 10000);
         } finally {
             avatarRef.current.value = "";
             dispatchForm({ field: "uploading", value: false });

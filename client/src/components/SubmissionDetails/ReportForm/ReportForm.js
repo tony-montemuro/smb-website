@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useContext, useState } from "react";
-import { MessageContext, PopupContext, UserContext } from "../../../utils/Contexts";
+import { PopupContext, MessageContext, UserContext } from "../../../utils/Contexts";
 import ReportUpdate from "../../../database/update/ReportUpdate";
 
 const ReportForm = () => {
@@ -9,14 +9,14 @@ const ReportForm = () => {
 
     /* ===== CONTEXTS ===== */
 
-    // user state & updateUser function from user context
-    const { user, updateUser } = useContext(UserContext);
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
 
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+    // user state & updateUser function from user context
+    const { user, updateUser } = useContext(UserContext);
 
     /* ===== STATES ===== */
     const [message, setMessage] = useState(messageInit);
@@ -55,12 +55,14 @@ const ReportForm = () => {
             // perform a concurrent call to update board, as well as update user data (specifically, the report token count
             // should decrease)
             await Promise.all([updateBoard(), updateUser(user.id)]);
-            addMessage("The submission was successfully reported! Please give the moderation team a few days to look it over.", "success");
+            addMessage("The submission was successfully reported! Please give the moderation team a few days to look it over.", "success", 10000);
             closePopup();
     
         } catch (error) {
             // otherwise, render an error message, and set the submitting state back to false
-            addMessage(error.message, "error");
+            addMessage("There was a problem reporting this submission.", "error", 8000);
+
+        } finally {
             setSubmitting(false);
         }
     };

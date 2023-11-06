@@ -69,7 +69,7 @@ function User({ imageReducer }) {
         { profile.moderated_games.length > 0 &&
           <>
             <h2>Game Moderator</h2>
-            <p>This user is responsible for moderating the charts of at least <strong>1</strong> game. To see the specific list of games, go to the <strong>Game Moderators</strong> section.</p>
+            <p>This user is responsible for moderating the charts of at least <strong>1</strong> game. To see the specific list of games, go to the <strong>Games Moderated</strong> section.</p>
           </>
         }
         <h2>Normal User</h2>

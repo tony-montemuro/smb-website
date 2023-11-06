@@ -16,11 +16,11 @@ function Profile({ imageReducer }) {
 
   /* ===== CONTEXTS ===== */
 
-  // user state from user context
-  const { user } = useContext(UserContext);
-
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
+
+  // user state from user context
+  const { user } = useContext(UserContext);
 
   /* ===== STATES ===== */
   const [countries, setCountries] = useState(undefined);
@@ -38,7 +38,7 @@ function Profile({ imageReducer }) {
       // if not user.id (meaning user is null), current user is not authenticated. thus, deny
       // access to this page.
       if (!user.id) {
-        addMessage("You cannot access this page.", "error");
+        addMessage("Forbidden access.", "error", 5000);
         navigate("/");
         return;
       }

@@ -66,9 +66,9 @@ function SubmissionHistory() {
       );
 			
 			// if no level or profile exists, we will print an error message, and navigate to the home screen
-			if (!level || !profile) {
-				addMessage("Page does not exist.", "error");
-				navigate("/");
+			if (!level || profile === null) {
+				addMessage("Submission History does not exist.", "error", 5000);
+				navigate(level ? `/games/${ abb }/${ category }/${ type }/${ levelName }` : `/games/${ abb }`);
 				return;
 			}
 
@@ -101,7 +101,7 @@ function SubmissionHistory() {
 
       <Container title="Submission History" largeTitle>
         <div className={ styles.containerBody }>
-        { profile && level ?
+        { profile ?
 
           // Header - render message describing the page
           <h2>

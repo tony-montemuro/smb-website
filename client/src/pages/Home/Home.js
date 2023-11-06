@@ -1,9 +1,15 @@
 /* ===== IMPORTS ===== */
+import { MessageContext } from "../../utils/Contexts";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import PostRead from "../../database/read/PostRead";
 
 const Home = () => {
+    /* ===== CONTEXTS ===== */
+
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     /* ===== VARIABLES ===== */
     const navigate = useNavigate();
 
@@ -21,16 +27,17 @@ const Home = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the most recent posts are retrieved, and the posts state is updated by calling setPosts() function
     const getPosts = async () => {
-        // first, grab the posts
-        const posts = await queryRecentPosts();
-        
-        // next, split each post body into "lines", so that formatting can be preserved according to new line characters
-        for (let post of posts) {
-            post.body = post.body.split("\n");
+        try {
+            const posts = await queryRecentPosts();
+            
+            // split each post body into "lines", so that formatting can be preserved according to new line characters
+            for (let post of posts) {
+                post.body = post.body.split("\n");
+            }
+            setPosts(posts);
+        } catch (error) {
+            addMessage("News posts failed to load.", "error", 7000);
         }
-
-        // finally, update the posts state hook
-        setPosts(posts);
     };
 
     // FUNCTION 2: navigateToGame - code that navigates a user to a game page given a game object

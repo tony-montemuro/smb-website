@@ -23,14 +23,14 @@ import Update from "./Update/Update.jsx";
 function Levelboard({ imageReducer }) {
 	/* ===== CONTEXTS ===== */
 
-	// user state & is moderator function from user context
-  const { user, isModerator } = useContext(UserContext);
-
 	// game state from game context
   const { game } = useContext(GameContext);
 
 	// add message function from message context
 	const { addMessage } = useContext(MessageContext);
+
+	// user state & is moderator function from user context
+  const { user, isModerator } = useContext(UserContext);
 
 	/* ===== HELPER FUNCTIONS ===== */
 	const { capitalize, cleanLevelName, dateB2F } = FrontendHelper();
@@ -99,8 +99,8 @@ function Levelboard({ imageReducer }) {
 			
 			// if not, we will print an error message, and navigate to the home screen
 			if (!level) {
-				addMessage("Chart does not exist.", "error");
-				navigate("/");
+				addMessage("Chart does not exist.", "error", 5000);
+				navigate(`/games/${ abb }`);
 				return;
 			}
 

@@ -25,7 +25,7 @@ const Profile = () => {
             const countries = await queryCountries();
             return countries;
         } catch (error) {
-            addMessage("There was an issue fetching some of your data.", "error");
+            addMessage("There was an issue fetching some of your data.", "error", 7000);
             return undefined;
         };
     };

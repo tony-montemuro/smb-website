@@ -78,7 +78,7 @@ const Post = () => {
 		error = validateLinkDescription(form.values.link, form.values.link_description);
         setForm({ ...form, error: error });
 		if (error) {
-            addMessage("The link description field has an error.", "error");
+            addMessage("The Link Description field has an error.", "error", 7000);
             return;
         }
 
@@ -89,9 +89,9 @@ const Post = () => {
         try {
             await insertPost({ ...form.values, profile_id: user.profile.id });
             setForm({ ...form, submitted: true });
-            addMessage("Post successfully uploaded!", "success");
+            addMessage("Post successfully uploaded!", "success", 5000);
         } catch (error) {
-            addMessage("Post failed to upload. The database may be experiencing some issues.", "error");
+            addMessage("Post failed to upload. Try reloading the page.", "error", 7000);
         } finally {
             setForm({ ...form, submitting: false });
         }

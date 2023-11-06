@@ -181,9 +181,9 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
             const query = isUnapproved ? insertApproval(submission.id, user.profile.id) : deleteReport(submission.report.report_date);
             await query;
             handleCloseAndRemove();
-            addMessage("Submission was successfully approved!", "success");
+            addMessage("Submission was successfully approved!", "success", 5000);
         } catch (error) {
-            addMessage("There was a problem approving this submission.", "error");
+            addMessage("There was a problem approving this submission.", "error", 7000);
         };
     };
 
@@ -206,7 +206,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         // and return early
         if (Object.values(error).some(row => row !== undefined)) {
             setForm({ ...form, error: error });
-            addMessage("One or more form fields had errors.", "error");
+            addMessage("One or more form fields had errors.", "error", 7000);
             return;
         }
 
@@ -218,18 +218,18 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
             await updateSubmission(payload, submission.id);
 
             // next, insert approval
-            const query = isUnapproved ? insertApproval(submission.id, user.profile.id) : deleteReport(submission.report.report_date);
+            const query = insertApproval(submission.id, user.profile.id);
             await query;
 
             // finally, close popup
             handleCloseAndRemove();
-            addMessage("Submission was successfully updated and approved!", "success");
+            addMessage("Submission was successfully updated and approved!", "success", 7000);
 
         } catch (error) {
             if (error.message === "approve") {
-                addMessage("There was a problem approving this submission.", "error");
+                addMessage("There was a problem approving this submission.", "error", 7000);
             } else {
-                addMessage("There was a problem updating this submission.", "error");
+                addMessage("There was a problem updating this submission.", "error", 7000);
             }
         } finally {
             setSubmitting(false);
@@ -244,7 +244,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     // otherwise, we run the `updateSubmission` function
     const onApproveClick = e => {
         e.preventDefault();
-        if (isFormUnchanged()) {
+        if (isFormUnchanged() || !isUnapproved) {
             approveSubmission();
         } else {
             updateAndApproveSubmission();
@@ -284,13 +284,13 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
 
             // finally, close popup
             handleCloseAndRemove();
-            addMessage("Submission was successfully rejected!", "success");
+            addMessage("Submission was successfully rejected!", "success", 5000);
 
         } catch (error) {
             if (error.message === "delete") {
-                addMessage("There was a problem deleting this submission.", "error");
+                addMessage("There was a problem deleting this submission.", "error", 7000);
             } else {
-                addMessage("The submission successfully was rejected, but the notification system failed to notify the user.", "error");
+                addMessage("The submission successfully was rejected, but the notification system failed to notify the user.", "error", 10000);
             }
         } finally {
             setSubmitting(false);

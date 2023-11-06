@@ -62,13 +62,10 @@ const UserStats = () => {
                     total: liveTotal
                 }
             };
-            
-            // update the stats state hook
             setStats(stats);
 
         } catch (error) {
-            // if the submissions fail to be fetched, let's render an error specifying the issue
-			addMessage("Failed to fetch user data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+			addMessage("Failed to fetch user data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         };
     };
 

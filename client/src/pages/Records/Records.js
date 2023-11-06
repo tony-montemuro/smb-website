@@ -41,7 +41,7 @@ const Records = () => {
             const [all, live] = await Promise.all(promises);
             setRecordTable({ all, live });
         } catch (error) {
-			addMessage("Failed to fetch world record data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+			addMessage("Failed to fetch world record data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         }
     };
 

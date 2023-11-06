@@ -10,7 +10,7 @@ const UserLayout = () => {
     const navigate = useNavigate();
 
     /* ===== CONTEXTS ===== */
-
+    
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
@@ -34,7 +34,7 @@ const UserLayout = () => {
             const profile = await getProfile(profileId);
             return profile;
         } catch (error) {
-            addMessage("There was an issue fetching this users data.", "error");
+            addMessage("There was an issue fetching this users information.", "error", 7000);
             return undefined;
         };
     };

@@ -49,5 +49,5 @@
 }
 
 .clear:hover {
-    background-color: rgb(var(--color-container-selected)) !important;
+    background-color: rgb(var(--color-container-selected));
 }

@@ -37,7 +37,7 @@ const MedalTable = () => {
             const medals = await getMedals(abb, category, type);
             setMedalTable(medals);
         } catch (error) {
-			addMessage("Failed to fetch medal table data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+			addMessage("Failed to load medal table. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         }
     };
 

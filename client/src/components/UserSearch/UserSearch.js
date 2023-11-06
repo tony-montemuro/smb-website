@@ -59,7 +59,7 @@ const UserSearch = () => {
             setUsers({ data: profiles, total: count });
             if (profiles.length === 0) setBadSearch(badSearch => badSearch ? badSearch : userInput);
         } catch (error) {
-            addMessage("Profiles failed to load.", "error");
+            addMessage("Users data failing to load.", "error", 6000);
         };
     };
 

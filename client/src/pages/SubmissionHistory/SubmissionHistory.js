@@ -44,7 +44,7 @@ const SubmissionHistory = () => {
             const profile = await getProfile(profileId);
             return profile;
         } catch (error) {
-            addMessage("There was an issue fetching this users data.", "error");
+            addMessage("Failed to fetch some or all of Submission History data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
             return undefined;
         };
     };
@@ -65,7 +65,7 @@ const SubmissionHistory = () => {
             setSubmissions({ normal, tas });
 
         } catch (error) {
-            addMessage("Failed to fetch / update submission data. If refreshing the page does not work, the database may be experiencing some issues.", "error")
+            addMessage("Failed to fetch some or all of Submission History data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
         }
     };
 

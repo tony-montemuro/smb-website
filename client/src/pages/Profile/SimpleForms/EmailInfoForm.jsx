@@ -28,7 +28,6 @@ function EmailInfoForm() {
           value={ email.name }
           variant="filled"
         />
-        { email.error && <p id={ styles.error }>Error: { email.error }</p> }
         <button type="submit" disabled={ email.submitting }>Update Email</button>
       </form>
     </Container>

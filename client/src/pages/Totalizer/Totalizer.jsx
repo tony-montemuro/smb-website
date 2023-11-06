@@ -31,6 +31,7 @@ function Totalizer({ imageReducer }) {
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
+  const abb = path[2];
   const category = path[3];
   const type = path[5];
   const categories = getGameCategories(game);
@@ -51,15 +52,15 @@ function Totalizer({ imageReducer }) {
   useEffect(() => {
     // special case #1: we are attempting to access a totalizer page with a non-valid category or non-practice mode category
     if (!(categories.includes(category) && isPracticeMode(category))) {
-      addMessage("The page you requested does not exist.", "error");
-      navigate("/");
+      addMessage("Ranking does not exist.", "error", 5000);
+      navigate(`/games/${ abb }`);
       return;
     }
 
     // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
     if (!(types.includes(type))) {
-      addMessage("The page you requested does not exist.", "error");
-      navigate("/");
+      addMessage("Ranking does not exist.", "error", 5000);
+      navigate(`/games/${ abb }`);
       return;
     }
 

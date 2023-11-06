@@ -26,7 +26,7 @@ function AdministratorLayout() {
 
   /* ===== CONTEXTS ===== */
 
-  // add message state from message context
+  // add message function from message context
   const { addMessage } = useContext(MessageContext);
 
   // user state from user context
@@ -40,7 +40,7 @@ function AdministratorLayout() {
     if (user.id !== undefined) {
       // if user is not logged in or is not an administrator, render error, navigate to homepage, and render early
       if (!user.profile || !user.profile.administrator) {
-        addMessage("Forbidden access.", "error");
+        addMessage("Forbidden access.", "error", 5000);
         navigate("/");
         return;
       }

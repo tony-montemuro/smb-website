@@ -193,14 +193,15 @@ const Levelboard = () => {
 			// finally, we can update state hooks (board & user submissions)
 			setBoard({ adjacent, all, filters, filtered });
 			setUserSubmissions(user.profile ? 
-				all.filter(submission => submission.profile.id === user.profile.id)
+				all
+				.filter(submission => submission.profile.id === user.profile.id)
+				.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at))
 			: 
 				[]
 			);
 
 		} catch (error) {
-			// if the submissions fail to be fetched, let's render an error specifying the issue
-			addMessage("Failed to fetch / update chart data. If refreshing the page does not work, the database may be experiencing some issues.", "error");
+			addMessage("Failed to fetch / update chart data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
 		}
 	};
 

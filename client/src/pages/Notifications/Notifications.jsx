@@ -14,12 +14,12 @@ import TypeSymbol from "./TypeSymbol";
 
 function Notifications() {
   /* ===== CONTEXTS ===== */
+
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
   
   // user state from user context
   const { user } = useContext(UserContext);
-
-  // addMessage function from message context
-  const { addMessage } = useContext(MessageContext);
 
   /* ===== VARIABLES ===== */
   const TABLE_WIDTH = 7;
@@ -57,7 +57,7 @@ function Notifications() {
       // if not user.id (meaning user is null), current user is not authenticated. thus, deny
       // access to this page.
       if (!user.id) {
-        addMessage("You cannot access this page.", "error");
+        addMessage("Forbidden access.", "error", 5000);
         navigate("/");
         return;
       }

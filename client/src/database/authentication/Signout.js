@@ -28,11 +28,10 @@ const Signout = () => {
             }
 
             // if sign out was a success, let's inform the user
-            addMessage("You have successfully logged out!", "success");
+            addMessage("You have successfully logged out!", "success", 7000);
 
         } catch (error) {
-            // if there was any error in the sign out phase, inform the user
-            addMessage(error.message, "error");
+            addMessage("There was a problem logging you out.", "error", 7000);
         }
     };
 
