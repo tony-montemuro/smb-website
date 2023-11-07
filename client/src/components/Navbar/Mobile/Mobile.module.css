@@ -73,6 +73,10 @@
     width: 100%;
 }
 
+.dropdownInner p {
+    margin: 0;
+}
+
 .innerLeft {
     top: 0;
     left: 0;

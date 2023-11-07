@@ -28,12 +28,12 @@ function MobileLogo({ isOpen, setIsOpen }) {
             <CloseButton onClose={ () => setIsOpen(false) } />
           </div>
           <div className={ styles.dropdownLinks }>
-            <Link to="/" onClick={ () => setIsOpen(false) }>Home</Link>
-            <Link to="/games" onClick={ () => setIsOpen(false) }>Games</Link>
-            <Link to="/users" onClick={ () => setIsOpen(false) }>Users</Link>
-            <Link to="/news" onClick={ () => setIsOpen(false) }>News</Link>
-            <Link to="/resources" onClick={ () => setIsOpen(false) }>Resources</Link>
-            <Link to="/support" onClick={ () => setIsOpen(false) }>Support</Link>
+            <p><Link to="/" onClick={ () => setIsOpen(false) }>Home</Link></p>
+            <p><Link to="/games" onClick={ () => setIsOpen(false) }>Games</Link></p>
+            <p><Link to="/users" onClick={ () => setIsOpen(false) }>Users</Link></p>
+            <p><Link to="/news" onClick={ () => setIsOpen(false) }>News</Link></p>
+            <p><Link to="/resources" onClick={ () => setIsOpen(false) }>Resources</Link></p>
+            <p><Link to="/support" onClick={ () => setIsOpen(false) }>Support</Link></p>
           </div>
         </div>
       </div>

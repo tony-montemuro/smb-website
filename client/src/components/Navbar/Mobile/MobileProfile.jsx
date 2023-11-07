@@ -51,24 +51,38 @@ function MobileProfile({ isOpen, setIsOpen, imageReducer }) {
           <div className={ styles.dropdownLinks }>
 
             { /* First, render a link to the user's page */ }
-            <Link to={ `/user/${ user.profile.id }` } onClick={ () => setIsOpen(false) } title="View Profile">
+            <div onClick={ () => setIsOpen(false) }>
               <Username profile={ user.profile } />
-            </Link>
+            </div>
 
             <hr />
 
             { /* Next, render links to user-specific pages: editing profile, notifications, hubs for elevated users, etc. */ }
-            <Link to="/profile" onClick={ () => setIsOpen(false) }>Profile Settings</Link>
-            <Link to="/notifications" onClick={ () => setIsOpen(false) }>
-              Notifications{ user.notificationCount > 0 && ` (${ user.notificationCount })` }
-            </Link>
-            { user.profile.administrator && <Link to="/administrator" onClick={ () => setIsOpen(false) }>Administrator Hub</Link> }
-            { isModerator() && <Link to="/moderator" onClick={ () => setIsOpen(false) }>Moderator Hub</Link> }
+            <p>
+              <Link to="/profile" onClick={ () => setIsOpen(false) }>Profile Settings</Link>
+            </p>
+            <p>
+              <Link to="/notifications" onClick={ () => setIsOpen(false) }>
+                Notifications{ user.notificationCount > 0 && ` (${ user.notificationCount })` }
+              </Link>
+            </p>
+            { user.profile.administrator && 
+              <p>
+                <Link to="/administrator" onClick={ () => setIsOpen(false) }>Administrator Hub</Link>
+              </p> 
+            }
+            { isModerator() && 
+              <p>
+                <Link to="/moderator" onClick={ () => setIsOpen(false) }>Moderator Hub</Link>
+              </p>
+            }
 
             <hr />
 
             { /* Finally, render option to sign out */ }
-            <span id={ styles.signout } onClick={ onSignOut }>Sign Out</span>
+            <p>
+              <span id={ styles.signout } onClick={ onSignOut }>Sign Out</span>
+            </p>
 
           </div>
         </div>
