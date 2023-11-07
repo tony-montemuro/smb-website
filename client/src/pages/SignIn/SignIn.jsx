@@ -66,6 +66,7 @@ function SignIn() {
           theme="dark"
           appearance={ { theme } }
           providers={ [] }
+          redirectTo={ `${ window.location.origin }/profile` }
         />
       </div>
 

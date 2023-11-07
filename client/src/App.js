@@ -1,6 +1,5 @@
 /* ===== IMPORTS ===== */
 import { supabase } from "./database/SupabaseClient";
-import { useNavigate } from "react-router-dom";
 import { useReducer, useRef, useState } from "react";
 import DateHelper from "./helper/DateHelper";
 import NotificationRead from "./database/read/NotificationRead";
@@ -19,7 +18,6 @@ const App = () => {
     users: {}
   }
   const defaultMessage = { open: false };
-  const navigate = useNavigate();
 
   /* ===== REFS ===== */
   const timeoutRef = useRef(null);
@@ -38,11 +36,9 @@ const App = () => {
 
   /* ===== FUNCTIONS ===== */
 
-  // database functions to load data
+  // database functions
   const { queryNotificationCount } = NotificationRead();
   const { queryUserProfile } = ProfileRead();
-
-  // database function used to retrieve the current session
   const { getSession } = Session();
 
   // helper funcitons
@@ -165,14 +161,9 @@ const App = () => {
 
     // listener for changes to the auth state
     supabase.auth.onAuthStateChange((event, newSession) => {
-      // special case #1: the current session's user id is the same as the previous session's user id. function should just return
+      // special case: the current session's user id is the same as the previous session's user id. function should just return
       if (event === "SIGNED_IN" && session && newSession && newSession.user.id === session.user.id) {
         return;
-      }
-
-      // special case #2: user is attempting to recover their password
-      if (event === "PASSWORD_RECOVERY") {
-        navigate("/password-reset");
       }
 
       // otherwise, update the user data
