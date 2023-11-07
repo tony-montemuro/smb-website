@@ -4,8 +4,8 @@ import { GameContext } from "../../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import dayjs from "dayjs";
 import styles from "./Filters.module.css";
-import FiltersLogic from "./Filters.js";
 import ArrayBasedFilter from "./ArrayBasedFilter";
+import FiltersLogic from "./Filters.js";
 
 function Filters({ currentFilters, defaultFilters, updateBoard }) {
   /* ===== CONTEXTS ===== */

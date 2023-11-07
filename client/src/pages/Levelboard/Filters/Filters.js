@@ -140,11 +140,10 @@ const Filters = (defaultFilters) => {
     // PRECONDITIONS (1 parameter):
     // 1.) a function that, when called, updates the levelboard
     // POSTCONDITIONS (1 possible outcome):
-    // we apply filters by calling the `updateBoard` with our `filters` state as a parameter, and close the popup by calling
-    // the `closePopup` function
+    // we first close the popup, then apply filters by calling the `updateBoard` with our `filters` state as a parameter
     const handleApplyFilters = async updateBoard => {
-        await updateBoard(filters);
         closePopup();
+        await updateBoard(filters);
     };
 
     return {
