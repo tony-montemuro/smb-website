@@ -1,40 +1,51 @@
 /* ===== IMPORTS ===== */
-import { Auth } from "@supabase/auth-ui-react";
+import { useContext, useEffect } from "react";
 import { supabase } from "../../database/SupabaseClient";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../utils/Contexts";
 import styles from "./SignIn.module.css";
+import Logo from "../../assets/svg/Logo.jsx";
 import LoginImage from "../../assets/png/login.png";
+import MemoizedAuth from "./MemoizedAuth.jsx";
 
 function SignIn() {
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
-  const theme = { 
-    ...ThemeSupa, 
-    dark: {
-      ...ThemeSupa.dark,
-      colors: {
-        ...ThemeSupa.dark.colors,
-        brand: "rgb(var(--color-nav))",
-        brandAccent: "rgb(var(--color-nav-hover))",
-        brandButtonText: "rgb(var(--color-text))",
-      }
-    },
-    default: {
-      ...ThemeSupa.default,
-      fonts: {
-        bodyFontFamily: "var(--font)",
-        buttonFontFamily: "var(--font)",
-        inputFontFamily: "var(--font)",
-        labelFontFamily: "var(--font)"
+  console.log(ThemeSupa);
+  const theme = {
+    theme: {
+      ...ThemeSupa, 
+      dark: {
+        ...ThemeSupa.dark,
+        colors: {
+          ...ThemeSupa.dark.colors,
+          brand: "rgb(var(--color-button))",
+          brandAccent: "rgb(var(--color-button-hover))",
+          brandButtonText: "black",
+        }
       },
-      fontSizes: {
-        baseBodySize: "15px",
-        baseInputSize: "16px",
-        baseLabelSize: "16px",
-        baseButtonSize: "16px"
+      default: {
+        ...ThemeSupa.default,
+        colors: {
+          ...ThemeSupa.default.colors,
+          brand: "rgb(var(--color-button))",
+          brandAccent: "rgb(var(--color-button-hover))",
+          brandButtonText: "black",
+          inputText: "white"
+        },
+        fonts: {
+          bodyFontFamily: "var(--font)",
+          buttonFontFamily: "var(--font)",
+          inputFontFamily: "var(--font)",
+          labelFontFamily: "var(--font)"
+        },
+        fontSizes: {
+          baseBodySize: "15px",
+          baseInputSize: "16px",
+          baseLabelSize: "16px",
+          baseButtonSize: "16px"
+        }
       }
     }
   };
@@ -60,11 +71,13 @@ function SignIn() {
 
       { /* Left: render the sign in form */ }
       <div className={ styles.left }>
-        <h2>SMB Elite</h2>
-        <Auth 
+        <div className={ styles.logo }>
+          <Logo />
+        </div>
+        <MemoizedAuth 
           supabaseClient={ supabase }
           theme="dark"
-          appearance={ { theme } }
+          appearance={ theme }
           providers={ [] }
           redirectTo={ `${ window.location.origin }/profile` }
         />
