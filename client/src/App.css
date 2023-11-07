@@ -180,3 +180,7 @@ input[type=file], input[type=file]::-webkit-file-upload-button {
     color: #ccc;
     border-color: #ccc;
 }
+
+.cancel:disabled:hover {
+    background-color: transparent;
+}

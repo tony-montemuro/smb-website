@@ -177,6 +177,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     // if the submission approval is successful, we close the popup and render a success message to the user
     // if the submission approval is a failure, render an error message to the user
     const approveSubmission = async () => {
+        setSubmitting(true);
         try {
             const query = isUnapproved ? insertApproval(submission.id, user.profile.id) : deleteReport(submission.report.report_date);
             await query;
@@ -184,6 +185,8 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
             addMessage("Submission was successfully approved!", "success", 5000);
         } catch (error) {
             addMessage("There was a problem approving this submission.", "error", 7000);
+        } finally {
+            setSubmitting(false);
         };
     };
 

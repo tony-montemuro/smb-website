@@ -2,6 +2,10 @@
     opacity: 0.6;
 }
 
+#disabled:hover {
+    background-color: transparent;
+}
+
 .close {
     padding: 0;
     border: 2px solid red;
