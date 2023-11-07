@@ -6,6 +6,7 @@ import styles from "./Profile.module.css";
 import AvatarInfoForm from "./SimpleForms/AvatarInfoForm.jsx";
 import EmailInfoForm from "./SimpleForms/EmailInfoForm.jsx";
 import Loading from "../../components/Loading/Loading.jsx";
+import PasswordForm from "./SimpleForms/PasswordForm.jsx";
 import ProfileLogic from "./Profile.js";
 import SignoutForm from "./SimpleForms/SignoutForm.jsx";
 import UserInfoForm from "./UserInfoForm/UserInfoForm.jsx";
@@ -69,6 +70,7 @@ function Profile({ imageReducer }) {
         <div className={ styles.right }>
           { user.profile && <AvatarInfoForm imageReducer={ imageReducer } /> }
           <EmailInfoForm />
+          <PasswordForm />
           <SignoutForm />
         </div>
           

@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { MessageContext } from "../../../utils/Contexts";
 import { useContext, useState } from "react";
-import Password from "../../database/authentication/Password";
+import Password from "../../../database/authentication/Password";
 
-const PasswordReset = () => {
+const PasswordForm = () => {
     /* ===== VARIABLES ===== */
     const defaultForm = {
         error: { confirmation: undefined, password: undefined },
@@ -71,8 +71,8 @@ const PasswordReset = () => {
         }
 
         // if we made it past validation, attempt to update the password
+        setForm({ ...form, submitting: true });
         try {
-            setForm({ ...form, submitting: true });
             await updatePassword(form.values.password);
             addMessage("Password was successfully reset!", "success", 5000);
         } catch (error) {
@@ -86,4 +86,4 @@ const PasswordReset = () => {
 };
 
 /* ===== EXPORTS ===== */
-export default PasswordReset;
+export default PasswordForm;
