@@ -25,16 +25,13 @@
     border-right: none;
 }
 
-.tab:hover {
-    background-color: rgba(var(--color-container-selected), 0.5);
-}
-
 .active {
     background-color: rgb(var(--color-container-selected));
     cursor: default;
 }
 
 .tab:not(.active):hover {
+    background-color: rgba(var(--color-container-selected), 0.5);
     cursor: pointer;
 }
 
