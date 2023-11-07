@@ -23,20 +23,22 @@ function PasswordForm() {
           <div className={ styles.form }>
 
             { /* Render a text field for both form fields */ }
-            <TextField 
+            <TextField
+              autoComplete="new-password" 
               color={ form.error.password ? "error" : "primary" }
               fullWidth
               helperText={ form.error.password ? form.error.password : null }
               id="password"
               inputProps={ { minLength: PASSWORD_MIN_LENGTH, maxLength: PASSWORD_MAX_LENGTH } }
-              label="Password"
+              label="New Password"
               placeholder={ limitMessage }
               onChange={ handleChange }
               type="password"
               value={ form.values.password }
               variant="filled"
             />
-            <TextField 
+            <TextField
+              autoComplete="new-password" 
               color={ form.error.confirmation ? "error" : "primary" }
               fullWidth
               helperText={ form.error.confirmation ? form.error.confirmation : null }
