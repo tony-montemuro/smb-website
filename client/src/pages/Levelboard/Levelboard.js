@@ -30,13 +30,13 @@ const Levelboard = () => {
 		all: undefined,
 		adjacent: undefined,
 		filtered: undefined,
-		filters: undefined
+		filters: undefined,
+		user: undefined
 	};
 	const navigate = useNavigate();
 
 	/* ===== STATES ===== */
 	const [board, setBoard] = useState(boardInit);
-	const [userSubmissions, setUserSubmissions] = useState([]);
 
 	/* ===== FUNCTIONS ===== */
 	
@@ -184,21 +184,18 @@ const Levelboard = () => {
 		setBoard(boardInit);
 
 		try {
-			// get chart submissions
+			// get chart submissions, & perform filters
 			const all = await getChartSubmissions(abb, category, levelName, type);
-
-			// then, we need to get the array of filtered submissions
 			const filtered = getFiltered(filters, all);
-
-			// finally, we can update state hooks (board & user submissions)
-			setBoard({ adjacent, all, filters, filtered });
-			setUserSubmissions(user.profile ? 
+			const userSubmissions = user.profile ?
 				all
 				.filter(submission => submission.profile.id === user.profile.id)
 				.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at))
-			: 
-				[]
-			);
+			:
+				[];
+
+			// finally, we can update state the board state hook
+			setBoard({ adjacent, all, filters, filtered, user: userSubmissions });
 
 		} catch (error) {
 			addMessage("Failed to fetch / update chart data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
@@ -245,7 +242,6 @@ const Levelboard = () => {
 
 	return {
 		board,
-		userSubmissions,
 		setupBoard,
 		getChartTypes,
 		handleTabClick,

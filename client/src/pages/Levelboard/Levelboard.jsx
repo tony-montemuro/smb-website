@@ -55,6 +55,12 @@ function Levelboard({ imageReducer }) {
 		regions: game.region.map(region => region.id),
 		tas: [false]
 	};
+	const defaultPopups = {
+		filters: false,
+		insert: false,
+		update: false,
+		details: false
+	};
 	const buttonWidth = "60px";
 	const TABLE_WIDTH = 10;
 	const NUM_RECENT = 20;
@@ -62,22 +68,24 @@ function Levelboard({ imageReducer }) {
 
 	/* ===== STATES & FUNCTIONS ===== */
 	const [level, setLevel] = useState(undefined);
-	const [filtersPopup, setFiltersPopup] = useState(false);
-	const [insertPopup, setInsertPopup] = useState(false);
-	const [updateSubmissions, setUpdateSubmissions] = useState(undefined);
-	const [detailSubmission, setDetailSubmission] = useState(undefined);
-	const [submitting, setSubmitting] = useState(false);
 	const [pageNum, setPageNum] = useState(1);
+	const [popups, setPopups] = useState(defaultPopups);
+	const [submitting, setSubmitting] = useState(false);
 
 	// states and functions from js file
 	const { 
 		board,
-		userSubmissions,
 		setupBoard,
 		getChartTypes,
 		handleTabClick,
 		getChartSearchParams
 	} = LevelboardLogic();
+
+	// simple functions for closing any popup
+	const closePopup = () => setPopups(defaultPopups);
+
+	// simple function that is called when user clicks a levelboard row (updates the details state with selected submission)
+	const handleRowClick = submission => setPopups({ ...popups, details: submission });
 
 	/* ===== MEMOS ===== */
 	const searchParams = useMemo(() => {
@@ -122,20 +130,20 @@ function Levelboard({ imageReducer }) {
 
 			{ /* Popups */ }
 			<Popup 
-				renderPopup={ insertPopup } 
-				setRenderPopup={ setInsertPopup } 
+				renderPopup={ popups.insert } 
+				setRenderPopup={ closePopup } 
 				width={ `${ isModerator(abb) ? "1000px" : "500px" }` } 
 				disableClose={ submitting }
 			>
 				<Insert level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />
 			</Popup>
-			<Popup renderPopup={ updateSubmissions } setRenderPopup={ setUpdateSubmissions } width="800px" disableClose={ submitting } >
+			<Popup renderPopup={ popups.update } setRenderPopup={ closePopup } width="800px" disableClose={ submitting } >
 				<Update level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />
 			</Popup>
-			<Popup renderPopup={ filtersPopup } setRenderPopup={ setFiltersPopup } width="1100px" >
+			<Popup renderPopup={ popups.filters } setRenderPopup={ closePopup } width="1100px" >
 				<Filters currentFilters={ board.filters } defaultFilters={ defaultFilters } updateBoard={ setupBoard } />
 			</Popup>
-			<Popup renderPopup={ detailSubmission } setRenderPopup={ setDetailSubmission } width="820px" >
+			<Popup renderPopup={ popups.details } setRenderPopup={ closePopup } width="820px" >
 				<SubmissionDetails level={ level } updateBoard={ setupBoard } />
 			</Popup>
 
@@ -178,11 +186,11 @@ function Levelboard({ imageReducer }) {
 					{ /* Render buttons, such as: filters, update, insert */ }
 					{ board.filtered && board.filters ?
 							<div className={ styles.optionsBtns }>
-								<button type="button" onClick={ () => setFiltersPopup(true) }>Filters</button>
-								{ user.profile && userSubmissions.length > 0 &&
+								<button type="button" onClick={ () => setPopups({ ...popups, filters: true }) }>Filters</button>
+								{ user.profile && board.user.length > 0 &&
 									<button 
 										type="button" 
-										onClick={ () => setUpdateSubmissions(userSubmissions)}
+										onClick={ () => setPopups( { ...popups, update: board.user })}
 									>
 										Update Submission(s)
 									</button>
@@ -190,7 +198,7 @@ function Levelboard({ imageReducer }) {
 								{ user.profile && 
 									<button 
 										type="button" 
-										onClick={ () => setInsertPopup(true) }
+										onClick={ () => setPopups({ ...popups, insert: true }) }
 									>
 										Submit { capitalize(type) }
 									</button>
@@ -237,7 +245,7 @@ function Levelboard({ imageReducer }) {
 												imageReducer={ imageReducer }
 												level={ level }
 												worldRecord={ board.filtered[0].record }
-												onClickFunc={ setDetailSubmission }
+												onClickFunc={ handleRowClick }
 												key={ submission.id } 
 											/>
 										})}
