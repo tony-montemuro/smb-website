@@ -22,10 +22,6 @@
     align-items: center;
 }
 
-.title button {
-    height: fit-content;
-}
-
 .input {
     display: flex;
     flex-direction: column;

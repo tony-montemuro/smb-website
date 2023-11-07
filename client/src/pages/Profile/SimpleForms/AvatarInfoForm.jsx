@@ -38,6 +38,7 @@ function AvatarInfoForm({ imageReducer }) {
             type="file"
             id="avatar-update"
             accept=".jpg,.jpeg,.png"
+            title="Upload Avatar"
             ref={ avatarRef }
           />
         </div>

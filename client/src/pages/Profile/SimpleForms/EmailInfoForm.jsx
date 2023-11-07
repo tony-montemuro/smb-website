@@ -16,6 +16,7 @@ function EmailInfoForm() {
       <form className={ styles.form } onSubmit={ handleEmailUpdate }>
         <span><b>Note: </b>For security reasons, you will be required to validate an email from both your current address, as well as the new address you provide.</span>
         <TextField 
+          autoComplete="email"
           color={ email.error ? "error" : "primary" }
           error={ email.error ? true : false }
           fullWidth

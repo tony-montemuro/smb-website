@@ -63,6 +63,7 @@ function UserInfoForm({ countries }) {
           { /* Profile section - the general information describing a profile */ }
           <SectionTitle title="profile" hasChanged={ hasChanged } onClick={ handleReset } />
           <TextField 
+            autoComplete="username"
             color={ form.error.username ? "error" : "primary" }
             error={ form.error.username }
             fullWidth
