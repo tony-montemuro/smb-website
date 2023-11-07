@@ -1,22 +1,46 @@
 /* ===== IMPORTS ===== */
+import { useEffect, useRef } from "react";
 import { PopupContext } from "../../utils/Contexts";
 import styles from "./Popup.module.css";
 import CloseButton from "../CloseButton/CloseButton.jsx";
+import PopupLogic from "./Popup.js";
 
 function Popup({ renderPopup, setRenderPopup, width, disableClose, children }) {
+  /* ===== REFS ===== */
+  const innerRef = useRef();
+
   /* ===== FUNCTIONS ===== */
 
-  // FUNCTION 1: closePopup - simple function that, when called, will close a particular popup component
-  // PRECONDITIONS (1 condition):
-  // the `renderPopup` state should be set to true when this function is called
-  // POSTCONDITIONS (1 possible outcome):
-  // the `renderPopup` state is set to false by calling the setter functions with the `false` argument
-  const closePopup = () => setRenderPopup(false);
+  // functions from the js file
+  const { closePopup, handleClick, handleTouch } = PopupLogic(setRenderPopup, innerRef);
+
+  /* ===== EFFECTS ===== */
+
+  // code that is executed each time the `renderPopup` state changes
+  useEffect(() => {
+    if (renderPopup) {
+      document.body.style.overflow = "hidden";
+      document.addEventListener("mouseup", handleClick);
+      document.addEventListener("touchend", handleTouch);
+    } else {
+      document.body.style.overflow = "visible";
+      document.removeEventListener("mouseup", handleClick);
+      document.removeEventListener("touchend", handleTouch);
+    }
+    
+    // Cleanup function
+    return () => {
+      document.body.style.overflow = "visible";
+      document.removeEventListener("mouseup", handleClick);
+      document.removeEventListener("touchend", handleTouch);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [renderPopup]);
 
   /* ===== POPUP COMPONENT ===== */
   return renderPopup &&
     <div className={ styles.popup }>
-      <div className={ styles.inner } style={ { maxWidth: width } }>
+      <div className={ styles.inner } ref={ innerRef } style={ { maxWidth: width } }>
 
         { /* Render button to close the popup */ }
         <div className={ styles.close }>
