@@ -3,6 +3,7 @@ import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Levelboard.module.css";
+import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
 import Container from "../../components/Container/Container.jsx";
 import Filters from "./Filters/Filters.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
@@ -57,6 +58,7 @@ function Levelboard({ imageReducer }) {
 	const buttonWidth = "60px";
 	const TABLE_WIDTH = 10;
 	const NUM_RECENT = 20;
+	const SUBMISSIONS_PER_TABLE = 50;
 
 	/* ===== STATES & FUNCTIONS ===== */
 	const [level, setLevel] = useState(undefined);
@@ -65,6 +67,7 @@ function Levelboard({ imageReducer }) {
 	const [updateSubmissions, setUpdateSubmissions] = useState(undefined);
 	const [detailSubmission, setDetailSubmission] = useState(undefined);
 	const [submitting, setSubmitting] = useState(false);
+	const [pageNum, setPageNum] = useState(1);
 
 	// states and functions from js file
 	const { 
@@ -228,7 +231,7 @@ function Levelboard({ imageReducer }) {
 										emptyMessage={ board.all.length > 0 ? "No submissions match your filters." : "There have been no submissions to this chart." }
 										numCols={ TABLE_WIDTH }
 									>
-										{ board.filtered.map(submission => {
+										{ board.filtered.slice((pageNum-1)*SUBMISSIONS_PER_TABLE, pageNum*SUBMISSIONS_PER_TABLE).map(submission => {
 											return <LevelboardRow 
 												submission={ submission } 
 												imageReducer={ imageReducer }
@@ -246,6 +249,18 @@ function Levelboard({ imageReducer }) {
 
 						</table>
 					</div>
+
+					{ /* Render pagination controls at the bottom of this container */ }
+					{ board.filters && board.filtered &&
+						<CachedPageControls 
+							items={ board.filtered }
+							itemsPerPage={ SUBMISSIONS_PER_TABLE }
+							pageNum={ pageNum }
+							setPageNum={ setPageNum }
+							itemsName="Submissions"
+						/>
+					}
+
 				</div>
 
 			</Container>
