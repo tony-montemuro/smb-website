@@ -63,7 +63,7 @@ button:hover {
 }
 
 button[disabled]:hover {
-    background-color: inherit;
+    background-color: rgb(var(--color-button));
 }
 
 button[disabled] {
