@@ -2,7 +2,6 @@
 
 .game {
     display: flex;
-    flex-wrap: wrap;
     gap: var(--app-padding);
 }
 
@@ -34,7 +33,13 @@
     background-color: rgb(var(--color-nav));
 }
 
-/* ===== MEDIA QUERIEY FOR SMALL DEVICES ===== */
+/* ===== MEDIA QUERIES FOR SMALL DEVICES ===== */
+
+@media (max-width: 1330px) {
+    .game {
+        flex-direction: column;
+    }
+}
 
 @media (max-width: 1067px) {
     .half {
