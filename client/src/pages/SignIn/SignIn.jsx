@@ -12,7 +12,6 @@ import MemoizedAuth from "./MemoizedAuth.jsx";
 function SignIn() {
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
-  console.log(ThemeSupa);
   const theme = {
     theme: {
       ...ThemeSupa, 

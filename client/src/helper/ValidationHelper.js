@@ -34,7 +34,6 @@ const ValidationHelper = () => {
         if (url && !twitchPattern.test(url) && !youtubePattern.test(url) && !twitterPatttern.test(url)) {
             return "Not a valid YouTube, Twitch, or X (Twitter) video URL.";
         }
-
         return undefined;
     };
 
@@ -48,11 +47,24 @@ const ValidationHelper = () => {
         if (date.includes("NaN")) {
             return "Please select a valid date.";
         }
-        
         return undefined;
     }
 
-    return { validateEmail, validateVideoUrl, validateDate };
+    // FUNCTION 4: validateLive - given the live boolean value, as well as the submission proof, validate `live` field
+    // PRECONDITIONS (2 parameter):
+    // 1.) live: a boolean value, corresponding to whether or not the user provided a "live" proof
+    // 2.) proof: a string containing the users's link to a proof
+    // POSTCONDITIONS (2 possible outcomes):
+    // if live is determined to be valid based on the proof parameter, return undefined
+    // if live is determined to be invalid based on the proof parameter, return a string that contains the error message
+    const validateLive = (live, proof) => {
+        if (!proof && live) {
+            return "Field cannot be selected if no proof is provided.";
+        }
+        return undefined;
+    };
+
+    return { validateEmail, validateVideoUrl, validateDate, validateLive };
 };
 
 /* ===== EXPORTS ===== */

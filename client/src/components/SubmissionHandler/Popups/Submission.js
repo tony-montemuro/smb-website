@@ -12,7 +12,7 @@ import ValidationHelper from "../../../helper/ValidationHelper";
 
 const Submission = (submission, game, isUnapproved, setSubmissions, setSubmitting) => {
     /* ===== VARIABLES ===== */
-    const defaultError = { proof: null, submitted_at: null };
+    const defaultError = { proof: undefined, submitted_at: undefined, live: undefined };
     const defaultForm = { 
         values: null, 
         error: defaultError
@@ -41,7 +41,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     
     // helper functions
     const { dateB2F } = FrontendHelper();
-    const { validateVideoUrl, validateDate } = ValidationHelper();
+    const { validateVideoUrl, validateDate, validateLive } = ValidationHelper();
     const { getDateOfSubmission } = DateHelper();
 
     // database functions
@@ -80,22 +80,13 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     // if the field id is live / tas, we use the checked variable rather than the value variable to update the form
 	// otherwise, we simply update the form field based on the value variable
     const handleChange = e => {
-        // get variables from e.target
         const { id, value, checked } = e.target;
-
-        // special case: updating a checkbox field
-        if (id === "live" || id === "tas") {
-            setForm({ ...form, values: { ...form.values, [id]: checked } });
-        }
-
-        // general case: updating a field
-        else {
-            setForm({ 
-                ...form, 
-                values: { ...form.values, [id]: value }, 
-                error: Object.keys(form.error).includes(id) ? { ...form.error, [id]: null } : { ...form.error } 
-            });
-        }
+        const val = id === "live" || id === "tas" ? checked : value;
+        setForm({ 
+            ...form, 
+            values: { ...form.values, [id]: val },
+            error: Object.keys(form.error).includes(id) ? { ...form.error, [id]: null } : { ...form.error } 
+        });
     };
 
     // FUNCTION 3: handleSubmittedAtChange - handle a change to the `submitted_at` field in the submission form
@@ -204,6 +195,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         // validate necessary fields
         error.proof = validateVideoUrl(form.values.proof);
         error.submitted_at = validateDate(form.values.submitted_at);
+        error.live = validateLive(form.values.live, form.values.proof);
 
         // if any fields returned an error, let's render a message, update the `error.fields` object by calling the setForm() function,
         // and return early

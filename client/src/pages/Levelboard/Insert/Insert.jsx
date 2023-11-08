@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import styles from "./Insert.module.css";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import FormHelperText from "@mui/material/FormHelperText";
 import FormGroup from "@mui/material/FormGroup";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import InsertLogic from "./Insert.js";
@@ -174,6 +175,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting }) {
                 } 
                 label="Live Proof" 
               />
+              { form.error.live && <FormHelperText error>{ form.error.live }</FormHelperText> }
             </FormGroup>
             <FormGroup>
               <FormControlLabel 

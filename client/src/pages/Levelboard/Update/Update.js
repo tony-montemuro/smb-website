@@ -8,17 +8,78 @@ import SubmissionUpdate from "../../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../../helper/ValidationHelper";
 
 const Update = (level, setSubmitting) => {
+    /* ===== REDUCER FUNCTIONS ===== */
+
+    // FUNCTION 1: reducer - function that executes each time the user attempts to update the from reducer hook
+    // PRECONDITIONS (2 parameters):
+    // 1.) state: the state of the form object when the function is called
+    // 2.) action: an object with two fields:
+        // a.) field: specifies which field of the form the reducer should modify
+        // b.) value: specifies the new value that the reducer should use to modify form[field]
+    // POSTCONDITIONS (4 possible outcomes):
+    // if field is "values", update the `values` state. in this case, `action.value` is expected to be an object, and as such, 
+    // one or more fields of `form.values` can be updated. any fields in `form.values` that have a corresponding
+    // error in `form.error` are also reset to default value (undefined)
+    // if the field is "error", update the `error` state. in this case, `action.value` is expected to be an object, and as such,
+    // one or more fields of `form.error` can be updated.
+    // if the field is "all", the form is reset back to it's default state
+    // otherwise, this function expects `action.field` to be a string representing a valid form field, and `value` to be a single
+    // value
+    const reducer = (state, action) => {
+        const field = action.field, value = action.value;
+		switch(field) {
+			case "values":
+                // generate error object using `state.error`, and `value`
+                const error = {};
+                Object.keys(value).forEach(key => {
+                    if (key in state.error) error[key] = undefined;
+                });
+
+				return {
+					...state,
+                    error: {
+                        ...state.error,
+                        ...error
+                    },
+					values: {
+						...state.values,
+						...value
+					}
+				};
+            case "error": {
+                return {
+                    ...state,
+                    [field]: {
+                        ...state[field],
+                        ...value
+                    }
+                };
+            }
+			case "all":
+				return formInit;
+			default:
+				return { ...state, [field]: value };
+		}
+	};
+
     /* ===== VARIABLES ===== */
     const location = useLocation();
     const path = location.pathname.split("/");
     const category = path[3];
     const type = path[4];
-    const errorInit = { proof: null, submitted_at: null };
+    const errorInit = { 
+        proof: undefined, 
+        submitted_at: undefined, 
+        live: undefined 
+    };
     const formInit = {
 		values: null,
 		error: errorInit,
         submission: null
 	};
+
+    /* ===== REDUCERS ===== */
+    const [form, dispatchForm] = useReducer(reducer, formInit);
 
     /* ===== CONTEXTS ===== */
 
@@ -31,24 +92,6 @@ const Update = (level, setSubmitting) => {
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
-    /* ===== STATES & REDUCERS ===== */
-    const [form, dispatchForm] = useReducer((state, action) => {
-        const field = action.field, value = action.value;
-        if (field === "values" || field === "error") {
-            return {
-                ...state,
-                [field]: {
-                    ...state[field],
-                    ...value
-                }
-            };
-        }
-        if (field === "all") {
-            return formInit;
-        }
-        return { ...state, [field]: value };
-	}, formInit);
-
     /* ===== FUNCTIONS ===== */
 
     // database functions
@@ -57,7 +100,7 @@ const Update = (level, setSubmitting) => {
     // helper functions
     const { getDateOfSubmission } = DateHelper();
     const { dateB2F, recordB2F } = FrontendHelper();
-    const { validateVideoUrl, validateDate } = ValidationHelper();
+    const { validateVideoUrl, validateDate, validateLive } = ValidationHelper();
 
     // FUNCTION 1: submission2Form ("submission to form") - function that generates the form object given a submission
     // PRECONDITIONS (1 parameter):
@@ -112,12 +155,9 @@ const Update = (level, setSubmitting) => {
             dispatchForm({ field: "values", value: { [id]: checked } });
         } 
         
-        // otherwise, we simply use the `value` property as our updated value, and update error state if necessary
+        // otherwise, we simply use the `value` property as our updated value
         else {
             dispatchForm({ field: "values", value: { [id]: value } });
-            if (Object.keys(form.error).includes(id)) {
-                dispatchForm({ field: "error", value: { [id]: null } });
-            }
         }
     };
 
@@ -136,7 +176,6 @@ const Update = (level, setSubmitting) => {
             submitted_at = `${ year }-${ month }-${ day }`;
         }
         dispatchForm({ field: "values", value: { submitted_at } });
-        dispatchForm({ field: "error", value: { submitted_at: null } });
     };
 
     // FUNCTION 5: isFormUnchanged - function that checks whether or not the form was unchanged
@@ -207,6 +246,7 @@ const Update = (level, setSubmitting) => {
         // perform form validation
 		error.proof = validateVideoUrl(form.values.proof);
 		error.submitted_at = validateDate(form.values.submitted_at);
+        error.live = validateLive(form.values.live, form.values.proof);
 
         // if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });

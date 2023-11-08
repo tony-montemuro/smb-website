@@ -215,7 +215,11 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
               } 
               label="Live Proof" 
             />
-            { form.values.live !== form.submission.live && <FormHelperText>{ updateFieldText }</FormHelperText> }
+            { form.error.live ?
+              <FormHelperText error>{ form.error.live }</FormHelperText>
+            :
+              form.values.live !== form.submission.live && <FormHelperText>{ updateFieldText }</FormHelperText>
+            }
           </FormGroup>
           <FormGroup>
             <FormControlLabel 

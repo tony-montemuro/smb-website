@@ -212,7 +212,11 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                   } 
                   label="Live Proof" 
                 />
-                { submission.live !== form.values.live && <FormHelperText>{ updateFieldText }</FormHelperText> }
+                { form.error.live ?
+                  <FormHelperText error>{ form.error.live }</FormHelperText>
+                :
+                  submission.live !== form.values.live && <FormHelperText>{ updateFieldText }</FormHelperText>
+                }
               </FormGroup>
               <FormGroup>
                 <FormControlLabel 

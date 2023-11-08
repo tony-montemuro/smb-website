@@ -8,6 +8,49 @@ import SubmissionUpdate from "../../../database/update/SubmissionUpdate";
 import ValidationHelper from "../../../helper/ValidationHelper";
 
 const Insert = (level, setSubmitting) => {
+    /* ===== REDUCER FUNCTIONS ===== */
+
+    // FUNCTION 1: reducer - function that executes each time the user attempts to update the from reducer hook
+    // PRECONDITIONS (2 parameters):
+    // 1.) state: the state of the form object when the function is called
+    // 2.) action: an object with two fields:
+        // a.) field: specifies which field of the form the reducer should modify
+        // b.) value: specifies the new value that the reducer should use to modify form[field]
+    // POSTCONDITIONS (3 possible outcomes):
+    // if field is "values", this function will update the values state. in this case, `action.value` is expected to be an
+    // object, and as such, one or more fields of `form.values` can be updated. any fields in `form.values` that have a corresponding
+    // error in `form.error` are also reset to default value (undefined)
+    // if the field is "all", the form is reset back to it's default state
+    // otherwise, this function expects `action.field` to be a string representing a valid form field, and `value` to be a single
+    // value
+    const reducer = (state, action) => {
+        const field = action.field, value = action.value;
+		switch(field) {
+			case "values":
+                // generate error object using `state.error`, and `value`
+                const error = {};
+                Object.keys(value).forEach(key => {
+                    if (key in state.error) error[key] = undefined;
+                });
+
+				return {
+					...state,
+                    error: {
+                        ...state.error,
+                        ...error
+                    },
+					values: {
+						...state.values,
+						...value
+					}
+				};
+			case "all":
+				return formInit;
+			default:
+				return { ...state, [field]: value };
+		}
+	};
+
     /* ===== VARIABLES ===== */
     const location = useLocation();
     const path = location.pathname.split("/");
@@ -22,11 +65,15 @@ const Insert = (level, setSubmitting) => {
             second: null, 
             centisecond: null, 
             proof: null, 
-            submitted_at: null
+            submitted_at: null,
+            live: null
         }
 	};
     const MAX = 2147483647;
     const MAX_CENTISECOND = 99;
+
+    /* ====== REDUCERS ===== */
+    const [form, dispatchForm] = useReducer(reducer, formInit);
 
     /* ===== CONTEXTS ===== */
 
@@ -42,24 +89,6 @@ const Insert = (level, setSubmitting) => {
     // user state from user context
     const { user } = useContext(UserContext);
 
-    /* ====== STATES & REDUCERS ===== */
-    const [form, dispatchForm] = useReducer((state, action) => {
-		switch(action.field) {
-			case "values":
-				return {
-					...state,
-					[action.field]: {
-						...state[action.field],
-						...action.value
-					}
-				};
-			case "all":
-				return formInit;
-			default:
-				return { ...state, [action.field]: action.value };
-		}
-	}, formInit);
-
     /* ===== FUNCTIONS ===== */
 
     // database functions
@@ -68,7 +97,7 @@ const Insert = (level, setSubmitting) => {
     // helper functions
     const { dateF2B } = DateHelper();
     const { capitalize, dateB2F } = FrontendHelper();
-    const { validateVideoUrl, validateDate } = ValidationHelper();
+    const { validateVideoUrl, validateDate, validateLive } = ValidationHelper();
 
     // FUNCTION 1: generateForm - function that generates the submission form using data from game context, path, & profile parameter
     // PRECONDITIONS (1 parameter):
@@ -166,12 +195,10 @@ const Insert = (level, setSubmitting) => {
     // if the record is determined to be invalid, return a string that contains the error message
     // if the record is determined to be valid, return undefined
     const validateRecord = (recordField, type) => {
-        // validate that record is not too large
         const record = parseInt(recordField);
         if (record > MAX) {
             return `${ capitalize(type) } is invalid.`;
         }
-
         return undefined;
     };
 
@@ -358,6 +385,7 @@ const Insert = (level, setSubmitting) => {
         }
 		error.proof = validateVideoUrl(form.values.proof);
         error.submitted_at = validateDate(form.values.submitted_at);
+        error.live = validateLive(form.values.live, form.values.proof);
 
 		// if any errors are determined, let's return
         dispatchForm({ field: "error", value: error });
