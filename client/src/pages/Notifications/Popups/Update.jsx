@@ -137,14 +137,14 @@ function Update() {
                   Proof:&nbsp;
                   { notification.proof ?
                     <a href={ notification.proof } target="_blank" rel="noopener noreferrer">
-                      <VideocamIcon sx={{ color: "black" }} titleAccess={ notification.proof } />
+                      <VideocamIcon sx={{ color: "white" }} titleAccess={ notification.proof } />
                     </a>
                   :
                     <ClearIcon />
                   }
                   &nbsp;→&nbsp;
                   <a href={ submission.proof } target="_blank" rel="noopener noreferrer">
-                    <VideocamIcon sx={{ color: "black" }} titleAccess={ submission.proof } />
+                    <VideocamIcon sx={{ color: "white" }} titleAccess={ submission.proof } />
                   </a>
                 </span>
               </div>
