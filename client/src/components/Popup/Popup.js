@@ -16,7 +16,14 @@ const Popup = (setRenderPopup, innerRef) => {
     // if we are clicking outside the popup, this function closes the popup
     const handleClick = e => {
         if (!innerRef.current.contains(e.target)) {
-            closePopup();
+            // handle exception for date picker calendar, which renders outside popup
+            const desktopDatePicker = document.querySelector(".MuiPickersPopper-root");
+            const mobileDatePicker = document.querySelector(".MuiModal-root");
+            const clickWithinDesktopDatePicker = desktopDatePicker && desktopDatePicker.contains(e.target);
+            const clickWithinMobileDatePicker = mobileDatePicker && mobileDatePicker.contains(e.target);
+            if (!(clickWithinDesktopDatePicker || clickWithinMobileDatePicker)) {
+                closePopup();
+            }
         }
     }
 
@@ -28,7 +35,12 @@ const Popup = (setRenderPopup, innerRef) => {
     // if we are touching outside the popup, this function closes the popup
     const handleTouch = e => {
         if (!innerRef.current.contains(e.changedTouches[0].target)) {
-            closePopup();
+            // handle exception for date picker calendar, which renders outside popup
+            const datepicker = document.querySelector(".MuiModal-root");
+            const clickWithinDatePicker = datepicker && datepicker.contains(e.changedTouches[0].target);
+            if (!clickWithinDatePicker) {
+                closePopup();
+            }
         }
     };
 

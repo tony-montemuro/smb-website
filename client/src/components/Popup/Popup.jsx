@@ -20,19 +20,19 @@ function Popup({ renderPopup, setRenderPopup, width, disableClose, children }) {
   useEffect(() => {
     if (renderPopup) {
       document.body.style.overflow = "hidden";
-      document.addEventListener("mouseup", handleClick);
-      document.addEventListener("touchend", handleTouch);
+      document.addEventListener("mousedown", handleClick);
+      document.addEventListener("touchstart", handleTouch);
     } else {
       document.body.style.overflow = "visible";
-      document.removeEventListener("mouseup", handleClick);
-      document.removeEventListener("touchend", handleTouch);
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("touchstart", handleTouch);
     }
     
     // Cleanup function
     return () => {
       document.body.style.overflow = "visible";
-      document.removeEventListener("mouseup", handleClick);
-      document.removeEventListener("touchend", handleTouch);
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("touchstart", handleTouch);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [renderPopup]);
