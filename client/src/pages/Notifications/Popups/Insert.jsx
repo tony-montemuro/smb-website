@@ -26,7 +26,7 @@ function Insert() {
 
   /* ===== INSERT COMPONENT ===== */
   return (
-    <>
+    <div className={ styles.popup }>
 
       { /* Popup header - includes a link to the moderator's user page */ }
       <h2>
@@ -35,25 +35,23 @@ function Insert() {
       </h2>
 
       { /* Notification details - render the basic info, as well as more specific information that the moderator inserted */ }
-      <div className={ styles.detailsWrapper }>
-        <div className={ styles.details }>
-          <ul>
-            <NotificationBasicInfo notification={ notification } />
-            <li>
-              { capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }
-            </li>
-            <li>Date: { dateB2F(submission.submitted_at) }</li>
-            <li>Monkey: { submission.monkey.monkey_name }</li>
-            <li>Platform: { submission.platform.platform_name }</li>
-            <li>Region: { submission.region.region_name }</li>
-            <li><NotificationProof proof={ submission.proof } /></li>
-            <li>Live Proof: <CheckmarkOrX isChecked={ submission.live } /></li>
-            <li>TAS: <CheckmarkOrX isChecked={ submission.tas } /></li>
-          </ul>
-        </div>
+      <div className={ styles.details }>
+        <ul>
+          <NotificationBasicInfo notification={ notification } />
+          <li>
+            { capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }
+          </li>
+          <li>Date: { dateB2F(submission.submitted_at) }</li>
+          <li>Monkey: { submission.monkey.monkey_name }</li>
+          <li>Platform: { submission.platform.platform_name }</li>
+          <li>Region: { submission.region.region_name }</li>
+          <li><NotificationProof proof={ submission.proof } /></li>
+          <li>Live Proof: <CheckmarkOrX isChecked={ submission.live } /></li>
+          <li>TAS: <CheckmarkOrX isChecked={ submission.tas } /></li>
+        </ul>
       </div>
 
-    </>
+    </div>
   );
 };
 

@@ -26,7 +26,7 @@ function Update() {
 
   /* ===== UPDATE POPUP COMPONENT ===== */
   return (
-    <>
+    <div className={ styles.popup }>
 
       { /* Popup header - includes a link to the moderator's user page */ }
       <h2>
@@ -35,168 +35,182 @@ function Update() {
       </h2>
 
       { /* Notification details */ }
-      <div className={ styles.detailsWrapper }>
-        <div className={ styles.details }>
-          <ul>
+      <div className={ styles.details }>
+        <ul>
 
-            { /* Link to the game corresponding to the notification prop */ }
+          { /* Link to the game corresponding to the notification prop */ }
+          <li>
+            <span>
+              Game:&nbsp;<Link to={`/games/${ notification.level.mode.game.abb }`}>{ notification.level.mode.game.name }</Link> 
+            </span>
+          </li>
+
+          { /* Link to the category of the level corresponding to the notification prop */ }
+          <li>
+            <span>
+              Category: { categoryB2F(notification.level.category) }
+            </span>
+          </li>
+
+          { /* Link to the level corresponding to the notification prop */ }
+          <li>
+            <span>
+              Chart:&nbsp;
+              <Link to={`/games/${ notification.level.mode.game.abb }/${ notification.level.category }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
+                { cleanLevelName(notification.level.name) } ({ capitalize(notification.score ? "score" : "time") })
+              </Link>
+            </span>
+          </li>
+
+          { /* Render the record */ }
+          <li>
+            <span>{ capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }</span>
+          </li>
+
+          { /* Render the submission date. If the submission date was updated, render both the old submission date, and the new
+          submission date. */ }
+          { notification.submitted_at !== submission.submitted_at ?
             <li>
-              <span>
-                Game:&nbsp;<Link to={`/games/${ notification.level.mode.game.abb }`}>{ notification.level.mode.game.name }</Link> 
-              </span>
-            </li>
-
-            { /* Link to the category of the level corresponding to the notification prop */ }
-            <li>
-              <span>
-                Category: { categoryB2F(notification.level.category) }
-              </span>
-            </li>
-
-            { /* Link to the level corresponding to the notification prop */ }
-            <li>
-              <span>
-                Chart:&nbsp;
-                <Link to={`/games/${ notification.level.mode.game.abb }/${ notification.level.category }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
-                  { cleanLevelName(notification.level.name) } ({ capitalize(notification.score ? "score" : "time") })
-                </Link>
-              </span>
-            </li>
-
-            { /* Render the record */ }
-            <li>
-              <span>{ capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }</span>
-            </li>
-
-            { /* Render the submission date. If the submission date was updated, render both the old submission date, and the new
-            submission date. */ }
-            { notification.submitted_at !== submission.submitted_at ?
-              <li className={ styles.updated }>
+              <div className={ styles.updated }>
                 <span>
                   Date: { dateB2F(notification.submitted_at) } → { dateB2F(submission.submitted_at) }
                 </span>
-              </li>
-            :
-              <li>
-                <span>Date: { dateB2F(notification.submitted_at) }</span>
-              </li>
-            }
+              </div>
+            </li>
+          :
+            <li>
+              <span>Date: { dateB2F(notification.submitted_at) }</span>
+            </li>
+          }
 
-            { /* Render the submission monkey. If the submission monkey was updated, render both the old monkey, and the new monkey. */ }
-            { notification.monkey.id !== submission.monkey.id ?
-              <li className={ styles.updated } >
+          { /* Render the submission monkey. If the submission monkey was updated, render both the old monkey, and the new monkey. */ }
+          { notification.monkey.id !== submission.monkey.id ?
+            <li>
+              <div className={ styles.updated }>
                 <span>
                   Monkey: { notification.monkey.monkey_name } → { submission.monkey.monkey_name }
                 </span>
-              </li>
-            :
-              <li>
-                <span>Monkey: { notification.monkey.monkey_name }</span>
-              </li>
-            }
+              </div>
+            </li>
+          :
+            <li>
+              <span>Monkey: { notification.monkey.monkey_name }</span>
+            </li>
+          }
 
-            { /* Render the submission platform. If the submission platform was updated, render both the old platform,
-            and the new platform. */ }
-            { notification.platform.id !== submission.platform.id ?
-              <li className={ styles.updated } >
+          { /* Render the submission platform. If the submission platform was updated, render both the old platform,
+          and the new platform. */ }
+          { notification.platform.id !== submission.platform.id ?
+            <li>
+              <div className={ styles.updated }>
                 <span>
                   Platform: { notification.platform.platform_name } → { submission.platform.platform_name }
                 </span>
-              </li>
-            :
-              <li>
-                <span>Platform: { notification.platform.platform_name }</span>
-              </li>
-            }
+              </div>
+            </li>
+          :
+            <li>
+              <span>Platform: { notification.platform.platform_name }</span>
+            </li>
+          }
 
-            { /* Render the submission region. If the submission region was updated, render both the old region, and the new region. */ }
-            { notification.region.id !== submission.region.id ?
-              <li className={ styles.updated } >
+          { /* Render the submission region. If the submission region was updated, render both the old region, and the new region. */ }
+          { notification.region.id !== submission.region.id ?
+            <li>
+              <div className={ styles.updated }>
                 <span>
                   Region: { notification.region.region_name } → { submission.region.region_name }
                 </span>
-              </li>
-            :
-              <li>
-                <span>Region: { notification.region.region_name }</span>
-              </li>
-            }
+              </div>
+            </li>
+          :
+            <li>
+              <span>Region: { notification.region.region_name }</span>
+            </li>
+          }
 
-            { /* Render the submission proof. If the submission proof was updated, render both the old proof, and the new proof. */ }
-            { notification.proof !== submission.proof ?
-              <li className={ styles.updated } >
+          { /* Render the submission proof. If the submission proof was updated, render both the old proof, and the new proof. */ }
+          { notification.proof !== submission.proof ?
+            <li>
+              <div className={ styles.updated }>
                 <span>
                   Proof:&nbsp;
                   { notification.proof ?
                     <a href={ notification.proof } target="_blank" rel="noopener noreferrer">
-                      <VideocamIcon sx={{ color: "black" }} />
+                      <VideocamIcon sx={{ color: "black" }} titleAccess={ notification.proof } />
                     </a>
                   :
                     <ClearIcon />
                   }
                   &nbsp;→&nbsp;
                   <a href={ submission.proof } target="_blank" rel="noopener noreferrer">
-                    <VideocamIcon sx={{ color: "black" }} />
+                    <VideocamIcon sx={{ color: "black" }} titleAccess={ submission.proof } />
                   </a>
                 </span>
-              </li>
-            :
-              <li>
-                <span>
-                  <NotificationProof proof={ submission.proof } />
-                </span>
-              </li>
-            }
+              </div>
+            </li>
+          :
+            <li>
+              <span>
+                <NotificationProof proof={ submission.proof } />
+              </span>
+            </li>
+          }
 
-            { /* Render the submission live proof status. If the submission live status was updated, render both the old status, and 
-            the new status. */ }
-            { notification.live !== submission.live ?
-              <li className={ styles.updated } >
+          { /* Render the submission live proof status. If the submission live status was updated, render both the old status, and 
+          the new status. */ }
+          { notification.live !== submission.live ?
+            <li>
+              <div className={ styles.updated }>
                 <span>
                   Live Proof: <CheckmarkOrX isChecked={ notification.live } /> → <CheckmarkOrX isChecked={ submission.live } />
                 </span>
-              </li>          
-            :
-              <li>
-                <span>Live Status: <CheckmarkOrX isChecked={ submission.live } /></span>
-              </li>
-            }
+              </div>
+            </li>          
+          :
+            <li>
+              <span>Live Status: <CheckmarkOrX isChecked={ submission.live } /></span>
+            </li>
+          }
 
-            { /* Render if the submission used tools. If the tas field was updated, render both the old tas, and 
-            new tas value. */ }
-            { notification.tas !== submission.tas ?
-              <li className={ styles.updated } >
+          { /* Render if the submission used tools. If the tas field was updated, render both the old tas, and 
+          new tas value. */ }
+          { notification.tas !== submission.tas ?
+            <li>
+              <div className={ styles.updated }>
                 <span>
                   TAS: <CheckmarkOrX isChecked={ notification.tas } /> → <CheckmarkOrX isChecked={ submission.tas } />
                 </span>
-              </li>
-            :
-              <li>
-                <span>TAS: <CheckmarkOrX isChecked={ submission.tas } /></span>
-              </li>
-            }
+              </div>
+            </li>
+          :
+            <li>
+              <span>TAS: <CheckmarkOrX isChecked={ submission.tas } /></span>
+            </li>
+          }
 
-            { /* Render the submission comment. If the submission comment was updated, render both the old comment, and the new comment. */ }
-            { notification.comment !== submission.comment ?
-              <li className={ styles.updated } >
+          { /* Render the submission comment. If the submission comment was updated, render both the old comment, and the new comment. */ }
+          { notification.comment !== submission.comment ?
+            <li>
+              <div className={ styles.updated }>
                 <span>
                   Comment:&nbsp;
-                  { notification.comment ? notification.comment : <i>None</i> } 
+                  { notification.comment ? `"${ notification.comment }"` : `""` } 
                   &nbsp;→&nbsp;
-                  { submission.comment ? submission.comment : <i>None</i> }
+                  { submission.comment ? `"${ submission.comment }"` : `""` }
                 </span>
-              </li>
-            :
-              <li>
-                <span>Comment:&nbsp;{ notification.comment ? notification.comment : <i>None</i> }</span>
-              </li>
-            }
+              </div>
+            </li>
+          :
+            <li>
+              <span>Comment:&nbsp;{ notification.comment ? `"${ notification.comment }"` : `""` }</span>
+            </li>
+          }
 
-          </ul>
-        </div>
+        </ul>
       </div>
 
-    </>
+    </div>
   );
 };
 

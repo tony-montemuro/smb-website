@@ -9,7 +9,7 @@ function NotificationProof({ proof }) {
       Proof:&nbsp;
       { proof ?
         <a href={ proof } target="_blank" rel="noopener noreferrer">
-          <VideocamIcon sx={{ color: "white" }} />
+          <VideocamIcon sx={{ color: "white" }} titleAccess={ proof } />
         </a>
       :
         <ClearIcon />

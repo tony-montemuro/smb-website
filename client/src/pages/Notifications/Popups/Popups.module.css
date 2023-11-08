@@ -1,6 +1,14 @@
-.detailsWrapper {
-    display: flex;
-    justify-content: center;
+.popup {
+    --min-line-heigth: 30px;
+}
+
+.popup h2 {
+    margin: 0;
+    padding: 10px 0;
+}
+
+.popup hr {
+    width: 100%;
 }
 
 .details {
@@ -17,8 +25,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 5px;
-    min-height: 26px;
+    margin: 5px 0;
+    min-height: var(--min-line-heigth);
 }
 
 .details span {
@@ -32,6 +40,9 @@
 }
 
 .updated {
-    background-color: yellow;
-    color: black;
+    display: flex;
+    align-items: center;
+    background-color: rgba(var(--color-button), 0.25);
+    border-radius: 3px;
+    min-height: var(--min-line-heigth);
 }

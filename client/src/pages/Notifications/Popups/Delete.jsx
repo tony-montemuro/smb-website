@@ -25,7 +25,7 @@ function Delete() {
 
   /* ===== DELETE COMPONENT ===== */
   return (
-    <>
+    <div className={ styles.popup }>
 
       { /* Popup header - includes a link to the moderator's user page */ }
       <h2>
@@ -34,22 +34,22 @@ function Delete() {
       </h2>
 
       { /* Notification details - render the basic info, record, and tas status */ }
-      <div className={ styles.detailsWrapper }>
-        <div className={ styles.details }>
-          <ul>
-            <NotificationBasicInfo notification={ notification } />
-            <li>
-              { capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }
-            </li>
-            <li>TAS: <CheckmarkOrX isChecked={ notification.tas } /></li>
-          </ul>
-        </div>
+      <div className={ styles.details }>
+        <ul>
+          <NotificationBasicInfo notification={ notification } />
+          <li>
+            { capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }
+          </li>
+          <li>TAS: <CheckmarkOrX isChecked={ notification.tas } /></li>
+        </ul>
       </div>
+
+      <hr />
 
       { /* Render the message associated with the deletion, if there is one. */ }
       <NotificationMessage message={ notification.message } notification={ notification } />
 
-    </>
+    </div>
   );
 };
 
