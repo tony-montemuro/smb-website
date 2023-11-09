@@ -36,7 +36,7 @@ function GameHeader({ imageReducer }) {
             <Link to={ `/games/${ game.abb }` }>
               <h1>{ game.name }</h1>
             </Link>
-            { game.custom && <span>Custom Game by:&nbsp;&nbsp;<Username profile={ game.creator } /></span> }
+            { game.custom && game.creator && <span>Custom Game by:&nbsp;&nbsp;<Username profile={ game.creator } /></span> }
             <span>Release Date: { game.release_date }</span>
             { game.custom &&
               <span>Game Download:
