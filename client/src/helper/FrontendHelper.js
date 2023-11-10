@@ -23,7 +23,10 @@ const FrontendHelper = () => {
     const cleanLevelName = str => {
         const words = str.split("_");
         for (let i = 0; i < words.length; i++) {
-            if (words[i][0] !== "(") {
+            if (!words[i] && i < words.length-1) {
+                words[i-1] = words[i-1]+"_";
+            }
+            else if (words[i][0] !== "(") {
                 words[i] = words[i][0].toUpperCase()+words[i].substr(1) 
             } else {
                 words[i] = words[i][0]+words[i][1].toUpperCase()+words[i].substr(2);

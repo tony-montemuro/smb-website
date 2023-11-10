@@ -43,7 +43,7 @@ function LevelSearchBar() {
       { filtered && hasElements() &&
         <div className={ styles.results }>
           { categories.map(category => {
-            return <LevelSearchBarCategory category={ category } filtered={ filtered } />;
+            return <LevelSearchBarCategory category={ category } filtered={ filtered } key={ category } />;
           })}
         </div>
       }
