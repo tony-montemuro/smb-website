@@ -2,6 +2,7 @@
 import { Fragment } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./Stats.module.css";
+import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper";
 
 function Records({ rankings }) {
@@ -45,7 +46,7 @@ function Records({ rankings }) {
                       <tr key={ row.level.name }>
                         <td className={ styles.name }>
                           <Link to={ `/games/${ abb }/${ category }/${ type }/${ row.level.name }` }>
-                            { cleanLevelName(row.level.name) }
+                            <FancyLevel level={ row.level.name } />
                           </Link>
                         </td>
                         <td className={ styles.record }>{ row.record && recordB2F(row.record, type, row.level.timer_type) }</td>

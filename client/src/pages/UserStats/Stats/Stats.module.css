@@ -19,6 +19,10 @@
     gap: var(--app-padding);
 }
 
+.records td {
+    height: 24px;
+}
+
 .name {
     width: 40%;
 }

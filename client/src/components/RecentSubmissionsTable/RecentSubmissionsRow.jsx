@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
+import FancyLevel from "../FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import Username from "../../components/Username/Username.jsx";
 
@@ -14,7 +15,7 @@ function RecentSubmissionsRow({ submission, renderGame, renderLevelContext }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { cleanLevelName, capitalize, getTimeAgo, categoryB2F, recordB2F } = FrontendHelper();
+  const { capitalize, getTimeAgo, categoryB2F, recordB2F } = FrontendHelper();
 
   /* ===== RECENT SUBMISSION ROW COMPONENT ===== */
   return (
@@ -27,7 +28,7 @@ function RecentSubmissionsRow({ submission, renderGame, renderLevelContext }) {
           <td>{ categoryB2F(category) }</td>
           <td>
             <Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>
-              { cleanLevelName(level.name) } ({ capitalize(type) })
+              <FancyLevel level={ level.name } /> ({ capitalize(type) })
             </Link>
           </td>
         </>

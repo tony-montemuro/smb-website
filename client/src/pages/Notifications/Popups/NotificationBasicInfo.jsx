@@ -1,12 +1,13 @@
 /* ===== IMPORTS ===== */
 import { Link } from "react-router-dom";
+import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper";
 
 function NotificationBasicInfo({ notification }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { capitalize, cleanLevelName, categoryB2F } = FrontendHelper();
+  const { capitalize, categoryB2F } = FrontendHelper();
 
   /* ===== NOTIFICATION BASIC INFO COMPONENT ===== */
   return ( 
@@ -20,7 +21,9 @@ function NotificationBasicInfo({ notification }) {
       <li>
         Chart:&nbsp;
         <Link to={`/games/${ notification.level.mode.game.abb }/${ notification.level.category }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
-          { cleanLevelName(notification.level.name) } ({ capitalize(notification.score ? "score" : "time") })
+          <div className="center">
+            <FancyLevel level={ notification.level.name } /> ({ capitalize(notification.score ? "score" : "time") })
+          </div>
         </Link>
       </li>
     </>

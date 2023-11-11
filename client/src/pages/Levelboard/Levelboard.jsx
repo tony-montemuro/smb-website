@@ -5,6 +5,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Levelboard.module.css";
 import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
 import Container from "../../components/Container/Container.jsx";
+import FancyLevel from "../../components/FancyLevel/FancyLevel.jsx";
 import Filters from "./Filters/Filters.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import Insert from "./Insert/Insert.jsx";
@@ -34,7 +35,7 @@ function Levelboard({ imageReducer }) {
   const { user, isModerator } = useContext(UserContext);
 
 	/* ===== HELPER FUNCTIONS ===== */
-	const { capitalize, cleanLevelName, dateB2F } = FrontendHelper();
+	const { capitalize, dateB2F } = FrontendHelper();
 	const { fetchLevelFromGame } = GameHelper();
 	const { scrollToTop } = ScrollHelper();
 
@@ -163,7 +164,7 @@ function Levelboard({ imageReducer }) {
 
 					{ /* Level name */ }
 					<div className={ `center ${ styles.middleTitle }` }>
-						<h1>{ cleanLevelName(level.name) }</h1>
+						<h1><FancyLevel level={ level.name } size="large" /></h1>
 					</div>
 
 					{ /* Next level button */ }

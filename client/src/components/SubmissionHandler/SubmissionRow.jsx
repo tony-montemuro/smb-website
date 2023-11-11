@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import styles from "./SubmissionHandler.module.css";
+import FancyLevel from "../FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import SubmissionHandlerLogic from "./SubmissionHandler.js";
 import Username from "../../components/Username/Username.jsx"
@@ -8,7 +9,7 @@ function SubmissionRow({ submission, onClick, isUnapproved }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { getTimeAgo, capitalize, cleanLevelName, recordB2F, categoryB2F } = FrontendHelper();
+  const { getTimeAgo, capitalize, recordB2F, categoryB2F } = FrontendHelper();
   const { isClickable } = SubmissionHandlerLogic(isUnapproved);
   
   /* ===== VARIABLES ===== */
@@ -55,7 +56,7 @@ function SubmissionRow({ submission, onClick, isUnapproved }) {
       { /* Render the name of the level, as well as the type of submission */ }
       <td>
         <div>
-          { `${ cleanLevelName(level.name) } (${ capitalize(type) })` }
+          <FancyLevel level={ level.name } />{ `(${ capitalize(type) })` }
         </div>
       </td>
 

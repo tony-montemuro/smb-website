@@ -40,6 +40,8 @@ function Rejection({ form, clearMessage, handleChange, setShowReject, onReject }
   return (
     <div ref={ rejectionRef } className={ styles.rejection }>
 
+      <hr />
+
       { /* Render information about rejections */ }
       <div className={ styles.rejectionHeader }>
         <h2>

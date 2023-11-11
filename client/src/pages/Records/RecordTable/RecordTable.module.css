@@ -1,3 +1,7 @@
+.recordTable td {
+    height: 24px;
+}
+
 .level {
     width: 35%;
 }

@@ -1,7 +1,8 @@
 /* ===== IMPORTS ===== */
 import styles from "./Icon.module.css";
+import FrontendHelper from "../../../helper/FrontendHelper";
 
-function GoalIcon({ goal }) {
+function GoalIcon({ goal, size }) {
   /* ===== FUNCTION ===== */
 
   // FUNCTION 1: goalToColor - simple function which converts goal string to a color
@@ -17,12 +18,28 @@ function GoalIcon({ goal }) {
     };
   };
 
+  // FUNCTION 2: sizeToEm - simple function which converts size to `em` unit in string format
+  // PRECONDITIONS: NONE
+  // POSTCONDITIONS (1 possible outcome):
+  // the string containing an em value associated with `size` is returned
+  const sizeToEm = () => {
+    switch (size) {
+      case "small": return "1em";
+      case "medium": return "1.25em";
+      case "large": return "1.5em";
+      default: return "1em";
+    }
+  }
+
+  // helper functions
+  const { capitalize } = FrontendHelper();
+
   /* ===== GOAL ICON COMPONENT ===== */
   return goal && (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       className={ styles.icon }
-      style={ { fill: goalToColor() } }
+      style={ { fill: goalToColor(), width: sizeToEm(), height: sizeToEm() } }
       width="498.667"
       height="498.667"
       version="1"
@@ -36,7 +53,7 @@ function GoalIcon({ goal }) {
         d="M1760 2015c-224-63-365-308-306-532 64-241 295-379 531-318 156 41 281 174 316 336 14 67 6 180-17 239-46 117-146 220-254 261-73 28-197 34-270 14z"
         transform="matrix(.1 0 0 -.1 0 374)"
       ></path>
-      <title>This chart is for runs in the { goal } goal only.</title>
+      <title>{ capitalize(goal) } goal only</title>
     </svg>
   );
 }

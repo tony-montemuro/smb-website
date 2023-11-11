@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import styles from "./Popups.module.css";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckmarkOrX from "./CheckmarkOrX";
+import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import NotificationProof from "./NotificationProof";
 import Username from "../../../components/Username/Username";
@@ -22,7 +23,7 @@ function Update() {
   const type = notification.score ? "score" : "time";
 
   /* ===== FUNCTIONS ===== */
-  const { capitalize, cleanLevelName, recordB2F, dateB2F, categoryB2F } = FrontendHelper();
+  const { capitalize, recordB2F, dateB2F, categoryB2F } = FrontendHelper();
 
   /* ===== UPDATE POPUP COMPONENT ===== */
   return (
@@ -57,7 +58,9 @@ function Update() {
             <span>
               Chart:&nbsp;
               <Link to={`/games/${ notification.level.mode.game.abb }/${ notification.level.category }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
-                { cleanLevelName(notification.level.name) } ({ capitalize(notification.score ? "score" : "time") })
+                <div className="center">
+                  <FancyLevel level={ notification.level.name } /> ({ capitalize(notification.score ? "score" : "time") })
+                </div>
               </Link>
             </span>
           </li>

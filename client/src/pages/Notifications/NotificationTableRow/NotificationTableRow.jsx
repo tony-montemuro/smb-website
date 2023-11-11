@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import styles from "./NotificationTableRow.module.css";
+import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import TypeSymbol from "../TypeSymbol";
 
@@ -8,7 +9,7 @@ function NotificationTableRow({ row, notifications, pageNum, handleRowClick, tog
   const type = row.score ? "score" : "time";
 
   // helper functions
-  const { cleanLevelName, capitalize, recordB2F, getTimeAgo, categoryB2F } = FrontendHelper();
+  const { capitalize, recordB2F, getTimeAgo, categoryB2F } = FrontendHelper();
 
   /* ===== NOTIFICATION TABLE ROW COMPONENT ===== */
   return (
@@ -36,7 +37,7 @@ function NotificationTableRow({ row, notifications, pageNum, handleRowClick, tog
         { categoryB2F(row.level.category) }
       </td>
       <td onClick={ () => handleRowClick(row) }>
-        { cleanLevelName(row.level.name) } ({ capitalize(type) })
+        <FancyLevel level={ row.level.name } /> ({ capitalize(type) })
       </td>
       <td onClick={ () => handleRowClick(row) }>{ recordB2F(row.record, type, row.level.timer_type) }</td>
 

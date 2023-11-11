@@ -4,6 +4,7 @@ import { useContext } from "react";
 import styles from "./ModeBody.module.css";
 import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
+import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import StylesHelper from "../../../helper/StylesHelper.js";
 import TypeButtons from "../../../components/TypeButtons/TypeButtons.jsx";
@@ -37,7 +38,7 @@ function ModeBody({ category, modeName, selectedMode, setSelectedMode }) {
         mode.level.map((level, index) => {
           return (
             <div className={ `${ styles.levels } ${ indexToParity(index)}` } key={ level.name }>
-              <span>{ cleanLevelName(level.name) }</span>
+              <FancyLevel level={ level.name } />
               <TypeButtons abb={ game.abb } category={ category } level={ level } />
             </div>
           );

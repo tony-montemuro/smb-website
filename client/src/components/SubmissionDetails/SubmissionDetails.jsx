@@ -7,6 +7,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import DetailedRecord from "../DetailedRecord/DetailedRecord.jsx";
 import EmbededVideo from "../EmbededVideo/EmbededVideo.jsx";
+import FancyLevel from "../FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import ReportForm from "./ReportForm/ReportForm.jsx";
 import Username from "../Username/Username.jsx";
@@ -29,7 +30,7 @@ function SubmissionDetails({ level, updateBoard }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { dateB2F, cleanLevelName } = FrontendHelper();
+  const { dateB2F } = FrontendHelper();
 
   /* ===== SUBMISSION DETAILS COMPONENT ===== */
   return (
@@ -37,10 +38,13 @@ function SubmissionDetails({ level, updateBoard }) {
 
       { /* Popup header - render the name of the level, the record, and the username */ }
       <h1>
-        { cleanLevelName(levelName) }:&nbsp;
+        <FancyLevel level={ levelName } size="large" />
+      </h1>
+
+      <h2>
         <DetailedRecord submission={ submission } iconSize="large" timerType={ level.timer_type } /> by&nbsp;
         <Username profile={ profile } />
-      </h1>
+      </h2>
 
       { /* Render a special message if the submission used tools. */ }
       { submission.tas && <p><b>Note:</b> This run is tool-assisted (TAS), and will not count toward any rankings.</p> }

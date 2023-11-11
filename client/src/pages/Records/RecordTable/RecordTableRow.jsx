@@ -2,6 +2,7 @@
 import { Fragment } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./RecordTable.module.css";
+import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper.js";
 import Username from "../../../components/Username/Username.jsx";
 
@@ -9,7 +10,7 @@ function RecordTableRow({ row, filter, allRecord, isAllGreater }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { cleanLevelName, recordB2F, timerType2TimeUnit } = FrontendHelper();
+  const { recordB2F, timerType2TimeUnit } = FrontendHelper();
   
   /* ===== VARIABLES ===== */
   const location = useLocation();
@@ -25,7 +26,7 @@ function RecordTableRow({ row, filter, allRecord, isAllGreater }) {
     <tr key={ row.level.name }>
       <td className={ styles.level }>
         <Link to={ `/games/${ abb }/${ category }/${ type }/${ row.level.name }` }>
-          { cleanLevelName(row.level.name) }
+          <FancyLevel level={ row.level.name } />
         </Link>
       </td>
       <td className={ styles.record }>

@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./SubmissionHistory.module.css";
 import Container from "../../components/Container/Container.jsx";
+import FancyLevel from "../../components/FancyLevel/FancyLevel.jsx";
 import FilteredSubmissionRow from "./FilteredSubmissionRow";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
@@ -20,7 +21,7 @@ import Username from "../../components/Username/Username";
 
 function SubmissionHistory() {
   /* ===== HELPER FUNCTIONS ====== */
-  const { capitalize, cleanLevelName, runTypeB2F } = FrontendHelper();
+  const { capitalize, runTypeB2F } = FrontendHelper();
   const { fetchLevelFromGame } = GameHelper();
   const { scrollToTop } = ScrollHelper();
 
@@ -109,7 +110,9 @@ function SubmissionHistory() {
             <>
               <Username profile={ profile } />
               &nbsp;to&nbsp;
-              <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }` }>{ cleanLevelName(levelName) } ({ capitalize(type) })</Link>:
+              <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }` }>
+                <FancyLevel level={ levelName } size="medium" /> ({ capitalize(type) })
+              </Link>:
             </>
           </h2>
 

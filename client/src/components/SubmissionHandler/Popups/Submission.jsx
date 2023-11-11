@@ -9,6 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Checkbox from "@mui/material/Checkbox";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import EmbededVideo from "../../../components/EmbededVideo/EmbededVideo.jsx";
+import FancyLevel from "../../FancyLevel/FancyLevel.jsx";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -53,7 +54,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
   } = SubmissionLogic(submission, game, isUnapproved, setSubmissions, setSubmitting);
 
   // helper functions
-  const { cleanLevelName, recordB2F, dateB2F } = FrontendHelper();
+  const { recordB2F, dateB2F } = FrontendHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -71,11 +72,12 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
       <div className={ styles.header }>
         <h1>
           <Link to={ `/games/${ game.abb }/${ category }/${ type }/${ submission.level.name }` }>
-            { cleanLevelName(submission.level.name) }
+            <FancyLevel level={ submission.level.name } size="large" />
           </Link>
-          :&nbsp;
-          { recordB2F(submission.record, type, submission.level.timer_type) } by <Username profile={ submission.profile } /> 
         </h1>
+        <h2>
+          { recordB2F(submission.record, type, submission.level.timer_type) } by <Username profile={ submission.profile } /> 
+        </h2>
 
         { /* If submission is reported, render the reasoning left by the creator of the report. */ }
         { !isUnapproved &&
@@ -89,6 +91,8 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
         }
 
       </div>
+
+      <hr />
 
       { /* Body - render the submission, as well as a form to update certain fields */ }
       <div className={ styles.body }>

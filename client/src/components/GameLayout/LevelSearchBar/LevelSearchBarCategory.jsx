@@ -2,6 +2,7 @@
 import { GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import styles from "./LevelSearchBar.module.css";
+import FancyLevel from "../../FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper.js";
 import StylesHelper from "../../../helper/StylesHelper.js";
 import TypeButtons from "../../TypeButtons/TypeButtons.jsx";
@@ -15,7 +16,7 @@ function LevelSearchBarCategory({ category, filtered }) {
   /* ===== FUNCTIONS ===== */
 
   // helper funcitons
-  const { categoryB2F, cleanLevelName } = FrontendHelper();
+  const { categoryB2F } = FrontendHelper();
   const { indexToParity } = StylesHelper();
 
   /* ===== LEVEL SEARCH BAR CATEGORY ===== */
@@ -30,7 +31,7 @@ function LevelSearchBarCategory({ category, filtered }) {
       { filtered[category].slice(0, 5).map((level, index) => {
         return (
           <div className={ `${ styles.result } ${ indexToParity(index) }` } key={ level.name }>
-            <span>{ cleanLevelName(level.name) }</span>
+            <FancyLevel level={ level.name } />
             <TypeButtons abb={ game.abb } category={ category } level={ level } />
           </div>
         );
