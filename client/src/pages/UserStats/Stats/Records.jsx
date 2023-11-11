@@ -14,7 +14,7 @@ function Records({ rankings }) {
   const type = path[5];
 
   /* ===== FUNCTIONS ===== */
-  const { capitalize, cleanLevelName, recordB2F, dateB2F } = FrontendHelper();
+  const { capitalize, snakeToTitle, recordB2F, dateB2F } = FrontendHelper();
 
   /* ===== RECORDS COMPONENT ===== */
   return (
@@ -25,7 +25,7 @@ function Records({ rankings }) {
       { Object.keys(rankings).map(mode => {
         return (
           <Fragment key={ mode }>
-            <h3>{ cleanLevelName(mode) }</h3>
+            <h3>{ snakeToTitle(mode) }</h3>
             <div className="table">
               <table key={ mode }>
 

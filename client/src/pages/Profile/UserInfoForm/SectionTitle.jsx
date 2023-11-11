@@ -6,12 +6,12 @@ function SectionTitle({ title, hasChanged, onClick }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { cleanLevelName } = FrontendHelper();
+  const { snakeToTitle } = FrontendHelper();
 
   /* ===== SECTION TITLE COMPONENT ===== */
   return (
     <div className={ styles.title }>
-      <h3>{ cleanLevelName(title) }</h3>
+      <h3>{ snakeToTitle(title) }</h3>
       { hasChanged(title) && <button type="button" onClick={ () => onClick(title) }>Reset</button> }
     </div>
   );

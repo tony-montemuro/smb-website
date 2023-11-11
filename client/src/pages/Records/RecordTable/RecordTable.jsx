@@ -11,12 +11,12 @@ function RecordTable({ recordTable, filter, mode, allGreater }) {
   const levels = recordTable[filter][mode];
 
   /* ===== FUNCTIONS ===== */
-  const { capitalize, cleanLevelName } = FrontendHelper();
+  const { capitalize, snakeToTitle } = FrontendHelper();
 
   /* ===== RECORD TABLE COMPONENT ===== */
   return (
     <div>
-      <h3>{ cleanLevelName(mode) }</h3>
+      <h3>{ snakeToTitle(mode) }</h3>
       <div className="table">
         <table className={ styles.recordTable } key={ mode }>
 

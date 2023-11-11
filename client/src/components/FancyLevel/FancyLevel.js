@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import FrontendHelper from "../../helper/FrontendHelper.js";
+import FrontendHelper from "../../helper/FrontendHelper";
 
 const FancyLevel = () => {
     /* ===== VARIABLES ===== */
@@ -8,16 +8,33 @@ const FancyLevel = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { cleanLevelName } = FrontendHelper();
+    const { snakeToTitle } = FrontendHelper();
 
-    // FUNCTION 1: addSyntaxToGoal - simple function that returns a goal string wrapped in snake case syntax
+    // FUNCTION 1: cleanLevelName - code that takes the level in snake case, and converts it to a format the user is familiar with
+    // PRECONDITIONS (1 parameter):
+    // 1.) level: an unformatted level name
+    // POSTCONDITIONS (1 possible outcome):
+    // returns a copy of level in title case, as well as handling strange edge cases such as dashes, dots, etc.
+    const cleanLevelName = level => {
+        const specialChars = [".", "-", "("];
+        let cleanedLevel = snakeToTitle(level);
+        for (let i = 0; i < cleanedLevel.length; i++) {
+            if (i > 0 && specialChars.includes(cleanedLevel[i-1])) {
+                const former = cleanedLevel.substr(0, i), later = cleanedLevel.substr(i+1);
+                cleanedLevel = former + cleanedLevel[i].toUpperCase() + later;
+            }
+        }
+        return cleanedLevel;
+    };
+
+    // FUNCTION 2: addSyntaxToGoal - simple function that returns a goal string wrapped in snake case syntax
     // PRECONDITIONS (1 parameter):
     // 1.) goal: a string: "blue", "green", or "red"
     // POSTCONDITIONS (1 possible outcome):
     // the string is returned like so (ignore brackets): "_([goal])"
     const addSyntaxToGoal = goal => `_(${ goal })`;
 
-    // FUNCTION 2: getNameAndGoal - function that returns the cleaned name of the level, as well as the goal-type, if there is one
+    // FUNCTION 3: getNameAndGoal - function that returns the cleaned name of the level, as well as the goal-type, if there is one
     // PRECONDITIONS (1 parameter):
     // 1.) level: a string representing a level, in snake-case
     // POSTCONDITIONS (1 possible outcome):

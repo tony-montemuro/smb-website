@@ -4,7 +4,7 @@ import { formatDistanceToNowStrict } from "date-fns";
 const FrontendHelper = () => {
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: capitalize
+    // FUNCTION 1: capitalize - function that takes a string, and returns it with the first word capitalized
     // PRECONDITIONS (1 parameter):
     // 1.) str: a string whose first character is a letter
     // POSTCONDITIONS (1 possible outcome): 
@@ -13,26 +13,39 @@ const FrontendHelper = () => {
         return str.charAt(0).toUpperCase()+str.slice(1);
     };
 
-    // FUNCTION 2: cleanLevelName
-    // PRECONDITION (1 parameter):
-    // 1.) str: a string with the following format: 
-    // word1_word2_..._(wordn)
+    // FUCNTION 2: snakeToTitle - converts a string in snake case to title case
+    // PRECONDITIONS (1 parameter):
+    // 1.) str: a string with snake case formatting
     // POSTCONDITIONS (1 possible outcome):
-    // returns a copy of str with the following format:
-    // Word1 Word2 ... (Wordn)
-    const cleanLevelName = str => {
-        const words = str.split("_");
-        for (let i = 0; i < words.length; i++) {
-            if (!words[i] && i < words.length-1) {
-                words[i-1] = words[i-1]+"_";
+    // generally, the first letter of each word is capitalized, and underscores are replaced with spaces. however, if
+    // the user wants to have a space, they can specify that with two underscores `__`, and this function will handle
+    // that request
+    const snakeToTitle = str => {
+        let title = "";
+        for (let i = 0; i < str.length; i++) {
+
+            // special case: handle if character is underscore, including double underscores
+            if (str[i] === "_") {
+                if (i < str.length-1 && str[i+1] === "_") {
+                    title += "_";
+                    i += 1;
+                } else {
+                    title += " ";
+                }
+            } 
+            
+            // general case: handle any other character, and perform capitalization when necessary
+            else {
+                if (i > 0 && str[i-1] === "_") {
+                    title += str[i].toUpperCase();
+                } else {
+                    title += str[i];
+                }
             }
-            else if (words[i][0] !== "(") {
-                words[i] = words[i][0].toUpperCase()+words[i].substr(1) 
-            } else {
-                words[i] = words[i][0]+words[i][1].toUpperCase()+words[i].substr(2);
-            }
+
         }
-        return words.join(" ");
+
+        return capitalize(title);
     };
 
     // FUNCTION 3: dateB2F - ("date backend-to-frontend") converts a back-end date to front-end style 
@@ -216,7 +229,7 @@ const FrontendHelper = () => {
 
     return { 
         capitalize,
-        cleanLevelName,
+        snakeToTitle,
         dateB2F,
         secondsToHours, 
         recordB2F,

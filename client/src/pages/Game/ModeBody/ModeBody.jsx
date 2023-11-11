@@ -21,7 +21,7 @@ function ModeBody({ category, modeName, selectedMode, setSelectedMode }) {
   /* ===== FUNCTIONS ===== */
     
   // helper functions
-  const { cleanLevelName } = FrontendHelper();
+  const { snakeToTitle } = FrontendHelper();
   const { indexToParity } = StylesHelper();
 
   /* ===== MODE BODY COMPONENT ===== */
@@ -29,7 +29,7 @@ function ModeBody({ category, modeName, selectedMode, setSelectedMode }) {
     <>
       { /* Game mody body: name - Always will render, and is clickable. If a user clicks on it, toggle between expanded and unexpanded. */ }
       <div className={ styles.name } onClick={ () => selectedMode !== modeName ? setSelectedMode(modeName) : setSelectedMode(null) }>
-        <h3>{ cleanLevelName(mode.name) }</h3>
+        <h3>{ snakeToTitle(mode.name) }</h3>
         { modeName === selectedMode ? <ExpandLessRoundedIcon /> : <ExpandMoreRoundedIcon /> }
       </div>
 

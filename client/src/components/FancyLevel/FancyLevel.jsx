@@ -15,7 +15,7 @@ function FancyLevel({ level, size = "small" }) {
   /* ===== FANCY LEVEL COMPONENT ===== */
   return (
     <div className={ styles.fancyLevel }>
-      <span>{ levelName }&nbsp;<GoalIcon goal={ goal } size={ size } /></span>
+      <span>{ levelName }<GoalIcon goal={ goal } size={ size } /></span>
     </div>
   );
 };

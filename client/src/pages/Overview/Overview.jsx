@@ -20,7 +20,7 @@ function Overview({ imageReducer }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { cleanLevelName } = FrontendHelper();
+  const { snakeToTitle } = FrontendHelper();
   
   // FUNCTION 1: getContent - function that, given a header, returns the content of the container
   // PRECONDITIONS (1 parameter):
@@ -52,7 +52,7 @@ function Overview({ imageReducer }) {
       { headers.map(header => {
         return (
           <div id={ header } key={ header }>
-            <Container title={ cleanLevelName(header) }>
+            <Container title={ snakeToTitle(header) }>
               { getContent(header) }
             </Container>
           </div>

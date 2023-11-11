@@ -1,7 +1,6 @@
 /* ===== IMPORTS ===== */
 import { GameContext } from "../../../utils/Contexts";
 import { useContext, useState } from "react";
-import FrontendHelper from "../../../helper/FrontendHelper";
 import GameHelper from "../../../helper/GameHelper";
 
 const LevelSearchBar = () => {
@@ -11,7 +10,6 @@ const LevelSearchBar = () => {
     const { game } = useContext(GameContext);
 
     /* ===== HELPER FUNCTIONS ===== */
-    const { cleanLevelName } = FrontendHelper();
     const { getGameCategories } = GameHelper();
 
     /* ===== VARIABLES ===== */
@@ -41,7 +39,9 @@ const LevelSearchBar = () => {
         if (word.length > 0) {
             game.mode.forEach(mode => {                 // for each mode
                 mode.level.forEach(level => {           // for each level
-                    if (cleanLevelName(level.name).toLowerCase().includes(word.toLowerCase())) {
+                    const levelName = level.name.replaceAll("_", " ");
+                    const userInput = word.toLowerCase();
+                    if (levelName.includes(userInput)) {
                         newFiltered[mode.category].push(level);
                     }
                 });
