@@ -144,7 +144,7 @@ function Levelboard({ imageReducer }) {
 			<Popup renderPopup={ popups.filters } setRenderPopup={ closePopup } width="1100px" >
 				<Filters currentFilters={ board.filters } defaultFilters={ defaultFilters } updateBoard={ setupBoard } />
 			</Popup>
-			<Popup renderPopup={ popups.details } setRenderPopup={ closePopup } width="820px" >
+			<Popup renderPopup={ popups.details } setRenderPopup={ closePopup } width="760px" >
 				<SubmissionDetails level={ level } updateBoard={ setupBoard } />
 			</Popup>
 

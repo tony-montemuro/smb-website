@@ -19,4 +19,5 @@
     justify-content: space-between;
     align-items: center;
     padding: 5px 6px;
+    gap: 2px;
 }
