@@ -71,6 +71,7 @@ const UserInfoForm = () => {
     const generateFormVals = () => {
         const userId = user.id;
         const profile = user.profile;
+        console.log(profile);
         if (profile) {
             return {
                 id: profile.id,
@@ -161,7 +162,7 @@ const UserInfoForm = () => {
             const profile = user.profile;
             return profile && (
                 form.user.username !== profile.username ||
-                form.user.country !== profile.country.iso2 || 
+                form.user.country !== (profile.country ? profile.country.iso2 : "") || 
                 form.user.bio !== profile.bio ||
                 form.user.birthday !== profile.birthday
             );
@@ -360,6 +361,8 @@ const UserInfoForm = () => {
             if (!user.profile) {
                 delete userInfo.id; // user's with no profile yet have no id yet
             }
+            const country = userInfo.country;
+            userInfo.country = country ? country : null; 
 
             // attempt to upload user info. if it's a success, we also update user state, and render a success message
             await upsertUserInfo(userInfo);
