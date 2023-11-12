@@ -15,7 +15,7 @@ function FancyLevel({ level }) {
   /* ===== FANCY LEVEL COMPONENT ===== */
   return (
     <div className={ styles.fancyLevel }>
-      <span className={ styles.text }>{ levelName }</span>
+      <span>{ levelName }</span>
       <Goal goal={ goal } />
     </div>
   );

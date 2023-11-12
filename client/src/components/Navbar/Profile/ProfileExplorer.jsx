@@ -15,7 +15,7 @@ import Username from "../../Username/Username";
 
 function ProfileExplorer({ imageReducer }) {
   /* ===== VARIABLES ===== */
-  const AVATAR_LENGTH = 60;
+  const AVATAR_LENGTH = 50;
 
   /* ===== CONTEXTS ===== */
 

@@ -21,7 +21,15 @@
 
 .profile {
     display: flex;
+    align-self: center;
+    height: 60px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 7px;
+    margin-right: 7px;
+    background-color: rgb(var(--color-container));
     gap: 5px;
+    border-radius: 4px;
 }
 
 .avatarLinkWrapper {
