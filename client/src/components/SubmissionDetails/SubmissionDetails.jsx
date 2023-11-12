@@ -38,7 +38,7 @@ function SubmissionDetails({ level, updateBoard }) {
 
       { /* Popup header - render the name of the level, the record, and the username */ }
       <h1>
-        <FancyLevel level={ levelName } size="large" />
+        <FancyLevel level={ levelName } />
       </h1>
 
       <h2>

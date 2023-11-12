@@ -21,9 +21,7 @@ function NotificationBasicInfo({ notification }) {
       <li>
         Chart:&nbsp;
         <Link to={`/games/${ notification.level.mode.game.abb }/${ notification.level.category }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
-          <div className="center">
-            <FancyLevel level={ notification.level.name } /> ({ capitalize(notification.score ? "score" : "time") })
-          </div>
+          <div><FancyLevel level={ notification.level.name } />&nbsp;({ capitalize(notification.score ? "score" : "time") })</div>
         </Link>
       </li>
     </>

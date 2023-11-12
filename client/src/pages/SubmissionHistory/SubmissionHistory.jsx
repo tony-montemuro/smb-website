@@ -111,7 +111,7 @@ function SubmissionHistory() {
               <Username profile={ profile } />
               &nbsp;to&nbsp;
               <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }` }>
-                <FancyLevel level={ levelName } size="medium" /> ({ capitalize(type) })
+                <FancyLevel level={ levelName } /> ({ capitalize(type) })
               </Link>:
             </>
           </h2>

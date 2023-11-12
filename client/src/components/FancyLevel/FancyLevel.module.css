@@ -1,7 +1,8 @@
-.fancyLevel svg {
-    vertical-align: sub;
+.fancyLevel {
+    display: inline;
 }
 
-.txt {
-    padding-right: 3px;
+.fancyLevel svg {
+    top: .14em;
+    position: relative;
 }

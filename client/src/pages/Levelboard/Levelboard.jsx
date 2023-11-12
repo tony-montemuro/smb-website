@@ -164,7 +164,7 @@ function Levelboard({ imageReducer }) {
 
 					{ /* Level name */ }
 					<div className={ `center ${ styles.middleTitle }` }>
-						<h1><FancyLevel level={ level.name } size="large" /></h1>
+						<h1><FancyLevel level={ level.name } /></h1>
 					</div>
 
 					{ /* Next level button */ }

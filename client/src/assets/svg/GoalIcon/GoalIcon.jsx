@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
-import styles from "./Icon.module.css";
+import styles from "./GoalIcon.module.css";
 import FrontendHelper from "../../../helper/FrontendHelper";
 
-function GoalIcon({ goal, size }) {
+function GoalIcon({ goal }) {
   /* ===== FUNCTION ===== */
 
   // FUNCTION 1: goalToColor - simple function which converts goal string to a color
@@ -18,19 +18,6 @@ function GoalIcon({ goal, size }) {
     };
   };
 
-  // FUNCTION 2: sizeToEm - simple function which converts size to `em` unit in string format
-  // PRECONDITIONS: NONE
-  // POSTCONDITIONS (1 possible outcome):
-  // the string containing an em value associated with `size` is returned
-  const sizeToEm = () => {
-    switch (size) {
-      case "small": return "1em";
-      case "medium": return "1.25em";
-      case "large": return "1.5em";
-      default: return "1em";
-    }
-  }
-
   // helper functions
   const { capitalize } = FrontendHelper();
 
@@ -39,7 +26,7 @@ function GoalIcon({ goal, size }) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       className={ styles.icon }
-      style={ { fill: goalToColor(), width: sizeToEm(), height: sizeToEm() } }
+      style={ { fill: goalToColor() } }
       width="498.667"
       height="498.667"
       version="1"

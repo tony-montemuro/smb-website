@@ -72,7 +72,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
       <div className={ styles.header }>
         <h1>
           <Link to={ `/games/${ game.abb }/${ category }/${ type }/${ submission.level.name }` }>
-            <FancyLevel level={ submission.level.name } size="large" />
+            <FancyLevel level={ submission.level.name } />
           </Link>
         </h1>
         <h2>

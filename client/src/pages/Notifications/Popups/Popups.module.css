@@ -27,12 +27,7 @@
     align-items: center;
     margin: 5px 0;
     min-height: var(--min-line-heigth);
-}
-
-.details span {
-    padding: 3px;
-    display: flex;
-    align-items: center;
+    height: auto;
 }
 
 .details li a {
