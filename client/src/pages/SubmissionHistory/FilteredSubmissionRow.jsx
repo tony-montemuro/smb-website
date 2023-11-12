@@ -4,6 +4,7 @@ import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import CheckIcon from "@mui/icons-material/Check";
 import DetailedRecord from "../../components/DetailedRecord/DetailedRecord.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
+import LiveIcon from "../../assets/svg/Icons/LiveIcon.jsx";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
 function FilteredSubmissionRow({ submission, level, onClickFunc }) {
@@ -37,7 +38,7 @@ function FilteredSubmissionRow({ submission, level, onClickFunc }) {
       <td>
         { submission.proof && 
           <div className={ styles.svgWrapper }>
-            <VideocamIcon titleAccess="Has proof" sx={{ color: "black" }} />
+            { submission.live ? <LiveIcon /> : <VideocamIcon titleAccess="Has proof" /> }
           </div>
         }
       </td>

@@ -1,6 +1,5 @@
 /* ===== IMPORTS ===== */
 import { useEffect, useState } from "react";
-import styles from "./RecentSubmissionsTable.module.css";
 import LoadingTable from "../LoadingTable/LoadingTable.jsx";
 import PageControls from "../PageControls/PageControls.jsx";
 import RecentSubmissionsRow from "./RecentSubmissionsRow.jsx";
@@ -31,7 +30,7 @@ function RecentSubmissionsTable({ numSubmissions = 5, searchParams, renderGame, 
   return (
     <>
       <div className="table">
-        <table className={ styles.table }>
+        <table>
 
           { /* Table header - render information about what is present in each column */ }
           <thead>

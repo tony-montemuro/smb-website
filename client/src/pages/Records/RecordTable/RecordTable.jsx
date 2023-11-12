@@ -18,7 +18,7 @@ function RecordTable({ recordTable, filter, mode, allGreater }) {
     <div>
       <h3>{ snakeToTitle(mode) }</h3>
       <div className="table">
-        <table className={ styles.recordTable } key={ mode }>
+        <table key={ mode }>
 
           { /* Record table header - specifies the information displayed in each cell of the record table */ }
           <thead>
