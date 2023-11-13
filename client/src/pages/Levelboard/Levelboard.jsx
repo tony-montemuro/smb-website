@@ -3,11 +3,14 @@ import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Levelboard.module.css";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
 import Container from "../../components/Container/Container.jsx";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import FancyLevel from "../../components/FancyLevel/FancyLevel.jsx";
 import Filters from "./Filters/Filters.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
+import IconButton from "../../components/IconButton/IconButton.jsx";
 import Insert from "./Insert/Insert.jsx";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
@@ -20,6 +23,7 @@ import ScrollHelper from "../../helper/ScrollHelper";
 import SubmissionDetails from "../../components/SubmissionDetails/SubmissionDetails.jsx";
 import TableContent from "../../components/TableContent/TableContent.jsx";
 import TableTabs from "../../components/TableTabs/TableTabs";
+import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import Update from "./Update/Update.jsx";
 
 function Levelboard({ imageReducer }) {
@@ -187,23 +191,23 @@ function Levelboard({ imageReducer }) {
 					{ /* Render buttons, such as: filters, update, insert */ }
 					{ board.filtered && board.filters ?
 							<div className={ styles.optionsBtns }>
-								<button type="button" onClick={ () => setPopups({ ...popups, filters: true }) }>Filters</button>
+
+								<IconButton name="Filters" onClick={ () => setPopups({ ...popups, filters: true }) }>
+									<TuneRoundedIcon />
+								</IconButton>
+
 								{ user.profile && board.user.length > 0 &&
-									<button 
-										type="button" 
-										onClick={ () => setPopups( { ...popups, update: board.user })}
-									>
-										Update Submission(s)
-									</button>
+									<IconButton name="Update Submission(s)" onClick={ () => setPopups( { ...popups, update: board.user }) }>
+										<EditRoundedIcon />
+									</IconButton>
 								}
+
 								{ user.profile && 
-									<button 
-										type="button" 
-										onClick={ () => setPopups({ ...popups, insert: true }) }
-									>
-										Submit { capitalize(type) }
-									</button>
+									<IconButton name={ `Submit ${ capitalize(type) }` } onClick={ () => setPopups({ ...popups, insert: true }) }>
+										<AddCircleOutlineRoundedIcon />
+									</IconButton>
 								}
+								
 							</div>
 						:
 							<Loading />
