@@ -54,8 +54,14 @@
 
 /* ===== MEDIA QUERY FOR MOBILE DEVICES ===== */
 
-@media (max-width: 550px) {
+@media (max-width: 586px) {
     .options {
         flex-direction: column-reverse;
+    }
+}
+
+@media (max-width: 427px) {
+    .optionsBtns {
+        justify-content: center;
     }
 }

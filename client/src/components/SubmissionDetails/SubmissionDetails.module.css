@@ -19,6 +19,18 @@
     padding: 10px 0;
 }
 
+.disclaimer {
+    font-size: 14px;
+}
+
+.disclaimer ul {
+    margin: 5px 0;
+}
+
+#disclaimerText {
+    text-decoration: underline;
+}
+
 .details {
     list-style: none;
     padding: 0;

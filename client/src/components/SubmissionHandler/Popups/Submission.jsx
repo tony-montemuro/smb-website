@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Link } from "react-router-dom";
+import { renderPosition, PositionDisclaimer } from "../../Positions/Positions.jsx";
 import { PopupContext } from "../../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import dayjs from "dayjs";
@@ -94,6 +95,9 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
 
       <hr />
 
+      { /* Render position disclaimer component, which details the complicated position fields */ }
+      <PositionDisclaimer />
+
       { /* Body - render the submission, as well as a form to update certain fields */ }
       <div className={ styles.body }>
 
@@ -115,7 +119,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 id="all_position"
                 inputProps={ { readOnly: true } }
                 label="Position"
-                value={ submission.all_position }
+                value={ renderPosition(submission.id, submission.submitted_at) ? submission.all_position : "-" }
                 variant="filled"
               />
               { submission.position && 
@@ -125,7 +129,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                   id="position"
                   inputProps={ { readOnly: true } }
                   label="Live Position"
-                  value={ submission.position }
+                  value={ renderPosition(submission.id, submission.submitted_at) ? submission.position : "-" }
                   variant="filled"
                 />
               }

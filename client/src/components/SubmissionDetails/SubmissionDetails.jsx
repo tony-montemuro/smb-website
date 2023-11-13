@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { LivePosition, Position } from "../Positions/Positions.jsx";
+import { LivePosition, Position, PositionDisclaimer } from "../Positions/Positions.jsx";
 import { PopupContext, UserContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
@@ -57,6 +57,10 @@ function SubmissionDetails({ level, updateBoard }) {
         <EmbededVideo url={ submission.proof } />
       </div>
 
+      { /* Submission disclaimer - render a disclaimer to the user explaining the position fields (only should render
+        if `all_position` field is present) */ }
+      { submission.all_position && <PositionDisclaimer /> }
+
       <hr />
 
       { /* Submission details info - render the submission details within this unordered list */ }
@@ -65,16 +69,16 @@ function SubmissionDetails({ level, updateBoard }) {
         { /* Render the submission differently, depending on whether or not `all_position` is defined. */ }
         { submission.all_position ?
           <>
+            { /* Submission info - render both the position and live position fields */ }
             <li>
               <span className={ styles.label }>Position:</span>&nbsp;
               <Position position={ submission.all_position } id={ submission.id } submittedAt={ submission.submitted_at } />
             </li>
-            { submission.live && 
-              <li>
-                <span className={ styles.label }>Live Position:</span>&nbsp;
-                <LivePosition position={ submission.position } id={ submission.id } submittedAt={ submission.submitted_at } />
-              </li> 
-            }
+            <li>
+              <span className={ styles.label }>Live Position:</span>&nbsp;
+              <LivePosition position={ submission.position } id={ submission.id } submittedAt={ submission.submitted_at } />
+            </li> 
+
           </>
         :
           <li><span className={ styles.label }>Position:</span>&nbsp;{ submission.position }</li>

@@ -1,0 +1,36 @@
+.disclaimer h3 {
+    display: inline;
+    margin: 0;
+}
+
+.disclaimer details[open] summary {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.disclaimer details[open] {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 5px;
+}
+
+.disclaimer summary {
+    background-color: rgb(var(--color-nav));
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.details {
+    padding: 5px;
+}
+
+.details ul {
+    margin: 7px 0;
+}
+
+.details li {
+    padding: 2px 0;
+}
+
+#disclaimerText {
+    text-decoration: underline;
+}

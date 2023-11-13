@@ -70,6 +70,10 @@ button[disabled] {
     cursor: default;
 }
 
+details summary {
+    cursor: pointer;
+}
+
 hr {
     height: 2px;
     background-color: rgba(var(--color-container-selected), 0.8);
