@@ -2,7 +2,6 @@
 import styles from "./Overview.module.css";
 import BoxArt from "../../components/BoxArt/BoxArt.jsx";
 
-
 /* ===== EXPORTS ===== */
 
 // EXPORT 1: General component - the content of the general container

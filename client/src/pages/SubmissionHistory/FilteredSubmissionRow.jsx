@@ -1,4 +1,5 @@
 /* ===== IMPORTS ===== */
+import { LivePosition, Position } from "../../components/Positions/Positions.jsx";
 import styles from "./SubmissionHistory.module.css";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import CheckIcon from "@mui/icons-material/Check";
@@ -62,10 +63,14 @@ function FilteredSubmissionRow({ submission, level, onClickFunc }) {
       </td>
 
       { /* Position - Render the overall position of the submission */ }
-      <td>{ submission.all_position }</td>
+      <td>
+        <Position position={ submission.all_position } id={ submission.id } submittedAt={ submission.submitted_at } />
+      </td>
 
       { /* Live Position - Render the position of the submission (live only) */ }
-      <td>{ submission.position ? submission.position : "-" }</td>
+      <td>
+        <LivePosition position={ submission.position } id={ submission.id } submittedAt={ submission.submitted_at } />
+      </td>
       
     </tr>
   );

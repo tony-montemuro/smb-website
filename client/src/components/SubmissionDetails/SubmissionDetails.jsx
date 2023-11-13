@@ -1,4 +1,5 @@
 /* ===== IMPORTS ===== */
+import { LivePosition, Position } from "../Positions/Positions.jsx";
 import { PopupContext, UserContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
@@ -64,8 +65,16 @@ function SubmissionDetails({ level, updateBoard }) {
         { /* Render the submission differently, depending on whether or not `all_position` is defined. */ }
         { submission.all_position ?
           <>
-            <li><span className={ styles.label }>Position:</span>&nbsp;{ submission.all_position }</li>
-            { submission.live && <li><span className={ styles.label }>Live Position:</span>&nbsp;{ submission.position }</li> }
+            <li>
+              <span className={ styles.label }>Position:</span>&nbsp;
+              <Position position={ submission.all_position } id={ submission.id } submittedAt={ submission.submitted_at } />
+            </li>
+            { submission.live && 
+              <li>
+                <span className={ styles.label }>Live Position:</span>&nbsp;
+                <LivePosition position={ submission.position } id={ submission.id } submittedAt={ submission.submitted_at } />
+              </li> 
+            }
           </>
         :
           <li><span className={ styles.label }>Position:</span>&nbsp;{ submission.position }</li>
