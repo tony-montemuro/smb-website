@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../../../utils/Contexts";
 import styles from "./Profile.module.css";
+import AdminIcon from "../../../assets/svg/Icons/AdminIcon.jsx";
 import Avatar from "../../Avatar/Avatar.jsx";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -75,7 +76,7 @@ function ProfileExplorer({ imageReducer }) {
           { user.profile.administrator &&
             <div className={ styles.profileLink }>
               <Link to="/administrator" className="center">
-                <ShieldRoundedIcon titleAccess="Administrator Hub" />
+                <AdminIcon title="Administrator Hub" />
               </Link>
             </div>
           }
