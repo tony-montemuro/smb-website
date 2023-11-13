@@ -42,8 +42,6 @@ export function PositionDisclaimer() {
 
 // EXPORT 3: Live position component - render the live position field, based on the `id` and `submittedAt` parameters
 export function LivePosition({ position, id, submittedAt }) {
-  console.log(id);
-  console.log(submittedAt);
   return position ?
     renderPosition(id, submittedAt) ? position : (
         <span title="Date does not match the timestamp it was submitted at, so live position could not be calculated.">

@@ -71,7 +71,6 @@ const UserInfoForm = () => {
     const generateFormVals = () => {
         const userId = user.id;
         const profile = user.profile;
-        console.log(profile);
         if (profile) {
             return {
                 id: profile.id,
