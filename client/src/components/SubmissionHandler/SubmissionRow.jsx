@@ -56,7 +56,7 @@ function SubmissionRow({ submission, onClick, isUnapproved }) {
       { /* Render the name of the level, as well as the type of submission */ }
       <td>
         <div>
-          <FancyLevel level={ level.name } />{ `(${ capitalize(type) })` }
+          <FancyLevel level={ level.name } /> { `(${ capitalize(type) })` }
         </div>
       </td>
 
