@@ -3,7 +3,6 @@
 .submission {
     display: flex;
     flex-direction: column;
-    gap: 10px;
 }
 
 .submission hr {
@@ -16,9 +15,11 @@
 
 .header h1, .header h2 {
     margin: 0;
+    padding: 5px 0;
 }
 
 .body {
+    padding-top: 10px;
     display: flex;
     flex-direction: row;
     gap: var(--app-padding);
