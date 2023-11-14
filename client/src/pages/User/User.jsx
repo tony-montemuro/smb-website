@@ -2,11 +2,14 @@
 import { ProfileContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import styles from "./User.module.css";
+import AdminIcon from "../../assets/svg/Icons/AdminIcon.jsx";
 import Container from "../../components/Container/Container.jsx";
 import DiscordLogo from "../../components/DiscordLogo/DiscordLogo.jsx";
 import EmbededVideo from "../../components/EmbededVideo/EmbededVideo.jsx";
 import GameRow from "../../components/GameRow/GameRow.jsx";
 import Items from "../../components/Items/Items.jsx";
+import ModIcon from "../../assets/svg/Icons/ModIcon.jsx";
+import NormalIcon from "../../assets/svg/Icons/NormalIcon.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
 import SocialLink from "../../components/SocialLink/SocialLink.jsx";
 import UserLogic from "./User.js";
@@ -62,17 +65,26 @@ function User({ imageReducer }) {
       <Container title="Roles" largeTitle>
         { profile.administrator &&
           <>
-            <h2>Site Administrator</h2>
+            <span className={ styles.roleHeader }>
+              <AdminIcon />
+              <h2>Site Administrator</h2>
+            </span>
             <p>This user is responsible for maintaining SMBElite.</p>
           </>
         }
         { profile.moderated_games.length > 0 &&
           <>
-            <h2>Game Moderator</h2>
+            <span className={ styles.roleHeader }>
+              <ModIcon />
+              <h2>Game Moderator</h2>
+            </span>
             <p>This user is responsible for moderating the charts of at least <strong>1</strong> game. To see the specific list of games, go to the <strong>Games Moderated</strong> section.</p>
           </>
         }
-        <h2>Normal User</h2>
+        <span className={ styles.roleHeader }>
+          <NormalIcon />
+          <h2>Normal User</h2>
+        </span>
         <p>This user has all of the privileges granted to newly registered users: submitting scores/times, updating submissions, reporting submissions, & updating their personal profile.</p>
       </Container>
 

@@ -32,3 +32,9 @@
     display: flex;
     justify-content: center;
 }
+
+.roleHeader {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

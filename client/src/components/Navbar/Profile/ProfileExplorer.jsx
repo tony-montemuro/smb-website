@@ -10,7 +10,6 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import ModIcon from "../../../assets/svg/Icons/ModIcon.jsx";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded';
 import Signout from "../../../database/authentication/Signout";
 import Username from "../../Username/Username";
 
@@ -85,7 +84,7 @@ function ProfileExplorer({ imageReducer }) {
           { isModerator() &&
             <div className={ styles.profileLink }>
               <Link to="/moderator" className="center">
-                <ModIcon />
+                <ModIcon title="Moderator Hub" />
               </Link>
             </div>
           }
