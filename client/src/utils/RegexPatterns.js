@@ -13,7 +13,7 @@ export const discordPattern = /^(?!.*\.{2})[a-z0-9_.]{2,32}$/;
 export const emailPattern =  /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
 // Username Regex
-export const usernamePattern = /^[A-Za-z0-9][\w]{3,19}$/;
+export const usernamePattern = /^[A-Za-z0-9][\w]{2,14}$/;
 
 // Twitter Regex
 export const twitterPatttern = /^https?:\/\/(?:twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)[/\S]*$/;

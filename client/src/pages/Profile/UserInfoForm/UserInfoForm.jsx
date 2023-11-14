@@ -20,8 +20,8 @@ function UserInfoForm({ countries }) {
   const TWITCH_LENGTH_MAX = 24;
   const TWITTER_LENGTH_MIN = 5;
   const TWITTER_LENGTH_MAX = 16;
-  const USERNAME_LENGTH_MIN = 4;
-  const USERNAME_LENGTH_MAX = 20;
+  const USERNAME_LENGTH_MIN = 3;
+  const USERNAME_LENGTH_MAX = 15;
   const YOUTUBE_LENGTH_MIN = 4;
   const YOUTUBE_LENGTH_MAX = 31;
   const FEATURED_VIDEO_LENGTH_MAX = 256;
@@ -71,7 +71,7 @@ function UserInfoForm({ countries }) {
             inputProps={ { minLength: USERNAME_LENGTH_MIN, maxLength: USERNAME_LENGTH_MAX } }
             helperText={ form.error.username ? form.error.username : `${ form.user.username.length }/${ USERNAME_LENGTH_MAX }` }
             label="Username"
-            placeholder="Between 4 and 20 characters..."
+            placeholder={ `Between ${ USERNAME_LENGTH_MIN } and ${ USERNAME_LENGTH_MAX } characters...` }
             onChange={ handleChange }
             required
             value={ form.user.username }
