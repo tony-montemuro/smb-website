@@ -3,6 +3,11 @@
     padding-bottom: 10px;
 }
 
+.medalsIcon {
+    display: flex;
+    align-items: center;
+}
+
 /* ===== MEDIA QUERIES FOR PHONES ===== */
 
 @media (max-width: 600px) {

@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import styles from "./Icon.module.css";
 
-function PlatinumIcon() {
+function PlatinumIcon({ isPlural }) {
   /* ===== PLATINUM ICON COMPONENT ===== */
   return (
     <svg 
@@ -67,7 +67,7 @@ function PlatinumIcon() {
         fill="#D4D3D2"
         d="M137 183l-3 11-5-5-1.813-1.688C126 186 126 186 126 184c7.625-1 7.625-1 11-1z"
       ></path>
-      <title>Platinum Medal</title>
+      <title>Platinum Medal{ isPlural && "s" }</title>
     </svg>
   );
 }

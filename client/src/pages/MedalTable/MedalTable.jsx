@@ -3,13 +3,17 @@ import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./MedalTable.module.css";
+import BronzeIcon from "../../assets/svg/Icons/BronzeIcon.jsx";
 import Container from "../../components/Container/Container.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
+import GoldIcon from "../../assets/svg/Icons/GoldIcon.jsx";
 import LoadingTable from "../../components/LoadingTable/LoadingTable.jsx";
 import MedalTableLogic from "./MedalTable.js";
 import MedalTableRow from "./MedalTableRow.jsx";
+import PlatinumIcon from "../../assets/svg/Icons/PlatinumIcon.jsx";
 import ScrollHelper from "../../helper/ScrollHelper";
+import SilverIcon from "../../assets/svg/Icons/SilverIcon.jsx";
 import TableContent from "../../components/TableContent/TableContent.jsx";
 
 function MedalTable({ imageReducer }) {
@@ -81,10 +85,18 @@ function MedalTable({ imageReducer }) {
             <tr>
               <th>Position</th>
               <th>Name</th>
-              <th>Platinum</th>
-              <th>Gold</th>
-              <th>Silver</th>
-              <th>Bronze</th>
+              <th>
+                <div className={ styles.medalsIcon }><PlatinumIcon isPlural /></div>
+              </th>
+              <th>
+                <div className={ styles.medalsIcon }><GoldIcon isPlural /></div>
+              </th>
+              <th>
+                <div className={ styles.medalsIcon }><SilverIcon isPlural /></div>
+              </th>
+              <th>
+                <div className={ styles.medalsIcon }><BronzeIcon isPlural /></div>
+              </th>
             </tr>
           </thead>
 
