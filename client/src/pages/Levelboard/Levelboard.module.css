@@ -35,6 +35,11 @@
     cursor: pointer;
 }
 
+#medalsIcon {
+    display: flex;
+    align-items: center;
+}
+
 .svgWrapper {
     display: flex;
     align-items: center;

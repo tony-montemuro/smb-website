@@ -4,18 +4,19 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Levelboard.module.css";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import BananaIcon from "../../assets/svg/Icons/BananaIcon.jsx";
 import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
 import Container from "../../components/Container/Container.jsx";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import FancyLevel from "../../components/FancyLevel/FancyLevel.jsx";
 import Filters from "./Filters/Filters.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
+import GameHelper from "../../helper/GameHelper";
 import IconButton from "../../components/IconButton/IconButton.jsx";
 import Insert from "./Insert/Insert.jsx";
 import LevelboardLogic from "./Levelboard.js";
 import LevelboardRow from "./LevelboardRow";
 import LoadingTable from "../../components/LoadingTable/LoadingTable.jsx";
-import GameHelper from "../../helper/GameHelper";
 import Loading from "../../components/Loading/Loading.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
@@ -40,7 +41,7 @@ function Levelboard({ imageReducer }) {
 
 	/* ===== HELPER FUNCTIONS ===== */
 	const { capitalize, dateB2F } = FrontendHelper();
-	const { fetchLevelFromGame } = GameHelper();
+	const { fetchLevelFromGame, isPracticeMode } = GameHelper();
 	const { scrollToTop } = ScrollHelper();
 
 	/* ===== VARIABLES ===== */
@@ -223,7 +224,11 @@ function Levelboard({ imageReducer }) {
 							{ /* Table header information: specifies the information displayed in each cell of the board */ }
 							<thead>
 								<tr>
-									<th>#</th>
+
+									{ /* If chart is practice mode, then render a column for medals */ }
+									{ isPracticeMode(category) && <th id={ styles.medalsIcon }><BananaIcon title="Medals" /></th> }
+
+									<th title="Position">#</th>
 									<th>Name</th>
 									<th>{ capitalize(type) }</th>
 									<th>Date</th>
