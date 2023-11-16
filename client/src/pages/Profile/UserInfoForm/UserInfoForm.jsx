@@ -21,7 +21,7 @@ function UserInfoForm({ countries }) {
   const TWITTER_LENGTH_MIN = 5;
   const TWITTER_LENGTH_MAX = 16;
   const USERNAME_LENGTH_MIN = 3;
-  const USERNAME_LENGTH_MAX = 15;
+  const USERNAME_LENGTH_MAX = 16;
   const YOUTUBE_LENGTH_MIN = 4;
   const YOUTUBE_LENGTH_MAX = 31;
   const FEATURED_VIDEO_LENGTH_MAX = 256;
