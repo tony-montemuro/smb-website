@@ -150,7 +150,17 @@ const GameHelper = () => {
     // if the category is one listed in the array defined in this function, return true
     // otherwise, return false
     const isPracticeMode = category => {
-        return ["main", "misc", "main_jump", "perfect", "perfect_jump", "special", "special_jump"].includes(category);
+        return [
+            "main", 
+            "misc", 
+            "main_jump", 
+            "perfect", 
+            "perfect_jump", 
+            "special", 
+            "special_jump", 
+            "perfect_special", 
+            "perfect_special_jump"
+        ].includes(category);
     };
 
     // FUNCTION 6: fetchLevelFromGame: given a game object, level name, & category, determine if the level is present in the object, and
