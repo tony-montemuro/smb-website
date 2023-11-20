@@ -252,4 +252,5 @@ const FrontendHelper = () => {
     };
 };
 
+/* ===== EXPORTS ===== */
 export default FrontendHelper;
