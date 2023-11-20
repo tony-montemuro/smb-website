@@ -147,10 +147,10 @@ const GameHelper = () => {
     // PRECONDITIONS (1 parameter):
     // 1.) category: a string representing a valid category
     // POSTCONDITIONS (2 possible outcomes, 1 return):
-    // if the category is either "main" or "misc", return true
+    // if the category is one listed in the array defined in this function, return true
     // otherwise, return false
     const isPracticeMode = category => {
-        return ["main", "misc"].includes(category);
+        return ["main", "misc", "main_jump", "perfect", "perfect_jump", "special", "special_jump"].includes(category);
     };
 
     // FUNCTION 6: fetchLevelFromGame: given a game object, level name, & category, determine if the level is present in the object, and
