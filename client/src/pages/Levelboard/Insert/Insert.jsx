@@ -157,7 +157,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting }) {
               id="proof"
               inputProps={ { maxLength: PROOF_MAX_LENGTH } }
               label="Proof"
-              placeholder="Must be a valid YouTube, Twitch, or X (Twitter) link"
+              placeholder="Must be a valid YouTube, Twitch, X (Twitter), or Imgur URL."
               onChange={ handleChange }
               type="url"
               value={ form.values.proof }

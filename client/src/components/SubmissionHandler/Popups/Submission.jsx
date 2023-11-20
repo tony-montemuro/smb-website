@@ -203,7 +203,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 helperText={ form.error.proof ? form.error.proof : (form.values.proof !== submission.proof ? updateFieldText : null) }
                 id="proof"
                 label="Proof"
-                placeholder="Must be a YouTube, Twitch, or X (Twitter) URL"
+                placeholder="Must be a YouTube, Twitch, X (Twitter), or Imgur URL."
                 onChange={ handleChange }
                 value={ form.values.proof }
                 variant="filled"

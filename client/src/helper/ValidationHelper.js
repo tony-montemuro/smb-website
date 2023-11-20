@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { emailPattern } from "../utils/RegexPatterns";
-import { twitterPatttern, twitchPattern, youtubePattern } from "../utils/RegexPatterns";
+import { twitterPatttern, twitchPattern, youtubePattern, imgurPattern } from "../utils/RegexPatterns";
 
 const ValidationHelper = () => {
     /* ===== FUNCTIONS ===== */
@@ -31,8 +31,8 @@ const ValidationHelper = () => {
     // if the video is determined to be non-valid, return a string that contains the error message
     // if the proof is determined to be valid, return undefined
     const validateVideoUrl = url => {
-        if (url && !twitchPattern.test(url) && !youtubePattern.test(url) && !twitterPatttern.test(url)) {
-            return "Not a valid YouTube, Twitch, or X (Twitter) video URL.";
+        if (url && !twitchPattern.test(url) && !youtubePattern.test(url) && !twitterPatttern.test(url) && !imgurPattern.test(url)) {
+            return "Not a valid YouTube, Twitch, X (Twitter), or Imgur URL.";
         }
         return undefined;
     };
