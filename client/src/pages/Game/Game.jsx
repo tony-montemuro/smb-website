@@ -9,6 +9,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 import ModeBody from "./ModeBody/ModeBody.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
+import Rule from "./Rule/Rule.jsx";
 
 function Game() {
   /* ===== CONTEXTS ===== */
@@ -68,11 +69,13 @@ function Game() {
       <div className={ styles.half }>
         <div className={ styles.info }>
           <Container title="Rules" largeTitle>
-            <ol>
-              { game.rule.map(row => {
-                return <li key={ row.id }>{ row.rule_name }</li>
-              })}
-            </ol>
+            <div className={ styles.rules }>
+              <ol>
+                { game.rule.map(row => {
+                  return <Rule rule={ row.rule_name } key={ row.id } />;
+                })}
+              </ol>
+            </div>
           </Container>
           <div className={ styles.recent }>
             <Container title="Recent Submissions" href={ `/recent-submissions?game_id=${ abb }` } largeTitle>

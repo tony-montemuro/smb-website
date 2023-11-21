@@ -15,8 +15,13 @@
     gap: var(--app-padding);
 }
 
-.info ol {
+.rules ol {
     padding-inline-start: 20px;
+}
+
+.rules p {
+    padding: 5px 0;
+    margin: 0;
 }
 
 .charts {
