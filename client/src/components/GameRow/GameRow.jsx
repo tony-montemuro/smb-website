@@ -5,13 +5,13 @@ import BoxArt from "../BoxArt/BoxArt.jsx";
 import StylesHelper from "../../helper/StylesHelper.js";
 
 function GameRow({ 
-  game, 
-  imageReducer, 
-  useCard, 
-  onClick = undefined, 
-  index = 0, 
-  extraContent = undefined,
-  selectedGame = undefined
+    game, 
+    imageReducer, 
+    useCard, 
+    onClick = undefined, 
+    index = 0, 
+    extraContent = undefined,
+    selectedGame = undefined
   }) {
   /* ===== VARIABLES ===== */
   const BOX_WIDTH = useCard ? 200 : 50;
@@ -27,10 +27,10 @@ function GameRow({
 
     // if useCard is true, render each game as a series of "cards" 
     return (
-      <div className={ styles.card }>
+      <div className={ styles.card } style={ { width: `${ BOX_WIDTH }px` } }>
         <Link to={ { pathname: `/games/${ game.abb }` } }>
           <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
-          <p>{ name } </p>
+          <p>{ name }</p>
         </Link>
       </div>
     );
