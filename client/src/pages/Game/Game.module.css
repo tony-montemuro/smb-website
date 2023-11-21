@@ -42,7 +42,7 @@
 
 @media (max-width: 1330px) {
     .game {
-        flex-direction: column;
+        flex-direction: column-reverse;
     }
 }
 
