@@ -154,12 +154,8 @@ const GameHelper = () => {
             "main", 
             "misc", 
             "main_jump", 
-            "perfect", 
-            "perfect_jump", 
             "special", 
             "special_jump", 
-            "perfect_special", 
-            "perfect_special_jump"
         ].includes(category);
     };
 

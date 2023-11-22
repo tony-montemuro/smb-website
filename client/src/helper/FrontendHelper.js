@@ -204,7 +204,7 @@ const FrontendHelper = () => {
             case "special_jump":
                 return "Special Mode (Jumps)";
             case "ranking":
-                return "Ranking Mode";
+                return "Ranking Challenge";
             case "perfect_special":
                 return "Special Mode Perfects";
             case "perfect_special_jump":
