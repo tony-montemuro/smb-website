@@ -4,3 +4,6 @@
 
 # Used in scripts
 node_modules
+
+# Backup
+dump.sql
