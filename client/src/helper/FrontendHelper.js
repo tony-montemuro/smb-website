@@ -195,20 +195,12 @@ const FrontendHelper = () => {
                 return "Party Games";
             case "main_jump":
                 return "Practice Mode (Jumps)"
-            case "perfect":
-                return "Practice Mode Perfects";
-            case "perfect_jump":
-                return "Practice Mode Perfects (Jumps)";
             case "special":
                 return "Special Mode";
             case "special_jump":
                 return "Special Mode (Jumps)";
             case "ranking":
                 return "Ranking Challenge";
-            case "perfect_special":
-                return "Special Mode Perfects";
-            case "perfect_special_jump":
-                return "Special Mode Perfects (Jump)"
             default:
                 return "";
         };
