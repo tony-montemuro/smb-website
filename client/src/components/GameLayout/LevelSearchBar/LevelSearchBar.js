@@ -39,7 +39,7 @@ const LevelSearchBar = () => {
         if (word.length > 0) {
             game.mode.forEach(mode => {                 // for each mode
                 mode.level.forEach(level => {           // for each level
-                    const levelName = level.name.replaceAll("_", " ");
+                    const levelName = level.name.replaceAll("_", " ").toLowerCase();
                     const userInput = word.toLowerCase();
                     if (levelName.includes(userInput)) {
                         newFiltered[mode.category].push(level);
