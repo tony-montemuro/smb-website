@@ -622,7 +622,8 @@ ALTER TABLE "public"."game_region" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."game_rule" (
     "abb" "text" NOT NULL,
-    "rule" integer NOT NULL
+    "rule" integer NOT NULL,
+    "id" integer NOT NULL
 );
 
 ALTER TABLE "public"."game_rule" OWNER TO "postgres";
@@ -916,6 +917,9 @@ ALTER TABLE ONLY "public"."game_rule"
 
 ALTER TABLE ONLY "public"."game_rule"
     ADD CONSTRAINT "game_rule_rule_fkey" FOREIGN KEY ("rule") REFERENCES "public"."rule"("id");
+
+ALTER TABLE ONLY "public"."game_rule"
+    ADD CONSTRAINT "unique_game_id" UNIQUE (abb, id);
 
 ALTER TABLE ONLY "public"."level"
     ADD CONSTRAINT "levelfk" FOREIGN KEY ("game", "mode", "category") REFERENCES "public"."mode"("game", "name", "category") MATCH FULL;

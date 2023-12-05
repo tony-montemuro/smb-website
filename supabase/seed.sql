@@ -1648,16 +1648,16 @@ INSERT INTO "public"."rule" ("id", "rule_name") VALUES
 -- Data for Name: game_rule; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."game_rule" ("abb", "rule") VALUES
-	('smb1', 1),
-	('smb1', 2),
-	('smb1', 3),
-	('smb2', 2),
-	('smb2', 4),
-	('smb2pal', 2),
-	('smb2pal', 4),
-	('651', 5),
-	('gaiden', 5);
+INSERT INTO "public"."game_rule" ("abb", "rule", "id") VALUES
+	('smb1', 1, 1),
+	('smb1', 2, 2),
+	('smb1', 3, 3),
+	('smb2', 2, 1),
+	('smb2', 4, 2),
+	('smb2pal', 2, 1),
+	('smb2pal', 4, 2),
+	('651', 5, 1),
+	('gaiden', 5, 1);
 
 
 --
