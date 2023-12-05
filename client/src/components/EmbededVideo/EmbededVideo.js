@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { youtubePattern, twitchPattern, twitterPatttern, youtubeTimestampPattern } from "../../utils/RegexPatterns";
+import { imgurPattern, twitchPattern, twitterPatttern, youtubePattern, youtubeTimestampPattern } from "../../utils/RegexPatterns";
 
 const EmbededVideo = () => {
     /* ===== VARIABLES ===== */
@@ -33,6 +33,11 @@ const EmbededVideo = () => {
         // next, check if it's a tweet
         if (twitterPatttern.test(url)) {
             return "twitter";
+        }
+
+        // then, check if it's an imgur link
+        if (imgurPattern.test(url)) {
+            return "imgur";
         }
 
         // otherwise, just return a null object
@@ -111,8 +116,27 @@ const EmbededVideo = () => {
         const id = match[2];
         return id;
     };
+    
+    // FUNCTION 7: getImgurId - function that gets the imgur id from a url for embeds
+    // PRECONDITIONS (1 paramter):
+    // 1.) url: a string representing the url of an imgur post
+    // POSTCONDITIONS (1 possible outcome):
+    // a string is returned representing the id of the imgur post
+    const getImgurId = url => {
+        const match = url.match(imgurPattern);
+        const id = match[1];
+        return id;
+    }
 
-    return { getUrlType, getYoutubeVideoId, getYoutubeVideoOpts, getTwitchVodSource, getTwitchClipSource, getTweetId };
+    return { 
+        getUrlType, 
+        getYoutubeVideoId, 
+        getYoutubeVideoOpts, 
+        getTwitchVodSource, 
+        getTwitchClipSource, 
+        getTweetId,
+        getImgurId
+    };
 };
 
 /* ===== EXPORTS ===== */

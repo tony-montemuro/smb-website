@@ -3,6 +3,7 @@ import "./EmbededVideo.css";
 import { Tweet } from "react-tweet";
 import styles from "./EmbededVideo.module.css";
 import EmbededVideoLogic from "./EmbededVideo.js";
+import Imgur from "./Imgur.jsx";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import YouTube from "react-youtube";
 
@@ -13,7 +14,15 @@ function EmbededVideo({ url }) {
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file
-  const { getUrlType, getYoutubeVideoId, getYoutubeVideoOpts, getTwitchVodSource, getTwitchClipSource, getTweetId } = EmbededVideoLogic();
+  const { 
+    getUrlType, 
+    getYoutubeVideoId, 
+    getYoutubeVideoOpts, 
+    getTwitchVodSource, 
+    getTwitchClipSource, 
+    getTweetId,
+    getImgurId
+  } = EmbededVideoLogic();
 
   // FUNCTION 1: getStandardPlayer - code that returns the JSX for a video player depending on the urlType
   // PRECONDITIONS (1 parameter):
@@ -89,7 +98,12 @@ function EmbededVideo({ url }) {
     );
   }
 
-  // CASE 4: render an error message if an embed is not supported (urlType is not standard / twitter)
+  // CASE 4: URL is a Imgur type - return an imgur component, 
+  if (urlType === "imgur") {
+    return <Imgur id={ getImgurId(url) } isAlbum={ url.includes("/a/") } />;
+  }
+
+  // CASE 5: render an error message if an embed is not supported (urlType is not supported)
   return (
     <div className={ styles.missing }>
       <h3>Embeded video is not supported for this link:&nbsp;</h3>

@@ -31,4 +31,4 @@ export const twitterHandlePattern = /^@[\w]{4,15}$/;
 export const youtubeTimestampPattern = /[?&]t=(\d+)/;
 
 // Imgur Regex
-export const imgurPattern = /^(?:https?:\/\/)?(?:www\.)?(www\.)?imgur\.com///;
+export const imgurPattern = /^(?:https?:\/\/)?(?:i\.)?(?:www\.)?(?:imgur\.com\/)?(?:a\/)?([a-zA-Z0-9]{7})(?:\.mp4)?$/;

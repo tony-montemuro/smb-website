@@ -378,6 +378,7 @@ const UserInfoForm = () => {
             
             // general case: render an error message, and reset the uploading flag
             else {
+                console.log(error);
                 addMessage("There was an error updating your profile. Try refreshing the page.", "error", 10000);
             }
 
