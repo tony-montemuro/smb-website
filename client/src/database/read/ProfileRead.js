@@ -45,7 +45,7 @@ const ProfileRead = () => {
         } catch (error) {
             // special case: user is authenticated, but has not created a profile yet
             if (error.code === "PGRST116") {
-                addMessage("Welcome to SMBElite! Please create your profile to get started!", "info", 15000);
+                addMessage("Welcome to SMBElite! If a profile already exists under your name (check the Users page), contact TonySMB via Discord [tonysmb] or Email [tonyamontemuro@gmail.com] to sync your account to that profile. Otherwise, create your profile to get started!", "info", 30000);
                 return null;
             } 
             
