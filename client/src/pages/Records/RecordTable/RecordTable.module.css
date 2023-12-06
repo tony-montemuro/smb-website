@@ -9,3 +9,7 @@
 .players {
     width: 50%;
 }
+
+.usernameWrapper {
+    white-space: nowrap;
+}

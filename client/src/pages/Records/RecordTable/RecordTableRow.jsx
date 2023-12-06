@@ -43,8 +43,11 @@ function RecordTableRow({ row, filter, allRecord, isAllGreater }) {
         { row.profiles.map((profile, index) => {
           return (
             <Fragment key={ profile.id }>
-              <Username profile={ profile } />
-              { index < row.profiles.length-1 ? ", " : null }
+              <span className={ styles.usernameWrapper }>
+                <Username profile={ profile } />
+                { index < row.profiles.length-1 ? "," : null }
+              </span>
+              { index < row.profiles.length-1 ? " " : null }
             </Fragment>
           );
         })}
