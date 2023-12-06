@@ -93,7 +93,7 @@ function Records() {
       { recordTable ?
         <>
           <p id={ styles.message }>
-            <em>There are </em><strong>{ numNotLive() }</strong><em> stage(s) where the live record is worse than the overall record.</em>
+            <em>There are </em><strong>{ numNotLive() }</strong><em> levels(s) where the live record is worse than the overall record.</em>
           </p>
           { Object.keys(recordTable[filter]).map(mode => {
             return <RecordTable 

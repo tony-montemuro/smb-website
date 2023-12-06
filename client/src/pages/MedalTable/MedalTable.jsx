@@ -76,7 +76,10 @@ function MedalTable({ imageReducer }) {
   /* ===== MEDALS COMPONENT ===== */
   return (
     <Container title={ `${ capitalize(type) } Medal Table` } largeTitle>
-      <h2 className={ styles.header }>{ categoryB2F(category) }</h2>
+      <div className={ styles.header }>
+        <h2>{ categoryB2F(category) }</h2>
+        <em>Remember that medals are only awarded to submissions with live proof.</em>
+      </div>
       <div className={ `table ${ styles.medalTable }` }>
         <table>
           

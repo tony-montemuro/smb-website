@@ -1,6 +1,12 @@
 .header {
-    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
     padding-bottom: 10px;
+}
+
+.header h2 {
+    margin: 0;
 }
 
 .medalsIcon {
