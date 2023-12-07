@@ -152,10 +152,11 @@ const GameHelper = () => {
     const isPracticeMode = category => {
         return [
             "main", 
+            "main_sweep",
             "misc", 
             "main_jump", 
             "special", 
-            "special_jump", 
+            "special_jump" 
         ].includes(category);
     };
 

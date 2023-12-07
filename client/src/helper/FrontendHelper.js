@@ -183,6 +183,8 @@ const FrontendHelper = () => {
         switch (category) {
             case "main":
                 return "Practice Mode";
+            case "main_sweep":
+                return "Practice Mode (Sweep)";
             case "misc":
                 return "Miscellaneous Practice Mode";
             case "normal":
@@ -201,6 +203,8 @@ const FrontendHelper = () => {
                 return "Special Mode (Jumps)";
             case "ranking":
                 return "Ranking Challenge";
+            case "interstellar":
+                return "Interstellar Mode";
             default:
                 return "";
         };
