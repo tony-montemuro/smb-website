@@ -1,9 +1,10 @@
 /* ===== IMPORTS ===== */
 import { GameContext, MessageContext } from "../../utils/Contexts";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./MedalTable.module.css";
 import BronzeIcon from "../../assets/svg/Icons/BronzeIcon.jsx";
+import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
 import Container from "../../components/Container/Container.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
@@ -32,6 +33,7 @@ function MedalTable({ imageReducer }) {
 
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 6;
+  const USERS_PER_PAGE = 25;
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
@@ -42,6 +44,7 @@ function MedalTable({ imageReducer }) {
   const types = getCategoryTypes(game, category);
 
   /* ===== STATES AND FUNCTIONS ===== */
+  const [pageNum, setPageNum] = useState(1);
 
   // states and functions from the js file
   const { 
@@ -111,7 +114,7 @@ function MedalTable({ imageReducer }) {
                 emptyMessage="There have been no live submissions to this game's category!"
                 numCols={ TABLE_LENGTH }
               >
-                { medalTable.map(row => {
+                { medalTable.slice((pageNum-1)*USERS_PER_PAGE, pageNum*USERS_PER_PAGE).map(row => {
                   return <MedalTableRow row={ row } imageReducer={ imageReducer } key={ row.profile.id } />;
                 })}
               </TableContent>
@@ -122,6 +125,17 @@ function MedalTable({ imageReducer }) {
           
         </table>
       </div>
+
+      { /* Render pagination controls at the bottom of this container */ }
+      { medalTable &&
+        <CachedPageControls 
+          items={ medalTable }
+          itemsPerPage={ USERS_PER_PAGE }
+          pageNum={ pageNum }
+          setPageNum={ setPageNum }
+          itemsName="Users"
+        />
+      }
     </Container>
   );
 };
