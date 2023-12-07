@@ -69,7 +69,7 @@ function Levelboard({ imageReducer }) {
 	};
 	const buttonWidth = "60px";
 	const TABLE_WIDTH = isPracticeMode(category) ? 11 : 10;
-	const NUM_RECENT = 20;
+	const NUM_RECENT = 10;
 	const SUBMISSIONS_PER_TABLE = 50;
 
 	/* ===== STATES & FUNCTIONS ===== */
