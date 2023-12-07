@@ -3,6 +3,7 @@ import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import styles from "./Totalizer.module.css";
+import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
 import Container from "../../components/Container/Container.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
@@ -28,6 +29,7 @@ function Totalizer({ imageReducer }) {
 
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 3;
+  const USERS_PER_PAGE = 25;
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
@@ -39,12 +41,22 @@ function Totalizer({ imageReducer }) {
 
   /* ===== STATES AND FUNCTIONS ===== */
   const [tableState, setTableState] = useState(game.live_preference ? "live" : "all");
+  const [pageNum, setPageNum] = useState(1);
 
   // states and functions from the js file
   const {
     totals,
     fetchTotals
   } = TotalizerLogic();
+
+  // FUNCTION 1: handleTableStateChange - code that executes each time the user toggles the table state
+  // PRECONDITIONS: NONE
+  // POSTCONDITIONS (1 possible outcome):
+  // the table state is swapped between live/all, and the page num is set back to 1
+  const handleTableStateChange = () => {
+    setTableState(tableState === "live" ? "all" : "live");
+    setPageNum(1);
+  };
 
   /* ===== EFFECTS ===== */
 
@@ -84,7 +96,7 @@ function Totalizer({ imageReducer }) {
               id="filter"
               type="checkbox"
               checked={ tableState === "live" }
-              onChange={ () => setTableState(tableState === "live" ? "all" : "live") }
+              onChange={ handleTableStateChange }
             />
           </div>
         </div>
@@ -109,7 +121,7 @@ function Totalizer({ imageReducer }) {
                   emptyMessage={ `There have been no ${ tableState === "live" ? "live" : "" } submissions to this game's category!` }
                   numCols={ TABLE_LENGTH }
                 >
-                  { totals[tableState].map(row => {
+                  { totals[tableState].slice((pageNum-1)*USERS_PER_PAGE, pageNum*USERS_PER_PAGE).map(row => {
                     return <TotalizerRow row={ row } topTotal={ totals[tableState][0].total } imageReducer={ imageReducer } key={ row.profile.id } />
                   })}
                 </TableContent>
@@ -120,6 +132,17 @@ function Totalizer({ imageReducer }) {
 
           </table>
         </div>
+        
+        { /* Render pagination controls at the bottom of this container */ }
+        { totals &&
+          <CachedPageControls 
+            items={ totals[tableState] }
+            itemsPerPage={ USERS_PER_PAGE }
+            pageNum={ pageNum }
+            setPageNum={ setPageNum }
+            itemsName="Users"
+          />
+        }
         
       </div>
     </Container>
