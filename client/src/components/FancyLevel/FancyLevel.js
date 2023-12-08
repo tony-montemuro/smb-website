@@ -3,7 +3,7 @@ import FrontendHelper from "../../helper/FrontendHelper";
 
 const FancyLevel = () => {
     /* ===== VARIABLES ===== */
-    const goals = ["blue", "green", "red"];
+    const goals = ["blue", "green", "red", "stunt"];
 
     /* ===== FUNCTIONS ===== */
 

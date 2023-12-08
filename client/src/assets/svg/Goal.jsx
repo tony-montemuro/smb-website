@@ -13,6 +13,7 @@ function Goal({ goal }) {
       case "blue": return "rgb(58,105,164)";
       case "green": return "rgb(55,173,88)";
       case "red": return "rgb(174,60,67)";
+      case "stunt": return "rgb(187,0,255)";
       default: return "rgb(255,255,255)";
     };
   };
