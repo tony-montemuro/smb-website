@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
+import { CategoriesContext, GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Levelboard.module.css";
@@ -30,6 +30,9 @@ import Update from "./Update/Update.jsx";
 function Levelboard({ imageReducer }) {
 	/* ===== CONTEXTS ===== */
 
+	// categories state from categories context
+	const { categories } = useContext(CategoriesContext);
+
 	// game state from game context
   const { game } = useContext(GameContext);
 
@@ -41,7 +44,7 @@ function Levelboard({ imageReducer }) {
 
 	/* ===== HELPER FUNCTIONS ===== */
 	const { capitalize, dateB2F } = FrontendHelper();
-	const { fetchLevelFromGame, isPracticeMode } = GameHelper();
+	const { fetchLevelFromGame } = GameHelper();
 	const { scrollToTop } = ScrollHelper();
 
 	/* ===== VARIABLES ===== */
@@ -52,6 +55,7 @@ function Levelboard({ imageReducer }) {
 	const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
+	const { practice: isPracticeMode } = categories[category];
 	const defaultFilters = {
 		endDate: dateB2F(),
 		live: game.live_preference ? [true] : [false, true],
@@ -68,7 +72,7 @@ function Levelboard({ imageReducer }) {
 		details: false
 	};
 	const buttonWidth = "60px";
-	const TABLE_WIDTH = isPracticeMode(category) ? 11 : 10;
+	const TABLE_WIDTH = isPracticeMode ? 11 : 10;
 	const NUM_RECENT = 10;
 	const SUBMISSIONS_PER_TABLE = 50;
 
@@ -226,7 +230,7 @@ function Levelboard({ imageReducer }) {
 								<tr>
 
 									{ /* If chart is practice mode, then render a column for medals */ }
-									{ isPracticeMode(category) && <th id={ styles.medalsIcon }><BananaIcon title="Medals" /></th> }
+									{ isPracticeMode && <th id={ styles.medalsIcon }><BananaIcon title="Medals" /></th> }
 
 									<th title="Position">#</th>
 									<th>Name</th>
@@ -255,6 +259,7 @@ function Levelboard({ imageReducer }) {
 												imageReducer={ imageReducer }
 												level={ level }
 												worldRecord={ board.filtered[0].record }
+												isPracticeMode={ isPracticeMode }
 												onClickFunc={ handleRowClick }
 												key={ submission.id } 
 											/>

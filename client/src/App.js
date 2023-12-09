@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { supabase } from "./database/SupabaseClient";
 import { useReducer, useRef, useState } from "react";
+import CategoryRead from "./database/read/CategoryRead";
 import DateHelper from "./helper/DateHelper";
 import NotificationRead from "./database/read/NotificationRead";
 import ProfileRead from "./database/read/ProfileRead";
@@ -33,10 +34,12 @@ const App = () => {
       return state;
     }
   }, defaultImages);
+  const [categories, setCategories] = useState(undefined);
 
   /* ===== FUNCTIONS ===== */
 
   // database functions
+  const { queryCategories } = CategoryRead();
   const { queryNotificationCount } = NotificationRead();
   const { queryUserProfile } = ProfileRead();
   const { getSession } = Session();
@@ -172,16 +175,37 @@ const App = () => {
     });
   };
 
+  // FUNCTION 6: getCategories - function that sets categories state with information from db
+  // PRECONDITIONS (1 condition):
+  // this code should execute when the app component first mounts
+  // POSTCONDITIONS (2 possible outcomes):
+  // if the query is successful, generate a category map that maps key of category.abb to the rest of it's data, so it's easy to
+  // fetch that additional data
+  // otherwise, this function should simply render an error message to the user. IF THIS HAPPENS, many parts of the application
+  // WILL NOT LOAD!
+  const getCategories = async () => {
+    try {
+      const categories = await queryCategories();
+      const categoryMap = {};
+      categories.forEach(category => categoryMap[category.abb] = category);
+      setCategories(categoryMap);
+    } catch (error) {
+      addMessage("Critical data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
+    };
+  };
+
   return { 
     user, 
     messageContent,
     images,
+    categories,
     dispatchImages,
     addMessage,
     handleMessageClose,
     updateUser,
     isModerator,
-    callSessionListener
+    callSessionListener,
+    getCategories
   };
 };
 

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ====== */
-import { GameContext, MessageContext } from "../../utils/Contexts";
+import { CategoriesContext, GameContext, MessageContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import styles from "./Records.module.css";
@@ -14,6 +14,9 @@ import ScrollHelper from "../../helper/ScrollHelper";
 function Records() {
   /* ===== CONTEXTS ===== */
 
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+
   // game state from game context
   const { game } = useContext(GameContext);
 
@@ -21,7 +24,7 @@ function Records() {
   const { addMessage } = useContext(MessageContext);
 
   /* ===== HELPER FUNCTIONS ===== */
-  const { capitalize, categoryB2F } = FrontendHelper();
+  const { capitalize } = FrontendHelper();
   const { getGameCategories, getCategoryTypes } = GameHelper();
   const { scrollToTop } = ScrollHelper();
 
@@ -32,7 +35,8 @@ function Records() {
   const abb = path[2];
   const category = path[3];
   const type = path[4];
-  const categories = getGameCategories(game);
+  const { name: categoryName } = categories[category];
+  const gameCategories = getGameCategories(game);
   const types = getCategoryTypes(game, category);
 
   /* ===== STATES AND FUNCTIONS ===== */
@@ -51,7 +55,7 @@ function Records() {
   // code that is executed when the component mounts, or when the user switches between score and time
   useEffect(() => {
     // special case #1: we are attempting to access a records page with a non-valid category
-    if (!(categories.includes(category))) {
+    if (!(gameCategories.includes(category))) {
       addMessage("Ranking does not exist.", "error", 5000);
       navigate(`/games/${ abb }`);
       return;
@@ -76,7 +80,7 @@ function Records() {
 
       { /* Records header - render the category & an input for user to swap between live-only and all */ }
       <div className={ styles.header }>
-        <h2>{ categoryB2F(category) }</h2>
+        <h2>{ categoryName }</h2>
         <div className={ styles.filter }>
           <label htmlFor="live">Live-records only: </label>
           <input

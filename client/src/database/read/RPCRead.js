@@ -280,28 +280,6 @@ const RPCRead = () => {
         };
     };
 
-    // FUNCTION 11: getCategories - function that grabs the list of all valid categories
-    // PRECONDITIONS: NONE
-    // POSTCONDITIONS (2 possible outcome):
-    // if the query is successful, the list of valid category names is returned
-    // if the query is unsuccessful, this function throws an error, which should be handled by the caller function
-    const getCategories = async () => {
-        try {
-            const { data: categories, error } = await supabase.rpc("get_categories");
-
-            // error handling
-            if (error) {
-                throw error;
-            };
-
-            return categories;
-
-        } catch (error) {
-            // error should be handled by the caller function
-            throw error;
-        };
-    };
-
     return { 
         getRecords, 
         getTotals, 
@@ -312,8 +290,7 @@ const RPCRead = () => {
         getUnapprovedCounts, 
         getUnapprovedByGame,
         getReportedByGame,
-        getProfile,
-        getCategories
+        getProfile
     };
 };
 

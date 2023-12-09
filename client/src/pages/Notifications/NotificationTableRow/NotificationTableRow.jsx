@@ -1,15 +1,25 @@
 /* ===== IMPORTS ===== */
+import { CategoriesContext } from "../../../utils/Contexts.js";
+import { useContext } from "react";
 import styles from "./NotificationTableRow.module.css";
 import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import TypeSymbol from "../TypeSymbol";
 
 function NotificationTableRow({ row, notifications, pageNum, handleRowClick, toggleSelection }) {
+  /* ===== CONTEXTS ===== */
+
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+  
   /* ===== VARIABLES ===== */
   const type = row.score ? "score" : "time";
+  const { name: categoryName } = categories[row.level.category];
+
+  /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { capitalize, recordB2F, getTimeAgo, categoryB2F } = FrontendHelper();
+  const { capitalize, recordB2F, getTimeAgo } = FrontendHelper();
 
   /* ===== NOTIFICATION TABLE ROW COMPONENT ===== */
   return (
@@ -34,7 +44,7 @@ function NotificationTableRow({ row, notifications, pageNum, handleRowClick, tog
         { row.level.mode.game.name }
       </td>
       <td onClick={ () => handleRowClick(row) }>
-        { categoryB2F(row.level.category) }
+        { categoryName }
       </td>
       <td onClick={ () => handleRowClick(row) }>
         <FancyLevel level={ row.level.name } /> ({ capitalize(type) })

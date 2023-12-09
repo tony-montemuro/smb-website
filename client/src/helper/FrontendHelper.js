@@ -173,44 +173,7 @@ const FrontendHelper = () => {
         return formattedTimeAgo;
     };
 
-    // FUNCTION 8: categoryB2F - ("category backend-to-frontend") convert category from back-end format to front-end format
-    // PRECONDITIONS (1 parameter):
-    // 1.) category: a string representing a valid category
-    // POSTCONDITIONS (2 possible outcome):
-    // if category is a valid category, the category is transformed into the readable name
-    // otherwise, an empty string is returned
-    const categoryB2F = category => {
-        switch (category) {
-            case "main":
-                return "Practice Mode";
-            case "main_sweep":
-                return "Practice Mode (Sweep)";
-            case "misc":
-                return "Miscellaneous Practice Mode";
-            case "normal":
-                return "Normal Mode";
-            case "story":
-                return "Story Mode";
-            case "challenge":
-                return "Challenge Mode";
-            case "party":
-                return "Party Games";
-            case "main_jump":
-                return "Practice Mode (Jumps)"
-            case "special":
-                return "Special Mode";
-            case "special_jump":
-                return "Special Mode (Jumps)";
-            case "ranking":
-                return "Ranking Challenge";
-            case "interstellar":
-                return "Interstellar Mode";
-            default:
-                return "";
-        };
-    };
-
-    // FUNCTION 9: runTypeB2F - ("run type backend-to-frontend") convert run type from backend to frontend format
+    // FUNCTION 8: runTypeB2F - ("run type backend-to-frontend") convert run type from backend to frontend format
     // PRECONDITIONS (1 parameter):
     // 1.) runType: a string, either "normal" or "tas"
     // POSTCONDITIONS (1 possible outcome):
@@ -227,7 +190,7 @@ const FrontendHelper = () => {
         };
     };
 
-    // FUNCTION 10: timerType2TimeUnit - ("timer type to timer unit") convers a timer type string to it's time unit
+    // FUNCTION 9: timerType2TimeUnit - ("timer type to timer unit") convers a timer type string to it's time unit
     // PRECONDITIONS (1 parameter):
     // 1.) timerType: a string representing the time of timer of the chart
     // POSTCONDITIONS (1 possible outcome):
@@ -246,7 +209,6 @@ const FrontendHelper = () => {
         secondsToHours, 
         recordB2F,
         getTimeAgo,
-        categoryB2F,
         runTypeB2F,
         timerType2TimeUnit
     };

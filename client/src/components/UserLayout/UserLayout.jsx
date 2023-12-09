@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ProfileContext, MessageContext } from "../../utils/Contexts";
+import { CategoriesContext, ProfileContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react"; 
 import styles from "./UserLayout.module.css";
 import Loading from "../Loading/Loading.jsx";
@@ -16,6 +16,9 @@ function UserLayout({ imageReducer }) {
   const navigate = useNavigate();
 
   /* ===== CONTEXTS ===== */
+
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext)
@@ -52,7 +55,7 @@ function UserLayout({ imageReducer }) {
   }, [location.pathname]);
 
   /* ===== USER LAYOUT COMPONENT ===== */ 
-  return profile ?
+  return profile && categories ?
     <ProfileContext.Provider value={ { profile } } >
       <div className={ styles.userLayout }>
 

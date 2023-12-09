@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
-import { useEffect, useState } from "react";
+import { CategoriesContext } from "../../utils/Contexts.js";
+import { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import styles from "./RecentSubmissions.module.css";
 import GameFilter from "./ListFilters/GameFilter.jsx";
@@ -13,6 +14,9 @@ function RecentSubmissions({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const NUM_SUBMISSIONS = 20;
 
+  /* ===== CONTEXTS ===== */
+  const { categories } = useContext(CategoriesContext);
+
   /* ===== STATES & FUNCTIONS ===== */
   const [searchParams, setSearchParams] = useSearchParams();
   const [gamePopup, setGamePopup] = useState(undefined);
@@ -20,7 +24,7 @@ function RecentSubmissions({ imageReducer }) {
   const [otherPopup, setOtherPopup] = useState(undefined);
 
   // states & functions from the js file
-  const { filtersData, dispatchFiltersData, fetchGames, fetchUsers, fetchCategories } = RecentSubmissionsLogic();
+  const { filtersData, dispatchFiltersData, fetchGames, fetchUsers } = RecentSubmissionsLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -28,9 +32,14 @@ function RecentSubmissions({ imageReducer }) {
   useEffect(() => {
     fetchGames(searchParams);
     fetchUsers(searchParams);
-    fetchCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // code that is executed when the component mounts, and when the categories state updates
+  useEffect(() => {
+    dispatchFiltersData({ type: "categories", value: categories });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categories]);
 
   /* ===== RECENT SUBMISSIONS COMPONENT ===== */
   return (

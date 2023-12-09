@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { PopupContext } from "../../../utils/Contexts";
+import { CategoriesContext, PopupContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Popups.module.css";
@@ -14,6 +14,9 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 function Update() {
   /* ===== CONTEXTS ===== */
 
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+
   // popup data state from popup context
   const { popupData } = useContext(PopupContext);
 
@@ -21,9 +24,11 @@ function Update() {
   const notification = popupData;
   const submission = notification.submission;
   const type = notification.score ? "score" : "time";
+  const category = notification.level.category;
+  const { name: categoryName } = categories[category];
 
   /* ===== FUNCTIONS ===== */
-  const { capitalize, recordB2F, dateB2F, categoryB2F } = FrontendHelper();
+  const { capitalize, recordB2F, dateB2F } = FrontendHelper();
 
   /* ===== UPDATE POPUP COMPONENT ===== */
   return (
@@ -49,7 +54,7 @@ function Update() {
           { /* Link to the category of the level corresponding to the notification prop */ }
           <li>
             <span>
-              Category: { categoryB2F(notification.level.category) }
+              Category: { categoryName }
             </span>
           </li>
 
@@ -57,7 +62,7 @@ function Update() {
           <li>
             <span>
               Chart:&nbsp;
-              <Link to={`/games/${ notification.level.mode.game.abb }/${ notification.level.category }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
+              <Link to={`/games/${ notification.level.mode.game.abb }/${ category }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
                 <div><FancyLevel level={ notification.level.name } />&nbsp;({ capitalize(notification.score ? "score" : "time") })</div>
               </Link>
             </span>

@@ -2,7 +2,7 @@
 import { PopupContext } from "../../../utils/Contexts";
 import { useContext, useState } from "react";
 
-const OtherFilter = (categories) => {
+const OtherFilter = (numCategories) => {
     /* ===== CONTEXTS ===== */
 
     // close popup function from popup context
@@ -55,7 +55,7 @@ const OtherFilter = (categories) => {
 
     // FUNCTION 3: updateCategoryFilter - function that updates the category filter based on the category parameter
     // PRECONDITIONS (1 parameter):
-    // 1.) category: the name of the category we are attempting to toggle on/off
+    // 1.) category: the object of the category we are attempting to toggle on/off
     // POSTCONDITIONS (4 possible outcomes):
     // if category is present in the filter already, we will generally update the filter state to the same array without the
     // category
@@ -72,7 +72,7 @@ const OtherFilter = (categories) => {
             }
         } else {
             const newCategory = filters.category.concat([category]);
-            setFilters({ ...filters, category: newCategory.length !== categories.length ? newCategory : [] });
+            setFilters({ ...filters, category: newCategory.length !== numCategories ? newCategory : [] });
         }
     };
 

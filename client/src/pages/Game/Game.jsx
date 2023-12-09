@@ -1,11 +1,10 @@
 /* ===== IMPORTS ===== */
-import { GameContext } from "../../utils/Contexts";
+import { CategoriesContext, GameContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Game.module.css";
 import ButtonList from "../../components/ButtonList/ButtonList.jsx";
 import Container from "../../components/Container/Container.jsx";
-import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 import ModeBody from "./ModeBody/ModeBody.jsx";
 import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/RecentSubmissionsTable.jsx";
@@ -14,11 +13,13 @@ import Rule from "./Rule/Rule.jsx";
 function Game() {
   /* ===== CONTEXTS ===== */
 
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+
   // game state from game context
   const { game } = useContext(GameContext);
 
   /* ===== HELPER FUNCTIONS ===== */
-  const { categoryB2F } = FrontendHelper();
   const { getGameCategories } = GameHelper();
 
   /* ===== VARIABLES ===== */
@@ -27,7 +28,7 @@ function Game() {
   const path = location.pathname.split("/");
   const abb = path[2];
   const category = path[3];
-  const categories = getGameCategories(game);
+  const gameCategories = getGameCategories(game);
   
   /* ===== MEMOS ===== */
   const searchParams = useMemo(() => {
@@ -53,7 +54,7 @@ function Game() {
   /* ===== EFFECTS ====== */
   useEffect(() => {
     // special case: we are attempting to access a game page with a non-valid category
-    if (category && !(categories.includes(category))) {
+    if (category && !(gameCategories.includes(category))) {
       setSelectedCategory("main");
       navigate(`/games/${ abb }`);
       return;
@@ -89,9 +90,9 @@ function Game() {
       <div className={ styles.charts }>
         <Container title="Charts" largeTitle>
           <div className={ styles.chartsBody }>
-            { categories.length > 1 &&
+            { gameCategories.length > 1 &&
               <ButtonList
-                buttons={ categories.map(category => ({ name: categoryB2F(category), value: category })) }
+                buttons={ gameCategories.map(category => ({ name: categories[category].name, value: category })) }
                 current={ selectedCategory }
                 setCurrent={ handleChange }
                 wrap

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, MessageContext } from "../../utils/Contexts";
+import { CategoriesContext, GameContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./MedalTable.module.css";
@@ -20,6 +20,9 @@ import TableContent from "../../components/TableContent/TableContent.jsx";
 function MedalTable({ imageReducer }) {
   /* ===== CONTEXTS ===== */
 
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+
   // game state from game context
   const { game } = useContext(GameContext);
   
@@ -27,8 +30,8 @@ function MedalTable({ imageReducer }) {
   const { addMessage } = useContext(MessageContext);
 
   /* ===== HELPER FUNCTIONS ===== */
-  const { capitalize, categoryB2F } = FrontendHelper();
-  const { getGameCategories, getCategoryTypes, isPracticeMode } = GameHelper();
+  const { capitalize } = FrontendHelper();
+  const { getGameCategories, getCategoryTypes } = GameHelper();
   const { scrollToTop } = ScrollHelper();
 
   /* ===== VARIABLES ===== */
@@ -40,7 +43,8 @@ function MedalTable({ imageReducer }) {
   const abb = path[2];
   const category = path[3];
   const type = path[5];
-  const categories = getGameCategories(game);
+  const { name: categoryName, practice: isPracticeMode } = categories[category];
+  const gameCategories = getGameCategories(game);
   const types = getCategoryTypes(game, category);
 
   /* ===== STATES AND FUNCTIONS ===== */
@@ -57,7 +61,7 @@ function MedalTable({ imageReducer }) {
   // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
     // special case #1: we are attempting to access a medals page with a non-valid or non-practice mode category
-    if (!(categories.includes(category) && isPracticeMode(category))) {
+    if (!(gameCategories.includes(category) && isPracticeMode)) {
       addMessage("Ranking does not exist.", "error", 5000);
       navigate(`/games/${ abb }`);
       return;
@@ -80,7 +84,7 @@ function MedalTable({ imageReducer }) {
   return (
     <Container title={ `${ capitalize(type) } Medal Table` } largeTitle>
       <div className={ styles.header }>
-        <h2>{ categoryB2F(category) }</h2>
+        <h2>{ categoryName }</h2>
         <em>Remember that medals are only awarded to submissions with live proof.</em>
       </div>
       <div className={ `table ${ styles.medalTable }` }>

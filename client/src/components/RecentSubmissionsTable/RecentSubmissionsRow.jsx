@@ -1,21 +1,29 @@
 /* ===== IMPORTS ===== */
+import { CategoriesContext } from "../../utils/Contexts.js";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import FancyLevel from "../FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import Username from "../../components/Username/Username.jsx";
 
 function RecentSubmissionsRow({ submission, renderGame, renderLevelContext }) {
+  /* ===== CONTEXTS ===== */
+
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+  
   /* ===== VARIABLES ===== */
   const level = submission.level;
   const category = level.category;
   const game = submission.level.mode.game;
   const type = submission.score ? "score" : "time";
   const profile = submission.profile;
+  const { name: categoryName } = categories[category];
 
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { capitalize, getTimeAgo, categoryB2F, recordB2F } = FrontendHelper();
+  const { capitalize, getTimeAgo, recordB2F } = FrontendHelper();
 
   /* ===== RECENT SUBMISSION ROW COMPONENT ===== */
   return (
@@ -25,7 +33,7 @@ function RecentSubmissionsRow({ submission, renderGame, renderLevelContext }) {
       { renderGame && <td><Link to={ `/games/${ game.abb }` }>{ game.name }</Link></td> }
       { renderLevelContext &&
         <>
-          <td>{ categoryB2F(category) }</td>
+          <td>{ categoryName }</td>
           <td>
             <Link to={ `/games/${ game.abb }/${ category }/${ type }/${ level.name }` }>
               <FancyLevel level={ level.name } /> ({ capitalize(type) })

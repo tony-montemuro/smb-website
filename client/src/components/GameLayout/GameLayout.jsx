@@ -1,5 +1,5 @@
 /* ===== IMPORTS ====== */
-import { GameContext, MessageContext } from "../../utils/Contexts";
+import { CategoriesContext, GameContext, MessageContext } from "../../utils/Contexts";
 import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import GameHelper from "../../helper/GameHelper";
 import GameLayoutLogic from "./GameLayout.js";
 import Loading from "../../components/Loading/Loading.jsx";
 import ModeratorContainer from "./Containers/ModeratorContainer";
-import RankingsContent from "./Containers/RankingsContents.jsx";
+import RankingsContents from "./Containers/RankingsContents.jsx";
 
 function GameLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -19,6 +19,9 @@ function GameLayout({ imageReducer }) {
   const navigate = useNavigate();
 
   /* ===== CONTEXTS ====== */
+
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -60,7 +63,7 @@ function GameLayout({ imageReducer }) {
   /* ===== GAME LAYOUT COMPONENT ===== */
   return (
     <div className={ styles.gameLayout }>
-      { game ?
+      { game && categories ?
         <GameContext.Provider value={ { game } }>
           <GameHeader imageReducer={ imageReducer } />
           <div className={ styles.body }>
@@ -74,7 +77,7 @@ function GameLayout({ imageReducer }) {
             <div className={ styles.bodyRight }>
               <Container title="Rankings" largeTitle>
                 { getGameCategories(game).map(category => {
-                  return <RankingsContent category={ category } key={ category } />
+                  return <RankingsContents category={ category } key={ category } />
                 })}
               </Container>
               <Container title="Moderators" largeTitle>

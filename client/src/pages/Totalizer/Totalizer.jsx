@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, MessageContext } from "../../utils/Contexts";
+import { CategoriesContext, GameContext, MessageContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import styles from "./Totalizer.module.css";
@@ -16,6 +16,9 @@ import TotalizerRow from "./TotalizerRow.jsx";
 function Totalizer({ imageReducer }) {
   /* ===== CONTEXTS ===== */
 
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+
   // game state from game context
   const { game } = useContext(GameContext);
 
@@ -23,8 +26,8 @@ function Totalizer({ imageReducer }) {
   const { addMessage } = useContext(MessageContext);
 
   /* ===== HELPER FUNCTIONS ===== */
-  const { capitalize, categoryB2F } = FrontendHelper();
-  const { getGameCategories, getCategoryTypes, isPracticeMode } = GameHelper();
+  const { capitalize } = FrontendHelper();
+  const { getGameCategories, getCategoryTypes } = GameHelper();
   const { scrollToTop } = ScrollHelper();
 
   /* ===== VARIABLES ===== */
@@ -36,7 +39,8 @@ function Totalizer({ imageReducer }) {
   const abb = path[2];
   const category = path[3];
   const type = path[5];
-  const categories = getGameCategories(game);
+  const { name: categoryName, practice: isPracticeMode } = categories[category];
+  const gameCategories = getGameCategories(game);
   const types = getCategoryTypes(game, category);
 
   /* ===== STATES AND FUNCTIONS ===== */
@@ -63,7 +67,7 @@ function Totalizer({ imageReducer }) {
   // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
     // special case #1: we are attempting to access a totalizer page with a non-valid category or non-practice mode category
-    if (!(categories.includes(category) && isPracticeMode(category))) {
+    if (!(gameCategories.includes(category) && isPracticeMode)) {
       addMessage("Ranking does not exist.", "error", 5000);
       navigate(`/games/${ abb }`);
       return;
@@ -89,7 +93,7 @@ function Totalizer({ imageReducer }) {
 
         { /* Totalizer header - render the category, as well as an input for user to swap between live-only and all */ }
         <div className={ styles.header }>
-          <h2>{ categoryB2F(category) }</h2>
+          <h2>{ categoryName }</h2>
           <div className={ styles.filter }>
             <label htmlFor="filter">Live-{ type }s only: </label>
             <input

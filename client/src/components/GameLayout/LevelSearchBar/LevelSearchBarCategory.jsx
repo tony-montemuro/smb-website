@@ -1,22 +1,26 @@
 /* ===== IMPORTS ===== */
-import { GameContext } from "../../../utils/Contexts";
+import { CategoriesContext, GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import styles from "./LevelSearchBar.module.css";
 import FancyLevel from "../../FancyLevel/FancyLevel.jsx";
-import FrontendHelper from "../../../helper/FrontendHelper.js";
 import StylesHelper from "../../../helper/StylesHelper.js";
 import TypeButtons from "../../TypeButtons/TypeButtons.jsx";
 
 function LevelSearchBarCategory({ category, filtered }) {
   /* ===== CONTEXTS ===== */
 
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+
   // game state from game context
   const { game } = useContext(GameContext);
+
+  /* ===== VARIABLES ===== */
+  const { name: categoryName } = categories[category];
 
   /* ===== FUNCTIONS ===== */
 
   // helper funcitons
-  const { categoryB2F } = FrontendHelper();
   const { indexToParity } = StylesHelper();
 
   /* ===== LEVEL SEARCH BAR CATEGORY ===== */
@@ -24,7 +28,7 @@ function LevelSearchBarCategory({ category, filtered }) {
     <>
       { /* First, render the category of games (either main or custom) */ }
       <div className={ styles.result }>
-        <h3>{ categoryB2F(category) }</h3>
+        <h3>{ categoryName }</h3>
       </div>
 
       { /* Then, render the first 5 levels within that category */ }

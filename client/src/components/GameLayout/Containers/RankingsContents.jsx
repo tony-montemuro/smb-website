@@ -1,5 +1,5 @@
 /* ===== IMPORTS ====== */
-import { GameContext } from "../../../utils/Contexts";
+import { CategoriesContext, GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./RankingsContainer.module.css";
@@ -8,19 +8,23 @@ import GameHelper from "../../../helper/GameHelper";
 
 function RankingsContents({ category }) {
   /* ===== CONTEXTS ===== */
+
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
   
   // game state from game context
   const { game } = useContext(GameContext);
 
   /* ===== HELPER FUNCTIONS ===== */
-  const { capitalize, categoryB2F } = FrontendHelper();
-  const { getGameCategories, getCategoryTypes, isPracticeMode } = GameHelper();
+  const { capitalize } = FrontendHelper();
+  const { getGameCategories, getCategoryTypes } = GameHelper();
   
   /* ===== VARIABLES ===== */
+  const { name: categoryName, practice: isPracticeMode } = categories[category];
   const types = getCategoryTypes(game, category);
   const navigate = useNavigate();
   let rankings = [ { name: "World Records", path: "" } ];
-  rankings = isPracticeMode(category) ? rankings.concat([
+  rankings = isPracticeMode ? rankings.concat([
     { name: "Totalizers", path: "/totalizer" },
     { name: "Medal Tables", path: "/medals" }
   ]) : rankings;
@@ -31,7 +35,7 @@ function RankingsContents({ category }) {
       <div className={ styles.rows }>
 
         { /* Render the name of the category */ }
-        <h2 className={ styles.row }>{ categoryB2F(category) }</h2>
+        <h2 className={ styles.row }>{ categoryName }</h2>
 
         { /* For each ranking in the category, render a row containing the name of the ranking, and buttons to each page */ }
         { rankings.map(ranking => {

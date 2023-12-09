@@ -3,7 +3,6 @@ import { MessageContext } from "../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import GameRead from "../../database/read/GameRead";
 import ProfileRead from "../../database/read/ProfileRead";
-import RPCRead from "../../database/read/RPCRead";
 
 const RecentSubmissions = () => {
     /* ===== CONTEXTS ===== */
@@ -45,7 +44,6 @@ const RecentSubmissions = () => {
     // database functions
     const { queryGameByList } = GameRead();
     const { queryProfileByList } = ProfileRead();
-    const { getCategories } = RPCRead();
 
     // FUNCTION 1: fetchGames - function that fetches any games that we are already fitering by
     // PRECONDITIONS (1 parameter):
@@ -111,22 +109,7 @@ const RecentSubmissions = () => {
         dispatchFiltersData({ type: "users", value: users });
     };
 
-    // FUNCTION 3: fetchCategories - code that fetches the list of all valid categories
-    // PRECONDITIONS: NONE
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, this function updates the `categories` state by calling the `dispatchFiltersData` setter function
-    // with the result of the query as an argument
-    // if the query is unsuccessful, this function will render an error to the user, keeping the categories loading
-    const fetchCategories = async () => {
-        try {
-            const categories = await getCategories();
-            dispatchFiltersData({ type: "categories", value: categories });
-        } catch (error) {
-            addMessage("One or more filters has broken due loading failures.", "error", 7000);
-        };
-    };
-
-    return { filtersData, dispatchFiltersData, fetchGames, fetchUsers, fetchCategories };
+    return { filtersData, dispatchFiltersData, fetchGames, fetchUsers };
 };
 
 /* ===== EXPORTS ===== */

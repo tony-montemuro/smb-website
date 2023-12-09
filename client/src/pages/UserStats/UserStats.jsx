@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { ProfileContext, MessageContext } from "../../utils/Contexts";
+import { CategoriesContext, ProfileContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./UserStats.module.css";
@@ -14,6 +14,9 @@ import UserStatsLogic from "./UserStats.js";
 
 function UserStats() {
   /* ===== CONTEXTS ===== */
+  
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
 
   // profiles state from profile context
   const { profile } = useContext(ProfileContext);
@@ -22,8 +25,8 @@ function UserStats() {
   const { addMessage } = useContext(MessageContext);
 
   /* ===== HELPER FUNCTIONS ===== */
-  const { capitalize, categoryB2F } = FrontendHelper();
-  const { getGameCategories, getCategoryTypes, isPracticeMode } = GameHelper();
+  const { capitalize } = FrontendHelper();
+  const { getGameCategories, getCategoryTypes } = GameHelper();
 
   /* ===== VARIABLES ===== */
   const navigate = useNavigate();
@@ -33,6 +36,7 @@ function UserStats() {
   const abb = path[3];
   const category = path[4];
   const type = path[5];
+  const { name: categoryName, practice: isPracticeMode } = categories[category];
   const errorMessage = "User page does not exist.";
 
   /* ===== STATES & FUNCTIONS ===== */
@@ -61,8 +65,8 @@ function UserStats() {
     }
 
     // special case #1: we are attempting to access a user stats page with a non-valid category
-    const categories = getGameCategories(game);
-    if (!(categories.includes(category))) {
+    const gameCategories = getGameCategories(game);
+    if (!(gameCategories.includes(category))) {
       addMessage(errorMessage, "error", 5000);
       navigate("/");
       return;
@@ -90,7 +94,7 @@ function UserStats() {
 
         { /* Header - render the category + type, as well as a live filter */ }
         <div className={ styles.header }>
-          <h2>{ categoryB2F(category) } ({ capitalize(type) })</h2>
+          <h2>{ categoryName } ({ capitalize(type) })</h2>
 
           { /* Live filter: Toggle records page between rendering all records and just live records */ }
           <div className={ styles.filter }>
@@ -111,7 +115,7 @@ function UserStats() {
         <>
 
           { /* Stats tables - render these only if it's a practice mode category */ }
-          { isPracticeMode(category) &&
+          { isPracticeMode &&
             <>
               <Total total={ stats[allLiveFilter].total } filter={ allLiveFilter } />
               <hr />

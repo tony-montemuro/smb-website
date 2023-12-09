@@ -1,4 +1,6 @@
 /* ===== IMPORTS ===== */
+import { CategoriesContext } from "../../utils/Contexts.js";
+import { useContext } from "react";
 import styles from "./SubmissionHandler.module.css";
 import FancyLevel from "../FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";
@@ -6,10 +8,15 @@ import SubmissionHandlerLogic from "./SubmissionHandler.js";
 import Username from "../../components/Username/Username.jsx"
 
 function SubmissionRow({ submission, onClick, isUnapproved }) {
+  /* ===== CONTEXTS ===== */
+
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+  
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { getTimeAgo, capitalize, recordB2F, categoryB2F } = FrontendHelper();
+  const { getTimeAgo, capitalize, recordB2F } = FrontendHelper();
   const { isClickable } = SubmissionHandlerLogic(isUnapproved);
   
   /* ===== VARIABLES ===== */
@@ -18,6 +25,7 @@ function SubmissionRow({ submission, onClick, isUnapproved }) {
   const level = submission.level;
   const creator = !isUnapproved ? submission.report.creator : undefined;
   const type = submission.score ? "score" : "time";
+  const { name: categoryName } = categories[level.category];
 
   /* ===== SUBMISSION ROW COMPONENT ===== */
   return (
@@ -50,7 +58,7 @@ function SubmissionRow({ submission, onClick, isUnapproved }) {
 
       { /* Render the category of the level */ }
       <td>
-        <div>{ categoryB2F(level.category) }</div>
+        <div>{ categoryName }</div>
       </td>
 
       { /* Render the name of the level, as well as the type of submission */ }

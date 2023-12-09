@@ -2,7 +2,6 @@
 import { useEffect } from "react";
 import styles from "./OtherFilter.module.css";
 import BooleanFilter from "./BooleanFilter.jsx";
-import FrontendHelper from "../../../helper/FrontendHelper.js";
 import Loading from "../../../components/Loading/Loading.jsx";
 import OtherFilterLogic from "./OtherFilter.js";
 
@@ -19,6 +18,7 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
     { name: "score", title: "Type", true: "Score", false: "Time", default: defaultFilters.score },
     { name: "tas", title: "TAS", true: "TAS", false: "Normal", default: defaultFilters.tas },
   ];
+  const categoriesList = categories ? Object.values(categories) : [];
 
   /* ===== STATES & FUNCTIONS ===== */
 
@@ -31,10 +31,7 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
     updateBooleanFilter,
     resetFiltersAll,
     closePopupAndUpdate 
-  } = OtherFilterLogic(categories);
-
-  // helper functions
-  const { categoryB2F } = FrontendHelper();
+  } = OtherFilterLogic(categoriesList.length);
 
   /* ===== EFFECTS ===== */
   
@@ -61,7 +58,7 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
               <button type="button" onClick={ updateCategoryFilterAll }>Reset</button>
             }
           </div>
-          { categories ?
+          { categoriesList ?
             <div id={ styles.categoryBtns } className={ styles.btns }>
 
               { /* Render button to select all categories */ }
@@ -77,15 +74,15 @@ function OtherFilter({ searchParams, setSearchParams, categories }) {
               <br />
 
               { /* Now, render a button for selecting each category */ }
-              { categories.map(category => {
+              { categoriesList.map(category => {
                 return (
                   <button 
                     type="button"
-                    key={ category }
-                    onClick={ () => updateCategoryFilter(category) }
-                    className={ filters.category.length === 0 || filters.category.includes(category) ? styles.selected : "" }
+                    key={ JSON.stringify(category) }
+                    onClick={ () => updateCategoryFilter(category.abb) }
+                    className={ filters.category.length === 0 || filters.category.includes(category.abb) ? styles.selected : "" }
                   >
-                    { categoryB2F(category) }
+                    { category.name }
                   </button>
                 );
               })}

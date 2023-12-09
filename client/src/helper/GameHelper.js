@@ -40,7 +40,7 @@ const GameHelper = () => {
         // the data from this
         if (!game.mode) {
             game.categories.forEach(category => {
-                categories.push(category.name);
+                categories.push(category.abb);
             });
         }
 
@@ -70,7 +70,7 @@ const GameHelper = () => {
         // special case: game has limited details. in this case, game object *should* have a field called `categories`, which
         // should point to an object with the `types` field. we can use this data to get category types
         if (!game.mode) {
-            const category = game.categories.find(category => category.name === categoryName);
+            const category = game.categories.find(category => category.abb === categoryName);
             if (category.types.includes("both")) {
                 return ["score", "time"];
             } else {
@@ -143,24 +143,7 @@ const GameHelper = () => {
         return modes;
     };
 
-    // FUNCTION 5: isPracticeMode - takes a category, and determines if it's a practice mode category
-    // PRECONDITIONS (1 parameter):
-    // 1.) category: a string representing a valid category
-    // POSTCONDITIONS (2 possible outcomes, 1 return):
-    // if the category is one listed in the array defined in this function, return true
-    // otherwise, return false
-    const isPracticeMode = category => {
-        return [
-            "main", 
-            "main_sweep",
-            "misc", 
-            "main_jump", 
-            "special", 
-            "special_jump" 
-        ].includes(category);
-    };
-
-    // FUNCTION 6: fetchLevelFromGame: given a game object, level name, & category, determine if the level is present in the object, and
+    // FUNCTION 5: fetchLevelFromGame: given a game object, level name, & category, determine if the level is present in the object, and
     // return it
 	// PRECONDITIONS (4 parameters):
 	// 1.) game: an object containing information about the game defined in the path
@@ -183,7 +166,7 @@ const GameHelper = () => {
 		return null;
 	};
 
-    return { cleanGameObject, getGameCategories, getCategoryTypes, getRelevantModes, isPracticeMode, fetchLevelFromGame };
+    return { cleanGameObject, getGameCategories, getCategoryTypes, getRelevantModes, fetchLevelFromGame };
 };
 
 /* ===== EXPORTS ===== */
