@@ -16,7 +16,7 @@ export const emailPattern =  /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 export const usernamePattern = /^[A-Za-z0-9][\w]{2,15}$/;
 
 // Twitter Regex
-export const twitterPatttern = /^(?:https?:\/\/)?(?:www\.)?:\/\/(?:twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)[/\S]*$/;
+export const twitterPatttern = /^(?:https?:\/\/)?(?:www\.)?(?:twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)[/\S]*$/;
 
 // YouTube Handle Regex
 export const youtubeHandlePattern = /^@[\w.-]{3,30}$/;
