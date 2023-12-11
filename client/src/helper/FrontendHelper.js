@@ -65,7 +65,17 @@ const FrontendHelper = () => {
         return `${year}-${month}-${day}`;
     };
 
-    // FUNCTION 4: secondsToHours - convert a time from seconds to hours
+
+    // FUNCTION 4: numberWithCommas - converts integer x to a string with commas for increased reablilty
+    // PRECONDITIONS (1 parameter):
+    // 1.) x: an integer
+    // POSTCONDITIONS (1 possible outcome):
+    // a string reprsentation of the number is returned, including commas
+    const numberWithCommas = x => {
+        return x.toLocaleString("en-US");
+    };
+
+    // FUNCTION 5: secondsToHours - convert a time from seconds to hours
     // PRECONDITIONS (2 parameters):
     // 1.) record is a float number with at most two decimals places
     // 2.) type is either "score" or "time"
@@ -77,20 +87,20 @@ const FrontendHelper = () => {
         if (type === "time") {
             // calculate each unit of time
             let time = Math.floor(record);
-            let hours = Math.floor(time/3600).toLocaleString('en-US', { minimumIntegerDigits: 1, useGrouping: false });
-            let minutes = Math.floor((time%3600)/60).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-            let seconds = Math.floor(time%60).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-            let centiseconds = Math.round((record%60-seconds)*100).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            let hours = Math.floor(time/3600).toLocaleString("en-US", { minimumIntegerDigits: 1, useGrouping: false });
+            let minutes = Math.floor((time%3600)/60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
+            let seconds = Math.floor(time%60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
+            let centiseconds = Math.round((record%60-seconds)*100).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
 
             // return with following format: XX:XX:XX.XX
             return `${ hours }:${ minutes }:${ seconds }.${ centiseconds }`;
         }
 
         // otherwise, just return formatted record
-        return record.toLocaleString("en-US");
+        return numberWithCommas(record);
     };
 
-    // FUNCTION 5: secondsToMinutes - convert a time from seconds to minutes
+    // FUNCTION 6: secondsToMinutes - convert a time from seconds to minutes
     // PRECONDITIONS (2 parameters):
     // 1.) record is a float number with at most two decimals places
     // 2.) type is either "score" or "time"
@@ -102,19 +112,19 @@ const FrontendHelper = () => {
         if (type === "time") {
             // calculate each unit of time
             let time = Math.floor(record);
-            let minutes = Math.floor(time/60).toLocaleString('en-US', { minimumIntegerDigits: 1, useGrouping: false });
-            let seconds = Math.floor(time%60).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-            let centiseconds = Math.round((record%60-seconds)*100).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+            let minutes = Math.floor(time/60).toLocaleString("en-US", { minimumIntegerDigits: 1, useGrouping: false });
+            let seconds = Math.floor(time%60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
+            let centiseconds = Math.round((record%60-seconds)*100).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
 
             // return with following format: XX:XX:XX.XX
             return `${ minutes }:${ seconds }.${ centiseconds }`;
         }
 
         // otherwise, just return formatted record
-        return record.toLocaleString("en-US");
+        return numberWithCommas(record);
     };
 
-    // FUNCTION 6: recordB2F - ("record backend-to-frontend") convert record from back-end format to front-end format
+    // FUNCTION 7: recordB2F - ("record backend-to-frontend") convert record from back-end format to front-end format
     // PRECONDITION (3 parameters): 
     // 1.) record: a float number with at most two decimal places (should only have decimals if the type is "score")
     // 2.) type: a string, either "score" or "time"
@@ -154,10 +164,10 @@ const FrontendHelper = () => {
         }
 
         // finally, handle score records
-        return fixedRecord.toLocaleString("en-US");
+        return numberWithCommas(fixedRecord);
     };
 
-    // FUNCTION 7: getTimeAgo - given a timestamp, determine how long ago the timestamp occured given the current time
+    // FUNCTION 8: getTimeAgo - given a timestamp, determine how long ago the timestamp occured given the current time
     // PRECONDITIONS (1 parameter):
     // 1.) timestamp: a string representing a timestamp, typically formatted in the PostgreSQL `timestamptz` format
     // POSTCONDITIONS (4 possible outcomes):
@@ -173,7 +183,7 @@ const FrontendHelper = () => {
         return formattedTimeAgo;
     };
 
-    // FUNCTION 8: runTypeB2F - ("run type backend-to-frontend") convert run type from backend to frontend format
+    // FUNCTION 9: runTypeB2F - ("run type backend-to-frontend") convert run type from backend to frontend format
     // PRECONDITIONS (1 parameter):
     // 1.) runType: a string, either "normal" or "tas"
     // POSTCONDITIONS (1 possible outcome):
@@ -190,7 +200,7 @@ const FrontendHelper = () => {
         };
     };
 
-    // FUNCTION 9: timerType2TimeUnit - ("timer type to timer unit") convers a timer type string to it's time unit
+    // FUNCTION 10: timerType2TimeUnit - ("timer type to timer unit") convers a timer type string to it's time unit
     // PRECONDITIONS (1 parameter):
     // 1.) timerType: a string representing the time of timer of the chart
     // POSTCONDITIONS (1 possible outcome):
@@ -206,6 +216,7 @@ const FrontendHelper = () => {
         capitalize,
         snakeToTitle,
         dateB2F,
+        numberWithCommas,
         secondsToHours, 
         recordB2F,
         getTimeAgo,

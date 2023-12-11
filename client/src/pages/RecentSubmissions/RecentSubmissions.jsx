@@ -12,7 +12,7 @@ import UserFilter from "./ListFilters/UserFilter.jsx";
 
 function RecentSubmissions({ imageReducer }) {
   /* ===== VARIABLES ===== */
-  const NUM_SUBMISSIONS = 20;
+  const NUM_SUBMISSIONS = 100;
 
   /* ===== CONTEXTS ===== */
   const { categories } = useContext(CategoriesContext);
