@@ -14,14 +14,14 @@ function Support() {
   return (
     <div className={ styles.support }>
       <h1>Support</h1>
-      <p>SMBElite was developed solely by <strong>TonySMB</strong>, but can only survive with the help of the community. Here are a list of ways to help maintain the website:</p>
+      <p>SMBElite was initially developed by <strong>TonySMB</strong>, but can only survive with the help of the community. Here are a list of ways to help maintain the website:</p>
       <hr />
       <h2>Become a Site Administrator</h2>
       <p><strong>Site Administrators</strong> are elevated users who help maintain the website with access to special privileges, such as:</p>
       <ul>
         <li>Creating news posts to announce developments within the community</li>
         <li>Adding/removing game moderators</li>
-        <li>Adding charts for new Monkey Ball games</li> 
+        <li>Adding charts for new Monkey Ball games <em>[Coming Soon]</em></li> 
       </ul>
       <p>Site Administrators are also well-trusted, meaning that changes they suggest are most likely to be implemented.</p>
       <p>To become an adiminstrator, start by offering to moderate at least one game. Develop enough trust over time, and you may earn the privilege of site administrator!</p>
@@ -31,7 +31,7 @@ function Support() {
       <p>If you are a developer, SMBElite is an open-source application. You can access the website's repository <a href="https://github.com/tony-montemuro/smb-website" target="_blank" rel="noopener noreferrer">here</a>. Feel free to contribute to the repository; any help is greatly appreciated!</p>
       <hr />
       <h2>Make a Donation</h2>
-      <p>Unfortunately, SMBElite is not free; it costs approximately <strong>$XX.XX</strong> to run per month. <strong>TonySMB</strong> is currently paying each bill, but any donations to help with costs is highly appreciated. Here are some payment options:</p>
+      <p>Any donations to help cover operational costs are greatly appreciated. Please only donate what you can!</p>
       <div className={ styles.payments }>
         <div className={ styles.payment }>
           <a 
