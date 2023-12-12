@@ -36,7 +36,12 @@ function UserStats() {
   const abb = path[3];
   const category = path[4];
   const type = path[5];
-  const { name: categoryName, practice: isPracticeMode } = categories[category];
+  const categoryDetails = categories[category];
+  let categoryName, isPracticeMode;
+  if (categoryDetails) {
+    categoryName = categories[category].name;
+    isPracticeMode = categories[category].practice;
+  }
   const errorMessage = "User page does not exist.";
 
   /* ===== STATES & FUNCTIONS ===== */

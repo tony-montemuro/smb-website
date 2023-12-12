@@ -43,7 +43,12 @@ function MedalTable({ imageReducer }) {
   const abb = path[2];
   const category = path[3];
   const type = path[5];
-  const { name: categoryName, practice: isPracticeMode } = categories[category];
+  const categoryDetails = categories[category];
+  let categoryName, isPracticeMode;
+  if (categoryDetails) {
+    categoryName = categoryDetails.name;
+    isPracticeMode = categoryDetails.practice;
+  }
   const gameCategories = getGameCategories(game);
   const types = getCategoryTypes(game, category);
 

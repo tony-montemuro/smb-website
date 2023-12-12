@@ -35,7 +35,7 @@ function Records() {
   const abb = path[2];
   const category = path[3];
   const type = path[4];
-  const { name: categoryName } = categories[category];
+  const categoryName = categories[category] ? categories[category].name : undefined;
   const gameCategories = getGameCategories(game);
   const types = getCategoryTypes(game, category);
 
