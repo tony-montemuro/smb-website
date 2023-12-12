@@ -1,9 +1,9 @@
 /* ===== IMPORTS ===== */
-import { useContext, useEffect } from "react";
+import { MessageContext, UserContext } from "../../utils/Contexts";
 import { supabase } from "../../database/SupabaseClient";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../../utils/Contexts";
 import styles from "./SignIn.module.css";
 import Logo from "../../assets/svg/Logo.jsx";
 import LoginImage from "../../assets/png/login.png";
@@ -11,7 +11,7 @@ import MemoizedAuth from "./MemoizedAuth.jsx";
 
 function SignIn() {
   /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
   const theme = {
     theme: {
       ...ThemeSupa, 
@@ -51,6 +51,9 @@ function SignIn() {
 
   /* ===== CONTEXTS ===== */
 
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
+
   // user state from user context
   const { user } = useContext(UserContext);
 
@@ -59,7 +62,8 @@ function SignIn() {
   // code that is executed each time the user state is updated
   useEffect(() => {
     if (user.id) {
-      navigate("/profile");
+      addMessage("Login successful!", "success", 5000);
+      navigateTo("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);

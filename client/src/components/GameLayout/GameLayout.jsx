@@ -16,7 +16,7 @@ function GameLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const params = useParams();
   const { abb } = params;
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
 
   /* ===== CONTEXTS ====== */
 
@@ -48,7 +48,7 @@ function GameLayout({ imageReducer }) {
       // if game does not exist, render error message and navigate back home
       if (!game) {
         addMessage("Game does not exist.", "error", 6000);
-        navigate("/");
+        navigateTo("/games");
         return;
       }
 

@@ -1,6 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts.js";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Resources.module.css";
 import Container from "../../components/Container/Container.jsx";
@@ -10,14 +9,9 @@ import ResourcesLogic from "./Resources.js";
 import ScrollHelper from "../../helper/ScrollHelper";
 
 function Resources({ imageReducer }) {
-  /* ===== CONTEXTS ===== */
-
-  // add message function from message context
-  const { addMessage } = useContext(MessageContext);
-
   /* ===== STATES & FUNCTIONS ===== */
-  const { pages, currentPage, handlePageClick } = ResourcesLogic(imageReducer);
-  const navigate = useNavigate();
+  const { pages, currentPage, setCurrentPage, handlePageClick } = ResourcesLogic(imageReducer);
+  const navigateTo = useNavigate();
 
   // helper functions
   const { scrollToId } = ScrollHelper();
@@ -30,10 +24,9 @@ function Resources({ imageReducer }) {
 
   // code that is executed when the component mounts
   useEffect(() => {
-    console.log(pageInfo);
     if (!pageInfo) {
-      addMessage("Page does not exist.", "error", 5000);
-      navigate("/");
+      setCurrentPage("overview");
+      navigateTo("/resources");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

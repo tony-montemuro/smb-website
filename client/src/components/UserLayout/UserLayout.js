@@ -7,7 +7,7 @@ import ScrollHelper from "../../helper/ScrollHelper";
 
 const UserLayout = () => {
     /* ===== VARIABLES ===== */
-    const navigate = useNavigate();
+    const navigateTo = useNavigate();
 
     /* ===== CONTEXTS ===== */
     
@@ -56,7 +56,7 @@ const UserLayout = () => {
     // the page is updated to include stats for the selected (`abb` + `category` + `type`) combination, and the page is
     // automatically scrolled to the stats section of the page
     const onStatsClick = (abb, category, type) => {
-        navigate(`${ abb }/${ category }/${ type }`);
+        navigateTo(`${ abb }/${ category }/${ type }`);
         scrollToRight();
     };
 

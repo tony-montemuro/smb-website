@@ -4,7 +4,7 @@ import styles from "./Profile.module.css";
 
 function CreateProfile() {
   /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
 
   /* ===== CREATE PROFILE COMPONENT ===== */
   return (
@@ -12,8 +12,8 @@ function CreateProfile() {
       type="button" 
       className={ styles.btn }
       title="Create Profile"
-      onClick={ () => navigate("/profile")
-    }>
+      onClick={ () => navigateTo("/profile") }
+    >
       Create Profile
     </button>
   );

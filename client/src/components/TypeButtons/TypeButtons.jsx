@@ -4,7 +4,7 @@ import styles from "./TypeButtons.module.css";
 
 function TypeButtons({ abb, category, level }) {
   /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
 
   /* ===== TYPE BUTTONS COMPONENT ===== */
   return (
@@ -12,14 +12,14 @@ function TypeButtons({ abb, category, level }) {
 
       {/* Score button */}
       { (level.chart_type === "both" || level.chart_type === "score") &&
-        <button type="button" onClick={ () => navigate(`/games/${ abb }/${ category }/score/${ level.name }`) }>
+        <button type="button" onClick={ () => navigateTo(`/games/${ abb }/${ category }/score/${ level.name }`) }>
           Score
         </button>
       }
 
       {/* Time button */}
       { (level.chart_type === "time" || level.chart_type === "both") &&
-        <button type="button" onClick={ () => navigate(`/games/${ abb }/${ category }/time/${ level.name }`) }>
+        <button type="button" onClick={ () => navigateTo(`/games/${ abb }/${ category }/time/${ level.name }`) }>
           Time
         </button>
       }

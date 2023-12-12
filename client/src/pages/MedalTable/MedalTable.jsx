@@ -37,7 +37,7 @@ function MedalTable({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 6;
   const USERS_PER_PAGE = 25;
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
   const abb = path[2];
@@ -63,14 +63,14 @@ function MedalTable({ imageReducer }) {
     // special case #1: we are attempting to access a medals page with a non-valid or non-practice mode category
     if (!(gameCategories.includes(category) && isPracticeMode)) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigate(`/games/${ abb }`);
+      navigateTo(`/games/${ abb }`);
       return;
     }
 
     // special case #2: we are attempting to access a medals page with a valid category, but an invalid type
     if (!(types.includes(type))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigate(`/games/${ abb }`);
+      navigateTo(`/games/${ abb }`);
       return;
     }
 

@@ -34,7 +34,7 @@ function Notifications() {
     update: "A moderator has updated one of you submissions.",
     delete: "A moderator has deleted one of your submissions."
   };
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
 
   /* ===== STATES & FUNCTIONS ===== */
   const [notification, setNotification] = useState(undefined);
@@ -61,7 +61,7 @@ function Notifications() {
       // access to this page.
       if (!user.id) {
         addMessage("Forbidden access.", "error", 5000);
-        navigate("/");
+        navigateTo("/");
         return;
       }
 

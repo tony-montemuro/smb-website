@@ -32,7 +32,7 @@ const Resources = (imageReducer) => {
     const location = useLocation();
     const path = location.pathname.split("/");
     const pageName = path[2] ? path[2] : "overview";
-    const navigate = useNavigate();
+    const navigateTo = useNavigate();
 
     /* ===== STATES ===== */
     const [currentPage, setCurrentPage] = useState(pageName);
@@ -49,16 +49,15 @@ const Resources = (imageReducer) => {
     // if the current page is different from `name`, this function navigates the user to the page defined by name
     // otherwise, this function will scroll the user to the top of `name` page
     const handlePageClick = name => {
-        console.log(name, currentPage);
         if (currentPage !== name) {
             setCurrentPage(name);
-            navigate(`/resources/${ name }`);
+            navigateTo(`/resources/${ name }`);
         } else {
             scrollToId(name);
         }
     };
 
-    return { pages, currentPage, handlePageClick };
+    return { pages, currentPage, setCurrentPage, handlePageClick };
 };
 
 /* ===== EXPORTS ===== */

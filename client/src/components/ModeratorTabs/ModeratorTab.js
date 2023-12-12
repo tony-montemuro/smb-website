@@ -6,7 +6,7 @@ const ModeratorTab = () => {
     const path = useLocation().pathname.split("/");
     const hubType = path[1];
     const pageType = path[2];
-    const navigate = useNavigate();
+    const navigateTo = useNavigate();
 
     /* ===== FUNCTIONS ===== */
 
@@ -18,7 +18,7 @@ const ModeratorTab = () => {
 	// otherwise, the user is navigated to the other page
 	const handleTabClick = otherPageType => {
 		if (otherPageType !== pageType) {
-			otherPageType ? navigate(`/${ hubType }/${ otherPageType }`) : navigate(`/${ hubType }`);
+			otherPageType ? navigateTo(`/${ hubType }/${ otherPageType }`) : navigateTo(`/${ hubType }`);
 		}
 	};
 

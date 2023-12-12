@@ -29,7 +29,7 @@ function Records() {
   const { scrollToTop } = ScrollHelper();
 
   /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
   const abb = path[2];
@@ -57,14 +57,14 @@ function Records() {
     // special case #1: we are attempting to access a records page with a non-valid category
     if (!(gameCategories.includes(category))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigate(`/games/${ abb }`);
+      navigateTo(`/games/${ abb }`);
       return;
     }
 
     // special case #2: we are attempting to access a records page with a valid category, but an invalid type
     if (!(types.includes(type))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigate(`/games/${ abb }`);
+      navigateTo(`/games/${ abb }`);
       return;
     }
 

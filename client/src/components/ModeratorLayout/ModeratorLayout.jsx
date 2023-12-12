@@ -28,7 +28,7 @@ function ModeratorLayout() {
       content: `${ getNumberOfSubmissions(false) > 0 ? `(${ getNumberOfSubmissions(false) }) ` : "" }Reported Submissions`
     }
   ];
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
 
   /* ===== CONTEXTS ===== */
 
@@ -47,7 +47,7 @@ function ModeratorLayout() {
       // if user is not logged in or a moderator of at least 1 game, render error, navigate to homepage, and render early
       if (!(isModerator())) {
         addMessage("Forbidden access.", "error", 5000);
-        navigate("/");
+        navigateTo("/");
         return;
       }
 

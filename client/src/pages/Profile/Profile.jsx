@@ -13,7 +13,7 @@ import UserInfoForm from "./UserInfoForm/UserInfoForm.jsx";
 
 function Profile({ imageReducer }) {
   /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
 
   /* ===== CONTEXTS ===== */
 
@@ -40,7 +40,7 @@ function Profile({ imageReducer }) {
       // access to this page.
       if (!user.id) {
         addMessage("Forbidden access.", "error", 5000);
-        navigate("/");
+        navigateTo("/");
         return;
       }
 

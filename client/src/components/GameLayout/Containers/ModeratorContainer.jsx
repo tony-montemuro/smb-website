@@ -8,7 +8,7 @@ import UserRow from "../../UserRow/UserRow.jsx";
 
 function ModeratorContainer({ imageReducer }) {
   /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
 
   /* ===== CONTEXTS ===== */
 
@@ -24,7 +24,7 @@ function ModeratorContainer({ imageReducer }) {
             <UserRow 
               user={ profile } 
               imageReducer={ imageReducer } 
-              onClick={ () => navigate(`/user/${ profile.id }`) }
+              onClick={ () => navigateTo(`/user/${ profile.id }`) }
               index={ index }
               isDetailed
               disableLink

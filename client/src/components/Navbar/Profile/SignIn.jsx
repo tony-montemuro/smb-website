@@ -4,7 +4,7 @@ import styles from "./Profile.module.css";
 
 function SignIn() {
   /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
 
   /* ===== SIGN IN COMPONENT ===== */
   return (
@@ -12,8 +12,8 @@ function SignIn() {
       type="button" 
       className={ styles.btn }
       title="Sign In"
-      onClick={ () => navigate("/signin")
-    }>
+      onClick={ () => navigateTo("/signin")}
+    >
       Sign In
     </button>
   );

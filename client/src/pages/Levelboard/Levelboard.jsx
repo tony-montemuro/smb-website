@@ -48,13 +48,14 @@ function Levelboard({ imageReducer }) {
 	const { scrollToTop } = ScrollHelper();
 
 	/* ===== VARIABLES ===== */
-	const navigate = useNavigate();
+	const navigateTo = useNavigate();
 	const location = useLocation();
 	const path = location.pathname.split("/");
 	const abb = path[2];
 	const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
+	console.log(categories);
 	const { practice: isPracticeMode } = categories[category];
 	const defaultFilters = {
 		endDate: dateB2F(),
@@ -121,7 +122,7 @@ function Levelboard({ imageReducer }) {
 			// if not, we will print an error message, and navigate to the home screen
 			if (!level) {
 				addMessage("Chart does not exist.", "error", 5000);
-				navigate(`/games/${ abb }`);
+				navigateTo(`/games/${ abb }/${ category }`);
 				return;
 			}
 

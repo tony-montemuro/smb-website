@@ -13,7 +13,7 @@ function UserLayout({ imageReducer }) {
   const params = useParams();
   const location = useLocation();
   const { profileId } = params;
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
 
   /* ===== CONTEXTS ===== */
 
@@ -41,7 +41,7 @@ function UserLayout({ imageReducer }) {
         // and navigate to the home screen
         if (!profile) {
           addMessage("The requested user does not exist.", "error", 7000);
-          navigate("/users");
+          navigateTo("/users");
           return;
         }
 

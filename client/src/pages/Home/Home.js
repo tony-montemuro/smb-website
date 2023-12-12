@@ -11,7 +11,7 @@ const Home = () => {
     const { addMessage } = useContext(MessageContext);
 
     /* ===== VARIABLES ===== */
-    const navigate = useNavigate();
+    const navigateTo = useNavigate();
 
     /* ===== STATES ===== */
     const [posts, setPosts] = useState(undefined);
@@ -46,8 +46,8 @@ const Home = () => {
     // POSTCONDITIONS (1 possible outcome):
     // navigate the user to the page associated with `game`
     const navigateToGame = game => {
-        navigate(`/games/${ game.abb }`);
-    }
+        navigateTo(`/games/${ game.abb }`);
+    };
 
     return { posts, getPosts, navigateToGame };
 };

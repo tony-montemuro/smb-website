@@ -26,7 +26,7 @@ function SubmissionHistory() {
   const { scrollToTop } = ScrollHelper();
 
   /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
 	const location = useLocation();
 	const path = location.pathname.split("/");
 	const abb = path[2];
@@ -69,7 +69,7 @@ function SubmissionHistory() {
 			// if no level or profile exists, we will print an error message, and navigate to the home screen
 			if (!level || profile === null) {
 				addMessage("Submission History does not exist.", "error", 5000);
-				navigate(level ? `/games/${ abb }/${ category }/${ type }/${ levelName }` : `/games/${ abb }`);
+				navigateTo(level ? `/games/${ abb }/${ category }/${ type }/${ levelName }` : `/games/${ abb }`);
 				return;
 			}
 

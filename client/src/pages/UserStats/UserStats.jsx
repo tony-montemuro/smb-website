@@ -29,7 +29,7 @@ function UserStats() {
   const { getGameCategories, getCategoryTypes } = GameHelper();
 
   /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
   const profileId = parseInt(path[2]);
@@ -60,7 +60,7 @@ function UserStats() {
     // if either do not match, handle the error, and navigate to the home screen
     if (!game) {
       addMessage(errorMessage, "error", 5000);
-      navigate("/");
+      navigateTo(`/user/${ profileId }`);
       return;
     }
 
@@ -68,7 +68,7 @@ function UserStats() {
     const gameCategories = getGameCategories(game);
     if (!(gameCategories.includes(category))) {
       addMessage(errorMessage, "error", 5000);
-      navigate("/");
+      navigateTo(`/user/${ profileId }`);
       return;
     }
 
@@ -76,7 +76,7 @@ function UserStats() {
     const types = getCategoryTypes(game, category);
     if (!(types.includes(type))) {
       addMessage(errorMessage, "error", 5000);
-      navigate("/");
+      navigateTo(`/user/${ profileId }`);
       return;
     }
 

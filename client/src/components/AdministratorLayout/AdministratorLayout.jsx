@@ -22,7 +22,7 @@ function AdministratorLayout() {
       content: "Create Post"
     }
   ];
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
 
   /* ===== CONTEXTS ===== */
 
@@ -41,7 +41,7 @@ function AdministratorLayout() {
       // if user is not logged in or is not an administrator, render error, navigate to homepage, and render early
       if (!user.profile || !user.profile.administrator) {
         addMessage("Forbidden access.", "error", 5000);
-        navigate("/");
+        navigateTo("/");
         return;
       }
     }

@@ -33,7 +33,7 @@ function Totalizer({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 3;
   const USERS_PER_PAGE = 25;
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
   const abb = path[2];
@@ -69,14 +69,14 @@ function Totalizer({ imageReducer }) {
     // special case #1: we are attempting to access a totalizer page with a non-valid category or non-practice mode category
     if (!(gameCategories.includes(category) && isPracticeMode)) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigate(`/games/${ abb }`);
+      navigateTo(`/games/${ abb }`);
       return;
     }
 
     // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
     if (!(types.includes(type))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigate(`/games/${ abb }`);
+      navigateTo(`/games/${ abb }`);
       return;
     }
 

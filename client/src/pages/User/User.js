@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const User = () => {
     /* ===== VARIABLES ===== */
-    const navigate = useNavigate();
+    const navigateTo = useNavigate();
 
     /* ===== CONTEXTS ===== */
 
@@ -53,7 +53,7 @@ const User = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the user is navigated to the page associated with the game
     const onGameRowClick = game => {
-        navigate(`/games/${ game.abb }`);
+        navigateTo(`/games/${ game.abb }`);
     };
 
     return { searchParams, socials, details, onGameRowClick };

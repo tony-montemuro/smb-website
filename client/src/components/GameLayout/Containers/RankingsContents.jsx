@@ -22,7 +22,7 @@ function RankingsContents({ category }) {
   /* ===== VARIABLES ===== */
   const { name: categoryName, practice: isPracticeMode } = categories[category];
   const types = getCategoryTypes(game, category);
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
   let rankings = [ { name: "World Records", path: "" } ];
   rankings = isPracticeMode ? rankings.concat([
     { name: "Totalizers", path: "/totalizer" },
@@ -47,7 +47,7 @@ function RankingsContents({ category }) {
                   return (
                     <button 
                       type="button"
-                      onClick={ () => navigate(`/games/${ game.abb }/${ category }${ ranking.path }/${ type }`) } 
+                      onClick={ () => navigateTo(`/games/${ game.abb }/${ category }${ ranking.path }/${ type }`) } 
                       key={ type }
                     >
                       { capitalize(type) }

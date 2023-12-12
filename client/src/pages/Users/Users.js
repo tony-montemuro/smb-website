@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const Users = () => {
     /* ===== VARIABLES ===== */
-    const navigate = useNavigate();
+    const navigateTo = useNavigate();
 
     /* ===== FUNCTIONS ===== */
 
@@ -13,7 +13,7 @@ const Users = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the application navigates to the user's page
     const navigateToUser = user => {
-        navigate(`/user/${ user.id }`);
+        navigateTo(`/user/${ user.id }`);
     };
 
     return { navigateToUser };

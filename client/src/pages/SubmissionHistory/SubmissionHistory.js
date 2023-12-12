@@ -7,7 +7,7 @@ import SubmissionRead from "../../database/read/SubmissionRead";
 
 const SubmissionHistory = () => {
     /* ===== VARIABLES ===== */
-    const navigate = useNavigate();
+    const navigateTo = useNavigate();
     const location = useLocation();
 	const path = location.pathname.split("/");
 	const abb = path[2];
@@ -77,7 +77,7 @@ const SubmissionHistory = () => {
     // otherwise, the user will be navigated to the "other" submission history page for the other run type
     const handleTabClick = otherRunType => {
         if (runType !== otherRunType) {
-            navigate(`/games/${ abb }/${ category }/${ type }/${ levelName }/${ profileId }/${ otherRunType }`);
+            navigateTo(`/games/${ abb }/${ category }/${ type }/${ levelName }/${ profileId }/${ otherRunType }`);
         }
     };
 

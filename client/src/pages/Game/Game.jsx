@@ -23,7 +23,7 @@ function Game() {
   const { getGameCategories } = GameHelper();
 
   /* ===== VARIABLES ===== */
-  const navigate = useNavigate();
+  const navigateTo = useNavigate();
   const location = useLocation();
   const path = location.pathname.split("/");
   const abb = path[2];
@@ -48,7 +48,7 @@ function Game() {
   const handleChange = category => {
     setSelectedCategory(category);
     setSelectedMode(null);
-    navigate(`/games/${ abb }/${ category }`);
+    navigateTo(`/games/${ abb }/${ category }`);
   };
 
   /* ===== EFFECTS ====== */
@@ -56,7 +56,7 @@ function Game() {
     // special case: we are attempting to access a game page with a non-valid category
     if (category && !(gameCategories.includes(category))) {
       setSelectedCategory("main");
-      navigate(`/games/${ abb }`);
+      navigateTo(`/games/${ abb }`);
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -33,7 +33,7 @@ const Levelboard = () => {
 		filters: undefined,
 		user: undefined
 	};
-	const navigate = useNavigate();
+	const navigateTo = useNavigate();
 
 	/* ===== STATES ===== */
 	const [board, setBoard] = useState(boardInit);
@@ -223,7 +223,7 @@ const Levelboard = () => {
 	// otherwise, the user is navigated to the current level's other board
 	const handleTabClick = otherType => {
 		if (otherType !== type) {
-			navigate(`/games/${ abb }/${ category }/${ otherType }/${ levelName }`);
+			navigateTo(`/games/${ abb }/${ category }/${ otherType }/${ levelName }`);
 		}
 	};
 
