@@ -22,7 +22,7 @@
 .right {
     height: calc(100vh - var(--navbar-height));
     width: 1300px;
-    filter: sepia(100%) saturate(300%) brightness(62%) hue-rotate(220deg);
+    filter: sepia(100%) saturate(260%) brightness(60%) hue-rotate(220deg);
 }
 
 .right img {
