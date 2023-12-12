@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useEffect, useState } from "react";
-import Default from "../../assets/png/default.png";
+import Default from "../../assets/png/avatar.png";
 import Download from "../../database/storage/Download";
 
 function Avatar( { profileId, size, imageReducer } ) {

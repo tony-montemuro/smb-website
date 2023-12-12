@@ -1,14 +1,7 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
 import { supabase } from "../SupabaseClient";
-import { useContext } from "react";
 
 const Download = () => {
-    /* ===== CONTEXTS ===== */
-
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
-
     /* ===== FUNCTIONS ===== */
 
     // FUNCTION 1: downloadBoxArt - function that takes the abb string parameter, and uses it to download box art for abb's game
@@ -16,7 +9,7 @@ const Download = () => {
     // 1.) abb: a string value, representing a game's abb value. in this context, we can use it to retrieve that game's box art
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, we convert the blob object returned into a url object, and return it
-    // if the query is unsuccessful, we alert the user of the error, and return null
+    // if the query is unsuccessful, simply return null
     const downloadBoxArt = async (abb) => {
         try {
             // query supabase games storage for the image
@@ -31,7 +24,6 @@ const Download = () => {
             return URL.createObjectURL(data);
 
         } catch (error) {
-            addMessage("One or more image resources failed to load.", "error", 7000);
             return null;
         }
     };
