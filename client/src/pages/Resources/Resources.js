@@ -1,18 +1,32 @@
 /* ===== IMPORTS ===== */
+import { CaptureCards, OBS } from "./Contents/GettingStarted.jsx";
+import { Emulators, General, PausingRule, ProofRequirements, Regions, ReplayErrors, ScoreCalculation, Types } from "./Contents/Overview.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ScrollHelper from "../../helper/ScrollHelper";
 
-const ResourcesLayout = () => {
+const Resources = (imageReducer) => {
     /* ===== VARIABLES ===== */
     const pages = [
         { 
             name: "overview", 
-            headers: ["general", "types", "score_calculation", "pausing_rule", "proof_requirements", "regions", "replay_errors", "emulators"]
+            headers: {
+                general: <General />,
+                types: <Types />,
+                score_calculation: <ScoreCalculation />,
+                pausing_rule: <PausingRule />,
+                proof_requirements: <ProofRequirements />,
+                regions: <Regions imageReducer={ imageReducer } />,
+                replay_errors: <ReplayErrors />,
+                emulators: <Emulators />
+            }
         },
         {
             name: "getting_started",
-            headers: ["capture_cards", "OBS"]
+            headers: {
+                capture_cards: <CaptureCards />,
+                OBS: <OBS />
+            }
         }
     ];
     const location = useLocation();
@@ -35,9 +49,10 @@ const ResourcesLayout = () => {
     // if the current page is different from `name`, this function navigates the user to the page defined by name
     // otherwise, this function will scroll the user to the top of `name` page
     const handlePageClick = name => {
+        console.log(name, currentPage);
         if (currentPage !== name) {
             setCurrentPage(name);
-            navigate(`${ name }`);
+            navigate(`/resources/${ name }`);
         } else {
             scrollToId(name);
         }
@@ -47,4 +62,4 @@ const ResourcesLayout = () => {
 };
 
 /* ===== EXPORTS ===== */
-export default ResourcesLayout;
+export default Resources;

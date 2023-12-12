@@ -1,6 +1,6 @@
 /* ===== GENERAL STYLING ===== */
 
-.resourcesLayout {
+.resources {
     display: flex;
     padding: var(--app-padding);
     gap: var(--app-padding);
@@ -24,6 +24,9 @@
 
 .content {
     flex: 1; 
+    display: flex;
+    flex-direction: column;
+    gap: var(--app-padding);
 }
 
 .content h1 {
@@ -33,7 +36,7 @@
 /* ===== MEDIA QUERY FOR SMALLER DEVICES ===== */
 
 @media (max-width: 730px) {
-    .resourcesLayout {
+    .resources {
         flex-direction: column;
     }
 

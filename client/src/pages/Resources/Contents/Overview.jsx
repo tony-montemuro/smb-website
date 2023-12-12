@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
-import styles from "./Overview.module.css";
-import BoxArt from "../../components/BoxArt/BoxArt.jsx";
+import styles from "./Contents.module.css";
+import BoxArt from "../../../components/BoxArt/BoxArt.jsx";
 
 /* ===== EXPORTS ===== */
 

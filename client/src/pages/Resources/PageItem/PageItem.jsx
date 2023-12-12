@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import styles from "./PageItem.module.css";
-import FrontendHelper from "../../helper/FrontendHelper";
+import FrontendHelper from "../../../helper/FrontendHelper";
 
 function PageItem({ page, currentPage, headerClickFunc, pageClickFunc }) {
   /* ===== FUNCTIONS ===== */
@@ -18,7 +18,7 @@ function PageItem({ page, currentPage, headerClickFunc, pageClickFunc }) {
       { /* If this page is the current page, render it's headers as another list of items */ }
       { currentPage === page.name &&
         <ul className={ styles.headerList }>
-          { page.headers.map(header => {
+          { Object.keys(page.headers).map(header => {
             return <li key={ header } onClick={ () => headerClickFunc(header) }>{ snakeToTitle(header) }</li>
           })}
         </ul>

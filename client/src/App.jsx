@@ -11,7 +11,6 @@ import Game from "./pages/Game/Game.jsx";
 import GameLayout from "./components/GameLayout/GameLayout.jsx";
 import GameModerators from "./pages/GameModerators/GameModerators.jsx";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
-import GettingStarted from "./pages/GettingStarted/GettingStarted.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
 import MedalTable from "./pages/MedalTable/MedalTable.jsx";
@@ -23,11 +22,10 @@ import News from "./pages/News/News.jsx";
 import Notifications from "./pages/Notifications/Notifications.jsx";
 import Post from "./pages/Post/Post.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
-import Overview from "./pages/Overview/Overview.jsx";
 import RecentSubmissions from "./pages/RecentSubmissions/RecentSubmissions.jsx";
 import Records from "./pages/Records/Records.jsx";
 import Reports from "./pages/Reports/Reports.jsx";
-import ResourcesLayout from "./components/ResourcesLayout/ResourcesLayout.jsx";
+import Resources from "./pages/Resources/Resources.jsx";
 import SignIn from "./pages/SignIn/SignIn.jsx";
 import SubmissionHistory from "./pages/SubmissionHistory/SubmissionHistory.jsx";
 import Support from "./pages/Support/Support.jsx";
@@ -137,11 +135,8 @@ function App() {
                   <UserStats />
                 }/>
               </Route>
-              <Route path="resources" element={ <ResourcesLayout /> } >
-                <Route index element={ <Overview imageReducer={ imageReducer } /> } />
-                <Route path="overview" element={ <Overview imageReducer={ imageReducer } /> } />
-                <Route path="getting_started" element={ <GettingStarted /> } />
-              </Route>
+              <Route path="/resources" element={ <Resources imageReducer={ imageReducer } /> } />
+              <Route path="/resources/:section" element={ <Resources imageReducer={ imageReducer } /> } />
               <Route path="administrator" element={ <AdministratorLayout /> } >
                 <Route index element={ <Administrator /> } />
                 <Route path="game-moderators" element={

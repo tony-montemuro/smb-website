@@ -1,11 +1,5 @@
 /* ===== GENERAL STYLING ===== */
 
-.overview {
-    display: flex;
-    flex-direction: column;
-    gap: var(--app-padding);
-}
-
 .content {
     font-size: 20px;
 }
