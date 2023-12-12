@@ -8,13 +8,13 @@ import BoxArt from "../../components/BoxArt/BoxArt.jsx";
 export function General() {
   return (
     <div className={ styles.content }>
-      This page contains general information relevant to the main Super Monkey Ball games: 
+      This page contains general information relevant to the first three games: 
       <ul>
           <li>Super Monkey Ball (SMB1)</li>
           <li>Super Monkey Ball 2 (SMB2)</li>
           <li>Super Monkey Ball Deluxe (SMBDX)</li>
       </ul>
-      For information regarding custom level packs or another entry in the series, please refer to the game-specific rules page.
+      However, much of the information present on this page is applicable to other games. For specific information regarding other entries in the series, please refer to the game-specific rules page.
     </div>
   );
 };
@@ -104,7 +104,7 @@ export function ReplayErrors() {
   return (
     <div className={ styles.content }>
       A common mistake new players make is submitting incorrect times based off of the replay info rather than the actual time in Practice Mode. This is due to an in-game error where times ending in .X1 or .X6 will display incorrectly as .X2 and .X7 respectively in the replay. If this happens, please make sure to submit the time you finished in Practice Mode, not the time displayed in the replay.<br /><br />
-      Another error with the replay info will occur when saving a replay from Normal / Challenge Mode that finishes in a warp goal. Outside of Practice Mode, warp goals give an additional warp bonus that multiplies the clear score by x2 or x3 depending on the colour of the goal, making much higher scores achievable than what is possible in Practice Mode. Replays from Normal / Challenge Mode will display the score <strong>including</strong> the warp bonus, and these scores should <strong>not</strong> be submitted to Practice Mode charts. If you wish to submit an IL score performed in Normal / Challenge Mode, you must first re-calculate it to negate the warp bonus beforehand.
+      Another error with the replay info will occur when saving a replay from Normal / Challenge Mode that finishes in a warp goal. Outside of Practice Mode, warp goals give an additional warp bonus that multiplies the clear score by x2 or x3 depending on the color of the goal, making much higher scores achievable than what is possible in Practice Mode. Replays from Normal / Challenge Mode will display the score <strong>including</strong> the warp bonus, and these scores should <strong>not</strong> be submitted to Practice Mode charts. If you wish to submit an IL score performed in Normal / Challenge Mode, you must first re-calculate it to negate the warp bonus beforehand.
     </div>
   );
 };
@@ -113,7 +113,15 @@ export function ReplayErrors() {
 export function Emulators() {
   return (
     <div className={ styles.content }>
-      Currently, runs performed on Dolphin emulator are allowed to be submitted to SMB1 and SMB2 charts, however they must be marked as such. Despite this, playing on console is much preferred and encouraged. For SMBDX, emulator runs are strictly <strong>not allowed</strong> and may not be submitted to any ranked charts.
+      Runs performed on Dolphin emulator are allowed to be submitted to SMB1 and SMB2 charts, but with additional restrictions. First, you must be playing on a stable, up-to-date beta version of Dolphin emulator. You must additionally provide live proof with input display, using an analog joystick. Finally, you must have the following 4 options enabled in the "Movie" tab: 
+      <ul>
+        <li>Show Lag Counter</li>
+        <li>Show Frame Counter</li>
+        <li>Show Input Display</li>
+        <li>Show System Clock</li>
+      </ul>
+      The black display these options create should be placed on the edge of the gameplay window, overlapping the gameplay, but not blocking any UI elements. Despite this, playing on console is much preferred and encouraged.<br /><br />
+      For SMBDX, emulator runs are strictly <strong>not allowed</strong> and may not be submitted to any charts.
     </div>
   );
 };

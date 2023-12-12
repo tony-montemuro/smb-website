@@ -6,10 +6,6 @@
     gap: var(--app-padding);
 }
 
-.overview strong {
-    text-shadow: 0 0 3px rgb(200, 200, 200);
-}
-
 .content {
     font-size: 20px;
 }
