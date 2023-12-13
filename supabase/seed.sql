@@ -10419,6 +10419,10 @@ INSERT INTO "public"."game_rule" ("abb", "rule", "id") VALUES
 	('stardust', 30, 5),
 	('stardust', 31, 6);
 
+INSERT INTO "storage"."buckets" ("id", "name", "owner", "created_at", "updated_at", "public", "avif_autodetection", "file_size_limit", "allowed_mime_types", "owner_id") VALUES
+	('avatars', 'avatars', NULL, '2022-06-22 18:59:36.937336+00', '2022-06-22 18:59:36.937336+00', false, false, NULL, NULL, NULL),
+	('games', 'games', NULL, '2022-07-05 14:46:17.712956+00', '2022-07-05 14:46:17.712956+00', false, false, NULL, NULL, NULL);
+
 
 --
 -- Data for Name: report; Type: TABLE DATA; Schema: public; Owner: postgres
