@@ -16,18 +16,18 @@ jobs:
 
     steps:
       - name: git-checkout
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Supabase cli setup
-      - uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v1
         with:
           version: latest
 
       - name: Link to production database
-      - run: supabase link --project-ref $SUPABASE_PROJECT_ID
+        run: supabase link --project-ref $SUPABASE_PROJECT_ID
 
       - name: Push new migrations
-      - run: supabase db push
+        run: supabase db push
 
   build-app:
     runs-on: ubuntu-latest
