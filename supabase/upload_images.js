@@ -79,11 +79,13 @@ async function getFileData(file) {
 async function main() {
     // first, define our files array
     const files = [
-        { path: "images/651.png" },
-        { path: "images/gaiden.png" }, 
+        { path: "images/bm.png" },
+        { path: "images/launch.png" }, 
         { path: "images/smb1.png" }, 
         { path: "images/smb2.png" },
-        { path: "images/smb2pal.png" }
+        { path: "images/smb2pal.png" },
+        { path: "images/smbdx.png" },
+        { path: "images/stardust.png" },
     ];
 
     // next, get the file data for each file
