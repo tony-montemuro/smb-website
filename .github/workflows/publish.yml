@@ -52,10 +52,9 @@ jobs:
 
       - name: Push
         uses: s0/git-publish-subdir-action@develop
-        working-directory: ./client
         env:
           REPO: self
           BRANCH: build
-          FOLDER: build 
+          FOLDER: ./client/build 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MESSAGE: "Build: ({sha}) {msg}"
