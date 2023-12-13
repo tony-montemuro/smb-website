@@ -36,24 +36,23 @@ jobs:
       - name: git-checkout
         uses: actions/checkout@v3
 
-      - name: Print current working directory
-        run: pwd
-
       - name: Install all dependencies
-        run: |
-          cd client
-          npm install
+        run: npm install
+        working-directory: ./client
 
       - name: Set up environment variables
         run: |
           echo "REACT_APP_SUPABASE_URL=${{ secrets.REACT_APP_SUPABASE_URL }}" >> .env.production
           echo "REACT_APP_SUPABASE_ANON_KEY=${{ secrets.REACT_APP_SUPABASE_ANON_KEY }}" > .env.production
+        working-directory: ./client
 
       - name: Build
         run: npm run build
+        working-directory: ./client
 
       - name: Push
         uses: s0/git-publish-subdir-action@develop
+        working-directory: ./client
         env:
           REPO: self
           BRANCH: build
