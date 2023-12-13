@@ -32,18 +32,16 @@ jobs:
   build-app:
     runs-on: ubuntu-latest
     name: Build and Push
+    env:
+      REACT_APP_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
     steps:
       - name: git-checkout
         uses: actions/checkout@v3
 
       - name: Install all dependencies
         run: npm install
-        working-directory: ./client
-
-      - name: Set up environment variables
-        run: |
-          echo "REACT_APP_SUPABASE_URL=${{ secrets.REACT_APP_SUPABASE_URL }}" >> .env.production
-          echo "REACT_APP_SUPABASE_ANON_KEY=${{ secrets.REACT_APP_SUPABASE_ANON_KEY }}" > .env.production
         working-directory: ./client
 
       - name: Build
