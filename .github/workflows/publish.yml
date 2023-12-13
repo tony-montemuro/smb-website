@@ -8,20 +8,25 @@ on:
 jobs:
   deploy-migrations:
     runs-on: ubuntu-latest
-
+    name: Deploy Migrations
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.PRODUCTION_DB_PASSWORD }}
       SUPABASE_PROJECT_ID: ${{ secrets.PRODUCTION_PROJECT_ID }}
 
     steps:
+      - name: git-checkout
       - uses: actions/checkout@v3
 
+      - name: Supabase cli setup
       - uses: supabase/setup-cli@v1
         with:
           version: latest
 
+      - name: Link to production database
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID
+
+      - name: Push new migrations
       - run: supabase db push
 
   build-app:
@@ -31,11 +36,13 @@ jobs:
       - name: git-checkout
         uses: actions/checkout@v3
 
-      - name: Navigate to client directory
-        run: cd client
+      - name: Print current working directory
+        run: pwd
 
       - name: Install all dependencies
-        run: npm install
+        run: |
+          cd client
+          npm install
 
       - name: Set up environment variables
         run: |
