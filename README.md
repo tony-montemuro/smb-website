@@ -71,10 +71,10 @@ Before you can run the app, a local database server must be running for the clie
 4. Run these commands:
     ```bash
     cd client
-    touch .env.local
+    touch .env.development.local
     ```
     This will create a file in the `client` directory for storing environment variables, which are necessary to connect to the server.
-5. Open `.env.local` into a text editor, add the following, and save:
+5. Open `.env.development.local` into a text editor, add the following, and save:
     ```env
     REACT_APP_SUPABASE_URL=<YOUR_API_URL>
     REACT_APP_SUPABASE_ANON_KEY=<YOUR_ANON_KEY>
