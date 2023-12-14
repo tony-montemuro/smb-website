@@ -45,7 +45,7 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
     if (games) {
       const sorted = isUnapproved ? games.toSorted((a, b) => b.unapproved - a.unapproved) : games.toSorted((a, b) => b.reported - a.reported);
       setSortedGames(sorted);
-      setGame(sorted[0]);
+      setGame(game ? game : sorted[0]);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [games, isUnapproved]);

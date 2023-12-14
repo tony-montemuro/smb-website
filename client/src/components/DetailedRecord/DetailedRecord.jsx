@@ -29,6 +29,7 @@ function DetailedRecord({ submission, iconSize, timerType }) {
       { submission.approve ? 
         <div className="inline-icon">
           <CheckIcon 
+            color="success"
             fontSize={ iconSize }
             titleAccess="This submission has been approved by a moderator."
           />
