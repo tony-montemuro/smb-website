@@ -9,5 +9,11 @@
 }
 
 .body {
-    margin-bottom: 10px;
+    --line-height: 19px;
+    padding-bottom: var(--line-height);
+}
+
+.body p {
+    min-height: var(--line-height);
+    margin: 0;
 }

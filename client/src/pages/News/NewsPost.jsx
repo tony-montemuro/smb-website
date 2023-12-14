@@ -21,9 +21,11 @@ function NewsPost({ post }) {
       <hr />
 
       { /* Post body - render the contents of the post, as well as a link, if one was included */ }
-      { post.body.map((line, index) => {
-        return <p key={ index }>{ line }</p>;
-      })}
+      <div className={ styles.body }>
+        { post.body.map((line, index) => {
+          return <p key={ index }>{ line }</p>;
+        })}
+      </div>
       { post.link && post.link.length > 0 &&
         <a href={ post.link } target="_blank" rel="noopener noreferrer">{ post.link_description }</a>
       }

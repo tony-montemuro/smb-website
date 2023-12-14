@@ -27,10 +27,10 @@ function NewsPost({ post }) {
         { post.body.map((line, index) => {
           return <p key={ index }>{ line }</p>;
         })}
-        { post.link && post.link.length > 0 &&
-          <a href={ post.link } target="_blank" rel="noopener noreferrer">{ post.link_description }</a>
-        }
       </div>
+      { post.link && post.link.length > 0 &&
+        <a href={ post.link } target="_blank" rel="noopener noreferrer">{ post.link_description }</a>
+      }
       
     </details>
   );

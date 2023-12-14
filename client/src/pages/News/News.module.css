@@ -2,6 +2,11 @@
     padding: var(--app-padding);
 }
 
+.news h2 {
+    margin: 0;
+    padding: 10px 0;
+}
+
 .post {
     background-color: rgb(var(--color-container));
     margin: 10px 0;
@@ -10,5 +15,15 @@
 }
 
 .post hr {
-    margin: 20px 0;
+    margin: 15px 0;
+}
+
+.body {
+    --line-height: 19px;
+    padding-bottom: var(--line-height);
+}
+
+.body p {
+    min-height: var(--line-height);
+    margin: 0;
 }
