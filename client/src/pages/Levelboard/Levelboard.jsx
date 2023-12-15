@@ -55,7 +55,7 @@ function Levelboard({ imageReducer }) {
 	const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
-	const isPracticeMode = categories[category] ? categories[category].isPracticeMode : undefined;
+	const isPracticeMode = categories[category] ? categories[category].practice : undefined;
 	const defaultFilters = {
 		endDate: dateB2F(),
 		live: game.live_preference ? [true] : [false, true],
