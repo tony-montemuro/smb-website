@@ -33,7 +33,7 @@ function ReportForm({ updateBoard }) {
 
         // If the submission is already reported, render a message letting the user know they are unable to report it again
         <h2>This submission has already been reported, so it cannot be reported again.
-        Please wait for moderator to handle this submission.</h2>
+        Please wait for a moderator to handle this submission.</h2>
 
       :
         submission.profile.id === user.profile.id ?

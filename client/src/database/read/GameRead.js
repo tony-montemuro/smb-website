@@ -78,7 +78,7 @@ const GameRead = () => {
             }
 
             // next, let's sort the list of profiles (game moderators) by username, as well as game_rules by id
-            game.profile.sort((a, b) => a.username.localeCompare(b.name));
+            game.profile.sort((a, b) => a.username.localeCompare(b.username));
             game.game_rule.sort((a, b) => a.id - b.id);
 
             // return the game object

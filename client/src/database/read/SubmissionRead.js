@@ -140,7 +140,8 @@ const SubmissionRead = () => {
                 .eq("level_id", level)
                 .eq("score", type === "score")
                 .eq("profile_id", profileId)
-                .order("submitted_at", { ascending: false });
+                .order("submitted_at", { ascending: false })
+                .order("id", { ascending: false });
 
             // error handling
             if (error) {

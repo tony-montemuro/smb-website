@@ -30,14 +30,18 @@
     height: auto;
 }
 
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: var(--min-line-heigth);
+    height: auto;
+}
+
 .details li a {
     display: inline-flex;
 }
 
 .updated {
-    display: flex;
-    align-items: center;
     background-color: rgba(var(--color-button), 0.25);
-    border-radius: 3px;
-    min-height: var(--min-line-heigth);
 }
