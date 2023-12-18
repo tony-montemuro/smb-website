@@ -213,7 +213,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
             await updateSubmission(payload, submission.id);
 
             // next, insert approval
-            const query = insertApproval(submission.id, user.profile.id);
+            const query = isUnapproved ? insertApproval(submission.id, user.profile.id) : deleteReport(submission.report.report_date);
             await query;
 
             // finally, close popup
@@ -239,7 +239,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     // otherwise, we run the `updateSubmission` function
     const onApproveClick = e => {
         e.preventDefault();
-        if (isFormUnchanged() || !isUnapproved) {
+        if (isFormUnchanged()) {
             approveSubmission();
         } else {
             updateAndApproveSubmission();
