@@ -46,21 +46,21 @@ function Update() {
 
           { /* Link to the game corresponding to the notification prop */ }
           <li>
-            <span>
+            <span className={ styles.wrapper }>
               Game:&nbsp;<Link to={`/games/${ notification.level.mode.game.abb }`}>{ notification.level.mode.game.name }</Link> 
             </span>
           </li>
 
           { /* Link to the category of the level corresponding to the notification prop */ }
           <li>
-            <span>
+            <span className={ styles.wrapper }>
               Category: { categoryName }
             </span>
           </li>
 
           { /* Link to the level corresponding to the notification prop */ }
           <li>
-            <span>
+            <span className={ styles.wrapper }>
               Chart:&nbsp;
               <Link to={`/games/${ notification.level.mode.game.abb }/${ category }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
                 <div><FancyLevel level={ notification.level.name } />&nbsp;({ capitalize(notification.score ? "score" : "time") })</div>
@@ -70,7 +70,7 @@ function Update() {
 
           { /* Render the record */ }
           <li>
-            <span>{ capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }</span>
+            <span className={ styles.wrapper }>{ capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }</span>
           </li>
 
           { /* Render the submission date. If the submission date was updated, render both the old submission date, and the new
@@ -78,14 +78,14 @@ function Update() {
           { notification.submitted_at !== submission.submitted_at ?
             <li>
               <div className={ styles.updated }>
-                <span>
+                <span className={ styles.wrapper }>
                   Date: { dateB2F(notification.submitted_at) } → { dateB2F(submission.submitted_at) }
                 </span>
               </div>
             </li>
           :
             <li>
-              <span>Date: { dateB2F(notification.submitted_at) }</span>
+              <span className={ styles.wrapper }>Date: { dateB2F(notification.submitted_at) }</span>
             </li>
           }
 
@@ -93,14 +93,14 @@ function Update() {
           { notification.monkey.id !== submission.monkey.id ?
             <li>
               <div className={ styles.updated }>
-                <span>
+                <span className={ styles.wrapper }>
                   Monkey: { notification.monkey.monkey_name } → { submission.monkey.monkey_name }
                 </span>
               </div>
             </li>
           :
             <li>
-              <span>Monkey: { notification.monkey.monkey_name }</span>
+              <span className={ styles.wrapper }>Monkey: { notification.monkey.monkey_name }</span>
             </li>
           }
 
@@ -109,14 +109,14 @@ function Update() {
           { notification.platform.id !== submission.platform.id ?
             <li>
               <div className={ styles.updated }>
-                <span>
+                <span className={ styles.wrapper }>
                   Platform: { notification.platform.platform_name } → { submission.platform.platform_name }
                 </span>
               </div>
             </li>
           :
             <li>
-              <span>Platform: { notification.platform.platform_name }</span>
+              <span className={ styles.wrapper }>Platform: { notification.platform.platform_name }</span>
             </li>
           }
 
@@ -124,14 +124,14 @@ function Update() {
           { notification.region.id !== submission.region.id ?
             <li>
               <div className={ styles.updated }>
-                <span>
+                <span className={ styles.wrapper }>
                   Region: { notification.region.region_name } → { submission.region.region_name }
                 </span>
               </div>
             </li>
           :
             <li>
-              <span>Region: { notification.region.region_name }</span>
+              <span className={ styles.wrapper }>Region: { notification.region.region_name }</span>
             </li>
           }
 
@@ -139,7 +139,7 @@ function Update() {
           { notification.proof !== submission.proof ?
             <li>
               <div className={ styles.updated }>
-                <span>
+                <span className={ styles.wrapper }>
                   Proof:&nbsp;
                   { notification.proof ?
                     <a href={ notification.proof } target="_blank" rel="noopener noreferrer">
@@ -157,7 +157,7 @@ function Update() {
             </li>
           :
             <li>
-              <span>
+              <span className={ styles.wrapper }>
                 <NotificationProof proof={ submission.proof } />
               </span>
             </li>
@@ -168,14 +168,14 @@ function Update() {
           { notification.live !== submission.live ?
             <li>
               <div className={ styles.updated }>
-                <span>
+                <span className={ styles.wrapper }>
                   Live Proof: <CheckmarkOrX isChecked={ notification.live } /> → <CheckmarkOrX isChecked={ submission.live } />
                 </span>
               </div>
             </li>          
           :
             <li>
-              <span>Live Status: <CheckmarkOrX isChecked={ submission.live } /></span>
+              <span className={ styles.wrapper }>Live Status: <CheckmarkOrX isChecked={ submission.live } /></span>
             </li>
           }
 
@@ -184,14 +184,14 @@ function Update() {
           { notification.tas !== submission.tas ?
             <li>
               <div className={ styles.updated }>
-                <span>
+                <span className={ styles.wrapper }>
                   TAS: <CheckmarkOrX isChecked={ notification.tas } /> → <CheckmarkOrX isChecked={ submission.tas } />
                 </span>
               </div>
             </li>
           :
             <li>
-              <span>TAS: <CheckmarkOrX isChecked={ submission.tas } /></span>
+              <span className={ styles.wrapper }>TAS: <CheckmarkOrX isChecked={ submission.tas } /></span>
             </li>
           }
 
@@ -199,7 +199,7 @@ function Update() {
           { notification.comment !== submission.comment ?
             <li>
               <div className={ styles.updated }>
-                <span>
+                <span className={ styles.wrapper }>
                   Comment:&nbsp;
                   { notification.comment ? `"${ notification.comment }"` : `""` } 
                   &nbsp;→&nbsp;
@@ -209,7 +209,7 @@ function Update() {
             </li>
           :
             <li>
-              <span>Comment:&nbsp;{ notification.comment ? `"${ notification.comment }"` : `""` }</span>
+              <span className={ styles.wrapper }>Comment:&nbsp;{ notification.comment ? `"${ notification.comment }"` : `""` }</span>
             </li>
           }
 
