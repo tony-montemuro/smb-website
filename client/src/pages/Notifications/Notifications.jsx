@@ -28,10 +28,10 @@ function Notifications() {
   const TABLE_WIDTH = 7;
   const NOTIFS_PER_PAGE = 50;
   const messages = {
-    approve: "A moderator has approved one of your submission.",
+    approve: "A moderator has approved one of your submissions.",
     report: "A user has reported one of your submissions.",
     insert: "A moderator has inserted a new submission on your behalf.",
-    update: "A moderator has updated one of you submissions.",
+    update: "A moderator has updated one of your submissions.",
     delete: "A moderator has deleted one of your submissions."
   };
   const navigateTo = useNavigate();
