@@ -157,6 +157,7 @@ const GameHelper = () => {
 		for (const mode of game.mode) {				// for each mode in the game object
 			if (mode.category === category) {
 				for (const level of mode.level) {	// for each level in the mode object
+                    console.log(levelName, level);
 					if (level.name === levelName && (level.chart_type === type || level.chart_type === "both")) {
 						return level;
 					}

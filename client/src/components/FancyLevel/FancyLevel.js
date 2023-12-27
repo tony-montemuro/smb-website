@@ -17,12 +17,16 @@ const FancyLevel = () => {
     // returns a copy of level in title case, as well as handling strange edge cases such as dashes, dots, etc.
     const cleanLevelName = level => {
         const specialChars = [".", "-", "("];
+        const replace = { "~~": "?" };
         let cleanedLevel = snakeToTitle(level);
         for (let i = 0; i < cleanedLevel.length; i++) {
             if (i > 0 && specialChars.includes(cleanedLevel[i-1])) {
                 const former = cleanedLevel.substr(0, i), later = cleanedLevel.substr(i+1);
                 cleanedLevel = former + cleanedLevel[i].toUpperCase() + later;
             }
+        }
+        for (let [target, value] of Object.entries(replace)) {
+            cleanedLevel = cleanedLevel.replaceAll(target, value);
         }
         return cleanedLevel;
     };
