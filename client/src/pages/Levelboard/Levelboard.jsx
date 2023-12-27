@@ -117,6 +117,7 @@ function Levelboard({ imageReducer }) {
 		if (user !== undefined) {
 			// see if levelName corresponds to a level stored in the game object
 			const level = fetchLevelFromGame(game, levelName, category, type);
+			console.log(level);
 			
 			// if not, we will print an error message, and navigate to the home screen
 			if (!level) {
@@ -145,7 +146,13 @@ function Levelboard({ imageReducer }) {
 				width={ `${ isModerator(abb) ? "1000px" : "500px" }` } 
 				disableClose={ submitting }
 			>
-				<Insert level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />
+				<Insert 
+					level={ level } 
+					updateBoard={ setupBoard } 
+					submitting={ submitting } 
+					setSubmitting={ setSubmitting }
+					board={ board } 
+				/>
 			</Popup>
 			<Popup renderPopup={ popups.update } setRenderPopup={ closePopup } width="800px" disableClose={ submitting } >
 				<Update level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />

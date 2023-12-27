@@ -1,5 +1,15 @@
 /* ===== GENERAL STYLING ===== */
-.insert {
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.body {
     display: flex;
     gap: var(--app-padding);
 }
