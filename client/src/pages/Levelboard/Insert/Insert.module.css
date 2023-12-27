@@ -33,9 +33,8 @@
 }
 
 /* ===== MEDIA QUERY FOR SMALLER DEVICES ===== */
-
 @media (max-width: 800px) {
-    .insert {
+    .body {
         flex-direction: column;
     }
 }
