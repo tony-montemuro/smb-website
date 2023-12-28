@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { imgurPattern, twitchPattern, twitterPatttern, youtubePattern, youtubeTimestampPattern } from "../../utils/RegexPatterns";
+import { imgurPattern, twitchPattern, twitterPatttern, youtubePattern, youtubeTimestampPattern, timerPattern } from "../../utils/RegexPatterns";
 
 const EmbededVideo = () => {
     /* ===== VARIABLES ===== */
@@ -68,13 +68,21 @@ const EmbededVideo = () => {
             width: "100%",
             height: "100%"
         }
+        let time = match ? match[1] : undefined;
+        if (match && time.split("").some(c => ["h", "m", "s"].includes(c))) {
+            const timerMatch = time.match(timerPattern);
+            const hours = timerMatch[2] || 0;
+            const minutes = timerMatch[4] || 0;
+            const seconds = timerMatch[6] || 0;
+            time = parseInt(hours) * 3600 + parseInt(minutes) * 60 + parseInt(seconds); 
+        }
 
         // if there is, we add it to the opts object, and return.
-        return match ? 
+        return time ? 
             { 
                 ...opts,
                 playerVars: {
-                    start: parseInt(match[1]),
+                    start: parseInt(time),
                 }
             }
         :

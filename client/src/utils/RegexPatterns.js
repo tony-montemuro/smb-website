@@ -28,7 +28,10 @@ export const twitchUsernamePattern = /^[a-zA-Z0-9][\w]{1,23}$/;
 export const twitterHandlePattern = /^@[\w]{4,15}$/;
 
 // YouTube Timestamp Regex
-export const youtubeTimestampPattern = /[?&]t=(\d+)/;
+export const youtubeTimestampPattern = /[?&]t=([\dhms]+)/;
+
+// Timer Regex
+export const timerPattern = /((\d*)h)?((\d*)m)?((\d*)s)?/;
 
 // Imgur Regex
 export const imgurPattern = /^(?:https?:\/\/)?(?:i\.)?(?:www\.)?(?:imgur\.com\/)?(?:a\/)?([a-zA-Z0-9]{7})(?:\.mp4)?$/;
