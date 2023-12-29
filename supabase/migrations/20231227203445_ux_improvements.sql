@@ -13,5 +13,5 @@ REFERENCES level (game, name, category) MATCH FULL
 ON UPDATE CASCADE;
 
 UPDATE level
-SET name = REPLACE(name, '?', '~~')
+SET name = REPLACE(name, '?', '%3F')
 WHERE name LIKE '%?%';
