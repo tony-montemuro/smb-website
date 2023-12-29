@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { GameContext, MessageContext } from "../../utils/Contexts";
+import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -45,6 +45,9 @@ function SubmissionHistory() {
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
+
+  // user state from user context
+  const { user } = useContext(UserContext);
 
   /* ===== STATES & FUNCTIONS ====== */
 
@@ -92,12 +95,18 @@ function SubmissionHistory() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
+  // code that is executed each time the user state updates
+  useEffect(() => {
+    if (level && profile) fetchSubmissions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+ 
   /* ===== RECORD HISTORY COMPONENT ===== */
   return (
     <>
       { /* Popups */ }
       <Popup renderPopup={ detailSubmission } setRenderPopup={ setDetailSubmission } width="800px" >
-				<SubmissionDetails level={ level } updateBoard={ fetchSubmissions } />
+				<SubmissionDetails level={ level } />
 			</Popup>
 
       <Container title="Submission History" largeTitle>

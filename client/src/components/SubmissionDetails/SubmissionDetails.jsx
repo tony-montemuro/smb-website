@@ -13,7 +13,7 @@ import FrontendHelper from "../../helper/FrontendHelper.js";
 import ReportForm from "./ReportForm/ReportForm.jsx";
 import Username from "../Username/Username.jsx";
 
-function SubmissionDetails({ level, updateBoard }) {
+function SubmissionDetails({ level }) {
   /* ===== CONTEXTS ===== */
   
   // user state from user context
@@ -101,7 +101,7 @@ function SubmissionDetails({ level, updateBoard }) {
       { user.id &&
         <>
           <hr />
-          <ReportForm updateBoard={ updateBoard } />
+          <ReportForm />
         </>
       }
 

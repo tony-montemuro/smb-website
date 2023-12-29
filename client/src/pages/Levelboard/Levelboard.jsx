@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { CategoriesContext, GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Levelboard.module.css";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import BananaIcon from "../../assets/svg/Icons/BananaIcon.jsx";
@@ -46,6 +46,9 @@ function Levelboard({ imageReducer }) {
 	const { capitalize, dateB2F } = FrontendHelper();
 	const { fetchLevelFromGame } = GameHelper();
 	const { scrollToTop } = ScrollHelper();
+
+	/* ===== REFS ===== */
+	const prevPathname = useRef(undefined);
 
 	/* ===== VARIABLES ===== */
 	const navigateTo = useNavigate();
@@ -129,7 +132,13 @@ function Levelboard({ imageReducer }) {
 			setLevel(level);
 			
 			// set up the board object
-			setupBoard(defaultFilters);
+			if (location.pathname === prevPathname.current) {
+				console.log("!!");
+				setupBoard(board.filters ? board.filters : defaultFilters);
+			} else {
+				setupBoard(defaultFilters);
+				prevPathname.current = location.pathname;
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, location.pathname]);
@@ -160,7 +169,7 @@ function Levelboard({ imageReducer }) {
 				<Filters currentFilters={ board.filters } defaultFilters={ defaultFilters } updateBoard={ setupBoard } />
 			</Popup>
 			<Popup renderPopup={ popups.details } setRenderPopup={ closePopup } width="760px" >
-				<SubmissionDetails level={ level } updateBoard={ setupBoard } />
+				<SubmissionDetails level={ level } />
 			</Popup>
 
 			<Container>
