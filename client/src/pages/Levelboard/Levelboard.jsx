@@ -133,7 +133,6 @@ function Levelboard({ imageReducer }) {
 			
 			// set up the board object
 			if (location.pathname === prevPathname.current) {
-				console.log("!!");
 				setupBoard(board.filters ? board.filters : defaultFilters);
 			} else {
 				setupBoard(defaultFilters);
