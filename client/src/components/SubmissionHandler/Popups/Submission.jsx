@@ -83,10 +83,10 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
         { /* If submission is reported, render the reasoning left by the creator of the report. */ }
         { !isUnapproved &&
           <>
-            <h2>
-              The following submission was reported by&nbsp;
+            <h3>
+              <strong>The following submission was reported by&nbsp;</strong>
               <Username profile={ creator } />.
-            </h2>
+            </h3>
             <p>They left the following message with the report: "{ submission.report.message }"</p>
           </>
         }

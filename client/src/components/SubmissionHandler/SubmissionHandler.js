@@ -58,10 +58,10 @@ const SubmissionHandler = (isUnapproved) => {
     // 1.) submission: a submission object
     // POSTCONDITIONS (2 possible outcomes):
     // in general, this function will return true
-    // however, if the submission is NOT new, and the report that exists is either on a submission belonging to the current user,
-    // or was created by the current user, we want to return false
+    // however, if the submission is NOT new, the current user is NOT an adminstrator, and the report that exists is either on a submission 
+    // belonging to the current user, or was created by the current user, we want to return false
     const isClickable = submission => {
-        return !(!isUnapproved && (submission.profile_id === user.profile.id || submission.report.creator.id === user.profile.id));
+        return !(!isUnapproved && !user.profile.administrator && (submission.profile.id === user.profile.id || submission.report.creator.id === user.profile.id));
     }
 
     // FUNCTION 3: setGameAndScroll - code that is executed when the moderator selects a game
