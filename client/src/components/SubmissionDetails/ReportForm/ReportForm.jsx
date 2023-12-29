@@ -7,7 +7,7 @@ import CountdownTimer from "../../CountdownTimer/CountdownTimer.jsx";
 import ReportFormLogic from "./ReportForm.js";
 import TextField from "@mui/material/TextField";
 
-function ReportForm() {
+function ReportForm({ updateBoards }) {
   /* ===== CONTEXTS ===== */
 
   // popup data state from popup context
@@ -61,7 +61,7 @@ function ReportForm() {
           }
           
           { /* Report form - allow user to leave a message with the report */ }
-          <form onSubmit={ (e) => handleReport(e, submission, setSubmitting) }>
+          <form onSubmit={ (e) => handleReport(e, submission, setSubmitting, updateBoards) }>
             <div className={ styles.formWrapper }>
 
               { /* Render a text field for the user to enter a message with their report */ }

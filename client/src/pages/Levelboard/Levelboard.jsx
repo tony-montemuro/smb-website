@@ -49,6 +49,7 @@ function Levelboard({ imageReducer }) {
 
 	/* ===== REFS ===== */
 	const prevPathname = useRef(undefined);
+	const prevUserId = useRef(undefined);
 
 	/* ===== VARIABLES ===== */
 	const navigateTo = useNavigate();
@@ -114,10 +115,9 @@ function Levelboard({ imageReducer }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// code that is executed when the page loads, when the user state is updated, or when the user
-  // switches levels
+	// code that is executed when the component mounts, and when the `user` state changes
 	useEffect(() => {
-		if (user !== undefined) {
+		if (user.id !== undefined && prevUserId.current === undefined) {
 			// see if levelName corresponds to a level stored in the game object
 			const level = fetchLevelFromGame(game, levelName, category, type);
 			
@@ -128,19 +128,23 @@ function Levelboard({ imageReducer }) {
 				return;
 			}
 
-			// update the level state hook
+			// update states
 			setLevel(level);
-			
-			// set up the board object
-			if (location.pathname === prevPathname.current) {
-				setupBoard(board.filters ? board.filters : defaultFilters);
-			} else {
-				setupBoard(defaultFilters);
-				prevPathname.current = location.pathname;
-			}
+			setupBoard(defaultFilters);
+			prevUserId.current = user.id;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, location.pathname]);
+	}, [user]);
+
+	// code that is executed when the component mounts, or when the `location.pathname` state changes
+	useEffect(() => {
+		if (prevPathname.current && location.pathname !== prevPathname.current) {
+			setLevel(fetchLevelFromGame(game, levelName, category, type));
+			setupBoard(defaultFilters);
+		}
+		prevPathname.current = location.pathname;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.pathname]);
 
 	/* ===== LEVELBOARD COMPONENT ===== */
 	return level ?
@@ -168,7 +172,7 @@ function Levelboard({ imageReducer }) {
 				<Filters currentFilters={ board.filters } defaultFilters={ defaultFilters } updateBoard={ setupBoard } />
 			</Popup>
 			<Popup renderPopup={ popups.details } setRenderPopup={ closePopup } width="760px" >
-				<SubmissionDetails level={ level } />
+				<SubmissionDetails level={ level } updateBoards={ setupBoard } />
 			</Popup>
 
 			<Container>
