@@ -108,8 +108,12 @@ ALTER TABLE submission
 ADD COLUMN mod_note VARCHAR(100) NOT NULL DEFAULT '';
 
 -- STEP 2: GRANT UPDATE ACCESS TO NEW ATTRIBUTE
-GRANT UPDATE (mod_note)
-ON submission
+REVOKE UPDATE
+ON TABLE submission 
+FROM authenticated;
+
+GRANT UPDATE (region_id, submitted_at, monkey_id, proof, comment, live, platform_id, tas, mod_note)
+ON TABLE submission 
 TO authenticated;
 
 -- STEP 3: RESTRICT NORMAL USERS FROM UPDATING NEW ATTRIBUTE
@@ -337,85 +341,24 @@ USING (
   )
 );
 
-CREATE POLICY "Enable admin update for unapproved submissions"
-ON submission
-FOR UPDATE
-TO authenticated
-USING (
-  (
-    (
-      is_admin()
-    )
-    AND
-    (
-      NOT (
-        EXISTS ( 
-          SELECT 1
-          FROM approve
-          WHERE (approve.submission_id = submission.id)
-        )
-      )
-    )
-  )
-)
-WITH CHECK (
-  (
-    (
-      is_admin()
-    )
-    AND
-    (
-      NOT (
-        EXISTS ( 
-          SELECT 1
-          FROM approve
-          WHERE (approve.submission_id = submission.id)
-        )
-      )
-    )
-  )
-);
-
 DROP POLICY "Enable mod updates for unapproved submissions" ON submission;
 
-CREATE POLICY "Enable mod update for unapproved/irrelevant report submissions"
+CREATE POLICY "Enable mod updates for unapproved submissions"
 ON submission
 FOR UPDATE
 TO authenticated
 USING (
   (
-    (is_moderator(game_id)) 
-  AND 
     (
-      NOT (
-        EXISTS (
-          SELECT 1
-          FROM approve
-          WHERE (approve.submission_id = submission.id)
-        )
-      )
-    ) 
-  AND 
+      is_moderator(game_id)
+    )
+    AND
     (
       NOT (
         EXISTS ( 
           SELECT 1
-          FROM report
-          WHERE ((report.submission_id = submission.id) AND (report.creator_id = get_profile_id()))
-        )
-      )
-    ) AND 
-    (
-      NOT (
-        (
-          EXISTS ( 
-            SELECT 1
-            FROM report
-            WHERE (report.submission_id = submission.id)
-          )
-        ) 
-        AND (
-          profile_id = get_profile_id()
+          FROM approve
+          WHERE (approve.submission_id = submission.id)
         )
       )
     )
@@ -423,40 +366,20 @@ USING (
 )
 WITH CHECK (
   (
-    (is_moderator(game_id)) 
-  AND 
+    (
+      is_moderator(game_id)
+    )
+    AND
     (
       NOT (
-        EXISTS (
+        EXISTS ( 
           SELECT 1
           FROM approve
           WHERE (approve.submission_id = submission.id)
         )
       )
-    ) 
-  AND 
-    (
-      NOT (
-        EXISTS ( 
-          SELECT 1
-          FROM report
-          WHERE ((report.submission_id = submission.id) AND (report.creator_id = get_profile_id()))
-        )
-      )
-    ) AND 
-    (
-      NOT (
-        (
-          EXISTS ( 
-            SELECT 1
-            FROM report
-            WHERE (report.submission_id = submission.id)
-          )
-        ) 
-        AND (
-          profile_id = get_profile_id()
-        )
-      )
     )
   )
 );
+
+ALTER POLICY "Insert restrictions [RESTRICTIVE]" ON notification RENAME TO "Enforce receiving profile exists [RESTRICTIVE]";
