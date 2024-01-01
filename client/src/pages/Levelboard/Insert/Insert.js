@@ -123,7 +123,8 @@ const Insert = (level, setSubmitting) => {
             level_id: level.name,
             category: category,
             submitted_at: dateB2F(),
-            tas: false
+            tas: false,
+            mod_note: ""
         };
     }
 

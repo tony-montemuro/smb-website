@@ -260,6 +260,19 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 value={ form.values.comment }
                 variant="filled"
               />
+              <TextField
+                color={ form.values.mod_note !== submission.mod_note ? "success" : "primary" }
+                fullWidth
+                helperText={ form.values.mod_note !== submission.mod_note ? updateFieldText : null }
+                id="mod_note"
+                inputProps={ { maxLength: COMMENT_MAX_LENGTH } }
+                label="Moderator Note"
+                multiline
+                rows={ COMMENT_ROWS }
+                onChange={ handleChange }
+                value={ form.values.mod_note }
+                variant="filled"
+              />
 
               { /* Button used to reset the form back to it's original values */ }
               <button className="cancel" type="button" onClick={ () => fillForm() } disabled={ submitting || isFormUnchanged() }>Reset Values</button>

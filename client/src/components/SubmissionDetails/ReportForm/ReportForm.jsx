@@ -51,7 +51,7 @@ function ReportForm({ updateBoards }) {
           :
             <>
               <h2>If this submission has issues, report it here.</h2>
-              <p>In your message, please explain your reasoning for reporting the submission. Be specific!</p>
+              <p>In your message, please explain your reasoning for reporting the submission. Be specific! Also, remember to consider the Moderator Note, if there is one.</p>
               
               {/* Only render report token's if current user is "normal" (non-admin & non-moderator) */}
               { !isModerator(abb) &&

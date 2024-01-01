@@ -58,7 +58,8 @@ const NotificationRead = () => {
                         live,
                         position,
                         all_position,
-                        tas
+                        tas,
+                        mod_note
                     ),
                     level (
                         category, 
@@ -70,6 +71,7 @@ const NotificationRead = () => {
                         name,
                         timer_type
                     ),
+                    mod_note,
                     score,
                     record,
                     submitted_at,

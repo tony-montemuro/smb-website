@@ -63,7 +63,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
     <div className={ styles.insert }>
       <div className={ styles.header }>
         <h1><FancyLevel level={ level.name } /></h1>
-        { board.all.length > 0 && board.filtered.length > 0 &&
+        { board.all && board.all.length > 0 && board.filtered && board.filtered.length > 0 &&
           <span>1st: { recordB2F(board.filtered[0].record, type, level.timer_type) }</span>
         }
       </div>
@@ -213,6 +213,21 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 value={ form.values.comment }
                 variant="filled"
               />
+              { user.profile.id !== form.values.profile.id &&
+                <TextField
+                  fullWidth
+                  helperText={ `${ form.values.mod_note.length }/${ COMMENT_MAX_LENGTH }` }
+                  id="mod_note"
+                  inputProps={{ maxLength: COMMENT_MAX_LENGTH }}
+                  label="Moderator Note"
+                  multiline
+                  placeholder="Must be under 100 characters"
+                  rows={ COMMENT_ROWS }
+                  onChange={ handleChange }
+                  value={ form.values.mod_note }
+                  variant="filled"
+                />
+              }
 
               { /* Form submission button: submits the form. NOTE: button is disabled if the submitting state is true. */ }
               <div className="center">

@@ -93,12 +93,17 @@ function SubmissionDetails({ level, updateBoards }) {
             { submission.live ? <CheckIcon titleAccess="This submission has a live proof." /> : <CloseRoundedIcon titleAccess="This submission has no live proof." /> }
           </div>
         </li>
-        { submission.comment && <li><span className={ styles.label }>Comment:</span>&nbsp;"{ submission.comment }"</li> }
+        { submission.comment && 
+          <li><span className={ styles.label }>Comment:</span>&nbsp;"{ submission.comment }"</li> 
+        }
+        { submission.mod_note &&
+          <li><span className={ styles.label }>Moderator Note:</span>&nbsp;{ submission.mod_note }</li>
+        }
 
       </ul>
 
       { /* If user is authenticated, render the ReportForm */ }
-      { user.id &&
+      { user.profile &&
         <>
           <hr />
           <ReportForm updateBoards={ updateBoards } />
