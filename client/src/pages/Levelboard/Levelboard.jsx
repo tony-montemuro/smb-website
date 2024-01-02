@@ -6,10 +6,12 @@ import styles from "./Levelboard.module.css";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import BananaIcon from "../../assets/svg/Icons/BananaIcon.jsx";
 import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
+import Checkbox from "@mui/material/Checkbox";
 import Container from "../../components/Container/Container.jsx";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import FancyLevel from "../../components/FancyLevel/FancyLevel.jsx";
 import Filters from "./Filters/Filters.jsx";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 import IconButton from "../../components/IconButton/IconButton.jsx";
@@ -92,6 +94,7 @@ function Levelboard({ imageReducer }) {
 		setupBoard,
 		getChartTypes,
 		handleTabClick,
+		handleReplayCheck,
 		getChartSearchParams
 	} = LevelboardLogic();
 
@@ -214,6 +217,21 @@ function Levelboard({ imageReducer }) {
 					{ /* Render buttons, such as: filters, update, insert */ }
 					{ board.filtered && board.filters ?
 							<div className={ styles.optionsBtns }>
+
+								<FormControlLabel 
+									control={ 
+										<Checkbox 
+											checked={ board.filters.live.includes(false) } 
+											id="replays" 
+											onChange={ e => handleReplayCheck(e) } 
+											inputProps={{ "aria-label": "controlled" }} 
+											style={{ paddingLeft: "5px", paddingRight: "0" }}
+										/>
+									}
+									label="Include replays"
+									labelPlacement="start"
+									style={{ margin: "0" }}
+								/>
 
 								<IconButton name="Filters" onClick={ () => setPopups({ ...popups, filters: true }) }>
 									<TuneRoundedIcon />
