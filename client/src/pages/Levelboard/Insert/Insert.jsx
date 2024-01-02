@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { GameContext, UserContext } from "../../../utils/Contexts";
-import { useContext, useEffect } from "react";
+import { CategoriesContext, GameContext, UserContext } from "../../../utils/Contexts";
+import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import dayjs from "dayjs";
 import styles from "./Insert.module.css";
@@ -21,6 +21,9 @@ import UserSearch from "../../../components/UserSearch/UserSearch.jsx";
 function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
   /* ===== CONTEXTS ===== */
 
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+
   // game state from game context
   const { game } = useContext(GameContext);
 
@@ -30,7 +33,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
   /* ===== STATES & FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { form, fillForm, handleChange, handleSubmittedAtChange, onUserRowClick, handleSubmit } = InsertLogic(level, setSubmitting); 
+  const { form, handleChange, handleSubmittedAtChange, onUserRowClick, handleSubmit } = InsertLogic(level, setSubmitting); 
   
   // helper functions
   const { capitalize, recordB2F } = FrontendHelper();
@@ -39,27 +42,22 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
   const location = useLocation();
   const path = location.pathname.split("/");
   const abb = path[2];
+  const category = path[3];
   const type = path[4];
+  const otherType = type === "score" ? "time" : "score";
   const userRowOptions = {
     isDetailed: false,
     disableLink: true,
     onUserRowClick: onUserRowClick
   };
+  const isPracticeMode = categories[category] ? categories[category].practice : undefined;
   const PROOF_MAX_LENGTH = 256;
   const COMMENT_MAX_LENGTH = 100;
   const COMMENT_ROWS = 2;
   const USERS_PER_PAGE = 5;
 
-  /* ===== EFFECTS ===== */
-
-  // code that is executed when the component mounts
-  useEffect(() => {
-    fillForm(level);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   /* ===== INSERT COMPONENT ===== */ 
-  return form.values &&
+  return (
     <div className={ styles.insert }>
       <div className={ styles.header }>
         <h1><FancyLevel level={ level.name } /></h1>
@@ -99,7 +97,12 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
               }
 
               { /* Render all necessary inputs for a submission */ }
-              <RecordInput form={ form } handleChange={ handleChange } timerType={ level.timer_type } />
+              <RecordInput 
+                form={ form } 
+                handleChange={ handleChange } 
+                timerType={ level.timer_type }
+                type={ type }
+              />
               <DatePicker 
                 color={ form.error.submitted_at ? "error" : "primary" }
                 disableFuture
@@ -228,6 +231,32 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                   variant="filled"
                 />
               }
+              { level.chart_type === "both" && isPracticeMode &&
+                <FormGroup>
+                  <FormControlLabel 
+                    control={ 
+                      <Checkbox 
+                        checked={ form.values.both } 
+                        id="both" 
+                        onChange={ handleChange } 
+                        inputProps={{ "aria-label": "controlled" }} 
+                      />
+                    } 
+                    label={ `Submit ${ capitalize(otherType) }` } 
+                  />
+                </FormGroup>
+              }
+              { form.values.both &&
+                <>
+                  <span><strong>IMPORTANT: </strong>This field should only be filled if the { otherType } also matches the proof submitted.</span>
+                  <RecordInput 
+                    form={ form } 
+                    handleChange={ handleChange } 
+                    timerType={ level.timer_type }
+                    type={ otherType }
+                  />
+                </>
+              }
 
               { /* Form submission button: submits the form. NOTE: button is disabled if the submitting state is true. */ }
               <div className="center">
@@ -240,6 +269,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
       </div>
     
     </div>
+  );
 };
 
 /* ===== EXPORTS ===== */
