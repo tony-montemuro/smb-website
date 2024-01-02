@@ -221,14 +221,14 @@ function Levelboard({ imageReducer }) {
 								<FormControlLabel 
 									control={ 
 										<Checkbox 
-											checked={ board.filters.live.includes(false) } 
+											checked={ !board.filters.live.includes(false) } 
 											id="replays" 
 											onChange={ e => handleReplayCheck(e) } 
 											inputProps={{ "aria-label": "controlled" }} 
 											style={{ paddingLeft: "5px", paddingRight: "0" }}
 										/>
 									}
-									label="Include replays"
+									label="Live-only"
 									labelPlacement="start"
 									style={{ margin: "0" }}
 								/>

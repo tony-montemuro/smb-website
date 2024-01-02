@@ -227,13 +227,13 @@ const Levelboard = () => {
 		}
 	};
 
-	// FUNCTION 7: handleReplayCheck - function that executes when the user selects the "include replays" checkbox
+	// FUNCTION 7: handleReplayCheck - function that executes when the user selects the "live-only" checkbox
 	// PRECONDITIONS: NONE
 	// POSTCONDITIONS (2 possible outcome):
-	// if the checkbox goes from OFF -> ON, then we set board.filters.live to [false, true]
-	// otherwise, set board.filters.live to [true]
+	// if the checkbox goes from OFF -> ON, then we set board.filters.live to [true]
+	// otherwise, set board.filters.live to [true, false]
 	const handleReplayCheck = e => {
-		const live = e.target.checked ? [true, false] : [true];
+		const live = e.target.checked ? [true] : [true, false];
 		setupBoard({ ...board.filters, live });
 	};
 
