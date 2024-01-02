@@ -168,7 +168,10 @@ const Insert = (level, setSubmitting) => {
     // if profileId differs from profile id in our form, reset form to default values, with our new profile
     const onUserRowClick = profile => {
         if (profile.id !== form.values.profile.id) {
-            dispatchForm({ field: "values", value: defaultVals });
+            dispatchForm({ 
+                field: "values", 
+                value: { ...defaultVals, profile } 
+            });
         }
     };
 
