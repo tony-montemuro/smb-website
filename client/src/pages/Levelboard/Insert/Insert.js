@@ -349,7 +349,6 @@ const Insert = (level, setSubmitting) => {
             });
         }
 
-        console.log(submissions);
         return submissions;
     };
 
@@ -377,7 +376,6 @@ const Insert = (level, setSubmitting) => {
     // if r1 resolves to fulfilled, this function will update the board, render a message depending on r2's status, and closes the popup
     // if r2 resolves to rejected, this function will keep the popup, and render a message / handle the form based on r1's status
     const handleResults = async (r1, r2, updateBoard) => {
-        console.log(r1,r2);
         if (r1.status === "fulfilled") {
             await updateBoard();
             if (r2.status === "fulfilled") {
