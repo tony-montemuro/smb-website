@@ -1,3 +1,6 @@
+----- INTRODUCE DELIMITER CHARACTER FOR QUESTION MARKS IN LEVEL NAMES -----
+
+-- STEP 1: Enable `UPDATE CASCADE` on tables depending on `level` so we can update the name attribute
 ALTER TABLE notification
 DROP CONSTRAINT notification_level_fk,
 ADD CONSTRAINT notification_level_fk
@@ -12,10 +15,14 @@ FOREIGN KEY (game_id, level_id, category)
 REFERENCES level (game, name, category) MATCH FULL
 ON UPDATE CASCADE;
 
+-- STEP 2: Replace all instances of '?' in level names with the HTML ASCII encoded version
 UPDATE level
 SET name = REPLACE(name, '?', '%3F')
 WHERE name LIKE '%?%';
 
+----- REPORT SYSTEM CHANGES: ALLOW SELF REPORTS, & TOKENLESS REPORTS FOR ADMINS / GAME MODERATORS =====
+
+-- STEP 1: Update RLS policies
 DROP POLICY "Report insert restrictions for authenticated users" 
 ON report;
 
@@ -31,6 +38,7 @@ FOR DELETE
 TO authenticated
 USING (is_admin());
 
+-- STEP 2: Update functions that activate on DB triggers
 CREATE OR REPLACE FUNCTION decrement_report_token() 
 RETURNS TRIGGER
 LANGUAGE plpgsql
