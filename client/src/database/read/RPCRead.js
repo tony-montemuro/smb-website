@@ -160,30 +160,7 @@ const RPCRead = () => {
         };
     };
 
-    // FUNCTION 6: getUnapproved - function that grabs all submissions that have not yet been approved
-    // PRECONDITIONS: NONE
-    // POSTCONDITIONS (2 possible outcomes, 1 return):
-    // if the query is a success, an array containing all of the unapproved submissions will be returned
-    // otherwise, this function will throw an error, which should be handled by the caller function
-    const getUnapproved = async () => {
-        try {
-            const { data: unapproved, error } = await supabase.rpc("get_unapproved");
-
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            // return the array of unapproved submissions
-            return unapproved;
-
-        } catch (error) {
-            // error will be handled by caller function
-            throw error;
-        }
-    };
-
-    // FUNCTION 7: getUnapprovedCounts - function that grabs the count of unapproved submissions, either for a list of games, or all
+    // FUNCTION 6: getUnapprovedCounts - function that grabs the count of unapproved submissions, either for a list of games, or all
     // games
     // PRECONDITIONS (1 parameter):
     // 1.) games: an array of game strings (abbs), which is set if the current user is a moderator. otherwise, an empty array is supplied,
@@ -209,7 +186,7 @@ const RPCRead = () => {
         };
     };
 
-    // FUNCTION 8: getUnapprovedByGame - function that grabs all the unapproved submissions for a particular game
+    // FUNCTION 7: getUnapprovedByGame - function that grabs all the unapproved submissions for a particular game
     // PRECONDITIONS (1 parameter):
     // 1.) abb: a string corresponding to the primary key of a game
     // POSTCONDITIONS (2 possible outcomes):
@@ -232,7 +209,7 @@ const RPCRead = () => {
         };
     };
 
-    // FUNCTION 9: getReportedByGame - function that grabs all the reported submissions for a particular game
+    // FUNCTION 8: getReportedByGame - function that grabs all the reported submissions for a particular game
     // PRECONDITIONS (1 parameter):
     // 1.) abb: a string corresponding to the primary key of a game
     // POSTCONDITIONS (2 possible outcomes):
@@ -255,7 +232,7 @@ const RPCRead = () => {
         };
     };
 
-    // FUNCTION 10: getProfile - function that can grab a single profile using a profile id
+    // FUNCTION 9: getProfile - function that can grab a single profile using a profile id
     // PRECONDITIONS (1 parameter):
     // 1.) profileId: an integer corresponding to the primary key of a profile in the database
     // POSTCONDITIONS (2 possible outcomes):
@@ -286,7 +263,6 @@ const RPCRead = () => {
         getMedals, 
         getUserRankings, 
         getChartSubmissions, 
-        getUnapproved, 
         getUnapprovedCounts, 
         getUnapprovedByGame,
         getReportedByGame,

@@ -227,6 +227,16 @@ const Levelboard = () => {
 		}
 	};
 
+	// FUNCTION 7: handleReplayCheck - function that executes when the user selects the "live-only" checkbox
+	// PRECONDITIONS: NONE
+	// POSTCONDITIONS (2 possible outcome):
+	// if the checkbox goes from OFF -> ON, then we set board.filters.live to [true]
+	// otherwise, set board.filters.live to [true, false]
+	const handleReplayCheck = e => {
+		const live = e.target.checked ? [true] : [true, false];
+		setupBoard({ ...board.filters, live });
+	};
+
 	// FUNCTION 7: getChartSearchParams - using url path information, generate the equivalent URLSearchParams object
 	// PRECONDITIONS: NONE
 	// POSTCONDITIONS (1 possible outcome):
@@ -245,6 +255,7 @@ const Levelboard = () => {
 		setupBoard,
 		getChartTypes,
 		handleTabClick,
+		handleReplayCheck,
 		getChartSearchParams
 	};
 };  

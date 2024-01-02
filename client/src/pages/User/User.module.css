@@ -17,8 +17,8 @@
 
 .socials {
     display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
+    gap: 15px;
+    padding: 5px 0;
 }
 
 .user-about-me p {

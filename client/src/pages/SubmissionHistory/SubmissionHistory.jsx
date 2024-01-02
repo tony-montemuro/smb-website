@@ -86,18 +86,18 @@ function SubmissionHistory() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // code that is executed each time the path changes
+  // code that is executed when the component mounts, and each time the path changes
   useEffect(() => {
     setRunType(runTypeParam);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
-
+ 
   /* ===== RECORD HISTORY COMPONENT ===== */
   return (
     <>
       { /* Popups */ }
       <Popup renderPopup={ detailSubmission } setRenderPopup={ setDetailSubmission } width="800px" >
-				<SubmissionDetails level={ level } updateBoard={ fetchSubmissions } />
+				<SubmissionDetails level={ level } updateBoards={ fetchSubmissions } />
 			</Popup>
 
       <Container title="Submission History" largeTitle>

@@ -107,6 +107,7 @@ const SubmissionRead = () => {
                     comment,
                     id,
                     live,
+                    mod_note,
                     monkey (
                         id, 
                         monkey_name

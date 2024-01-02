@@ -213,6 +213,24 @@ function Update() {
             </li>
           }
 
+          { /* Render the moderator note. If the moderator note was updated, render both the old mod note, and the new mod note. */ }
+          { notification.mod_note !== submission.mod_note ?
+            <li>
+              <div className={ styles.updated }>
+                <span className={ styles.wrapper }>
+                  Moderator Note:&nbsp;
+                  { notification.mod_note ? `"${ notification.mod_note }"` : `""` }
+                  &nbsp;→&nbsp;
+                  { submission.mod_note ? `"${ submission.mod_note }"` : `""` }
+                </span>
+              </div>
+            </li>
+          :
+            <li>
+              <span className={ styles.wrapper }>Moderator Note:&nbsp;{ notification.mod_note ? `"${ notification.mod_note }"` : `""` }</span>
+            </li>
+          }
+
         </ul>
       </div>
 

@@ -35,7 +35,7 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
     // 2.) fileExt: the extension of the file
     const getFileInfo = avatarRef => {
         const file = avatarRef.current.files[0];
-        return { file: file, fileExt: file.name.split(".").pop() };
+        return { file: file, fileExt: file.name.split(".").pop().toLowerCase() };
     };
 
     // FUNCTION 2: checkImageDimension - code that checks the dimensions of the image uploaded by the user

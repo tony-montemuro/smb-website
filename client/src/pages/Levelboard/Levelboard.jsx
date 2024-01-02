@@ -1,15 +1,17 @@
 /* ===== IMPORTS ===== */
 import { CategoriesContext, GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Levelboard.module.css";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import BananaIcon from "../../assets/svg/Icons/BananaIcon.jsx";
 import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";
+import Checkbox from "@mui/material/Checkbox";
 import Container from "../../components/Container/Container.jsx";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import FancyLevel from "../../components/FancyLevel/FancyLevel.jsx";
 import Filters from "./Filters/Filters.jsx";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import FrontendHelper from "../../helper/FrontendHelper";
 import GameHelper from "../../helper/GameHelper";
 import IconButton from "../../components/IconButton/IconButton.jsx";
@@ -46,6 +48,10 @@ function Levelboard({ imageReducer }) {
 	const { capitalize, dateB2F } = FrontendHelper();
 	const { fetchLevelFromGame } = GameHelper();
 	const { scrollToTop } = ScrollHelper();
+
+	/* ===== REFS ===== */
+	const prevPathname = useRef(undefined);
+	const prevUserId = useRef(undefined);
 
 	/* ===== VARIABLES ===== */
 	const navigateTo = useNavigate();
@@ -88,6 +94,7 @@ function Levelboard({ imageReducer }) {
 		setupBoard,
 		getChartTypes,
 		handleTabClick,
+		handleReplayCheck,
 		getChartSearchParams
 	} = LevelboardLogic();
 
@@ -111,10 +118,9 @@ function Levelboard({ imageReducer }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// code that is executed when the page loads, when the user state is updated, or when the user
-  // switches levels
+	// code that is executed when the component mounts, and when the `user` state changes
 	useEffect(() => {
-		if (user !== undefined) {
+		if (user.id !== undefined && prevUserId.current === undefined) {
 			// see if levelName corresponds to a level stored in the game object
 			const level = fetchLevelFromGame(game, levelName, category, type);
 			
@@ -125,14 +131,23 @@ function Levelboard({ imageReducer }) {
 				return;
 			}
 
-			// update the level state hook
+			// update states
 			setLevel(level);
-			
-			// set up the board object
 			setupBoard(defaultFilters);
+			prevUserId.current = user.id;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, location.pathname]);
+	}, [user]);
+
+	// code that is executed when the component mounts, or when the `location.pathname` state changes
+	useEffect(() => {
+		if (prevPathname.current && location.pathname !== prevPathname.current) {
+			setLevel(fetchLevelFromGame(game, levelName, category, type));
+			setupBoard(defaultFilters);
+		}
+		prevPathname.current = location.pathname;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.pathname]);
 
 	/* ===== LEVELBOARD COMPONENT ===== */
 	return level ?
@@ -145,7 +160,13 @@ function Levelboard({ imageReducer }) {
 				width={ `${ isModerator(abb) ? "1000px" : "500px" }` } 
 				disableClose={ submitting }
 			>
-				<Insert level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />
+				<Insert 
+					level={ level } 
+					updateBoard={ setupBoard } 
+					submitting={ submitting } 
+					setSubmitting={ setSubmitting }
+					board={ board } 
+				/>
 			</Popup>
 			<Popup renderPopup={ popups.update } setRenderPopup={ closePopup } width="800px" disableClose={ submitting } >
 				<Update level={ level } updateBoard={ setupBoard } submitting={ submitting } setSubmitting={ setSubmitting } />
@@ -154,7 +175,7 @@ function Levelboard({ imageReducer }) {
 				<Filters currentFilters={ board.filters } defaultFilters={ defaultFilters } updateBoard={ setupBoard } />
 			</Popup>
 			<Popup renderPopup={ popups.details } setRenderPopup={ closePopup } width="760px" >
-				<SubmissionDetails level={ level } updateBoard={ setupBoard } />
+				<SubmissionDetails level={ level } updateBoards={ setupBoard } />
 			</Popup>
 
 			<Container>
@@ -196,6 +217,21 @@ function Levelboard({ imageReducer }) {
 					{ /* Render buttons, such as: filters, update, insert */ }
 					{ board.filtered && board.filters ?
 							<div className={ styles.optionsBtns }>
+
+								<FormControlLabel 
+									control={ 
+										<Checkbox 
+											checked={ !board.filters.live.includes(false) } 
+											id="replays" 
+											onChange={ e => handleReplayCheck(e) } 
+											inputProps={{ "aria-label": "controlled" }} 
+											style={{ paddingLeft: "5px", paddingRight: "0" }}
+										/>
+									}
+									label="Live-only"
+									labelPlacement="start"
+									style={{ margin: "0" }}
+								/>
 
 								<IconButton name="Filters" onClick={ () => setPopups({ ...popups, filters: true }) }>
 									<TuneRoundedIcon />

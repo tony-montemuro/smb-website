@@ -66,6 +66,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
                 live: submission.live,
                 tas: submission.tas,
                 comment: submission.comment,
+                mod_note: submission.mod_note,
                 message: ""
             },
             error: defaultError
@@ -159,7 +160,8 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
             && form.values.proof === submission.proof
             && form.values.live === submission.live
             && form.values.tas === submission.tas
-            && form.values.comment === submission.comment;
+            && form.values.comment === submission.comment
+            && form.values.mod_note === submission.mod_note;
     };
 
     // FUNCTION 9: approveSubmission - function that runs when the user approves a submission with NO changes to it

@@ -4,6 +4,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: -webkit-sticky;
+    position: sticky;
+    top: var(--navbar-height);
+    background-color: rgb(var(--color-container));
+    padding: 5px 0;
+    z-index: var(--z-low);
 }
 
 .header h2 {

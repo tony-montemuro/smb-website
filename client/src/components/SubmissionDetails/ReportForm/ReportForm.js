@@ -36,7 +36,7 @@ const ReportForm = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // if at least one query fails, user is alerted of the error, and the popup remains open
     // if all queries are successful, the popup will close, and the user will be notified that everything was a success
-    const handleReport = async (e, submission, setSubmitting, updateBoard) => {
+    const handleReport = async (e, submission, setSubmitting, updateBoards) => {
         // first, update the form to prevent multiple submissions
         e.preventDefault();
         setSubmitting(true);
@@ -52,9 +52,9 @@ const ReportForm = () => {
         try {
             await insertReport(report);
         
-            // perform a concurrent call to update board, as well as update user data (specifically, the report token count
-            // should decrease)
-            await Promise.all([updateBoard(), updateUser(user.id)]);
+            // now, make concurrent calls to both update user, as well as the boards of the caller component
+            await Promise.all([updateUser(user.id), updateBoards()])
+            await updateUser(user.id);
             addMessage("The submission was successfully reported! Please give the moderation team a few days to look it over.", "success", 10000);
             closePopup();
     

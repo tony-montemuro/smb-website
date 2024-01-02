@@ -1,12 +1,7 @@
 /* ===== IMPORTS ===== */
-import { useLocation } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 
-function RecordInput({ form, handleChange, timerType }) {
-  /* ===== VARIABLES ===== */
-  const location = useLocation();
-  const type = location.pathname.split("/")[4];
-
+function RecordInput({ form, handleChange, timerType, type }) {
   /* ===== RECORD INPUT COMPONENT ===== */
 
   // If type is score, we simply render an input that allows user to enter a number.
