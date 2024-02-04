@@ -1,12 +1,11 @@
 ALTER TABLE level
-ADD COLUMN score_ascending BOOLEAN NOT NULL DEFAULT false;
+ADD COLUMN ascending chart_t;
 
 CREATE OR REPLACE FUNCTION prepare_submission() RETURNS "trigger"
 LANGUAGE "plpgsql"
 AS $$
   DECLARE
-    time_negative_transform boolean;
-    score_negative_transform boolean;
+    negative_transform public.chart_t;
     level_timer_type public.timer_t;
   BEGIN
     -- First, let's quickly validate that user is trying to insert a positive record. The value may be transformed to a negative
@@ -15,9 +14,9 @@ AS $$
       RAISE EXCEPTION 'Record cannot be a negative value.';
     END IF;
 
-    -- time_ascending -> `time_negative_transform`, score_ascending -> `score_negative_transform`, timer_type -> `level_timer_type`
-    SELECT time_ascending, score_ascending, timer_type
-    INTO time_negative_transform, score_negative_transform, level_timer_type
+    -- ascending -> `negative_transform`, timer_type -> `level_timer_type`
+    SELECT ascending, timer_type
+    INTO negative_transform, level_timer_type
     FROM level l
     WHERE l.game = NEW.game_id AND l.name = NEW.level_id AND l.category = NEW.category;
 
@@ -36,14 +35,14 @@ AS $$
         NEW.record := (FLOOR(NEW.record / 3600)) * 3600::float8; -- Round down to nearest hour
       END IF;
 
-      -- Apply any transformations based on the `time_negative_transform` variable
-      IF time_negative_transform THEN
+      -- Apply any transformations based on the `negative_transform` variable
+      IF negative_transform IN ('time'::chart_t, 'both'::chart_t) THEN
         NEW.record := NEW.record * (-1); -- negate the record attribute
       END IF;
 
-    -- Otherwise, let's perform any necessary record modifications based on the `score_negative_transform` variable
+    -- Otherwise, let's perform any necessary record modifications based on the `negative_transform` variable
     ELSE
-      IF score_negative_transform THEN
+      IF negative_transform IN ('score'::chart_t, 'both'::chart_t) THEN
         NEW.record := NEW.record * (-1); -- negate the record attribute
       END IF;
     END IF;
@@ -63,5 +62,12 @@ AS $$
 $$;
 
 UPDATE level
-SET score_ascending = true
+SET ascending = 'time'
+WHERE time_ascending = true;
+
+UPDATE level
+SET ascending = 'score'
 WHERE mode ILIKE '%golf%';
+
+ALTER TABLE level
+DROP COLUMN time_ascending;
