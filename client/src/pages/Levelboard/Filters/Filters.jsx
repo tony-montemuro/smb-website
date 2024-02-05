@@ -149,7 +149,7 @@ function Filters({ currentFilters, defaultFilters, updateBoard }) {
             disableFuture
             label="End Date"
             format="YYYY-MM-DD"
-            minDate={ dayjs(game.release_date) }
+            minDate={ dayjs(game.min_date) }
             value={ filters.endDate ? dayjs(filters.endDate) : filters.endDate }
             onChange={ handleEndDateChange }
             slotProps={{

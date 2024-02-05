@@ -108,7 +108,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 disableFuture
                 label="Date"
                 format="YYYY-MM-DD"
-                minDate={ game.custom ? dayjs("2016-07-09") : dayjs(game.release_date) }
+                minDate={ dayjs(game.min_date) }
                 value={ form.values.submitted_at ? dayjs(form.values.submitted_at) : form.values.submitted_at }
                 onChange={ handleSubmittedAtChange }
                 slotProps={{
