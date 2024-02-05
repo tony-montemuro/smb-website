@@ -50,6 +50,7 @@ const GameRead = () => {
                         )
                     ),
                     live_preference,
+                    min_date,
                     mode (
                         level (
                             category,
@@ -197,7 +198,7 @@ const GameRead = () => {
         };
     };
 
-    // FUNCTION 4: queryGamesByList - code that takes an array of strings representing game primary keys, and returns the matching games
+    // FUNCTION 4: queryGameByList - code that takes an array of strings representing game primary keys, and returns the matching games
     // PRECONDITIONS (1 parameter):
     // 1.) abbs: an array of `abb` strings, each should correspond to a game in the db
     // POSTCONDITIONS (2 possible outcomes):
