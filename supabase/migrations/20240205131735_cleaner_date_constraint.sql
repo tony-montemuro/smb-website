@@ -12,6 +12,10 @@ ALTER TABLE game
 ALTER COLUMN min_date
 SET NOT NULL;
 
+ALTER TABLE game
+ALTER COLUMN release_date
+SET NOT NULL;
+
 DROP POLICY IF EXISTS "Insert restrictions [RESTRICTIVE]" ON submission;
 
 CREATE POLICY "Insert restrictions [RESTRICTIVE]" 
