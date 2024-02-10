@@ -4324,7 +4324,8 @@ INSERT INTO "public"."monkey" ("id", "monkey_name") VALUES
 	(19, 'Suezo'),
 	(14, 'SEGA Dreamcast'),
 	(15, 'SEGA Saturn'),
-	(16, 'SEGA Game Gear');
+	(16, 'SEGA Game Gear'),
+	(20, 'Custom');
 
 
 --
@@ -10332,6 +10333,7 @@ INSERT INTO "public"."game_monkey" ("game", "monkey") VALUES
 	('bm', 17),
 	('bm', 18),
 	('bm', 19),
+	('bm', 20),
 	('launch', 1),
 	('launch', 2),
 	('launch', 3),
@@ -10497,7 +10499,11 @@ https://github.com/MorsGames/BananaModManager/blob/main/LegalMods.md'),
 	(29, 'For submissions to Monkey Race charts, your proof must be a live recording. Submissions to the glitch charts that use the 0.01 lap glitch will not be accepted.'),
 	(30, 'Submissions to sweep charts that do not collect all bunches will be rejected.'),
 	(31, 'Grand Total Interstellar submissions must show all 10 stages of gameplay, as well as uncut footage reaching the run''s end scren.'),
-	(32, 'Runs achieved on the original Supernova ISO can be submitted to the Supernova charts of this game.');
+	(32, 'Runs achieved on the original Supernova ISO can be submitted to the Supernova charts of this game.'),
+	(33, 'The use of the Super Blocky Mode cheat code is prohibited for all charts.'),
+  (34, 'Using Save & Quit during Normal Mode submissions is prohibited.'),
+  (35, 'You are allowed to turn off music and SFX through the in-game menu.'),
+	(36, 'If you are using a custom monkey, please select ''Custom'' as the monkey of your submission.');
 
 
 --
@@ -10581,7 +10587,12 @@ INSERT INTO "public"."game_rule" ("abb", "rule", "id") VALUES
 	('stardust', 6, 4),
 	('stardust', 30, 5),
 	('stardust', 31, 6),
-	('stardust', 32, 7);
+	('stardust', 32, 7),
+	('smbjr', 33, 1),
+  ('smbjr', 34, 2),
+  ('smbjr', 35, 3),
+  ('smbjr', 4, 4),
+	('bm', 36, 8);
 
 INSERT INTO "public"."category" (abb, name, practice, id) VALUES
 	('mini', 'Mini Games', false, 13),
