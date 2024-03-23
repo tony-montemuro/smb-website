@@ -203,7 +203,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 helperText={ form.error.proof ? form.error.proof : (form.values.proof !== submission.proof ? updateFieldText : null) }
                 id="proof"
                 label="Proof"
-                placeholder="Must be a valid URL type"
+                placeholder="Must be a valid URL"
                 onChange={ handleChange }
                 value={ form.values.proof }
                 variant="filled"
