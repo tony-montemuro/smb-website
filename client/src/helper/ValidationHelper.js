@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { emailPattern } from "../utils/RegexPatterns";
-import { twitterPatttern, twitchPattern, youtubePattern, imgurPattern } from "../utils/RegexPatterns";
+import { twitterPatttern, twitchPattern, youtubePattern, imgurPattern, googleDrivePattern } from "../utils/RegexPatterns";
 
 const ValidationHelper = () => {
     /* ===== FUNCTIONS ===== */
@@ -24,15 +24,16 @@ const ValidationHelper = () => {
         return undefined;
     };
 
-    // FUNCTION 2: validateVideoUrl - given a video url, validate that it's either a youtube, twitch, or twitter video
+    // FUNCTION 2: validateVideoUrl - given a video url, validate that it's either a youtube, twitch, twitter, google drive, 
+    // or imgur video
     // PRECONDITIONS (1 parameter):
     // 1.) url: a string value representing a video url; also may be an empty string
     // POSTCONDITIONS (2 possible outcomes):
     // if the video is determined to be non-valid, return a string that contains the error message
     // if the proof is determined to be valid, return undefined
     const validateVideoUrl = url => {
-        if (url && !twitchPattern.test(url) && !youtubePattern.test(url) && !twitterPatttern.test(url) && !imgurPattern.test(url)) {
-            return "Not a valid YouTube, Twitch, X (Twitter), or Imgur URL.";
+        if (url && !twitchPattern.test(url) && !youtubePattern.test(url) && !twitterPatttern.test(url) && !imgurPattern.test(url) && !googleDrivePattern.test(url)) {
+            return "Not a valid YouTube, Twitch, X (Twitter), Google Drive, or Imgur URL.";
         }
         return undefined;
     };

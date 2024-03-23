@@ -35,3 +35,6 @@ export const timerPattern = /((\d*)h)?((\d*)m)?((\d*)s)?/;
 
 // Imgur Regex
 export const imgurPattern = /^(?:https?:\/\/)?(?:i\.)?(?:www\.)?(?:imgur\.com\/)?(?:a\/)?([a-zA-Z0-9]{7})(?:\.mp4)?$/;
+
+// Google Drive Regex
+export const googleDrivePattern = /^(?:https?:\/\/)?drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/[^/?]+)?(?:\?.*)?$/;
