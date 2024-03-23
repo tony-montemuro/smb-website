@@ -9,7 +9,7 @@ import YouTube from "react-youtube";
 
 function EmbededVideo({ url }) {
   /* ===== VARIABLES ===== */
-  const standardPlayers = ["youtube", "twitch-vod", "twitch-clip"];
+  const standardPlayers = ["youtube", "twitch-vod", "twitch-clip", "google-drive"];
 
   /* ===== FUNCTIONS ===== */
 
@@ -21,7 +21,8 @@ function EmbededVideo({ url }) {
     getTwitchVodSource, 
     getTwitchClipSource, 
     getTweetId,
-    getImgurId
+    getImgurId,
+    getGoogleDriveSource
   } = EmbededVideoLogic();
 
   // FUNCTION 1: getStandardPlayer - code that returns the JSX for a video player depending on the urlType
@@ -56,6 +57,18 @@ function EmbededVideo({ url }) {
           <iframe
             title={ urlType }
             src={ getTwitchClipSource(url) }
+            width="100%"
+            height="100%"
+            allowFullScreen
+            className={ styles.player }
+          >
+          </iframe>
+        );
+      case "google-drive":
+        return (
+          <iframe
+            title={ urlType }
+            src={ getGoogleDriveSource(url) }
             width="100%"
             height="100%"
             allowFullScreen

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { imgurPattern, twitchPattern, twitterPatttern, youtubePattern, youtubeTimestampPattern, timerPattern } from "../../utils/RegexPatterns";
+import { googleDrivePattern, imgurPattern, twitchPattern, twitterPatttern, youtubePattern, youtubeTimestampPattern, timerPattern } from "../../utils/RegexPatterns";
 
 const EmbededVideo = () => {
     /* ===== VARIABLES ===== */
@@ -38,6 +38,11 @@ const EmbededVideo = () => {
         // then, check if it's an imgur link
         if (imgurPattern.test(url)) {
             return "imgur";
+        }
+
+        // then, check if it's a google drive link
+        if (googleDrivePattern.test(url)) {
+            return "google-drive";
         }
 
         // otherwise, just return a null object
@@ -135,6 +140,17 @@ const EmbededVideo = () => {
         const id = match[1];
         return id;
     }
+    
+    // FUNCTION 8: getGoogleDriveSource - function that gets the source URL for a google drive link used in embeds
+    // PRECONDITIONS (1 parameter):
+    // 1.) url: a string representing the url of a google drive file url
+    // POSTCONDITIONS (1 possible outcome):
+    // a string is returned representing the src url (must be transformed from the input)
+    const getGoogleDriveSource = url => {
+        const match = url.match(googleDrivePattern);
+        const id = match[1];
+        return `https://drive.google.com/file/d/${ id }/preview`;
+    };
 
     return { 
         getUrlType, 
@@ -143,7 +159,8 @@ const EmbededVideo = () => {
         getTwitchVodSource, 
         getTwitchClipSource, 
         getTweetId,
-        getImgurId
+        getImgurId,
+        getGoogleDriveSource
     };
 };
 

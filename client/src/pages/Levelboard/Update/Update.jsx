@@ -197,7 +197,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             helperText={ form.error.proof ? form.error.proof : (form.values.proof !== form.submission.proof ? updateFieldText : null) }
             id="proof"
             label="Proof"
-            placeholder="Must be a YouTube, Twitch, X (Twitter), or Imgur URL"
+            placeholder="YouTube, Twitch, X (Twitter), Google Drive, or Imgur URL"
             onChange={ handleChange }
             type="url"
             value={ form.values.proof }
