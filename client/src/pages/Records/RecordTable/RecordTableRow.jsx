@@ -42,7 +42,7 @@ function RecordTableRow({ row, filter, allRecord, isAllGreater }) {
       <td className={ styles.players }>
         { row.profiles.map((profile, index) => {
           return (
-            <Fragment key={ profile.id }>
+            <Fragment key={ profile.submission_id }>
               <span className={ styles.usernameWrapper }>
                 <Username profile={ profile } />
                 { index < row.profiles.length-1 ? "," : null }
