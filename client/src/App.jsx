@@ -8,6 +8,7 @@ import AdministratorLayout from "./components/AdministratorLayout/AdministratorL
 import AppLogic from "./App.js";
 import Approvals from "./pages/Approvals/Approvals.jsx";
 import Game from "./pages/Game/Game.jsx";
+import GameAdd from "./pages/GameAdd/GameAdd.jsx";
 import GameLayout from "./components/GameLayout/GameLayout.jsx";
 import GameModerators from "./pages/GameModerators/GameModerators.jsx";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
@@ -143,6 +144,7 @@ function App() {
                   <GameModerators imageReducer={ imageReducer } />
                 }/>
                 <Route path="post" element={ <Post /> }/>
+                <Route path="game-add" element={ <GameAdd /> } />
               </Route>
               <Route path="moderator" element={ <ModeratorLayout /> } >
                 <Route index element={ <Moderator /> } />

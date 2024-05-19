@@ -1,0 +1,13 @@
+.metadataForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--app-padding);
+}
+
+.metadataForm h2 {
+    margin: 0;
+}
+
+.metadataForm button {
+    width: fit-content;
+}

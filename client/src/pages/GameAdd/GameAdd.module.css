@@ -1,0 +1,5 @@
+.gameAdd {
+    display: flex;
+    flex-direction: column;
+    padding: var(--app-padding);
+}
