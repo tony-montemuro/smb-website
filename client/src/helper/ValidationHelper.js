@@ -40,12 +40,12 @@ const ValidationHelper = () => {
 
     // FUNCTION 3: validateDate - given a date string, validate that it's a valid format
     // PRECONDITIONS (1 parameter):
-    // 1.) date: a string representing a data, in a front-end YYYY-MM-DD format
+    // 1.) date: a string (or null) representing a data, in a front-end YYYY-MM-DD format
     // POSTCONDITIONS (2 possible outcomes):
     // if the date is determined to be invalid, return a string that contains the error message
     // if the date is determined to be valid, return undefined
     const validateDate = date => {
-        if (date.includes("NaN")) {
+        if (!date || date.includes("NaN")) {
             return "Please select a valid date.";
         }
         return undefined;

@@ -8,7 +8,7 @@ import AdministratorLayout from "./components/AdministratorLayout/AdministratorL
 import AppLogic from "./App.js";
 import Approvals from "./pages/Approvals/Approvals.jsx";
 import Game from "./pages/Game/Game.jsx";
-import GameAdd from "./pages/GameAdd/GameAdd.jsx";
+import GameAddLayout from "./components/GameAddLayout/GameAddLayout.jsx";
 import GameLayout from "./components/GameLayout/GameLayout.jsx";
 import GameModerators from "./pages/GameModerators/GameModerators.jsx";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
@@ -16,6 +16,7 @@ import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
 import MedalTable from "./pages/MedalTable/MedalTable.jsx";
 import Message from "./components/Message/Message.jsx";
+import MetadataForm from "./pages/MetadataForm/MetadataForm.jsx";
 import Moderator from "./pages/Moderator/Moderator.jsx";
 import ModeratorLayout from "./components/ModeratorLayout/ModeratorLayout.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
@@ -144,7 +145,9 @@ function App() {
                   <GameModerators imageReducer={ imageReducer } />
                 }/>
                 <Route path="post" element={ <Post /> }/>
-                <Route path="game-add" element={ <GameAdd /> } />
+                <Route path="game-add" element={ <GameAddLayout /> } >
+                  <Route index element={ <MetadataForm /> } />
+                </Route>
               </Route>
               <Route path="moderator" element={ <ModeratorLayout /> } >
                 <Route index element={ <Moderator /> } />

@@ -1,20 +1,22 @@
 /* ===== IMPORTS ===== */
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useEffect } from "react";
 import Checkbox from "@mui/material/Checkbox";
-import Container from "../../../components/Container/Container.jsx";
+import Container from "../../components/Container/Container.jsx";
 import dayjs from "dayjs";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import MetadataFormLogic from "./MetadataForm.js";
 import styles from "./MetadataForm.module.css";
 import TextField from "@mui/material/TextField";
-import UserSearch from "../../../components/UserSearch/UserSearch.jsx";
+import UserSearch from "../../components/UserSearch/UserSearch.jsx";
 
-function MetadataForm({ pageNumber, unlockedPages, setUnlockedPages }) {
+function MetadataForm() {
   /* ===== FUNCTIONS ===== */
   const { 
     form,
     creatorName,
+    populateForm,
     handleChange,
     handleDateChange,
     updateLocal,
@@ -33,19 +35,24 @@ function MetadataForm({ pageNumber, unlockedPages, setUnlockedPages }) {
     onUserRowClick: onUserRowClick
   };
 
+  /* ===== EFFECTS ===== */
+  useEffect(() => {
+    populateForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /* ===== METADATA FORM COMPONENT ===== */
   return (
     
     <Container title="Main Information">
       <form onSubmit={ validateAndUpdate } className={ styles.metadataForm }>
         <TextField 
-          color={ form.error.name ? "error" : "primary" }
-          error={ form.error.name }
           id="name"
           inputProps={{ maxLength: NAME_LENGTH_MAX }}
-          helperText={ form.error.name ? form.error.name : `${ form.values.name.length }/${ NAME_LENGTH_MAX }` }
+          helperText={ `${ form.values.name.length }/${ NAME_LENGTH_MAX }` }
           label="Name"
           placeholder={ `Must be ${ NAME_LENGTH_MAX } characters or less` }
+          onBlur={ updateLocal }
           onChange={ handleChange }
           required
           value={ form.values.name }
@@ -54,12 +61,13 @@ function MetadataForm({ pageNumber, unlockedPages, setUnlockedPages }) {
 
         <TextField 
           color={ form.error.abb ? "error" : "primary" }
-          error={ form.error.abb }
+          error={ form.error.abb ? true : false }
           id="abb"
           inputProps={{ maxLength: ABB_LENGTH_MAX }}
           helperText={ form.error.abb ? form.error.abb : `${ form.values.abb.length }/${ ABB_LENGTH_MAX }` }
           label="Abbreviation"
           placeholder={ `Must be ${ ABB_LENGTH_MAX } characters or less` }
+          onBlur={ updateLocal }
           onChange={ handleChange }
           required
           value={ form.values.abb }
@@ -72,10 +80,15 @@ function MetadataForm({ pageNumber, unlockedPages, setUnlockedPages }) {
           format="YYYY-MM-DD"
           label="Release Date"
           minDate={ dayjs(DATE_MIN) }
-          onChange={ handleDateChange }
+          onBlur={ updateLocal } // used here for calendar date entry
+          onChange={ (e) => handleDateChange(e, "release_date") }
           slotProps={{
             field: { clearable: false },
-            textField: { variant: "filled" }
+            textField: { 
+              helperText: form.error.release_date && form.error.release_date,
+              variant: "filled", 
+              onBlur: updateLocal // onBlur here for manual date entry
+            }
           }}
           value={ dayjs(form.values.release_date) }
         />
@@ -86,6 +99,7 @@ function MetadataForm({ pageNumber, unlockedPages, setUnlockedPages }) {
               <Checkbox  
                 checked={ form.values.live_preference }
                 id="live_preference"
+                onBlur={ updateLocal }
                 onChange={ handleChange } 
                 inputProps={{ "aria-label": "controlled" }} 
               />
@@ -100,6 +114,7 @@ function MetadataForm({ pageNumber, unlockedPages, setUnlockedPages }) {
               <Checkbox  
                 checked={ form.values.custom }
                 id="custom"
+                onBlur={ updateLocal }
                 onChange={ handleChange }
                 inputProps={{ "aria-label": "controlled" }} 
               />
@@ -115,22 +130,22 @@ function MetadataForm({ pageNumber, unlockedPages, setUnlockedPages }) {
               disableHighlightToday
               disableFuture
               format="YYYY-MM-DD"
+              id="min_date"
               label="Minimum Date"
               minDate={ dayjs(DATE_MIN) }
-              onChange={ handleDateChange }
+              onBlur={ updateLocal } // used here for calendar date entry
+              onChange={ (e) => handleDateChange(e, "min_date") }
               slotProps={{
                 field: { clearable: false },
-                textField: { variant: "filled" }
+                textField: { variant: "filled", onBlur: updateLocal } // onBlur here for manual date entry
               }}
-              value={ dayjs(form.values.release_date) }
+              value={ dayjs(form.values.min_date) }
             />
 
             <TextField 
-              color={ form.error.download ? "error" : "primary" }
-              error={ form.error.download }
               id="download"
-              helperText={ form.error.download && form.error.download }
               label="Download URL"
+              onBlur={ updateLocal }
               onChange={ handleChange }
               required
               value={ form.values.download === null ? "" : form.values.download }
@@ -141,6 +156,7 @@ function MetadataForm({ pageNumber, unlockedPages, setUnlockedPages }) {
               id="creator_name"
               label="Creator"
               readOnly
+              required
               value={ creatorName }
               variant="filled"
             />
