@@ -1,4 +1,4 @@
--- Redefine `get_profile`, `get_unapproved_counts`, since we are removing `id` attribute from `game` table
+-- Redefine `get_profile`, since we are removing `id` attribute from `game` table
 CREATE OR REPLACE FUNCTION get_profile(p_id integer)
 RETURNS json
 LANGUAGE sql
@@ -69,6 +69,77 @@ AS $$
   ) profiles_row
 $$;
 
+ALTER TABLE game
+DROP COLUMN id;
+
+DROP POLICY "Enable authenticated users to insert their own row" ON profile;
+
+CREATE POLICY "Enable insert for admins, & authenticated users their own row"
+ON profile
+AS PERMISSIVE
+FOR INSERT
+TO authenticated 
+WITH CHECK (
+  auth.uid() = user_id OR is_admin()
+);
+
+-- Add "order" to game entities: monkeys, regions, & platforms
+ALTER TABLE game_monkey
+ADD COLUMN id INTEGER;
+
+WITH ordered AS (
+  SELECT
+    game,
+    monkey,
+    ROW_NUMBER() OVER (PARTITION BY game ORDER BY monkey) AS new_id
+  FROM game_monkey
+)
+UPDATE game_monkey gm
+SET id = o.new_id
+FROM ordered o
+WHERE gm.game = o.game AND gm.monkey = o.monkey;
+
+ALTER TABLE game_monkey
+ALTER COLUMN id SET NOT NULL;
+
+ALTER TABLE game_region
+ADD COLUMN id INTEGER;
+
+WITH ordered AS (
+  SELECT
+    game,
+    region,
+    ROW_NUMBER() OVER (PARTITION BY game ORDER BY region) AS new_id
+  FROM game_region
+)
+UPDATE game_region gr
+SET id = o.new_id
+FROM ordered o
+WHERE gr.game = o.game AND gr.region = o.region;
+
+ALTER TABLE game_region
+ALTER COLUMN id SET NOT NULL;
+
+ALTER TABLE game_platform
+ADD COLUMN id INTEGER;
+
+WITH ordered AS (
+  SELECT
+    game,
+    platform,
+    ROW_NUMBER() OVER (PARTITION BY game ORDER BY platform) AS new_id
+  FROM game_platform
+)
+UPDATE game_platform gp
+SET id = o.new_id
+FROM ordered o
+WHERE gp.game = o.game AND gp.platform = o.platform;
+
+ALTER TABLE game_platform
+ALTER COLUMN id SET NOT NULL;
+
+-- Need to redefine this function, since we removed the `id` attribute from `game` table, and to add order to
+-- 'entity' tables
 CREATE OR REPLACE FUNCTION get_unapproved_counts(abbs text[])
 RETURNS json
 LANGUAGE sql
@@ -85,6 +156,7 @@ AS $$
           FROM game_monkey gm
           INNER JOIN monkey m ON gm.monkey = m.id
           WHERE gm.game = g.abb
+          ORDER BY gm.id
         ) monkey_row
       ) AS monkey,
       g.name,
@@ -95,6 +167,7 @@ AS $$
           FROM game_platform gp
           INNER JOIN platform p ON gp.platform = p.id
           WHERE gp.game = g.abb
+          ORDER BY gp.id
         ) platform_row
       ) AS platform,
       (
@@ -104,6 +177,7 @@ AS $$
           FROM game_region gr
           INNER JOIN region r ON gr.region = r.id
           WHERE gr.game = g.abb
+          ORDER BY gr.id
         ) region_row
       ) AS region,
       g.release_date,
@@ -122,20 +196,6 @@ AS $$
     ORDER BY g.release_date
   ) submission_row
 $$;
-
-ALTER TABLE game
-DROP COLUMN id;
-
-DROP POLICY "Enable authenticated users to insert their own row" ON profile;
-
-CREATE POLICY "Enable insert for admins, & authenticated users their own row"
-ON profile
-AS PERMISSIVE
-FOR INSERT
-TO authenticated 
-WITH CHECK (
-  auth.uid() = user_id OR is_admin()
-);
 
 -- INSERT PERMISSIONS
 CREATE POLICY "Enable insert for administrators"
