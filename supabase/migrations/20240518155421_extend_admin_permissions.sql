@@ -1,3 +1,142 @@
+-- Redefine `get_profile`, `get_unapproved_counts`, since we are removing `id` attribute from `game` table
+CREATE OR REPLACE FUNCTION get_profile(p_id integer)
+RETURNS json
+LANGUAGE sql
+AS $$
+  SELECT row_to_json(profiles_row)
+  FROM (
+    SELECT
+      EXISTS (SELECT 1 FROM administrator a WHERE a.profile_id = p_id) AS administrator,
+      bio,
+      birthday,
+      (SELECT row_to_json(country_row) FROM (SELECT c.iso2, c.name FROM countries c WHERE c.iso2 = p.country) AS country_row) country,
+      discord,
+      featured_video,
+      id,
+      (
+        SELECT COALESCE ((json_agg(jsonb_build_object(
+          'abb', g.abb,
+          'custom', g.custom,
+          'name', g.name
+        ) ORDER BY g.release_date)), '[]'::json)
+        FROM (
+          SELECT g.abb, g.custom, g.release_date, g.name
+          FROM game_profile gp
+          INNER JOIN game AS g ON g.abb = gp.game
+          WHERE gp.profile = p_id
+          ORDER BY g.release_date
+        ) g
+      ) moderated_games,
+      (
+        SELECT COALESCE (json_agg(jsonb_build_object(
+          'abb', g.abb,
+          'categories', (
+            SELECT json_agg(jsonb_build_object(
+              'abb', c.category,
+              'types', (
+                SELECT json_agg(DISTINCT l.chart_type)
+                FROM level l
+                WHERE l.game = g.abb AND l.category = c.category
+              )
+            ))
+            FROM (
+              SELECT * FROM (
+                SELECT DISTINCT ON (m.category) m.category, m.id
+                FROM mode m
+                WHERE m.game = g.abb
+                ORDER BY m.category, m.id
+              ) dc ORDER BY dc.id
+            ) c
+          ),
+          'custom', g.custom,
+          'name', g.name,
+          'live_preference', g.live_preference
+        ) ORDER BY g.release_date), '[]'::json) AS submitted_games
+        FROM (
+          SELECT DISTINCT ON (s.game_id) s.game_id AS abb, g.custom, g.release_date, g.live_preference, g.name
+          FROM submission s
+          INNER JOIN game AS g ON g.abb = s.game_id
+          WHERE s.profile_id = p_id
+        ) g
+      ) submitted_games,
+      twitch_username,
+      twitter_handle,
+      username,
+      video_description,
+      youtube_handle
+    FROM profile p
+    WHERE p.id = p_id
+  ) profiles_row
+$$;
+
+CREATE OR REPLACE FUNCTION get_unapproved_counts(abbs text[])
+RETURNS json
+LANGUAGE sql
+AS $$
+  SELECT json_agg(row_to_json(submission_row))
+  FROM (
+    SELECT 
+      g.abb AS abb,
+      g.min_date,
+      (
+        SELECT json_agg(monkey_row)
+        FROM (
+          SELECT m.id, m.monkey_name
+          FROM game_monkey gm
+          INNER JOIN monkey m ON gm.monkey = m.id
+          WHERE gm.game = g.abb
+        ) monkey_row
+      ) AS monkey,
+      g.name,
+       (
+        SELECT json_agg(platform_row)
+        FROM (
+          SELECT p.id, p.platform_name
+          FROM game_platform gp
+          INNER JOIN platform p ON gp.platform = p.id
+          WHERE gp.game = g.abb
+        ) platform_row
+      ) AS platform,
+      (
+        SELECT json_agg(region_row)
+        FROM (
+          SELECT r.id, r.region_name
+          FROM game_region gr
+          INNER JOIN region r ON gr.region = r.id
+          WHERE gr.game = g.abb
+        ) region_row
+      ) AS region,
+      g.release_date,
+      COUNT(CASE WHEN s.id IS NOT NULL AND a.submission_id IS NULL AND r.submission_id IS NOT NULL THEN 1 ELSE NULL END) AS reported,
+      COUNT(CASE WHEN s.id IS NOT NULL AND a.submission_id IS NULL AND r.submission_id IS NULL THEN 1 ELSE NULL END) AS unapproved
+    FROM game g
+    LEFT JOIN submission s ON g.abb = s.game_id
+    LEFT JOIN approve a ON s.id = a.submission_id
+    LEFT JOIN report r ON s.id = r.submission_id
+    WHERE
+      CASE
+        WHEN array_length(abbs, 1) > 0 THEN g.abb = ANY(abbs)
+        ELSE true
+      END
+    GROUP BY g.abb
+    ORDER BY g.release_date
+  ) submission_row
+$$;
+
+ALTER TABLE game
+DROP COLUMN id;
+
+DROP POLICY "Enable authenticated users to insert their own row" ON profile;
+
+CREATE POLICY "Enable insert for admins, & authenticated users their own row"
+ON profile
+AS PERMISSIVE
+FOR INSERT
+TO authenticated 
+WITH CHECK (
+  auth.uid() = user_id OR is_admin()
+);
+
 -- INSERT PERMISSIONS
 CREATE POLICY "Enable insert for administrators"
 ON category
