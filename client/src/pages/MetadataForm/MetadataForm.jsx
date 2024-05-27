@@ -1,28 +1,36 @@
 /* ===== IMPORTS ===== */
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import Container from "../../components/Container/Container.jsx";
 import dayjs from "dayjs";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import MetadataFormLogic from "./MetadataForm.js";
+import Popup from "../../components/Popup/Popup.jsx";
 import styles from "./MetadataForm.module.css";
 import TextField from "@mui/material/TextField";
+import UserInfoForm from "../../components/UserInfoForm/UserInfoForm.jsx";
 import UserSearch from "../../components/UserSearch/UserSearch.jsx";
 
 function MetadataForm() {
+  /* ===== STATES ===== */
+  const [submittingCreator, setSubmittingCreator] = useState(false);
+
   /* ===== FUNCTIONS ===== */
   const { 
     form,
     creatorName,
+    addCreator,
+    updateLocal,
     populateForm,
     handleChange,
     handleDateChange,
-    updateLocal,
     validateAndUpdate,
-    onUserRowClick 
-  } = MetadataFormLogic();
+    onUserRowClick,
+    openPopup,
+    closePopup
+  } = MetadataFormLogic(submittingCreator, setSubmittingCreator);
   
   /* ===== VARIABLES ===== */
   const ABB_LENGTH_MAX = 12;
@@ -43,8 +51,24 @@ function MetadataForm() {
 
   /* ===== METADATA FORM COMPONENT ===== */
   return (
-    
     <Container title="Main Information">
+      <Popup 
+				renderPopup={ addCreator } 
+				setRenderPopup={ closePopup } 
+				width="1000px"
+				disableClose={ submittingCreator }
+			>
+        <div className={ styles.popupHeader }>
+          <h1>Upload Creator</h1>
+          <em>In the event a custom game has a creator who has no SMBElite account, create a new account to give proper credits.</em>
+        </div>
+				<UserInfoForm 
+          submitting={ submittingCreator }
+          setSubmitting={ setSubmittingCreator }
+          adminMode
+        />
+			</Popup>
+
       <form onSubmit={ validateAndUpdate } className={ styles.metadataForm }>
         <TextField 
           id="name"
@@ -155,6 +179,7 @@ function MetadataForm() {
             <TextField 
               id="creator_name"
               label="Creator"
+              placeholder="Select via user search below"
               readOnly
               required
               value={ creatorName }
@@ -167,6 +192,7 @@ function MetadataForm() {
           </> 
         }
 
+        <span onClick={ openPopup } className={ styles.creatorUpload }>Creator missing from list? Click here to upload a creator!</span>
         <button type="submit">Validate</button>
       </form>
     </Container>

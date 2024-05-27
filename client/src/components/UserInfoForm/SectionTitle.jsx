@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import styles from "./UserInfoForm.module.css";
-import FrontendHelper from "../../../helper/FrontendHelper";
+import FrontendHelper from "../../helper/FrontendHelper";
 
 function SectionTitle({ title, hasChanged, onClick }) {
   /* ===== FUNCTIONS ===== */

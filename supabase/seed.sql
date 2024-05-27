@@ -427,18 +427,18 @@ INSERT INTO "public"."profile" ("id", "user_id", "username", "youtube_handle", "
 -- Data for Name: game; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."game" (abb, name, custom, id, release_date, creator, download, live_preference, min_date) VALUES
-	('smb1', 'Super Monkey Ball', false, 1, '2001-09-14', NULL, NULL, true, '2001-09-14'),
-	('smb2', 'Super Monkey Ball 2', false, 2, '2002-08-25', NULL, NULL, true, '2002-08-25'),
-	('smb2pal', 'Super Monkey Ball 2 PAL', false, 3, '2003-03-10', NULL, NULL, true, '2003-03-10'),
-	('smbdx', 'Super Monkey Ball Deluxe', false, 4, '2005-03-15', NULL, NULL, true, '2005-03-15'),
-	('bm', 'Super Monkey Ball Banana Mania', false, 5, '2021-10-05', NULL, NULL, true, '2021-10-05'),
-	('launch', 'Super Monkey Ball: Launch!', true, 8, '2023-02-17', NULL, 'https://mega.nz/file/3lQQ0Dxb#Y89-X8vB0b2jgBFXrQVfP9d3PSvS_Bak-1yivKvLsIo', false, '2023-02-17'),
-	('invasion', 'Super Monkey Ball Invasion', true, 9, '2023-05-26', NULL, 'https://mega.nz/file/IIExlSRJ#S72TwIGd1Au5EBHw27CsCtznF71vmMVBJqhemImnBLg', false, '2023-05-26'),
-	('stardust', 'Super Monkey Ball Stardust', true, 10, '2023-12-02', NULL, 'https://mega.nz/file/S8MAAZCb#qopcgLOShOI2sUmcOkAwTRIl1VtgyR3m2e84PjqBu0E', false, '2021-10-31'),
-	('651', 'Super Monkey Ball 651', true, 6, '2019-07-15', NULL, 'https://mega.nz/file/McN2VI4S#p8pkonzW-iO4HsWwLgRGzwXx2Li3Jfk4-hTK6nV0SJY', false, '2019-07-15'),
-	('gaiden', 'Super Monkey Ball Gaiden', true, 7, '2020-06-23', NULL, 'https://mega.nz/file/taYiVC4S#DRr9ulDEM526IySEehGkgJI-vpbUPvJrY8UNnRccOcY', false, '2020-06-23'),
-	('smbjr', 'Super Monkey Ball Jr.', false, 11, '2002-11-20', NULL, NULL, true, '2002-11-20');
+INSERT INTO "public"."game" (abb, name, custom, release_date, creator, download, live_preference, min_date) VALUES
+	('smb1', 'Super Monkey Ball', false, '2001-09-14', NULL, NULL, true, '2001-09-14'),
+	('smb2', 'Super Monkey Ball 2', false, '2002-08-25', NULL, NULL, true, '2002-08-25'),
+	('smb2pal', 'Super Monkey Ball 2 PAL', false, '2003-03-10', NULL, NULL, true, '2003-03-10'),
+	('smbdx', 'Super Monkey Ball Deluxe', false, '2005-03-15', NULL, NULL, true, '2005-03-15'),
+	('bm', 'Super Monkey Ball Banana Mania', false, '2021-10-05', NULL, NULL, true, '2021-10-05'),
+	('launch', 'Super Monkey Ball: Launch!', true, '2023-02-17', NULL, 'https://mega.nz/file/3lQQ0Dxb#Y89-X8vB0b2jgBFXrQVfP9d3PSvS_Bak-1yivKvLsIo', false, '2023-02-17'),
+	('invasion', 'Super Monkey Ball Invasion', true, '2023-05-26', NULL, 'https://mega.nz/file/IIExlSRJ#S72TwIGd1Au5EBHw27CsCtznF71vmMVBJqhemImnBLg', false, '2023-05-26'),
+	('stardust', 'Super Monkey Ball Stardust', true, '2023-12-02', NULL, 'https://mega.nz/file/S8MAAZCb#qopcgLOShOI2sUmcOkAwTRIl1VtgyR3m2e84PjqBu0E', false, '2021-10-31'),
+	('651', 'Super Monkey Ball 651', true, '2019-07-15', NULL, 'https://mega.nz/file/McN2VI4S#p8pkonzW-iO4HsWwLgRGzwXx2Li3Jfk4-hTK6nV0SJY', false, '2019-07-15'),
+	('gaiden', 'Super Monkey Ball Gaiden', true, '2020-06-23', NULL, 'https://mega.nz/file/taYiVC4S#DRr9ulDEM526IySEehGkgJI-vpbUPvJrY8UNnRccOcY', false, '2020-06-23'),
+	('smbjr', 'Super Monkey Ball Jr.', false, '2002-11-20', NULL, NULL, true, '2002-11-20');
 
 
 --

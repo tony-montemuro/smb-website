@@ -67,7 +67,7 @@ const GameRead = () => {
                     release_date
                 `)
                 .order("custom")
-                .order("id")
+                .order("release_date")
                 .order("id", { foreignTable: "mode", ascending: true })
                 .order("id", { foreignTable: "mode.level", ascending: true })
                 .eq("abb", abb)
@@ -137,7 +137,7 @@ const GameRead = () => {
                     release_date
                 `)
                 .order("custom")
-                .order("id");
+                .order("release_date");
 
             // error handling
             if (error) {
@@ -183,7 +183,7 @@ const GameRead = () => {
                 .in("custom", customFilter)
                 .or(`name.ilike.%${ userInput }%,abb.ilike.%${ userInput }%`)
                 .order("custom")
-                .order("id")
+                .order("release_date")
                 .range(start, end);
 
             // error handling
@@ -211,7 +211,7 @@ const GameRead = () => {
                 .select("abb, custom, name")
                 .in("abb", abbs)
                 .order("custom")
-                .order("id");
+                .order("release_date");
 
             // error handling
             if (error) {

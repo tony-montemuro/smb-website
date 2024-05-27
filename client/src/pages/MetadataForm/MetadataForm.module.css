@@ -1,3 +1,14 @@
+.popupHeader h1 {
+    margin: 0;
+}
+
+.popupHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+}
+
 .metadataForm {
     display: flex;
     flex-direction: column;
@@ -9,5 +20,16 @@
 }
 
 .metadataForm button {
+    width: fit-content;
+}
+
+.creatorUpload:hover {
+    color: rgb(var(--color-link-hover));
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.creatorUpload {
+    color: rgb(var(--color-link));
     width: fit-content;
 }

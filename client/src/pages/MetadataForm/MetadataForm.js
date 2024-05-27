@@ -1,7 +1,8 @@
 /* ===== IMPORTS ===== */
-import { GameAddContext } from "../../utils/Contexts";
+import { GameAddContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useReducer, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
+import ProfileRead from "../../database/read/ProfileRead.js";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const MetadataForm = () => {
@@ -10,10 +11,17 @@ const MetadataForm = () => {
     // keys array & unlock page function from game add context
     const { keys, unlockNextPage } = useContext(GameAddContext);
 
+    // add message function from message context
+    const { addMessage } = useContext(MessageContext);
+
     /* ===== STATES ===== */
     const [creatorName, setCreatorName] = useState("");
+    const [addCreator, setAddCreator] = useState(false);
 
     /* ===== FUNCTIONS ===== */
+
+    // database functions
+    const { queryProfileByList } = ProfileRead();
 
     // helper functions
     const { dateB2F } = FrontendHelper();
@@ -40,9 +48,18 @@ const MetadataForm = () => {
 	};
     const metadataKey = keys["metadata"];
 
-    /* ===== REDUCER FUNCTIONS ===== */
+    /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: reducer - function that executes each time the user attempts to update the from reducer hook
+    // FUNCTION 1: updateLocal - function that runs each time the user finishes interacting with a form field
+    // PRECONDITIONS (1 parameter):
+    // 1.) formData (optional): optional parameter. typically, we just use `form.values`, but we can also manually pass in data
+    // POSTCONDITIONS (1 possible outcome):
+    // the form data stored locally is updated with the current state of `form.values`
+    const updateLocal = (formData = null) => {
+        localStorage.setItem(metadataKey, JSON.stringify(formData ?? form.values));
+    };
+
+    // FUNCTION 2: reducer - function that executes each time the user attempts to update the from reducer hook
     // PRECONDITIONS (2 parameters):
     // 1.) state: the state of the form object when the function is called
     // 2.) action: an object with two fields:
@@ -53,7 +70,14 @@ const MetadataForm = () => {
         const field = action.field, value = action.value;
 		switch (field) {
             case "values":
-                return { ...state, values: { ...state.values, ...value } };
+                const updatedValues = { ...state.values, ...value };
+
+                // special case: if we are updating the creator id, we update local storage as well with updated data
+                if (value.hasOwnProperty('creator_id')) {
+                    updateLocal(updatedValues);
+                }
+
+                return { ...state, values: updatedValues };
 			case "error":
                 return { ...state, error: { ...state.error, ...value } };
 			default:
@@ -66,19 +90,32 @@ const MetadataForm = () => {
 
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: populateForm - function that executes when the MetadataForm component mounts
+    // FUNCTION 3: populateForm - function that executes when the MetadataForm component mounts
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
-    // if the `GAME_ADD_METADATA` key is stored locally, we need to match the form with this data
+    // if the metadata key is stored locally, we need to match the form with this data
     // otherwise, this function does nothing
-    const populateForm = () => {
+    const populateForm = async () => {
+        // first, let's try to grab form data. if it does not exist, return early
         const formData = JSON.parse(localStorage.getItem(metadataKey));
-        if (formData) {
-            dispatchForm({ field: "values", value: formData });
+        if (!formData) {
+            return;
+        }
+        
+        // now, let's update our form, and also get the creator name from the database
+        dispatchForm({ field: "values", value: formData });
+        const creatorId = formData.creator_id;
+        if (creatorId) {
+            try {
+                const users = await queryProfileByList([creatorId]);
+                setCreatorName(users.length > 0 ? users[0].username : "");
+            } catch (error) {
+                addMessage("There was a problem displaying creator's information. The system may be experiencing an outage.", "error", 8000);
+            }
         }
     };
 
-    // FUNCTION 2: handleChange - function that is run each time the user modifies the form
+    // FUNCTION 4: handleChange - function that is run each time the user modifies the form
 	// PRECONDITIONS (1 parameter):
 	// 1.) e: an event object generated when the user makes a change to the form
 	// POSTCONDITIONS (3 possible outcomes):
@@ -114,7 +151,7 @@ const MetadataForm = () => {
         }
     };
 
-    // FUNCTION 3: handleDateChange - function specifically designed to handle date input changes
+    // FUNCTION 5: handleDateChange - function specifically designed to handle date input changes
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object that is generated when the user makes a change to a date input of the form
     // 2.) field: a string containing the name of the field to update
@@ -134,15 +171,7 @@ const MetadataForm = () => {
         dispatchForm({ field: "values", value: { [id]: date } });
     };
 
-    // FUNCTION 4: updateLocal - function that runs each time the user finishes interacting with a form field
-    // PRECONDITIONS: NONE
-    // POSTCONDITIONS (1 possible outcome):
-    // the form data stored locally is updated with the current state of `form.values`
-    const updateLocal = () => {
-        localStorage.setItem(metadataKey, JSON.stringify(form.values));
-    };
-
-    // FUNCTION 5: validateAbb - function that validates the abb form field
+    // FUNCTION 6: validateAbb - function that validates the abb form field
     // PRECONDITIONS (1 parameter):
     // 1.) abb: a string, which will correspond to the primary key of the new game in the database
     // POSTCONDITIONS (2 possible outcomes):
@@ -155,7 +184,7 @@ const MetadataForm = () => {
         }
     };
 
-    // FUNCTION 6: validateAndUpdate - function that attempts to validate form values
+    // FUNCTION 7: validateAndUpdate - function that attempts to validate form values
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object that is generated when the user submits the form
     // POSTCONDITIONS (2 possible outcomes):
@@ -165,7 +194,6 @@ const MetadataForm = () => {
         e.preventDefault();
         const error = {};
 
-        console.log(form.values);
         error.abb = validateAbb(form.values.abb);
         error.release_date = validateDate(form.values.release_date);
         if (form.values.custom) {
@@ -181,7 +209,7 @@ const MetadataForm = () => {
         dispatchForm({ field: "error", value: error });
     };
 
-    // FUNCTION 7: onUserRowClick - function that is called when selecting a user as the game creator
+    // FUNCTION 8: onUserRowClick - function that is called when selecting a user as the game creator
     // PRECONDITIONS (1 parameter):
     // 1.) profile: a profile object, containing at least the id, username, and country fields
     // POSTCONDITIONS (2 possible outcomes):
@@ -191,19 +219,34 @@ const MetadataForm = () => {
         if (profile.id !== form.values.creator_id) {
             setCreatorName(profile.username);
             dispatchForm({ field: "values", value: { creator_id: profile.id } });
-            updateLocal({ target: { value: profile.id } }); // mimic an event object
+            updateLocal(); // mimic an event object
         }
     };
+
+    // FUNCTION 9: openPopup - function that is called when the user opens the "add creator" popup
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // when the user attempts to open the popup, we set the `addCreator` state to `true` to render the popup
+    const openPopup = () => setAddCreator(true);
+
+    // FUNCTION 10: closePopup - function that is called when the user closes the "add creator" popup is closed
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // when the user attempts to close the popup, we set the `addCreator` state to `false` to unrender the popup
+    const closePopup = () => setAddCreator(false);
 
     return { 
         form,
         creatorName,
+        addCreator,
+        updateLocal,
         populateForm,
         handleChange,
         handleDateChange,
-        updateLocal,
         validateAndUpdate,
-        onUserRowClick
+        onUserRowClick,
+        openPopup,
+        closePopup
     };
 };
 
