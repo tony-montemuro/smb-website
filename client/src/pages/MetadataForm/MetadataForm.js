@@ -17,6 +17,7 @@ const MetadataForm = () => {
     /* ===== STATES ===== */
     const [creatorName, setCreatorName] = useState("");
     const [addCreator, setAddCreator] = useState(false);
+    const [triggerUserSearch, setTriggerUserSearch] = useState(false);
 
     /* ===== FUNCTIONS ===== */
 
@@ -235,10 +236,18 @@ const MetadataForm = () => {
     // when the user attempts to close the popup, we set the `addCreator` state to `false` to unrender the popup
     const closePopup = () => setAddCreator(false);
 
+    // FUNCTION 11: refreshUserSearch - function that is called that will refresh the user search when trigger
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // because the `triggerUserSearch` state is a boolean, to guarantee the user search refreshes, we just need to
+    // set to opposite state (false => true; true => false)
+    const refreshUserSearch = () => setTriggerUserSearch(triggerUserSearch => !triggerUserSearch);
+
     return { 
         form,
         creatorName,
         addCreator,
+        triggerUserSearch,
         updateLocal,
         populateForm,
         handleChange,
@@ -246,7 +255,8 @@ const MetadataForm = () => {
         validateAndUpdate,
         onUserRowClick,
         openPopup,
-        closePopup
+        closePopup,
+        refreshUserSearch
     };
 };
 

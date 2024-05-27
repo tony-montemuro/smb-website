@@ -31,12 +31,12 @@ const UserInfoForm = (setSubmitting, adminMode) => {
     // however, if we are in admin mode, we are accessing this component within a popup, so we can
     // define `closePopup` as the closePopup function from the popup context
     const popupContext = useContext(PopupContext);
-    let closePopup = adminMode ? popupContext.closePopup : () => {};
+    let closePopup = adminMode.status ? popupContext.closePopup : () => {};
 
     // generally, we will assign user to user state from user context
     // however, if we are in admin mode, we want to ignore the current user's context
     let { user, updateUser } = useContext(UserContext);
-    if (adminMode) {
+    if (adminMode.status) {
         user = null;
     }
 
@@ -361,12 +361,13 @@ const UserInfoForm = (setSubmitting, adminMode) => {
     // FUNCTION 15: adminUpload - function that exclusively uploads NEW profiles, accessible by admins in admin mode ONLY
     // PRECONDITIONS (1 parameter):
     // 1.) userInfo: an object containing user information defined in form (see `generateFormVals` function for more details)
-    // if the data successfully uploads, render a success message, and close the popup
+    // if the data successfully uploads, render a success message, rerender the search results, and close the popup
     // otherwise, this function throws an error, which should be handled by the caller function
     const adminModeUpload = async userInfo => {
         try {
             await insertUserInfo(userInfo);
             addMessage(`Profile successfully created! Try searching for ${ userInfo.username } in the user searchbar!`);
+            adminMode.refreshUserSearchFunc();
             closePopup();
         } catch (error) {
             throw error;
@@ -414,7 +415,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
             userInfo.country = country ? country : null; 
 
             // attempt to upload user info. if it's a success, we also update user state, and render a success message
-            if (!adminMode) {
+            if (!adminMode.status) {
                 await standardUpload(userInfo);
             } else {
                 await adminModeUpload(userInfo);

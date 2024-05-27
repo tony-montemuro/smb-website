@@ -22,6 +22,7 @@ function MetadataForm() {
     form,
     creatorName,
     addCreator,
+    triggerUserSearch,
     updateLocal,
     populateForm,
     handleChange,
@@ -29,7 +30,8 @@ function MetadataForm() {
     validateAndUpdate,
     onUserRowClick,
     openPopup,
-    closePopup
+    closePopup,
+    refreshUserSearch
   } = MetadataFormLogic(submittingCreator, setSubmittingCreator);
   
   /* ===== VARIABLES ===== */
@@ -41,6 +43,10 @@ function MetadataForm() {
     isDetailed: false,
     disableLink: true,
     onUserRowClick: onUserRowClick
+  };
+  const adminModeProp = {
+    status: true,
+    refreshUserSearchFunc: refreshUserSearch
   };
 
   /* ===== EFFECTS ===== */
@@ -65,7 +71,7 @@ function MetadataForm() {
 				<UserInfoForm 
           submitting={ submittingCreator }
           setSubmitting={ setSubmittingCreator }
-          adminMode
+          adminMode={ adminModeProp }
         />
 			</Popup>
 
@@ -187,12 +193,19 @@ function MetadataForm() {
             />
 
             <div className={ styles.userSearch }>
-              <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ userRowOptions } />
+              <UserSearch 
+                usersPerPage={ USERS_PER_PAGE } 
+                userRowOptions={ userRowOptions } 
+                parentRefreshTrigger={ triggerUserSearch } 
+              />
             </div>
+
+            <span onClick={ openPopup } className={ styles.creatorUpload }>
+              Creator missing from list? Click here to upload a creator!
+            </span>
           </> 
         }
 
-        <span onClick={ openPopup } className={ styles.creatorUpload }>Creator missing from list? Click here to upload a creator!</span>
         <button type="submit">Validate</button>
       </form>
     </Container>

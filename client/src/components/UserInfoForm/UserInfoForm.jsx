@@ -9,13 +9,13 @@ import SectionTitle from "./SectionTitle.jsx";
 import TextField from "@mui/material/TextField";
 import UserInfoFormLogic from "./UserInfoForm.js";
 
-function UserInfoForm({ submitting, setSubmitting, adminMode = false }) {
+function UserInfoForm({ submitting, setSubmitting, adminMode = { status: false } }) {
   /* ===== CONTEXTS ===== */
 
   // generally, we will assign user to user state from user context
   // however, if we are in admin mode, we want to ignore the current user's context
   let { user } = useContext(UserContext);
-  if (adminMode) {
+  if (adminMode.status) {
     user = null;
   }
 
