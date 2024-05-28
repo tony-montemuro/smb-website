@@ -64,9 +64,9 @@ const GameAddLayout = (page, setPage) => {
     // PRECONDITIONS (1 condition): this function should run each time the user performs a form validation, and succeeds
     // POSTCONDITIONS (2 possible outcomes):
     // if the number of unlocked pages is the same as the page number, this means we have NOT unlocked the next page,
-    // so we can do so
+    // so we can do so, and display success message to user
     // if the number of unlocked pages differs from the page number, this means we have ALREADY unlocked the next page, so
-    // we should do nothing
+    // we simply let the user know the information was re-validated
     const unlockNextPage = () => {
         const numPages = page.unlocked.length;
         if (page.number === numPages) {
