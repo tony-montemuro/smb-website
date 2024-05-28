@@ -82,7 +82,7 @@ function MetadataForm() {
           helperText={ `${ form.values.name.length }/${ NAME_LENGTH_MAX }` }
           label="Name"
           placeholder={ `Must be ${ NAME_LENGTH_MAX } characters or less` }
-          onBlur={ updateLocal }
+          onBlur={ () => updateLocal() }
           onChange={ handleChange }
           required
           value={ form.values.name }
@@ -97,7 +97,7 @@ function MetadataForm() {
           helperText={ form.error.abb ? form.error.abb : `${ form.values.abb.length }/${ ABB_LENGTH_MAX }` }
           label="Abbreviation"
           placeholder={ `Must be ${ ABB_LENGTH_MAX } characters or less` }
-          onBlur={ updateLocal }
+          onBlur={ () => updateLocal() }
           onChange={ handleChange }
           required
           value={ form.values.abb }
@@ -110,14 +110,14 @@ function MetadataForm() {
           format="YYYY-MM-DD"
           label="Release Date"
           minDate={ dayjs(DATE_MIN) }
-          onBlur={ updateLocal } // used here for calendar date entry
+          onBlur={ () => updateLocal() } // used here for calendar date entry
           onChange={ (e) => handleDateChange(e, "release_date") }
           slotProps={{
             field: { clearable: false },
             textField: { 
               helperText: form.error.release_date && form.error.release_date,
               variant: "filled", 
-              onBlur: updateLocal // onBlur here for manual date entry
+              onBlur: () => updateLocal() // onBlur here for manual date entry
             }
           }}
           value={ dayjs(form.values.release_date) }
@@ -129,7 +129,7 @@ function MetadataForm() {
               <Checkbox  
                 checked={ form.values.live_preference }
                 id="live_preference"
-                onBlur={ updateLocal }
+                onBlur={ () => updateLocal() }
                 onChange={ handleChange } 
                 inputProps={{ "aria-label": "controlled" }} 
               />
@@ -144,7 +144,7 @@ function MetadataForm() {
               <Checkbox  
                 checked={ form.values.custom }
                 id="custom"
-                onBlur={ updateLocal }
+                onBlur={ () => updateLocal() }
                 onChange={ handleChange }
                 inputProps={{ "aria-label": "controlled" }} 
               />
@@ -163,11 +163,11 @@ function MetadataForm() {
               id="min_date"
               label="Minimum Date"
               minDate={ dayjs(DATE_MIN) }
-              onBlur={ updateLocal } // used here for calendar date entry
+              onBlur={ () => updateLocal() } // used here for calendar date entry
               onChange={ (e) => handleDateChange(e, "min_date") }
               slotProps={{
                 field: { clearable: false },
-                textField: { variant: "filled", onBlur: updateLocal } // onBlur here for manual date entry
+                textField: { variant: "filled", onBlur: () => updateLocal() } // onBlur here for manual date entry
               }}
               value={ dayjs(form.values.min_date) }
             />
@@ -175,7 +175,7 @@ function MetadataForm() {
             <TextField 
               id="download"
               label="Download URL"
-              onBlur={ updateLocal }
+              onBlur={ () => updateLocal() }
               onChange={ handleChange }
               required
               value={ form.values.download === null ? "" : form.values.download }
