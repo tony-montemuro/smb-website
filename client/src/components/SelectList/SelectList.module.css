@@ -1,0 +1,8 @@
+.selectList {
+    display: flex;
+}
+
+.selector {
+    display: flex;
+    flex-direction: row;
+}
