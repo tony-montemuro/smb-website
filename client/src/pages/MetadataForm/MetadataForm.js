@@ -8,7 +8,7 @@ import ValidationHelper from "../../helper/ValidationHelper";
 const MetadataForm = () => {
     /* ===== CONTEXTS ===== */
 
-    // keys array & unlock page function from game add context
+    // keys objectg & unlock page function from game add context
     const { keys, unlockNextPage } = useContext(GameAddContext);
 
     // add message function from message context
@@ -66,7 +66,10 @@ const MetadataForm = () => {
     // 2.) action: an object with two fields:
         // a.) field: specifies which field of the form the reducer should modify
         // b.) value: specifies the new value that the reducer should use to modify form[field]
-    // POSTCONDITIONS (N possible outcomes):
+    // POSTCONDITIONS (3 possible outcomes):
+    // if the values field is updated, we update any changed values
+    // if the error field is update, we update any changed errors
+    // otherwise, this function does nothing 
     const reducer = (state, action) => {
         const field = action.field, value = action.value;
 		switch (field) {

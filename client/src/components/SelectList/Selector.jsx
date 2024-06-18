@@ -2,24 +2,24 @@
 import styles from "./SelectList.module.css";
 import TextField from "@mui/material/TextField";
 
-function Selector({ inputData, selectData, entity }) {
+function Selector({ inputData, selectData, entity, index }) {
   return (
     <div className={ styles.selector }>
       <TextField
-        id={ inputData.id }
-        label={ inputData.label }
+        id={ `${ inputData.id }_${ index }` }
         select
-        SelectProps={{ native: true }}
+        SelectProps={ { native: true } }
         onChange={ inputData.handleChange }
         value={ entity[selectData.entityName] }
         variant="filled"
       >
+        <option key="null" value=""></option>
         { selectData.entities.map(entity => (
           <option 
-            value={ entity.id } 
             key={ entity.id } 
+            value={ entity.id } 
           >
-            { entity[selectData.entityNameAlt] }
+            { selectData.entities.find(e => e.id === entity.id)[selectData.entityNameAlt] }
           </option>
         ))}
       </TextField>
