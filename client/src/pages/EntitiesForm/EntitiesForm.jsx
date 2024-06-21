@@ -9,7 +9,7 @@ function EntitiesForm() {
   const [selectData, setSelectData] = useState(null);
 
   /* ===== FUNCTIONS ===== */
-  const { form, fetchSelectData, handleInsert } = EntitiesFormLogic(setSelectData);
+  const { form, fetchSelectData, handleInsert, handleUpdate } = EntitiesFormLogic(setSelectData);
 
   /* ===== EFFECTS ===== */
 
@@ -23,57 +23,57 @@ function EntitiesForm() {
   return selectData &&
     <Container title="Game Entities">
       <SelectList
-        entities={ form.values.monkeys }
+        entities={ form.values.monkey }
         inputData={{
           id: "monkey",
           label: "Monkeys",
-          handleChange: () => {},
+          handleChange: handleUpdate,
           handleInsert: handleInsert
         }}
         selectData={{ 
-          entities: selectData.monkeys,
+          entities: selectData.monkey,
           entityName: "monkey",
           entityNameAlt: "monkey_name"
         }}
       />
       <SelectList
-        entities={ form.values.platforms }
+        entities={ form.values.platform }
         inputData={{
           id: "platform",
           label: "Platforms",
-          handleChange: () => {},
+          handleChange: handleUpdate,
           handleInsert: handleInsert
         }}
         selectData={{ 
-          entities: selectData.platforms,
+          entities: selectData.platform,
           entityName: "platform",
           entityNameAlt: "platform_name"
         }}
       />
       <SelectList
-        entities={ form.values.regions }
+        entities={ form.values.region }
         inputData={{
           id: "region",
           label: "Regions",
-          handleChange: () => {},
+          handleChange: handleUpdate,
           handleInsert: handleInsert
         }}
         selectData={{ 
-          entities: selectData.regions,
+          entities: selectData.region,
           entityName: "region",
           entityNameAlt: "region_name"
         }}
       />
       <SelectList
-        entities={ form.values.rules }
+        entities={ form.values.rule }
         inputData={{
           id: "rule",
           label: "Rules",
-          handleChange: () => {},
+          handleChange: handleUpdate,
           handleInsert: handleInsert
         }}
         selectData={{ 
-          entities: selectData.rules,
+          entities: selectData.rule,
           entityName: "rule",
           entityNameAlt: "rule_name"
         }}

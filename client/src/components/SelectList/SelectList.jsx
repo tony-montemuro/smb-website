@@ -7,21 +7,23 @@ function SelectList({ entities, inputData, selectData }) {
   return (
     <div className={ styles.selectList }>
       <span>{ inputData.label }</span>
-      { entities.toSorted((a, b) => a.id - b.id).map((entity, index) => (
+      { entities.map(entity => (
         <Selector 
           inputData={ inputData } 
           selectData={ selectData }
-          entity={ entity }
-          index={ index }
+          value={ entity[selectData.entityName] }
+          handleChange={ inputData.handleChange }
+          id={ entity.id }
           key={ entity.id } 
         />
       ))}
-      <button 
-        type="button" 
-        onClick={ () => inputData.handleChange(selectData.entity, entities.length) }
-      >
-        Add
-      </button>
+      <Selector 
+        inputData={ inputData }
+        selectData={ selectData }
+        value=""
+        handleChange={ inputData.handleInsert }
+        id={ entities.length > 0 ? entities.at(-1).id+1 : 1 }
+      />
     </div>
   );
 };

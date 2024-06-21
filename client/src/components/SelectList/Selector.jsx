@@ -2,15 +2,16 @@
 import styles from "./SelectList.module.css";
 import TextField from "@mui/material/TextField";
 
-function Selector({ inputData, selectData, entity, index }) {
+function Selector({ inputData, selectData, value, handleChange, id }) {
   return (
     <div className={ styles.selector }>
       <TextField
-        id={ `${ inputData.id }_${ index }` }
+        id={ `${ inputData.id }_${ id }` }
+        onChange={ e => handleChange(e, id, selectData.entityName) }
+        placeholder={ selectData.entityName }
         select
         SelectProps={ { native: true } }
-        onChange={ inputData.handleChange }
-        value={ entity[selectData.entityName] }
+        value={ value }
         variant="filled"
       >
         <option key="null" value=""></option>
@@ -23,7 +24,7 @@ function Selector({ inputData, selectData, entity, index }) {
           </option>
         ))}
       </TextField>
-      <button type="button">Delete</button>
+      <button type="button" disabled={ !value }>Delete</button>
     </div>
   );
 };
