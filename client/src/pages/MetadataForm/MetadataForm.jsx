@@ -66,7 +66,7 @@ function MetadataForm() {
 			>
         <div className={ styles.popupHeader }>
           <h1>Upload Creator</h1>
-          <em>In the event a custom game has a creator who has no SMBElite account, create a new account to give proper credits.</em>
+          <em>In the event a custom game has a creator with no SMBElite account, create a new account to give proper credits.</em>
         </div>
 				<UserInfoForm 
           submitting={ submittingCreator }
@@ -76,6 +76,7 @@ function MetadataForm() {
 			</Popup>
 
       <form onSubmit={ validateAndUpdate } className={ styles.metadataForm }>
+        <span><em>On this screen, you will fill out information directly related to the game.</em></span>
         <TextField 
           id="name"
           inputProps={{ maxLength: NAME_LENGTH_MAX }}
@@ -200,7 +201,7 @@ function MetadataForm() {
               />
             </div>
 
-            <span onClick={ openPopup } className={ styles.creatorUpload }>
+            <span onClick={ openPopup } className="hyperlink">
               Creator missing from list? Click here to upload a creator!
             </span>
           </> 

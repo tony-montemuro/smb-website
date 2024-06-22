@@ -22,14 +22,3 @@
 .metadataForm button {
     width: fit-content;
 }
-
-.creatorUpload:hover {
-    color: rgb(var(--color-link-hover));
-    cursor: pointer;
-    text-decoration: underline;
-}
-
-.creatorUpload {
-    color: rgb(var(--color-link));
-    width: fit-content;
-}

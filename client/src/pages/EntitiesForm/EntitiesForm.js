@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { useContext, useReducer } from "react";
+import { useContext, useReducer, useState } from "react";
 import { GameAddContext, MessageContext } from "../../utils/Contexts";
 import Read from "../../database/read/Read.js";
 
@@ -11,6 +11,9 @@ const EntitiesForm = (setSelectData) => {
 
     // keys object from game add context
     const { keys } = useContext(GameAddContext);
+
+    /* ===== STATES ===== */
+    const [addEntity, setAddEntity] = useState(false);
 
     /* ===== VARIABLES ===== */
     const defaultVals = {
@@ -46,9 +49,10 @@ const EntitiesForm = (setSelectData) => {
         // a.) field: specifies which field of the form the reducer should modify
         // b.) data: specifies the new value that the reducer should use to modify form[field]
         // c.) name: specifies the name of the entity we are currently interacting with
-    // POSTCONDITIONS (4 possible outcomes):
+    // POSTCONDITIONS (5 possible outcomes):
     // if the type field is `insertValues`, we add new value to the `name` array, and update our values object
     // if the type is `updateValues`, we update the value already current to the `name` array, and update our values object
+    // if the type is `values`, we simply update the values object using data
     // if the type is `error`, we simply update the error object using data
     // otherwise, this function does nothing 
     const reducer = (state, action) => {
@@ -73,6 +77,8 @@ const EntitiesForm = (setSelectData) => {
                 updatedValues = { ...state.values, [name]: updated };
                 updateLocal(updatedValues);
                 return { ...state, values: updatedValues };
+            case "values":
+                return { ...state, values: { ...state.values, ...data } };
 			case "error":
                 return { ...state, error: { ...state.error, ...data } };
 			default:
@@ -88,7 +94,23 @@ const EntitiesForm = (setSelectData) => {
     // db functions
     const { queryAll } = Read();
 
-    // FUNCTION 3: fetchSelectData - function that grabs all the data we need for the select elements in the form
+    // FUNCTION 3: populateForm - function that executes when the EntitiesForm component mounts
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the metadata key is stored locally, we need to match the form with this data
+    // otherwise, this function does nothing
+    const populateForm = async () => {
+        // first, let's try to grab form data. if it does not exist, return early
+        const formData = JSON.parse(localStorage.getItem(entitiesKey));
+        if (!formData) {
+            return;
+        }
+        
+        // now, let's update our form, and also get the creator name from the database
+        dispatchForm({ type: "values", data: formData });
+    };
+
+    // FUNCTION 4: fetchSelectData - function that grabs all the data we need for the select elements in the form
     // PRECONDITIONS (1 condition):
     // this function should be called when the `EntitiesForm` component mounts
     // POSTCONDITIONS (2 possible outcomes):
@@ -116,37 +138,48 @@ const EntitiesForm = (setSelectData) => {
         }
     };
 
-    // FUNCTION 4: handleInsert - function that is called when the user adds a new select row
+    // FUNCTION 5: handleInsert - function that is called when the user adds a new select row
     // PRECONDITIONS (3 parameters):
-    // 1.) e: the event object generated when the user makes a change to the selector
+    // 1.) e: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - should be equal to the number of entities currently present
     // 3.) entityName: a string that contains the name of the entity we are modifying 
     // POSTCONDITIONS (2 possible outcome):
     // if the user selected a non-empty value, the new entity is formed, and the form data is updated to include the new
     // entity
     // if the user selected an empty value, this function will ignore the change and do nothing
-    const handleInsert = (e, id, entityName) => {
-        const value = e.target.value;
-
+    const handleInsert = (value, id, entityName) => {
         if (value) {
             dispatchForm({ type: "insertValues", data: { id, [entityName]: parseInt(value) }, name: entityName });
         }
     };
 
-    // FUNCTION 5: handleUpdate - function that is called when the user updateds an existing row
+    // FUNCTION 6: handleUpdate - function that is called when the user updateds an existing row
     // PRECONDITIONS (3 parameters):
-    // 1.) e: the event object generated when the user makes a change to the selector
+    // 1.) e: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - should be equal to the number of entities currently present
     // 3.) entityName: a string that contains the name of the entity we are modifying 
     // POSTCONDITIONS (2 possible outcomes):
     // if the user select a non-empty value, the entity will be updated
     // otherwise, the system will delete the entity
-    const handleUpdate = (e, id, entityName) => {
-        const value = e.target.value;
-    dispatchForm({ type: "updateValues", data: { id, [entityName]: value ? parseInt(value) : value }, name: entityName });
+    const handleUpdate = (value, id, entityName) => {
+        dispatchForm({ type: "updateValues", data: { id, [entityName]: value ? parseInt(value) : value }, name: entityName });
     }
 
-    return { form, fetchSelectData, handleInsert, handleUpdate };
+    // FUNCTION 7: openPopup - function that is called when the user wishes to open the `EntityAddForm`
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // the `addEntity` state is updated to "true", rendering the popup
+    const openPopup = () => setAddEntity(true);
+
+    return { 
+        form,
+        addEntity,
+        populateForm,
+        fetchSelectData,
+        handleInsert,
+        handleUpdate, 
+        openPopup 
+    };
 };
 
 /* ===== EXPORTS ===== */

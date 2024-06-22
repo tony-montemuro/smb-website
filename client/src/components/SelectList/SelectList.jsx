@@ -6,9 +6,9 @@ function SelectList({ entities, inputData, selectData }) {
   /* ===== SELECT LIST COMPONENT ===== */
   return (
     <div className={ styles.selectList }>
-      <span>{ inputData.label }</span>
+      <span><strong>{ inputData.label }</strong></span>
       { entities.map(entity => (
-        <Selector 
+        <Selector
           inputData={ inputData } 
           selectData={ selectData }
           value={ entity[selectData.entityName] }

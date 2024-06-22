@@ -7,10 +7,11 @@ function Selector({ inputData, selectData, value, handleChange, id }) {
     <div className={ styles.selector }>
       <TextField
         id={ `${ inputData.id }_${ id }` }
-        onChange={ e => handleChange(e, id, selectData.entityName) }
+        onChange={ e => handleChange(e.target.value, id, selectData.entityName) }
         placeholder={ selectData.entityName }
         select
         SelectProps={ { native: true } }
+        sx={ { width: "fit-content" } }
         value={ value }
         variant="filled"
       >
@@ -24,7 +25,7 @@ function Selector({ inputData, selectData, value, handleChange, id }) {
           </option>
         ))}
       </TextField>
-      <button type="button" disabled={ !value }>Delete</button>
+      <button type="button" disabled={ !value } onClick={ () => handleChange("", id, selectData.entityName) } >Delete</button>
     </div>
   );
 };

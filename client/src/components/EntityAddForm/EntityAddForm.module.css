@@ -1,0 +1,19 @@
+.entityAddForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.entityAddForm h1 {
+    margin: 0;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form button {
+    width: fit-content;
+}

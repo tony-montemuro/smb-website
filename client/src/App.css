@@ -188,3 +188,14 @@ input[type=file], input[type=file]::-webkit-file-upload-button {
 .cancel:disabled:hover {
     background-color: transparent;
 }
+
+.hyperlink {
+    color: rgb(var(--color-link));
+    width: fit-content;
+}
+
+.hyperlink:hover {
+    color: rgb(var(--color-link-hover));
+    cursor: pointer;
+    text-decoration: underline;
+}
