@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
-import styles from "./EntityAddForm.module.css";
+import styles from "./EntityAddForm.module.css"; 
+import EntitiyAddFormLogic from "./EntityAddForm.js";
 import FrontendHelper from "../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
@@ -8,80 +9,94 @@ function EntityAddForm() {
   const RULE_HEIGHT = 8;
   const RULE_MAX_LENGTH = 1024;
 
+  /* ===== STATES & VARIABLES ===== */
+  const { form, handleChange, handleSubmit } = EntitiyAddFormLogic();
+
   /* ===== ENTITY ADD FORM ===== */
   return (
     <div className={ styles.entityAddForm }>
       <h1>Add New Entities</h1>
 
       { /* Monkey form */ }
-      <SingleFieldForm entityName="monkey" handleChange={ () => {} } handleSubmit={ () => {} } />
+      <SingleFieldForm 
+        entityName="monkey"
+        form={ form } 
+        handleChange={ handleChange } 
+        handleSubmit={ handleSubmit } 
+      />
 
       { /* Platform form */ }
-      <form className={ styles.form }>
+      <form id="platform" className={ styles.form } onSubmit={ handleSubmit }>
         <span><strong>Platform</strong></span>
         <TextField
           id="platform_name"
           label="Platform"
-          onChange={ () => {} }
+          onChange={ handleChange }
           required
-          value={ null }
+          value={ form.platform.platform_name }
           variant="filled"
         />
         <TextField
           id="platform_abb"
           label="Platform Abbreviation"
-          onChange={ () => {} }
+          onChange={ handleChange }
           required
-          value={ null }
+          value={ form.platform.platform_abb }
           variant="filled"
         />
-        <button type="submit" onClick={ () => {} }>Add</button>
+        <button type="submit">Add</button>
       </form>
 
-      <SingleFieldForm entityName="region" handleChange={ () => {} } handleSubmit={ () => {} } />
-      <form className={ styles.form }>
+      <SingleFieldForm 
+        entityName="region" 
+        form={ form }
+        handleChange={ handleChange } 
+        handleSubmit={ handleSubmit } 
+      />
+      <form id="rule" className={ styles.form } onSubmit={ handleSubmit }>
         <span><strong>Rule</strong></span>
         <TextField
           fullWidth
-          // helperText={ `${ form.values.body.length }/${ BODY_MAX_LENGTH }` }
+          helperText={ `${ form.rule.rule_name.length }/${ RULE_MAX_LENGTH }` }
           id="rule_name"
           inputProps={ { maxLength: RULE_MAX_LENGTH } }
           label="Rule"
           multiline
           placeholder={ `Must be under ${ RULE_MAX_LENGTH } characters` }
           rows={ RULE_HEIGHT }
-          onChange={ () => {} }
+          onChange={ handleChange }
           required
-          value={ null }
+          value={ form.rule.rule_name }
           variant="filled"
         />
-        <button type="submit" onClick={ () => {} }>Add</button>
+        <button type="submit">Add</button>
       </form>
 
     </div>
   );
 };
 
-function SingleFieldForm({ entityName, handleChange, handleSubmit }) {
+function SingleFieldForm({ entityName, form, handleChange, handleSubmit }) {
   /* ===== FUNCTIONS ===== */
   const { capitalize } = FrontendHelper();
 
   /* ===== VARIABLES ===== */
   const capitalizedEntityName = capitalize(entityName);
+  const value = form[entityName][`${ entityName }_name`];
 
   /* ===== SINGLE FIELD FORM COMPONENT ===== */
   return (
-    <form className={ styles.form }>
+    <form id={ entityName } className={ styles.form } onSubmit={ handleSubmit }>
       <span><strong>{ capitalizedEntityName }</strong></span>
       <TextField 
         id={ `${ entityName }_name` }
         label={ capitalizedEntityName }
         onChange={ handleChange }
         required
-        value={ null }
+        value={ value }
         variant="filled"
       />
-      <button type="submit" onClick={ () => handleSubmit(entityName) }>Add</button>
+      <button type="submit">Add</button>
     </form>
   );
 };
