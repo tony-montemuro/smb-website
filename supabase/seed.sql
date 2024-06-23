@@ -4327,6 +4327,8 @@ INSERT INTO "public"."monkey" ("id", "monkey_name") VALUES
 	(16, 'SEGA Game Gear'),
 	(20, 'Custom');
 
+SELECT SETVAL(pg_get_serial_sequence('"public"."monkey"', 'id'), (SELECT MAX("id") FROM "public"."monkey"), true);
+
 
 --
 -- Data for Name: platform; Type: TABLE DATA; Schema: public; Owner: postgres
@@ -4361,6 +4363,8 @@ INSERT INTO "public"."platform" ("id", "platform_name", "platform_abb") VALUES
 	(26, 'Amazon Luna', 'LUNA'),
 	(27, 'Emulator', 'EMU');
 
+SELECT SETVAL(pg_get_serial_sequence('"public"."platform"', 'id'), (SELECT MAX("id") FROM "public"."platform"), true);
+
 
 --
 -- Data for Name: region; Type: TABLE DATA; Schema: public; Owner: postgres
@@ -4373,6 +4377,8 @@ INSERT INTO "public"."region" (id, region_name) VALUES
 	(4, 'PAL 60'),
 	(5, 'WW'),
 	(6, 'PAL');
+
+SELECT SETVAL(pg_get_serial_sequence('"public"."region"', 'id'), (SELECT MAX("id") FROM "public"."region"), true);
 
 
 --
@@ -10505,6 +10511,7 @@ https://github.com/MorsGames/BananaModManager/blob/main/LegalMods.md'),
   (35, 'You are allowed to turn off music and SFX through the in-game menu.'),
 	(36, 'If you are using a custom monkey, please select ''Custom'' as the monkey of your submission.');
 
+SELECT SETVAL(pg_get_serial_sequence('"public"."rule"', 'id'), (SELECT MAX("id") FROM "public"."rule"), true);
 
 --
 -- Data for Name: game_rule; Type: TABLE DATA; Schema: public; Owner: postgres
