@@ -4,13 +4,13 @@ import EntitiyAddFormLogic from "./EntityAddForm.js";
 import FrontendHelper from "../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
-function EntityAddForm() {
+function EntityAddForm({ submitting, setSubmitting, refreshSelectDataFunc }) {
   /* ===== VARIABLES ===== */
   const RULE_HEIGHT = 8;
   const RULE_MAX_LENGTH = 1024;
 
   /* ===== STATES & VARIABLES ===== */
-  const { form, handleChange, handleSubmit } = EntitiyAddFormLogic();
+  const { form, handleChange, handleSubmit } = EntitiyAddFormLogic(setSubmitting, refreshSelectDataFunc);
 
   /* ===== ENTITY ADD FORM ===== */
   return (
@@ -22,7 +22,8 @@ function EntityAddForm() {
         entityName="monkey"
         form={ form } 
         handleChange={ handleChange } 
-        handleSubmit={ handleSubmit } 
+        handleSubmit={ handleSubmit }
+        disabled={ submitting }
       />
 
       { /* Platform form */ }
@@ -44,14 +45,15 @@ function EntityAddForm() {
           value={ form.platform.platform_abb }
           variant="filled"
         />
-        <button type="submit">Add</button>
+        <button type="submit" disabled={ submitting }>Add</button>
       </form>
 
       <SingleFieldForm 
         entityName="region" 
         form={ form }
         handleChange={ handleChange } 
-        handleSubmit={ handleSubmit } 
+        handleSubmit={ handleSubmit }
+        disabled={ submitting }
       />
       <form id="rule" className={ styles.form } onSubmit={ handleSubmit }>
         <span><strong>Rule</strong></span>
@@ -69,14 +71,14 @@ function EntityAddForm() {
           value={ form.rule.rule_name }
           variant="filled"
         />
-        <button type="submit">Add</button>
+        <button type="submit" disabled={ submitting }>Add</button>
       </form>
 
     </div>
   );
 };
 
-function SingleFieldForm({ entityName, form, handleChange, handleSubmit }) {
+function SingleFieldForm({ entityName, form, handleChange, handleSubmit, disabled }) {
   /* ===== FUNCTIONS ===== */
   const { capitalize } = FrontendHelper();
 
@@ -96,7 +98,7 @@ function SingleFieldForm({ entityName, form, handleChange, handleSubmit }) {
         value={ value }
         variant="filled"
       />
-      <button type="submit">Add</button>
+      <button type="submit" disabled={ disabled }>Add</button>
     </form>
   );
 };

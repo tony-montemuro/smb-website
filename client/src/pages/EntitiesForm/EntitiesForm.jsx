@@ -11,6 +11,7 @@ import SelectList from "../../components/SelectList/SelectList.jsx";
 function EntitiesForm() {
   /* ===== STATES ===== */
   const [selectData, setSelectData] = useState(null);
+  const [submittingEntity, setSubmittingEntity] = useState(false);
 
   /* ===== FUNCTIONS ===== */
 
@@ -22,7 +23,8 @@ function EntitiesForm() {
     fetchSelectData, 
     handleInsert, 
     handleUpdate,
-    openPopup
+    openPopup,
+    closePopup
   } = EntitiesFormLogic(setSelectData);
 
   /* ===== EFFECTS ===== */
@@ -39,11 +41,15 @@ function EntitiesForm() {
     <Container title="Game Entities">
       <Popup 
 				renderPopup={ addEntity } 
-				setRenderPopup={ () => {} } 
+				setRenderPopup={ closePopup } 
 				width="1000px"
 				disableClose={ null }
 			>
-				<EntityAddForm />
+				<EntityAddForm 
+          submitting={ submittingEntity } 
+          setSubmitting={ setSubmittingEntity }
+          refreshSelectDataFunc={ fetchSelectData }
+        />
 			</Popup>
 
       <div className={ styles.entitiesForm }>

@@ -239,7 +239,7 @@ const MetadataForm = () => {
     // when the user attempts to close the popup, we set the `addCreator` state to `false` to unrender the popup
     const closePopup = () => setAddCreator(false);
 
-    // FUNCTION 11: refreshUserSearch - function that is called that will refresh the user search when trigger
+    // FUNCTION 11: refreshUserSearch - function that is called that will refresh the user search when triggered
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // because the `triggerUserSearch` state is a boolean, to guarantee the user search refreshes, we just need to

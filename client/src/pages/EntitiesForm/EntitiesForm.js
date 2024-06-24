@@ -171,6 +171,12 @@ const EntitiesForm = (setSelectData) => {
     // the `addEntity` state is updated to "true", rendering the popup
     const openPopup = () => setAddEntity(true);
 
+    // FUNCTION 10: closePopup - function that is called when the user wishes to close the `EntityAddForm`
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // the `addEntity` state is updated to "false", unrendering the popup
+    const closePopup = () => setAddEntity(false);
+
     return { 
         form,
         addEntity,
@@ -178,7 +184,8 @@ const EntitiesForm = (setSelectData) => {
         fetchSelectData,
         handleInsert,
         handleUpdate, 
-        openPopup 
+        openPopup,
+        closePopup
     };
 };
 
