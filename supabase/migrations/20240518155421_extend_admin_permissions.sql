@@ -324,3 +324,7 @@ ADD CONSTRAINT platform_name_key UNIQUE (platform_name);
 
 ALTER TABLE platform
 ADD CONSTRAINT platform_abb_key UNIQUE (platform_abb);
+
+-- Add unique constraint to `region` table
+ALTER TABLE region
+ADD CONSTRAINT region_name_key UNIQUE (region_name);
