@@ -314,3 +314,13 @@ SELECT SETVAL(pg_get_serial_sequence('rule', 'id'), (SELECT MAX(id) FROM rule), 
 -- Add character limit to `rule` table on `rule_name` attribute
 ALTER TABLE rule
 ALTER rule_name TYPE VARCHAR(1024);
+
+-- Separate out unique constraint on platform table
+ALTER TABLE platform
+DROP CONSTRAINT platform_name_abb_key;
+
+ALTER TABLE platform
+ADD CONSTRAINT platform_name_key UNIQUE (platform_name);
+
+ALTER TABLE platform
+ADD CONSTRAINT platform_abb_key UNIQUE (platform_abb);
