@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts"; 
 import { useContext, useState } from "react";
+import GameHelper from "../../helper/GameHelper";
 import RPCRead from "../../database/read/RPCRead";
 
 const Totalizer = () => {
@@ -16,6 +17,9 @@ const Totalizer = () => {
 
     // database functions
     const { getTotals } = RPCRead();
+
+    // helper functions
+    const { getDecimals } = GameHelper();
 
     // FUNCTION 1: fetchTotals - given a game, category, & type, use the submissions to generate a totals object
     // PRECONDITIONS (3 parameters):
@@ -43,10 +47,20 @@ const Totalizer = () => {
         };
     };
 
-    return { 
-        totals,
-        fetchTotals
+    // TODO: this is a fine temporary solution, but should be generalized better - need to rework timer system!
+    // FUNCTION 2: getDecimalsByCategory - given a game object and category, determine the decimals of the category
+    // PRECONDITIONS (2 parameter):
+    // 1.) game: an object containing information about the game defined in the path
+    // 2.) category: a string value representing a valid category
+    // POSTCONDITIONS (2 possible outcomes):
+    // if even a single level exists with a `timer_type` ending in 'msec', we return 3
+    // otherwise, return 2
+    const getDecimalsByCategory = (game, category) => {
+        const categoryLevels = game.mode.filter(mode => mode.category === category).map(mode => mode.level).flat(1);
+        return getDecimals(categoryLevels);
     };
+
+    return { totals, fetchTotals, getDecimalsByCategory };
 };
 
 /* ===== EXPORTS ===== */

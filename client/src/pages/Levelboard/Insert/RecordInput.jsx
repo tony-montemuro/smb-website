@@ -92,6 +92,22 @@ function RecordInput({ form, handleChange, timerType, type }) {
           variant="filled"
         />
       }
+      { timerType.includes("msec") &&
+        <TextField
+          color={ form.error.millisecond ? "error" : "primary" }
+          fullWidth
+          helperText={ form.error.millisecond ? form.error.millisecond : null }
+          id="millisecond"
+          inputProps={ { 
+            inputMode: "numeric",
+            pattern: "[0-9]*",
+          } }
+          label="Decimals"
+          onChange={ handleChange }
+          value={ form.values.millisecond }
+          variant="filled"
+        />
+      }
     </>
   );
   

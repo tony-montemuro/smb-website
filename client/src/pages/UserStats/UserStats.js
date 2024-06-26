@@ -1,9 +1,10 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import GameHelper from "../../helper/GameHelper";
 import RPCRead from "../../database/read/RPCRead";
 
-const UserStats = () => {
+const UserStats = (decimalPlaces) => {
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
@@ -17,7 +18,28 @@ const UserStats = () => {
     // database functions
     const { getTotals, getMedals, getUserRankings } = RPCRead();
 
-    // FUNCTION 1: fetchUserStats - given path information & game object, fetch the stats object
+    // helper functions
+    const { getDecimals } = GameHelper();
+
+    // TODO: this is a fine temporary solution, but should be generalized better - need to rework timer system!
+    // FUNCTION 1: determineDecimals - given the rankings object, determine the decimals of the category
+    // PRECONDITIONS (1 parameter):
+    // 1.) rankings: an object containing information about the user's ranking on every level in the category
+    // POSTCONDITIONS (2 possible outcomes):
+    // if even a single level exists with a `timer_type` ending in 'msec', set `decimalPlaces.current` to 3
+    // otherwise, set `decimalPlaces.current` to 2
+    const determineDecimals = rankings => {
+        const levelSets = Object.values(rankings);
+        let levels = [];
+
+        levelSets.forEach(set => {
+            levels = levels.concat(set.map(ranking => ranking.level));
+        });
+
+        decimalPlaces.current = getDecimals(levels);
+    };
+
+    // FUNCTION 2: fetchUserStats - given path information & game object, fetch the stats object
     // PRECONDITIONS (3 parameters):
     // 1.) game: an object containing information about the game defined in the path
     // 2.) profileId: an integer representing the id of the user who's info we want to query
@@ -62,6 +84,7 @@ const UserStats = () => {
                     total: liveTotal
                 }
             };
+            determineDecimals(allRankings);
             setStats(stats);
 
         } catch (error) {
