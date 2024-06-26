@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import styles from "./Stats.module.css";
 import FrontendHelper from "../../../helper/FrontendHelper";
 
-function Total({ total, filter }) {
+function Total({ total, filter, decimalPlaces }) {
   /* ===== VARIABLES ====== */
   const location = useLocation();
   const path = location.pathname.split("/");
@@ -32,7 +32,7 @@ function Total({ total, filter }) {
             <tbody>
               <tr>
                 <td>{ total.position }</td>
-                <td>{ secondsToHours(total.total, type) }</td>
+                <td>{ secondsToHours(total.total, type, decimalPlaces) }</td>
               </tr>
             </tbody>
 

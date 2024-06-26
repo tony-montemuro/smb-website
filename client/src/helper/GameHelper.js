@@ -143,7 +143,7 @@ const GameHelper = () => {
         return modes;
     };
 
-    // FUNCTION 5: fetchLevelFromGame: given a game object, level name, & category, determine if the level is present in the object, and
+    // FUNCTION 5: fetchLevelFromGame - given a game object, level name, & category, determine if the level is present in the object, and
     // return it
 	// PRECONDITIONS (4 parameters):
 	// 1.) game: an object containing information about the game defined in the path
@@ -166,7 +166,25 @@ const GameHelper = () => {
 		return null;
 	};
 
-    return { cleanGameObject, getGameCategories, getCategoryTypes, getRelevantModes, fetchLevelFromGame };
+    // TODO: this is a fine temporary solution, but should be generalized better - need to rework timer system!
+    // FUNCTION 6: getDecimals - function that takes an array of levels, and determines the decimals
+    // PRECONDITIONS (1 parameter):
+    // 1.) levels: an array of level objects, each should contain the `timer_type` field, or this function WILL fail!
+    // POSTCONDITIONS (2 possible outcomes):
+    // if even a single level exists with a `timer_type` ending in 'msec', we return 3
+    // otherwise, return 2
+    const getDecimals = levels => {
+        return levels.some(level => level.timer_type !== null && level.timer_type.endsWith("msec")) ? 3 : 2;
+    };
+
+    return { 
+        cleanGameObject,
+        getGameCategories,
+        getCategoryTypes,
+        getRelevantModes,
+        fetchLevelFromGame,
+        getDecimals
+    };
 };
 
 /* ===== EXPORTS ===== */

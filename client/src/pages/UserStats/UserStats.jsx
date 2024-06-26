@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { CategoriesContext, ProfileContext, MessageContext } from "../../utils/Contexts";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./UserStats.module.css";
 import Container from "../../components/Container/Container.jsx";
@@ -44,15 +44,17 @@ function UserStats() {
   }
   const errorMessage = "User page does not exist.";
 
+  /* ===== REFS ===== */
+
+  // use this to store decimalPlaces, which can only be calculated after data fetch
+  const decimalPlaces = useRef(null);
+
   /* ===== STATES & FUNCTIONS ===== */
   const [game, setGame] = useState(undefined);
   const [allLiveFilter, setAllLiveFilter] = useState("live");
 
   // hooks and functions from the js file
-  const { 
-    stats,
-    fetchUserStats
-  } = UserStatsLogic();
+  const { stats, fetchUserStats } = UserStatsLogic(decimalPlaces);
 
   /* ===== EFFECTS ===== */
 
@@ -122,7 +124,7 @@ function UserStats() {
           { /* Stats tables - render these only if it's a practice mode category */ }
           { isPracticeMode &&
             <>
-              <Total total={ stats[allLiveFilter].total } filter={ allLiveFilter } />
+              <Total total={ stats[allLiveFilter].total } filter={ allLiveFilter } decimalPlaces={ decimalPlaces.current } />
               <hr />
               <Medals medals={ stats[allLiveFilter].medals } filter={ allLiveFilter } />
               <hr />
