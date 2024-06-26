@@ -36,7 +36,6 @@ const UserStats = (decimalPlaces) => {
             levels = levels.concat(set.map(ranking => ranking.level));
         });
 
-        console.log(levels);
         decimalPlaces.current = getDecimals(levels);
     };
 
