@@ -15,3 +15,7 @@
 .selector button {
     height: fit-content;
 }
+
+.error {
+    padding-left: 14px;
+}

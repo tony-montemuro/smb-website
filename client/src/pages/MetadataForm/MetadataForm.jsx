@@ -38,7 +38,7 @@ function MetadataForm() {
   const ABB_LENGTH_MAX = 12;
   const DATE_MIN = "2000-01-01";
   const NAME_LENGTH_MAX = 256;
-  const USERS_PER_PAGE = 5;
+  const USERS_PER_PAGE = 10;
   const userRowOptions = {
     isDetailed: false,
     disableLink: true,

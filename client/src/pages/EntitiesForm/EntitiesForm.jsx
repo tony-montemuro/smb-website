@@ -7,6 +7,8 @@ import EntityAddForm from "../../components/EntityAddForm/EntityAddForm.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import Popup from "../../components/Popup/Popup.jsx";
 import SelectList from "../../components/SelectList/SelectList.jsx";
+import Username from "../../components/Username/Username.jsx";
+import UserSearch from "../../components/UserSearch/UserSearch.jsx";
 
 function EntitiesForm() {
   /* ===== STATES ===== */
@@ -15,7 +17,7 @@ function EntitiesForm() {
 
   /* ===== FUNCTIONS ===== */
 
-  // sstates & functions from the js file
+  // states & functions from the js file
   const { 
     form, 
     addEntity, 
@@ -23,9 +25,20 @@ function EntitiesForm() {
     fetchSelectData, 
     handleInsert, 
     handleUpdate,
+    handleModeratorInsert,
+    handleModeratorDelete,
     openPopup,
-    closePopup
+    closePopup,
+    validateAndUpdate
   } = EntitiesFormLogic(setSelectData);
+
+  /* ===== VARIABLES ===== */
+  const USERS_PER_PAGE = 10;
+  const userRowOptions = {
+    isDetailed: false,
+    disableLink: true,
+    onUserRowClick: handleModeratorInsert
+  };
 
   /* ===== EFFECTS ===== */
 
@@ -52,7 +65,7 @@ function EntitiesForm() {
         />
 			</Popup>
 
-      <div className={ styles.entitiesForm }>
+      <form className={ styles.entitiesForm } onSubmit={ validateAndUpdate }>
         <span>
           <em>
             On this screen, you will select and define the <strong>entities</strong> for each game.&nbsp;
@@ -61,6 +74,7 @@ function EntitiesForm() {
             appear on the website!</strong>
           </em>
         </span>
+
         <div className={ styles.input }>
           <SelectList
             entities={ form.values.monkey }
@@ -68,7 +82,8 @@ function EntitiesForm() {
               id: "monkey",
               label: "Monkeys",
               handleChange: handleUpdate,
-              handleInsert: handleInsert
+              handleInsert: handleInsert,
+              error: form.error.monkey
             }}
             selectData={{ 
               entities: selectData.monkey,
@@ -78,6 +93,7 @@ function EntitiesForm() {
           />
           <EntityAddLink entityName="monkey" openPopup={ openPopup } />
         </div>
+
         <div className={ styles.input }>
           <SelectList
             entities={ form.values.platform }
@@ -85,7 +101,8 @@ function EntitiesForm() {
               id: "platform",
               label: "Platforms",
               handleChange: handleUpdate,
-              handleInsert: handleInsert
+              handleInsert: handleInsert,
+              error: form.error.platform
             }}
             selectData={{ 
               entities: selectData.platform,
@@ -95,6 +112,7 @@ function EntitiesForm() {
           />
           <EntityAddLink entityName="platform" openPopup={ openPopup } />
         </div>
+
         <div className={ styles.input }>
           <SelectList
             entities={ form.values.region }
@@ -102,7 +120,8 @@ function EntitiesForm() {
               id: "region",
               label: "Regions",
               handleChange: handleUpdate,
-              handleInsert: handleInsert
+              handleInsert: handleInsert,
+              error: form.error.region
             }}
             selectData={{ 
               entities: selectData.region,
@@ -112,6 +131,7 @@ function EntitiesForm() {
           />
           <EntityAddLink entityName="region" openPopup={ openPopup } />
         </div>
+
         <div className={ styles.input }>
           <SelectList
             entities={ form.values.rule }
@@ -119,7 +139,8 @@ function EntitiesForm() {
               id: "rule",
               label: "Rules",
               handleChange: handleUpdate,
-              handleInsert: handleInsert
+              handleInsert: handleInsert,
+              error: form.error.rule
             }}
             selectData={{ 
               entities: selectData.rule,
@@ -129,7 +150,25 @@ function EntitiesForm() {
           />
           <EntityAddLink entityName="rule" openPopup={ openPopup } />
         </div>
-      </div>
+
+        <div className={ styles.input }>
+          <h3>Moderators</h3>
+          <span>Select moderators via user search.</span>
+          <div className={ styles.moderatorList }>
+            { form.values.moderator.map((moderator, index) => {
+              return (
+                <div className={ `${ styles.moderator } ${ (index+1) % 2 ? "even" : "odd" }` } key={ moderator.id }>
+                  <Username profile={ moderator } disableLink />
+                  <button type="button" onClick={ () => handleModeratorDelete(moderator.id) }>Delete</button>
+                </div>
+              );
+            })}
+          </div>
+          <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ userRowOptions } />
+        </div>
+
+        <button type="submit">Validate</button>
+      </form>
     </Container>
 };
 

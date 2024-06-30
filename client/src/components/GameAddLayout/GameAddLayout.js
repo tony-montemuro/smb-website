@@ -75,9 +75,9 @@ const GameAddLayout = (page, setPage) => {
             const newUnlockedPages = [...page.unlocked, nextPageNumber];
             setPage({ ...page, unlocked: newUnlockedPages });
             localStorage.setItem(unlockedPagesKey, JSON.stringify(newUnlockedPages));
-            addMessage(`Information validated! Please proceed to the ${ pageNames[numPages] } section.`);
+            addMessage(`Information validated! Please proceed to the ${ pageNames[numPages] } section.`, "success", 8000);
         } else {
-            addMessage("Information re-validated!");
+            addMessage("Information re-validated!", "success", 5000);
         }
     };
 

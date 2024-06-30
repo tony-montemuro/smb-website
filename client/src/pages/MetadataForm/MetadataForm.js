@@ -8,7 +8,7 @@ import ValidationHelper from "../../helper/ValidationHelper";
 const MetadataForm = () => {
     /* ===== CONTEXTS ===== */
 
-    // keys objectg & unlock page function from game add context
+    // keys object & unlock page function from game add context
     const { keys, unlockNextPage } = useContext(GameAddContext);
 
     // add message function from message context
@@ -208,6 +208,8 @@ const MetadataForm = () => {
         if (!Object.values(error).some(e => e !== undefined)) {
             unlockNextPage();
             updateLocal();
+        } else {
+            addMessage("Form not validated, please check error messages.", "error", 8000);
         }
 
         dispatchForm({ field: "error", value: error });

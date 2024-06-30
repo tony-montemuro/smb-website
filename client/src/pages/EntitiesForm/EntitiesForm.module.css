@@ -4,8 +4,27 @@
     gap: 10px;
 }
 
+.entitiesForm h3 {
+    margin: 0;
+}
+
 .input {
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+.moderatorList {
+    gap: 0px;
+    padding-bottom: 5px;
+}
+
+.moderator {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px;
+}
+
+.entitiesForm button {
+    width: fit-content;
 }

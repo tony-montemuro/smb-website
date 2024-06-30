@@ -1,12 +1,13 @@
 /* ===== IMPORTS ===== */
-import Selector from "./Selector.jsx";
 import styles from "./SelectList.module.css";
+import FormHelperText from "@mui/material/FormHelperText";
+import Selector from "./Selector.jsx";
 
 function SelectList({ entities, inputData, selectData }) {
   /* ===== SELECT LIST COMPONENT ===== */
   return (
     <div className={ styles.selectList }>
-      <span><strong>{ inputData.label }</strong></span>
+      <h3>{ inputData.label }</h3>
       { entities.map(entity => (
         <Selector
           inputData={ inputData } 
@@ -24,6 +25,7 @@ function SelectList({ entities, inputData, selectData }) {
         handleChange={ inputData.handleInsert }
         id={ entities.length > 0 ? entities.at(-1).id+1 : 1 }
       />
+      { inputData.error && <FormHelperText className={ styles.error } error>{ inputData.error }</FormHelperText> }
     </div>
   );
 };
