@@ -1,0 +1,9 @@
+.structureForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.structureForm h3 {
+    margin: 0;
+}

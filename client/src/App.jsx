@@ -30,6 +30,7 @@ import Records from "./pages/Records/Records.jsx";
 import Reports from "./pages/Reports/Reports.jsx";
 import Resources from "./pages/Resources/Resources.jsx";
 import SignIn from "./pages/SignIn/SignIn.jsx";
+import StructureForm from "./pages/StructureForm/StructureForm.jsx";
 import SubmissionHistory from "./pages/SubmissionHistory/SubmissionHistory.jsx";
 import Support from "./pages/Support/Support.jsx";
 import Totalizer from "./pages/Totalizer/Totalizer.jsx";
@@ -149,6 +150,7 @@ function App() {
                 <Route path="game-add" element={ <GameAddLayout /> } >
                   <Route index element={ <MetadataForm /> } />
                   <Route path="game-entities" element={ <EntitiesForm /> } />
+                  <Route path="game-structure" element={ <StructureForm /> } />
                 </Route>
               </Route>
               <Route path="moderator" element={ <ModeratorLayout /> } >
