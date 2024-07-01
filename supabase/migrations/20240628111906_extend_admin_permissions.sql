@@ -328,3 +328,7 @@ ADD CONSTRAINT platform_abb_key UNIQUE (platform_abb);
 -- Add unique constraint to `region` table
 ALTER TABLE region
 ADD CONSTRAINT region_name_key UNIQUE (region_name);
+
+-- Add unique constraint to `category` table
+ALTER TABLE category
+ADD CONSTRAINT category UNIQUE (name, practice);
