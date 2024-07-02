@@ -10,8 +10,9 @@ function Rule({ rule }) {
   /* ===== RULE COMPONENT ===== */
   return (
     <li>
-      { splitRule(rule).map(line => {
-        return <p key={ line }>{ line }</p>;
+      { splitRule(rule).map((line, index) => {
+        const key = `${ index }-${ line.trim() || "empty" }`;
+        return <p key={ key }>{ line }</p>;
       })}
     </li>
   );

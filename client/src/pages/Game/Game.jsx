@@ -29,6 +29,7 @@ function Game() {
   const abb = path[2];
   const category = path[3];
   const gameCategories = getGameCategories(game);
+  const firstCategory = gameCategories[0];
   
   /* ===== MEMOS ===== */
   const searchParams = useMemo(() => {
@@ -38,7 +39,7 @@ function Game() {
   }, [abb]);
 
   /* ===== STATES ===== */
-  const [selectedCategory, setSelectedCategory] = useState(category ? category : "main");
+  const [selectedCategory, setSelectedCategory] = useState(category ? category : firstCategory);
   const [selectedMode, setSelectedMode] = useState(null);
   const modes = game.mode.filter(mode => mode.category === selectedCategory);
 
@@ -55,7 +56,7 @@ function Game() {
   useEffect(() => {
     // special case: we are attempting to access a game page with a non-valid category
     if (category && !(gameCategories.includes(category))) {
-      setSelectedCategory("main");
+      setSelectedCategory(firstCategory);
       navigateTo(`/games/${ abb }`);
       return;
     }
