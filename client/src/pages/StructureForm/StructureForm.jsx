@@ -1,8 +1,25 @@
 /* ===== IMPORTS ===== */
+import { useEffect, useState } from "react";
 import styles from "./StructureForm.module.css";
 import Container from "../../components/Container/Container.jsx";
+import SelectList from "../../components/SelectList/SelectList.jsx";
+import StructureFormLogic from "./StructureForm.js";
 
 function StructureForm() {
+  /* ===== STATES & FUNCTIONS ===== */
+  const [categories, setCategories] = useState(undefined);
+
+  // states & functions from the js file
+  const { form, queryCategories, handleInsert, handleUpdate } = StructureFormLogic(setCategories);
+
+  /* ===== EFFECTS ===== */
+
+  // code that is executed when the component mounts
+  useEffect(() => {
+    queryCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /* ===== STRUCTURE FORM COMPONENT ===== */
   return (
     <Container title="Game Structure">
@@ -44,8 +61,25 @@ function StructureForm() {
             the user. This is the smallest level of division of charts.
           </li>
         </ul>
-        <h3>Categories</h3>
-        <span>Within a single game, a <strong>category</strong> is the largest grouping of charts. Charts in the same <strong>category</strong> are ranked together.</span>
+        
+        { /* Only render inputs if user has selected  */ }
+        { categories &&
+          <SelectList
+            entities={ form.values.category }
+            inputData={{
+              id: "category",
+              label: "Categories",
+              handleChange: handleUpdate,
+              handleInsert: handleInsert,
+              error: form.error.monkey
+            }}
+            selectData={{ 
+              entities: categories,
+              entityName: "category",
+              entityNameAlt: "name"
+            }}
+          />
+        }
       </form>
     </Container>
   );

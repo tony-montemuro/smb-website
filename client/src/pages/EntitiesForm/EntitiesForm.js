@@ -63,10 +63,10 @@ const EntitiesForm = (setSelectData) => {
         return usernameA.localeCompare(usernameB);
     };
 
-    // FUNCTION 3: reducer - function that executes each time the user attempts to update the from reducer hook
+    // FUNCTION 3: reducer - function that executes each time the user attempts to update the form reducer hook
     // PRECONDITIONS (2 parameters):
     // 1.) state: the state of the form object when the function is called
-    // 2.) action: an object with two fields:
+    // 2.) action: an object with three fields:
         // a.) field: specifies which field of the form the reducer should modify
         // b.) data: specifies the new value that the reducer should use to modify form[field]
         // c.) name: specifies the name of the entity we are currently interacting with
@@ -169,7 +169,7 @@ const EntitiesForm = (setSelectData) => {
     // 2.) entityName: the string representing the set of `entityName` we want to check
     // POSTCONDITIONS (2 possible outcomes):
     // if `data` is already present in `form.values[entityName]`, return true
-    // otherwise, return false
+    // otherwise, render an error message, & return false
     const isDuplicate = (data, entityName) => {
         const key = entityName === "moderator" ? "id" : entityName;
 

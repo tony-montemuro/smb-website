@@ -19,6 +19,7 @@ const GameAddLayout = (page, setPage) => {
         currentPage: "GAME_ADD_CURRENT_PAGE",
         metadata: "GAME_ADD_METADATA",
         entities: "GAME_ADD_ENTITIES",
+        structure: "GAME_ADD_STRUCTURE",
         unlockedPages: "GAME_ADD_UNLOCKED_PAGES"
     };
     const unlockedPagesKey = keys["unlockedPages"];
