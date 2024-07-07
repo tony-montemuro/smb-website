@@ -10,12 +10,13 @@ function StructureForm() {
   const [categories, setCategories] = useState(undefined);
 
   // states & functions from the js file
-  const { form, queryCategories, handleInsert, handleUpdate } = StructureFormLogic(setCategories);
+  const { form, populateForm, queryCategories, handleInsert, handleUpdate } = StructureFormLogic(setCategories);
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts
   useEffect(() => {
+    populateForm();
     queryCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -38,14 +39,14 @@ function StructureForm() {
             styles:
             <ol>
               <li>
-                <strong>"Practice Mode" style</strong> - This is a traditional grouping of charts, that the average user is most familiar with.
+                <strong>"Practice Mode" Style</strong> - This is a traditional grouping of charts, that the average user is most familiar with.
                 Submissions to charts within categories of this style are <strong>ranked by all 3 types:</strong> world records, totalizer, 
                 and medal table. High scores / fast time charts are <strong>restricted to descending order</strong>, meaning the higher the high 
                 score / fast time, the better. Some example "Practice Mode" style categories include Practice Mode, Miscellaneous
                 Practice Mode, Practice Mode (Jumps), & Supernova. <strong>Traditional IL charts should be within this style of category.</strong>
               </li>
               <li>
-                <strong>"Non-Practice Mode" style</strong> - This is a less common grouping of charts, that some users of the website may be familiar
+                <strong>"Non-Practice Mode" Style</strong> - This is a less common grouping of charts, that some users of the website may be familiar
                 with. Submissions to charts within categories of this style are <strong>only ranked by world records.</strong> However, high score /
                 fast time charts can have <strong>either ascending or descending order.</strong> Some example "Non-Practice Mode" style categories
                 include Challenge Mode, Party Games, & Time Attack. <strong>Non-traditional IL charts will typically be within this style
@@ -71,15 +72,19 @@ function StructureForm() {
               label: "Categories",
               handleChange: handleUpdate,
               handleInsert: handleInsert,
-              error: form.error.category,
-              valueAttribute: "abb"
+              error: form.error.category
             }}
             selectData={{ 
-              entities: categories,
+              entities: {
+                "practice_mode_style": categories.filter(category => category.practice),
+                "non-practice_mode_style": categories.filter(category => !category.practice)
+              },
               valueAttribute: "abb",
               entityName: "name"
             }}
-          />
+          >
+            <span>TODO: work on the next input!</span>
+          </SelectList>
         }
       </form>
     </Container>

@@ -83,8 +83,7 @@ function EntitiesForm() {
               label: "Monkeys",
               handleChange: handleUpdate,
               handleInsert: handleInsert,
-              error: form.error.monkey,
-              valueAttribute: "monkey"
+              error: form.error.monkey
             }}
             selectData={{ 
               entities: selectData.monkey,
@@ -103,8 +102,7 @@ function EntitiesForm() {
               label: "Platforms",
               handleChange: handleUpdate,
               handleInsert: handleInsert,
-              error: form.error.platform,
-              valueAttribute: "platform"
+              error: form.error.platform
             }}
             selectData={{ 
               entities: selectData.platform,
@@ -123,8 +121,7 @@ function EntitiesForm() {
               label: "Regions",
               handleChange: handleUpdate,
               handleInsert: handleInsert,
-              error: form.error.region,
-              valueAttribute: "region"
+              error: form.error.region
             }}
             selectData={{ 
               entities: selectData.region,
@@ -143,8 +140,7 @@ function EntitiesForm() {
               label: "Rules",
               handleChange: handleUpdate,
               handleInsert: handleInsert,
-              error: form.error.rule,
-              valueAttribute: "rule"
+              error: form.error.rule
             }}
             selectData={{ 
               entities: selectData.rule,

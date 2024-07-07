@@ -61,7 +61,6 @@ const StructureForm = (setCategories) => {
     // otherwise, this function does nothing 
     const reducer = (state, action) => {
         const { type, data, name } = action;
-        console.log(type, data, name);
         let updatedValues;
 
 		switch (type) {
@@ -77,7 +76,6 @@ const StructureForm = (setCategories) => {
                 // only re-introduce data if value is defined. otherwise, this function behaves as a "delete"
                 if (data[name]) {
                     updated.push(data);
-                    updated.sort((a, b) => a.id - b.id);
                 }
 
                 updatedValues = { ...state.values, [name]: updated };
@@ -97,7 +95,23 @@ const StructureForm = (setCategories) => {
 
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 3: queryCategories - function that grabs all categories
+    // FUNCTION 3: populateForm - function that executes when the StructureForm component mounts
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the metadata key is stored locally, we need to match the form with this data
+    // otherwise, this function does nothing
+    const populateForm = async () => {
+        // first, let's try to grab form data. if it does not exist, return early
+        const formData = JSON.parse(localStorage.getItem(structureKey));
+        if (!formData) {
+            return;
+        }
+        
+        // now, let's update our form, and also get the creator name from the database
+        dispatchForm({ type: "values", data: formData });
+    };
+
+    // FUNCTION 4: queryCategories - function that grabs all categories
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the `categories` state is updated with the values
@@ -106,6 +120,7 @@ const StructureForm = (setCategories) => {
     const queryCategories = async () => {
         try {
             const categories = await queryAll("category", "id");
+            categories.sort((a, b) => b.practice - a.practice);
             setCategories(categories);
 
         } catch (error) {
@@ -113,7 +128,7 @@ const StructureForm = (setCategories) => {
         };
     };
 
-    // FUNCTION 4: isDuplicate - function that checks if an entity attempting to be added is already present in data
+    // FUNCTION 5: isDuplicate - function that checks if an entity attempting to be added is already present in data
     // PRECONDITIONS (2 parameters):
     // 1.) data: the data the user has selected, that we wish to check
     // 2.) entityName: the string representing the set of `entityName` we want to check
@@ -128,14 +143,14 @@ const StructureForm = (setCategories) => {
 
         // if we made it this far, we are dealing with a typical entity. return true if entity exists in `form.values[entityName]`,
         // false otherwise.
-        const result = form.values[entityName].some(v => v === data);
+        const result = form.values[entityName].some(v => v[entityName] === data[entityName]);
         if (result) {
             addMessage(`${ capitalize(entityName) } already selected.`, "error", 5000);
         }
         return result;
     };
 
-    // FUNCTION 5: handleInsert - function that is called when the user adds a new select row
+    // FUNCTION 6: handleInsert - function that is called when the user adds a new select row
     // PRECONDITIONS (3 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - unused here, but passed from component
@@ -145,12 +160,13 @@ const StructureForm = (setCategories) => {
     // entity
     // if the user selected an empty / duplicate value, this function will ignore the change and do nothing
     const handleInsert = (value, id, entityName) => {
-        if (value && !isDuplicate(value, entityName)) {
-            dispatchForm({ type: "insertValues", data: value, name: entityName });
+        const data = { id, [entityName]: value };
+        if (value && !isDuplicate(data, entityName)) {
+            dispatchForm({ type: "insertValues", data: data, name: entityName });
         }
     };
 
-    // FUNCTION 6: handleUpdate - function that is called when the user updates an existing row
+    // FUNCTION 7: handleUpdate - function that is called when the user updates an existing row
     // PRECONDITIONS (3 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - should be equal to the number of entities currently present
@@ -160,13 +176,13 @@ const StructureForm = (setCategories) => {
     // if the user selects a duplicate value, this function will render an error message 
     // otherwise, the system will delete the entity
     const handleUpdate = (value, id, entityName) => {
-        const data = { id, [entityName]: value ? parseInt(value) : value };
+        const data = { id, [entityName]: value };
         if (!isDuplicate(data, entityName)) {
-            dispatchForm({ type: "updateValues", data, name: entityName });
+            dispatchForm({ type: "updateValues", data: data, name: entityName });
         }
     }
 
-    return { form, queryCategories, handleInsert, handleUpdate };
+    return { form, populateForm, queryCategories, handleInsert, handleUpdate };
 };
 
 /* ===== EXPORTS ===== */

@@ -38,3 +38,6 @@ export const imgurPattern = /^(?:https?:\/\/)?(?:i\.)?(?:www\.)?(?:imgur\.com\/)
 
 // Google Drive Regex
 export const googleDrivePattern = /^(?:https?:\/\/)?drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/[^/?]+)?(?:\?.*)?$/;
+
+// Is alpha regex
+export const isAlphaPattern = /[A-Za-z]/;
