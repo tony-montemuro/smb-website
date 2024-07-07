@@ -12,7 +12,7 @@ function SelectList({ entities, inputData, selectData }) {
         <Selector
           inputData={ inputData } 
           selectData={ selectData }
-          value={ entity[selectData.entityName] }
+          inputValue={ entity[inputData.valueAttribute] }
           handleChange={ inputData.handleChange }
           id={ entity.id }
           key={ entity.id } 
@@ -21,7 +21,7 @@ function SelectList({ entities, inputData, selectData }) {
       <Selector 
         inputData={ inputData }
         selectData={ selectData }
-        value=""
+        inputValue=""
         handleChange={ inputData.handleInsert }
         id={ entities.length > 0 ? entities.at(-1).id+1 : 1 }
       />

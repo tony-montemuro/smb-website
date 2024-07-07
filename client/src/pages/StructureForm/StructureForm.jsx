@@ -45,7 +45,7 @@ function StructureForm() {
                 Practice Mode, Practice Mode (Jumps), & Supernova. <strong>Traditional IL charts should be within this style of category.</strong>
               </li>
               <li>
-                "Non-Practice Mode" style - This is a less common grouping of charts, that some users of the website may be familiar
+                <strong>"Non-Practice Mode" style</strong> - This is a less common grouping of charts, that some users of the website may be familiar
                 with. Submissions to charts within categories of this style are <strong>only ranked by world records.</strong> However, high score /
                 fast time charts can have <strong>either ascending or descending order.</strong> Some example "Non-Practice Mode" style categories
                 include Challenge Mode, Party Games, & Time Attack. <strong>Non-traditional IL charts will typically be within this style
@@ -67,16 +67,17 @@ function StructureForm() {
           <SelectList
             entities={ form.values.category }
             inputData={{
-              id: "category",
+              entityName: "category",
               label: "Categories",
               handleChange: handleUpdate,
               handleInsert: handleInsert,
-              error: form.error.monkey
+              error: form.error.category,
+              valueAttribute: "abb"
             }}
             selectData={{ 
               entities: categories,
-              entityName: "category",
-              entityNameAlt: "name"
+              valueAttribute: "abb",
+              entityName: "name"
             }}
           />
         }

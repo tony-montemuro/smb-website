@@ -79,16 +79,17 @@ function EntitiesForm() {
           <SelectList
             entities={ form.values.monkey }
             inputData={{
-              id: "monkey",
+              entityName: "monkey",
               label: "Monkeys",
               handleChange: handleUpdate,
               handleInsert: handleInsert,
-              error: form.error.monkey
+              error: form.error.monkey,
+              valueAttribute: "monkey"
             }}
             selectData={{ 
               entities: selectData.monkey,
-              entityName: "monkey",
-              entityNameAlt: "monkey_name"
+              valueAttribute: "id",
+              entityName: "monkey_name"
             }}
           />
           <EntityAddLink entityName="monkey" openPopup={ openPopup } />
@@ -98,16 +99,17 @@ function EntitiesForm() {
           <SelectList
             entities={ form.values.platform }
             inputData={{
-              id: "platform",
+              entityName: "platform",
               label: "Platforms",
               handleChange: handleUpdate,
               handleInsert: handleInsert,
-              error: form.error.platform
+              error: form.error.platform,
+              valueAttribute: "platform"
             }}
             selectData={{ 
               entities: selectData.platform,
-              entityName: "platform",
-              entityNameAlt: "platform_name"
+              valueAttribute: "id",
+              entityName: "platform_name"
             }}
           />
           <EntityAddLink entityName="platform" openPopup={ openPopup } />
@@ -117,16 +119,17 @@ function EntitiesForm() {
           <SelectList
             entities={ form.values.region }
             inputData={{
-              id: "region",
+              entityName: "region",
               label: "Regions",
               handleChange: handleUpdate,
               handleInsert: handleInsert,
-              error: form.error.region
+              error: form.error.region,
+              valueAttribute: "region"
             }}
             selectData={{ 
               entities: selectData.region,
-              entityName: "region",
-              entityNameAlt: "region_name"
+              valueAttribute: "id",
+              entityName: "region_name"
             }}
           />
           <EntityAddLink entityName="region" openPopup={ openPopup } />
@@ -136,16 +139,17 @@ function EntitiesForm() {
           <SelectList
             entities={ form.values.rule }
             inputData={{
-              id: "rule",
+              entityName: "rule",
               label: "Rules",
               handleChange: handleUpdate,
               handleInsert: handleInsert,
-              error: form.error.rule
+              error: form.error.rule,
+              valueAttribute: "rule"
             }}
             selectData={{ 
               entities: selectData.rule,
-              entityName: "rule",
-              entityNameAlt: "rule_name"
+              valueAttribute: "id",
+              entityName: "rule_name"
             }}
           />
           <EntityAddLink entityName="rule" openPopup={ openPopup } />

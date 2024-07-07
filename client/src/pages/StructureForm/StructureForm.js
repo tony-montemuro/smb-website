@@ -61,6 +61,7 @@ const StructureForm = (setCategories) => {
     // otherwise, this function does nothing 
     const reducer = (state, action) => {
         const { type, data, name } = action;
+        console.log(type, data, name);
         let updatedValues;
 
 		switch (type) {
@@ -120,17 +121,14 @@ const StructureForm = (setCategories) => {
     // if `data` is already present in `form.values[entityName]`, return true
     // otherwise, render an error message, & return false
     const isDuplicate = (data, entityName) => {
-        const key = entityName === "moderator" ? "id" : entityName;
-
-        // first, let's ignore check for "remove" values. generally, this is when data[entityName] is falsy. 
-        // however, for moderators, this occurs when id is falsy
-        if (!data[key]) {
+        // first, let's ignore check for "remove" values. this is when data[entityName] is falsy
+        if (!data[entityName]) {
             return false;
         }
 
         // if we made it this far, we are dealing with a typical entity. return true if entity exists in `form.values[entityName]`,
         // false otherwise.
-        const result = form.values[entityName].some(v => v[key] === data[key]);
+        const result = form.values[entityName].some(v => v === data);
         if (result) {
             addMessage(`${ capitalize(entityName) } already selected.`, "error", 5000);
         }
@@ -140,18 +138,15 @@ const StructureForm = (setCategories) => {
     // FUNCTION 5: handleInsert - function that is called when the user adds a new select row
     // PRECONDITIONS (3 parameters):
     // 1.) value: the value chosen by the user from the selector
-    // 2.) id: an integer representing the id of the new entity - should be equal to the number of entities currently present
+    // 2.) id: an integer representing the id of the new entity - unused here, but passed from component
     // 3.) entityName: a string that contains the name of the entity we are modifying 
     // POSTCONDITIONS (2 possible outcome):
     // if the user selected a non-empty value, the new entity is formed, and the form data is updated to include the new
     // entity
     // if the user selected an empty / duplicate value, this function will ignore the change and do nothing
     const handleInsert = (value, id, entityName) => {
-        console.log(value, id, entityName)
-        console.log(entityName);
-        const data = { id, [entityName]: parseInt(value) };
-        if (value && !isDuplicate(data, entityName)) {
-            dispatchForm({ type: "insertValues", data, name: entityName });
+        if (value && !isDuplicate(value, entityName)) {
+            dispatchForm({ type: "insertValues", data: value, name: entityName });
         }
     };
 
