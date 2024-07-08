@@ -5,7 +5,6 @@ import TextField from "@mui/material/TextField";
 
 function Selector({ inputData, selectData, inputValue, handleChange, id, children }) {
   /* ===== SELECTOR COMPONENT ===== */
-  console.log(inputValue);
   return (
     <div>
       <div className={ styles.selector }>

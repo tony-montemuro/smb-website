@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { useContext, useReducer } from "react";
+import { useContext, useReducer, useState } from "react";
 import { GameAddContext, MessageContext } from "../../utils/Contexts";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import Read from "../../database/read/Read.js";
@@ -12,6 +12,9 @@ const StructureForm = (setCategories) => {
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
+    
+    /* ===== STATES ===== */
+    const [addCategory, setAddCategory] = useState(false);
 
     /* ===== VARIABLES ===== */
     const defaultVals = {
@@ -182,7 +185,28 @@ const StructureForm = (setCategories) => {
         }
     }
 
-    return { form, populateForm, queryCategories, handleInsert, handleUpdate };
+    // FUNCTION 8: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // the `addCategory` state is updated to "true", rendering the popup
+    const openPopup = () => setAddCategory(true);
+
+    // FUNCTION 9: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // the `addCategory` state is updated to "false", unrendering the popup
+    const closePopup = () => setAddCategory(false);
+
+    return { 
+        form, 
+        addCategory, 
+        populateForm, 
+        queryCategories, 
+        handleInsert, 
+        handleUpdate,
+        openPopup,
+        closePopup
+    };
 };
 
 /* ===== EXPORTS ===== */

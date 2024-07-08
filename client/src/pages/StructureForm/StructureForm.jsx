@@ -1,16 +1,28 @@
 /* ===== IMPORTS ===== */
 import { useEffect, useState } from "react";
 import styles from "./StructureForm.module.css";
+import CategoryAddForm from "../../components/CategoryAddForm/CategoryAddForm.jsx";
 import Container from "../../components/Container/Container.jsx";
+import Popup from "../../components/Popup/Popup.jsx";
 import SelectList from "../../components/SelectList/SelectList.jsx";
 import StructureFormLogic from "./StructureForm.js";
 
 function StructureForm() {
   /* ===== STATES & FUNCTIONS ===== */
   const [categories, setCategories] = useState(undefined);
+  const [submittingCategory, setSubmittingCategory] = useState(false);
 
   // states & functions from the js file
-  const { form, populateForm, queryCategories, handleInsert, handleUpdate } = StructureFormLogic(setCategories);
+  const { 
+    form,
+    addCategory,
+    populateForm,
+    queryCategories,
+    handleInsert,
+    handleUpdate,
+    openPopup,
+    closePopup
+  } = StructureFormLogic(setCategories);
 
   /* ===== EFFECTS ===== */
 
@@ -24,6 +36,22 @@ function StructureForm() {
   /* ===== STRUCTURE FORM COMPONENT ===== */
   return (
     <Container title="Game Structure">
+
+      { /* Popup */ }
+      <Popup 
+				renderPopup={ addCategory } 
+				setRenderPopup={ closePopup } 
+				width="1000px"
+				disableClose={ null }
+			>
+				<CategoryAddForm 
+          submitting={ submittingCategory } 
+          setSubmitting={ setSubmittingCategory }
+          refreshCategoryDataFunc={ setSubmittingCategory }
+        />
+			</Popup>
+
+      { /* Structure form */ }
       <form className={ styles.structureForm }>
         <span>
           On this screen, you will create and organize high score / fast time charts.
@@ -65,26 +93,31 @@ function StructureForm() {
         
         { /* Only render inputs if user has selected  */ }
         { categories &&
-          <SelectList
-            entities={ form.values.category }
-            inputData={{
-              entityName: "category",
-              label: "Categories",
-              handleChange: handleUpdate,
-              handleInsert: handleInsert,
-              error: form.error.category
-            }}
-            selectData={{ 
-              entities: {
-                "practice_mode_style": categories.filter(category => category.practice),
-                "non-practice_mode_style": categories.filter(category => !category.practice)
-              },
-              valueAttribute: "abb",
-              entityName: "name"
-            }}
-          >
-            <span>TODO: work on the next input!</span>
-          </SelectList>
+          <>
+            <SelectList
+              entities={ form.values.category }
+              inputData={{
+                entityName: "category",
+                label: "Categories",
+                handleChange: handleUpdate,
+                handleInsert: handleInsert,
+                error: form.error.category
+              }}
+              selectData={{ 
+                entities: {
+                  "practice_mode_style": categories.filter(category => category.practice),
+                  "non-practice_mode_style": categories.filter(category => !category.practice)
+                },
+                valueAttribute: "abb",
+                entityName: "name"
+              }}
+            >
+              <span>TODO: work on the next input!</span>
+            </SelectList>
+            <span onClick={ openPopup } className="hyperlink">
+              Category missing from list? Click here to upload a new category!
+            </span>
+          </>
         }
       </form>
     </Container>

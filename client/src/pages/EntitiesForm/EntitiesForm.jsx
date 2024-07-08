@@ -52,6 +52,8 @@ function EntitiesForm() {
   /* ===== ENTITIES FORM COMPONENT ===== */
   return selectData &&
     <Container title="Game Entities">
+
+      { /* Popup for adding entities */ }
       <Popup 
 				renderPopup={ addEntity } 
 				setRenderPopup={ closePopup } 
@@ -65,6 +67,7 @@ function EntitiesForm() {
         />
 			</Popup>
 
+      { /* Entities form */ }
       <form className={ styles.entitiesForm } onSubmit={ validateAndUpdate }>
         <span>
           <em>
