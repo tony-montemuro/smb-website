@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import { GameAddContext, MessageContext } from "../../utils/Contexts";
+import { isLowerAlphaNumeric } from "../../utils/RegexPatterns.js";
 import { useContext, useReducer, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
 import ProfileRead from "../../database/read/ProfileRead.js";
@@ -182,8 +183,7 @@ const MetadataForm = () => {
     // if the abb contains any upper-case letters, or special characters, return a string that contains the error message
     // if the abb is determined to be valid, return undefined
     const validateAbb = abb => {
-        const lowerAndNumbers = /^[a-z0-9]+$/;
-        if (!lowerAndNumbers.test(abb)) {
+        if (!isLowerAlphaNumeric.test(abb)) {
             return "Abbreviation should only contain lowercase letters, and/or numbers.";
         }
     };

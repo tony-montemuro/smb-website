@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import styles from "./StructureForm.module.css";
 import CategoryAddForm from "../../components/CategoryAddForm/CategoryAddForm.jsx";
 import Container from "../../components/Container/Container.jsx";
+import Loading from "../../components/Loading/Loading.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
 import SelectList from "../../components/SelectList/SelectList.jsx";
 import StructureFormLogic from "./StructureForm.js";
@@ -41,13 +42,13 @@ function StructureForm() {
       <Popup 
 				renderPopup={ addCategory } 
 				setRenderPopup={ closePopup } 
-				width="1000px"
-				disableClose={ null }
+				width="500px"
+				disableClose={ submittingCategory }
 			>
 				<CategoryAddForm 
           submitting={ submittingCategory } 
           setSubmitting={ setSubmittingCategory }
-          refreshCategoryDataFunc={ setSubmittingCategory }
+          refreshCategoryDataFunc={ queryCategories }
         />
 			</Popup>
 
@@ -92,7 +93,7 @@ function StructureForm() {
         </ul>
         
         { /* Only render inputs if user has selected  */ }
-        { categories &&
+        { categories ?
           <>
             <SelectList
               entities={ form.values.category }
@@ -118,6 +119,8 @@ function StructureForm() {
               Category missing from list? Click here to upload a new category!
             </span>
           </>
+        :
+          <Loading />
         }
       </form>
     </Container>

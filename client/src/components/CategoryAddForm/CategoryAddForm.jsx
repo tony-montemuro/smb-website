@@ -7,6 +7,9 @@ import FormGroup from "@mui/material/FormGroup";
 import TextField from "@mui/material/TextField";
 
 function CategoryAddForm({ submitting, setSubmitting, refreshCategoryDataFunc }) {
+  /* ===== VARIABLES ===== */
+  const ABB_LENGTH_MAX = 15;
+
   /* ===== STATES & FUNCTIONS ===== */
 
   // states & functions from the js file
@@ -27,8 +30,11 @@ function CategoryAddForm({ submitting, setSubmitting, refreshCategoryDataFunc })
         />
         <TextField
           id="abb"
+          inputProps={{ maxLength: ABB_LENGTH_MAX }}
+          helperText={ `${ form.values.abb.length }/${ ABB_LENGTH_MAX }` }
           label="Category Abbreviation"
           onChange={ handleChange }
+          placeholder={ `Must be ${ ABB_LENGTH_MAX } characters or less` }
           required
           value={ form.values.abb }
           variant="filled"
@@ -46,7 +52,7 @@ function CategoryAddForm({ submitting, setSubmitting, refreshCategoryDataFunc })
             label="Practice Mode Style" 
           />
         </FormGroup>
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={ submitting }>Submit</button>
       </form>
     </div>
   );

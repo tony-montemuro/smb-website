@@ -10605,6 +10605,8 @@ INSERT INTO "public"."category" (abb, name, practice, id) VALUES
 	('mini', 'Mini Games', false, 13),
 	('supernova', 'Supernova', true, 14);
 
+SELECT SETVAL(pg_get_serial_sequence('"public"."category"', 'id'), (SELECT MAX("id") FROM "public"."category"), true);
+
 INSERT INTO "storage"."buckets" ("id", "name", "owner", "created_at", "updated_at", "public", "avif_autodetection", "file_size_limit", "allowed_mime_types", "owner_id") VALUES
 	('avatars', 'avatars', NULL, '2022-06-22 18:59:36.937336+00', '2022-06-22 18:59:36.937336+00', false, false, NULL, NULL, NULL),
 	('games', 'games', NULL, '2022-07-05 14:46:17.712956+00', '2022-07-05 14:46:17.712956+00', false, false, NULL, NULL, NULL);

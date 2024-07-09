@@ -41,3 +41,8 @@ export const googleDrivePattern = /^(?:https?:\/\/)?drive\.google\.com\/file\/d\
 
 // Is alpha regex
 export const isAlphaPattern = /[A-Za-z]/;
+
+// Is lower alphanumeric regex
+export const isLowerAlphaNumeric = /^[a-z0-9]+$/;
+
+export const isLowerAlphaNumericWithUnderscores = /^[a-z0-9][a-z0-9_]*$/;

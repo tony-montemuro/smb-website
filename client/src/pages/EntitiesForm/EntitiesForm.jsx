@@ -5,6 +5,7 @@ import Container from "../../components/Container/Container.jsx";
 import EntitiesFormLogic from "./EntitiesForm.js";
 import EntityAddForm from "../../components/EntityAddForm/EntityAddForm.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
+import Loading from "../../components/Loading/Loading.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
 import SelectList from "../../components/SelectList/SelectList.jsx";
 import Username from "../../components/Username/Username.jsx";
@@ -50,7 +51,7 @@ function EntitiesForm() {
   }, []);
 
   /* ===== ENTITIES FORM COMPONENT ===== */
-  return selectData &&
+  return (
     <Container title="Game Entities">
 
       { /* Popup for adding entities */ }
@@ -58,7 +59,7 @@ function EntitiesForm() {
 				renderPopup={ addEntity } 
 				setRenderPopup={ closePopup } 
 				width="1000px"
-				disableClose={ null }
+				disableClose={ submittingEntity }
 			>
 				<EntityAddForm 
           submitting={ submittingEntity } 
@@ -67,8 +68,7 @@ function EntitiesForm() {
         />
 			</Popup>
 
-      { /* Entities form */ }
-      <form className={ styles.entitiesForm } onSubmit={ validateAndUpdate }>
+      <div className={ styles.entitiesForm }>
         <span>
           <em>
             On this screen, you will select and define the <strong>entities</strong> for each game.&nbsp;
@@ -78,101 +78,109 @@ function EntitiesForm() {
           </em>
         </span>
 
-        <div className={ styles.input }>
-          <SelectList
-            entities={ form.values.monkey }
-            inputData={{
-              entityName: "monkey",
-              label: "Monkeys",
-              handleChange: handleUpdate,
-              handleInsert: handleInsert,
-              error: form.error.monkey
-            }}
-            selectData={{ 
-              entities: selectData.monkey,
-              valueAttribute: "id",
-              entityName: "monkey_name"
-            }}
-          />
-          <EntityAddLink entityName="monkey" openPopup={ openPopup } />
-        </div>
+        { /* Entities form */ }
+        { selectData ?
+          <form className={ styles.entitiesForm } onSubmit={ validateAndUpdate }>
+            <div className={ styles.input }>
+              <SelectList
+                entities={ form.values.monkey }
+                inputData={{
+                  entityName: "monkey",
+                  label: "Monkeys",
+                  handleChange: handleUpdate,
+                  handleInsert: handleInsert,
+                  error: form.error.monkey
+                }}
+                selectData={{ 
+                  entities: selectData.monkey,
+                  valueAttribute: "id",
+                  entityName: "monkey_name"
+                }}
+              />
+              <EntityAddLink entityName="monkey" openPopup={ openPopup } />
+            </div>
 
-        <div className={ styles.input }>
-          <SelectList
-            entities={ form.values.platform }
-            inputData={{
-              entityName: "platform",
-              label: "Platforms",
-              handleChange: handleUpdate,
-              handleInsert: handleInsert,
-              error: form.error.platform
-            }}
-            selectData={{ 
-              entities: selectData.platform,
-              valueAttribute: "id",
-              entityName: "platform_name"
-            }}
-          />
-          <EntityAddLink entityName="platform" openPopup={ openPopup } />
-        </div>
+            <div className={ styles.input }>
+              <SelectList
+                entities={ form.values.platform }
+                inputData={{
+                  entityName: "platform",
+                  label: "Platforms",
+                  handleChange: handleUpdate,
+                  handleInsert: handleInsert,
+                  error: form.error.platform
+                }}
+                selectData={{ 
+                  entities: selectData.platform,
+                  valueAttribute: "id",
+                  entityName: "platform_name"
+                }}
+              />
+              <EntityAddLink entityName="platform" openPopup={ openPopup } />
+            </div>
 
-        <div className={ styles.input }>
-          <SelectList
-            entities={ form.values.region }
-            inputData={{
-              entityName: "region",
-              label: "Regions",
-              handleChange: handleUpdate,
-              handleInsert: handleInsert,
-              error: form.error.region
-            }}
-            selectData={{ 
-              entities: selectData.region,
-              valueAttribute: "id",
-              entityName: "region_name"
-            }}
-          />
-          <EntityAddLink entityName="region" openPopup={ openPopup } />
-        </div>
+            <div className={ styles.input }>
+              <SelectList
+                entities={ form.values.region }
+                inputData={{
+                  entityName: "region",
+                  label: "Regions",
+                  handleChange: handleUpdate,
+                  handleInsert: handleInsert,
+                  error: form.error.region
+                }}
+                selectData={{ 
+                  entities: selectData.region,
+                  valueAttribute: "id",
+                  entityName: "region_name"
+                }}
+              />
+              <EntityAddLink entityName="region" openPopup={ openPopup } />
+            </div>
 
-        <div className={ styles.input }>
-          <SelectList
-            entities={ form.values.rule }
-            inputData={{
-              entityName: "rule",
-              label: "Rules",
-              handleChange: handleUpdate,
-              handleInsert: handleInsert,
-              error: form.error.rule
-            }}
-            selectData={{ 
-              entities: selectData.rule,
-              valueAttribute: "id",
-              entityName: "rule_name"
-            }}
-          />
-          <EntityAddLink entityName="rule" openPopup={ openPopup } />
-        </div>
+            <div className={ styles.input }>
+              <SelectList
+                entities={ form.values.rule }
+                inputData={{
+                  entityName: "rule",
+                  label: "Rules",
+                  handleChange: handleUpdate,
+                  handleInsert: handleInsert,
+                  error: form.error.rule
+                }}
+                selectData={{ 
+                  entities: selectData.rule,
+                  valueAttribute: "id",
+                  entityName: "rule_name"
+                }}
+              />
+              <EntityAddLink entityName="rule" openPopup={ openPopup } />
+            </div>
 
-        <div className={ styles.input }>
-          <h3>Moderators</h3>
-          <span>Select moderators via user search.</span>
-          <div className={ styles.moderatorList }>
-            { form.values.moderator.map((moderator, index) => {
-              return (
-                <div className={ `${ styles.moderator } ${ (index+1) % 2 ? "even" : "odd" }` } key={ moderator.id }>
-                  <Username profile={ moderator } disableLink />
-                  <button type="button" onClick={ () => handleModeratorDelete(moderator.id) }>Delete</button>
-                </div>
-              );
-            })}
-          </div>
-          <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ userRowOptions } />
-        </div>
+            <div className={ styles.input }>
+              <h3>Moderators</h3>
+              <span>Select moderators via user search.</span>
+              <div className={ styles.moderatorList }>
+                { form.values.moderator.map((moderator, index) => {
+                  return (
+                    <div className={ `${ styles.moderator } ${ (index+1) % 2 ? "even" : "odd" }` } key={ moderator.id }>
+                      <Username profile={ moderator } disableLink />
+                      <button type="button" onClick={ () => handleModeratorDelete(moderator.id) }>Delete</button>
+                    </div>
+                  );
+                })}
+              </div>
+              <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ userRowOptions } />
+            </div>
 
-        <button type="submit">Validate</button>
-      </form>
+            <button type="submit">Validate</button>
+          </form>
+        :
+          <Loading />
+        }
+      </div>
     </Container>
+  );
 };
 
 function EntityAddLink({ entityName, openPopup }) {
