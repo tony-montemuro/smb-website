@@ -1,0 +1,10 @@
+.modeList {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-left: 20px;
+}
+
+.modeList h3 {
+    margin: 0;
+}

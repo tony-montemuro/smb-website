@@ -4,6 +4,7 @@ import styles from "./StructureForm.module.css";
 import CategoryAddForm from "../../components/CategoryAddForm/CategoryAddForm.jsx";
 import Container from "../../components/Container/Container.jsx";
 import Loading from "../../components/Loading/Loading.jsx";
+import ModeList from "./ModeList/ModeList.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
 import SelectList from "../../components/SelectList/SelectList.jsx";
 import StructureFormLogic from "./StructureForm.js";
@@ -113,7 +114,7 @@ function StructureForm() {
                 entityName: "name"
               }}
             >
-              <span>TODO: work on the next input!</span>
+              <ModeList modes={ form.values.mode } />
             </SelectList>
             <span onClick={ openPopup } className="hyperlink">
               Category missing from list? Click here to upload a new category!

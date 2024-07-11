@@ -1,10 +1,12 @@
 /* ===== IMPORTS ===== */
+import { cloneElement } from "react";
 import styles from "./SelectList.module.css";
 import FrontendHelper from "../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
 function Selector({ inputData, selectData, inputValue, handleChange, id, children }) {
   /* ===== SELECTOR COMPONENT ===== */
+  console.log(inputValue, id);
   return (
     <div>
       <div className={ styles.selector }>
@@ -26,7 +28,7 @@ function Selector({ inputData, selectData, inputValue, handleChange, id, childre
         </TextField>
         <button type="button" disabled={ !inputValue } onClick={ () => handleChange("", id, inputData.entityName) } >Delete</button>
       </div>
-      { inputValue && children }
+      { inputValue && cloneElement(children, { [inputData.entityName]: inputValue, id: id }) }
     </div>
   );
 };
