@@ -84,6 +84,27 @@ const StructureForm = (setCategories) => {
                 updatedValues = { ...state.values, [name]: updated };
                 updateLocal(updatedValues);
                 return { ...state, values: updatedValues };
+            case "modesChange":
+                const updatedModes = [...state.values.mode];
+                const targetIndex = updatedModes.findIndex(mode => mode.id === data.id && mode.category === data.category);
+
+                // if we fail to find mode, we need to treat as insert, and update any ids >= data.id
+                if (targetIndex === -1) {
+                    for (let mode of updatedModes) {
+                        if (mode.id >= data.id) {
+                            mode.id++;
+                        }
+                    }
+
+                    updatedModes.push(data);
+                    updatedModes.sort((a, b) => a.id - b.id);
+                } else {
+                    updatedModes[targetIndex] = data;
+                }
+
+                updatedValues = { ...state.values, mode: updatedModes };
+                updateLocal(updatedValues);
+                return { ...state, values: updatedValues };
             case "values":
                 return { ...state, values: { ...state.values, ...data } };
 			case "error":
@@ -153,45 +174,78 @@ const StructureForm = (setCategories) => {
         return result;
     };
 
-    // FUNCTION 6: handleInsert - function that is called when the user adds a new select row
-    // PRECONDITIONS (3 parameters):
+    // FUNCTION 6: handleCategoryInsert - function that is called when the user adds a new category select row
+    // PRECONDITIONS (2 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - unused here, but passed from component
-    // 3.) entityName: a string that contains the name of the entity we are modifying 
     // POSTCONDITIONS (2 possible outcome):
-    // if the user selected a non-empty value, the new entity is formed, and the form data is updated to include the new
-    // entity
+    // if the user selected a non-empty value, the new category is formed, and the form data is updated to include the new
+    // category
     // if the user selected an empty / duplicate value, this function will ignore the change and do nothing
-    const handleInsert = (value, id, entityName) => {
-        const data = { id, [entityName]: value };
-        if (value && !isDuplicate(data, entityName)) {
-            dispatchForm({ type: "insertValues", data: data, name: entityName });
+    const handleCategoryInsert = (value, id) => {
+        const data = { id, category: value };
+        if (value && !isDuplicate(data, "category")) {
+            dispatchForm({ type: "insertValues", data: data, name: "category" });
         }
     };
 
-    // FUNCTION 7: handleUpdate - function that is called when the user updates an existing row
-    // PRECONDITIONS (3 parameters):
+    // FUNCTION 7: handleCategoryUpdate - function that is called when the user updates an existing category row
+    // PRECONDITIONS (2 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - should be equal to the number of entities currently present
-    // 3.) entityName: a string that contains the name of the entity we are modifying 
     // POSTCONDITIONS (3 possible outcomes):
-    // if the user selects a non-empty value, the entity will be updated
+    // if the user selects a non-empty value, the category will be updated
     // if the user selects a duplicate value, this function will render an error message 
-    // otherwise, the system will delete the entity
-    const handleUpdate = (value, id, entityName) => {
-        const data = { id, [entityName]: value };
-        if (!isDuplicate(data, entityName)) {
-            dispatchForm({ type: "updateValues", data: data, name: entityName });
+    // otherwise, the system will delete the category
+    const handleCategoryUpdate = (value, id) => {
+        const data = { id, category: value };
+        if (!isDuplicate(data, "category")) {
+            dispatchForm({ type: "updateValues", data: data, name: "category" });
         }
     }
 
-    // FUNCTION 8: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
+    // FUNCTION 8: handleModeChange - code that is excuted each time the user makes a keystroke in a mode input
+    // PRECONDITIONS (3 parameters):
+    // 1.) mode: the string user input entered as the mode
+    // 2.) category: the category the mode belongs to
+    // 3.) id: the id of the mode
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the user enters a non-empty value, the list of modes is updated to include it
+    // otherwise, the system will delete the entity
+    const handleModeChange = (mode, category, id) => {
+        // if `id` is null, define it here by finding the `id+1` of the last mode of the given category, or the last
+        // category with values if no modes exist in the current category yet
+        if (!id) {
+            let categoryIndex = form.values.category.findIndex(c => c.category === category);
+            let categoryModes = [];
+
+            while (categoryIndex >= 0 && !id) {
+                const categoryName = form.values.category[categoryIndex].category;
+                categoryModes = form.values.mode.filter(m => m.category === categoryName);
+                if (categoryModes.length > 0) {
+                    id = categoryModes.at(-1).id+1;
+                }
+                categoryIndex--;
+            }
+
+            // if id is still undefined at this point, implication is that this should have an id of 1
+            if (!id) {
+                id = 1;
+            }
+        }
+
+        // update form
+        const data = { name: mode, category, id };
+        dispatchForm({ type: "modesChange", data: data });
+    };
+
+    // FUNCTION 10: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "true", rendering the popup
     const openPopup = () => setAddCategory(true);
 
-    // FUNCTION 9: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
+    // FUNCTION 11: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "false", unrendering the popup
@@ -202,8 +256,9 @@ const StructureForm = (setCategories) => {
         addCategory, 
         populateForm, 
         queryCategories, 
-        handleInsert, 
-        handleUpdate,
+        handleCategoryInsert, 
+        handleCategoryUpdate,
+        handleModeChange,
         openPopup,
         closePopup
     };

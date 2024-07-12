@@ -20,8 +20,9 @@ function StructureForm() {
     addCategory,
     populateForm,
     queryCategories,
-    handleInsert,
-    handleUpdate,
+    handleCategoryInsert,
+    handleCategoryUpdate,
+    handleModeChange,
     openPopup,
     closePopup
   } = StructureFormLogic(setCategories);
@@ -101,8 +102,8 @@ function StructureForm() {
               inputData={{
                 entityName: "category",
                 label: "Categories",
-                handleChange: handleUpdate,
-                handleInsert: handleInsert,
+                handleChange: handleCategoryUpdate,
+                handleInsert: handleCategoryInsert,
                 error: form.error.category
               }}
               selectData={{ 
@@ -114,7 +115,7 @@ function StructureForm() {
                 entityName: "name"
               }}
             >
-              <ModeList modes={ form.values.mode } />
+              <ModeList modes={ form.values.mode } handleChange={ handleModeChange } />
             </SelectList>
             <span onClick={ openPopup } className="hyperlink">
               Category missing from list? Click here to upload a new category!
