@@ -8,3 +8,18 @@
 .modeList h3 {
     margin: 0;
 }
+
+.modeInput {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
+.modeInput button {
+    height: fit-content;
+}
+
+#addModeBtn {
+    width: fit-content;
+}

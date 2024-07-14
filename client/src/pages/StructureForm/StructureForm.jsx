@@ -22,6 +22,7 @@ function StructureForm() {
     queryCategories,
     handleCategoryInsert,
     handleCategoryUpdate,
+    handleModeInsert,
     handleModeChange,
     openPopup,
     closePopup
@@ -115,7 +116,9 @@ function StructureForm() {
                 entityName: "name"
               }}
             >
-              <ModeList modes={ form.values.mode } handleChange={ handleModeChange } />
+              <ModeList modes={ form.values.mode } handleInsert={ handleModeInsert } handleChange={ handleModeChange }>
+                <span>Level component goes here!</span>
+              </ModeList>
             </SelectList>
             <span onClick={ openPopup } className="hyperlink">
               Category missing from list? Click here to upload a new category!

@@ -2,7 +2,7 @@
 import styles from "./ModeList.module.css";
 import ModeInput from "./ModeInput.jsx";
 
-function ModeList({ modes, category, id, handleChange }) {
+function ModeList({ modes, category, handleChange, handleInsert, children }) {
   /* ===== VARIABLES ===== */
   const filteredModes = modes.filter(mode => mode.category === category);
 
@@ -16,16 +16,14 @@ function ModeList({ modes, category, id, handleChange }) {
             mode={ mode }
             category={ category }
             handleChange={ handleChange }
+            domId={ mode.id }
             key={ `mode_${ category }${ mode.id }` }
-          />
+          >
+            { children }
+          </ModeInput>
         );
       })}
-      <ModeInput 
-        mode={ null }
-        category={ category }
-        id={ id }
-        handleChange={ handleChange }
-      />
+      <button type="button" id={ styles.addModeBtn } onClick={ () => handleInsert(category) }>Add Mode</button>
     </div>
   );
 };
