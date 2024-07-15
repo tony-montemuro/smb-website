@@ -1,0 +1,14 @@
+.levelList {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-left: 20px;
+}
+
+#addLevelBtn {
+    width: fit-content;
+}
+
+.level {
+    display: flex;
+}

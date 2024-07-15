@@ -16,7 +16,6 @@ function ModeList({ modes, category, handleChange, handleInsert, children }) {
             mode={ mode }
             category={ category }
             handleChange={ handleChange }
-            domId={ mode.id }
             key={ `mode_${ category }${ mode.id }` }
           >
             { children }

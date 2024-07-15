@@ -8,6 +8,7 @@ import ModeList from "./ModeList/ModeList.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
 import SelectList from "../../components/SelectList/SelectList.jsx";
 import StructureFormLogic from "./StructureForm.js";
+import LevelList from "./LevelList/LevelList.jsx";
 
 function StructureForm() {
   /* ===== STATES & FUNCTIONS ===== */
@@ -24,6 +25,7 @@ function StructureForm() {
     handleCategoryUpdate,
     handleModeInsert,
     handleModeChange,
+    handleLevelInsert,
     openPopup,
     closePopup
   } = StructureFormLogic(setCategories);
@@ -117,7 +119,7 @@ function StructureForm() {
               }}
             >
               <ModeList modes={ form.values.mode } handleInsert={ handleModeInsert } handleChange={ handleModeChange }>
-                <span>Level component goes here!</span>
+                <LevelList levels={ form.values.level } handleInsert={ handleLevelInsert } handleChange={ () => {} } />
               </ModeList>
             </SelectList>
             <span onClick={ openPopup } className="hyperlink">

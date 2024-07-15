@@ -294,11 +294,10 @@ const StructureForm = (setCategories) => {
     const handleModeInsert = category => {
         let id;
         let categoryIndex = form.values.category.findIndex(c => c.category === category);
-        let categoryModes = [];
 
         while (categoryIndex >= 0 && !id) {
             const categoryName = form.values.category[categoryIndex].category;
-            categoryModes = form.values.mode.filter(m => m.category === categoryName);
+            const categoryModes = form.values.mode.filter(m => m.category === categoryName);
             if (categoryModes.length > 0) {
                 id = categoryModes.at(-1).id+1;
             }
@@ -327,13 +326,45 @@ const StructureForm = (setCategories) => {
         dispatchForm({ type: "modesChange", data: data });
     };
 
-    // FUNCTION 14: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
+    // FUNCTION 14: handleLevelInsert - function that is called when the user wants to add a new level to the list of levels
+    // PRECONDITIONS (2 parameters):
+    // 1.) category: the category we want to add the level to
+    // 2.) mode: the mode we want to add the level to
+    // POSTCONDITIONS (1 possible outcome):
+    // we determine where to add the level, and add it
+    const handleLevelInsert = (category, mode) => {
+        let id;
+        let categoryIndex = form.values.category.findIndex(c => c.category === category);
+        let modeIndex = form.values.mode.findIndex(m => m.name === mode);
+
+        while (categoryIndex >= 0 && !id) {
+            const categoryName = form.values.category[categoryIndex].category;
+            while (modeIndex >= 0 && !id) {
+                const modeName = form.values.mode[modeIndex].name;
+                const categoryModeLevels = form.values.level.filter(l => l.category === categoryName && l.mode === modeName);
+                if (categoryModeLevels.length > 0) {
+                    id = categoryModeLevels.at(-1).id+1;
+                }
+                modeIndex--;
+            }
+            categoryIndex--;
+        }
+
+        // if id is still undefined at this point, implication is that this should have an id of 1
+        if (!id) {
+            id = 1;
+        }
+
+        // insert data!
+    }
+
+    // FUNCTION 15: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "true", rendering the popup
     const openPopup = () => setAddCategory(true);
 
-    // FUNCTION 15: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
+    // FUNCTION 16: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "false", unrendering the popup
@@ -348,6 +379,7 @@ const StructureForm = (setCategories) => {
         handleCategoryUpdate,
         handleModeInsert,
         handleModeChange,
+        handleLevelInsert,
         openPopup,
         closePopup
     };
