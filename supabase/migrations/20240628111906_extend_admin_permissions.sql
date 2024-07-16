@@ -339,3 +339,20 @@ ADD CONSTRAINT region_name_key UNIQUE (region_name);
 -- Add unique constraint to `category` table
 ALTER TABLE category
 ADD CONSTRAINT category_unique_constraint UNIQUE (name, practice);
+
+-- Functions used on game structure page
+CREATE OR REPLACE FUNCTION get_chart_types()
+RETURNS json
+LANGUAGE sql
+AS $$
+  SELECT json_agg(chart_types)::json
+  FROM unnest(enum_range(NULL::chart_t)) AS chart_types;
+$$;
+
+CREATE OR REPLACE FUNCTION get_timer_types()
+RETURNS json
+LANGUAGE sql
+AS $$
+  SELECT json_agg(timer_types)::json
+  FROM unnest(enum_range(NULL::timer_t)) AS timer_types;
+$$;
