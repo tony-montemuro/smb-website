@@ -4,7 +4,11 @@ import styles from "./SelectList.module.css";
 import FrontendHelper from "../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
-function Selector({ inputData, selectData, inputValue, handleChange, id, children }) {
+function Selector({ inputData, selectData, entity, handleChange, children }) {
+  /* ===== VARIABLES ===== */
+  const inputValue = entity[inputData.entityName];
+  const id = entity.id;
+
   /* ===== SELECTOR COMPONENT ===== */
   return (
     <div>
@@ -27,7 +31,7 @@ function Selector({ inputData, selectData, inputValue, handleChange, id, childre
         </TextField>
         <button type="button" disabled={ !inputValue } onClick={ () => handleChange("", id, inputData.entityName) }>Delete</button>
       </div>
-      { inputValue && cloneElement(children, { [inputData.entityName]: inputValue}) }
+      { inputValue && cloneElement(children, { [inputData.entityName]: entity }) }
     </div>
   );
 };

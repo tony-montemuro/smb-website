@@ -3,8 +3,9 @@ import { useContext, useReducer, useState } from "react";
 import { GameAddContext, MessageContext } from "../../utils/Contexts";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import Read from "../../database/read/Read.js";
+import RPCRead from "../../database/read/RPCRead.js";
 
-const StructureForm = (setCategories) => {
+const StructureForm = (setFormData) => {
     /* ===== CONTEXTS ===== */
 
     // keys object & unlock page function from game add context
@@ -36,6 +37,7 @@ const StructureForm = (setCategories) => {
 
     // database functions
     const { queryAll } = Read();
+    const { getChartTypes } = RPCRead();
 
     // helper functions
     const { capitalize } = FrontendHelper();
@@ -164,19 +166,39 @@ const StructureForm = (setCategories) => {
         return { ...state, values: updatedValues };
     };
 
-    // FUNCTION 6: reducer - function that executes each time the user attempts to update the form reducer hook
+    // FUNCTION 6: insertLevel - function that executes when the user performs an action to insert a level
+    // 1.) state: the current state of the form
+    // 2.) data: the user inputted-category (object with two keys: id (int) and category (string))
+    // POSTCONDITIONS (1 possible outcomes):
+    // the level is added to the form
+    const insertLevel = (state, data) => {
+        let updatedLevels = [...state.values.level];
+        for (let level of updatedLevels) {
+            if (level.id >= data.id) {
+                level.id++;
+            }
+        }
+
+        updatedLevels.push(data);
+        updatedLevels.sort((a, b) => a.id - b.id);
+        const updatedValues = { ...state.values, level: updatedLevels };
+        updateLocal(updatedValues);
+        return { ...state, values: updatedValues };
+    };
+
+    // FUNCTION 7: updateLevel
+    const updateLevel = (state, data) => {};
+
+    // FUNCTION 8: reducer - function that executes each time the user attempts to update the form reducer hook
     // PRECONDITIONS (2 parameters):
     // 1.) state: the state of the form object when the function is called
     // 2.) action: an object with three fields:
         // a.) field: specifies which field of the form the reducer should modify
         // b.) data: specifies the new value that the reducer should use to modify form[field]
         // c.) name: specifies the name of the entity we are currently interacting with
-    // POSTCONDITIONS (5 possible outcomes):
-    // if the type field is `insertCategory`, we add new value to the `name` array, and update our values object
-    // if the type is `updateCategory`, we update the value already current to the `name` array, and update our values object
-    // if the type is `values`, we simply update the values object using data
-    // if the type is `error`, we simply update the error object using data
-    // otherwise, this function does nothing 
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the type field is properly matched within the switch statement, the relevant action is performed on the form
+    // otherwise, this function simply returns the current state of the form, doing nothing
     const reducer = (state, action) => {
         const { type, data } = action;
 
@@ -187,6 +209,10 @@ const StructureForm = (setCategories) => {
                 return updateCategory(state, data);
             case "modesChange":
                 return changeModes(state, data);
+            case "insertLevel":
+                return insertLevel(state, data);
+            case "updateLevel":
+                return updateLevel(state, data);
             case "values":
                 return { ...state, values: { ...state.values, ...data } };
 			case "error":
@@ -201,7 +227,7 @@ const StructureForm = (setCategories) => {
 
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 7: populateForm - function that executes when the StructureForm component mounts
+    // FUNCTION 9: populateForm - function that executes when the StructureForm component mounts
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the metadata key is stored locally, we need to match the form with this data
@@ -217,24 +243,25 @@ const StructureForm = (setCategories) => {
         dispatchForm({ type: "values", data: formData });
     };
 
-    // FUNCTION 8: queryCategories - function that grabs all categories
+    // FUNCTION 10: queryCategories - function that queries the database for categories, used by the categories dropdown
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, the `categories` state is updated with the values
+    // if all queries are is successful, the `categories` state is updated with the values
     // if the query is unsuccessful, an error message is rendered to the user, and the `categories` state
     // remains unset
     const queryCategories = async () => {
         try {
             const categories = await queryAll("category", "id");
+        
             categories.sort((a, b) => b.practice - a.practice);
-            setCategories(categories);
+            setFormData(prevState => ({ ...prevState, categories }));
 
         } catch (error) {
             addMessage("Categories could not be loaded. If refreshing the page does not work, the system may be experiencing an outage.", "error", 15000);
         };
     };
 
-    // FUNCTION 9: isDuplicate - function that checks if an entity attempting to be added is already present in data
+    // FUNCTION 11: isDuplicate - function that checks if an entity attempting to be added is already present in data
     // PRECONDITIONS (2 parameters):
     // 1.) data: the data the user has selected, that we wish to check
     // 2.) entityName: the string representing the set of `entityName` we want to check
@@ -256,7 +283,7 @@ const StructureForm = (setCategories) => {
         return result;
     };
 
-    // FUNCTION 10: handleCategoryInsert - function that is called when the user adds a new category select row
+    // FUNCTION 12: handleCategoryInsert - function that is called when the user adds a new category select row
     // PRECONDITIONS (2 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - unused here, but passed from component
@@ -271,7 +298,7 @@ const StructureForm = (setCategories) => {
         }
     };
 
-    // FUNCTION 11: handleCategoryUpdate - function that is called when the user updates an existing category row
+    // FUNCTION 13: handleCategoryUpdate - function that is called when the user updates an existing category row
     // PRECONDITIONS (2 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - should be equal to the number of entities currently present
@@ -286,14 +313,15 @@ const StructureForm = (setCategories) => {
         }
     }
 
-    // FUNCTION 12: handleModeInsert - function that is called when the user wants to add a new mode to the list of modes
+    // FUNCTION 14: handleModeInsert - function that is called when the user wants to add a new mode to the list of modes
     // PRECONDITIONS (1 parametr):
-    // 1.) category: the category we want to add the mode to
+    // 1.) category: an object representing the category we want to add the mode to
     // POSTCONDITIONS (1 possible outcome):
     // we determine where to add the mode, and add it
     const handleModeInsert = category => {
+        const categoryName = category.category;
         let id;
-        let categoryIndex = form.values.category.findIndex(c => c.category === category);
+        let categoryIndex = form.values.category.findIndex(c => c.id === category.id);
 
         while (categoryIndex >= 0 && !id) {
             const categoryName = form.values.category[categoryIndex].category;
@@ -309,24 +337,24 @@ const StructureForm = (setCategories) => {
             id = 1;
         }
 
-        const data = { name: "", category, id };
+        const data = { name: "", category: categoryName, id };
         dispatchForm({ type: "modesChange", data: data });
     }
 
-    // FUNCTION 13: handleModeChange - code that is excuted each time the user makes a keystroke in a mode input
+    // FUNCTION 15: handleModeChange - code that is excuted each time the user makes a keystroke in a mode input
     // PRECONDITIONS (3 parameters):
     // 1.) mode: the string user input entered as the mode
-    // 2.) category: the category the mode belongs to
+    // 2.) category: a string representing the category the mode belongs to
     // 3.) id: the id of the mode
     // POSTCONDITIONS (2 possible outcomes):
     // if the user enters a non-empty value, the list of modes is updated to include it
     // otherwise, the system will delete the entity
     const handleModeChange = (mode, category, id) => {
-        const data = { name: mode, category, id };
+        const data = { name: mode, category: category, id };
         dispatchForm({ type: "modesChange", data: data });
     };
 
-    // FUNCTION 14: handleLevelInsert - function that is called when the user wants to add a new level to the list of levels
+    // FUNCTION 16: handleLevelInsert - function that is called when the user wants to add a new level to the list of levels
     // PRECONDITIONS (2 parameters):
     // 1.) category: the category we want to add the level to
     // 2.) mode: the mode we want to add the level to
@@ -355,16 +383,26 @@ const StructureForm = (setCategories) => {
             id = 1;
         }
 
-        // insert data!
+        const data = {
+            name: "",
+            category,
+            mode,
+            id: id,
+            chart_type: "both",
+            time: 60,
+            timer_type: "sec_csec",
+            ascending: null
+        };
+        dispatchForm({ type: "insertLevel", data: data });
     }
 
-    // FUNCTION 15: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
+    // FUNCTION 17: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "true", rendering the popup
     const openPopup = () => setAddCategory(true);
 
-    // FUNCTION 16: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
+    // FUNCTION 18: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "false", unrendering the popup

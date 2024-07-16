@@ -4,6 +4,12 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Selector from "./Selector.jsx";
 
 function SelectList({ entities, inputData, selectData, children }) {
+  /* ===== VARIABLES ===== */
+  const emptyEntity = {
+    id: entities.length > 0 ? entities.at(-1).id+1 : 1,
+    [inputData.entityName]: ""
+  };
+
   /* ===== SELECT LIST COMPONENT ===== */
   return (
     <div className={ styles.selectList }>
@@ -13,9 +19,8 @@ function SelectList({ entities, inputData, selectData, children }) {
           <Selector
             inputData={ inputData } 
             selectData={ selectData }
-            inputValue={ entity[inputData.entityName] }
+            entity={ entity }
             handleChange={ inputData.handleChange }
-            id={ entity.id }
             key={ JSON.stringify(entity) } 
           >
             { children }
@@ -25,9 +30,8 @@ function SelectList({ entities, inputData, selectData, children }) {
       <Selector
         inputData={ inputData }
         selectData={ selectData }
-        inputValue=""
+        entity={ emptyEntity }
         handleChange={ inputData.handleInsert }
-        id={ entities.length > 0 ? entities.at(-1).id+1 : 1 }
       />
       { inputData.error && <FormHelperText className={ styles.error } error>{ inputData.error }</FormHelperText> }
     </div>

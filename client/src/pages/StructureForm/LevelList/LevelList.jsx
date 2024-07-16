@@ -4,24 +4,28 @@ import LevelInput from "./LevelInput.jsx";
 
 function LevelList({ levels, category, mode, handleChange, handleInsert }) {
   /* ===== VARIABLES ===== */
-  const filteredLevels = levels.filter(level => level.category === category && level.mode === mode);
+  const categoryName = category.category;
+  const modeName = mode.name;
+  const filteredLevels = levels.filter(level => level.category === categoryName && level.mode === modeName);
   
   /* ===== LEVEL LIST COMPONENT ===== */
   return (
     <div className={ styles.levelList }>
       <h3>Levels</h3>
       { filteredLevels.map(level => {
+        const id = `level_${ category.id }_${ mode.id }_${ level.id }`;
         return (
           <LevelInput
+            id={ id }
             level={ level }
             mode={ mode }
             category={ category }
             handleChange={ handleChange }
-            key={ `level_${ category }${ mode.id }${ level.id }` }
+            key={ id }
           />
         );
       })}
-      <button type="button" id={ styles.addLevelBtn } onClick={ handleInsert }>Add Level</button>
+      <button type="button" id={ styles.addLevelBtn } onClick={ () => handleInsert(categoryName, modeName) }>Add Level</button>
     </div>
   );
 };

@@ -12,7 +12,7 @@ import LevelList from "./LevelList/LevelList.jsx";
 
 function StructureForm() {
   /* ===== STATES & FUNCTIONS ===== */
-  const [categories, setCategories] = useState(undefined);
+  const [formData, setFormData] = useState(undefined);
   const [submittingCategory, setSubmittingCategory] = useState(false);
 
   // states & functions from the js file
@@ -28,7 +28,7 @@ function StructureForm() {
     handleLevelInsert,
     openPopup,
     closePopup
-  } = StructureFormLogic(setCategories);
+  } = StructureFormLogic(setFormData);
 
   /* ===== EFFECTS ===== */
 
@@ -98,7 +98,7 @@ function StructureForm() {
         </ul>
         
         { /* Only render inputs if user has selected  */ }
-        { categories ?
+        { formData ?
           <>
             <SelectList
               entities={ form.values.category }
@@ -111,8 +111,8 @@ function StructureForm() {
               }}
               selectData={{ 
                 entities: {
-                  "practice_mode_style": categories.filter(category => category.practice),
-                  "non-practice_mode_style": categories.filter(category => !category.practice)
+                  "practice_mode_style": formData.categories.filter(category => category.practice),
+                  "non-practice_mode_style": formData.categories.filter(category => !category.practice)
                 },
                 valueAttribute: "abb",
                 entityName: "name"
