@@ -20,7 +20,8 @@ function StructureForm() {
     form,
     addCategory,
     populateForm,
-    queryCategories,
+    queryFormData,
+    updateFormCategories,
     handleCategoryInsert,
     handleCategoryUpdate,
     handleModeInsert,
@@ -35,7 +36,7 @@ function StructureForm() {
   // code that is executed when the component mounts
   useEffect(() => {
     populateForm();
-    queryCategories();
+    queryFormData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -53,7 +54,7 @@ function StructureForm() {
 				<CategoryAddForm 
           submitting={ submittingCategory } 
           setSubmitting={ setSubmittingCategory }
-          refreshCategoryDataFunc={ queryCategories }
+          refreshCategoryDataFunc={ updateFormCategories }
         />
 			</Popup>
 
@@ -119,7 +120,12 @@ function StructureForm() {
               }}
             >
               <ModeList modes={ form.values.mode } handleInsert={ handleModeInsert } handleChange={ handleModeChange }>
-                <LevelList levels={ form.values.level } handleInsert={ handleLevelInsert } handleChange={ () => {} } />
+                <LevelList 
+                  levels={ form.values.level } 
+                  handleInsert={ handleLevelInsert } 
+                  handleChange={ () => {} }
+                  formData={ formData } 
+                />
               </ModeList>
             </SelectList>
             <span onClick={ openPopup } className="hyperlink">

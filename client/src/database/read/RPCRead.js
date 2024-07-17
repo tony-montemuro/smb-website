@@ -279,6 +279,28 @@ const RPCRead = () => {
         }
     };
 
+    // FUNCTION 11: getTimerTypes - funcion that grabs all timer types from the database
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, the array of timer types is returned
+    // if the query is unsuccessful, this function will throw an error, which should be handled by the caller function
+    const getTimerTypes = async () => {
+        try {
+            const { data: timerTypes, error } = await supabase.rpc("get_timer_types");
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+            return timerTypes;
+
+        } catch (error) {
+            // error should be handled by the caller function
+            throw error;
+        };
+    };
+
     return { 
         getRecords, 
         getTotals, 
@@ -289,7 +311,8 @@ const RPCRead = () => {
         getUnapprovedByGame,
         getReportedByGame,
         getProfile,
-        getChartTypes
+        getChartTypes,
+        getTimerTypes
     };
 };
 

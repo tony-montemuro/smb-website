@@ -345,14 +345,20 @@ CREATE OR REPLACE FUNCTION get_chart_types()
 RETURNS json
 LANGUAGE sql
 AS $$
-  SELECT json_agg(chart_types)::json
-  FROM unnest(enum_range(NULL::chart_t)) AS chart_types;
+  SELECT json_agg(chart_type)::json
+  FROM (
+    SELECT unnest(enum_range(NULL::chart_t)) AS chart_type
+    ORDER BY chart_type
+  ) subquery;
 $$;
 
 CREATE OR REPLACE FUNCTION get_timer_types()
 RETURNS json
 LANGUAGE sql
 AS $$
-  SELECT json_agg(timer_types)::json
-  FROM unnest(enum_range(NULL::timer_t)) AS timer_types;
+  SELECT json_agg(timer_type)::json
+  FROM (
+    SELECT unnest(enum_range(NULL::timer_t)) AS timer_type
+    ORDER BY timer_type
+  ) subquery;
 $$;
