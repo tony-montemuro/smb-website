@@ -12,3 +12,8 @@
 .level {
     display: flex;
 }
+
+.levelInput {
+    display: flex;
+    gap: 8px;
+}
