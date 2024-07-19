@@ -26,7 +26,7 @@ function LevelList({ levels, category, mode, handleChange, handleInsert, formDat
           />
         );
       })}
-      <button type="button" id={ styles.addLevelBtn } onClick={ () => handleInsert(categoryName, modeName) }>Add Level</button>
+      <button type="button" className={ styles.levelListBtn } onClick={ () => handleInsert(categoryName, modeName) }>Add Level</button>
     </div>
   );
 };

@@ -24,7 +24,7 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
       <TextField
         id={ `${ id }_name` }
         label="Name"
-        onChange={ e => handleChange() }
+        onChange={ e => handleChange(e) }
         value={ level.name }
         variant="filled"
       />
@@ -32,7 +32,7 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
       <TextField
         id={ `${ id }_chart_type` }
         label="Chart Type"
-        onChange={ e => handleChange() }
+        onChange={ e => handleChange(e) }
         select
         SelectProps={ { native: true } }
         sx={ { width: "fit-content" } }
@@ -52,7 +52,7 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
       <TextField
         id={ `${ id }_timer_type` }
         label="Timer Type"
-        onChange={ e => handleChange() }
+        onChange={ e => handleChange(e) }
         select
         SelectProps={ { native: true } }
         sx={ { width: "fit-content" } }
@@ -75,8 +75,8 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
             <Checkbox 
               checked={ scoreChartTypes.includes(level.ascending) } 
               disabled={ level.chartType === "time" }
-              id={ `${ id }_ascending_score` } 
-              onChange={ handleChange } 
+              id={ `${ id }_ascending.score` } 
+              onChange={ e => handleChange(e) } 
               inputProps={{ "aria-label": "controlled" }} 
             />
           } 
@@ -90,14 +90,31 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
             <Checkbox 
               checked={ timeChartTypes.includes(level.ascending) } 
               disabled={ level.chartType === "score" }
-              id={ `${ id }_ascending_time` } 
-              onChange={ handleChange } 
+              id={ `${ id }_ascending.time` } 
+              onChange={ e => handleChange(e) } 
               inputProps={{ "aria-label": "controlled" }} 
             />
           } 
           label="Ascend Time"
         />
       </FormGroup>
+
+      <TextField
+        id={ `${ id }_time` }
+        label="Time"
+        onChange={ e => handleChange(e) }
+        type="number"
+        value={ level.time }
+        variant="filled"
+      />
+
+      <button
+        type="button" 
+        className={ styles.levelListBtn } 
+        onChange={ e => handleChange(e) }
+      >
+        Delete
+      </button>
     </div>
   );
 };

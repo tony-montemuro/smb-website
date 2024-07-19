@@ -429,15 +429,68 @@ const StructureForm = (setFormData) => {
             ascending: null
         };
         dispatchForm({ type: "insertLevel", data: data });
-    }
+    };
 
-    // FUNCTION 19: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
+    // FUNCTION 19: handleLevelChange
+    const handleLevelChange = e => {
+        let { id, value, checked } = e.target;
+        const idVals = id.split("_");
+        const levelId = parseInt(idVals.at(-2));
+        const level = form.values.level.find(level => level.id === levelId);
+        let field = idVals.at(-1);
+        if (field.beginsWith("ascending")) {
+            let fieldVals = field.split(".");
+            field = fieldVals[0];
+            let type = fieldVals[1];
+            const ascending = level.ascending;
+            if (type === "score") {
+                if (ascending === "both" && !checked) {
+                    value = "time";
+                }
+                if (ascending === "time" && checked) {
+                    value = "both";
+                }
+                if (ascending === null && checked) {
+                    value = "score";
+                }
+                if (ascending === "score" && !checked) {
+                    value = null;
+                }
+            } else {
+                if (ascending === "both" && !checked) {
+                    value = "score";
+                }
+                if (ascending === "score" && checked) {
+                    value = "both";
+                }
+                if (ascending === null && checked) {
+                    value = "time";
+                }
+                if (ascending === "time" && !checked) {
+                    value = null;
+                }
+            }
+
+        }
+        const update = { [field]: value };
+
+        // add any "side effects" caused by certain inputs on certain fields
+        switch (field) {
+            case "chart_type":
+                if (value === "score") {
+                    update.time = 0;
+                }
+            
+        };
+    };
+
+    // FUNCTION 20: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "true", rendering the popup
     const openPopup = () => setAddCategory(true);
 
-    // FUNCTION 20: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
+    // FUNCTION 21: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "false", unrendering the popup
@@ -454,6 +507,7 @@ const StructureForm = (setFormData) => {
         handleModeInsert,
         handleModeChange,
         handleLevelInsert,
+        handleLevelChange,
         openPopup,
         closePopup
     };

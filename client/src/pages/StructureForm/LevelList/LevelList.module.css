@@ -5,8 +5,9 @@
     padding-left: 20px;
 }
 
-#addLevelBtn {
+.levelListBtn {
     width: fit-content;
+    height: fit-content;
 }
 
 .level {
@@ -16,4 +17,5 @@
 .levelInput {
     display: flex;
     gap: 8px;
+    align-items: center;
 }
