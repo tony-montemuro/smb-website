@@ -13,7 +13,7 @@ function LevelList({ levels, category, mode, handleChange, handleInsert, formDat
     <div className={ styles.levelList }>
       <h3>Levels</h3>
       { filteredLevels.map(level => {
-        const id = `level_${ category.id }_${ mode.id }_${ level.id }`;
+        const id = `level-${ category.id }-${ mode.id }-${ level.id }`;
         return (
           <LevelInput
             id={ id }

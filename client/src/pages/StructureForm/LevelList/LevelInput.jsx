@@ -22,7 +22,7 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
   return (
     <div className={ styles.levelInput }>
       <TextField
-        id={ `${ id }_name` }
+        id={ `${ id }-name` }
         label="Name"
         onChange={ e => handleChange(e) }
         value={ level.name }
@@ -30,7 +30,7 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
       />
 
       <TextField
-        id={ `${ id }_chart_type` }
+        id={ `${ id }-chart_type` }
         label="Chart Type"
         onChange={ e => handleChange(e) }
         select
@@ -50,15 +50,16 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
       </TextField>
 
       <TextField
-        id={ `${ id }_timer_type` }
+        disabled={ level.chart_type === "score" || level.ascending === "score" }
+        id={ `${ id }-timer_type` }
         label="Timer Type"
         onChange={ e => handleChange(e) }
         select
         SelectProps={ { native: true } }
-        sx={ { width: "fit-content" } }
         value={ level.timer_type }
         variant="filled"
       >
+        <option key="" value=""></option>
         { formData.timerTypes.map(timerType => (
           <option
             key={ timerType }
@@ -74,8 +75,8 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
           control={ 
             <Checkbox 
               checked={ scoreChartTypes.includes(level.ascending) } 
-              disabled={ level.chartType === "time" }
-              id={ `${ id }_ascending.score` } 
+              disabled={ level.chart_type === "time" }
+              id={ `${ id }-ascending.score` } 
               onChange={ e => handleChange(e) } 
               inputProps={{ "aria-label": "controlled" }} 
             />
@@ -89,8 +90,8 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
           control={ 
             <Checkbox 
               checked={ timeChartTypes.includes(level.ascending) } 
-              disabled={ level.chartType === "score" }
-              id={ `${ id }_ascending.time` } 
+              disabled={ level.chart_type === "score" }
+              id={ `${ id }-ascending.time` } 
               onChange={ e => handleChange(e) } 
               inputProps={{ "aria-label": "controlled" }} 
             />
@@ -100,7 +101,8 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
       </FormGroup>
 
       <TextField
-        id={ `${ id }_time` }
+        disabled={ level.chart_type === "score" || timeChartTypes.includes(level.ascending) }
+        id={ `${ id }-time` }
         label="Time"
         onChange={ e => handleChange(e) }
         type="number"

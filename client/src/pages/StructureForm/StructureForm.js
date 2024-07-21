@@ -186,8 +186,19 @@ const StructureForm = (setFormData) => {
         return { ...state, values: updatedValues };
     };
 
-    // FUNCTION 7: updateLevel
-    const updateLevel = (state, data) => {};
+    // FUNCTION 7: updateLevel - function that is executed when the user performs an action to update a level
+    // 1.) state: the current state of the form
+    // 2.) data: the user inputted-changes
+    // POSTCONDITIONS (1 possible outcome):
+    // we find the targetted level, update the data, and update the state
+    const updateLevel = (state, data) => {
+        const levelUpdated = [...state.values.level];
+        const levelIndex = levelUpdated.findIndex(level => level.id === data.id);
+        levelUpdated[levelIndex] = { ...levelUpdated[levelIndex], ...data };
+        const updatedValues = { ...state.values, level: levelUpdated };
+        updateLocal(updatedValues);
+        return { ...state, values: updatedValues };
+    };
 
     // FUNCTION 8: reducer - function that executes each time the user attempts to update the form reducer hook
     // PRECONDITIONS (2 parameters):
@@ -428,69 +439,85 @@ const StructureForm = (setFormData) => {
             timer_type: "sec_csec",
             ascending: null
         };
-        dispatchForm({ type: "insertLevel", data: data });
+        dispatchForm({ type: "insertLevel", data });
     };
 
-    // FUNCTION 19: handleLevelChange
+    // FUNCTION 19: getAscendingValue - function that takes the ascending type the user is interacting with, and
+    // determines how the ascending state is updated
+    // PRECONDITIONS (3 parameters):
+    // 1.) a string, either "score" or "time"
+    // 2.) a boolean which determines whether or not the checkbox is switched ON or OFF 
+    // 3.) a level object which represents the level in the form the user is interacting with
+    // POSTCONDITIONS (1 possible outcome):
+    // using form data, we determine the new value of "ascending", and return it
+    const getAscendingValue = (type, checked, level) => {
+        const otherType = type === "score" ? "time" : "score";
+        const ascending = level.ascending;
+
+        if (ascending === null && checked) {
+            return type;
+        }
+        if (ascending === otherType && checked) {
+            return "both";
+        }
+        if (ascending === "both" && !checked) {
+            return otherType;
+        }
+        return null;
+    };
+
+    // FUNCTION 20: handleLevelChange
     const handleLevelChange = e => {
         let { id, value, checked } = e.target;
-        const idVals = id.split("_");
+        const idVals = id.split("-");
         const levelId = parseInt(idVals.at(-2));
         const level = form.values.level.find(level => level.id === levelId);
         let field = idVals.at(-1);
-        if (field.beginsWith("ascending")) {
+
+        // special case: if we are dealing with an ascending field, let's determine singular value
+        if (field.startsWith("ascending")) {
             let fieldVals = field.split(".");
             field = fieldVals[0];
-            let type = fieldVals[1];
-            const ascending = level.ascending;
-            if (type === "score") {
-                if (ascending === "both" && !checked) {
-                    value = "time";
-                }
-                if (ascending === "time" && checked) {
-                    value = "both";
-                }
-                if (ascending === null && checked) {
-                    value = "score";
-                }
-                if (ascending === "score" && !checked) {
-                    value = null;
-                }
-            } else {
-                if (ascending === "both" && !checked) {
-                    value = "score";
-                }
-                if (ascending === "score" && checked) {
-                    value = "both";
-                }
-                if (ascending === null && checked) {
-                    value = "time";
-                }
-                if (ascending === "time" && !checked) {
-                    value = null;
-                }
-            }
-
+            value = getAscendingValue(fieldVals[1], checked, level);
         }
-        const update = { [field]: value };
 
         // add any "side effects" caused by certain inputs on certain fields
+        const update = { id: levelId, [field]: value };
         switch (field) {
             case "chart_type":
                 if (value === "score") {
                     update.time = 0;
+                    update.timer_type = "";
                 }
-            
+
+                if (["score", "time"].includes(value)) {
+                    if (level.ascending === "both") {
+                        update.ascending = value;
+                    } else if (value !== level.ascending) {
+                        update.ascending = null;
+                    }
+                }
+                break;
+
+            case "ascending":
+                if (["both", "time"].includes(value)) {
+                    update.time = 0;
+                }
+                break;
+
+            default: break;
         };
+        
+        dispatchForm({ type: "updateLevel", data: update });
     };
 
-    // FUNCTION 20: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
+    // FUNCTION 21: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "true", rendering the popup
     const openPopup = () => setAddCategory(true);
 
-    // FUNCTION 21: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
+    // FUNCTION 22: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "false", unrendering the popup
