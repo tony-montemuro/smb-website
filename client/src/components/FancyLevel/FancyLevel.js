@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import FrontendHelper from "../../helper/FrontendHelper";
+import LevelHelper from "../../helper/LevelHelper.js";
 
 const FancyLevel = () => {
     /* ===== VARIABLES ===== */
@@ -8,42 +8,16 @@ const FancyLevel = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { snakeToTitle } = FrontendHelper();
+    const { levelB2F } = LevelHelper();
 
-    // FUNCTION 1: cleanLevelName - code that takes the level in snake case, and converts it to a format the user is familiar with
-    // PRECONDITIONS (1 parameter):
-    // 1.) level: an unformatted level name
-    // POSTCONDITIONS (1 possible outcome):
-    // returns a copy of level in title case, as well as handling strange edge cases such as dashes, dots, etc.
-    const cleanLevelName = level => {
-        const specialChars = [".", "-", "("];
-        const replaceStrs = { "%3F": "?" };
-        let cleanedLevel = snakeToTitle(level);
-
-        // handle special characters
-        for (let i = 0; i < cleanedLevel.length; i++) {
-            if (i > 0 && specialChars.includes(cleanedLevel[i-1])) {
-                const former = cleanedLevel.substr(0, i), later = cleanedLevel.substr(i+1);
-                cleanedLevel = former + cleanedLevel[i].toUpperCase() + later;
-            }
-        }
-
-        // handle strings to replace
-        for (let [target, value] of Object.entries(replaceStrs)) {
-            cleanedLevel = cleanedLevel.replaceAll(target, value);
-        }
-        
-        return cleanedLevel;
-    };
-
-    // FUNCTION 2: addSyntaxToGoal - simple function that returns a goal string wrapped in snake case syntax
+    // FUNCTION 1: addSyntaxToGoal - simple function that returns a goal string wrapped in snake case syntax
     // PRECONDITIONS (1 parameter):
     // 1.) goal: a string: "blue", "green", or "red"
     // POSTCONDITIONS (1 possible outcome):
     // the string is returned like so (ignore brackets): "_([goal])"
     const addSyntaxToGoal = goal => `_(${ goal })`;
 
-    // FUNCTION 3: getNameAndGoal - function that returns the cleaned name of the level, as well as the goal-type, if there is one
+    // FUNCTION 2: getNameAndGoal - function that returns the cleaned name of the level, as well as the goal-type, if there is one
     // PRECONDITIONS (1 parameter):
     // 1.) level: a string representing a level, in snake-case
     // POSTCONDITIONS (1 possible outcome):
@@ -53,7 +27,7 @@ const FancyLevel = () => {
     const getNameAndGoal = level => {
         const goal = goals.find(goal => level.endsWith(addSyntaxToGoal(goal)));
         if (goal) level = level.replace(addSyntaxToGoal(goal), "");
-        return { levelName: cleanLevelName(level), goal };
+        return { levelName: levelB2F(level), goal };
     };
 
     return { getNameAndGoal };

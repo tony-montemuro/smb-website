@@ -2,6 +2,7 @@
 import { useContext, useReducer, useState } from "react";
 import { GameAddContext, MessageContext } from "../../utils/Contexts";
 import FrontendHelper from "../../helper/FrontendHelper.js";
+import LevelHelper from "../../helper/LevelHelper.js";
 import Read from "../../database/read/Read.js";
 import RPCRead from "../../database/read/RPCRead.js";
 
@@ -41,6 +42,7 @@ const StructureForm = (setFormData) => {
 
     // helper functions
     const { capitalize } = FrontendHelper();
+    const { levelF2B } = LevelHelper();
 
     // FUNCTION 1: updateLocal - function that runs each time the user finishes interacting with a form field
     // PRECONDITIONS (1 parameter):
@@ -505,6 +507,10 @@ const StructureForm = (setFormData) => {
                 }
                 break;
 
+            case "name":
+                update.name = levelF2B(value);
+                break;
+                
             default: break;
         };
         

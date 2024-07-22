@@ -3,6 +3,7 @@ import styles from "./LevelList.module.css";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
+import LevelHelper from "../../../helper/LevelHelper.js";
 import LevelInputLogic from "./LevelInput.js";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
@@ -17,6 +18,7 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
 
   // helper functions
   const { capitalize } = FrontendHelper();
+  const { levelB2F } = LevelHelper();
 
   /* ===== LEVEL INPUT COMPONENT ===== */
   return (
@@ -25,7 +27,7 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
         id={ `${ id }-name` }
         label="Name"
         onChange={ e => handleChange(e) }
-        value={ level.name }
+        value={ levelB2F(level.name) }
         variant="filled"
       />
 
@@ -50,7 +52,7 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
       </TextField>
 
       <TextField
-        disabled={ level.chart_type === "score" || level.ascending === "score" }
+        disabled={ level.chart_type === "score" }
         id={ `${ id }-timer_type` }
         label="Timer Type"
         onChange={ e => handleChange(e) }
