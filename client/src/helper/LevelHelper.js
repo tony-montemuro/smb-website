@@ -1,16 +1,12 @@
 /* ===== IMPORTS ===== */
-import { isAlphaPattern } from "../utils/RegexPatterns.js";
+import { isUpperAlphaPattern } from "../utils/RegexPatterns.js";
 import FrontendHelper from "./FrontendHelper.js";
 
 const LevelHelper = () => {
-    /* ===== VARIABLES ===== */
-    const specialChars = [".", "-", "("];
-    const replaceStrs = { "%3F": "?" };
-
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { snakeToTitle } = FrontendHelper();
+    const { capitalize, snakeToTitle } = FrontendHelper();
 
     // FUNCTION 1: levelB2F ("level backend to frontend") - code that takes the level in snake case, and converts it to 
     // a format the user is familiar with
@@ -19,6 +15,8 @@ const LevelHelper = () => {
     // POSTCONDITIONS (1 possible outcome):
     // returns a copy of level in title case, as well as handling strange edge cases such as dashes, dots, etc.
     const levelB2F = level => {
+        const specialChars = [".", "-", "("];
+        const replaceStrs = { "%3F": "?" };
         let cleanedLevel = snakeToTitle(level);
 
         // handle special characters
@@ -43,25 +41,39 @@ const LevelHelper = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the level is converted to a format familiar to the DB
     const levelF2B = level => {
-        // THIS FUNCTION NEEDS WORK: need to figure out alternate capitalizations between "words", which are
-        // split by many different special characters
+        const separators = [".", "-", "(", "_", "__"];
+        const replaceStrs = {
+            "?": "%3F",
+            " ": "_",
+            "_": "__"
+        };
         let backendLevel = "";
+        let word = "";
 
         for (let i = 0; i < level.length; i++) {
-            const c = level[i];
+            let c = level[i];
 
-            if (isAlphaPattern.test(c)) {
-                backendLevel += c.toLowerCase();
-            } else if (c === " ") {
-                backendLevel += "_";
-            } else if (c === "_") {
-                backendLevel += "__";
-            } else if (Object.keys(replaceStrs).includes(c)) {
-                backendLevel += replaceStrs[c];
-            } else {
-                backendLevel += c;
+            // replace c, if necessary
+            if (Object.keys(replaceStrs).includes(c)) {
+                c = replaceStrs[c];
+            }
+
+            // if the word includes any uppercase letters after beginning, implication is that user wants non-standard 
+            // capitalization. the convention in DB is that first character is also capitalized, although technically unnecessary
+            if (word.length === 0) {
+                c = c.toLowerCase();
+            } else if (isUpperAlphaPattern.test(c)) {
+                word = capitalize(word);
+            }
+
+            // finally, update word with c. if c is a "separator" character, let's update `backendLevel`
+            word += c;
+            if (separators.includes(c)) {
+                backendLevel += word;
+                word = "";
             }
         }
+        backendLevel += word;
         
         return backendLevel;
     };

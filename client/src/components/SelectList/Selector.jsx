@@ -31,7 +31,7 @@ function Selector({ inputData, selectData, entity, handleChange, children }) {
         </TextField>
         <button type="button" disabled={ !inputValue } onClick={ () => handleChange("", id, inputData.entityName) }>Delete</button>
       </div>
-      { inputValue && cloneElement(children, { [inputData.entityName]: entity }) }
+      { inputValue && children && cloneElement(children, { [inputData.entityName]: entity }) }
     </div>
   );
 };

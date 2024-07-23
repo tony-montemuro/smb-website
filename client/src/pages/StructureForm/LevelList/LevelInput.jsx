@@ -8,7 +8,7 @@ import LevelInputLogic from "./LevelInput.js";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
-function LevelInput({ id, level, mode, category, formData, handleChange }) {
+function LevelInput({ id, level, formData, handleChange }) {
   /* ===== FUNCTIONS ===== */
   const scoreChartTypes = ["both", "score"];
   const timeChartTypes = ["both", "time"];
@@ -24,6 +24,7 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
   return (
     <div className={ styles.levelInput }>
       <TextField
+        className={ styles.nameInput }
         id={ `${ id }-name` }
         label="Name"
         onChange={ e => handleChange(e) }
@@ -32,6 +33,7 @@ function LevelInput({ id, level, mode, category, formData, handleChange }) {
       />
 
       <TextField
+        className={ styles.chartTypeInput }
         id={ `${ id }-chart_type` }
         label="Chart Type"
         onChange={ e => handleChange(e) }

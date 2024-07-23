@@ -18,8 +18,6 @@ function LevelList({ levels, category, mode, handleChange, handleInsert, formDat
           <LevelInput
             id={ id }
             level={ level }
-            mode={ mode }
-            category={ category }
             formData={ formData }
             handleChange={ handleChange }
             key={ id }

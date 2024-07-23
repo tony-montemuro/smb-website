@@ -101,7 +101,7 @@ function StructureForm() {
         
         { /* Only render inputs if user has selected  */ }
         { formData ?
-          <>
+          <div style={ { width: "100%" } }>
             <SelectList
               entities={ form.values.category }
               inputData={{
@@ -132,7 +132,7 @@ function StructureForm() {
             <span onClick={ openPopup } className="hyperlink">
               Category missing from list? Click here to upload a new category!
             </span>
-          </>
+          </div>
         :
           <Loading />
         }

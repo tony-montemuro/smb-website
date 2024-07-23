@@ -107,24 +107,32 @@ const StructureForm = (setFormData) => {
         };
 
         // only re-introduce data if category is defined. otherwise, this function behaves as a "delete"
+        const oldCategoryName = stateValues.category.find(c => c.id === data.id).category;
         if (!data.category) {
-            const categoryName = stateValues.category.find(c => c.id === data.id).category;
-            const children = findChildren(stateValues, "category", categoryName);
+            const children = findChildren(stateValues, "category", oldCategoryName);
             let warning = "Deleting this category will also delete it's ";
             warning += children.level.length > 0 ? "modes & levels." : "modes.";
             warning += " Are you sure you want to do this?";
 
             // special case: warn the users if there exist any children of the category. if they decide *not*
             // to delete the category, this function does nothing
-            if (children.mode.length > 0 && !window.confirm(warning)) {
+            if ((children.mode.length > 0 || children.level.length > 0) && !window.confirm(warning)) {
                 return state;
             }
 
             // otherwise, we need to go ahead and remove all children as well
-            updated.level = updated.level.filter(level => level.category !== categoryName);
-            updated.mode = updated.mode.filter(mode => mode.category !== categoryName);
+            updated.level = updated.level.filter(level => level.category !== oldCategoryName);
+            updated.mode = updated.mode.filter(mode => mode.category !== oldCategoryName);
+
         } else {
+            // now, we need to update category, and cascade change down to modes & levels
             updated.category.push(data);
+
+            const cascade = arg => arg.category === oldCategoryName ? { ...arg, category: data.category } : arg;
+            updated.mode = updated.mode.map(cascade);
+            updated.level = updated.level.map(cascade);
+
+            updated.category.sort((a, b) => a.id - b.id);
         }
 
         updateLocal(updated);
@@ -141,31 +149,45 @@ const StructureForm = (setFormData) => {
     // otherwise, treat as an insert
     const changeModes = (state, data) => {
         const matchingModeCondition = mode => mode.id === data.id && mode.category === data.category;
-        let updatedModes = [...state.values.mode];
-        const targetIndex = updatedModes.findIndex(mode => matchingModeCondition(mode));
+        const updated = { ...state.values };
+        const targetIndex = updated.mode.findIndex(mode => matchingModeCondition(mode));
 
         // if we fail to find mode, we need to treat as insert, and update any ids >= data.id
         if (targetIndex === -1) {
-            for (let mode of updatedModes) {
+            for (let mode of updated.mode) {
                 if (mode.id >= data.id) {
                     mode.id++;
                 }
             }
 
-            updatedModes.push(data);
-            updatedModes.sort((a, b) => a.id - b.id);
+            updated.mode.push(data);
+            updated.mode.sort((a, b) => a.id - b.id);
         } else {
             // now, if the value is defined, treat as updated. otherwise, treat as delete
+            const oldModeName = updated.mode[targetIndex].name;
             if (data.name !== "") {
-                updatedModes[targetIndex] = data;
+                // update mode, and cascade change down to child levels (if any)
+                updated.mode[targetIndex] = data;
+                updated.level.map(level => level.mode === oldModeName ? { ...level, mode: data.mode } : level);
+
             } else {
-                updatedModes = updatedModes.filter(mode => !matchingModeCondition(mode));
+                const children = findChildren(state.values, "mode", oldModeName);
+                let warning = "Deleting this mode will also delete it's levels. Are you sure you want to do this?";
+
+                // special case: warn the users if there exist any children of the mode. if they decide *not*
+                // to delete the mode, this function does nothing
+                if (children.level.length > 0 && !window.confirm(warning)) {
+                    return state;
+                }
+
+                // delete mode, as well as any children levels
+                updated.mode = updated.mode.filter(mode => !matchingModeCondition(mode));
+                updated.level = updated.level.filter(level => level.mode !== oldModeName);
             }
         }
 
-        const updatedValues = { ...state.values, mode: updatedModes };
-        updateLocal(updatedValues);
-        return { ...state, values: updatedValues };
+        updateLocal(updated);
+        return { ...state, values: updated };
     };
 
     // FUNCTION 6: insertLevel - function that executes when the user performs an action to insert a level

@@ -45,6 +45,9 @@ export const isAlphaPattern = /[A-Za-z]/;
 // Is lower alphanumeric regex
 export const isLowerAlphaNumeric = /^[a-z0-9]+$/;
 
+// Is upper alpha regex
+export const isUpperAlphaPattern = /^[A-Z]+$/;
+
 // Is upper alphanumeric regex
 export const isUpperAlphaNumeric = /^[A-Z0-9]+$/;
 
