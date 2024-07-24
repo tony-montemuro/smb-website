@@ -33,6 +33,13 @@ const StructureForm = (setFormData) => {
         }
     };
     const structureKey = keys.structure;
+    const INSERT_CATEGORY = "INSERT_CATEGORY";
+    const UPDATE_CATEGORY = "UPDATE_CATEGORY";
+    const INSERT_MODE = "INSERT_MODE";
+    const UPDATE_MODE = "UPDATE_MODE";
+    const DELETE_MODE = "DELETE_MODE";
+    const INSERT_LEVEL = "INSERT_LEVEL";
+    const UPDATE_LEVEL = "UPDATE_LEVEL";
 
     /* ===== FUNCTIONS ===== */
 
@@ -139,58 +146,78 @@ const StructureForm = (setFormData) => {
         return { ...state, values: updated };
     };
 
-    // FUNCTION 5: changeModes - function that executes when the user performs a 'change' on a mode
+    // FUNCTION 5: insertMode - function that executes when the user "adds" a new mode
     // PRECONDITIONS (2 parameters):
     // 1.) state: the current state of the form
-    // 2.) data: the user inputted-category (object with two keys: id (int) and category (string))
-    // POSTCONDITIONS (2 possible outcomes):
-    // if we are able to find that the mode already exists in the form, and the value is defined, treat as update
-    // if we are able to find that the mode already exists in the form, and the value is empty, treat as delete
-    // otherwise, treat as an insert
-    const changeModes = (state, data) => {
-        const matchingModeCondition = mode => mode.id === data.id && mode.category === data.category;
+    // 2.) data: the user inputted-mode (object with three keys: id (int), name (string), and category (string))
+    // POSTCONDITIONS (1 possible outcomes):
+    // the mode is added to our list of modes in the form
+    const insertMode = (state, data) => {
         const updated = { ...state.values };
-        const targetIndex = updated.mode.findIndex(mode => matchingModeCondition(mode));
 
-        // if we fail to find mode, we need to treat as insert, and update any ids >= data.id
-        if (targetIndex === -1) {
-            for (let mode of updated.mode) {
-                if (mode.id >= data.id) {
-                    mode.id++;
-                }
-            }
-
-            updated.mode.push(data);
-            updated.mode.sort((a, b) => a.id - b.id);
-        } else {
-            // now, if the value is defined, treat as updated. otherwise, treat as delete
-            const oldModeName = updated.mode[targetIndex].name;
-            if (data.name !== "") {
-                // update mode, and cascade change down to child levels (if any)
-                updated.mode[targetIndex] = data;
-                updated.level.map(level => level.mode === oldModeName ? { ...level, mode: data.mode } : level);
-
-            } else {
-                const children = findChildren(state.values, "mode", oldModeName);
-                let warning = "Deleting this mode will also delete it's levels. Are you sure you want to do this?";
-
-                // special case: warn the users if there exist any children of the mode. if they decide *not*
-                // to delete the mode, this function does nothing
-                if (children.level.length > 0 && !window.confirm(warning)) {
-                    return state;
-                }
-
-                // delete mode, as well as any children levels
-                updated.mode = updated.mode.filter(mode => !matchingModeCondition(mode));
-                updated.level = updated.level.filter(level => level.mode !== oldModeName);
+        for (let mode of updated.mode) {
+            if (mode.id >= data.id) {
+                mode.id++;
             }
         }
+
+        updated.mode.push(data);
+        updated.mode.sort((a, b) => a.id - b.id);
 
         updateLocal(updated);
         return { ...state, values: updated };
     };
 
-    // FUNCTION 6: insertLevel - function that executes when the user performs an action to insert a level
+    // FUNCTION 6: updateMode - function that executes when the user performs a change on a mode
+    // PRECONDITIONS (2 parameters):
+    // 1.) state: the current state of the form
+    // 2.) data: the user inputted-mode (object with three keys: id (int), name (string), and category (string))
+    // POSTCONDITIONS (1 possible outcomes):
+    // the mode is located in our list of modes, and updated based on the data parameter
+    const updateMode = (state, data) => {
+        const updated = { ...state.values };
+        const targetIndex = updated.mode.findIndex(mode => mode.id === data.id);
+        const oldModeName = updated.mode[targetIndex].name;
+
+        // update mode, and cascade change down to child levels (if any)
+        updated.mode[targetIndex] = data;
+        updated.level.map(level => level.mode === oldModeName ? { ...level, mode: data.mode } : level);
+
+        updateLocal(updated);
+        return { ...state, values: updated };
+    };
+
+    // FUNCTION 7: deleteMode - function that executes when the user performs a delete on a mode
+    // PRECONDITIONS (2 parameters):
+    // 1.) state: the current state of the form
+    // 2.) data: the id of the mode we want to delete
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the user selects "yes" from the popup, ther mode is deleted from our mode list, as well as all
+    // children belonging to that mode
+    // if the user selects "no" from the popup, no changes occur to the form
+    const deleteMode = (state, id) => {
+        const matchingModeCondition = mode => mode.id === id;
+        const updated = { ...state.values };
+        const targetIndex = updated.mode.findIndex(mode => matchingModeCondition(mode));
+        const oldModeName = updated.mode[targetIndex].name;
+        const children = findChildren(state.values, "mode", oldModeName);
+        let warning = "Deleting this mode will also delete it's levels. Are you sure you want to do this?";
+
+        // special case: warn the users if there exist any children of the mode. if they decide *not*
+        // to delete the mode, this function does nothing
+        if (children.level.length > 0 && !window.confirm(warning)) {
+            return state;
+        }
+
+        // delete mode, as well as any children levels
+        updated.mode = updated.mode.filter(mode => matchingModeCondition(mode));
+        updated.level = updated.level.filter(level => level.mode !== oldModeName);
+
+        updateLocal(updated);
+        return { ...state, values: updated };
+    };
+
+    // FUNCTION 8: insertLevel - function that executes when the user performs an action to insert a level
     // 1.) state: the current state of the form
     // 2.) data: the user inputted-category (object with two keys: id (int) and category (string))
     // POSTCONDITIONS (1 possible outcomes):
@@ -210,7 +237,7 @@ const StructureForm = (setFormData) => {
         return { ...state, values: updatedValues };
     };
 
-    // FUNCTION 7: updateLevel - function that is executed when the user performs an action to update a level
+    // FUNCTION 9: updateLevel - function that is executed when the user performs an action to update a level
     // 1.) state: the current state of the form
     // 2.) data: the user inputted-changes
     // POSTCONDITIONS (1 possible outcome):
@@ -224,7 +251,7 @@ const StructureForm = (setFormData) => {
         return { ...state, values: updatedValues };
     };
 
-    // FUNCTION 8: reducer - function that executes each time the user attempts to update the form reducer hook
+    // FUNCTION 10: reducer - function that executes each time the user attempts to update the form reducer hook
     // PRECONDITIONS (2 parameters):
     // 1.) state: the state of the form object when the function is called
     // 2.) action: an object with three fields:
@@ -238,15 +265,19 @@ const StructureForm = (setFormData) => {
         const { type, data } = action;
 
 		switch (type) {
-            case "insertCategory":
+            case INSERT_CATEGORY:
                 return insertCategory(state, data);
-            case "updateCategory":
+            case UPDATE_CATEGORY:
                 return updateCategory(state, data);
-            case "modesChange":
-                return changeModes(state, data);
-            case "insertLevel":
+            case INSERT_MODE:
+                return insertMode(state, data);
+            case UPDATE_MODE:
+                return updateMode(state, data);
+            case DELETE_MODE:
+                return deleteMode(state, data);
+            case INSERT_LEVEL:
                 return insertLevel(state, data);
-            case "updateLevel":
+            case UPDATE_LEVEL:
                 return updateLevel(state, data);
             case "values":
                 return { ...state, values: { ...state.values, ...data } };
@@ -262,7 +293,7 @@ const StructureForm = (setFormData) => {
 
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 9: populateForm - function that executes when the StructureForm component mounts
+    // FUNCTION 11: populateForm - function that executes when the StructureForm component mounts
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the metadata key is stored locally, we need to match the form with this data
@@ -278,7 +309,7 @@ const StructureForm = (setFormData) => {
         dispatchForm({ type: "values", data: formData });
     };
 
-    // FUNCTION 10: queryCategories - function that queries the database for categories, used by the categories dropdown
+    // FUNCTION 12: queryCategories - function that queries the database for categories, used by the categories dropdown
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if query is successful, sort the categories by practice flag, and return
@@ -295,7 +326,7 @@ const StructureForm = (setFormData) => {
         };
     };
 
-    // FUNCTION 11: queryFormData - function that loads all data used by the form; should be ran when the `StructureForm` 
+    // FUNCTION 13: queryFormData - function that loads all data used by the form; should be ran when the `StructureForm` 
     // component mounts
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
@@ -314,7 +345,7 @@ const StructureForm = (setFormData) => {
         };
     };
 
-    // FUNCTION 12: updateFormCategories - function that updates the `categories` field of the `formData` state
+    // FUNCTION 14: updateFormCategories - function that updates the `categories` field of the `formData` state
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, update the categories field of the `formData` state
@@ -331,7 +362,7 @@ const StructureForm = (setFormData) => {
         };
     };
 
-    // FUNCTION 13: isDuplicate - function that checks if an entity attempting to be added is already present in data
+    // FUNCTION 15: isDuplicate - function that checks if an entity attempting to be added is already present in data
     // PRECONDITIONS (2 parameters):
     // 1.) data: the data the user has selected, that we wish to check
     // 2.) entityName: the string representing the set of `entityName` we want to check
@@ -353,7 +384,7 @@ const StructureForm = (setFormData) => {
         return result;
     };
 
-    // FUNCTION 14: handleCategoryInsert - function that is called when the user adds a new category select row
+    // FUNCTION 16: handleCategoryInsert - function that is called when the user adds a new category select row
     // PRECONDITIONS (2 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - unused here, but passed from component
@@ -364,11 +395,11 @@ const StructureForm = (setFormData) => {
     const handleCategoryInsert = (value, id) => {
         const data = { id, category: value };
         if (value && !isDuplicate(data, "category")) {
-            dispatchForm({ type: "insertCategory", data: data });
+            dispatchForm({ type: INSERT_CATEGORY, data: data });
         }
     };
 
-    // FUNCTION 15: handleCategoryUpdate - function that is called when the user updates an existing category row
+    // FUNCTION 17: handleCategoryUpdate - function that is called when the user updates an existing category row
     // PRECONDITIONS (2 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - should be equal to the number of entities currently present
@@ -379,52 +410,65 @@ const StructureForm = (setFormData) => {
     const handleCategoryUpdate = (value, id) => {
         const data = { id, category: value };
         if (!isDuplicate(data, "category")) {
-            dispatchForm({ type: "updateCategory", data: data });
+            dispatchForm({ type: UPDATE_CATEGORY, data: data });
         }
     }
 
-    // FUNCTION 16: handleModeInsert - function that is called when the user wants to add a new mode to the list of modes
+    // FUNCTION 18: handleModeInsert - function that is called when the user wants to add a new mode to the list of modes
     // PRECONDITIONS (1 parametr):
     // 1.) category: an object representing the category we want to add the mode to
+    // 2.) id (optional): a integer, representing the id of the mode we want to add. if not provided, we assume
+    // the largest possible id within the category
     // POSTCONDITIONS (1 possible outcome):
     // we determine where to add the mode, and add it
-    const handleModeInsert = category => {
+    const handleModeInsert = (category, id = null) => {
         const categoryName = category.category;
-        let id;
-        let categoryIndex = form.values.category.findIndex(c => c.id === category.id);
 
-        while (categoryIndex >= 0 && !id) {
-            const categoryName = form.values.category[categoryIndex].category;
-            const categoryModes = form.values.mode.filter(m => m.category === categoryName);
-            if (categoryModes.length > 0) {
-                id = categoryModes.at(-1).id+1;
-            }
-            categoryIndex--;
-        }
-
-        // if id is still undefined at this point, implication is that this should have an id of 1
         if (!id) {
-            id = 1;
+            let categoryIndex = form.values.category.findIndex(c => c.id === category.id);
+
+            while (categoryIndex >= 0 && !id) {
+                const categoryName = form.values.category[categoryIndex].category;
+                const categoryModes = form.values.mode.filter(m => m.category === categoryName);
+                if (categoryModes.length > 0) {
+                    id = categoryModes.at(-1).id+1;
+                }
+                categoryIndex--;
+            }
+
+            // if id is still undefined at this point, implication is that this should have an id of 1
+            if (!id) {
+                id = 1;
+            }
         }
 
         const data = { name: "", category: categoryName, id };
-        dispatchForm({ type: "modesChange", data: data });
+        dispatchForm({ type: INSERT_MODE, data: data });
     }
 
-    // FUNCTION 17: handleModeChange - code that is excuted each time the user makes a keystroke in a mode input
+    // FUNCTION 19: handleModeUpdate - code that is excuted each time the user makes a keystroke in a mode input
     // PRECONDITIONS (3 parameters):
     // 1.) mode: the string user input entered as the mode
     // 2.) category: a string representing the category the mode belongs to
-    // 3.) id: the id of the mode
+    // 3.) id: an integer representing the id of the mode the user wants to update
     // POSTCONDITIONS (2 possible outcomes):
     // if the user enters a non-empty value, the list of modes is updated to include it
-    // otherwise, the system will delete the entity
-    const handleModeChange = (mode, category, id) => {
+    // otherwise, the system will attempt to delete the entity
+    const handleModeUpdate = (mode, category, id) => {
         const data = { name: mode, category: category, id };
-        dispatchForm({ type: "modesChange", data: data });
+        dispatchForm({ type: UPDATE_MODE, data: data });
     };
 
-    // FUNCTION 18: handleLevelInsert - function that is called when the user wants to add a new level to the list of levels
+    // FUNCTION 20: handleModeDelete - code that is executed when the user decides to delete a mode
+    // PRECONDITIONS (1 parameter):
+    // 1.) id: an integer representing the id of the mode the user wants to delete
+    // POSTCONDITIONS (1 possible outcome):
+    // the system will attempt to delete the mode
+    const handleModeDelete = id => {
+        dispatchForm({ type: DELETE_MODE, data: id });
+    };
+
+    // FUNCTION 21: handleLevelInsert - function that is called when the user wants to add a new level to the list of levels
     // PRECONDITIONS (2 parameters):
     // 1.) category: the category we want to add the level to
     // 2.) mode: the mode we want to add the level to
@@ -463,10 +507,10 @@ const StructureForm = (setFormData) => {
             timer_type: "sec_csec",
             ascending: null
         };
-        dispatchForm({ type: "insertLevel", data });
+        dispatchForm({ type: INSERT_LEVEL, data });
     };
 
-    // FUNCTION 19: getAscendingValue - function that takes the ascending type the user is interacting with, and
+    // FUNCTION 22: getAscendingValue - function that takes the ascending type the user is interacting with, and
     // determines how the ascending state is updated
     // PRECONDITIONS (3 parameters):
     // 1.) a string, either "score" or "time"
@@ -490,7 +534,11 @@ const StructureForm = (setFormData) => {
         return null;
     };
 
-    // FUNCTION 20: handleLevelChange
+    // FUNCTION 23: handleLevelChange - code that is executed when the use modifies any of the level inputs
+    // PRECONDITIONS (1 parameter):
+    // 1.) an event object generated by the user's keystroke within the input
+    // POSTCONDITIONS (1 possible outcome):
+    // any side-effects from the user input are applied here, and the level is updated accordingly
     const handleLevelChange = e => {
         let { id, value, checked } = e.target;
         const idVals = id.split("-");
@@ -536,16 +584,16 @@ const StructureForm = (setFormData) => {
             default: break;
         };
         
-        dispatchForm({ type: "updateLevel", data: update });
+        dispatchForm({ type: UPDATE_LEVEL, data: update });
     };
 
-    // FUNCTION 21: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
+    // FUNCTION 24: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "true", rendering the popup
     const openPopup = () => setAddCategory(true);
 
-    // FUNCTION 22: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
+    // FUNCTION 25: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "false", unrendering the popup
@@ -560,7 +608,8 @@ const StructureForm = (setFormData) => {
         handleCategoryInsert, 
         handleCategoryUpdate,
         handleModeInsert,
-        handleModeChange,
+        handleModeUpdate,
+        handleModeDelete,
         handleLevelInsert,
         handleLevelChange,
         openPopup,

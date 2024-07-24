@@ -2,7 +2,7 @@
 import styles from "./ModeList.module.css";
 import ModeInput from "./ModeInput.jsx";
 
-function ModeList({ modes, category, handleChange, handleInsert, children }) {
+function ModeList({ modes, category, handleChange, handleInsert, handleDelete, children }) {
   /* ===== VARIABLES ===== */
   const categoryName = category.category;
   const filteredModes = modes.filter(mode => mode.category === categoryName);
@@ -19,6 +19,8 @@ function ModeList({ modes, category, handleChange, handleInsert, children }) {
             mode={ mode }
             category={ category }
             handleChange={ handleChange }
+            handleInsert={ handleInsert }
+            handleDelete={ handleDelete }
             key={ id }
           >
             { children }

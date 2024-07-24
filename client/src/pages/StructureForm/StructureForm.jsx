@@ -25,7 +25,8 @@ function StructureForm() {
     handleCategoryInsert,
     handleCategoryUpdate,
     handleModeInsert,
-    handleModeChange,
+    handleModeUpdate,
+    handleModeDelete,
     handleLevelInsert,
     handleLevelChange,
     openPopup,
@@ -120,7 +121,12 @@ function StructureForm() {
                 entityName: "name"
               }}
             >
-              <ModeList modes={ form.values.mode } handleInsert={ handleModeInsert } handleChange={ handleModeChange }>
+              <ModeList 
+                modes={ form.values.mode }
+                handleInsert={ handleModeInsert }
+                handleChange={ handleModeUpdate }
+                handleDelete={ handleModeDelete }
+              >
                 <LevelList 
                   levels={ form.values.level } 
                   handleInsert={ handleLevelInsert } 
