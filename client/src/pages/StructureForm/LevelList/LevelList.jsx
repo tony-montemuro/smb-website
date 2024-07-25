@@ -2,7 +2,7 @@
 import styles from "./LevelList.module.css";
 import LevelInput from "./LevelInput.jsx";
 
-function LevelList({ levels, category, mode, handleChange, handleInsert, formData }) {
+function LevelList({ levels, category, mode, handleChange, handleInsert, handleDelete, formData }) {
   /* ===== VARIABLES ===== */
   const categoryName = category.category;
   const modeName = mode.name;
@@ -20,11 +20,20 @@ function LevelList({ levels, category, mode, handleChange, handleInsert, formDat
             level={ level }
             formData={ formData }
             handleChange={ handleChange }
+            handleDelete={ handleDelete }
             key={ id }
           />
         );
       })}
-      <button type="button" className={ styles.levelListBtn } onClick={ () => handleInsert(categoryName, modeName) }>Add Level</button>
+
+      <button 
+        type="button"
+        disabled={ !modeName }
+        className={ styles.levelListBtn }
+        onClick={ () => handleInsert(categoryName, modeName) }
+      >
+        Add Level
+      </button>
     </div>
   );
 };

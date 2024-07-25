@@ -8,7 +8,7 @@ import LevelInputLogic from "./LevelInput.js";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
-function LevelInput({ id, level, formData, handleChange }) {
+function LevelInput({ id, level, formData, handleChange, handleDelete }) {
   /* ===== FUNCTIONS ===== */
   const scoreChartTypes = ["both", "score"];
   const timeChartTypes = ["both", "time"];
@@ -117,7 +117,7 @@ function LevelInput({ id, level, formData, handleChange }) {
       <button
         type="button" 
         className={ styles.levelListBtn } 
-        onChange={ e => handleChange(e) }
+        onClick={ () => handleDelete(level.id) }
       >
         Delete
       </button>

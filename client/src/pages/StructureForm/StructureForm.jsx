@@ -29,6 +29,7 @@ function StructureForm() {
     handleModeDelete,
     handleLevelInsert,
     handleLevelChange,
+    handleLevelDelete,
     openPopup,
     closePopup
   } = StructureFormLogic(setFormData);
@@ -131,6 +132,7 @@ function StructureForm() {
                   levels={ form.values.level } 
                   handleInsert={ handleLevelInsert } 
                   handleChange={ handleLevelChange }
+                  handleDelete={ handleLevelDelete }
                   formData={ formData } 
                 />
               </ModeList>
