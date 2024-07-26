@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import styles from "./EntitiesForm.module.css";
 import Container from "../../components/Container/Container.jsx";
+import DeleteIcon from "@mui/icons-material/Delete";
 import EntitiesFormLogic from "./EntitiesForm.js";
 import EntityAddForm from "../../components/EntityAddForm/EntityAddForm.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
@@ -165,7 +166,14 @@ function EntitiesForm() {
                   return (
                     <div className={ `${ styles.moderator } ${ (index+1) % 2 ? "even" : "odd" }` } key={ moderator.id }>
                       <Username profile={ moderator } disableLink />
-                      <button type="button" onClick={ () => handleModeratorDelete(moderator.id) }>Delete</button>
+                      <button
+                        type="button"
+                        title="Delete moderator"
+                        className="center"
+                        onClick={ () => handleModeratorDelete(moderator.id) }
+                      >
+                        <DeleteIcon />
+                      </button>
                     </div>
                   );
                 })}

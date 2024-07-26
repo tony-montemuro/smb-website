@@ -121,6 +121,7 @@ function StructureForm() {
                 valueAttribute: "abb",
                 entityName: "name"
               }}
+              colorBackgrounds
             >
               <ModeList 
                 modes={ form.values.mode }
@@ -129,11 +130,11 @@ function StructureForm() {
                 handleDelete={ handleModeDelete }
               >
                 <LevelList 
-                  levels={ form.values.level } 
-                  handleInsert={ handleLevelInsert } 
+                  levels={ form.values.level }
+                  handleInsert={ handleLevelInsert }
                   handleChange={ handleLevelChange }
                   handleDelete={ handleLevelDelete }
-                  formData={ formData } 
+                  formData={ formData }
                 />
               </ModeList>
             </SelectList>

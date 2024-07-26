@@ -1,17 +1,28 @@
 /* ===== IMPORTS ===== */
 import { cloneElement } from "react";
 import styles from "./SelectList.module.css";
+import DeleteIcon from "@mui/icons-material/Delete";
 import FrontendHelper from "../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
-function Selector({ inputData, selectData, entity, handleChange, children }) {
+function Selector({ inputData, selectData, entity, handleChange, colorBackgrounds, children }) {
   /* ===== VARIABLES ===== */
   const inputValue = entity[inputData.entityName];
   const id = entity.id;
+  let backgroundColor;
+  if (id % 3 === 0) {
+    backgroundColor = "rgba(255, 0, 0, 0.2)";
+  }
+  if (id % 3 === 1) {
+    backgroundColor = "rgba(0, 255, 0, 0.2)";
+  }
+  if (id % 3 === 2) {
+    backgroundColor = "rgba(0, 0, 255, 0.2)";
+  }
 
   /* ===== SELECTOR COMPONENT ===== */
   return (
-    <div>
+    <div className={ colorBackgrounds && styles.coloredSelector } style={ { backgroundColor: colorBackgrounds ? backgroundColor : null } }>
       <div className={ styles.selector }>
         <TextField
           id={ `${ inputData.entityName }${ inputValue }` }
@@ -29,8 +40,17 @@ function Selector({ inputData, selectData, entity, handleChange, children }) {
             value={ selectData.valueAttribute } 
           />
         </TextField>
-        <button type="button" disabled={ !inputValue } onClick={ () => handleChange("", id, inputData.entityName) }>Delete</button>
+        <button
+          type="button"
+          title={ `Delete ${ inputData.entityName }` }
+          className="center"
+          disabled={ !inputValue }
+          onClick={ () => handleChange("", id, inputData.entityName) }
+        >
+          <DeleteIcon />
+        </button>
       </div>
+
       { inputValue && children && cloneElement(children, { [inputData.entityName]: entity }) }
     </div>
   );

@@ -4,6 +4,11 @@
     gap: 5px;
 }
 
+.coloredSelector {
+    padding: 5px;
+    border-radius: 5px;
+}
+
 .selector {
     display: flex;
     flex-direction: row;

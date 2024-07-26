@@ -11,7 +11,7 @@ function LevelList({ levels, category, mode, handleChange, handleInsert, handleD
   /* ===== LEVEL LIST COMPONENT ===== */
   return (
     <div className={ styles.levelList }>
-      <h3>Levels</h3>
+      <h3>Charts</h3>
       { filteredLevels.map(level => {
         const id = `level-${ category.id }-${ mode.id }-${ level.id }`;
         return (
@@ -19,7 +19,10 @@ function LevelList({ levels, category, mode, handleChange, handleInsert, handleD
             id={ id }
             level={ level }
             formData={ formData }
+            category={ categoryName }
+            mode={ modeName }
             handleChange={ handleChange }
+            handleInsert={ handleInsert }
             handleDelete={ handleDelete }
             key={ id }
           />

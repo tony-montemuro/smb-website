@@ -3,7 +3,7 @@ import styles from "./SelectList.module.css";
 import FormHelperText from "@mui/material/FormHelperText";
 import Selector from "./Selector.jsx";
 
-function SelectList({ entities, inputData, selectData, children }) {
+function SelectList({ entities, inputData, selectData, children, colorBackgrounds = false }) {
   /* ===== VARIABLES ===== */
   const emptyEntity = {
     id: entities.length > 0 ? entities.at(-1).id+1 : 1,
@@ -21,6 +21,7 @@ function SelectList({ entities, inputData, selectData, children }) {
             selectData={ selectData }
             entity={ entity }
             handleChange={ inputData.handleChange }
+            colorBackgrounds={ colorBackgrounds }
             key={ JSON.stringify(entity) } 
           >
             { children }

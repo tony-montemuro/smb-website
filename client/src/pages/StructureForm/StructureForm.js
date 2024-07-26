@@ -94,8 +94,6 @@ const StructureForm = (setFormData) => {
             ...state.values,
             category: [...state.values.category, data]
         }
-        
-        updateLocal(updatedValues);
         return { ...state, values: updatedValues };
     };
 
@@ -144,8 +142,6 @@ const StructureForm = (setFormData) => {
 
             updated.category.sort((a, b) => a.id - b.id);
         }
-
-        updateLocal(updated);
         return { ...state, values: updated };
     };
 
@@ -166,8 +162,6 @@ const StructureForm = (setFormData) => {
 
         updated.mode.push(data);
         updated.mode.sort((a, b) => a.id - b.id);
-
-        updateLocal(updated);
         return { ...state, values: updated };
     };
 
@@ -185,8 +179,6 @@ const StructureForm = (setFormData) => {
         // update mode, and cascade change down to child levels (if any)
         updated.mode[targetIndex] = data;
         updated.level.map(level => level.mode === oldModeName ? { ...level, mode: data.mode } : level);
-
-        updateLocal(updated);
         return { ...state, values: updated };
     };
 
@@ -215,8 +207,6 @@ const StructureForm = (setFormData) => {
         // delete mode, as well as any children levels
         updated.mode = updated.mode.filter(mode => !matchingModeCondition(mode));
         updated.level = updated.level.filter(level => level.mode !== oldModeName);
-
-        updateLocal(updated);
         return { ...state, values: updated };
     };
 
@@ -248,7 +238,6 @@ const StructureForm = (setFormData) => {
         updatedLevels.push(data);
         updatedLevels.sort((a, b) => a.id - b.id);
         const updatedValues = { ...state.values, level: updatedLevels };
-        updateLocal(updatedValues);
         return { ...state, values: updatedValues };
     };
 
@@ -262,7 +251,6 @@ const StructureForm = (setFormData) => {
         const levelIndex = levelUpdated.findIndex(level => level.id === data.id);
         levelUpdated[levelIndex] = { ...levelUpdated[levelIndex], ...data };
         const updatedValues = { ...state.values, level: levelUpdated };
-        updateLocal(updatedValues);
         return { ...state, values: updatedValues };
     };
 
@@ -275,7 +263,6 @@ const StructureForm = (setFormData) => {
     const deleteLevel = (state, id) => {
         const updated = { ...state.values };
         updated.level = updated.level.filter(level => level.id !== id);
-        updateLocal(updated);
         return { ...state, values: updated };
     };
 
@@ -286,29 +273,48 @@ const StructureForm = (setFormData) => {
         // a.) field: specifies which field of the form the reducer should modify
         // b.) data: specifies the new value that the reducer should use to modify form[field]
         // c.) name: specifies the name of the entity we are currently interacting with
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the type field is properly matched within the switch statement, the relevant action is performed on the form
+    // POSTCONDITIONS (3 possible outcomes):
+    // if the type field matches a dispatch type, we perform the relevant action, update local data, and return the result
+    // if the type field is not a dispatch type, but still matches with the outer switch statement, the relevant action is 
+    // performed on the form
     // otherwise, this function simply returns the current state of the form, doing nothing
     const reducer = (state, action) => {
         const { type, data } = action;
 
+        if (Object.values(dispatchTypes).includes(type)) {
+            let updatedState;
+            switch (type) {
+                case dispatchTypes.INSERT_CATEGORY:
+                    updatedState = insertCategory(state, data);
+                    break;
+                case dispatchTypes.UPDATE_CATEGORY:
+                    updatedState = updateCategory(state, data);
+                    break;
+                case dispatchTypes.INSERT_MODE:
+                    updatedState = insertMode(state, data);
+                    break;
+                case dispatchTypes.UPDATE_MODE:
+                    updatedState = updateMode(state, data);
+                    break;
+                case dispatchTypes.DELETE_MODE:
+                    updatedState = deleteMode(state, data);
+                    break;
+                case dispatchTypes.INSERT_LEVEL:
+                    updatedState = insertLevel(state, data);
+                    break;
+                case dispatchTypes.UPDATE_LEVEL:
+                    updatedState = updateLevel(state, data);
+                    break;
+                case dispatchTypes.DELETE_LEVEL:
+                    updatedState = deleteLevel(state, data);
+                    break;
+                default: return null;
+            }
+            updateLocal(updatedState.values);
+            return updatedState;
+        }
+
 		switch (type) {
-            case dispatchTypes.INSERT_CATEGORY:
-                return insertCategory(state, data);
-            case dispatchTypes.UPDATE_CATEGORY:
-                return updateCategory(state, data);
-            case dispatchTypes.INSERT_MODE:
-                return insertMode(state, data);
-            case dispatchTypes.UPDATE_MODE:
-                return updateMode(state, data);
-            case dispatchTypes.DELETE_MODE:
-                return deleteMode(state, data);
-            case dispatchTypes.INSERT_LEVEL:
-                return insertLevel(state, data);
-            case dispatchTypes.UPDATE_LEVEL:
-                return updateLevel(state, data);
-            case dispatchTypes.DELETE_LEVEL:
-                return deleteLevel(state, data);
             case "values":
                 return { ...state, values: { ...state.values, ...data } };
 			case "error":
@@ -425,7 +431,7 @@ const StructureForm = (setFormData) => {
     const handleCategoryInsert = (value, id) => {
         const data = { id, category: value };
         if (value && !isDuplicate(data, "category")) {
-            dispatchForm({ type: dispatchTypes.INSERT_MODE, data: data });
+            dispatchForm({ type: dispatchTypes.INSERT_CATEGORY, data: data });
         }
     };
 
@@ -466,7 +472,7 @@ const StructureForm = (setFormData) => {
                 categoryIndex--;
             }
 
-            // if id is still undefined at this point, implication is that this should have an id of 1
+            // if id is still null at this point, implication is that this should have an id of 1
             if (!id) {
                 id = 1;
             }
@@ -500,29 +506,32 @@ const StructureForm = (setFormData) => {
     // PRECONDITIONS (2 parameters):
     // 1.) category: the category we want to add the level to
     // 2.) mode: the mode we want to add the level to
+    // 3.) id (optional): a integer, representing the id of the level we want to add. if not provided, we assume
+    // the largest possible id within the category + mode combination
     // POSTCONDITIONS (1 possible outcome):
     // we determine where to add the level, and add it
-    const handleLevelInsert = (category, mode) => {
-        let id;
-        let categoryIndex = form.values.category.findIndex(c => c.category === category);
-        let modeIndex = form.values.mode.findIndex(m => m.name === mode);
-
-        while (categoryIndex >= 0 && !id) {
-            const categoryName = form.values.category[categoryIndex].category;
-            while (modeIndex >= 0 && !id) {
-                const modeName = form.values.mode[modeIndex].name;
-                const categoryModeLevels = form.values.level.filter(l => l.category === categoryName && l.mode === modeName);
-                if (categoryModeLevels.length > 0) {
-                    id = categoryModeLevels.at(-1).id+1;
-                }
-                modeIndex--;
-            }
-            categoryIndex--;
-        }
-
-        // if id is still undefined at this point, implication is that this should have an id of 1
+    const handleLevelInsert = (category, mode, id = null) => {
         if (!id) {
-            id = 1;
+            let categoryIndex = form.values.category.findIndex(c => c.category === category);
+            let modeIndex = form.values.mode.findIndex(m => m.name === mode);
+
+            while (categoryIndex >= 0 && !id) {
+                const categoryName = form.values.category[categoryIndex].category;
+                while (modeIndex >= 0 && !id) {
+                    const modeName = form.values.mode[modeIndex].name;
+                    const categoryModeLevels = form.values.level.filter(l => l.category === categoryName && l.mode === modeName);
+                    if (categoryModeLevels.length > 0) {
+                        id = categoryModeLevels.at(-1).id+1;
+                    }
+                    modeIndex--;
+                }
+                categoryIndex--;
+            }
+
+            // if id is still null at this point, implication is that this should have an id of 1
+            if (!id) {
+                id = 1;
+            }
         }
 
         const data = {

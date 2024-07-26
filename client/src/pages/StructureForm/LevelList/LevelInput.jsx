@@ -1,6 +1,8 @@
 /* ===== IMPORTS ===== */
 import styles from "./LevelList.module.css";
+import AddIcon from "@mui/icons-material/Add";
 import Checkbox from "@mui/material/Checkbox";
+import DeleteIcon from "@mui/icons-material/Delete";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import LevelHelper from "../../../helper/LevelHelper.js";
@@ -8,7 +10,7 @@ import LevelInputLogic from "./LevelInput.js";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
-function LevelInput({ id, level, formData, handleChange, handleDelete }) {
+function LevelInput({ id, level, formData, category, mode, handleChange, handleInsert, handleDelete }) {
   /* ===== FUNCTIONS ===== */
   const scoreChartTypes = ["both", "score"];
   const timeChartTypes = ["both", "time"];
@@ -39,7 +41,6 @@ function LevelInput({ id, level, formData, handleChange, handleDelete }) {
         onChange={ e => handleChange(e) }
         select
         SelectProps={ { native: true } }
-        sx={ { width: "fit-content" } }
         value={ level.chart_type }
         variant="filled"
       >
@@ -115,11 +116,21 @@ function LevelInput({ id, level, formData, handleChange, handleDelete }) {
       />
 
       <button
-        type="button" 
-        className={ styles.levelListBtn } 
+        type="button"
+        title="Add chart"
+        className={ `${ styles.levelListBtn } center` }
+        onClick={ () => handleInsert(category, mode, level.id+1) }
+      >
+        <AddIcon />
+      </button>
+
+      <button
+        type="button"
+        title="Delete chart"
+        className={ `${ styles.levelListBtn } center` }
         onClick={ () => handleDelete(level.id) }
       >
-        Delete
+        <DeleteIcon />
       </button>
     </div>
   );
