@@ -336,9 +336,12 @@ ADD CONSTRAINT platform_abb_key UNIQUE (platform_abb);
 ALTER TABLE region
 ADD CONSTRAINT region_name_key UNIQUE (region_name);
 
--- Add unique constraint to `category` table
+-- Add unique constraint to `category` table, and abb format constraint
 ALTER TABLE category
 ADD CONSTRAINT category_unique_constraint UNIQUE (name, practice);
+
+ALTER TABLE public.category
+ADD CONSTRAINT category_abb_format CHECK (abb ~ '^[a-z0-9][a-z0-9_]*$');
 
 -- Functions used on game structure page
 CREATE OR REPLACE FUNCTION get_chart_types()
