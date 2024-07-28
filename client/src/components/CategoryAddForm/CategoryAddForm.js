@@ -1,11 +1,14 @@
 /* ===== IMPORTS ===== */
+import { CategoriesContext, MessageContext } from "../../utils/Contexts";
 import { isLowerAlphaNumericWithUnderscores } from "../../utils/RegexPatterns"; 
-import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import Update from "../../database/update/Update.js";
 
-const CategoryAddForm = (setSubmitting, refreshCategoryDataFunc) => {
+const CategoryAddForm = (setSubmitting) => {
     /* ===== CONTEXTS ===== */
+
+    // get categories function from categories context
+    const { getCategories } = useContext(CategoriesContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -36,7 +39,11 @@ const CategoryAddForm = (setSubmitting, refreshCategoryDataFunc) => {
     // the form state is updated to match the change the user has made to the form
     const handleChange = e => {
         const { checked, id, value } = e.target;
-        setForm({ ...form, values: { ...form.values, [id]: id === "practice" ? checked : value } });
+        setForm({ 
+            ...form, 
+            error: formInit.error,
+            values: { ...form.values, [id]: id === "practice" ? checked : value } 
+        });
     };
 
     // FUNCTION 2: validateAbb - function that validates the abb form field
@@ -73,7 +80,7 @@ const CategoryAddForm = (setSubmitting, refreshCategoryDataFunc) => {
         try {
             // attempt to submit
             await insert("category", form.values);
-            await refreshCategoryDataFunc();
+            await getCategories();
             resetForm();
             addMessage(`New category was added! You should now be able to select it as an option.`, "success", 8000);
 

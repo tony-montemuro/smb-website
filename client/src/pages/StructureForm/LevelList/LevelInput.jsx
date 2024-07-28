@@ -1,4 +1,6 @@
 /* ===== IMPORTS ===== */
+import { CategoriesContext } from "../../../utils/Contexts.js";
+import { useContext } from "react";
 import styles from "./LevelList.module.css";
 import AddIcon from "@mui/icons-material/Add";
 import Checkbox from "@mui/material/Checkbox";
@@ -11,9 +13,17 @@ import FrontendHelper from "../../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
 function LevelInput({ id, level, formData, category, mode, handleChange, handleInsert, handleDelete }) {
-  /* ===== FUNCTIONS ===== */
+  /* ===== CONTEXTS ===== */
+
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+
+  /* ===== VARIABLES ===== */
   const scoreChartTypes = ["both", "score"];
   const timeChartTypes = ["both", "time"];
+  const isPracticeMode = categories[category].practice;
+
+  /* ===== FUNCTIONS ===== */
 
   // functions from the js file
   const { timerTypeB2F } = LevelInputLogic();
@@ -75,36 +85,6 @@ function LevelInput({ id, level, formData, category, mode, handleChange, handleI
         ))}
       </TextField>
 
-      <FormGroup>
-        <FormControlLabel 
-          control={ 
-            <Checkbox 
-              checked={ scoreChartTypes.includes(level.ascending) } 
-              disabled={ level.chart_type === "time" }
-              id={ `${ id }-ascending.score` } 
-              onChange={ e => handleChange(e) } 
-              inputProps={{ "aria-label": "controlled" }} 
-            />
-          } 
-          label="Ascend Score" 
-        />
-      </FormGroup>
-
-      <FormGroup>
-        <FormControlLabel 
-          control={ 
-            <Checkbox 
-              checked={ timeChartTypes.includes(level.ascending) } 
-              disabled={ level.chart_type === "score" }
-              id={ `${ id }-ascending.time` } 
-              onChange={ e => handleChange(e) } 
-              inputProps={{ "aria-label": "controlled" }} 
-            />
-          } 
-          label="Ascend Time"
-        />
-      </FormGroup>
-
       <TextField
         disabled={ level.chart_type === "score" || timeChartTypes.includes(level.ascending) }
         id={ `${ id }-time` }
@@ -114,6 +94,40 @@ function LevelInput({ id, level, formData, category, mode, handleChange, handleI
         value={ level.time }
         variant="filled"
       />
+
+      { !isPracticeMode && 
+        <>
+          <FormGroup>
+            <FormControlLabel 
+              control={ 
+                <Checkbox 
+                  checked={ scoreChartTypes.includes(level.ascending) } 
+                  disabled={ level.chart_type === "time" }
+                  id={ `${ id }-ascending.score` } 
+                  onChange={ e => handleChange(e) } 
+                  inputProps={{ "aria-label": "controlled" }} 
+                />
+              } 
+              label="Ascend Score" 
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <FormControlLabel 
+              control={ 
+                <Checkbox 
+                  checked={ timeChartTypes.includes(level.ascending) } 
+                  disabled={ level.chart_type === "score" }
+                  id={ `${ id }-ascending.time` } 
+                  onChange={ e => handleChange(e) } 
+                  inputProps={{ "aria-label": "controlled" }} 
+                />
+              } 
+              label="Ascend Time"
+            />
+          </FormGroup>
+        </>
+      }
 
       <button
         type="button"

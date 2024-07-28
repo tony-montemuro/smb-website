@@ -35,7 +35,7 @@ function LevelList({ levels, category, mode, handleChange, handleInsert, handleD
         className={ styles.levelListBtn }
         onClick={ () => handleInsert(categoryName, modeName) }
       >
-        Add Level
+        Add Chart
       </button>
     </div>
   );

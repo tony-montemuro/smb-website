@@ -1,9 +1,10 @@
 /* ===== IMPORTS ===== */
-import { GameAddContext } from "../../utils/Contexts";
+import { CategoriesContext, GameAddContext } from "../../utils/Contexts";
 import { Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AddGamePages from "./AddGamePages.jsx";
 import GameAddLayoutLogic from "./GameAddLayout.js";
+import Loading from "../Loading/Loading.jsx";
 import styles from "./GameAddLayout.module.css";
 
 function GameAddLayout() {
@@ -12,6 +13,11 @@ function GameAddLayout() {
     number: 1,
     unlocked: [1]
   };
+
+  /* ===== CONTEXTS ===== */
+
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
 
   /* ===== STATES ===== */
   const [page, setPage] = useState(pageInit); 
@@ -47,14 +53,19 @@ function GameAddLayout() {
   return (
     <div className={ styles.gameAdd }>
       <h1>Add Game</h1>
-      <GameAddContext.Provider value={ { unlockNextPage, keys } }>
-        <Outlet />
-        <AddGamePages 
-          page={ page }
-          setPage={ setPage }
-          pageNames={ pageNames }  
-        />
-      </GameAddContext.Provider>
+      
+      { categories ? 
+        <GameAddContext.Provider value={ { unlockNextPage, keys } }>
+          <Outlet />
+          <AddGamePages 
+            page={ page }
+            setPage={ setPage }
+            pageNames={ pageNames }  
+          />
+        </GameAddContext.Provider>
+      :
+        <Loading />
+      }
     </div>
   );
 };

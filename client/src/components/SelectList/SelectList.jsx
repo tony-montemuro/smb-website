@@ -12,7 +12,7 @@ function SelectList({ entities, inputData, selectData, children, colorBackground
 
   /* ===== SELECT LIST COMPONENT ===== */
   return (
-    <div className={ styles.selectList }>
+    <div className={ styles.container }>
       <h3>{ inputData.label }</h3>
       { entities.map(entity => {
         return (

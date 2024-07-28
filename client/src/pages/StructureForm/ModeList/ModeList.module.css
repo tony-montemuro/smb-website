@@ -1,12 +1,26 @@
-.modeList {
+.container {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    padding-left: 20px;
+}
+
+.modeListWrapper {
+    padding-left: 15px;
+}
+
+.modeList {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgba(1, 1, 1, 0.3);
 }
 
 .modeList h3 {
     margin: 0;
+}
+
+.modeInputWrapper {
+    padding: 5px;
+    border-radius: 5px;
 }
 
 .modeInput {

@@ -1,13 +1,15 @@
 /* ===== IMPORTS ===== */
 import { useContext, useReducer, useState } from "react";
-import { GameAddContext, MessageContext } from "../../utils/Contexts";
+import { CategoriesContext, GameAddContext, MessageContext } from "../../utils/Contexts";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import LevelHelper from "../../helper/LevelHelper.js";
-import Read from "../../database/read/Read.js";
 import RPCRead from "../../database/read/RPCRead.js";
 
 const StructureForm = (setFormData) => {
     /* ===== CONTEXTS ===== */
+    
+    // categories state function from categories context
+    const { categories } = useContext(CategoriesContext);
 
     // keys object & unlock page function from game add context
     const { keys } = useContext(GameAddContext);
@@ -47,7 +49,6 @@ const StructureForm = (setFormData) => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { queryAll } = Read();
     const { getChartTypes, getTimerTypes } = RPCRead();
 
     // helper functions
@@ -345,21 +346,13 @@ const StructureForm = (setFormData) => {
         dispatchForm({ type: "values", data: formData });
     };
 
-    // FUNCTION 13: queryCategories - function that queries the database for categories, used by the categories dropdown
+    // FUNCTION 13: getTransformedCategories - function that takes `categories` state from categories context, and converts to array
     // PRECONDITIONS: NONE
-    // POSTCONDITIONS (2 possible outcomes):
-    // if query is successful, sort the categories by practice flag, and return
-    // otherwise, the function throws an error, which should be handled by the caller function
-    const queryCategories = async () => {
-        try {
-            const categories = await queryAll("category", "id");
-
-            categories.sort((a, b) => b.practice - a.practice);
-            return categories;
-
-        } catch (error) {
-            throw error;
-        };
+    // POSTCONDITIONS (1 possible outcomes):
+    // the state is transform from a mapping of category names to category objects, to an array of category objects,
+    // sorted by id, then practice flag
+    const getTransformedCategories = () => {
+        return Object.values(categories).toSorted((b, a) => b.practice - a.practice);
     };
 
     // FUNCTION 14: queryFormData - function that loads all data used by the form; should be ran when the `StructureForm` 
@@ -370,11 +363,12 @@ const StructureForm = (setFormData) => {
     // otherwise, render an error message to the user, and keep the `formData` state undefined, so the form is unloaded
     const queryFormData = async () => {
         try {
-            const [categories, chartTypes, timerTypes] = await Promise.all(
-                [queryCategories(), getChartTypes(), getTimerTypes()]
+            const [chartTypes, timerTypes] = await Promise.all(
+                [getChartTypes(), getTimerTypes()]
             );
+            let categoryList = getTransformedCategories();
 
-            setFormData({ categories, chartTypes, timerTypes });
+            setFormData({ categories: categoryList, chartTypes, timerTypes });
 
         } catch (error) {
             addMessage("Data necessary to render the form failed to load. If reloading the page does not work, the system may be experiencing an outage.", "error", 10000);
@@ -384,17 +378,18 @@ const StructureForm = (setFormData) => {
     // FUNCTION 15: updateFormCategories - function that updates the `categories` field of the `formData` state
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, update the categories field of the `formData` state
-    // otherwise, this function simply renders an error message. the context this function is called is typically after a user
-    // adds a new category to the database. if we got this far, and failed, it means the category was inserted, but the read
-    // failed for whatever reason
+    // if any categories exist, we assume a success, and update the categories state
+    // otherwise, this function simply renders an error message
     const updateFormCategories = async () => {
         try {
-            const categories = await queryCategories();
-            setFormData(prevState => ({ ...prevState, categories }));
+            if (Object.values(categories).length > 0) {
+                setFormData(prevState => ({ ...prevState, categories: getTransformedCategories() }));
+            } else {
+                throw new Error("There was a problem updating the categories data. If refreshing the page does not work, the system may be experiencing an outage.");
+            }
             
         } catch (error) {
-            addMessage("Category was successfully added, but the form failed to update with the new category. If refreshing the page does not work, the system may be experiencing an outage.", "error", 15000);
+            addMessage(error.message, "error", 13000);
         };
     };
 

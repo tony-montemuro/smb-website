@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
-import { useEffect, useState } from "react";
+import { CategoriesContext } from "../../utils/Contexts.js";
+import { useContext, useEffect, useState } from "react";
 import styles from "./StructureForm.module.css";
 import CategoryAddForm from "../../components/CategoryAddForm/CategoryAddForm.jsx";
 import Container from "../../components/Container/Container.jsx";
@@ -12,6 +13,7 @@ import LevelList from "./LevelList/LevelList.jsx";
 
 function StructureForm() {
   /* ===== STATES & FUNCTIONS ===== */
+  const [isComponentMounted, setIsComponentMounted] = useState(false);
   const [formData, setFormData] = useState(undefined);
   const [submittingCategory, setSubmittingCategory] = useState(false);
 
@@ -34,14 +36,28 @@ function StructureForm() {
     closePopup
   } = StructureFormLogic(setFormData);
 
+  /* ===== CONTEXTS ===== */
+
+  // categories state from categories context
+  const { categories } = useContext(CategoriesContext);
+
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts
   useEffect(() => {
     populateForm();
     queryFormData();
+    setIsComponentMounted(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // code that is executed when the categories state updates after the component has already mounted
+  useEffect(() => {
+    if (isComponentMounted) {
+      updateFormCategories();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categories]);
 
   /* ===== STRUCTURE FORM COMPONENT ===== */
   return (
@@ -57,7 +73,6 @@ function StructureForm() {
 				<CategoryAddForm 
           submitting={ submittingCategory } 
           setSubmitting={ setSubmittingCategory }
-          refreshCategoryDataFunc={ updateFormCategories }
         />
 			</Popup>
 
@@ -119,7 +134,7 @@ function StructureForm() {
                   "non-practice_mode_style": formData.categories.filter(category => !category.practice)
                 },
                 valueAttribute: "abb",
-                entityName: "name"
+                entityName: "name",
               }}
               colorBackgrounds
             >

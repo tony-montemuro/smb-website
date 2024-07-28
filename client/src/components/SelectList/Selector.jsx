@@ -9,20 +9,20 @@ function Selector({ inputData, selectData, entity, handleChange, colorBackground
   /* ===== VARIABLES ===== */
   const inputValue = entity[inputData.entityName];
   const id = entity.id;
-  let backgroundColor;
-  if (id % 3 === 0) {
-    backgroundColor = "rgba(255, 0, 0, 0.2)";
-  }
-  if (id % 3 === 1) {
-    backgroundColor = "rgba(0, 255, 0, 0.2)";
-  }
-  if (id % 3 === 2) {
-    backgroundColor = "rgba(0, 0, 255, 0.2)";
-  }
+  const opacity = 0.4;
+  const backgroundColors = [
+    `rgba(249, 64, 64, ${ opacity })`,
+    `rgba(250, 149, 33, ${ opacity })`,
+    `rgba(245, 136, 220, ${ opacity })`,
+    `rgba(85, 222, 242, ${ opacity })`,
+  ];
 
   /* ===== SELECTOR COMPONENT ===== */
   return (
-    <div className={ colorBackgrounds && styles.coloredSelector } style={ { backgroundColor: colorBackgrounds ? backgroundColor : null } }>
+    <div 
+      className={ colorBackgrounds && `${ styles.coloredSelector } ${ styles.container }` } 
+      style={ { backgroundColor: colorBackgrounds ? backgroundColors[id % backgroundColors.length] : null } 
+    }>
       <div className={ styles.selector }>
         <TextField
           id={ `${ inputData.entityName }${ inputValue }` }

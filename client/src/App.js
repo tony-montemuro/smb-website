@@ -190,7 +190,7 @@ const App = () => {
       categories.forEach(category => categoryMap[category.abb] = category);
       setCategories(categoryMap);
     } catch (error) {
-      addMessage("Critical data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
+      addMessage("Category data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
     };
   };
 

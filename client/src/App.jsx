@@ -73,7 +73,7 @@ function App() {
   return (
     <MessageContext.Provider value={ { addMessage } }>
       <UserContext.Provider value={ { user, updateUser, isModerator } }>
-        <CategoriesContext.Provider value={ { categories } }>
+        <CategoriesContext.Provider value={ { categories, getCategories } }>
           <Navbar imageReducer={ imageReducer } />
           <div className="app">
 

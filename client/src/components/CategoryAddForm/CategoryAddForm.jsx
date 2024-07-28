@@ -6,14 +6,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import TextField from "@mui/material/TextField";
 
-function CategoryAddForm({ submitting, setSubmitting, refreshCategoryDataFunc }) {
+function CategoryAddForm({ submitting, setSubmitting }) {
   /* ===== VARIABLES ===== */
   const ABB_LENGTH_MAX = 15;
 
   /* ===== STATES & FUNCTIONS ===== */
 
   // states & functions from the js file
-  const { form, handleChange, handleSubmit } = CategoryAddFormLogic(setSubmitting, refreshCategoryDataFunc);
+  const { form, handleChange, handleSubmit } = CategoryAddFormLogic(setSubmitting);
 
   /* ===== CATEGORY ADD FORM COMPONENT ===== */
   return (
@@ -29,9 +29,11 @@ function CategoryAddForm({ submitting, setSubmitting, refreshCategoryDataFunc })
           variant="filled"
         />
         <TextField
+          color={ form.error.abb ? "error" : "primary" }
+          error={ form.error.abb ? true : false }
           id="abb"
           inputProps={{ maxLength: ABB_LENGTH_MAX }}
-          helperText={ `${ form.values.abb.length }/${ ABB_LENGTH_MAX }` }
+          helperText={ form.error.abb ? form.error.abb : `${ form.values.abb.length }/${ ABB_LENGTH_MAX }` }
           label="Category Abbreviation"
           onChange={ handleChange }
           placeholder={ `Must be ${ ABB_LENGTH_MAX } characters or less` }
