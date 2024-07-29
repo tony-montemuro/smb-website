@@ -7,3 +7,7 @@
 .structureForm h3 {
     margin: 0;
 }
+
+#submit {
+    width: fit-content;
+}

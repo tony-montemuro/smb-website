@@ -3,6 +3,7 @@ import styles from "./ModeList.module.css";
 import { cloneElement } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import LevelHelper from "../../../helper/LevelHelper.js";
 import TextField from "@mui/material/TextField";
 
 function ModeInput({ id, firstModeId, mode, category, handleChange, handleInsert, handleDelete, children }) {
@@ -16,6 +17,11 @@ function ModeInput({ id, firstModeId, mode, category, handleChange, handleInsert
   ];
   const weight = (modeId-firstModeId) % backgroundColors.length;
 
+  /* ===== FUNCTIONS ===== */
+
+  // helper functions
+  const { levelB2F } = LevelHelper();
+
   /* ===== MODE INPUT COMPONENT ===== */
   return (
     <div className={ styles.modeInputWrapper } style={ { backgroundColor: backgroundColors[weight] } }>
@@ -24,7 +30,7 @@ function ModeInput({ id, firstModeId, mode, category, handleChange, handleInsert
           id={ id }
           label="Mode"
           onChange={ e => handleChange(e.target.value, categoryName, modeId) }
-          value={ mode.name }
+          value={ levelB2F(mode.name) }
           variant="filled"
         />
 

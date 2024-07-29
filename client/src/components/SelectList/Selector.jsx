@@ -20,7 +20,7 @@ function Selector({ inputData, selectData, entity, handleChange, colorBackground
   /* ===== SELECTOR COMPONENT ===== */
   return (
     <div 
-      className={ colorBackgrounds && `${ styles.coloredSelector } ${ styles.container }` } 
+      className={ colorBackgrounds ? `${ styles.coloredSelector } ${ styles.container }` : "" } 
       style={ { backgroundColor: colorBackgrounds ? backgroundColors[id % backgroundColors.length] : null } 
     }>
       <div className={ styles.selector }>

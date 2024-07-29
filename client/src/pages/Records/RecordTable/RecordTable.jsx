@@ -2,6 +2,7 @@
 import styles from "./RecordTable.module.css";
 import { useLocation } from "react-router-dom";
 import FrontendHelper from "../../../helper/FrontendHelper";
+import LevelHelper from "../../../helper/LevelHelper.js";
 import RecordTableRow from "./RecordTableRow";
 
 function RecordTable({ recordTable, filter, mode, allGreater }) {
@@ -11,12 +12,13 @@ function RecordTable({ recordTable, filter, mode, allGreater }) {
   const levels = recordTable[filter][mode];
 
   /* ===== FUNCTIONS ===== */
-  const { capitalize, snakeToTitle } = FrontendHelper();
+  const { capitalize } = FrontendHelper();
+  const { levelB2F } = LevelHelper();
 
   /* ===== RECORD TABLE COMPONENT ===== */
   return (
     <div>
-      <h3>{ snakeToTitle(mode) }</h3>
+      <h3>{ levelB2F(mode) }</h3>
       <div className="table">
         <table key={ mode }>
 

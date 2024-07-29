@@ -33,7 +33,8 @@ function StructureForm() {
     handleLevelChange,
     handleLevelDelete,
     openPopup,
-    closePopup
+    closePopup,
+    validateStructure
   } = StructureFormLogic(setFormData);
 
   /* ===== CONTEXTS ===== */
@@ -77,7 +78,7 @@ function StructureForm() {
 			</Popup>
 
       { /* Structure form */ }
-      <form className={ styles.structureForm }>
+      <form className={ styles.structureForm } onSubmit={ validateStructure }>
         <span>
           On this screen, you will create and organize high score / fast time charts.
           It is important you understand how charts are organized:
@@ -118,7 +119,7 @@ function StructureForm() {
         
         { /* Only render inputs if user has selected  */ }
         { formData ?
-          <div style={ { width: "100%" } }>
+          <div style={ { width: "100%" } } className={ styles.structureForm }>
             <SelectList
               entities={ form.values.category }
               inputData={{
@@ -156,6 +157,8 @@ function StructureForm() {
             <span onClick={ openPopup } className="hyperlink">
               Category missing from list? Click here to upload a new category!
             </span>
+
+            <button id={ styles.submit } type="submit">Validate</button>
           </div>
         :
           <Loading />

@@ -5,7 +5,7 @@ import styles from "./ModeBody.module.css";
 import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
-import FrontendHelper from "../../../helper/FrontendHelper";
+import LevelHelper from "../../../helper/LevelHelper.js";
 import StylesHelper from "../../../helper/StylesHelper.js";
 import TypeButtons from "../../../components/TypeButtons/TypeButtons.jsx";
 
@@ -21,7 +21,7 @@ function ModeBody({ category, modeName, selectedMode, setSelectedMode }) {
   /* ===== FUNCTIONS ===== */
     
   // helper functions
-  const { snakeToTitle } = FrontendHelper();
+  const { levelB2F } = LevelHelper();
   const { indexToParity } = StylesHelper();
 
   /* ===== MODE BODY COMPONENT ===== */
@@ -29,7 +29,7 @@ function ModeBody({ category, modeName, selectedMode, setSelectedMode }) {
     <>
       { /* Game mody body: name - Always will render, and is clickable. If a user clicks on it, toggle between expanded and unexpanded. */ }
       <div className={ styles.name } onClick={ () => selectedMode !== modeName ? setSelectedMode(modeName) : setSelectedMode(null) }>
-        <h3>{ snakeToTitle(mode.name) }</h3>
+        <h3>{ levelB2F(mode.name) }</h3>
         { modeName === selectedMode ? <ExpandLessRoundedIcon /> : <ExpandMoreRoundedIcon /> }
       </div>
 
