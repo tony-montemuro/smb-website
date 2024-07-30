@@ -361,3 +361,8 @@ AS $$
   SELECT json_agg(timer_type)::json
   FROM unnest(enum_range(NULL::timer_t)) AS timer_type;
 $$;
+
+-- Constraints on mode table
+ALTER TABLE mode
+ADD CONSTRAINT name_no_question_marks 
+CHECK (position('?' in name) = 0);
