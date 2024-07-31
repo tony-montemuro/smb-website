@@ -366,3 +366,16 @@ $$;
 ALTER TABLE mode
 ADD CONSTRAINT name_no_question_marks 
 CHECK (position('?' in name) = 0);
+
+-- Encode special characters that currently exist
+UPDATE level
+SET name = REPLACE(name, ':', '%3A')
+WHERE name LIKE '%:%';
+
+UPDATE level
+SET name = REPLACE(name, ',', '%2C')
+WHERE name LIKE '%,%';
+
+UPDATE level
+SET name = REPLACE(name, '&', '%26')
+WHERE name LIKE '%&%';
