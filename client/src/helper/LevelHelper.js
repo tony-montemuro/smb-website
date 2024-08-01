@@ -16,7 +16,6 @@ const LevelHelper = () => {
     // returns a copy of level in title case, as well as handling strange edge cases such as dashes, dots, etc.
     const levelB2F = level => {
         const specialChars = [".", "-", "("];
-        const replaceStrs = { "%3F": "?" };
         let cleanedLevel = snakeToTitle(level);
 
         // handle special characters
@@ -26,13 +25,8 @@ const LevelHelper = () => {
                 cleanedLevel = former + cleanedLevel[i].toUpperCase() + later;
             }
         }
-
-        // handle strings to replace
-        for (let [target, value] of Object.entries(replaceStrs)) {
-            cleanedLevel = cleanedLevel.replaceAll(target, value);
-        }
         
-        return cleanedLevel;
+        return decodeURIComponent(cleanedLevel);
     };
 
     // FUNCTION 2: levelB2F ("level back to front") - function that converts a level in frontend format to backend format
@@ -42,21 +36,14 @@ const LevelHelper = () => {
     // the level is converted to a format familiar to the DB
     const levelF2B = level => {
         const separators = [".", "-", "(", "_", "__"];
-        const replaceStrs = {
-            "?": "%3F",
-            " ": "_",
-            "_": "__"
-        };
         let backendLevel = "";
         let word = "";
 
+        level = level.replaceAll("_", "__").replaceAll(" ", "_");
+        level = encodeURIComponent(level);
+        
         for (let i = 0; i < level.length; i++) {
             let c = level[i];
-
-            // replace c, if necessary
-            if (Object.keys(replaceStrs).includes(c)) {
-                c = replaceStrs[c];
-            }
 
             // if the word includes any uppercase letters after beginning, implication is that user wants non-standard 
             // capitalization. the convention in DB is that first character is also capitalized, although technically unnecessary

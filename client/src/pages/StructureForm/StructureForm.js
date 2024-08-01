@@ -732,6 +732,9 @@ const StructureForm = (setFormData) => {
             if (typeof level.id !== "number" || !Number.isInteger(level.id)) {
                 errorMsg += "Level assigned an invalid id. Contact TonySMB for help.";
             }
+            if (level.name.includes("?") || level.name.includes(" ")) {
+                errorMsg += "Level name includes invalid character.";
+            }
 
             if (errorMsg) {
                 errors[level.id] = errorMsg;
