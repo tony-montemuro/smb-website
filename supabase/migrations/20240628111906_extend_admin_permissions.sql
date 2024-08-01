@@ -379,3 +379,8 @@ WHERE name LIKE '%,%';
 UPDATE level
 SET name = REPLACE(name, '&', '%26')
 WHERE name LIKE '%&%';
+
+-- Constraints on level table
+ALTER TABLE level
+ADD CONSTRAINT name_url_valid
+CHECK (name ~ '^[a-zA-Z0-9\-_.!~*''()]+$');
