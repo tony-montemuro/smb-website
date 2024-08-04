@@ -1,18 +1,19 @@
 /* ===== IMPORTS ===== */
-import { useContext, useReducer, useState } from "react";
 import { CategoriesContext, GameAddContext, MessageContext } from "../../utils/Contexts";
+import { isUrlSafe } from "../../utils/RegexPatterns.js";
+import { useContext, useReducer, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 import LevelHelper from "../../helper/LevelHelper.js";
 import RPCRead from "../../database/read/RPCRead.js";
 
-const StructureForm = (setFormData) => {
+const StructureForm = (formData, setFormData) => {
     /* ===== CONTEXTS ===== */
     
     // categories state function from categories context
     const { categories } = useContext(CategoriesContext);
 
     // keys object & unlock page function from game add context
-    const { keys } = useContext(GameAddContext);
+    const { keys, unlockNextPage } = useContext(GameAddContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -642,31 +643,62 @@ const StructureForm = (setFormData) => {
     // PRECONDITION (1 parameter):
     // 1.) errors: an array of errors
     // POSTCONDITIONS (2 possible outcomes):
-    // if the errors array has at least one element, return it
+    // if the errors array has at least one element, return it, removing the final character from each error (a space)
     // otherwise, return undefined
-    const handleErrorReturn = errors => errors.length > 0 ? errors : undefined;
+    const handleErrorReturn = errors => {
+        if (errors.length === 0) {
+            return undefined;
+        }
+
+        // if there is at least one error, let's remove space from end of each
+        errors.forEach((error, index) => {
+            errors[index] = error.slice(0, -1);
+        });
+
+        return errors;
+    };
 
     // FUNCTION 29: validateCategories - function that validates each category
     // PRECONDITIONS (1 parameter):
     // 1.) categories - the list of categories we want to validate
-    // POSTCONDITIONS (3 possible outcomes):
+    // POSTCONDITIONS (2 possible outcomes):
     // if we validate the categories list is valid, do not return anything
-    // if categories is empty, return a string letting the user know
-    // otherwise, return an array, where we map category id => error message
+    // otherwise, return a string with the error message
     const validateCategories = categoriesList => {
         if (categoriesList.length === 0) {
             return "Must have at least one category.";
         }
 
-        const errors = [];
-        categories.forEach(obj => {
-            const { id, category } = obj;
+        let errorMsg = "";
+        const hasModes = {};
+        form.values.mode.forEach(mode => {
+            const { category } = mode;
+            if (!hasModes[category]) {
+                hasModes[category] = true;
+            }
+        });
+        let hasInvalid = false, hasMissingModes = false;
+
+        categoriesList.forEach(obj => {
+            const { category } = obj;
+
+            // ensure category exists, and is well-formed
             if (!categories[category] || typeof category !== "string") {
-                errors[id] = "Invalid category!";
+                hasInvalid = true;
+            }
+            if (!hasModes[category]) {
+                hasMissingModes = true;
             }
         });
 
-        return handleErrorReturn(errors);
+        if (hasInvalid) {
+            errorMsg += "One or more categories have invalid values, contact TonySMB for help. ";
+        }
+        if (hasMissingModes) {
+            errorMsg += "One or more categories have no modes and no levels. ";
+        }
+
+        return errorMsg ? errorMsg.slice(0, -1) : undefined;
     };
 
     // FUNCTION 30: validateModes - function that validates each mode
@@ -677,28 +709,41 @@ const StructureForm = (setFormData) => {
     // if modeList is empty, return a string letting the user know
     // otherwise, return an array, where we map mode id => error message
     const validateModes = modeList => {
-        if (modeList.length === 0) {
-            return "Must have at least one mode.";
-        }
-
         const errors = [];
-        form.values.mode.forEach(obj => {
+        const hasLevels = {};
+        form.values.level.forEach(level => {
+            const { mode } = level;
+            if (!hasLevels[mode]) {
+                hasLevels[mode] = true;
+            }
+        });
+
+        modeList.forEach(obj => {
             const { id, name, category } = obj;
             let errorMsg = "";
             
-            if (!categories[category] || typeof category !== "string") {
-                errorMsg += "Mode belongs to an invalid category. Contact TonySMB for help.";
-            }
-            if (typeof name !== "string") {
-                errorMsg += "Mode must be a word.";
-            }
-            if (name.length === 0) {
-                errorMsg += "Mode cannot be empty.";
-            }
-            if (name.includes("?")) {
-                errorMsg += "Mode cannot include question marks."
+            // ensure category is valid
+            if (!form.values.category.map(c => c.category).includes(category)) {
+                errorMsg += "Mode belongs to an invalid category, contact TonySMB for help. ";
             }
 
+            // next, ensure mode name is well-formed
+            if (typeof name !== "string") {
+                errorMsg += "Mode must be a word. ";
+            }
+            if (name.length === 0) {
+                errorMsg += "Mode cannot be empty. ";
+            }
+            if (name.length > 0 && !isUrlSafe.test(name)) {
+                errorMsg += "Mode includes an unsafe special character. ";
+            }
+
+            // ensure mode has >0 levels
+            if (!hasLevels[name]) {
+                errorMsg += "Mode must have at least one level. ";
+            }
+
+            // if any errors were identified, let's update errors array
             if (errorMsg) {
                 errors[id] = errorMsg;
             }
@@ -715,29 +760,97 @@ const StructureForm = (setFormData) => {
     // if levelList is empty, return a string letting the user know
     // otherwise, return an array, where we map level id => error message
     const validateLevels = levelList => {
-        if (levelList.length === 0) {
-            return "Must have at least one level.";
-        }
-
         const errors = [];
         levelList.forEach(level => {
+            const { ascending, category, chart_type, id, mode, name, time, timer_type } = level;
             let errorMsg = "";
 
-            if (!form.values.category.includes(level.category)) {
-                errorMsg += "Level assigned to invalid category. Contact TonySMB for help.";
+            // first, validate category is valid
+            if (!form.values.category.map(c => c.category).includes(category)) {
+                errorMsg += "Level assigned to invalid category, contact TonySMB for help. ";
             }
-            if (!form.values.mode.includes(level.mode)) {
-                errorMsg += "Level assigned to invalid mode. Contact TonySMB for help.";
+
+            // next, validate mode is valid
+            if (!form.values.mode.map(m => m.name).includes(mode)) {
+                errorMsg += "Level assigned to invalid mode, contact TonySMB for help. ";
             }
-            if (typeof level.id !== "number" || !Number.isInteger(level.id)) {
-                errorMsg += "Level assigned an invalid id. Contact TonySMB for help.";
+
+            // next, validate id is an integer
+            if (typeof id !== "number" || !Number.isInteger(id)) {
+                errorMsg += "Level assigned an invalid id, contact TonySMB for help. ";
             }
-            if (level.name.includes("?") || level.name.includes(" ")) {
-                errorMsg += "Level name includes invalid character.";
+
+            // next, the level name is safe, well-formatted
+            if (name.length === 0) {
+                errorMsg += "Name is required. ";
+            }
+            if (name.length > 0 && !isUrlSafe.test(name)) {
+                errorMsg += "Name includes an unsafe special character. ";
+            }
+
+            // next, let's handle fields dependent on chart type
+            if (chart_type === "score") {
+                if (timer_type !== "") {
+                    errorMsg += "Timer Type should be unset when Chart Type is Score. ";
+                }
+                if (time !== 0) {
+                    errorMsg += "Time should be 0 when Chart Type is Score. ";
+                }
+                if (["both", "time"].includes(ascending)) {
+                    errorMsg += "Ascend Time cannot be checked when Chart Type is Score. ";
+                }
+            } else {
+                if (timer_type === "") {
+                    errorMsg += "Timer Type is required when Chart Type is Time or Both. ";
+                }
+                if (["score", null].includes(ascending) && time === 0) {
+                    errorMsg += "Time cannot be 0. ";
+                }
+                if (chart_type === "time" && ["both", "score"].includes(ascending)) {
+                    errorMsg += "Ascend Score cannot be checked when Chart Type is Time." ;
+                }
+            }
+
+            // next, let's handle fields dependent on ascending
+            if (["time", "both"].includes(ascending)) {
+                if (time !== 0) {
+                    errorMsg += "Time must be 0 when Ascending Time is checked. ";
+                }
+            }
+
+            // next, let's validate chart type
+            if (!formData.chartTypes.includes(chart_type)) {
+                errorMsg += "Chart type is not a valid value. ";
+            }
+
+            // next, let's validate timer type
+            if (timer_type !== "" && !formData.timerTypes.includes(timer_type)) {
+                errorMsg += "Timer type is not a valid value. ";
+            }
+
+            // TODO: this should be fixed with a timer type update. for now, this works.
+            // next, let's validate time
+            if (time === "") {
+                errorMsg += "Time is required. ";
+            } else {
+                const fraction = String(time).split(".")[1];
+                if (timer_type.endsWith("msec")) {
+                    if (fraction && fraction.length > 3) {
+                        errorMsg += "Invalid number of decimals on time. ";
+                    }
+                } else if (timer_type.endsWith("csec")) {
+                    if (fraction && fraction.length > 2) {
+                        errorMsg += "Invalid number of decimals on time. ";
+                    }
+                } else {
+                    if (fraction) {
+                        errorMsg += "Invalid number of decimals on time. ";
+                    }
+                }
             }
 
             if (errorMsg) {
-                errors[level.id] = errorMsg;
+                errors[id] = errorMsg;
             }
         });
 
@@ -758,7 +871,18 @@ const StructureForm = (setFormData) => {
         
         error.category = validateCategories(form.values.category);
         error.mode = validateModes(form.values.mode);
-        error.level = validateLevels(form.value.level);
+        error.level = validateLevels(form.values.level);
+
+        // if no errors are detected, unlock next page, and update local storage
+        if (!Object.values(error).some(e => e !== undefined)) {
+            // unlockNextPage();
+            console.log("UNLOCK NEXT PAGE GOES HERE");
+        } else {
+            addMessage("Form not validated, please check error messages.", "error", 8000);
+        }
+
+        console.log(error);
+        dispatchForm({ type: "error", data: error });
 
     };
 

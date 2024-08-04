@@ -53,3 +53,6 @@ export const isUpperAlphaNumeric = /^[A-Z0-9]+$/;
 
 // Is lower alphanumeric with underscores regex
 export const isLowerAlphaNumericWithUnderscores = /^[a-z0-9][a-z0-9_]*$/;
+
+// Is url-safe regex
+export const isUrlSafe = /^[a-zA-Z0-9\-_.!~*''()%]+$/;

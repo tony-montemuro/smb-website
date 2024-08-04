@@ -2,7 +2,7 @@
 import styles from "./LevelList.module.css";
 import LevelInput from "./LevelInput.jsx";
 
-function LevelList({ levels, category, mode, handleChange, handleInsert, handleDelete, formData }) {
+function LevelList({ levels, category, mode, handleChange, handleInsert, handleDelete, formData, errors }) {
   /* ===== VARIABLES ===== */
   const categoryName = category.category;
   const modeName = mode.name;
@@ -13,7 +13,10 @@ function LevelList({ levels, category, mode, handleChange, handleInsert, handleD
     <div className={ styles.levelList }>
       <h3>Charts</h3>
       { filteredLevels.map(level => {
-        const id = `level-${ category.id }-${ mode.id }-${ level.id }`;
+        const levelId = level.id;
+        const id = `level-${ category.id }-${ mode.id }-${ levelId }`;
+        const error = errors && errors[levelId] ? errors[levelId] : null;
+        
         return (
           <LevelInput
             id={ id }
@@ -24,6 +27,7 @@ function LevelList({ levels, category, mode, handleChange, handleInsert, handleD
             handleChange={ handleChange }
             handleInsert={ handleInsert }
             handleDelete={ handleDelete }
+            error={ error }
             key={ id }
           />
         );

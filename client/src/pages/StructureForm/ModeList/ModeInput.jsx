@@ -3,10 +3,11 @@ import styles from "./ModeList.module.css";
 import { cloneElement } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import FormHelperText from "@mui/material/FormHelperText";
 import LevelHelper from "../../../helper/LevelHelper.js";
 import TextField from "@mui/material/TextField";
 
-function ModeInput({ id, firstModeId, mode, category, handleChange, handleInsert, handleDelete, children }) {
+function ModeInput({ id, firstModeId, mode, category, handleChange, handleInsert, handleDelete, error = null, children }) {
   /* ===== VARIABLES ===== */
   const categoryName = category.category;
   const modeId = mode.id;
@@ -52,6 +53,11 @@ function ModeInput({ id, firstModeId, mode, category, handleChange, handleInsert
         </button>
 
       </div>
+
+      { error &&
+        <FormHelperText error>{ error }</FormHelperText>
+      }
+      
       { cloneElement(children, { mode, category }) }
     </div>
   );

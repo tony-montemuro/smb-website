@@ -35,7 +35,7 @@ function StructureForm() {
     openPopup,
     closePopup,
     validateStructure
-  } = StructureFormLogic(setFormData);
+  } = StructureFormLogic(formData, setFormData);
 
   /* ===== CONTEXTS ===== */
 
@@ -144,6 +144,7 @@ function StructureForm() {
                 handleInsert={ handleModeInsert }
                 handleChange={ handleModeUpdate }
                 handleDelete={ handleModeDelete }
+                errors={ form.error.mode }
               >
                 <LevelList 
                   levels={ form.values.level }
@@ -151,6 +152,7 @@ function StructureForm() {
                   handleChange={ handleLevelChange }
                   handleDelete={ handleLevelDelete }
                   formData={ formData }
+                  errors={ form.error.level }
                 />
               </ModeList>
             </SelectList>
