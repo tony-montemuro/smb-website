@@ -50,7 +50,7 @@ async function uploadAll(files) {
         await Promise.all(promises);
         console.log("All files uploaded successfully!");
     } catch (error) {
-        console.error("One or more files failed to upload!");
+        console.error("One or more files failed to upload!", error);
     };
 };
 
@@ -65,7 +65,7 @@ async function getFileData(file) {
     try {
         data = fs.readFileSync(file.path);
     } catch (error) {
-        console.error("File could not be read.");
+        console.error("File could not be read.", error);
     } finally {
         file.data = data;
     };
@@ -78,15 +78,11 @@ async function getFileData(file) {
 // however, it is also possible one or more images failed to upload
 async function main() {
     // first, define our files array
-    const files = [
-        { path: "images/bm.png" },
-        { path: "images/launch.png" }, 
-        { path: "images/smb1.png" }, 
-        { path: "images/smb2.png" },
-        { path: "images/smb2pal.png" },
-        { path: "images/smbdx.png" },
-        { path: "images/stardust.png" },
-    ];
+    const directory = "images";
+    let files = fs.readdirSync(directory);
+    files = files.map(file => { 
+        return { path: `images/${ file }` }
+    });
 
     // next, get the file data for each file
     for (const file of files) {
