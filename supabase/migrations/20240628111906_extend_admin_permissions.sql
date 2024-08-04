@@ -362,11 +362,6 @@ AS $$
   FROM unnest(enum_range(NULL::timer_t)) AS timer_type;
 $$;
 
--- Constraints on mode table
-ALTER TABLE mode
-ADD CONSTRAINT name_no_question_marks 
-CHECK (position('?' in name) = 0);
-
 -- Encode special characters that currently exist
 UPDATE level
 SET name = REPLACE(name, ':', '%3A')
@@ -380,7 +375,22 @@ UPDATE level
 SET name = REPLACE(name, '&', '%26')
 WHERE name LIKE '%&%';
 
--- Constraints on level table
+-- Set time to 0 on all levels where ascending = 'time'
+UPDATE level
+SET time = 0
+WHERE ascending = 'time';
+
+-- Function that tests if a string is "url-safe"
+CREATE OR REPLACE FUNCTION is_url_safe(input TEXT)
+RETURNS BOOLEAN AS $$
+  SELECT input ~ '^[a-zA-Z0-9\-_.!~*''()%]+$';
+$$ LANGUAGE sql;
+
+-- Constraints on mode & level table
+ALTER TABLE mode
+ADD CONSTRAINT name_no_question_marks 
+CHECK (is_url_safe(name));
+
 ALTER TABLE level
 ADD CONSTRAINT name_url_valid
-CHECK (name ~ '^[a-zA-Z0-9\-_.!~*''()%]+$');
+CHECK (is_url_safe(name));
