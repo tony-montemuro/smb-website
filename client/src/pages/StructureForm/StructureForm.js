@@ -507,14 +507,29 @@ const StructureForm = (formData, setFormData) => {
     // POSTCONDITIONS (1 possible outcome):
     // we determine where to add the level, and add it
     const handleLevelInsert = (category, mode, id = null) => {
+        const categories = form.values.category;
+        const modes = form.values.mode;
+
         if (!id) {
-            let categoryIndex = form.values.category.findIndex(c => c.category === category);
-            let modeIndex = form.values.mode.findIndex(m => m.name === mode);
+            let categoryIndex = categories.findIndex(c => c.category === category);
+            let modeIndex = modes.findIndex(m => m.name === mode);
 
             while (categoryIndex >= 0 && !id) {
-                const categoryName = form.values.category[categoryIndex].category;
-                while (modeIndex >= 0 && !id) {
-                    const modeName = form.values.mode[modeIndex].name;
+                // find index of first mode in category
+                const categoryName = categories[categoryIndex].category;
+                let minModeIndex, index = modeIndex;
+                while (!minModeIndex && index > 0) {
+                    const mode = modes[index-1];
+                    if (mode.category !== categoryName) {
+                        minModeIndex = index; 
+                    }
+                    index--;
+                }
+                if (!minModeIndex) minModeIndex = 0;
+                
+
+                while (modeIndex >= minModeIndex && !id) {
+                    const modeName = modes[modeIndex].name;
                     const categoryModeLevels = form.values.level.filter(l => l.category === categoryName && l.mode === modeName);
                     if (categoryModeLevels.length > 0) {
                         id = categoryModeLevels.at(-1).id+1;
@@ -522,6 +537,7 @@ const StructureForm = (formData, setFormData) => {
                     modeIndex--;
                 }
                 categoryIndex--;
+                minModeIndex = modeIndex;
             }
 
             // if id is still null at this point, implication is that this should have an id of 1
