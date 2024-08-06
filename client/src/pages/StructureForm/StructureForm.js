@@ -85,7 +85,26 @@ const StructureForm = (formData, setFormData) => {
         return children;
     };
 
-    // FUNCTION 3: insertCategory - function that executes when the user performs an action to insert a category
+    // FUNCTION 3: shiftErrors - function that takes a spare array of errors, and shifts errors at or after a given index
+    // PRECONDITIONS (2 parameters):
+    // 1.) errors: a spare array of errors
+    // 2.) index: the index of the element we should start shifting
+    // POSTCONDITIONS (1 possible outcome):
+    // all elements at or after "index" in the array are shifted over by 1
+    const shiftErrors = (errors, index) => {
+        errors.length++;
+        let i = errors.length-1;
+
+        while (i > index) {
+            errors[i] = errors[i-1];
+            i--;
+        }
+        delete errors[i];
+
+        return errors;
+    };
+
+    // FUNCTION 4: insertCategory - function that executes when the user performs an action to insert a category
     // PRECONDITIONS (2 parameters):
     // 1.) state: the current state of the form
     // 2.) data: the user inputted-category (object with two keys: id (int) and category (string))
@@ -99,7 +118,7 @@ const StructureForm = (formData, setFormData) => {
         return { ...state, values: updatedValues };
     };
 
-    // FUNCTION 4: updateCategory - function that executes when the user performs an action to update a category
+    // FUNCTION 5: updateCategory - function that executes when the user performs an action to update a category
     // PRECONDITIONS (2 parameters):
     // 1.) state: the current state of the form
     // 2.) data: the user inputted-category (object with two keys: id (int) and category (string))
@@ -147,27 +166,37 @@ const StructureForm = (formData, setFormData) => {
         return { ...state, values: updated };
     };
 
-    // FUNCTION 5: insertMode - function that executes when the user "adds" a new mode
+    // FUNCTION 6: insertMode - function that executes when the user "adds" a new mode
     // PRECONDITIONS (2 parameters):
     // 1.) state: the current state of the form
     // 2.) data: the user inputted-mode (object with three keys: id (int), name (string), and category (string))
     // POSTCONDITIONS (1 possible outcomes):
     // the mode is added to our list of modes in the form
     const insertMode = (state, data) => {
-        const updated = { ...state.values };
+        const updatedValues = { ...state.values };
+        let firstShiftedIndex;
 
-        for (let mode of updated.mode) {
+        // first, let's shift existing modes, if necessary
+        for (let mode of updatedValues.mode) {
             if (mode.id >= data.id) {
+                if (firstShiftedIndex === undefined) firstShiftedIndex = mode.id;
                 mode.id++;
             }
         }
 
-        updated.mode.push(data);
-        updated.mode.sort((a, b) => a.id - b.id);
-        return { ...state, values: updated };
+        // then, shift any errors, if necessary
+        let modeErrors = state.error.mode ? [...state.error.mode] : undefined;
+        if (modeErrors && firstShiftedIndex !== undefined) {
+            modeErrors = shiftErrors(modeErrors, firstShiftedIndex);
+        }
+
+        updatedValues.mode.push(data);
+        updatedValues.mode.sort((a, b) => a.id - b.id);
+        const updatedErrors = { ...state.error, mode: modeErrors };
+        return { ...state, values: updatedValues, error: updatedErrors };
     };
 
-    // FUNCTION 6: updateMode - function that executes when the user performs a change on a mode
+    // FUNCTION 7: updateMode - function that executes when the user performs a change on a mode
     // PRECONDITIONS (2 parameters):
     // 1.) state: the current state of the form
     // 2.) data: the user inputted-mode (object with three keys: id (int), name (string), and category (string))
@@ -184,7 +213,7 @@ const StructureForm = (formData, setFormData) => {
         return { ...state, values: updated };
     };
 
-    // FUNCTION 7: deleteMode - function that executes when the user performs a delete on a mode
+    // FUNCTION 8: deleteMode - function that executes when the user performs a delete on a mode
     // PRECONDITIONS (2 parameters):
     // 1.) state: the current state of the form
     // 2.) data: the id of the mode we want to delete
@@ -212,7 +241,7 @@ const StructureForm = (formData, setFormData) => {
         return { ...state, values: updated };
     };
 
-    // FUNCTION 8: insertLevel - function that executes when the user performs an action to insert a level
+    // FUNCTION 9: insertLevel - function that executes when the user performs an action to insert a level
     // 1.) state: the current state of the form
     // 2.) data: the user inputted-category (object with two keys: id (int) and category (string))
     // POSTCONDITIONS (1 possible outcomes):
@@ -232,18 +261,23 @@ const StructureForm = (formData, setFormData) => {
             return arr;
         }, []);
 
-        // if we determine that mass-increment is necessary, do it
+        // if we determine that mass-increment is necessary, do it. errors should also be shifted
+        let levelErrors = state.error.level ? [...state.error.level] : undefined;
         if (mustIncrement) {
             laterLevelIndicies.forEach(index => updatedLevels[index].id++);
+            if (levelErrors) {
+                levelErrors = shiftErrors([...state.error.level], laterLevelIndicies[0]);
+            }
         }
 
         updatedLevels.push(data);
         updatedLevels.sort((a, b) => a.id - b.id);
         const updatedValues = { ...state.values, level: updatedLevels };
-        return { ...state, values: updatedValues };
+        const updatedErrors = { ...state.error, level: levelErrors };
+        return { ...state, values: updatedValues, error: updatedErrors };
     };
 
-    // FUNCTION 9: updateLevel - function that is executed when the user performs an action to update a level
+    // FUNCTION 10: updateLevel - function that is executed when the user performs an action to update a level
     // 1.) state: the current state of the form
     // 2.) data: the user inputted-changes
     // POSTCONDITIONS (1 possible outcome):
@@ -256,7 +290,7 @@ const StructureForm = (formData, setFormData) => {
         return { ...state, values: updatedValues };
     };
 
-    // FUNCTION 10: deleteLevel - function that executes when the user performs a delete on a level
+    // FUNCTION 11: deleteLevel - function that executes when the user performs a delete on a level
     // PRECONDITIONS (2 parameters):
     // 1.) state: the current state of the form
     // 2.) data: the id of the level we want to delete
@@ -268,7 +302,7 @@ const StructureForm = (formData, setFormData) => {
         return { ...state, values: updated };
     };
 
-    // FUNCTION 11: reducer - function that executes each time the user attempts to update the form reducer hook
+    // FUNCTION 12: reducer - function that executes each time the user attempts to update the form reducer hook
     // PRECONDITIONS (2 parameters):
     // 1.) state: the state of the form object when the function is called
     // 2.) action: an object with three fields:
@@ -331,7 +365,7 @@ const StructureForm = (formData, setFormData) => {
 
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 12: populateForm - function that executes when the StructureForm component mounts
+    // FUNCTION 13: populateForm - function that executes when the StructureForm component mounts
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the metadata key is stored locally, we need to match the form with this data
@@ -347,7 +381,7 @@ const StructureForm = (formData, setFormData) => {
         dispatchForm({ type: "values", data: formData });
     };
 
-    // FUNCTION 13: getTransformedCategories - function that takes `categories` state from categories context, and converts to array
+    // FUNCTION 14: getTransformedCategories - function that takes `categories` state from categories context, and converts to array
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcomes):
     // the state is transform from a mapping of category names to category objects, to an array of category objects,
@@ -356,7 +390,7 @@ const StructureForm = (formData, setFormData) => {
         return Object.values(categories).toSorted((b, a) => b.practice - a.practice);
     };
 
-    // FUNCTION 14: queryFormData - function that loads all data used by the form; should be ran when the `StructureForm` 
+    // FUNCTION 15: queryFormData - function that loads all data used by the form; should be ran when the `StructureForm` 
     // component mounts
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
@@ -376,7 +410,7 @@ const StructureForm = (formData, setFormData) => {
         };
     };
 
-    // FUNCTION 15: updateFormCategories - function that updates the `categories` field of the `formData` state
+    // FUNCTION 16: updateFormCategories - function that updates the `categories` field of the `formData` state
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if any categories exist, we assume a success, and update the categories state
@@ -394,7 +428,7 @@ const StructureForm = (formData, setFormData) => {
         };
     };
 
-    // FUNCTION 16: isDuplicate - function that checks if an entity attempting to be added is already present in data
+    // FUNCTION 17: isDuplicate - function that checks if an entity attempting to be added is already present in data
     // PRECONDITIONS (2 parameters):
     // 1.) data: the data the user has selected, that we wish to check
     // 2.) entityName: the string representing the set of `entityName` we want to check
@@ -416,7 +450,7 @@ const StructureForm = (formData, setFormData) => {
         return result;
     };
 
-    // FUNCTION 17: handleCategoryInsert - function that is called when the user adds a new category select row
+    // FUNCTION 18: handleCategoryInsert - function that is called when the user adds a new category select row
     // PRECONDITIONS (2 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - unused here, but passed from component
@@ -431,7 +465,7 @@ const StructureForm = (formData, setFormData) => {
         }
     };
 
-    // FUNCTION 18: handleCategoryUpdate - function that is called when the user updates an existing category row
+    // FUNCTION 19: handleCategoryUpdate - function that is called when the user updates an existing category row
     // PRECONDITIONS (2 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - should be equal to the number of entities currently present
@@ -446,7 +480,7 @@ const StructureForm = (formData, setFormData) => {
         }
     }
 
-    // FUNCTION 19: handleModeInsert - function that is called when the user wants to add a new mode to the list of modes
+    // FUNCTION 20: handleModeInsert - function that is called when the user wants to add a new mode to the list of modes
     // PRECONDITIONS (1 parametr):
     // 1.) category: an object representing the category we want to add the mode to
     // 2.) id (optional): a integer, representing the id of the mode we want to add. if not provided, we assume
@@ -478,7 +512,7 @@ const StructureForm = (formData, setFormData) => {
         dispatchForm({ type: dispatchTypes.INSERT_MODE, data: data });
     }
 
-    // FUNCTION 20: handleModeUpdate - code that is excuted each time the user makes a keystroke in a mode input
+    // FUNCTION 21: handleModeUpdate - code that is excuted each time the user makes a keystroke in a mode input
     // PRECONDITIONS (3 parameters):
     // 1.) mode: the string user input entered as the mode
     // 2.) category: a string representing the category the mode belongs to
@@ -491,14 +525,14 @@ const StructureForm = (formData, setFormData) => {
         dispatchForm({ type: dispatchTypes.UPDATE_MODE, data: data });
     };
 
-    // FUNCTION 21: handleModeDelete - code that is executed when the user decides to delete a mode
+    // FUNCTION 22: handleModeDelete - code that is executed when the user decides to delete a mode
     // PRECONDITIONS (1 parameter):
     // 1.) id: an integer representing the id of the mode the user wants to delete
     // POSTCONDITIONS (1 possible outcome):
     // the system will attempt to delete the mode
     const handleModeDelete = id => dispatchForm({ type: dispatchTypes.DELETE_MODE, data: id });
 
-    // FUNCTION 22: handleLevelInsert - function that is called when the user wants to add a new level to the list of levels
+    // FUNCTION 23: handleLevelInsert - function that is called when the user wants to add a new level to the list of levels
     // PRECONDITIONS (2 parameters):
     // 1.) category: the category we want to add the level to
     // 2.) mode: the mode we want to add the level to
@@ -559,7 +593,7 @@ const StructureForm = (formData, setFormData) => {
         dispatchForm({ type: dispatchTypes.INSERT_LEVEL, data });
     };
 
-    // FUNCTION 23: getAscendingValue - function that takes the ascending type the user is interacting with, and
+    // FUNCTION 24: getAscendingValue - function that takes the ascending type the user is interacting with, and
     // determines how the ascending state is updated
     // PRECONDITIONS (3 parameters):
     // 1.) a string, either "score" or "time"
@@ -583,7 +617,7 @@ const StructureForm = (formData, setFormData) => {
         return null;
     };
 
-    // FUNCTION 24: handleLevelChange - code that is executed when the use modifies any of the level inputs
+    // FUNCTION 25: handleLevelChange - code that is executed when the use modifies any of the level inputs
     // PRECONDITIONS (1 parameter):
     // 1.) an event object generated by the user's keystroke within the input
     // POSTCONDITIONS (1 possible outcome):
@@ -636,26 +670,26 @@ const StructureForm = (formData, setFormData) => {
         dispatchForm({ type: dispatchTypes.UPDATE_LEVEL, data: update });
     };
 
-    // FUNCTION 25: handleLevelDelete - code that is executed when the user decides to delete a level
+    // FUNCTION 26: handleLevelDelete - code that is executed when the user decides to delete a level
     // PRECONDITIONS (1 parameter):
     // 1.) id: an integer representing the id of the level the user wants to delete
     // POSTCONDITIONS (1 possible outcome):
     // the system will attempt to delete the level
     const handleLevelDelete = id => dispatchForm({ type: dispatchTypes.DELETE_LEVEL, data: id });
 
-    // FUNCTION 26: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
+    // FUNCTION 27: openPopup - function that is called when the user wishes to open the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "true", rendering the popup
     const openPopup = () => setAddCategory(true);
 
-    // FUNCTION 27: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
+    // FUNCTION 28: closePopup - function that is called when the user wishes to close the `CategoryAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addCategory` state is updated to "false", unrendering the popup
     const closePopup = () => setAddCategory(false);
 
-    // FUNCTION 28: handleErrorReturn - function that is called at the end of each validator function to handle return
+    // FUNCTION 29: handleErrorReturn - function that is called at the end of each validator function to handle return
     // PRECONDITION (1 parameter):
     // 1.) errors: an array of errors
     // POSTCONDITIONS (2 possible outcomes):
@@ -674,7 +708,7 @@ const StructureForm = (formData, setFormData) => {
         return errors;
     };
 
-    // FUNCTION 29: validateCategories - function that validates each category
+    // FUNCTION 30: validateCategories - function that validates each category
     // PRECONDITIONS (1 parameter):
     // 1.) categories - the list of categories we want to validate
     // POSTCONDITIONS (2 possible outcomes):
@@ -717,7 +751,7 @@ const StructureForm = (formData, setFormData) => {
         return errorMsg ? errorMsg.slice(0, -1) : undefined;
     };
 
-    // FUNCTION 30: validateModes - function that validates each mode
+    // FUNCTION 31: validateModes - function that validates each mode
     // PRECONDITIONS (1 parameter):
     // 1.) modes - the list of modes we want to validate
     // POSTCONDITIONS (3 possible outcomes):
@@ -768,7 +802,7 @@ const StructureForm = (formData, setFormData) => {
         return handleErrorReturn(errors);
     };
 
-    // FUNCTION 31: validateLevels - function that validates each level
+    // FUNCTION 32: validateLevels - function that validates each level
     // PRECONDITIONS (1 parameter):
     // 1.) modes - the list of levels we want to validate
     // POSTCONDITIONS (3 possible outcomes):
@@ -873,7 +907,7 @@ const StructureForm = (formData, setFormData) => {
         return handleErrorReturn(errors);
     };
 
-    // FUNCTION 32: validateStructure - function that ensures the the user-inputted game structure is valid
+    // FUNCTION 33: validateStructure - function that ensures the the user-inputted game structure is valid
     // PRECONDITIONS (1 parameter):
     // 1.) e: the event object generated by the submit event on the game structure form
     // POSTCONDITIONS (2 possible outcomes):
