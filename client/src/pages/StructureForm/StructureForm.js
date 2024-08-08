@@ -277,7 +277,7 @@ const StructureForm = (formData, setFormData) => {
         const { 
             elements: updatedLevels,
             errors: updatedLevelErrors
-        } = shiftElementsAndErrors(state.values.mode, state.error.mode);
+        } = shiftElementsAndErrors(state.values.level, state.error.level);
 
         updatedLevels.push(data);
         updatedLevels.sort((a, b) => a.id - b.id);
@@ -502,10 +502,10 @@ const StructureForm = (formData, setFormData) => {
     const handleModeInsert = (category, id = null) => {
         const categoryName = category.category;
 
-        if (!id) {
+        if (id === null) {
             let categoryIndex = form.values.category.findIndex(c => c.id === category.id);
 
-            while (categoryIndex >= 0 && !id) {
+            while (categoryIndex >= 0 && id === null) {
                 const categoryName = form.values.category[categoryIndex].category;
                 const categoryModes = form.values.mode.filter(m => m.category === categoryName);
                 if (categoryModes.length > 0) {
@@ -515,7 +515,7 @@ const StructureForm = (formData, setFormData) => {
             }
 
             // if id is still null at this point, implication is that this should have an id of 1
-            if (!id) {
+            if (id === null) {
                 id = 1;
             }
         }
@@ -556,11 +556,11 @@ const StructureForm = (formData, setFormData) => {
         const categories = form.values.category;
         const modes = form.values.mode;
 
-        if (!id) {
+        if (id === null) {
             let categoryIndex = categories.findIndex(c => c.category === category);
             let modeIndex = modes.findIndex(m => m.name === mode);
 
-            while (categoryIndex >= 0 && !id) {
+            while (categoryIndex >= 0 && id === null) {
                 // find index of first mode in category
                 const categoryName = categories[categoryIndex].category;
                 let minModeIndex, index = modeIndex;
@@ -574,20 +574,21 @@ const StructureForm = (formData, setFormData) => {
                 if (!minModeIndex) minModeIndex = 0;
                 
 
-                while (modeIndex >= minModeIndex && !id) {
+                while (modeIndex >= minModeIndex && id === null) {
                     const modeName = modes[modeIndex].name;
                     const categoryModeLevels = form.values.level.filter(l => l.category === categoryName && l.mode === modeName);
                     if (categoryModeLevels.length > 0) {
                         id = categoryModeLevels.at(-1).id+1;
+                    } else {
+                        modeIndex--;
                     }
-                    modeIndex--;
                 }
                 categoryIndex--;
                 minModeIndex = modeIndex;
             }
 
             // if id is still null at this point, implication is that this should have an id of 1
-            if (!id) {
+            if (id === null) {
                 id = 1;
             }
         }
