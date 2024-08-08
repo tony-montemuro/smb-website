@@ -388,9 +388,13 @@ $$ LANGUAGE sql;
 
 -- Constraints on mode & level table
 ALTER TABLE mode
-ADD CONSTRAINT name_no_question_marks 
-CHECK (is_url_safe(name));
+ADD CONSTRAINT name_url_valid 
+CHECK (is_url_safe(name) AND length(name) > 0);
 
 ALTER TABLE level
 ADD CONSTRAINT name_url_valid
-CHECK (is_url_safe(name));
+CHECK (is_url_safe(name) AND length(name) > 0);
+
+ALTER TABLE level
+ADD CONSTRAINT score_chart_restrictions
+CHECK (chart_type <> 'score' OR (timer_type = null AND time = 0 AND ascending NOT IN ('both', 'time')));
