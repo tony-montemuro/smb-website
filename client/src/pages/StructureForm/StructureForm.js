@@ -866,9 +866,6 @@ const StructureForm = (formData, setFormData) => {
                 if (timer_type === "") {
                     errorMsg += "Timer Type is required when Chart Type is Time or Both. ";
                 }
-                if (["score", null].includes(ascending) && time === 0) {
-                    errorMsg += "Time cannot be 0. ";
-                }
                 if (chart_type === "time" && ["both", "score"].includes(ascending)) {
                     errorMsg += "Ascend Score cannot be checked when Chart Type is Time." ;
                 }
