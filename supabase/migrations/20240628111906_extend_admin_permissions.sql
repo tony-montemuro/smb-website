@@ -375,10 +375,14 @@ UPDATE level
 SET name = REPLACE(name, '&', '%26')
 WHERE name LIKE '%&%';
 
--- Set time to 0 on all levels where ascending = 'time'
+-- Queries that fix data, so all levels will pass new restrictions
 UPDATE level
 SET time = 0
 WHERE ascending = 'time';
+
+UPDATE level
+SET timer_type = NULL
+WHERE chart_type = 'score';
 
 -- Function that tests if a string is "url-safe"
 CREATE OR REPLACE FUNCTION is_url_safe(input TEXT)
@@ -397,4 +401,16 @@ CHECK (is_url_safe(name) AND length(name) > 0);
 
 ALTER TABLE level
 ADD CONSTRAINT score_chart_restrictions
-CHECK (chart_type <> 'score' OR (timer_type = null AND time = 0 AND ascending NOT IN ('both', 'time')));
+CHECK (chart_type <> 'score' OR (timer_type IS NULL AND time = 0 AND ascending NOT IN ('both', 'time')));
+
+ALTER TABLE level
+ADD CONSTRAINT time_chart_restrictions
+CHECK (chart_type <> 'time' OR (ascending NOT IN ('both', 'score')));
+
+ALTER TABLE level
+ADD CONSTRAINT time_both_chart_restrictions
+CHECK (chart_type = 'score' OR (
+  timer_type IS NOT NULL AND (
+    ascending = 'score' OR ascending IS NULL OR time = 0
+  )
+));

@@ -3819,7 +3819,7 @@ INSERT INTO "public"."level" (id, game, mode, name, chart_type, "time", category
 	(530, 'stardust', 'stage_challenges', 'world_8-4_-_frequencies_(achievement)', 'time', 200, 'misc', 'sec_csec', NULL),
 	(531, 'stardust', 'stage_challenges', 'world_9-3_-_flip_switches_(achievement)', 'time', 300, 'misc', 'sec_csec', NULL),
 	(532, 'stardust', 'stage_challenges', 'world_10-10_-_impact_(achievement)', 'time', 300, 'misc', 'sec_csec', NULL),
-	(533, 'stardust', 'total', 'grand_total', 'score', 0, 'interstellar', 'sec_csec', NULL),
+	(533, 'stardust', 'total', 'grand_total', 'score', 0, 'interstellar', NULL, NULL),
 	(481, 'stardust', 'draft_stages', 'draft_stage_51_-_sweepers_bunch_park', 'both', 100, 'misc', 'sec_csec', NULL),
 	(534, 'stardust', 'individual_worlds', 'world_1', 'both', 0, 'interstellar', 'sec_csec', 'time'),
 	(535, 'stardust', 'individual_worlds', 'world_2', 'both', 0, 'interstellar', 'sec_csec', 'time'),
