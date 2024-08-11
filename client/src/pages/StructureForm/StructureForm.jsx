@@ -21,6 +21,7 @@ function StructureForm() {
   const { 
     form,
     addCategory,
+    updateLocal,
     populateForm,
     queryFormData,
     updateFormCategories,
@@ -141,6 +142,7 @@ function StructureForm() {
             >
               <ModeList 
                 modes={ form.values.mode }
+                handleBlur={ updateLocal }
                 handleInsert={ handleModeInsert }
                 handleChange={ handleModeUpdate }
                 handleDelete={ handleModeDelete }
@@ -148,6 +150,7 @@ function StructureForm() {
               >
                 <LevelList 
                   levels={ form.values.level }
+                  handleBlur={ updateLocal }
                   handleInsert={ handleLevelInsert }
                   handleChange={ handleLevelChange }
                   handleDelete={ handleLevelDelete }

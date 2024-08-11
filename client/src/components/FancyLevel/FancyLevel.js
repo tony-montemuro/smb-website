@@ -2,13 +2,10 @@
 import LevelHelper from "../../helper/LevelHelper.js";
 
 const FancyLevel = () => {
-    /* ===== VARIABLES ===== */
-    const goals = ["blue", "green", "red", "stunt"];
+    /* ===== VARIABLES & FUNCTIONS ===== */
 
-    /* ===== FUNCTIONS ===== */
-
-    // helper functions
-    const { levelB2F } = LevelHelper();
+    // helper variables & functions
+    const { goals, levelB2F } = LevelHelper();
 
     // FUNCTION 1: addSyntaxToGoal - simple function that returns a goal string wrapped in snake case syntax
     // PRECONDITIONS (1 parameter):

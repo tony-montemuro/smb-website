@@ -7,6 +7,7 @@ import Administrator from "./pages/Administrator/Administrator.jsx";
 import AdministratorLayout from "./components/AdministratorLayout/AdministratorLayout.jsx";
 import AppLogic from "./App.js";
 import Approvals from "./pages/Approvals/Approvals.jsx";
+import AssetsForm from "./pages/AssetsForm/AssetsForm.jsx";
 import EntitiesForm from "./pages/EntitiesForm/EntitiesForm.jsx";
 import Game from "./pages/Game/Game.jsx";
 import GameAddLayout from "./components/GameAddLayout/GameAddLayout.jsx";
@@ -151,6 +152,7 @@ function App() {
                   <Route index element={ <MetadataForm /> } />
                   <Route path="game-entities" element={ <EntitiesForm /> } />
                   <Route path="game-structure" element={ <StructureForm /> } />
+                  <Route path="game-assets" element={ <AssetsForm /> } />
                 </Route>
               </Route>
               <Route path="moderator" element={ <ModeratorLayout /> } >

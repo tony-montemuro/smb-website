@@ -3,6 +3,7 @@ import styles from "./AddGamePages.module.css";
 import LooksOneOutlinedIcon from "@mui/icons-material/LooksOneOutlined";
 import LooksTwoOutlinedIcon from "@mui/icons-material/LooksTwoOutlined";
 import Looks3OutlinedIcon from "@mui/icons-material/Looks3Outlined";
+import Looks4OutlinedIcon from "@mui/icons-material/Looks4Outlined";
 
 function AddGamePage({ name, index, page, setPage }) {
   /* ===== VARIABLES ===== */
@@ -12,7 +13,8 @@ function AddGamePage({ name, index, page, setPage }) {
   const numberComponents = {
     1: <LooksOneOutlinedIcon />,
     2: <LooksTwoOutlinedIcon />,
-    3: <Looks3OutlinedIcon />
+    3: <Looks3OutlinedIcon />,
+    4: <Looks4OutlinedIcon />
   }
 
   /* ===== ADD GAME PAGE COMPONENT ===== */

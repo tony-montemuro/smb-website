@@ -13,7 +13,8 @@ const GameAddLayout = (page, setPage) => {
     const pageNames = [
         "Main Information",
         "Game Entities",
-        "Game Structure"
+        "Game Structure",
+        "Game Assets"
     ];
     const keys = {
         currentPage: "GAME_ADD_CURRENT_PAGE",
@@ -37,7 +38,8 @@ const GameAddLayout = (page, setPage) => {
         const urls = {
             1: "",
             2: "game-entities",
-            3: "game-structure"
+            3: "game-structure",
+            4: "game-assets"
         };
 
         navigateTo(urls[pageNumber]);

@@ -13,7 +13,7 @@ import LevelInputLogic from "./LevelInput.js";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
-function LevelInput({ id, level, formData, category, mode, handleChange, handleInsert, handleDelete, error }) {
+function LevelInput({ id, level, formData, category, mode, handleBlur, handleChange, handleInsert, handleDelete, error }) {
   /* ===== CONTEXTS ===== */
 
   // categories state from categories context
@@ -29,9 +29,9 @@ function LevelInput({ id, level, formData, category, mode, handleChange, handleI
   // functions from the js file
   const { timerTypeB2F } = LevelInputLogic();
 
-  // helper functions
+  // helper variables & functions
   const { capitalize } = FrontendHelper();
-  const { levelB2F } = LevelHelper();
+  const { goals, levelB2F } = LevelHelper();
 
   /* ===== LEVEL INPUT COMPONENT ===== */
   return (
@@ -41,15 +41,38 @@ function LevelInput({ id, level, formData, category, mode, handleChange, handleI
           className={ styles.nameInput }
           id={ `${ id }-name` }
           label="Name"
+          onBlur={ () => handleBlur() }
           onChange={ e => handleChange(e) }
           value={ levelB2F(level.name) }
           variant="filled"
         />
 
         <TextField
+          id={ `${ id }-goal` }
+          label="Goal"
+          onBlur={ () => handleBlur() }
+          onChange={ e => handleChange(e) }
+          select
+          SelectProps={ { native: true } }
+          value={ level.goal }
+          variant="filled"
+        >
+          <option key="" value=""></option>
+          { goals.map(goal => (
+            <option
+              key={ goal }
+              value={ goal }
+            >
+              { capitalize(goal) }
+            </option>
+          ))}
+        </TextField>
+
+        <TextField
           className={ styles.chartTypeInput }
           id={ `${ id }-chart_type` }
           label="Chart Type"
+          onBlur={ () => handleBlur() }
           onChange={ e => handleChange(e) }
           select
           SelectProps={ { native: true } }
@@ -70,6 +93,7 @@ function LevelInput({ id, level, formData, category, mode, handleChange, handleI
           disabled={ level.chart_type === "score" }
           id={ `${ id }-timer_type` }
           label="Timer Type"
+          onBlur={ () => handleBlur() }
           onChange={ e => handleChange(e) }
           select
           SelectProps={ { native: true } }
@@ -91,6 +115,7 @@ function LevelInput({ id, level, formData, category, mode, handleChange, handleI
           disabled={ level.chart_type === "score" || timeChartTypes.includes(level.ascending) }
           id={ `${ id }-time` }
           label="Time (sec.)"
+          onBlur={ () => handleBlur() }
           onChange={ e => handleChange(e) }
           type="number"
           value={ level.time }
@@ -106,6 +131,7 @@ function LevelInput({ id, level, formData, category, mode, handleChange, handleI
                     checked={ scoreChartTypes.includes(level.ascending) } 
                     disabled={ level.chart_type === "time" }
                     id={ `${ id }-ascending.score` } 
+                    onBlur={ () => handleBlur() }
                     onChange={ e => handleChange(e) } 
                     inputProps={{ "aria-label": "controlled" }} 
                   />
@@ -121,6 +147,7 @@ function LevelInput({ id, level, formData, category, mode, handleChange, handleI
                     checked={ timeChartTypes.includes(level.ascending) } 
                     disabled={ level.chart_type === "score" }
                     id={ `${ id }-ascending.time` } 
+                    onBlur={ () => handleBlur() }
                     onChange={ e => handleChange(e) } 
                     inputProps={{ "aria-label": "controlled" }} 
                   />

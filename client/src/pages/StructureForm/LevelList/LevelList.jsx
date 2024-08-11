@@ -2,11 +2,10 @@
 import styles from "./LevelList.module.css";
 import LevelInput from "./LevelInput.jsx";
 
-function LevelList({ levels, category, mode, handleChange, handleInsert, handleDelete, formData, errors }) {
+function LevelList({ levels, category, mode, handleBlur, handleChange, handleInsert, handleDelete, formData, errors }) {
   /* ===== VARIABLES ===== */
   const categoryName = category.category;
-  const modeName = mode.name;
-  const filteredLevels = levels.filter(level => level.category === categoryName && level.mode === modeName);
+  const filteredLevels = levels.filter(level => level.category === categoryName && level.mode.id === mode.id);
   
   /* ===== LEVEL LIST COMPONENT ===== */
   return (
@@ -23,7 +22,8 @@ function LevelList({ levels, category, mode, handleChange, handleInsert, handleD
             level={ level }
             formData={ formData }
             category={ categoryName }
-            mode={ modeName }
+            mode={ mode }
+            handleBlur={ handleBlur }
             handleChange={ handleChange }
             handleInsert={ handleInsert }
             handleDelete={ handleDelete }
@@ -35,9 +35,9 @@ function LevelList({ levels, category, mode, handleChange, handleInsert, handleD
 
       <button 
         type="button"
-        disabled={ !modeName }
+        disabled={ !mode.name }
         className={ styles.levelListBtn }
-        onClick={ () => handleInsert(categoryName, modeName) }
+        onClick={ () => handleInsert(categoryName, mode) }
       >
         Add Chart
       </button>

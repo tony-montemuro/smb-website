@@ -7,7 +7,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import LevelHelper from "../../../helper/LevelHelper.js";
 import TextField from "@mui/material/TextField";
 
-function ModeInput({ id, firstModeId, mode, category, handleChange, handleInsert, handleDelete, error = null, children }) {
+function ModeInput({ id, firstModeId, mode, category, handleBlur, handleChange, handleInsert, handleDelete, error = null, children }) {
   /* ===== VARIABLES ===== */
   const categoryName = category.category;
   const modeId = mode.id;
@@ -30,6 +30,7 @@ function ModeInput({ id, firstModeId, mode, category, handleChange, handleInsert
         <TextField
           id={ id }
           label="Mode"
+          onBlur={ () => handleBlur() }
           onChange={ e => handleChange(e.target.value, categoryName, modeId) }
           value={ levelB2F(mode.name) }
           variant="filled"

@@ -3,6 +3,9 @@ import { isUpperAlphaPattern } from "../utils/RegexPatterns.js";
 import FrontendHelper from "./FrontendHelper.js";
 
 const LevelHelper = () => {
+    /* ===== VARIABLES ===== */
+    const goals = ["blue", "green", "red", "stunt"];
+
     /* ===== FUNCTIONS ===== */
 
     // helper functions
@@ -65,7 +68,7 @@ const LevelHelper = () => {
         return backendLevel;
     };
 
-    return { levelB2F, levelF2B };
+    return { goals, levelB2F, levelF2B };
 };
 
 /* ===== EXPORTS ===== */
