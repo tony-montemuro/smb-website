@@ -1,3 +1,39 @@
+-- Create new table for goal types
+CREATE TABLE goal (
+  name VARCHAR(256) PRIMARY KEY,
+  color VARCHAR(7) NOT NULL
+);
+
+ALTER TABLE goal
+ADD CONSTRAINT goal_name_constraint
+CHECK (length(name) > 0);
+
+ALTER TABLE goal
+ADD CONSTRAINT color_constraint
+CHECK (color ~ '^#[a-f0-9]{6}$');
+
+INSERT INTO goal (name, color)
+VALUES
+  ('blue', '#3a69a4'),
+  ('green', '#37ad58'),
+  ('red', '#ae3c43'),
+  ('stunt', '#bb00ff');
+
+ALTER TABLE goal ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Enable read access for all users"
+ON goal
+TO public
+USING (true);
+
+CREATE POLICY "Enable insert for administrators"
+ON goal
+FOR INSERT
+TO authenticated
+WITH CHECK (
+  (is_admin())
+);
+
 -- Redefine `get_profile`, since we are removing `id` attribute from `game` table
 CREATE OR REPLACE FUNCTION get_profile(p_id integer)
 RETURNS json
