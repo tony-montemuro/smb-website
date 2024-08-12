@@ -5,6 +5,7 @@ import CategoryRead from "./database/read/CategoryRead";
 import DateHelper from "./helper/DateHelper";
 import NotificationRead from "./database/read/NotificationRead";
 import ProfileRead from "./database/read/ProfileRead";
+import Read from "./database/read/Read";
 import Session from "./database/authentication/Session";
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
     }
   }, defaultImages);
   const [categories, setCategories] = useState(undefined);
+  const [appData, setAppData] = useState(undefined);
 
   /* ===== FUNCTIONS ===== */
 
@@ -42,6 +44,7 @@ const App = () => {
   const { queryCategories } = CategoryRead();
   const { queryNotificationCount } = NotificationRead();
   const { queryUserProfile } = ProfileRead();
+  const { queryAll } = Read();
   const { getSession } = Session();
 
   // helper funcitons
@@ -175,20 +178,63 @@ const App = () => {
     });
   };
 
-  // FUNCTION 6: getCategories - function that sets categories state with information from db
+  // FUNCTION 6: mapCategories - function that takes category data from database, and maps category abb to category object
+  // PRECONDITIONS (1 parameter):
+  // 1.) categories: an array of category objects from the database
+  // POSTCONDITIONS (1 possible outcome):
+  // a new object is generated using the array data, mapping abb to category object
+  const mapCategories = categories => {
+    const categoryMap = {};
+    categories.forEach(category => categoryMap[category.abb] = category);
+    return categories;
+  };
+
+  // FUNCTION 7: getAppData - function that fetches data used throughoute entire app
   // PRECONDITIONS (1 condition):
-  // this code should execute when the app component first mounts
+  // this code runs on application mount
+  // POSTCONDITIONS (2 possible outcomes):
+  // if all queries are successful, perform any necessary data manipulations, and update the `appData` state
+  // otherwise, this function should render an error message to the user. IF THIS HAPPENS, many parts of the application 
+  // WILL NOT LOAD!
+  const getAppData = async () => {
+    try {
+      const [categories, goals] = await Promise.all([queryCategories(), queryAll("goal")]);
+
+      setAppData({ categories: mapCategories(categories), goals });
+    } catch (error) {
+      addMessage("Important application data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 13000);
+    };
+  };
+
+  // FUNCTION 8: getCategories - function that sets `appData.categories` state with information from db
+  // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes):
   // if the query is successful, generate a category map that maps key of category.abb to the rest of it's data, so it's easy to
   // fetch that additional data
-  // otherwise, this function should simply render an error message to the user. IF THIS HAPPENS, many parts of the application
-  // WILL NOT LOAD!
+  // otherwise, this function should simply render an error message to the user, letting them know that the data failed to update,
+  // and that they should refresh the page
   const getCategories = async () => {
     try {
       const categories = await queryCategories();
       const categoryMap = {};
       categories.forEach(category => categoryMap[category.abb] = category);
+      setAppData({ ...appData, categories: categoryMap });
       setCategories(categoryMap);
+    } catch (error) {
+      addMessage("Category data failed to update. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+    };
+  };
+
+  // FUNCTION 9: getGoals - function that sets `appData.goal` state with information from db
+  // PRECONDITIONS: NONE
+  // POSTCONDITIONS (2 possible outcomes):
+  // if the query is successful, update the `appData.goal` state with information
+  // otherwise, this function should simply render an error message to the user, letting them know that the data failed to update,
+  // and that they should refresh the page
+  const getGoals = async () => {
+    try {
+      const goals = await queryAll("goal");
+      setAppData({ ...appData, goals: goals });
     } catch (error) {
       addMessage("Category data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
     };
@@ -199,13 +245,16 @@ const App = () => {
     messageContent,
     images,
     categories,
+    appData,
     dispatchImages,
     addMessage,
     handleMessageClose,
     updateUser,
     isModerator,
     callSessionListener,
-    getCategories
+    getAppData,
+    getCategories,
+    getGoals
   };
 };
 

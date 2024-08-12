@@ -49,12 +49,14 @@ function App() {
     messageContent,
     images,
     categories,
+    appData,
     dispatchImages,
     addMessage,
     handleMessageClose,
     updateUser,
     isModerator,
     callSessionListener,
+    getAppData,
     getCategories
   } = AppLogic();
 
@@ -66,6 +68,7 @@ function App() {
   // code that is executed when the application is first loaded (when app component mounts)
   useEffect(() => {
     callSessionListener();
+    getAppData();
     getCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
