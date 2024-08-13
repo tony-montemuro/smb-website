@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext } from "../../utils/Contexts.js";
+import { AppDataContext } from "../../utils/Contexts.js";
 import { useContext, useEffect, useState } from "react";
 import styles from "./StructureForm.module.css";
 import CategoryAddForm from "../../components/CategoryAddForm/CategoryAddForm.jsx";
@@ -40,8 +40,8 @@ function StructureForm() {
 
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   /* ===== EFFECTS ===== */
 
@@ -59,7 +59,7 @@ function StructureForm() {
       updateFormCategories();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categories]);
+  }, [appData.categories]);
 
   /* ===== STRUCTURE FORM COMPONENT ===== */
   return (

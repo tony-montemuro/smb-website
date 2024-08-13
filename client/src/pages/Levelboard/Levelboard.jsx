@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, GameContext, MessageContext, UserContext } from "../../utils/Contexts";
+import { AppDataContext, GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Levelboard.module.css";
@@ -32,8 +32,8 @@ import Update from "./Update/Update.jsx";
 function Levelboard({ imageReducer }) {
 	/* ===== CONTEXTS ===== */
 
-	// categories state from categories context
-	const { categories } = useContext(CategoriesContext);
+	// appData state from app data context
+	const { appData } = useContext(AppDataContext);
 
 	// game state from game context
   const { game } = useContext(GameContext);
@@ -61,7 +61,7 @@ function Levelboard({ imageReducer }) {
 	const category = path[3];
 	const type = path[4];
 	const levelName = path[5];
-	const isPracticeMode = categories[category] ? categories[category].practice : undefined;
+	const isPracticeMode = appData.categories[category] ? appData.categories[category].practice : undefined;
 	const defaultFilters = {
 		endDate: dateB2F(),
 		live: game.live_preference ? [true] : [false, true],

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, GameContext, MessageContext } from "../../utils/Contexts";
+import { AppDataContext, GameContext, MessageContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import styles from "./Totalizer.module.css";
@@ -16,8 +16,8 @@ import TotalizerRow from "./TotalizerRow.jsx";
 function Totalizer({ imageReducer }) {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // game state from game context
   const { game } = useContext(GameContext);
@@ -39,7 +39,7 @@ function Totalizer({ imageReducer }) {
   const abb = path[2];
   const category = path[3];
   const type = path[5];
-  const categoryDetails = categories[category];
+  const categoryDetails = appData.categories[category];
   let categoryName, isPracticeMode;
   if (categoryDetails) {
     categoryName = categoryDetails.name;

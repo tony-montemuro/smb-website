@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, GameContext } from "../../utils/Contexts";
+import { AppDataContext, GameContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Game.module.css";
@@ -13,8 +13,8 @@ import Rule from "./Rule/Rule.jsx";
 function Game() {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // game state from game context
   const { game } = useContext(GameContext);
@@ -93,7 +93,7 @@ function Game() {
           <div className={ styles.chartsBody }>
             { gameCategories.length > 1 &&
               <ButtonList
-                buttons={ gameCategories.map(category => ({ name: categories[category].name, value: category })) }
+                buttons={ gameCategories.map(category => ({ name: appData.categories[category].name, value: category })) }
                 current={ selectedCategory }
                 setCurrent={ handleChange }
                 wrap

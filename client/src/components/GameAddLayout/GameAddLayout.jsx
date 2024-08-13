@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, GameAddContext } from "../../utils/Contexts";
+import { AppDataContext, GameAddContext } from "../../utils/Contexts";
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import AddGamePages from "./AddGamePages.jsx";
@@ -16,8 +16,8 @@ function GameAddLayout() {
 
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // app data state from app data context
+  const { appData } = useContext(AppDataContext);
 
   /* ===== STATES ===== */
   const [page, setPage] = useState(pageInit); 
@@ -54,7 +54,7 @@ function GameAddLayout() {
     <div className={ styles.gameAdd }>
       <h1>Add Game</h1>
       
-      { categories ? 
+      { appData ? 
         <GameAddContext.Provider value={ { unlockNextPage, keys } }>
           <Outlet />
           <AddGamePages 

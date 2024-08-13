@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, MessageContext } from "../../utils/Contexts";
+import { AppDataContext, MessageContext } from "../../utils/Contexts";
 import { isLowerAlphaNumericWithUnderscores } from "../../utils/RegexPatterns"; 
 import { useContext, useState } from "react";
 import Update from "../../database/update/Update.js";
@@ -7,8 +7,8 @@ import Update from "../../database/update/Update.js";
 const CategoryAddForm = (setSubmitting) => {
     /* ===== CONTEXTS ===== */
 
-    // get categories function from categories context
-    const { getCategories } = useContext(CategoriesContext);
+    // get categories function from app data context
+    const { getCategories } = useContext(AppDataContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);

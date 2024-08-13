@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext } from "../../../utils/Contexts.js";
+import { AppDataContext } from "../../../utils/Contexts.js";
 import { useContext } from "react";
 import styles from "./StatsDirectory.module.css";
 import FrontendHelper from "../../../helper/FrontendHelper";
@@ -10,8 +10,8 @@ import UserLayoutLogic from "../UserLayout.js";
 function CategoryDetails({ game, category, index }) {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
   
   /* ===== FUNCTIONS ===== */
 
@@ -25,7 +25,7 @@ function CategoryDetails({ game, category, index }) {
 
   /* ===== VARIABLES ===== */
   const types = getCategoryTypes(game, category);
-  const { name: categoryName } = categories[category];
+  const { name: categoryName } = appData.categories[category];
 
   /* ===== CATEGORY DETAILS COMPONENT ===== */
   return (

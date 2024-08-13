@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, ProfileContext, MessageContext } from "../../utils/Contexts";
+import { AppDataContext, ProfileContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./UserStats.module.css";
@@ -15,8 +15,8 @@ import UserStatsLogic from "./UserStats.js";
 function UserStats() {
   /* ===== CONTEXTS ===== */
   
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // profiles state from profile context
   const { profile } = useContext(ProfileContext);
@@ -36,6 +36,7 @@ function UserStats() {
   const abb = path[3];
   const category = path[4];
   const type = path[5];
+  const categories = appData.categories;
   const categoryDetails = categories[category];
   let categoryName, isPracticeMode;
   if (categoryDetails) {

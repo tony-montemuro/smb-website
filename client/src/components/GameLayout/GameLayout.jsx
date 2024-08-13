@@ -1,5 +1,5 @@
 /* ===== IMPORTS ====== */
-import { CategoriesContext, GameContext, MessageContext } from "../../utils/Contexts";
+import { AppDataContext, GameContext, MessageContext } from "../../utils/Contexts";
 import { Outlet, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -20,8 +20,8 @@ function GameLayout({ imageReducer }) {
 
   /* ===== CONTEXTS ====== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -63,7 +63,7 @@ function GameLayout({ imageReducer }) {
   /* ===== GAME LAYOUT COMPONENT ===== */
   return (
     <div className={ styles.gameLayout }>
-      { game && categories ?
+      { game && appData ?
         <GameContext.Provider value={ { game } }>
           <GameHeader imageReducer={ imageReducer } />
           <div className={ styles.body }>

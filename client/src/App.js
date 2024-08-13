@@ -35,7 +35,6 @@ const App = () => {
       return state;
     }
   }, defaultImages);
-  const [categories, setCategories] = useState(undefined);
   const [appData, setAppData] = useState(undefined);
 
   /* ===== FUNCTIONS ===== */
@@ -216,10 +215,8 @@ const App = () => {
   const getCategories = async () => {
     try {
       const categories = await queryCategories();
-      const categoryMap = {};
-      categories.forEach(category => categoryMap[category.abb] = category);
+      const categoryMap = mapCategories(categories);
       setAppData({ ...appData, categories: categoryMap });
-      setCategories(categoryMap);
     } catch (error) {
       addMessage("Category data failed to update. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
     };
@@ -244,7 +241,6 @@ const App = () => {
     user, 
     messageContent,
     images,
-    categories,
     appData,
     dispatchImages,
     addMessage,

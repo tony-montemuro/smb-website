@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, GameAddContext, MessageContext } from "../../utils/Contexts";
+import { AppDataContext, GameAddContext, MessageContext } from "../../utils/Contexts";
 import { isUrlSafe } from "../../utils/RegexPatterns.js";
 import { useContext, useReducer, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper.js";
@@ -9,8 +9,8 @@ import RPCRead from "../../database/read/RPCRead.js";
 const StructureForm = (formData, setFormData) => {
     /* ===== CONTEXTS ===== */
     
-    // categories state function from categories context
-    const { categories } = useContext(CategoriesContext);
+    // appData state from app data context
+    const { appData } = useContext(AppDataContext);
 
     // keys object & unlock page function from game add context
     const { keys, unlockNextPage } = useContext(GameAddContext);
@@ -22,6 +22,7 @@ const StructureForm = (formData, setFormData) => {
     const [addCategory, setAddCategory] = useState(false);
 
     /* ===== VARIABLES ===== */
+    const categories = appData.categories;
     const defaultVals = {
         category: [],
         mode: [],
@@ -382,7 +383,8 @@ const StructureForm = (formData, setFormData) => {
         dispatchForm({ type: "values", data: formData });
     };
 
-    // FUNCTION 14: getTransformedCategories - function that takes `categories` state from categories context, and converts to array
+    // FUNCTION 14: getTransformedCategories - function that takes `appData.categories` state from appData context, and 
+    // converts to array
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcomes):
     // the state is transform from a mapping of category names to category objects, to an array of category objects,

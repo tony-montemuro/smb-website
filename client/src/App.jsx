@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import "./App.css";
-import { MessageContext, UserContext, CategoriesContext } from "./utils/Contexts";
+import { AppDataContext, MessageContext, UserContext } from "./utils/Contexts";
 import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import Administrator from "./pages/Administrator/Administrator.jsx";
@@ -57,7 +57,8 @@ function App() {
     isModerator,
     callSessionListener,
     getAppData,
-    getCategories
+    getCategories,
+    getGoals
   } = AppLogic();
 
   /* ===== VARIABLES ===== */
@@ -75,9 +76,9 @@ function App() {
 
   /* ===== APP COMPONENT ===== */
   return (
-    <MessageContext.Provider value={ { addMessage } }>
-      <UserContext.Provider value={ { user, updateUser, isModerator } }>
-        <CategoriesContext.Provider value={ { categories, getCategories } }>
+    <AppDataContext.Provider value={ { appData, getCategories, getGoals  } } >
+      <MessageContext.Provider value={ { addMessage } }>
+        <UserContext.Provider value={ { user, updateUser, isModerator } }>
           <Navbar imageReducer={ imageReducer } />
           <div className="app">
 
@@ -171,9 +172,9 @@ function App() {
             </Routes>
 
           </div>
-        </CategoriesContext.Provider>
-      </UserContext.Provider>
-    </MessageContext.Provider>
+        </UserContext.Provider>
+      </MessageContext.Provider>
+    </AppDataContext.Provider>
   );
 };
 

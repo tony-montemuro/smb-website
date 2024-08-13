@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext } from "../../../utils/Contexts.js";
+import { AppDataContext } from "../../../utils/Contexts.js";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
@@ -8,12 +8,12 @@ import FrontendHelper from "../../../helper/FrontendHelper";
 function NotificationBasicInfo({ notification }) {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   /* ===== VARIABLES ===== */
   const category = notification.level.category;
-  const { name: categoryName } = categories[category];
+  const { name: categoryName } = appData.categories[category];
   
   /* ===== FUNCTIONS ===== */
 

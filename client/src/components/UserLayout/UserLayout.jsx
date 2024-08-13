@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { CategoriesContext, ProfileContext, MessageContext } from "../../utils/Contexts";
+import { AppDataContext, ProfileContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react"; 
 import styles from "./UserLayout.module.css";
 import Loading from "../Loading/Loading.jsx";
@@ -17,8 +17,8 @@ function UserLayout({ imageReducer }) {
 
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext)
@@ -55,7 +55,7 @@ function UserLayout({ imageReducer }) {
   }, [location.pathname]);
 
   /* ===== USER LAYOUT COMPONENT ===== */ 
-  return profile && categories ?
+  return profile && appData ?
     <ProfileContext.Provider value={ { profile } } >
       <div className={ styles.userLayout }>
 

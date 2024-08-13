@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext } from "../../../utils/Contexts.js";
+import { AppDataContext } from "../../../utils/Contexts.js";
 import { useContext } from "react";
 import styles from "./LevelList.module.css";
 import AddIcon from "@mui/icons-material/Add";
@@ -16,13 +16,13 @@ import TextField from "@mui/material/TextField";
 function LevelInput({ id, level, formData, category, mode, handleBlur, handleChange, handleInsert, handleDelete, error }) {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   /* ===== VARIABLES ===== */
   const scoreChartTypes = ["both", "score"];
   const timeChartTypes = ["both", "time"];
-  const isPracticeMode = categories[category].practice;
+  const isPracticeMode = appData.categories[category].practice;
 
   /* ===== FUNCTIONS ===== */
 
