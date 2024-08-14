@@ -185,7 +185,7 @@ const App = () => {
   const mapCategories = categories => {
     const categoryMap = {};
     categories.forEach(category => categoryMap[category.abb] = category);
-    return categories;
+    return categoryMap;
   };
 
   // FUNCTION 7: getAppData - function that fetches data used throughoute entire app

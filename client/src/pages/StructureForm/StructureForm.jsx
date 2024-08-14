@@ -2,6 +2,7 @@
 import { AppDataContext } from "../../utils/Contexts.js";
 import { useContext, useEffect, useState } from "react";
 import styles from "./StructureForm.module.css";
+import GoalAddForm from "../../components/GoalAddForm/GoalAddForm.jsx";
 import CategoryAddForm from "../../components/CategoryAddForm/CategoryAddForm.jsx";
 import Container from "../../components/Container/Container.jsx";
 import Loading from "../../components/Loading/Loading.jsx";
@@ -20,7 +21,7 @@ function StructureForm() {
   // states & functions from the js file
   const { 
     form,
-    addCategory,
+    popup,
     updateLocal,
     populateForm,
     queryFormData,
@@ -33,9 +34,11 @@ function StructureForm() {
     handleLevelInsert,
     handleLevelChange,
     handleLevelDelete,
-    openPopup,
-    closePopup,
-    validateStructure
+    validateStructure,
+    openCategoryPopup,
+    closeCategoryPopup,
+    openGoalPopup,
+    closeGoalPopup
   } = StructureFormLogic(formData, setFormData);
 
   /* ===== CONTEXTS ===== */
@@ -65,10 +68,12 @@ function StructureForm() {
   return (
     <Container title="Game Structure">
 
-      { /* Popup */ }
+      { /* Popups */ }
+
+      { /* Add Category Popup */ }
       <Popup 
-				renderPopup={ addCategory } 
-				setRenderPopup={ closePopup } 
+				renderPopup={ popup.addCategory } 
+				setRenderPopup={ closeCategoryPopup } 
 				width="500px"
 				disableClose={ submittingCategory }
 			>
@@ -76,6 +81,15 @@ function StructureForm() {
           submitting={ submittingCategory } 
           setSubmitting={ setSubmittingCategory }
         />
+			</Popup>
+
+      { /* Add Goal Popup */ }
+      <Popup 
+				renderPopup={ popup.addGoal } 
+				setRenderPopup={ closeGoalPopup } 
+				width="500px"
+			>
+				<GoalAddForm />
 			</Popup>
 
       { /* Structure form */ }
@@ -159,8 +173,12 @@ function StructureForm() {
                 />
               </ModeList>
             </SelectList>
-            <span onClick={ openPopup } className="hyperlink">
+
+            <span onClick={ openCategoryPopup } className="hyperlink">
               Category missing from list? Click here to upload a new category!
+            </span>
+            <span onClick={ openGoalPopup } className="hyperlink">
+              Goal option missing? Click here to upload a new goal!
             </span>
 
             <button id={ styles.submit } type="submit">Validate</button>
