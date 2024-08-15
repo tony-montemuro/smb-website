@@ -1,0 +1,18 @@
+/* ===== GENERAL STYLING ===== */
+.goalAddForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form input[type=color] {
+    --length: 50px;
+    width: var(--length);
+    height: var(--length);
+}

@@ -197,7 +197,7 @@ const App = () => {
   // WILL NOT LOAD!
   const getAppData = async () => {
     try {
-      const [categories, goals] = await Promise.all([queryCategories(), queryAll("goal")]);
+      const [categories, goals] = await Promise.all([queryCategories(), queryAll("goal", "id")]);
 
       setAppData({ categories: mapCategories(categories), goals });
     } catch (error) {

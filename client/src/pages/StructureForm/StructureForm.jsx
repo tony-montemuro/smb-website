@@ -13,6 +13,9 @@ import StructureFormLogic from "./StructureForm.js";
 import LevelList from "./LevelList/LevelList.jsx";
 
 function StructureForm() {
+  /* ===== VARIABLES ===== */
+  const ADD_POPUP_WIDTH = "500px";
+
   /* ===== STATES & FUNCTIONS ===== */
   const [isComponentMounted, setIsComponentMounted] = useState(false);
   const [formData, setFormData] = useState(undefined);
@@ -74,7 +77,7 @@ function StructureForm() {
       <Popup 
 				renderPopup={ popup.addCategory } 
 				setRenderPopup={ closeCategoryPopup } 
-				width="500px"
+				width={ ADD_POPUP_WIDTH }
 				disableClose={ submittingCategory }
 			>
 				<CategoryAddForm 
@@ -85,9 +88,9 @@ function StructureForm() {
 
       { /* Add Goal Popup */ }
       <Popup 
-				renderPopup={ popup.addGoal } 
-				setRenderPopup={ closeGoalPopup } 
-				width="500px"
+				renderPopup={ popup.addGoal }
+				setRenderPopup={ closeGoalPopup }
+        width={ ADD_POPUP_WIDTH }
 			>
 				<GoalAddForm />
 			</Popup>

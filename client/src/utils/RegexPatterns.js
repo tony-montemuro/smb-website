@@ -48,6 +48,9 @@ export const isLowerAlphaNumeric = /^[a-z0-9]+$/;
 // Is upper alpha regex
 export const isUpperAlphaPattern = /^[A-Z]+$/;
 
+// Is lower alpha regex
+export const isLowerAlphaPattern = /^[a-z]+$/;
+
 // Is upper alphanumeric regex
 export const isUpperAlphaNumeric = /^[A-Z0-9]+$/;
 
