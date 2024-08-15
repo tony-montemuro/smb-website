@@ -1,15 +1,16 @@
 -- Create new table for goal types
 CREATE TABLE goal (
-  name VARCHAR(256) PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(256) UNIQUE NOT NULL,
   color VARCHAR(7) NOT NULL
 );
 
 ALTER TABLE goal
-ADD CONSTRAINT goal_name_constraint
-CHECK (length(name) > 0);
+ADD CONSTRAINT goal_name_content_constraint
+CHECK (length(name) > 0 AND name ~ '^[a-z]+$');
 
 ALTER TABLE goal
-ADD CONSTRAINT color_constraint
+ADD CONSTRAINT goal_color_content_constraint
 CHECK (color ~ '^#[a-f0-9]{6}$');
 
 INSERT INTO goal (name, color)
