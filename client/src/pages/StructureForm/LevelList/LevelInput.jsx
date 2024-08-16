@@ -31,7 +31,7 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
 
   // helper variables & functions
   const { capitalize } = FrontendHelper();
-  const { goals, levelB2F } = LevelHelper();
+  const { levelB2F } = LevelHelper();
 
   /* ===== LEVEL INPUT COMPONENT ===== */
   return (
@@ -58,12 +58,12 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
           variant="filled"
         >
           <option key="" value=""></option>
-          { goals.map(goal => (
+          { appData.goals.map(goal => (
             <option
-              key={ goal }
-              value={ goal }
+              key={ goal.name }
+              value={ goal.name }
             >
-              { capitalize(goal) }
+              { capitalize(goal.name) }
             </option>
           ))}
         </TextField>

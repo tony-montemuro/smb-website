@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { AppDataContext, MessageContext } from "../../utils/Contexts";
+import { AppDataContext, MessageContext, PopupContext } from "../../utils/Contexts";
 import { isLowerAlphaNumericWithUnderscores } from "../../utils/RegexPatterns"; 
 import { useContext, useState } from "react";
 import Update from "../../database/update/Update.js";
@@ -7,11 +7,14 @@ import Update from "../../database/update/Update.js";
 const CategoryAddForm = (setSubmitting) => {
     /* ===== CONTEXTS ===== */
 
-    // get categories function from app data context
-    const { getCategories } = useContext(AppDataContext);
+    // update categories function from app data context
+    const { updateCategories } = useContext(AppDataContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
+    
+    // close popup function from popup context
+    const { closePopup } = useContext(PopupContext);
 
     /* ===== VARIABLES ===== */
     const valuesInit = {
@@ -59,13 +62,13 @@ const CategoryAddForm = (setSubmitting) => {
         }
     };
 
-    // FUNCTION 3: resetForm - simple function that resets form to initial values
-    // PRECONDITIONS: NONE
-    // POSTCONDITIONS (1 possible outcome):
-    // form values are set back to defaults
-    const resetForm = () => setForm(formInit);
-
-    // FUNCTION 4: handleSubmit - code that is executed when the user submits the form
+    // FUNCTION 3: handleSubmit - code that is executed when the user submits the form
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: the event object generated when the user submits the form
+    // POSTCONDITIONS (3 possible outcomes):
+    // if the form is invalid, this function returns early, and renders an error message
+    // if the form is valid, but fails during async process, render an error message
+    // if the form is valid, and async process is successful, render a success message, and close the popup
     const handleSubmit = async e => {
         e.preventDefault();
         
@@ -80,8 +83,8 @@ const CategoryAddForm = (setSubmitting) => {
         try {
             // attempt to submit
             await insert("category", form.values);
-            await getCategories();
-            resetForm();
+            await updateCategories();
+            closePopup();
             addMessage(`New category was added! You should now be able to select it as an option.`, "success", 8000);
 
         } catch (error) {

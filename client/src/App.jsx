@@ -48,7 +48,6 @@ function App() {
     user, 
     messageContent,
     images,
-    categories,
     appData,
     dispatchImages,
     addMessage,
@@ -57,8 +56,8 @@ function App() {
     isModerator,
     callSessionListener,
     getAppData,
-    getCategories,
-    getGoals
+    updateCategories,
+    updateGoals
   } = AppLogic();
 
   /* ===== VARIABLES ===== */
@@ -75,7 +74,7 @@ function App() {
 
   /* ===== APP COMPONENT ===== */
   return (
-    <AppDataContext.Provider value={ { appData, getCategories, getGoals  } } >
+    <AppDataContext.Provider value={ { appData, updateCategories, updateGoals  } } >
       <MessageContext.Provider value={ { addMessage } }>
         <UserContext.Provider value={ { user, updateUser, isModerator } }>
           <Navbar imageReducer={ imageReducer } />

@@ -1,27 +1,38 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { isLowerAlphaPattern } from "../../utils/RegexPatterns";
+import { AppDataContext, MessageContext, PopupContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import Update from "../../database/update/Update.js";
 
-const GoalAddForm = () => {
+const GoalAddForm = (setSubmitting) => {
     /* ===== CONTEXTS ===== */
+
+    // update goals function from app data context
+    const { updateGoals } = useContext(AppDataContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
+    // close popup function from popup context
+    const { closePopup } = useContext(PopupContext);
+
     /* ===== VARIABLES ===== */
     const valuesInit = {
         name: "",
-        color: ""
+        color: "#000000"
     };
     const formInit = {
         values: valuesInit,
-        error: { abb: undefined }
+        error: undefined
     };
 
     /* ===== STATES ===== */
     const [form, setForm] = useState(formInit);
 
     /* ===== FUNCTIONS ===== */
+
+    // database functions
+    const { insert } = Update();
 
     // FUNCTION 1: handleChange - code that is executed when the user makes a change to the form
     // PRECONDITIONS (1 parameter):
@@ -32,13 +43,54 @@ const GoalAddForm = () => {
         const { id, value } = e.target;
         setForm({ ...form, values: { ...form.values, [id]: value } });
     };
+
+    // FUNCTION 2: validateName - code that checks if a goal color name is valid
+    // PRECONDITIONS (1 parameter):
+    // 1.) name: a string, the user's input to the `Goal Color Name` field
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the input fails to validate, return a string with the error message
+    // otherwise, this function returns nothing
+    const validateName = name => {
+        if (!isLowerAlphaPattern.test(name)) {
+            return "Color name must consist only of lowercase letters.";
+        }
+        return undefined;
+    };
     
-    // FUNCTION 2: handleSubmit - code that is executed when the user submits the form
-    const handleSubmit = async () => {
+    // FUNCTION 3: handleSubmit - code that is executed when the user submits the form
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: an event object generated when the user submits the form
+    // POSTCONDITIONS (3 possible outcomes):
+    // if the form does not validate, render an error message, and return early
+    // if the form validates, and the async process is successful, inform the user they were successful, and close the popup
+    // otherwise, render an error message to the user
+    const handleSubmit = async e => {
+        e.preventDefault();
+
+        // first, attempt to validate. if we detect an error, update `form.error`, and return early
+        const error = validateName(form.values.name);
+        if (error) {
+            setForm({ ...form, error });
+            return;
+        }
+        
+        // if we made it this far, we can attempt to submit the new goal
+        setSubmitting(true);
         try {
-            console.log("submitted!");
+            await insert("goal", form.values);
+            await updateGoals();
+            closePopup();
+            addMessage(`New goal was added! You should now be able to select it as an option.`, "success", 8000);
+
         } catch (error) {
-            addMessage(error.message, "error", 5000);
+            // render a different error if it's a unique constraint. otherwise, render generic error message
+            if (error.code === "23505") {
+                addMessage("A goal already exists with either the same color name or color!", "error", 10000);
+            } else {
+                addMessage("There was a problem adding the goal. If the issue consists, the system may be experiencing an outage.", "error", 13000);
+            }
+        } finally {
+            setSubmitting(false);
         }
     };
 

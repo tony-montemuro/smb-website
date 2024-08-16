@@ -2,22 +2,6 @@
 import FrontendHelper from "../../helper/FrontendHelper";
 
 function Goal({ goal }) {
-  /* ===== FUNCTION ===== */
-
-  // FUNCTION 1: goalToColor - simple function which converts goal string to a color
-  // PRECONDITIONS: NONE
-  // POSTCONDITIONS (1 possible outcome):
-  // the string containing an rbg color value associated with `goal` is returned
-  const goalToColor = () => {
-    switch (goal) {
-      case "blue": return "rgb(58,105,164)";
-      case "green": return "rgb(55,173,88)";
-      case "red": return "rgb(174,60,67)";
-      case "stunt": return "rgb(187,0,255)";
-      default: return "rgb(255,255,255)";
-    };
-  };
-
   // helper functions
   const { capitalize } = FrontendHelper();
 
@@ -25,7 +9,7 @@ function Goal({ goal }) {
   return goal && (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      style={ { fill: goalToColor(), paddingLeft: "4px" } }
+      style={ { fill: goal.color, paddingLeft: "4px" } }
       width="1em"
       height="1em"
       version="1"
@@ -39,7 +23,7 @@ function Goal({ goal }) {
         d="M1760 2015c-224-63-365-308-306-532 64-241 295-379 531-318 156 41 281 174 316 336 14 67 6 180-17 239-46 117-146 220-254 261-73 28-197 34-270 14z"
         transform="matrix(.1 0 0 -.1 0 374)"
       ></path>
-    <title>{ capitalize(goal) } goal only</title>
+    <title>{ capitalize(goal.name) } goal only</title>
     </svg>
   );
 }

@@ -205,30 +205,29 @@ const App = () => {
     };
   };
 
-  // FUNCTION 8: getCategories - function that sets `appData.categories` state with information from db
+  // FUNCTION 8: updateCategories - function that updates the `appData.categories` state with information from db
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes):
   // if the query is successful, generate a category map that maps key of category.abb to the rest of it's data, so it's easy to
   // fetch that additional data
   // otherwise, this function should simply render an error message to the user, letting them know that the data failed to update,
   // and that they should refresh the page
-  const getCategories = async () => {
+  const updateCategories = async () => {
     try {
       const categories = await queryCategories();
-      const categoryMap = mapCategories(categories);
-      setAppData({ ...appData, categories: categoryMap });
+      setAppData({ ...appData, categories: mapCategories(categories) });
     } catch (error) {
       addMessage("Category data failed to update. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
     };
   };
 
-  // FUNCTION 9: getGoals - function that sets `appData.goal` state with information from db
+  // FUNCTION 9: updateGoals - function that updates the `appData.goal` state with information from db
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes):
   // if the query is successful, update the `appData.goal` state with information
   // otherwise, this function should simply render an error message to the user, letting them know that the data failed to update,
   // and that they should refresh the page
-  const getGoals = async () => {
+  const updateGoals = async () => {
     try {
       const goals = await queryAll("goal");
       setAppData({ ...appData, goals: goals });
@@ -249,8 +248,8 @@ const App = () => {
     isModerator,
     callSessionListener,
     getAppData,
-    getCategories,
-    getGoals
+    updateCategories,
+    updateGoals
   };
 };
 

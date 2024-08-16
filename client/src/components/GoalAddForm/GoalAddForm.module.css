@@ -5,14 +5,27 @@
     gap: 15px;
 }
 
+.goalAddForm h1 {
+    margin: 0;
+}
+
+.goalAddForm button {
+    width: fit-content;
+}
+
 .form {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
 }
 
 .form input[type=color] {
     --length: 50px;
     width: var(--length);
     height: var(--length);
+}
+
+.color {
+    display: flex;
+    align-items: center;
 }

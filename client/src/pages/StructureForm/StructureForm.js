@@ -58,7 +58,7 @@ const StructureForm = (formData, setFormData) => {
 
     // helper variables & functions
     const { capitalize } = FrontendHelper();
-    const { goals, levelF2B } = LevelHelper();
+    const { levelF2B } = LevelHelper();
 
     // FUNCTION 1: updateLocal - function that runs each time the user finishes interacting with a form field
     // PRECONDITIONS (1 parameter):
@@ -870,7 +870,7 @@ const StructureForm = (formData, setFormData) => {
             }
 
             // next, validate the goal is safe, well-formatted
-            if (!goals.includes(goal) && goal !== "") {
+            if (!appData.goals.some(g => g.name === goal) && goal !== "") {
                 errorMsg += "Goal is not a valid value. ";
             }
 

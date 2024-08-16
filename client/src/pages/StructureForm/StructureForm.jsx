@@ -19,7 +19,7 @@ function StructureForm() {
   /* ===== STATES & FUNCTIONS ===== */
   const [isComponentMounted, setIsComponentMounted] = useState(false);
   const [formData, setFormData] = useState(undefined);
-  const [submittingCategory, setSubmittingCategory] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   // states & functions from the js file
   const { 
@@ -78,11 +78,11 @@ function StructureForm() {
 				renderPopup={ popup.addCategory } 
 				setRenderPopup={ closeCategoryPopup } 
 				width={ ADD_POPUP_WIDTH }
-				disableClose={ submittingCategory }
+				disableClose={ submitting }
 			>
 				<CategoryAddForm 
-          submitting={ submittingCategory } 
-          setSubmitting={ setSubmittingCategory }
+          submitting={ submitting } 
+          setSubmitting={ setSubmitting }
         />
 			</Popup>
 
@@ -92,7 +92,10 @@ function StructureForm() {
 				setRenderPopup={ closeGoalPopup }
         width={ ADD_POPUP_WIDTH }
 			>
-				<GoalAddForm />
+				<GoalAddForm
+          submitting={ submitting }
+          setSubmitting={ setSubmitting }
+        />
 			</Popup>
 
       { /* Structure form */ }

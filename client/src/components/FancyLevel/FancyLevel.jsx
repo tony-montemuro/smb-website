@@ -16,7 +16,7 @@ function FancyLevel({ level }) {
   return (
     <div className={ styles.fancyLevel }>
       <span>{ levelName }</span>
-      <Goal goal={ goal } />
+      <Goal goalColor={ goal } />
     </div>
   );
 };

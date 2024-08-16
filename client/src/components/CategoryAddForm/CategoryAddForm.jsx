@@ -31,9 +31,9 @@ function CategoryAddForm({ submitting, setSubmitting }) {
         <TextField
           color={ form.error.abb ? "error" : "primary" }
           error={ form.error.abb ? true : false }
+          helperText={ form.error.abb ? form.error.abb : `${ form.values.abb.length }/${ ABB_LENGTH_MAX }` }
           id="abb"
           inputProps={{ maxLength: ABB_LENGTH_MAX }}
-          helperText={ form.error.abb ? form.error.abb : `${ form.values.abb.length }/${ ABB_LENGTH_MAX }` }
           label="Category Abbreviation"
           onChange={ handleChange }
           placeholder={ `Must be ${ ABB_LENGTH_MAX } characters or less` }
