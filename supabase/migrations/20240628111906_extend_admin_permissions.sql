@@ -456,3 +456,19 @@ CHECK (chart_type = 'score' OR (
     ascending = 'score' OR ascending IS NULL OR time = 0
   )
 ));
+
+-- Add permissions for storage buckets
+CREATE POLICY "Admins can insert box art"
+on "storage"."objects"
+AS permissive
+FOR INSERT
+TO authenticated
+WITH CHECK ((bucket_id = 'games'::text) AND (is_admin()) AND (storage.extension(name) = 'png'::text));
+
+CREATE POLICY "Admins can update box art"
+ON "storage"."objects"
+AS permissive
+FOR UPDATE
+TO authenticated
+USING ((bucket_id = 'games'::text) AND (is_admin()) AND (storage.extension(name) = 'png'::text))
+WITH CHECK ((bucket_id = 'games'::text) AND (is_admin()) AND (storage.extension(name) = 'png'::text));
