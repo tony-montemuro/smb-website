@@ -96,7 +96,27 @@ const Download = () => {
         }
     };
 
-    return { retrieveGameImage, updateImageByProfileId };
+    // FUNCTION 4: updateImageByAbb - public facing function that, given an image, imageReducer, and forceUpdate boolean, will update
+    // the imageReducer global images state, if necessary (imageName is not found in imageReducer, or forceUpdate is set to true)
+    // PRECONDITIONS (3 parameters):
+    // 1.) imageName: a string that represents the name of a file in one of the storage bucket
+    // 2.) imageReducer: an object with two fields:
+        // a.) reducer: the image reducer itself (state)
+        // b.) dispatchSubmissions: the reducer function used to update the reducer
+    // 3.) forceUpdate: a boolean value, which will determine if update should be forced or not
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the imageReducer requires an update, or forceUpdate is set to true, we will download the box art from storage, and
+    // update the imageReducer state
+    // otherwise, this function does nothing
+    const updateImageByAbb = async (abb, imageReducer, forceUpdate) => {
+        const images = imageReducer.reducer.games;
+        if (!(abb in images) || forceUpdate) {
+            const img = await downloadBoxArt(abb);
+            imageReducer.dispatchImages({ set: "games", field: abb, data: img });
+        }
+    };
+
+    return { retrieveGameImage, updateImageByProfileId, updateImageByAbb };
 };
 
 /* ===== EXPORTS ===== */

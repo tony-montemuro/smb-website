@@ -71,6 +71,7 @@ function App() {
     getAppData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  console.log(imageReducer);
 
   /* ===== APP COMPONENT ===== */
   return (
@@ -154,7 +155,7 @@ function App() {
                   <Route index element={ <MetadataForm /> } />
                   <Route path="game-entities" element={ <EntitiesForm /> } />
                   <Route path="game-structure" element={ <StructureForm /> } />
-                  <Route path="game-assets" element={ <AssetsForm /> } />
+                  <Route path="game-assets" element={ <AssetsForm imageReducer={ imageReducer } /> } />
                 </Route>
               </Route>
               <Route path="moderator" element={ <ModeratorLayout /> } >
