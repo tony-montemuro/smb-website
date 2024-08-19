@@ -4,6 +4,7 @@ import LooksOneOutlinedIcon from "@mui/icons-material/LooksOneOutlined";
 import LooksTwoOutlinedIcon from "@mui/icons-material/LooksTwoOutlined";
 import Looks3OutlinedIcon from "@mui/icons-material/Looks3Outlined";
 import Looks4OutlinedIcon from "@mui/icons-material/Looks4Outlined";
+import Looks5OutlinedIcon from "@mui/icons-material/Looks5Outlined";
 
 function AddGamePage({ name, index, page, setPage }) {
   /* ===== VARIABLES ===== */
@@ -14,7 +15,8 @@ function AddGamePage({ name, index, page, setPage }) {
     1: <LooksOneOutlinedIcon />,
     2: <LooksTwoOutlinedIcon />,
     3: <Looks3OutlinedIcon />,
-    4: <Looks4OutlinedIcon />
+    4: <Looks4OutlinedIcon />,
+    5: <Looks5OutlinedIcon />
   }
 
   /* ===== ADD GAME PAGE COMPONENT ===== */

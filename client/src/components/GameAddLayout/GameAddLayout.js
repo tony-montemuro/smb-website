@@ -14,13 +14,15 @@ const GameAddLayout = (page, setPage) => {
         "Main Information",
         "Game Entities",
         "Game Structure",
-        "Game Assets"
+        "Game Assets",
+        "Summary"
     ];
     const keys = {
         currentPage: "GAME_ADD_CURRENT_PAGE",
         metadata: "GAME_ADD_METADATA",
         entities: "GAME_ADD_ENTITIES",
         structure: "GAME_ADD_STRUCTURE",
+        assets: "GAME_ADD_ASSETS",
         unlockedPages: "GAME_ADD_UNLOCKED_PAGES"
     };
     const unlockedPagesKey = keys["unlockedPages"];
@@ -39,7 +41,8 @@ const GameAddLayout = (page, setPage) => {
             1: "",
             2: "game-entities",
             3: "game-structure",
-            4: "game-assets"
+            4: "game-assets",
+            5: "summary"
         };
 
         navigateTo(urls[pageNumber]);
@@ -75,7 +78,13 @@ const GameAddLayout = (page, setPage) => {
         const numPages = page.unlocked.length;
         if (page.number === numPages) {
             const nextPageNumber = numPages+1;
-            const newUnlockedPages = [...page.unlocked, nextPageNumber];
+            let newUnlockedPages = [...page.unlocked, nextPageNumber];
+
+            // special case: since page 4 is currently optional, also unlock page 5 (this may change in the future!)
+            if (page.number === 3) {
+                newUnlockedPages = [...newUnlockedPages, nextPageNumber+1]    
+            }
+
             setPage({ ...page, unlocked: newUnlockedPages });
             localStorage.setItem(unlockedPagesKey, JSON.stringify(newUnlockedPages));
             addMessage(`Information validated! Please proceed to the ${ pageNames[numPages] } section.`, "success", 8000);

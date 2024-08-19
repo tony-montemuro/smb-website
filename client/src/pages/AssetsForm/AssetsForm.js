@@ -5,7 +5,7 @@ import Download from "../../database/storage/Download.js";
 import FileHelper from "../../helper/FileHelper.js";
 import Upload from "../../database/storage/Upload.js";
 
-const AssetsForm = (imageReducer, dimensions, fileTypes) => {
+const AssetsForm = (imageReducer, assets) => {
     /* ===== CONTEXTS ===== */
 
     // keys object from game add context
@@ -16,6 +16,7 @@ const AssetsForm = (imageReducer, dimensions, fileTypes) => {
 
     /* ===== VARIABLES ===== */
     const metadataKey = keys.metadata;
+    const assetsKey = keys.assets;
 
     /* ===== STATES ===== */
     const [error, setError] = useState(undefined);
@@ -41,20 +42,33 @@ const AssetsForm = (imageReducer, dimensions, fileTypes) => {
         const { file, fileExt } = getFileInfo(boxArtRef);
 
         // next, we need to check the file extension
-        if (!fileTypes.boxArt.includes(fileExt)) {
+        if (!assets.boxArt.fileTypes.includes(fileExt)) {
             return "Invalid file type.";
         }
 
         // finally, we need to check the file size. if the file exceeds the maximum dimensions, return an error
         try {
-            await checkImageDimension(file, dimensions.boxArt.MAX_WIDTH, dimensions.boxArt.MAX_HEIGHT);
+            const { MAX_WIDTH, MAX_HEIGHT } = assets.boxArt.dimensions;
+            await checkImageDimension(file, MAX_WIDTH, MAX_HEIGHT);
             return undefined;
         } catch (error) {
             return error;
         };
     };
 
-    // FUNCTION 2: handleSubmit - code that is executed when the user submits the form
+    // FUNCTION 2: updateAssets - code that updates the list of assets we have uploaded
+    // PRECONDITIONS (2 parameters):
+    // 1.) key: a string, which tells the function which asset needs to be updated
+    // 2.) assetName: a string, which stores the name of the asset we are saving
+    // POSTCONDITIONS (1 parameter):
+    // we update local storage to keep track of the asset
+    const updateAssets = (key, assetName) => {
+        const currentAssets = JSON.parse(localStorage.getItem(assetsKey));
+        const newAssets = { ...currentAssets, [key]: assetName };
+        localStorage.setItem(assetsKey, JSON.stringify(newAssets));
+    };
+
+    // FUNCTION 3: handleSubmit - code that is executed when the user submits the form
     // PRECONDITIONS (2 parameters):
     // 1.) e: event object generated when the user submits the form
     // 2.) boxArtRef: a ref hook that is assigned to the box art input
@@ -81,7 +95,9 @@ const AssetsForm = (imageReducer, dimensions, fileTypes) => {
             let metadata = localStorage.getItem(metadataKey);
             metadata = JSON.parse(metadata);
             const abb = metadata.abb;
-            await uploadBoxArt(file, `${ abb }.png`);
+            const fileName = `${ abb }.png`;
+            await uploadBoxArt(file, fileName);
+            updateAssets(assets.boxArt.key, fileName);
 
             // re-download the new image & update the global image state, and render a success message
             await updateImageByAbb(abb, imageReducer, true);

@@ -11,6 +11,7 @@ import AssetsForm from "./pages/AssetsForm/AssetsForm.jsx";
 import EntitiesForm from "./pages/EntitiesForm/EntitiesForm.jsx";
 import Game from "./pages/Game/Game.jsx";
 import GameAddLayout from "./components/GameAddLayout/GameAddLayout.jsx";
+import GameAddSummary from "./pages/GameAddSummary/GameAddSummary.jsx";
 import GameLayout from "./components/GameLayout/GameLayout.jsx";
 import GameModerators from "./pages/GameModerators/GameModerators.jsx";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
@@ -71,7 +72,6 @@ function App() {
     getAppData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(imageReducer);
 
   /* ===== APP COMPONENT ===== */
   return (
@@ -156,6 +156,7 @@ function App() {
                   <Route path="game-entities" element={ <EntitiesForm /> } />
                   <Route path="game-structure" element={ <StructureForm /> } />
                   <Route path="game-assets" element={ <AssetsForm imageReducer={ imageReducer } /> } />
+                  <Route path="summary" element={ <GameAddSummary /> } />
                 </Route>
               </Route>
               <Route path="moderator" element={ <ModeratorLayout /> } >

@@ -5,12 +5,12 @@ import styles from "./StructureForm.module.css";
 import GoalAddForm from "../../components/GoalAddForm/GoalAddForm.jsx";
 import CategoryAddForm from "../../components/CategoryAddForm/CategoryAddForm.jsx";
 import Container from "../../components/Container/Container.jsx";
+import LevelList from "./LevelList/LevelList.jsx";
 import Loading from "../../components/Loading/Loading.jsx";
 import ModeList from "./ModeList/ModeList.jsx";
 import Popup from "../../components/Popup/Popup.jsx";
 import SelectList from "../../components/SelectList/SelectList.jsx";
 import StructureFormLogic from "./StructureForm.js";
-import LevelList from "./LevelList/LevelList.jsx";
 
 function StructureForm() {
   /* ===== VARIABLES ===== */

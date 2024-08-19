@@ -7,20 +7,21 @@ import styles from "./AssetsForm.module.css";
 
 function AssetsForm({ imageReducer }) {
   /* ===== VARIABLES ===== */
-  const dimensions = {
+  const assets = {
     boxArt: {
-      MAX_WIDTH: 256,
-      MAX_HEIGHT: 363
+      dimensions: {
+        MAX_WIDTH: 256,
+        MAX_HEIGHT: 363
+      },
+      fileTypes: ["png"],
+      key: "BOX_ART"
     }
-  };
-  const fileTypes = {
-    boxArt: ["png"]
   };
   
   /* ===== STATES & FUNCTIONS ===== */
 
   // states & functions from the js file
-  const { error, uploading, handleBoxArtSubmit } = AssetsFormLogic(imageReducer, dimensions, fileTypes);
+  const { error, uploading, handleBoxArtSubmit } = AssetsFormLogic(imageReducer, assets);
   
   /* ===== REFS ===== */
   const boxArtRef = useRef(null);
@@ -40,7 +41,7 @@ function AssetsForm({ imageReducer }) {
           <span>
             <strong>Box Art is optional.</strong>
             &nbsp;Box Art assets must be a <strong>PNG</strong>. The standard dimensions are&nbsp; 
-            <strong>{ dimensions.boxArt.MAX_WIDTH } × { dimensions.boxArt.MAX_HEIGHT } pixels</strong>,
+            <strong>{ assets.boxArt.dimensions.MAX_WIDTH } × { assets.boxArt.dimensions.MAX_HEIGHT } pixels</strong>,
             however, the dimensions can be less for non-traditional box art.
           </span>
           <div>
@@ -48,7 +49,7 @@ function AssetsForm({ imageReducer }) {
             <input
               type="file"
               id="boxart-upload"
-              accept={ fileTypes.boxArt.map(type => `.${ type }`).join(",") }
+              accept={ assets.boxArt.fileTypes.map(type => `.${ type }`).join(",") }
               title="Upload Box Art"
               ref={ boxArtRef }
               required
