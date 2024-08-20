@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
-import { useEffect, useState } from "react";
+import { GameAddContext } from "../../utils/Contexts.js";
+import { useContext, useEffect, useState } from "react";
 import styles from "./EntitiesForm.module.css";
 import Container from "../../components/Container/Container.jsx";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -13,8 +14,12 @@ import Username from "../../components/Username/Username.jsx";
 import UserSearch from "../../components/UserSearch/UserSearch.jsx";
 
 function EntitiesForm() {
+  /* ===== CONTEXTS ===== */
+
+  // entities data state & fetch entities data function from game add context
+  const { entitiesData, fetchEntitiesData } = useContext(GameAddContext);
+
   /* ===== STATES ===== */
-  const [selectData, setSelectData] = useState(null);
   const [submittingEntity, setSubmittingEntity] = useState(false);
 
   /* ===== FUNCTIONS ===== */
@@ -24,7 +29,6 @@ function EntitiesForm() {
     form, 
     addEntity, 
     populateForm, 
-    fetchSelectData, 
     handleInsert, 
     handleUpdate,
     handleModeratorInsert,
@@ -32,7 +36,7 @@ function EntitiesForm() {
     openPopup,
     closePopup,
     validateAndUpdate
-  } = EntitiesFormLogic(setSelectData);
+  } = EntitiesFormLogic();
 
   /* ===== VARIABLES ===== */
   const USERS_PER_PAGE = 10;
@@ -47,7 +51,6 @@ function EntitiesForm() {
   // code that is executed when the component mounts
   useEffect(() => {
     populateForm();
-    fetchSelectData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -65,7 +68,7 @@ function EntitiesForm() {
 				<EntityAddForm 
           submitting={ submittingEntity } 
           setSubmitting={ setSubmittingEntity }
-          refreshSelectDataFunc={ fetchSelectData }
+          refreshSelectDataFunc={ fetchEntitiesData }
         />
 			</Popup>
 
@@ -80,7 +83,7 @@ function EntitiesForm() {
         </span>
 
         { /* Entities form */ }
-        { selectData ?
+        { entitiesData ?
           <form className={ styles.entitiesForm } onSubmit={ validateAndUpdate }>
             <div className={ styles.input }>
               <SelectList
@@ -93,7 +96,7 @@ function EntitiesForm() {
                   error: form.error.monkey
                 }}
                 selectData={{ 
-                  entities: selectData.monkey,
+                  entities: entitiesData.monkey,
                   valueAttribute: "id",
                   entityName: "monkey_name"
                 }}
@@ -112,7 +115,7 @@ function EntitiesForm() {
                   error: form.error.platform
                 }}
                 selectData={{ 
-                  entities: selectData.platform,
+                  entities: entitiesData.platform,
                   valueAttribute: "id",
                   entityName: "platform_name"
                 }}
@@ -131,7 +134,7 @@ function EntitiesForm() {
                   error: form.error.region
                 }}
                 selectData={{ 
-                  entities: selectData.region,
+                  entities: entitiesData.region,
                   valueAttribute: "id",
                   entityName: "region_name"
                 }}
@@ -150,7 +153,7 @@ function EntitiesForm() {
                   error: form.error.rule
                 }}
                 selectData={{ 
-                  entities: selectData.rule,
+                  entities: entitiesData.rule,
                   valueAttribute: "id",
                   entityName: "rule_name"
                 }}

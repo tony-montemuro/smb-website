@@ -2,8 +2,9 @@
 import { MessageContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import Read from "../../database/read/Read.js";
 
-const GameAddLayout = (page, setPage) => {
+const GameAddLayout = (page, setPage, setEntitiesData) => {
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
@@ -30,6 +31,10 @@ const GameAddLayout = (page, setPage) => {
     const navigateTo = useNavigate();
 
     /* ===== FUNCTIONS ===== */
+
+    // database functions
+
+    const { queryAll } = Read();
 
     // FUNCTION 1: switchPages - function that will navigate user to page based on page number
     // PRECONDITIONS (1 parameter):
@@ -93,12 +98,41 @@ const GameAddLayout = (page, setPage) => {
         }
     };
 
+    // FUNCTION 4: fetchEntitiesData - function that grabs all the data we need for entities in the form
+    // PRECONDITIONS (1 condition):
+    // this function should be called when the `GameAddLayout` component mounts
+    // POSTCONDITIONS (2 possible outcomes):
+    // if we fetch all the data successfully from the database, update the entitiesData state
+    // otherwise, render an error message to the user, and do not update the `entitiesData` state
+    const fetchEntitiesData = async () => {
+        try {
+            const [monkey, platform, region, rule] = await Promise.all(
+                [
+                    queryAll("monkey", "id"),
+                    queryAll("platform", "id"),
+                    queryAll("region", "id"),
+                    queryAll("rule", "id")
+                ]
+            );
+            setEntitiesData({
+                monkey,
+                platform,
+                region,
+                rule
+            });
+
+        } catch (error) {
+            addMessage("Entities data failed to load. If reloading the page does not work, the system may be experiencing an outage.", "error", 15000);
+        }
+    };
+
     return { 
         pageNames,
         keys,
         switchPages,
         restoreUnlockedPagesState,
-        unlockNextPage
+        unlockNextPage,
+        fetchEntitiesData
     };
 };
 

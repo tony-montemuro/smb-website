@@ -20,7 +20,6 @@ function MetadataForm() {
   /* ===== FUNCTIONS ===== */
   const { 
     form,
-    creatorName,
     addCreator,
     triggerUserSearch,
     updateLocal,
@@ -184,12 +183,12 @@ function MetadataForm() {
             />
 
             <TextField 
-              id="creator_name"
+              id="creator_username"
               label="Creator"
               placeholder="Select via user search below"
               readOnly
               required
-              value={ creatorName }
+              value={ form.values.creator ? form.values.creator.username : "" }
               variant="filled"
             />
 

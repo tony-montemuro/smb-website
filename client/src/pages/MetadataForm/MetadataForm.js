@@ -3,7 +3,6 @@ import { GameAddContext, MessageContext } from "../../utils/Contexts";
 import { isLowerAlphaNumeric } from "../../utils/RegexPatterns.js";
 import { useContext, useReducer, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
-import ProfileRead from "../../database/read/ProfileRead.js";
 import ValidationHelper from "../../helper/ValidationHelper";
 
 const MetadataForm = () => {
@@ -16,14 +15,10 @@ const MetadataForm = () => {
     const { addMessage } = useContext(MessageContext);
 
     /* ===== STATES ===== */
-    const [creatorName, setCreatorName] = useState("");
     const [addCreator, setAddCreator] = useState(false);
     const [triggerUserSearch, setTriggerUserSearch] = useState(false);
 
     /* ===== FUNCTIONS ===== */
-
-    // database functions
-    const { queryProfileByList } = ProfileRead();
 
     // helper functions
     const { dateB2F } = FrontendHelper();
@@ -36,7 +31,7 @@ const MetadataForm = () => {
         custom: false,
         release_date: dateB2F(),
         min_date: dateB2F(),
-        creator_id: null,
+        creator: null,
         download: null,
         live_preference: true
     };
@@ -78,7 +73,7 @@ const MetadataForm = () => {
                 const updatedValues = { ...state.values, ...value };
 
                 // special case: if we are updating the creator id, we update local storage as well with updated data
-                if (value.hasOwnProperty('creator_id')) {
+                if (Object.hasOwn(value, "creator")) {
                     updateLocal(updatedValues);
                 }
 
@@ -107,17 +102,8 @@ const MetadataForm = () => {
             return;
         }
         
-        // now, let's update our form, and also get the creator name from the database
+        // now, let's update our form
         dispatchForm({ field: "values", value: formData });
-        const creatorId = formData.creator_id;
-        if (creatorId) {
-            try {
-                const users = await queryProfileByList([creatorId]);
-                setCreatorName(users.length > 0 ? users[0].username : "");
-            } catch (error) {
-                addMessage("There was a problem displaying creator's information. The system may be experiencing an outage.", "error", 8000);
-            }
-        }
     };
 
     // FUNCTION 4: handleChange - function that is run each time the user modifies the form
@@ -138,11 +124,10 @@ const MetadataForm = () => {
                 value: {
                     custom: false,
                     min_date: form.values.release_date,
-                    creator_id: null,
+                    creator: null,
                     download: null
                 }
             });
-            setCreatorName("");
         }
 
         // special case: updating a checkbox field
@@ -220,11 +205,11 @@ const MetadataForm = () => {
     // 1.) profile: a profile object, containing at least the id, username, and country fields
     // POSTCONDITIONS (2 possible outcomes):
     // if profileId is the same as the profile id in our form, do nothing
-    // if profileId differs from profile id in our form, update the `creator_id` form field, & update local storage
+    // if profileId differs from profile id in our form, update the `creator` form field, & update local storage
     const onUserRowClick = profile => {
-        if (profile.id !== form.values.creator_id) {
-            setCreatorName(profile.username);
-            dispatchForm({ field: "values", value: { creator_id: profile.id } });
+        if (profile.id !== form.values.creator?.id) {
+            const { country, id, username } = profile;
+            dispatchForm({ field: "values", value: { creator: { country, id, username } } });
             updateLocal(); // mimic an event object
         }
     };
@@ -250,7 +235,6 @@ const MetadataForm = () => {
 
     return { 
         form,
-        creatorName,
         addCreator,
         triggerUserSearch,
         updateLocal,

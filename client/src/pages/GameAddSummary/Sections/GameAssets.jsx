@@ -1,4 +1,4 @@
-function GameAssets() {
+function GameAssets({ assets }) {
   /* ===== GAME ASSETS COMPONENT ===== */
   return (
     <div>

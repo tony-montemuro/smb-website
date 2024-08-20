@@ -1,4 +1,4 @@
-function GameStructure() {
+function GameStructure({ structure }) {
   /* ===== GAME STRUCTURE COMPONENT ===== */
   return (
     <div>

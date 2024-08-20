@@ -22,6 +22,7 @@ function GameAddLayout() {
   /* ===== STATES ===== */
   const [page, setPage] = useState(pageInit); 
   const [isComponentMounted, setIsComponentMounted] = useState(false);
+  const [entitiesData, setEntitiesData] = useState(undefined);
 
   /* ===== FUNCTIONS ===== */
   const { 
@@ -29,14 +30,16 @@ function GameAddLayout() {
     keys, 
     switchPages, 
     restoreUnlockedPagesState, 
-    unlockNextPage 
-  } = GameAddLayoutLogic(page, setPage); 
+    unlockNextPage,
+    fetchEntitiesData
+  } = GameAddLayoutLogic(page, setPage, setEntitiesData); 
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts
   useEffect(() => {
     restoreUnlockedPagesState();
+    fetchEntitiesData();
     setIsComponentMounted(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -55,7 +58,7 @@ function GameAddLayout() {
       <h1>Add Game</h1>
       
       { appData ? 
-        <GameAddContext.Provider value={ { unlockNextPage, keys } }>
+        <GameAddContext.Provider value={ { unlockNextPage, keys, entitiesData, fetchEntitiesData } }>
           <Outlet />
           <AddGamePages 
             page={ page }

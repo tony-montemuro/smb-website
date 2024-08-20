@@ -2,9 +2,8 @@
 import { useContext, useReducer, useState } from "react";
 import { GameAddContext, MessageContext } from "../../utils/Contexts";
 import FrontendHelper from "../../helper/FrontendHelper.js";
-import Read from "../../database/read/Read.js";
 
-const EntitiesForm = (setSelectData) => {
+const EntitiesForm = () => {
     /* ===== CONTEXTS ===== */
 
     // keys object & unlock page function from game add context
@@ -116,9 +115,6 @@ const EntitiesForm = (setSelectData) => {
     
     /* ===== FUNCTIONS ===== */
 
-    // db functions
-    const { queryAll } = Read();
-
     // FUNCTION 4: populateForm - function that executes when the EntitiesForm component mounts
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
@@ -135,35 +131,7 @@ const EntitiesForm = (setSelectData) => {
         dispatchForm({ type: "values", data: formData });
     };
 
-    // FUNCTION 5: fetchSelectData - function that grabs all the data we need for the select elements in the form
-    // PRECONDITIONS (1 condition):
-    // this function should be called when the `EntitiesForm` component mounts
-    // POSTCONDITIONS (2 possible outcomes):
-    // if we fetch all the data successfully from the database, update the formData state
-    // otherwise, render an error message to the user, and do not update the `formData` state
-    const fetchSelectData = async () => {
-        try {
-            const [monkey, platform, region, rule] = await Promise.all(
-                [
-                    queryAll("monkey", "id"),
-                    queryAll("platform", "id"),
-                    queryAll("region", "id"),
-                    queryAll("rule", "id")
-                ]
-            );
-            setSelectData({
-                monkey,
-                platform,
-                region,
-                rule
-            });
-
-        } catch (error) {
-            addMessage("Form data failed to load. If reloading the page does not work, the system may be experiencing an outage.", "error", 15000);
-        }
-    };
-
-    // FUNCTION 6: isDuplicate - function that checks if an entity attempting to be added is already present in data
+    // FUNCTION 5: isDuplicate - function that checks if an entity attempting to be added is already present in data
     // PRECONDITIONS (2 parameters):
     // 1.) data: the data the user has selected, that we wish to check
     // 2.) entityName: the string representing the set of `entityName` we want to check
@@ -188,7 +156,7 @@ const EntitiesForm = (setSelectData) => {
         return result;
     };
 
-    // FUNCTION 7: handleInsert - function that is called when the user adds a new select row
+    // FUNCTION 6: handleInsert - function that is called when the user adds a new select row
     // PRECONDITIONS (3 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - should be equal to the number of entities currently present
@@ -204,7 +172,7 @@ const EntitiesForm = (setSelectData) => {
         }
     };
 
-    // FUNCTION 8: handleUpdate - function that is called when the user updates an existing row
+    // FUNCTION 7: handleUpdate - function that is called when the user updates an existing row
     // PRECONDITIONS (3 parameters):
     // 1.) value: the value chosen by the user from the selector
     // 2.) id: an integer representing the id of the new entity - should be equal to the number of entities currently present
@@ -220,7 +188,7 @@ const EntitiesForm = (setSelectData) => {
         }
     }
 
-    // FUNCTION 9: handleModeratorInsert - function that is called when the user adds a moderator
+    // FUNCTION 8: handleModeratorInsert - function that is called when the user adds a moderator
     // PRECONDITIONS (1 parameter):
     // 1.) user - the user object of the moderator we want to add
     // POSTCONDITIONS (2 possible outcomes):
@@ -232,7 +200,7 @@ const EntitiesForm = (setSelectData) => {
         }
     };
 
-    // FUNCTION 10: handleModeratorDelete - function that is called when the user deletes a moderator
+    // FUNCTION 9: handleModeratorDelete - function that is called when the user deletes a moderator
     // PRECONDITIONS (1 parameter):
     // 1.) id - the id of the user we wish to remove from the list of moderators
     // POSTCONDITIONS (1 possible outcome):
@@ -241,19 +209,19 @@ const EntitiesForm = (setSelectData) => {
         dispatchForm({ type: "updateValues", data: { id }, name: "moderator" });
     };
 
-    // FUNCTION 11: openPopup - function that is called when the user wishes to open the `EntityAddForm`
+    // FUNCTION 10: openPopup - function that is called when the user wishes to open the `EntityAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addEntity` state is updated to "true", rendering the popup
     const openPopup = () => setAddEntity(true);
 
-    // FUNCTION 12: closePopup - function that is called when the user wishes to close the `EntityAddForm`
+    // FUNCTION 11: closePopup - function that is called when the user wishes to close the `EntityAddForm`
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // the `addEntity` state is updated to "false", unrendering the popup
     const closePopup = () => setAddEntity(false);
 
-    // FUNCTION 13: validateEntityList - function that ensures each entity list is non-empty
+    // FUNCTION 12: validateEntityList - function that ensures each entity list is non-empty
     // PRECONDTIONS (1 parameter):
     // 1.) entityName: a string containing the name of the entity list we want to validate
     // POSTCONDITIONS (2 possible outcomes):
@@ -267,7 +235,7 @@ const EntitiesForm = (setSelectData) => {
         return `Must select at least one ${ entityName }.`;
     };
 
-    // FUNCTION 14: validateAndUpdate - function that attempts to validate form values
+    // FUNCTION 13: validateAndUpdate - function that attempts to validate form values
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object that is generated when the user submits the form
     // POSTCONDITIONS (2 possible outcomes):
@@ -295,7 +263,6 @@ const EntitiesForm = (setSelectData) => {
         form,
         addEntity,
         populateForm,
-        fetchSelectData,
         handleInsert,
         handleUpdate,
         handleModeratorInsert,

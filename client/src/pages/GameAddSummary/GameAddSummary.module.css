@@ -3,3 +3,7 @@
     flex-direction: column;
     gap: 10px;
 }
+
+.summary h2 {
+    margin: 0;
+}

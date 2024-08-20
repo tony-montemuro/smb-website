@@ -1,8 +1,8 @@
-function GameEntities() {
+function GameEntities({ entities }) {
   /* ===== GAME ENTITIES COMPONENT ===== */
   return (
     <div>
-      Game Entities
+      <span>Monkeys: { entities.monkey.join(",") }</span>
     </div>
   );
 };
