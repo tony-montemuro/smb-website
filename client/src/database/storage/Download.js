@@ -52,7 +52,7 @@ const Download = () => {
         }
     };
 
-    // FUNCTION 3: retrieveGameImage - public facing function that, given an image&  imageReducer, and type, returns a game image. this 
+    // FUNCTION 3: retrieveGameImage - public facing function that, given an image & imageReducer, and type, returns a game image. this 
     // image may either be from the imageReducer cache, or may need to be downloaded from storage
     // PRECONDITIONS (2 parameters):
     // 1.) abb: a string that represents the name of a file in one of the storage bucket (game abb)
