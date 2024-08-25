@@ -18095,7 +18095,9 @@ INSERT INTO "public"."rule" ("id", "rule_name") VALUES
 	(42, 'Local Multiplayer submissions are not permitted. Runs must be performed in Single Player mode only.'),
 	(43, 'Do not submit the Clear Time shown in the book after completing a level. Rather, submit the time that appears on the timer after passing through the goal.'),
 	(31, 'Grand Total Interstellar submissions must show all 10 stages of gameplay, as well as uncut footage reaching the run''s end screen.'),
-	(44, 'New submissions must be performed on version 1.11. Any submissions performed on earlier versions must be temporarily marked as non-live, until the version patch is complete.');
+	(44, 'New submissions must be performed on version 1.11. Any submissions performed on earlier versions must be temporarily marked as non-live, until the version patch is complete.'),
+	(45, 'For the Story Mode time chart, submit the in-game time, rather than an RTA time.'),
+	(46, 'For the Story Mode and Ultimate time charts, submit the in-game time, rather than an RTA time.');
 
 SELECT SETVAL(pg_get_serial_sequence('"public"."rule"', 'id'), (SELECT MAX("id") FROM "public"."rule"), true);
 
@@ -18204,7 +18206,10 @@ INSERT INTO "public"."game_rule" ("abb", "rule", "id") VALUES
 	('hgs', 3, 2),
 	('hgs', 4, 3),
 	('hgs', 6, 4),
-	('hgs', 16, 5);
+	('hgs', 16, 5),
+	('smb2', 45, 11),
+	('smb2pal', 45, 12),
+	('smbdx', 46, 11);
 
 INSERT INTO "public"."category" (abb, name, practice, id) VALUES
 	('mini', 'Mini Games', false, 13),
