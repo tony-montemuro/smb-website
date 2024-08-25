@@ -48,7 +48,16 @@ const Sections = (imageReducer) => {
         }
     };
 
-    return { images, renderBoolean, fetchAssets };
+    // FUNCTION 3: stringifyEntities - function that converts an array of entity into a string: comma-separated entity names
+    // PRECONDITIONS (1 parameter):
+    // 1.) entities: an array of entity objects
+    // POSTCONDITIONS (1 possible outcome):
+    // for each object, we extract the name property, and append to comma-separated string
+    const stringifyEntities = entities => {
+        return entities.map(e => e.name).join(", ");
+    };
+
+    return { images, renderBoolean, fetchAssets, stringifyEntities };
 };
 
 /* ===== EXPORTS ===== */

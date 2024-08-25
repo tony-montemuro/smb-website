@@ -28,20 +28,23 @@ function GameAssets({ assets, imageReducer }) {
   return (
     <div className={ styles.section }>
       <h2>Game Assets</h2>
-      { images ?
-        images.boxArt ?
-          <div className={ styles.asset }>
-            <h3>Box Art</h3>
-            <img src={ images.boxArt } alt="boxArt" style={ { 
-              "width": assetsData.boxArt.dimensions.MAX_WIDTH, 
-              "height": assetsData.boxArt.dimensions.MAX_HEIGHT 
-            } } />
-          </div>
+      <hr />
+      <div className={ styles.sectionContent }>
+        { images ?
+          images.boxArt ?
+            <div className={ styles.asset }>
+              <h3>Box Art</h3>
+              <img src={ images.boxArt } alt="boxArt" style={ { 
+                "width": assetsData.boxArt.dimensions.MAX_WIDTH, 
+                "height": assetsData.boxArt.dimensions.MAX_HEIGHT 
+              } } />
+            </div>
+          :
+            <span><em>No assets uploaded.</em></span>
         :
-          <span><em>No assets uploaded.</em></span>
-      :
-        <Loading />
-      }
+          <Loading />
+        }
+      </div>
     </div>
   );
 };

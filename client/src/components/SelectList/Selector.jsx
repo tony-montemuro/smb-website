@@ -26,7 +26,7 @@ function Selector({ inputData, selectData, entity, handleChange, colorBackground
       <div className={ styles.selector }>
         <TextField
           id={ `${ inputData.entityName }${ inputValue }` }
-          onChange={ e => handleChange(e.target.value, id, inputData.entityName) }
+          onChange={ e => handleChange(e.target.value, id, inputData.entityName, e.target) }
           select
           SelectProps={ { native: true } }
           sx={ { width: "fit-content" } }
@@ -65,12 +65,12 @@ function Options({ entities, name, value }) {
   /* ===== OPTIONS COMPONENT ===== */
   // if we simply have an array of entities, render an option for each
   if (Array.isArray(entities)) {
-    return entities.map(entity => (
+    return entities.map(entity => (      
       <option 
         key={ entity.id } 
         value={ entity[value] } 
       >
-        { entities.find(e => e.id === entity.id)[name] }
+        { entity[name] }
       </option>
     ));
   } 

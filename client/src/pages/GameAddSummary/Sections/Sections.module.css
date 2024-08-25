@@ -1,13 +1,17 @@
 .section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     background-color: rgb(0, 0, 0, 0.3);
     border-radius: 10px;
-    padding: 8px;
+    padding: 12px 8px;
 }
 
-.asset {
+.section hr {
+    width: 100%;
+}
+
+.sectionContent, .asset {
     display: flex;
     flex-direction: column;
     gap: 10px;
