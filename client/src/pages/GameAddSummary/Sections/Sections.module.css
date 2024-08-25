@@ -6,3 +6,9 @@
     border-radius: 10px;
     padding: 8px;
 }
+
+.asset {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

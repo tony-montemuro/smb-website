@@ -5,11 +5,11 @@ import Download from "../../database/storage/Download.js";
 import FileHelper from "../../helper/FileHelper.js";
 import Upload from "../../database/storage/Upload.js";
 
-const AssetsForm = (imageReducer, assets) => {
+const AssetsForm = (imageReducer) => {
     /* ===== CONTEXTS ===== */
 
-    // keys object from game add context
-    const { keys } = useContext(GameAddContext);
+    // keys and assets data objects from game add context
+    const { keys, assetsData } = useContext(GameAddContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -42,13 +42,13 @@ const AssetsForm = (imageReducer, assets) => {
         const { file, fileExt } = getFileInfo(boxArtRef);
 
         // next, we need to check the file extension
-        if (!assets.boxArt.fileTypes.includes(fileExt)) {
+        if (!assetsData.boxArt.fileTypes.includes(fileExt)) {
             return "Invalid file type.";
         }
 
         // finally, we need to check the file size. if the file exceeds the maximum dimensions, return an error
         try {
-            const { MAX_WIDTH, MAX_HEIGHT } = assets.boxArt.dimensions;
+            const { MAX_WIDTH, MAX_HEIGHT } = assetsData.boxArt.dimensions;
             await checkImageDimension(file, MAX_WIDTH, MAX_HEIGHT);
             return undefined;
         } catch (error) {
@@ -97,7 +97,7 @@ const AssetsForm = (imageReducer, assets) => {
             const abb = metadata.abb;
             const fileName = `${ abb }.png`;
             await uploadBoxArt(file, fileName);
-            updateAssets(assets.boxArt.key, fileName);
+            updateAssets(assetsData.boxArt.key, fileName);
 
             // re-download the new image & update the global image state, and render a success message
             await updateImageByAbb(abb, imageReducer, true);

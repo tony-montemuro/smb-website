@@ -4,6 +4,6 @@
     gap: 10px;
 }
 
-.summary h2 {
+.summary h2, .summary h3 {
     margin: 0;
 }

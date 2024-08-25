@@ -9,7 +9,7 @@ import GameEntities from "./Sections/GameEntities.jsx";
 import GameStructure from "./Sections/GameStructure.jsx";
 import Metadata from "./Sections/Metadata.jsx";
 
-function GameAddSummary() {
+function GameAddSummary({ imageReducer }) {
   /* ===== CONTEXTS ===== */
 
   // keys object from game add context
@@ -36,7 +36,7 @@ function GameAddSummary() {
         <Metadata metadata={ metadata } />
         <GameEntities entities={ entities } />
         <GameStructure structure={ structure } />
-        <GameAssets assets={ assets } />
+        <GameAssets assets={ assets } imageReducer={ imageReducer } />
       </div>
     </Container>
   )

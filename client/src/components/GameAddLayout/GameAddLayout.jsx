@@ -13,6 +13,16 @@ function GameAddLayout() {
     number: 1,
     unlocked: [1]
   };
+  const assetsData = {
+    boxArt: {
+      dimensions: {
+        MAX_WIDTH: 256,
+        MAX_HEIGHT: 363
+      },
+      fileTypes: ["png"],
+      key: "BOX_ART"
+    }
+  };
 
   /* ===== CONTEXTS ===== */
 
@@ -58,7 +68,7 @@ function GameAddLayout() {
       <h1>Add Game</h1>
       
       { appData ? 
-        <GameAddContext.Provider value={ { unlockNextPage, keys, entitiesData, fetchEntitiesData } }>
+        <GameAddContext.Provider value={ { assetsData, unlockNextPage, keys, entitiesData, fetchEntitiesData } }>
           <Outlet />
           <AddGamePages 
             page={ page }

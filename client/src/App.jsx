@@ -156,7 +156,7 @@ function App() {
                   <Route path="game-entities" element={ <EntitiesForm /> } />
                   <Route path="game-structure" element={ <StructureForm /> } />
                   <Route path="game-assets" element={ <AssetsForm imageReducer={ imageReducer } /> } />
-                  <Route path="summary" element={ <GameAddSummary /> } />
+                  <Route path="summary" element={ <GameAddSummary imageReducer={ imageReducer } /> } />
                 </Route>
               </Route>
               <Route path="moderator" element={ <ModeratorLayout /> } >

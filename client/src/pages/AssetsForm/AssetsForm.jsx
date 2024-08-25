@@ -1,27 +1,21 @@
 /* ===== IMPORTS ===== */
-import { useRef } from "react";
+import { GameAddContext } from "../../utils/Contexts.js";
+import { useContext, useRef } from "react";
 import AssetsFormLogic from "./AssetsForm.js";
 import Container from "../../components/Container/Container.jsx";
 import FormHelperText from "@mui/material/FormHelperText";
 import styles from "./AssetsForm.module.css";
 
 function AssetsForm({ imageReducer }) {
-  /* ===== VARIABLES ===== */
-  const assets = {
-    boxArt: {
-      dimensions: {
-        MAX_WIDTH: 256,
-        MAX_HEIGHT: 363
-      },
-      fileTypes: ["png"],
-      key: "BOX_ART"
-    }
-  };
+  /* ===== CONTEXTS ===== */
+
+  // assets data variable from game add context
+  const { assetsData } = useContext(GameAddContext);
   
   /* ===== STATES & FUNCTIONS ===== */
 
   // states & functions from the js file
-  const { error, uploading, handleBoxArtSubmit } = AssetsFormLogic(imageReducer, assets);
+  const { error, uploading, handleBoxArtSubmit } = AssetsFormLogic(imageReducer);
   
   /* ===== REFS ===== */
   const boxArtRef = useRef(null);
@@ -41,7 +35,7 @@ function AssetsForm({ imageReducer }) {
           <span>
             <strong>Box Art is optional.</strong>
             &nbsp;Box Art assets must be a <strong>PNG</strong>. The standard dimensions are&nbsp; 
-            <strong>{ assets.boxArt.dimensions.MAX_WIDTH } × { assets.boxArt.dimensions.MAX_HEIGHT } pixels</strong>,
+            <strong>{ assetsData.boxArt.dimensions.MAX_WIDTH } × { assetsData.boxArt.dimensions.MAX_HEIGHT } pixels</strong>,
             however, the dimensions can be less for non-traditional box art.
           </span>
           <div>
@@ -49,7 +43,7 @@ function AssetsForm({ imageReducer }) {
             <input
               type="file"
               id="boxart-upload"
-              accept={ assets.boxArt.fileTypes.map(type => `.${ type }`).join(",") }
+              accept={ assetsData.boxArt.fileTypes.map(type => `.${ type }`).join(",") }
               title="Upload Box Art"
               ref={ boxArtRef }
               required
