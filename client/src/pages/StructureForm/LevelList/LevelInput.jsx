@@ -9,7 +9,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import FormHelperText from "@mui/material/FormHelperText";
 import LevelHelper from "../../../helper/LevelHelper.js";
-import LevelInputLogic from "./LevelInput.js";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
@@ -26,11 +25,8 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
 
   /* ===== FUNCTIONS ===== */
 
-  // functions from the js file
-  const { timerTypeB2F } = LevelInputLogic();
-
   // helper variables & functions
-  const { capitalize } = FrontendHelper();
+  const { capitalize, timerTypeB2F } = FrontendHelper();
   const { levelB2F } = LevelHelper();
 
   /* ===== LEVEL INPUT COMPONENT ===== */

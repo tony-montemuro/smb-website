@@ -16,3 +16,15 @@
     flex-direction: column;
     gap: 10px;
 }
+
+.mode {
+    --offset: 10px;
+    padding-left: var(--offset);
+}
+
+.level {
+    padding-left: calc(2 * var(--offset));
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
