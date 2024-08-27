@@ -17,14 +17,20 @@
     gap: 10px;
 }
 
-.mode {
-    --offset: 10px;
-    padding-left: var(--offset);
+.category {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
-.level {
-    padding-left: calc(2 * var(--offset));
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+.modeName {
+    padding-left: 5px;
+}
+
+.mode {
+    padding-left: 10px;
+}
+
+.column {
+    width: 10%;
 }

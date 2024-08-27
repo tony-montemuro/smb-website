@@ -1,7 +1,6 @@
 /* ===== IMPORTS ===== */
-import { AppDataContext } from "../../../utils/Contexts";
-import { useContext } from "react";
 import styles from "./Sections.module.css";
+import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper.js";
 import LevelHelper from "../../../helper/LevelHelper.js";
 import SectionsLogic from "./Sections.js";
@@ -9,19 +8,22 @@ import SectionsLogic from "./Sections.js";
 /* ===== COMPONENTS ===== */
 
 function GameStructure({ structure }) {
-  console.log(structure);
   /* ===== GAME STRUCTURE COMPONENT ===== */
   return (
     <div className={ styles.section }>
       <h2>Game Structure</h2>
+      <span>
+        <em><strong>Note: </strong>IDs are stored on the backend, but are typically invisible to users. You may notice that some IDs are skipped; this is totally normal.</em>
+      </span>
       <hr />
 
-      <div className={ styles.sectionContent }>
-        { structure.category.map(category => {
+      <div>
+        { structure.category.map((category, index) => {
           return (
-            <div key={ category.category }>
+            <div className={ styles.category } key={ category.category }>
               <h3>Category: { category.name }</h3>
               <ModeLevels structure={ structure } category={ category.category } />
+              { index < structure.category.length-1 ? <hr /> : null }
             </div>
           );
         })}
@@ -45,7 +47,7 @@ function ModeLevels({ structure, category }) {
     const { id, name } = mode;
     return (
       <div key={ `${ id }_${ name }` } className={ styles.mode }>
-        <span><strong>Mode: { levelB2F(name) }</strong></span>
+        <span className={ styles.modeName }><strong>Mode: { levelB2F(name) }</strong></span>
         <Levels structure={ structure } category={ category } mode={ name } />
       </div>
     );
@@ -53,47 +55,53 @@ function ModeLevels({ structure, category }) {
 };
 
 function Levels({ structure, category, mode }) {
-  /* ===== CONTEXTS ===== */
-
-  // app data state from app data context
-  const { appData } = useContext(AppDataContext);
-
   /* ===== VARIABLES ===== */
   const levels = structure.level.filter(level => level.category === category && level.mode.name === mode);
-  const { practice: isPracticeMode } = appData.categories[category];
 
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file
-  const { renderBoolean } = SectionsLogic();
+  const { renderBoolean, addGoalToLevelName } = SectionsLogic();
 
   // helper functions
   const { capitalize, timerTypeB2F } = FrontendHelper();
-  const { levelB2F } = LevelHelper();
 
   /* ===== LEVELS COMPONENT ===== */
-  return levels.map(level => {
-    const { ascending, chart_type, id, name, time, timer_type } = level;
-    const ascendingScore = ascending === "score" || ascending === "both";
-    const ascendingTime = ascending === "time" || ascending === "both";
+  return (
+    <table className="table">
+      <thead>
+        <tr>
+          <th className={ styles.column }>ID</th>
+          <th>Name</th>
+          <th className={ styles.column }>Chart Type</th>
+          <th className={ styles.column }>Timer Type</th>
+          <th className={ styles.column }>Time</th>
+          <th className={ styles.column }>Ascending Score</th>
+          <th className={ styles.column }>Ascending Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        { levels.map(level => {
+          let { ascending, chart_type, goal, id, name, time, timer_type } = level;
+          const ascendingScore = ascending === "score" || ascending === "both";
+          const ascendingTime = ascending === "time" || ascending === "both";
+          name = addGoalToLevelName(name, goal);
 
-    return (
-      <div key={ `${ id }_${ name }` } className={ styles.level }>
-        <span>Name: { levelB2F(name) }</span>
-        <span>Chart Type: { capitalize(chart_type) }</span>
-        <span>Timer Type: { timerTypeB2F(timer_type) }</span>
-        <span>Time: { time }</span>
-        { !isPracticeMode ?
-          <>
-            <span>Ascend Score: { renderBoolean(ascendingScore) }</span>
-            <span>Ascend Time: { renderBoolean(ascendingTime) }</span>
-          </>
-        :
-          null
-        }
-      </div>
-    );
-  });
+          return (
+            <tr key={ `${ id }_${ name }` }>
+              <td className={ styles.column }>{ id }</td>
+              <td><FancyLevel level={ name } /></td>
+              <td className={ styles.column }>{ capitalize(chart_type) }</td>
+              <td className={ styles.column }>{ timerTypeB2F(timer_type) }</td>
+              <td className={ styles.column }>{ time }</td>
+              <td className={ styles.column }>{ renderBoolean(ascendingScore) }</td>
+              <td className={ styles.column }>{ renderBoolean(ascendingTime) }</td>
+            </tr>
+          );
+      })}
+      </tbody>
+    </table>
+  );
 };
 
 /* ===== EXPORTS ===== */

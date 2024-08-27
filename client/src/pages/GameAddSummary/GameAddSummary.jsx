@@ -29,15 +29,22 @@ function GameAddSummary({ imageReducer }) {
   const structure = JSON.parse(localStorage.getItem(structureKey));
   const assets = JSON.parse(localStorage.getItem(assetsKey));
 
+  /* ===== FUNCTIONS ===== */
+
+  // functions from the js file
+  const { createGame } = GameAddSummaryLogic();
+
   /* ===== GAME ADD SUMMARY PAGE ===== */
   return (
     <Container title="Summary">
-      <div className={ styles.summary }>
+      <form className={ styles.summary } onSubmit={ createGame }>
+        <span>Use this screen to ensure all information is correct, and to create the game!</span>
         <Metadata metadata={ metadata } />
         <GameEntities entities={ entities } />
         <GameStructure structure={ structure } />
         <GameAssets assets={ assets } imageReducer={ imageReducer } />
-      </div>
+        <button type="submit">Add Game</button>
+      </form>
     </Container>
   )
 };

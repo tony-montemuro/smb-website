@@ -57,7 +57,22 @@ const Sections = (imageReducer) => {
         return entities.map(e => e.name).join(", ");
     };
 
-    return { images, renderBoolean, fetchAssets, stringifyEntities };
+    // FUNCTION 4: addGoalToLevelName - function that combines two strings: levelName and goal
+    // PRECONDITIONS (2 parameters):
+    // 1.) levelName: a string containing a level's name in backend format (snakecase, URL-encoded)
+    // 2.) goal: a valid goal color string, or undefined
+    // POSTCONDITIONS (2 possible outcomes):
+    // if goal is defined, append to end of levelName string
+    // otherwise, simply return levelName
+    const addGoalToLevelName = (levelName, goal) => {
+        if (!goal) {
+            return levelName;
+        }
+
+        return `${ levelName }_(${ goal })`;
+    };
+
+    return { images, renderBoolean, fetchAssets, stringifyEntities, addGoalToLevelName };
 };
 
 /* ===== EXPORTS ===== */

@@ -7,3 +7,8 @@
 .summary h2, .summary h3, .summary ol {
     margin: 0;
 }
+
+.summary button {
+    width: fit-content;
+    padding: 25px 20px;
+}

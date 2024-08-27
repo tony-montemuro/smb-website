@@ -137,6 +137,31 @@ function StructureForm() {
             the user. This is the smallest level of division of charts.
           </li>
         </ul>
+        <span>You should also be familiar with each chart field:</span>
+        <ul>
+          <li>
+            <strong>Name:</strong> The name of the chart. This is a "smart" input, meaning it will take your text input, and perform two conversions:
+            <ol>
+              <li><strong>Backend Conversion:</strong> A version of the name that is friendly with the database.</li>
+              <li><strong>Frontend Conversion:</strong> A version of the name that is friendly to the user. This includes auto-capitalization.</li>
+            </ol>
+            Feel free to type in all lowercase; the input should handle capitalization! A couple things to note: occasionally, modifying this input
+            causes unexpected behavior with the cursor due to the conversions. If this issue is commonly reported, I will attempt to fix it in the future.
+            Also, at this time, there is no way to force a word to start with a lowercase letter.
+          </li>
+          <li>
+            <strong>Goal:</strong> The goal color of the chart. This field should only be set when the chart is <strong>limited to a single goal!</strong>
+            &nbsp;Otherwise, leave this field empty.
+          </li>
+          <li>
+            <strong>Chart Type:</strong> Specifies whether the chart should be <strong>score, time, or both!</strong> In the future, there may
+            be more chart types added. Any chart outside this scope unfortunately cannot be added at this time.
+          </li>
+          <li>
+            <strong>Timer Type: </strong> Specifies the <strong>format times should be stored and rendered</strong> for the chart. Unlike other fields, there is
+            currently no way to add timer types. Contact <strong>TonySMB</strong> if you would like a new timer type added!
+          </li>
+        </ul>
         
         { /* Only render inputs if user has selected  */ }
         { formData ?
