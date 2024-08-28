@@ -7,6 +7,7 @@ import GameAddSummaryLogic from "./GameAddSummary.js";
 import GameAssets from "./Sections/GameAssets.jsx";
 import GameEntities from "./Sections/GameEntities.jsx";
 import GameStructure from "./Sections/GameStructure.jsx";
+import Logo from "../../assets/svg/Logo.jsx";
 import Metadata from "./Sections/Metadata.jsx";
 
 function GameAddSummary({ imageReducer }) {
@@ -43,7 +44,10 @@ function GameAddSummary({ imageReducer }) {
         <GameEntities entities={ entities } />
         <GameStructure structure={ structure } />
         <GameAssets assets={ assets } imageReducer={ imageReducer } />
-        <button type="submit">Add Game</button>
+        <button type="submit">
+          <Logo />
+          <span>Add Game</span>
+        </button>
       </form>
     </Container>
   )

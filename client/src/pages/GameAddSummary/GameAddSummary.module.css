@@ -11,4 +11,6 @@
 .summary button {
     width: fit-content;
     padding: 25px 20px;
+    background-color: rgb(var(--color-nav));
+    color: rgb(var(--color-text));
 }
