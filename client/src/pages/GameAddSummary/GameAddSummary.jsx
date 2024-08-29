@@ -7,8 +7,8 @@ import GameAddSummaryLogic from "./GameAddSummary.js";
 import GameAssets from "./Sections/GameAssets.jsx";
 import GameEntities from "./Sections/GameEntities.jsx";
 import GameStructure from "./Sections/GameStructure.jsx";
-import Logo from "../../assets/svg/Logo.jsx";
 import Metadata from "./Sections/Metadata.jsx";
+import SimpleLogo from "../../assets/svg/SimpleLogo.jsx";
 
 function GameAddSummary({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -38,14 +38,14 @@ function GameAddSummary({ imageReducer }) {
   /* ===== GAME ADD SUMMARY PAGE ===== */
   return (
     <Container title="Summary">
-      <form className={ styles.summary } onSubmit={ createGame }>
+      <form className={ styles.summary } onSubmit={ e => createGame(e, metadata, entities, structure) }>
         <span>Use this screen to ensure all information is correct, and to create the game!</span>
         <Metadata metadata={ metadata } />
         <GameEntities entities={ entities } />
         <GameStructure structure={ structure } />
         <GameAssets assets={ assets } imageReducer={ imageReducer } />
-        <button type="submit">
-          <Logo />
+        <button type="submit" className="center">
+          <SimpleLogo />
           <span>Add Game</span>
         </button>
       </form>

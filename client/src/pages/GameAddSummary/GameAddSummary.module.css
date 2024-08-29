@@ -9,8 +9,18 @@
 }
 
 .summary button {
+    gap: 3px;
     width: fit-content;
     padding: 25px 20px;
     background-color: rgb(var(--color-nav));
     color: rgb(var(--color-text));
+}
+
+.summary button:hover {
+    background-color: rgb(var(--color-nav-hover))
+}
+
+.summary button svg {
+    width: 25px;
+    height: 25px;
 }
