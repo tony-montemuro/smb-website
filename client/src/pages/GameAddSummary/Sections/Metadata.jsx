@@ -3,7 +3,7 @@ import styles from "./Sections.module.css";
 import Sections from "./Sections.js";
 import Username from "../../../components/Username/Username.jsx";
 
-function Metadata({ metadata }) {
+function Metadata({ metadata, error }) {
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file

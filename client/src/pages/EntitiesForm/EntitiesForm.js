@@ -2,6 +2,7 @@
 import { useContext, useReducer, useState } from "react";
 import { GameAddContext, MessageContext } from "../../utils/Contexts";
 import FrontendHelper from "../../helper/FrontendHelper.js";
+import GameAddValidation from "../../components/GameAddLayout/GameAddValidation.js";
 
 const EntitiesForm = () => {
     /* ===== CONTEXTS ===== */
@@ -38,6 +39,9 @@ const EntitiesForm = () => {
 
     // helper functions
     const { capitalize } = FrontendHelper();
+
+    // validation function
+    const { validateEntities } = GameAddValidation();
 
     // FUNCTION 1: updateLocal - function that runs each time the user finishes interacting with a form field
     // PRECONDITIONS (1 parameter):
@@ -235,21 +239,7 @@ const EntitiesForm = () => {
     // the `addEntity` state is updated to "false", unrendering the popup
     const closePopup = () => setAddEntity(false);
 
-    // FUNCTION 13: validateEntityList - function that ensures each entity list is non-empty
-    // PRECONDTIONS (1 parameter):
-    // 1.) entityName: a string containing the name of the entity list we want to validate
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the entity list is non-empty, this function returns undefined
-    // if the entity list is empty, this function returns a string containing an error message
-    const validateEntityList = entityName => {
-        if (form.values[entityName].length > 0) {
-            return undefined;
-        }
-
-        return `Must select at least one ${ entityName }.`;
-    };
-
-    // FUNCTION 14: validateAndUpdate - function that attempts to validate form values
+    // FUNCTION 13: validateAndUpdate - function that attempts to validate form values
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object that is generated when the user submits the form
     // POSTCONDITIONS (2 possible outcomes):
@@ -257,13 +247,9 @@ const EntitiesForm = () => {
     // if the form fails to validate, update the form state to display errors
     const validateAndUpdate = e => {
         e.preventDefault();
-        const error = {};
-
-        Object.keys(form.error).forEach(entityName => {
-            error[entityName] = validateEntityList(entityName)
-        });
 
         // if no errors are detected, unlock next page, and update local storage
+        const error = validateEntities(form.values);
         if (!Object.values(error).some(e => e !== undefined)) {
             unlockNextPage();
         } else {

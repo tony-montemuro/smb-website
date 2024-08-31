@@ -1,9 +1,8 @@
 /* ===== IMPORTS ===== */
 import { GameAddContext, MessageContext } from "../../utils/Contexts";
-import { isLowerAlphaNumeric } from "../../utils/RegexPatterns.js";
 import { useContext, useReducer, useState } from "react";
 import FrontendHelper from "../../helper/FrontendHelper";
-import ValidationHelper from "../../helper/ValidationHelper";
+import GameAddValidation from "../../components/GameAddLayout/GameAddValidation.js";
 
 const MetadataForm = () => {
     /* ===== CONTEXTS ===== */
@@ -22,7 +21,9 @@ const MetadataForm = () => {
 
     // helper functions
     const { dateB2F } = FrontendHelper();
-    const { validateDate } = ValidationHelper();
+
+    // validate function
+    const { validateMetadata } = GameAddValidation();
 
     /* ===== VARIABLES ===== */
     const defaultVals = {
@@ -161,19 +162,7 @@ const MetadataForm = () => {
         dispatchForm({ field: "values", value: { [id]: date } });
     };
 
-    // FUNCTION 6: validateAbb - function that validates the abb form field
-    // PRECONDITIONS (1 parameter):
-    // 1.) abb: a string, which will correspond to the primary key of the new game in the database
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the abb contains any upper-case letters, or special characters, return a string that contains the error message
-    // if the abb is determined to be valid, return undefined
-    const validateAbb = abb => {
-        if (!isLowerAlphaNumeric.test(abb)) {
-            return "Abbreviation should only contain lowercase letters, and/or numbers.";
-        }
-    };
-
-    // FUNCTION 7: validateAndUpdate - function that attempts to validate form values
+    // FUNCTION 6: validateAndUpdate - function that attempts to validate form values
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object that is generated when the user submits the form
     // POSTCONDITIONS (2 possible outcomes):
@@ -181,15 +170,9 @@ const MetadataForm = () => {
     // if the form fails to validate, update the form state to display errors
     const validateAndUpdate = e => {
         e.preventDefault();
-        const error = {};
-
-        error.abb = validateAbb(form.values.abb);
-        error.release_date = validateDate(form.values.release_date);
-        if (form.values.custom) {
-            error.min_date = validateDate(form.values.min_date);
-        }
 
         // if no errors are detected, unlock next page, and update local storage
+        const error = validateMetadata(form.values);
         if (!Object.values(error).some(e => e !== undefined)) {
             unlockNextPage();
             updateLocal();
@@ -200,7 +183,7 @@ const MetadataForm = () => {
         dispatchForm({ field: "error", value: error });
     };
 
-    // FUNCTION 8: onUserRowClick - function that is called when selecting a user as the game creator
+    // FUNCTION 7: onUserRowClick - function that is called when selecting a user as the game creator
     // PRECONDITIONS (1 parameter):
     // 1.) profile: a profile object, containing at least the id, username, and country fields
     // POSTCONDITIONS (2 possible outcomes):
@@ -214,19 +197,19 @@ const MetadataForm = () => {
         }
     };
 
-    // FUNCTION 9: openPopup - function that is called when the user opens the "add creator" popup
+    // FUNCTION 8: openPopup - function that is called when the user opens the "add creator" popup
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // when the user attempts to open the popup, we set the `addCreator` state to `true` to render the popup
     const openPopup = () => setAddCreator(true);
 
-    // FUNCTION 10: closePopup - function that is called when the user closes the "add creator" popup is closed
+    // FUNCTION 9: closePopup - function that is called when the user closes the "add creator" popup is closed
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // when the user attempts to close the popup, we set the `addCreator` state to `false` to unrender the popup
     const closePopup = () => setAddCreator(false);
 
-    // FUNCTION 11: refreshUserSearch - function that is called that will refresh the user search when triggered
+    // FUNCTION 10: refreshUserSearch - function that is called that will refresh the user search when triggered
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (1 possible outcome):
     // because the `triggerUserSearch` state is a boolean, to guarantee the user search refreshes, we just need to

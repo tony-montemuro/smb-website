@@ -7,7 +7,7 @@ import SectionsLogic from "./Sections.js";
 
 /* ===== COMPONENTS ===== */
 
-function GameStructure({ structure }) {
+function GameStructure({ structure, error }) {
   /* ===== GAME STRUCTURE COMPONENT ===== */
   return (
     <div className={ styles.section }>

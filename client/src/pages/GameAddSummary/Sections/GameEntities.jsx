@@ -4,7 +4,7 @@ import styles from "./Sections.module.css";
 import SectionsLogic from "./Sections.js";
 import Username from "../../../components/Username/Username.jsx";
 
-function GameEntities({ entities }) {
+function GameEntities({ entities, error }) {
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file

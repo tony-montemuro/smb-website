@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { AppDataContext } from "../../utils/Contexts.js";
+import { AppDataContext, GameAddContext } from "../../utils/Contexts.js";
 import { useContext, useEffect, useState } from "react";
 import styles from "./StructureForm.module.css";
 import GoalAddForm from "../../components/GoalAddForm/GoalAddForm.jsx";
@@ -16,9 +16,16 @@ function StructureForm() {
   /* ===== VARIABLES ===== */
   const ADD_POPUP_WIDTH = "500px";
 
+  /* ===== CONTEXTS ===== */
+
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
+
+  // structure data state & update structure categories function from game add context
+  const { structureData, updateStructureCategories } = useContext(GameAddContext);
+
   /* ===== STATES & FUNCTIONS ===== */
   const [isComponentMounted, setIsComponentMounted] = useState(false);
-  const [formData, setFormData] = useState(undefined);
   const [submitting, setSubmitting] = useState(false);
 
   // states & functions from the js file
@@ -27,8 +34,6 @@ function StructureForm() {
     popup,
     updateLocal,
     populateForm,
-    queryFormData,
-    updateFormCategories,
     handleCategoryInsert,
     handleCategoryUpdate,
     handleModeInsert,
@@ -37,24 +42,18 @@ function StructureForm() {
     handleLevelInsert,
     handleLevelChange,
     handleLevelDelete,
-    validateStructure,
+    validate,
     openCategoryPopup,
     closeCategoryPopup,
     openGoalPopup,
     closeGoalPopup
-  } = StructureFormLogic(formData, setFormData);
-
-  /* ===== CONTEXTS ===== */
-
-  // appData state from app data context
-  const { appData } = useContext(AppDataContext);
+  } = StructureFormLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts
   useEffect(() => {
     populateForm();
-    queryFormData();
     setIsComponentMounted(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -62,7 +61,7 @@ function StructureForm() {
   // code that is executed when the categories state updates after the component has already mounted
   useEffect(() => {
     if (isComponentMounted) {
-      updateFormCategories();
+      updateStructureCategories();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appData.categories]);
@@ -99,7 +98,7 @@ function StructureForm() {
 			</Popup>
 
       { /* Structure form */ }
-      <form className={ styles.structureForm } onSubmit={ validateStructure }>
+      <form className={ styles.structureForm } onSubmit={ validate }>
         <span>
           On this screen, you will create and organize high score / fast time charts.
           It is important you understand how charts are organized:
@@ -189,7 +188,7 @@ function StructureForm() {
         </ul>
         
         { /* Only render inputs if user has selected  */ }
-        { formData ?
+        { structureData ?
           <div style={ { width: "100%" } } className={ styles.structureForm }>
             <SelectList
               entities={ form.values.category }
@@ -202,8 +201,8 @@ function StructureForm() {
               }}
               selectData={{ 
                 entities: {
-                  "practice_mode_style": formData.categories.filter(category => category.practice),
-                  "non-practice_mode_style": formData.categories.filter(category => !category.practice)
+                  "practice_mode_style": structureData.categories.filter(category => category.practice),
+                  "non-practice_mode_style": structureData.categories.filter(category => !category.practice)
                 },
                 valueAttribute: "abb",
                 entityName: "name",
@@ -224,7 +223,7 @@ function StructureForm() {
                   handleInsert={ handleLevelInsert }
                   handleChange={ handleLevelChange }
                   handleDelete={ handleLevelDelete }
-                  formData={ formData }
+                  formData={ structureData }
                   errors={ form.error.level }
                 />
               </ModeList>

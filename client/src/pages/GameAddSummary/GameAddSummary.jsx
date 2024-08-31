@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { GameAddContext } from "../../utils/Contexts.js";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import styles from "./GameAddSummary.module.css";
 import Container from "../../components/Container/Container.jsx";
 import GameAddSummaryLogic from "./GameAddSummary.js";
@@ -15,6 +15,13 @@ function GameAddSummary({ imageReducer }) {
 
   // keys object from game add context
   const { keys } = useContext(GameAddContext);
+
+  /* ===== STATES ===== */
+  const [error, setError] = useState({
+    metadata: undefined,
+    entities: undefined,
+    structure: undefined
+  });
 
   /* ===== VARIABLES ===== */
   
@@ -33,16 +40,16 @@ function GameAddSummary({ imageReducer }) {
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file
-  const { createGame } = GameAddSummaryLogic();
+  const { createGame } = GameAddSummaryLogic(setError);
 
   /* ===== GAME ADD SUMMARY PAGE ===== */
   return (
     <Container title="Summary">
       <form className={ styles.summary } onSubmit={ e => createGame(e, metadata, entities, structure) }>
         <span>Use this screen to ensure all information is correct, and to create the game!</span>
-        <Metadata metadata={ metadata } />
-        <GameEntities entities={ entities } />
-        <GameStructure structure={ structure } />
+        <Metadata metadata={ metadata } error={ error.metadata } />
+        <GameEntities entities={ entities } error={ error.entities } />
+        <GameStructure structure={ structure } error={ error.structure } />
         <GameAssets assets={ assets } imageReducer={ imageReducer } />
         <button type="submit" className="center">
           <SimpleLogo />

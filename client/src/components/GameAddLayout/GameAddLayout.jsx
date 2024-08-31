@@ -23,7 +23,7 @@ function GameAddLayout() {
       key: "BOX_ART"
     }
   };
-
+  
   /* ===== CONTEXTS ===== */
 
   // app data state from app data context
@@ -33,6 +33,7 @@ function GameAddLayout() {
   const [page, setPage] = useState(pageInit); 
   const [isComponentMounted, setIsComponentMounted] = useState(false);
   const [entitiesData, setEntitiesData] = useState(undefined);
+  const [structureData, setStructureData] = useState(undefined);
 
   /* ===== FUNCTIONS ===== */
   const { 
@@ -41,18 +42,34 @@ function GameAddLayout() {
     switchPages, 
     restoreUnlockedPagesState, 
     unlockNextPage,
-    fetchEntitiesData
-  } = GameAddLayoutLogic(page, setPage, setEntitiesData); 
+    fetchEntitiesData,
+    fetchStructureData,
+    updateStructureCategories
+  } = GameAddLayoutLogic(page, setPage, setEntitiesData, setStructureData);
+
+  /* ===== CONTEXT DATA ===== */
+  const contextData = {
+    assetsData,
+    unlockNextPage,
+    keys,
+    entitiesData,
+    fetchEntitiesData,
+    structureData,
+    updateStructureCategories
+  }
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component mounts
+  // code that is executed when the component mounts AND when `appData` state is updated
   useEffect(() => {
-    restoreUnlockedPagesState();
-    fetchEntitiesData();
-    setIsComponentMounted(true);
+    if (appData) {
+      restoreUnlockedPagesState();
+      fetchEntitiesData();
+      fetchStructureData();
+      setIsComponentMounted(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appData]);
 
   // code that is executed when the page number changes
   useEffect(() => {
@@ -68,7 +85,7 @@ function GameAddLayout() {
       <h1>Add Game</h1>
       
       { appData ? 
-        <GameAddContext.Provider value={ { assetsData, unlockNextPage, keys, entitiesData, fetchEntitiesData } }>
+        <GameAddContext.Provider value={ contextData }>
           <Outlet />
           <AddGamePages 
             page={ page }
