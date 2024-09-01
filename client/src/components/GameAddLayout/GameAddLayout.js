@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Read from "../../database/read/Read.js";
 import RPCRead from "../../database/read/RPCRead.js";
 
-const GameAddLayout = (page, setPage, setEntitiesData, setStructureData) => {
+const GameAddLayout = (page, setPage, pageInit, setEntitiesData, setStructureData) => {
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
@@ -58,21 +58,25 @@ const GameAddLayout = (page, setPage, setEntitiesData, setStructureData) => {
         localStorage.setItem(currentPageKey, pageNumber.toString());
     };
 
-    // FUNCTION 2: restoreUnlockedPagesState - function that executes when the GameAddLayout component mounts
-    // PRECONDITIONS: NONE
+    // FUNCTION 2: restoreUnlockedPagesState - function that executes when the GameAddLayout component mounts, or when
+    // the form resets
+    // PRECONDITIONS (1 parameter):
+    // 1.) forceReset: an optional boolean parameter. when passed, we force a reset on the page state in local storage
     // POSTCONDITIONS (2 possible outcomes):
-    // if the user has unlocked pages according to local storage, restore unlocked pages to reflect that
-    // otherwise, this function does nothing
-    const restoreUnlockedPagesState = () => {
+    // if the user has unlocked pages according to local storage, and we are NOT force resetting, restore unlocked pages to
+    // reflect that
+    // otherwise, this function sets local storage to 
+    const restoreUnlockedPagesState = (forceReset = false) => {
         const localUnlockedPages = JSON.parse(localStorage.getItem(unlockedPagesKey));
         const pageNumber = parseInt(localStorage.getItem(currentPageKey));
+        console.log(localUnlockedPages, pageNumber);
 
         if (localUnlockedPages) {
             setPage({ number: pageNumber, unlocked: localUnlockedPages });
             switchPages(pageNumber);
         } else {
-            localStorage.setItem(unlockedPagesKey, JSON.stringify(page.unlocked));
-            localStorage.setItem(currentPageKey, "1");
+            localStorage.setItem(unlockedPagesKey, JSON.stringify(pageInit.unlocked));
+            localStorage.setItem(currentPageKey, pageInit.number.toString());
         }
     };
 
@@ -168,6 +172,22 @@ const GameAddLayout = (page, setPage, setEntitiesData, setStructureData) => {
         setStructureData(prevState => ({ ...prevState, categories: getTransformedCategories() }));
     };
 
+    // FUNCTION 8: resetForm - function that resets the form to it's default state
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (1 possible outcome):
+    // all data in `localStorage` relating to adding a game is wiped, the unlocked pages are reset
+    // back to only the first, and the user is redirected back to the first page
+    const resetForm = () => {
+        // reset local storage
+        Object.values(keys).forEach(key => {
+            localStorage.removeItem(key);
+        });
+
+        // reset page state
+        setPage(pageInit);
+        restoreUnlockedPagesState();
+    };
+
     return { 
         pageNames,
         keys,
@@ -176,7 +196,8 @@ const GameAddLayout = (page, setPage, setEntitiesData, setStructureData) => {
         unlockNextPage,
         fetchEntitiesData,
         fetchStructureData,
-        updateStructureCategories
+        updateStructureCategories,
+        resetForm
     };
 };
 

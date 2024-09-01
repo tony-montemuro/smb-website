@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import styles from "./Sections.module.css";
+import Errorable from "./Errorable.jsx";
 import Sections from "./Sections.js";
 import Username from "../../../components/Username/Username.jsx";
 
@@ -17,15 +18,22 @@ function Metadata({ metadata, error }) {
 
       <div className={ styles.sectionContent }>
         <span>Name: { metadata.name }</span>
-        <span>Abbreviation: { metadata.abb }</span>
-        <span>Release Data: { metadata.release_date }</span>
+        <Errorable error={ error?.abb } renderMessage>
+          <span>Abbreviation: { metadata.abb }</span>
+        </Errorable>
+        <Errorable error={ error?.release_date } renderMessage>
+          <span>Release Data: { metadata.release_date }</span>
+        </Errorable>
+        
         { metadata.custom &&
-          <span>Minimum Data: { metadata.min_date }</span>
+          <Errorable error={ error?.min_date } renderMessage>
+            <span>Minimum Data: { metadata.min_date }</span>
+          </Errorable>
         }
 
         <span>Live Preference: { renderBoolean(metadata.live_preference) }</span>
-        
         <span>Custom Game: { renderBoolean(metadata.custom) }</span>
+
         { metadata.custom &&
           <>
             <span>Download URL: <a href={ metadata.download } target="_blank" rel="noreferrer">{ metadata.download }</a></span>

@@ -47,14 +47,20 @@ function GameAddSummary({ imageReducer }) {
     <Container title="Summary">
       <form className={ styles.summary } onSubmit={ e => createGame(e, metadata, entities, structure) }>
         <span>Use this screen to ensure all information is correct, and to create the game!</span>
-        <Metadata metadata={ metadata } error={ error.metadata } />
-        <GameEntities entities={ entities } error={ error.entities } />
-        <GameStructure structure={ structure } error={ error.structure } />
-        <GameAssets assets={ assets } imageReducer={ imageReducer } />
-        <button type="submit" className="center">
-          <SimpleLogo />
-          <span>Add Game</span>
-        </button>
+
+        { metadata && entities && structure &&
+          <>
+            <Metadata metadata={ metadata } error={ error.metadata } />
+            <GameEntities entities={ entities } error={ error.entities } />
+            <GameStructure structure={ structure } error={ error.structure } />
+            <GameAssets assets={ assets } imageReducer={ imageReducer } />
+            <button type="submit" className="center">
+              <SimpleLogo />
+              <h3>Add Game</h3>
+            </button>         
+          </>
+        }
+        
       </form>
     </Container>
   )

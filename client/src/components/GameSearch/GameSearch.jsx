@@ -11,6 +11,7 @@ import SearchBarInput from "../SearchBarInput/SearchBarInput";
 
 function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
   /* ===== STATES & FUNCTIONS ===== */
+  
   const [gameTypeFilter, setGameTypeFilter] = useState(undefined)
   const [pageNum, setPageNum] = useState(1);
   const [searchInput, setSearchInput] = useState("");

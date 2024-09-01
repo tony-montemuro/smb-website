@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import styles from "./Sections.module.css";
+import Errorable from "./Errorable.jsx";
 import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper.js";
 import LevelHelper from "../../../helper/LevelHelper.js";
@@ -22,7 +23,7 @@ function GameStructure({ structure, error }) {
           return (
             <div className={ styles.category } key={ category.category }>
               <h3>Category: { category.name }</h3>
-              <ModeLevels structure={ structure } category={ category.category } />
+              <ModeLevels structure={ structure } category={ category.category } error={ error } />
               { index < structure.category.length-1 ? <hr /> : null }
             </div>
           );
@@ -33,7 +34,7 @@ function GameStructure({ structure, error }) {
   );
 };
 
-function ModeLevels({ structure, category }) {
+function ModeLevels({ structure, category, error }) {
   /* ===== VARIABLES ===== */
   const modes = structure.mode.filter(mode => mode.category === category);
 
@@ -45,16 +46,20 @@ function ModeLevels({ structure, category }) {
   /* ===== MODE LEVELS COMPONENT ===== */
   return modes.map(mode => {
     const { id, name } = mode;
+    const errorMessage = error?.mode ? error.mode[id] : "";
+
     return (
       <div key={ `${ id }_${ name }` } className={ styles.mode }>
-        <span className={ styles.modeName }><strong>Mode: { levelB2F(name) }</strong></span>
-        <Levels structure={ structure } category={ category } mode={ name } />
+        <Errorable error={ errorMessage } renderMessage>
+          <span className={ styles.modeName }><strong>Mode: { levelB2F(name) }</strong></span>
+        </Errorable>
+        <Levels structure={ structure } category={ category } mode={ name } error={ error } />
       </div>
     );
   });
 };
 
-function Levels({ structure, category, mode }) {
+function Levels({ structure, category, mode, error }) {
   /* ===== VARIABLES ===== */
   const levels = structure.level.filter(level => level.category === category && level.mode.name === mode);
 
@@ -85,10 +90,11 @@ function Levels({ structure, category, mode }) {
           let { ascending, chart_type, goal, id, name, time, timer_type } = level;
           const ascendingScore = ascending === "score" || ascending === "both";
           const ascendingTime = ascending === "time" || ascending === "both";
+          const errorMessage = error?.level ? error?.level[id] : "";
           name = addGoalToLevelName(name, goal);
 
           return (
-            <tr key={ `${ id }_${ name }` }>
+            <tr key={ `${ id }_${ name }` } className={ errorMessage && styles.levelError } title={ errorMessage }>
               <td className={ styles.column }>{ id }</td>
               <td><FancyLevel level={ name } /></td>
               <td className={ styles.column }>{ capitalize(chart_type) }</td>

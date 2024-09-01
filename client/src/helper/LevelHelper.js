@@ -65,7 +65,14 @@ const LevelHelper = () => {
         return backendLevel;
     };
 
-    return { levelB2F, levelF2B };
+    // FUNCTION 3: addSyntaxToGoal - simple function that returns a goal string wrapped in snake case syntax
+    // PRECONDITIONS (1 parameter):
+    // 1.) goal: a string: "blue", "green", or "red"
+    // POSTCONDITIONS (1 possible outcome):
+    // the string is returned like so (ignore brackets): "_([goal])"
+    const addSyntaxToGoal = goal => `_(${ goal })`;
+
+    return { levelB2F, levelF2B, addSyntaxToGoal };
 };
 
 /* ===== EXPORTS ===== */

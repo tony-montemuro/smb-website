@@ -34,3 +34,17 @@
 .column {
     width: 10%;
 }
+
+.errorable {
+    width: fit-content;
+}
+
+.errorable span, .errorable h3 {
+    background-color: rgb(var(--color-error));
+    border-radius: 3px;
+    width: fit-content;
+}
+
+.category .mode .levelError {
+    background-color: rgb(var(--color-error));
+}

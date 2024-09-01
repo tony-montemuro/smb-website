@@ -137,7 +137,8 @@ const GameRead = () => {
                     release_date
                 `)
                 .order("custom")
-                .order("release_date");
+                .order("release_date")
+                .order("name");
 
             // error handling
             if (error) {
@@ -184,6 +185,7 @@ const GameRead = () => {
                 .or(`name.ilike.%${ userInput }%,abb.ilike.%${ userInput }%`)
                 .order("custom")
                 .order("release_date")
+                .order("name")
                 .range(start, end);
 
             // error handling
@@ -211,7 +213,8 @@ const GameRead = () => {
                 .select("abb, custom, name")
                 .in("abb", abbs)
                 .order("custom")
-                .order("release_date");
+                .order("release_date")
+                .order("name");    
 
             // error handling
             if (error) {

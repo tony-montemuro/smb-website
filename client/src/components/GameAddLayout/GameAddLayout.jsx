@@ -44,8 +44,9 @@ function GameAddLayout() {
     unlockNextPage,
     fetchEntitiesData,
     fetchStructureData,
-    updateStructureCategories
-  } = GameAddLayoutLogic(page, setPage, setEntitiesData, setStructureData);
+    updateStructureCategories,
+    resetForm
+  } = GameAddLayoutLogic(page, setPage, pageInit, setEntitiesData, setStructureData);
 
   /* ===== CONTEXT DATA ===== */
   const contextData = {
@@ -55,15 +56,18 @@ function GameAddLayout() {
     entitiesData,
     fetchEntitiesData,
     structureData,
-    updateStructureCategories
+    updateStructureCategories,
+    resetForm
   }
 
   /* ===== EFFECTS ===== */
 
-  // code that is executed when the component mounts AND when `appData` state is updated
+  // code that is executed when the component mounts AND when `appData` is changed
   useEffect(() => {
+    restoreUnlockedPagesState();
+
+    // code that executes when `appData` state is set
     if (appData) {
-      restoreUnlockedPagesState();
       fetchEntitiesData();
       fetchStructureData();
       setIsComponentMounted(true);

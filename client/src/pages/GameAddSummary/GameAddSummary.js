@@ -1,15 +1,26 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { GameAddContext, MessageContext } from "../../utils/Contexts";
 import { useContext } from "react";
 import GameAddValidation from "../../components/GameAddLayout/GameAddValidation";
+import LevelHelper from "../../helper/LevelHelper";
+import RPCUpdate from "../../database/update/RPCUpdate";
 
 const GameAddSummary = (setError) => {
     /* ===== CONTEXTS ===== */
+
+    // reset form function from game add context
+    const { resetForm } = useContext(GameAddContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
     /* ===== FUNCTIONS ===== */
+
+    // database functions
+    const { addGame } = RPCUpdate();
+
+    // helper functions
+    const { addSyntaxToGoal } = LevelHelper();
 
     // validation functions
     const { validateEntities, validateMetadata, validateStructure } = GameAddValidation();
@@ -21,7 +32,7 @@ const GameAddSummary = (setError) => {
     // POSTCONDITIONS (1 possible outcome):
     // a copy of `metadata` is returned, fixing the creator field
     const metadataToGame = metadata => {
-        return { ...metadata, creator: metadata.creator.id };
+        return { ...metadata, creator: metadata.creator?.id };
     }
 
     // FUNCTION 2: extractStructureData - takes the game's abb, as well as structure, and extracts mode and level information
@@ -36,12 +47,14 @@ const GameAddSummary = (setError) => {
         const mode = structure.mode.map(mode => {
             return { ...mode, game: abb };
         });
-        const level = structure.level.map(level => {
-            return {
-                ...level,
-                game: abb,
-                mode: level.mode.name
-            };
+        const level = structure.level.map(oldLevel => {
+            const { goal, ...level } = oldLevel;
+            if (goal) {
+                level.name += addSyntaxToGoal(goal);
+            }
+            level.game = abb;
+            level.mode = level.mode.name;
+            return level;
         });
 
         return { mode, level };
@@ -92,7 +105,7 @@ const GameAddSummary = (setError) => {
     // if the error object has at least one defined error message, return true
     // otherwise, return false
     const hasMessages = error => {
-        return error.some(message => message !== undefined);
+        return Object.values(error).some(message => message !== undefined);
     };
     
     // FUNCTION 5: getErrorMessage - function that determines the error message, based on the `errorList` object
@@ -102,13 +115,13 @@ const GameAddSummary = (setError) => {
     // a string is returned with the error message that should be rendered to the user
     const getErrorMessage = errorList => {
         const sections = [];
-        if (Object.values(errorList["metadata"]).some(error => hasMessages(error))) {
+        if (hasMessages(errorList["metadata"])) {
             sections.push("Main Information");
         }
-        if (Object.keys(errorList["entities"]).some(error => hasMessages(error))) {
+        if (hasMessages(errorList["entities"])) {
             sections.push("Game Entities");
         }
-        if (Object.keys(errorList["structure"]).some(error => hasMessages(error))) {
+        if (hasMessages(errorList["structure"])) {
             sections.push("Game Structure");
         }
 
@@ -116,13 +129,15 @@ const GameAddSummary = (setError) => {
         switch (sections.length) {
             case 1:
                 sectionStr = `${ sections[0] } section`;
+                break;
             case 2:
                 sectionStr = `${ sections.join(" and ") } sections`;
+                break;
             default:
                 sectionStr = `${ sections.join(", ") } sections`;
         }
 
-        return `Game could not be added, errors discovered in ${ sectionStr }. Go back to the problematic sections, fix the areas marked red, and try again. To ensure the problematic areas are fixed, you can always re-validate.`;
+        return `Game could not be added: errors discovered in ${ sectionStr }. Go back to the problematic sections, fix the areas marked red, and try again. To ensure the problematic areas are fixed, you can always re-validate.`;
     };
 
     // FUNCITON 6: createGame - code that is executed when the user requests to create the game
@@ -135,7 +150,7 @@ const GameAddSummary = (setError) => {
     // if the data is validated, and everything is uploaded properly, let the user know, and reset the `Add Game` form
     // if the data is validated, but some data fails to upload, let the user know what exactly failed, and return
     // if the data is invalid, let the user know where the issues lie, and return early 
-    const createGame = (e, metadata, entities, structure) => {
+    const createGame = async (e, metadata, entities, structure) => {
         e.preventDefault();
 
         // first, we need to validate the data one last time
@@ -144,7 +159,7 @@ const GameAddSummary = (setError) => {
         errorList["entities"] = validateEntities(entities);
         errorList["structure"] = validateStructure(structure);
 
-        // if there are any errors with messages
+        // if there are any errors with messages, return early
         setError(errorList);
         if (Object.values(errorList).some(error => hasMessages(error))) {
             addMessage(getErrorMessage(errorList), "error", 25000);
@@ -154,10 +169,20 @@ const GameAddSummary = (setError) => {
         // next, prepare the data for upload
         const game = metadataToGame(metadata);
         const abb = game.abb;
-        const { mode, level } = extractStructureData(abb, structure);
-        const { game_monkey, game_platform, game_profile, game_region, game_rule } = extractEntitiesData(abb, entities);
+        const entitiesData = extractEntitiesData(abb, entities);
+        const structureData = extractStructureData(abb, structure);
 
         // finally, upload data
+        try {
+            await addGame(game, entitiesData, structureData);
+
+            // if we made it this far, we have succeeded. we need to reset the form, and let the user know they were successful
+            resetForm();
+            addMessage(`${ game.name } was successfully added!`, "success", 6000);
+
+        } catch (error) {
+            addMessage(`There was a problem creating the game. If the issue persists, please contact TonySMB. Error returned by server: '${ error.message }'`, "error", 30000);
+        }
     };
 
     return { createGame };

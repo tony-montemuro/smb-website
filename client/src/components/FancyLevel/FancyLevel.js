@@ -10,16 +10,9 @@ const FancyLevel = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { levelB2F } = LevelHelper();
+    const { levelB2F, addSyntaxToGoal } = LevelHelper();
 
-    // FUNCTION 1: addSyntaxToGoal - simple function that returns a goal string wrapped in snake case syntax
-    // PRECONDITIONS (1 parameter):
-    // 1.) goal: a string: "blue", "green", or "red"
-    // POSTCONDITIONS (1 possible outcome):
-    // the string is returned like so (ignore brackets): "_([goal])"
-    const addSyntaxToGoal = goal => `_(${ goal })`;
-
-    // FUNCTION 2: getNameAndGoal - function that returns the cleaned name of the level, as well as the goal color, if there is one
+    // FUNCTION 1: getNameAndGoal - function that returns the cleaned name of the level, as well as the goal color, if there is one
     // PRECONDITIONS (1 parameter):
     // 1.) level: a string representing a level, in snake-case
     // POSTCONDITIONS (1 possible outcome):
