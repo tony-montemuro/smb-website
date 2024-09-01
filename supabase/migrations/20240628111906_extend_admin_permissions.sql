@@ -472,3 +472,51 @@ FOR UPDATE
 TO authenticated
 USING ((bucket_id = 'games'::text) AND (is_admin()) AND (storage.extension(name) = 'png'::text))
 WITH CHECK ((bucket_id = 'games'::text) AND (is_admin()) AND (storage.extension(name) = 'png'::text));
+
+-- Function for adding the game to the db
+CREATE FUNCTION add_game(game JSONB, modes JSONB, levels JSONB, game_monkeys JSONB, game_platforms JSONB, game_profiles JSONB, game_regions JSONB, game_rules JSONB)
+RETURNS VOID
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  -- Insert game
+  INSERT INTO game (abb, name, custom, release_date, creator, download, live_preference, min_date)
+  SELECT abb, name, custom, release_date, creator, download, live_preference, min_date
+  FROM jsonb_to_record(game) AS g(abb text, name text, custom boolean, release_date date, creator int, download text, live_preference boolean, min_date date);
+
+  -- Insert modes
+  INSERT INTO mode (game, name, category, id)
+  SELECT m.game, name, category, id
+  FROM jsonb_to_recordset(modes) AS m(game text, name text, category text, id int);
+
+  -- Insert levels
+  INSERT INTO level (game, name, category, id, mode, chart_type, time, timer_type, ascending)
+  SELECT l.game, name, category, id, mode, chart_type, time, timer_type, ascending
+  FROM jsonb_to_recordset(levels) AS l(game text, name text, category text, id int, mode text, chart_type chart_t, time float, timer_type timer_t, ascending chart_t);
+
+  -- Insert game monkeys
+  INSERT INTO game_monkey (game, monkey, id)
+  SELECT gm.game, monkey, id
+  FROM jsonb_to_recordset(game_monkeys) AS gm(game text, monkey int, id int);
+
+  -- Insert game platforms
+  INSERT INTO game_platform (game, platform, id)
+  SELECT gpl.game, platform, id
+  FROM jsonb_to_recordset(game_platforms) AS gpl(game text, platform int, id int);
+
+  -- Insert game profiles
+  INSERT INTO game_profile (game, profile)
+  SELECT gpr.game, profile
+  FROM jsonb_to_recordset(game_profiles) AS gpr(game text, profile int);
+
+  -- Insert game regions
+  INSERT INTO game_region (game, region, id)
+  SELECT gre.game, region, id
+  FROM jsonb_to_recordset(game_regions) AS gre(game text, region int, id int);
+
+  -- Insert game rules
+  INSERT INTO game_rule (abb, rule, id)
+  SELECT gru.game, rule, id
+  FROM jsonb_to_recordset(game_rules) AS gru(game text, rule int, id int);
+END;
+$$;
