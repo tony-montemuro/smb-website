@@ -22,6 +22,7 @@ function GameAddSummary({ imageReducer }) {
     entities: undefined,
     structure: undefined
   });
+  const [submitting, setSubmitting] = useState(false);
 
   /* ===== VARIABLES ===== */
   
@@ -40,12 +41,12 @@ function GameAddSummary({ imageReducer }) {
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file
-  const { createGame } = GameAddSummaryLogic(setError);
+  const { createGame } = GameAddSummaryLogic(setError, setSubmitting);
 
   /* ===== GAME ADD SUMMARY PAGE ===== */
   return (
     <Container title="Summary">
-      <form className={ styles.summary } onSubmit={ e => createGame(e, metadata, entities, structure) }>
+      <form className={ styles.summary } onSubmit={ e => createGame(e, metadata, entities, structure, assets) }>
         <span>Use this screen to ensure all information is correct, and to create the game!</span>
 
         { metadata && entities && structure &&
@@ -54,7 +55,7 @@ function GameAddSummary({ imageReducer }) {
             <GameEntities entities={ entities } error={ error.entities } />
             <GameStructure structure={ structure } error={ error.structure } />
             <GameAssets assets={ assets } imageReducer={ imageReducer } />
-            <button type="submit" className="center">
+            <button type="submit" className="center" disabled={ submitting }>
               <SimpleLogo />
               <h3>Add Game</h3>
             </button>         

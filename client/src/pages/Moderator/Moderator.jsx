@@ -20,7 +20,7 @@ function Moderator() {
   /* ===== MODERATOR COMPONENT ===== */
   return (
     <div className={ styles.moderator }>
-      <h1>Moderator</h1>
+      <h1>Moderation</h1>
 
       { /* About section - general information about moderators */ }
       <h2>About</h2>

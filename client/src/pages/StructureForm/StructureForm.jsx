@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import styles from "./StructureForm.module.css";
 import GoalAddForm from "../../components/GoalAddForm/GoalAddForm.jsx";
 import CategoryAddForm from "../../components/CategoryAddForm/CategoryAddForm.jsx";
+import ChartDefaultsForm from "./ChartDefaultsForm/ChartDefaultsForm.jsx";
 import Container from "../../components/Container/Container.jsx";
 import LevelList from "./LevelList/LevelList.jsx";
 import Loading from "../../components/Loading/Loading.jsx";
@@ -15,6 +16,14 @@ import StructureFormLogic from "./StructureForm.js";
 function StructureForm() {
   /* ===== VARIABLES ===== */
   const ADD_POPUP_WIDTH = "500px";
+  const chartDefaultsInit = {
+    name: "",
+    goal: "",
+    chart_type: "both",
+    time: 60,
+    timer_type: "sec_csec",
+    ascending: null
+  };
 
   /* ===== CONTEXTS ===== */
 
@@ -26,6 +35,7 @@ function StructureForm() {
 
   /* ===== STATES & FUNCTIONS ===== */
   const [isComponentMounted, setIsComponentMounted] = useState(false);
+  const [chartDefaults, setChartDefaults] = useState(chartDefaultsInit);
   const [submitting, setSubmitting] = useState(false);
 
   // states & functions from the js file
@@ -46,8 +56,9 @@ function StructureForm() {
     openCategoryPopup,
     closeCategoryPopup,
     openGoalPopup,
-    closeGoalPopup
-  } = StructureFormLogic();
+    closeGoalPopup,
+    handleChartDefaultsChange
+  } = StructureFormLogic(chartDefaults, setChartDefaults);
 
   /* ===== EFFECTS ===== */
 
@@ -186,6 +197,8 @@ function StructureForm() {
             </ul>
           </li>
         </ul>
+
+        <ChartDefaultsForm chartDefaults={ chartDefaults } handleChange={ handleChartDefaultsChange } />
         
         { /* Only render inputs if user has selected  */ }
         { structureData ?

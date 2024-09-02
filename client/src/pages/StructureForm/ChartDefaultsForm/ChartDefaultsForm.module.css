@@ -1,24 +1,13 @@
-.levelList {
+.formWrapper {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    padding-left: 20px;
 }
 
-.levelListBtn {
-    width: fit-content;
-    height: fit-content;
-}
-
-.level {
-    display: flex;
-}
-
-.levelInput {
+.form {
     display: flex;
     gap: 8px;
     align-items: center;
-    width: 100%;
 }
 
 .nameInput {

@@ -2,6 +2,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    --level-name-width: 40%;
+    --level-name-min-width: 300px;
 }
 
 .structureForm h3 {

@@ -60,16 +60,14 @@ const GameAddLayout = (page, setPage, pageInit, setEntitiesData, setStructureDat
 
     // FUNCTION 2: restoreUnlockedPagesState - function that executes when the GameAddLayout component mounts, or when
     // the form resets
-    // PRECONDITIONS (1 parameter):
-    // 1.) forceReset: an optional boolean parameter. when passed, we force a reset on the page state in local storage
+    // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
     // if the user has unlocked pages according to local storage, and we are NOT force resetting, restore unlocked pages to
     // reflect that
     // otherwise, this function sets local storage to 
-    const restoreUnlockedPagesState = (forceReset = false) => {
+    const restoreUnlockedPagesState = () => {
         const localUnlockedPages = JSON.parse(localStorage.getItem(unlockedPagesKey));
         const pageNumber = parseInt(localStorage.getItem(currentPageKey));
-        console.log(localUnlockedPages, pageNumber);
 
         if (localUnlockedPages) {
             setPage({ number: pageNumber, unlocked: localUnlockedPages });
