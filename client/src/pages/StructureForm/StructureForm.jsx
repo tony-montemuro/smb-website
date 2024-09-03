@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext, GameAddContext } from "../../utils/Contexts.js";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./StructureForm.module.css";
 import GoalAddForm from "../../components/GoalAddForm/GoalAddForm.jsx";
 import CategoryAddForm from "../../components/CategoryAddForm/CategoryAddForm.jsx";
@@ -14,6 +14,14 @@ import SelectList from "../../components/SelectList/SelectList.jsx";
 import StructureFormLogic from "./StructureForm.js";
 
 function StructureForm() {
+  /* ===== CONTEXTS ===== */
+
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
+
+  // structure data state & update structure categories function from game add context
+  const { structureData, updateStructureCategories } = useContext(GameAddContext);
+
   /* ===== VARIABLES ===== */
   const ADD_POPUP_WIDTH = "500px";
   const chartDefaultsInit = {
@@ -25,13 +33,15 @@ function StructureForm() {
     ascending: null
   };
 
-  /* ===== CONTEXTS ===== */
-
-  // appData state from app data context
-  const { appData } = useContext(AppDataContext);
-
-  // structure data state & update structure categories function from game add context
-  const { structureData, updateStructureCategories } = useContext(GameAddContext);
+  /* ===== MEMOS ===== */
+  const categories = useMemo(() => {
+    if (structureData) {
+      return {
+        "practice_mode_style": structureData.categories.filter(category => category.practice),
+        "non-practice_mode_style": structureData.categories.filter(category => !category.practice)
+      };
+    }
+  }, [structureData]);
 
   /* ===== STATES & FUNCTIONS ===== */
   const [isComponentMounted, setIsComponentMounted] = useState(false);
@@ -213,10 +223,7 @@ function StructureForm() {
                 error: form.error.category
               }}
               selectData={{ 
-                entities: {
-                  "practice_mode_style": structureData.categories.filter(category => category.practice),
-                  "non-practice_mode_style": structureData.categories.filter(category => !category.practice)
-                },
+                entities: categories,
                 valueAttribute: "abb",
                 entityName: "name",
               }}
