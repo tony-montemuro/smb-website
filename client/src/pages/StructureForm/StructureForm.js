@@ -47,7 +47,7 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
         UPDATE_MODE: { name: "UPDATE_MODE", updateLocal: false },
         DELETE_MODE: { name: "DELETE_MODE", updateLocal: true },
         INSERT_LEVEL: { name: "INSERT_LEVEL", updateLocal: true },
-        UPDATE_LEVEL: { name: "UPDATE_LEVEL", updateLocal: false },
+        UPDATE_LEVEL: { name: "UPDATE_LEVEL", updateLocal: true },
         DELETE_LEVEL: { name: "DELETE_LEVEL", updateLocal: true },
     };
 
@@ -502,7 +502,12 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
     // 1.) id: an integer representing the id of the mode the user wants to delete
     // POSTCONDITIONS (1 possible outcome):
     // the system will attempt to delete the mode
-    const handleModeDelete = id => dispatchForm({ type: dispatchTypes.DELETE_MODE.name, data: id });
+    const handleModeDelete = id => {
+        if (visibleCharts === id) {
+            setVisibleCharts(null);
+        }
+        dispatchForm({ type: dispatchTypes.DELETE_MODE.name, data: id });
+    }
 
     // FUNCTION 20: handleLevelInsert - function that is called when the user wants to add a new level to the list of levels
     // PRECONDITIONS (2 parameters):
@@ -571,9 +576,7 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
     // 1.) level: a level object
     // POSTCONDITIONS (1 possible outcome):
     // the level is updated to take the value of the parameter
-    const handleLevelChange = level => {
-        dispatchForm({ type: dispatchTypes.UPDATE_LEVEL.name, data: level });
-    };
+    const handleLevelChange = level => dispatchForm({ type: dispatchTypes.UPDATE_LEVEL.name, data: level });
 
     // FUNCTION 22: handleLevelDelete - code that is executed when the user decides to delete a level
     // PRECONDITIONS (1 parameter):

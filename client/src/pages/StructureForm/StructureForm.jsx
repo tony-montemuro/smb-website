@@ -225,6 +225,10 @@ function StructureForm() {
             </ul>
           </li>
         </ul>
+        <span>
+          Finally, you may face some <strong>browser performance issues</strong> on this screen in various places. Many measures were taken to reduce this issue, but it still remains a problem.
+          In the future, this may eventually be fixed.
+        </span>
 
         <ChartDefaultsForm chartDefaults={ chartDefaults } handleChange={ handleChartDefaultsChange } />
         
