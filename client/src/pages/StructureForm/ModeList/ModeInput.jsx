@@ -3,21 +3,25 @@ import styles from "./ModeList.module.css";
 import { cloneElement } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
+import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import FormHelperText from "@mui/material/FormHelperText";
 import LevelHelper from "../../../helper/LevelHelper.js";
 import TextField from "@mui/material/TextField";
 
 function ModeInput({ 
-  id, 
-  firstModeId, 
-  mode, 
-  category, 
-  handleBlur, 
-  handleChange, 
-  handleInsert, 
-  handleDelete, 
-  error = null, 
-  children 
+  id,
+  firstModeId,
+  mode,
+  category,
+  isVisibleCharts,
+  setVisibleCharts,
+  handleBlur,
+  handleChange,
+  handleInsert,
+  handleDelete,
+  error = null,
+  children
 }) {
   /* ===== VARIABLES ===== */
   const categoryName = category.category;
@@ -63,6 +67,15 @@ function ModeInput({
         >
           <DeleteIcon />
         </button>
+        <button
+          type="button"
+          title={ isVisibleCharts ? "Hide charts" : "Show charts" }
+          onClick={ () => isVisibleCharts ? setVisibleCharts(null) : setVisibleCharts(modeId) }
+          className="center"
+          id={ styles.toggleCharts }
+        >
+          { isVisibleCharts ? <ExpandMoreRoundedIcon sx={{ color: "white" }} /> : <ExpandLessRoundedIcon sx={{ color: "white" }} /> }
+        </button>
 
       </div>
 
@@ -70,7 +83,7 @@ function ModeInput({
         <FormHelperText error>{ error }</FormHelperText>
       }
       
-      { cloneElement(children, { mode, category }) }
+      { isVisibleCharts && cloneElement(children, { mode, category }) }
     </div>
   );
 };

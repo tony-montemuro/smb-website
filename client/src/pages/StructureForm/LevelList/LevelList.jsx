@@ -18,10 +18,9 @@ function LevelList({ levels, category, mode, handleBlur, handleChange, handleIns
         
         return (
           <LevelInput
-            id={ id }
             level={ level }
             formData={ formData }
-            category={ categoryName }
+            category={ category }
             mode={ mode }
             handleBlur={ handleBlur }
             handleChange={ handleChange }

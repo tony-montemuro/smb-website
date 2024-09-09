@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext } from "../../../utils/Contexts.js";
-import { useContext } from "react";
+import { useContext, memo } from "react";
 import styles from "./LevelList.module.css";
 import AddIcon from "@mui/icons-material/Add";
 import Checkbox from "@mui/material/Checkbox";
@@ -9,25 +9,33 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import FormHelperText from "@mui/material/FormHelperText";
 import LevelHelper from "../../../helper/LevelHelper.js";
+import LevelInputHelper from "./LevelInput.js";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import TextField from "@mui/material/TextField";
 
-function LevelInput({ id, level, formData, category, mode, handleBlur, handleChange, handleInsert, handleDelete, error }) {
+function LevelInput({ level, formData, category, mode, handleBlur, handleInsert, handleDelete, error }) {
   /* ===== CONTEXTS ===== */
 
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
 
   /* ===== VARIABLES ===== */
+  const categoryName = category.category;
   const scoreChartTypes = ["both", "score"];
   const timeChartTypes = ["both", "time"];
-  const isPracticeMode = appData.categories[category].practice;
+  const isPracticeMode = appData.categories[categoryName].practice;
 
-  /* ===== FUNCTIONS ===== */
+  /* ===== STATES & FUNCTIONS ===== */
+
+  // states & functions from the js file
+  const { localState, updateLocalState } = LevelInputHelper(level);
 
   // helper variables & functions
   const { capitalize, timerTypeB2F } = FrontendHelper();
   const { levelB2F } = LevelHelper();
+
+  /* ===== VARIABLES ===== */
+  const id = `level-${ category.id }-${ mode.id }-${ level.id }`;
 
   /* ===== LEVEL INPUT COMPONENT ===== */
   return (
@@ -37,20 +45,20 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
           className={ styles.nameInput }
           id={ `${ id }-name` }
           label="Name"
-          onBlur={ () => handleBlur() }
-          onChange={ e => handleChange(e) }
-          value={ levelB2F(level.name) }
+          onBlur={ () => handleBlur(localState) }
+          onChange={ e => updateLocalState(e) }
+          value={ levelB2F(localState.name) }
           variant="filled"
         />
 
         <TextField
           id={ `${ id }-goal` }
           label="Goal"
-          onBlur={ () => handleBlur() }
-          onChange={ e => handleChange(e) }
+          onBlur={ () => handleBlur(localState) }
+          onChange={ e => updateLocalState(e) }
           select
           SelectProps={ { native: true } }
-          value={ level.goal }
+          value={ localState.goal }
           variant="filled"
         >
           <option key="" value=""></option>
@@ -68,11 +76,11 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
           className={ styles.chartTypeInput }
           id={ `${ id }-chart_type` }
           label="Chart Type"
-          onBlur={ () => handleBlur() }
-          onChange={ e => handleChange(e) }
+          onBlur={ () => handleBlur(localState) }
+          onChange={ e => updateLocalState(e) }
           select
           SelectProps={ { native: true } }
-          value={ level.chart_type }
+          value={ localState.chart_type }
           variant="filled"
         >
           { formData.chartTypes.map(chartType => (
@@ -86,14 +94,14 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
         </TextField>
 
         <TextField
-          disabled={ level.chart_type === "score" }
+          disabled={ localState.chart_type === "score" }
           id={ `${ id }-timer_type` }
           label="Timer Type"
-          onBlur={ () => handleBlur() }
-          onChange={ e => handleChange(e) }
+          onBlur={ () => handleBlur(localState) }
+          onChange={ e => updateLocalState(e) }
           select
           SelectProps={ { native: true } }
-          value={ level.timer_type }
+          value={ localState.timer_type }
           variant="filled"
         >
           <option key="" value=""></option>
@@ -108,13 +116,13 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
         </TextField>
 
         <TextField
-          disabled={ level.chart_type === "score" || timeChartTypes.includes(level.ascending) }
+          disabled={ localState.chart_type === "score" || timeChartTypes.includes(localState.ascending) }
           id={ `${ id }-time` }
           label="Time (sec.)"
-          onBlur={ () => handleBlur() }
-          onChange={ e => handleChange(e) }
+          onBlur={ () => handleBlur(localState) }
+          onChange={ e => updateLocalState(e) }
           type="number"
-          value={ level.time }
+          value={ localState.time }
           variant="filled"
         />
 
@@ -124,11 +132,11 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
               <FormControlLabel 
                 control={ 
                   <Checkbox 
-                    checked={ scoreChartTypes.includes(level.ascending) } 
-                    disabled={ level.chart_type === "time" }
+                    checked={ scoreChartTypes.includes(localState.ascending) } 
+                    disabled={ localState.chart_type === "time" }
                     id={ `${ id }-ascending.score` } 
-                    onBlur={ () => handleBlur() }
-                    onChange={ e => handleChange(e) } 
+                    onBlur={ () => handleBlur(localState) }
+                    onChange={ e => updateLocalState(e) } 
                     inputProps={{ "aria-label": "controlled" }} 
                   />
                 } 
@@ -140,11 +148,11 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
               <FormControlLabel 
                 control={ 
                   <Checkbox 
-                    checked={ timeChartTypes.includes(level.ascending) } 
-                    disabled={ level.chart_type === "score" }
+                    checked={ timeChartTypes.includes(localState.ascending) } 
+                    disabled={ localState.chart_type === "score" }
                     id={ `${ id }-ascending.time` } 
-                    onBlur={ () => handleBlur() }
-                    onChange={ e => handleChange(e) } 
+                    onBlur={ () => handleBlur(localState) }
+                    onChange={ e => updateLocalState(e) }  
                     inputProps={{ "aria-label": "controlled" }} 
                   />
                 } 
@@ -158,7 +166,7 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
           type="button"
           title="Add chart"
           className={ `${ styles.levelListBtn } center` }
-          onClick={ () => handleInsert(category, mode, level.id+1) }
+          onClick={ () => handleInsert(categoryName, mode, localState.id+1) }
         >
           <AddIcon />
         </button>
@@ -167,7 +175,7 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
           type="button"
           title="Delete chart"
           className={ `${ styles.levelListBtn } center` }
-          onClick={ () => handleDelete(level.id) }
+          onClick={ () => handleDelete(localState.id) }
         >
           <DeleteIcon />
         </button>
@@ -182,4 +190,4 @@ function LevelInput({ id, level, formData, category, mode, handleBlur, handleCha
 };
 
 /* ===== EXPORTS ===== */
-export default LevelInput;
+export default memo(LevelInput);

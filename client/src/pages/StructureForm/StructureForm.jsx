@@ -33,16 +33,6 @@ function StructureForm() {
     ascending: null
   };
 
-  /* ===== MEMOS ===== */
-  const categories = useMemo(() => {
-    if (structureData) {
-      return {
-        "practice_mode_style": structureData.categories.filter(category => category.practice),
-        "non-practice_mode_style": structureData.categories.filter(category => !category.practice)
-      };
-    }
-  }, [structureData]);
-
   /* ===== STATES & FUNCTIONS ===== */
   const [isComponentMounted, setIsComponentMounted] = useState(false);
   const [chartDefaults, setChartDefaults] = useState(chartDefaultsInit);
@@ -52,6 +42,8 @@ function StructureForm() {
   const { 
     form,
     popup,
+    visibleCharts,
+    setVisibleCharts,
     updateLocal,
     populateForm,
     handleCategoryInsert,
@@ -69,6 +61,32 @@ function StructureForm() {
     closeGoalPopup,
     handleChartDefaultsChange
   } = StructureFormLogic(chartDefaults, setChartDefaults);
+
+  /* ===== MEMOS ===== */
+  const categories = useMemo(() => {
+    if (structureData) {
+      return {
+        "practice_mode_style": structureData.categories.filter(category => category.practice),
+        "non-practice_mode_style": structureData.categories.filter(category => !category.practice)
+      };
+    }
+  }, [structureData]);
+  const inputData = useMemo(() => {
+    return {
+      entityName: "category",
+      label: "Categories",
+      handleChange: handleCategoryUpdate,
+      handleInsert: handleCategoryInsert,
+      error: form.error.category
+    }
+  }, [form.error.category, handleCategoryInsert, handleCategoryUpdate]);
+  const selectData = useMemo(() => {
+    return {
+      entities: categories,
+      valueAttribute: "abb",
+      entityName: "name",
+    }
+  }, [categories]);
 
   /* ===== EFFECTS ===== */
 
@@ -215,23 +233,15 @@ function StructureForm() {
           <div style={ { width: "100%" } } className={ styles.structureForm }>
             <SelectList
               entities={ form.values.category }
-              inputData={{
-                entityName: "category",
-                label: "Categories",
-                handleChange: handleCategoryUpdate,
-                handleInsert: handleCategoryInsert,
-                error: form.error.category
-              }}
-              selectData={{ 
-                entities: categories,
-                valueAttribute: "abb",
-                entityName: "name",
-              }}
+              inputData={ inputData }
+              selectData={ selectData }
               colorBackgrounds
             >
               <ModeList 
                 modes={ form.values.mode }
                 handleBlur={ updateLocal }
+                visibleCharts={ visibleCharts }
+                setVisibleCharts={ setVisibleCharts }
                 handleInsert={ handleModeInsert }
                 handleChange={ handleModeUpdate }
                 handleDelete={ handleModeDelete }
@@ -239,9 +249,8 @@ function StructureForm() {
               >
                 <LevelList 
                   levels={ form.values.level }
-                  handleBlur={ updateLocal }
+                  handleBlur={ handleLevelChange }
                   handleInsert={ handleLevelInsert }
-                  handleChange={ handleLevelChange }
                   handleDelete={ handleLevelDelete }
                   formData={ structureData }
                   errors={ form.error.level }

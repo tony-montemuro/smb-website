@@ -37,3 +37,8 @@
 #addModeBtn {
     width: fit-content;
 }
+
+#toggleCharts {
+    background-color: transparent;
+    padding: 0;
+}

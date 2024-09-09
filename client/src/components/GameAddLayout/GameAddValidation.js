@@ -114,10 +114,10 @@ const GameAddValidation = () => {
     // 2.) errors: a spare array of error messages
     // 3.) duplicateMessage: the duplicate message we want to render to the user
     // POSTCONDITIONS (1 possible outcome):
-    // we iterate over the seen object values. if any have >1 ids, we append a duplication
+    // we iterate over the seen object values. if any have >1 ids, and have a name, we append a duplication error
     const duplicateCheck = (seen, errors, duplicateMessage) => {
-        Object.values(seen).forEach(idLists => {
-            if (idLists.length > 1) {
+        for (const [key, idLists] of Object.entries(seen)) {
+            if (idLists.length > 1 && JSON.parse(key).name !== "") {
                 idLists.forEach(id => {
                     if (errors[id]) {
                         errors[id] += duplicateMessage;
@@ -126,7 +126,7 @@ const GameAddValidation = () => {
                     }
                 });
             }
-        });
+        }
     };
 
     // FUNCTION 6: validateModes - function that validates each mode
