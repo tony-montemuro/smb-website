@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext } from "../../../utils/Contexts.js";
-import { useContext, memo } from "react";
+import { useContext } from "react";
 import styles from "./LevelList.module.css";
 import AddIcon from "@mui/icons-material/Add";
 import Checkbox from "@mui/material/Checkbox";
@@ -52,6 +52,7 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
         />
 
         <TextField
+          className={ styles.dropdown }
           id={ `${ id }-goal` }
           label="Goal"
           onBlur={ () => handleBlur(localState) }
@@ -73,7 +74,7 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
         </TextField>
 
         <TextField
-          className={ styles.chartTypeInput }
+          className={ styles.dropdown }
           id={ `${ id }-chart_type` }
           label="Chart Type"
           onBlur={ () => handleBlur(localState) }
@@ -94,6 +95,7 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
         </TextField>
 
         <TextField
+          className={ styles.wideDropdown }
           disabled={ localState.chart_type === "score" }
           id={ `${ id }-timer_type` }
           label="Timer Type"
@@ -116,6 +118,7 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
         </TextField>
 
         <TextField
+          className={ styles.dropdown }
           disabled={ localState.chart_type === "score" || timeChartTypes.includes(localState.ascending) }
           id={ `${ id }-time` }
           label="Time (sec.)"
@@ -190,4 +193,4 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
 };
 
 /* ===== EXPORTS ===== */
-export default memo(LevelInput);
+export default LevelInput;

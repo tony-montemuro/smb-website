@@ -50,6 +50,7 @@ function ChartDefaultsForm({ chartDefaults, handleChange }) {
               />
 
               <TextField
+                className={ styles.dropdown }
                 id="goal"
                 label="Goal"
                 onChange={ handleChange }
@@ -70,6 +71,7 @@ function ChartDefaultsForm({ chartDefaults, handleChange }) {
               </TextField>
 
               <TextField
+                className={ styles.dropdown }
                 id="chart_type"
                 label="Chart Type"
                 onChange={ handleChange }
@@ -89,6 +91,7 @@ function ChartDefaultsForm({ chartDefaults, handleChange }) {
               </TextField>
 
               <TextField
+                className={ styles.wideDropdown }
                 disabled={ chartDefaults.chart_type === "score" }
                 id="timer_type"
                 label="Timer Type"
@@ -110,6 +113,7 @@ function ChartDefaultsForm({ chartDefaults, handleChange }) {
               </TextField>
 
               <TextField
+                className={ styles.dropdown }
                 disabled={ chartDefaults.chart_type === "score" || timeChartTypes.includes(chartDefaults.ascending) }
                 id="time"
                 label="Time (sec.)"

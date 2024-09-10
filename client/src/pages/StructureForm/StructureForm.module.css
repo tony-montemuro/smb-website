@@ -4,6 +4,8 @@
     gap: 10px;
     --level-name-width: 40%;
     --level-name-min-width: 300px;
+    --dropdown-min-width: 86px;
+    --dropdown-wide-min-width: 203px;
 }
 
 .structureForm h3 {
