@@ -73,40 +73,42 @@ function Levels({ structure, category, mode, error }) {
 
   /* ===== LEVELS COMPONENT ===== */
   return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th className={ styles.column }>ID</th>
-          <th>Name</th>
-          <th className={ styles.column }>Chart Type</th>
-          <th className={ styles.column }>Timer Type</th>
-          <th className={ styles.column }>Time</th>
-          <th className={ styles.column }>Ascending Score</th>
-          <th className={ styles.column }>Ascending Time</th>
-        </tr>
-      </thead>
-      <tbody>
-        { levels.map(level => {
-          let { ascending, chart_type, goal, id, name, time, timer_type } = level;
-          const ascendingScore = ascending === "score" || ascending === "both";
-          const ascendingTime = ascending === "time" || ascending === "both";
-          const errorMessage = error?.level ? error?.level[id] : "";
-          name = addGoalToLevelName(name, goal);
+    <div className={ styles.levels }>
+      <table className="table">
+        <thead>
+          <tr>
+            <th className={ styles.column }>ID</th>
+            <th>Name</th>
+            <th className={ styles.column }>Chart Type</th>
+            <th className={ styles.column }>Timer Type</th>
+            <th className={ styles.column }>Time</th>
+            <th className={ styles.column }>Ascending Score</th>
+            <th className={ styles.column }>Ascending Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          { levels.map(level => {
+            let { ascending, chart_type, goal, id, name, time, timer_type } = level;
+            const ascendingScore = ascending === "score" || ascending === "both";
+            const ascendingTime = ascending === "time" || ascending === "both";
+            const errorMessage = error?.level ? error?.level[id] : "";
+            name = addGoalToLevelName(name, goal);
 
-          return (
-            <tr key={ `${ id }_${ name }` } className={ errorMessage && styles.levelError } title={ errorMessage }>
-              <td className={ styles.column }>{ id }</td>
-              <td><FancyLevel level={ name } /></td>
-              <td className={ styles.column }>{ capitalize(chart_type) }</td>
-              <td className={ styles.column }>{ timerTypeB2F(timer_type) }</td>
-              <td className={ styles.column }>{ time }</td>
-              <td className={ styles.column }>{ renderBoolean(ascendingScore) }</td>
-              <td className={ styles.column }>{ renderBoolean(ascendingTime) }</td>
-            </tr>
-          );
-      })}
-      </tbody>
-    </table>
+            return (
+              <tr key={ `${ id }_${ name }` } className={ errorMessage && styles.levelError } title={ errorMessage }>
+                <td className={ styles.column }>{ id }</td>
+                <td><FancyLevel level={ name } /></td>
+                <td className={ styles.column }>{ capitalize(chart_type) }</td>
+                <td className={ styles.column }>{ timerTypeB2F(timer_type) }</td>
+                <td className={ styles.column }>{ time }</td>
+                <td className={ styles.column }>{ renderBoolean(ascendingScore) }</td>
+                <td className={ styles.column }>{ renderBoolean(ascendingTime) }</td>
+              </tr>
+            );
+        })}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

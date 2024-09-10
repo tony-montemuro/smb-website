@@ -36,7 +36,9 @@ function Metadata({ metadata, error }) {
 
         { metadata.custom &&
           <>
-            <span>Download URL: <a href={ metadata.download } target="_blank" rel="noreferrer">{ metadata.download }</a></span>
+            <span id={ styles.download }>
+              Download URL: <a href={ metadata.download } target="_blank" rel="noreferrer">{ metadata.download }</a>
+            </span>
             <span>Creator:&nbsp;&nbsp;<Username profile={ metadata.creator } disableLink /></span>
           </>
         }

@@ -31,6 +31,10 @@
     padding-left: 10px;
 }
 
+.levels {
+    overflow-x: auto;
+}
+
 .column {
     width: 10%;
 }
@@ -47,4 +51,8 @@
 
 .category .mode .levelError {
     background-color: rgb(var(--color-error));
+}
+
+#download {
+    word-break: break-all;
 }

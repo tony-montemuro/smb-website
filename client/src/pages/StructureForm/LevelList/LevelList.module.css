@@ -1,8 +1,11 @@
+.leftPadding {
+    padding-left: 20px;
+}
+
 .levelList {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    padding-left: 20px;
     overflow-x: auto;
 }
 
@@ -22,15 +25,15 @@
     width: 100%;
 }
 
-.nameInput {
+.levelInput .nameInput {
     width: var(--level-name-width);
     min-width: var(--level-name-min-width);
 }
 
-.dropdown {
+.levelInput .dropdown {
     min-width: var(--dropdown-min-width);
 }
 
-.wideDropdown {
+.levelInput .wideDropdown {
     min-width: var(--dropdown-wide-min-width);
 }
