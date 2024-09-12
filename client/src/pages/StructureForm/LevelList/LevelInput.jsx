@@ -19,12 +19,6 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
 
-  /* ===== VARIABLES ===== */
-  const categoryName = category.category;
-  const scoreChartTypes = ["both", "score"];
-  const timeChartTypes = ["both", "time"];
-  const isPracticeMode = appData.categories[categoryName].practice;
-
   /* ===== STATES & FUNCTIONS ===== */
 
   // states & functions from the js file
@@ -35,7 +29,19 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
   const { levelB2F } = LevelHelper();
 
   /* ===== VARIABLES ===== */
+  const categoryName = category.category;
+  const scoreChartTypes = ["both", "score"];
+  const timeChartTypes = ["both", "time"];
+  const isPracticeMode = appData.categories[categoryName].practice;
+  const chartType = localState.chart_type;
   const id = `level-${ category.id }-${ mode.id }-${ level.id }`;
+  let timeTitle;
+  if (chartType === "score") {
+    timeTitle = "Score charts cannot have a time.";
+  }
+  if (timeChartTypes.includes(localState.ascending)) {
+    timeTitle = "Ascending time charts cannot have a time.";
+  }
 
   /* ===== LEVEL INPUT COMPONENT ===== */
   return (
@@ -96,13 +102,14 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
 
         <TextField
           className={ styles.wideDropdown }
-          disabled={ localState.chart_type === "score" }
+          disabled={ chartType === "score" }
           id={ `${ id }-timer_type` }
           label="Timer Type"
           onBlur={ () => handleBlur(localState) }
           onChange={ e => updateLocalState(e) }
           select
           SelectProps={ { native: true } }
+          title={ chartType === "score" ? "Score charts cannot have a timer type." : null }
           value={ localState.timer_type }
           variant="filled"
         >
@@ -119,11 +126,12 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
 
         <TextField
           className={ styles.dropdown }
-          disabled={ localState.chart_type === "score" || timeChartTypes.includes(localState.ascending) }
+          disabled={ chartType === "score" || timeChartTypes.includes(localState.ascending) }
           id={ `${ id }-time` }
           label="Time (sec.)"
           onBlur={ () => handleBlur(localState) }
           onChange={ e => updateLocalState(e) }
+          title={ timeTitle }
           type="number"
           value={ localState.time }
           variant="filled"
@@ -131,32 +139,32 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
 
         { !isPracticeMode && 
           <>
-            <FormGroup>
+            <FormGroup title={ chartType === "time" ? "Cannot ascend score if chart type is time." : null }>
               <FormControlLabel 
                 control={ 
                   <Checkbox 
                     checked={ scoreChartTypes.includes(localState.ascending) } 
-                    disabled={ localState.chart_type === "time" }
-                    id={ `${ id }-ascending.score` } 
-                    onBlur={ () => handleBlur(localState) }
-                    onChange={ e => updateLocalState(e) } 
+                    disabled={ chartType === "time" }
+                    id={ `${ id }-ascending.score` }
                     inputProps={{ "aria-label": "controlled" }} 
+                    onBlur={ () => handleBlur(localState) }
+                    onChange={ e => updateLocalState(e) }
                   />
                 } 
                 label="Ascend Score" 
               />
             </FormGroup>
 
-            <FormGroup>
+            <FormGroup title={ chartType === "score" ? "Cannot ascend time if chart type is score." : null }>
               <FormControlLabel 
                 control={ 
                   <Checkbox 
-                    checked={ timeChartTypes.includes(localState.ascending) } 
-                    disabled={ localState.chart_type === "score" }
-                    id={ `${ id }-ascending.time` } 
+                    checked={ timeChartTypes.includes(localState.ascending) }
+                    disabled={ chartType === "score" }
+                    id={ `${ id }-ascending.time` }
+                    inputProps={{ "aria-label": "controlled" }}
                     onBlur={ () => handleBlur(localState) }
-                    onChange={ e => updateLocalState(e) }  
-                    inputProps={{ "aria-label": "controlled" }} 
+                    onChange={ e => updateLocalState(e) }
                   />
                 } 
                 label="Ascend Time"

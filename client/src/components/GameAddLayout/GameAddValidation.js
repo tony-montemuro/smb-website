@@ -30,6 +30,27 @@ const GameAddValidation = () => {
         }
     };
 
+    // FUNCTION 2: validateMinDate - function that validates the metadata min_date form field
+    // PRECONDITIONS (2 parameters):
+    // 1.) minDate: a string, which will correspond to the `min_date` field of the game table
+    // 2.) releaseDate: a string, which will correspond to the `release_date` field of the game table
+    // POSTCONDITIONS (2 possible outcomes):
+    // if minDate is invalid, or occurs AFTER the release date, return a string that contains the error message
+    // if minDate is determined to be valid, return undefined
+    const validateMinDate = (minDate, releaseDate) => {
+        let error = validateDate(minDate);
+        if (error) {
+            return error;
+        }
+
+        minDate = new Date(minDate).getTime();
+        releaseDate = new Date(releaseDate).getTime();
+        if (minDate > releaseDate) {
+            error = "Minimum Date cannot be after release date.";
+        }
+        return error;
+    };
+
     // FUNCTION 2: validateEntityList - function that ensures each entity list is non-empty
     // PRECONDTIONS (2 parameters):
     // 1.) entities: the entities object from the `EntitiesForm`
