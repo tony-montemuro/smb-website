@@ -432,6 +432,15 @@ RETURNS BOOLEAN AS $$
   SELECT input ~ '^[a-zA-Z0-9\-_.!~*''()%]+$';
 $$ LANGUAGE sql;
 
+-- Constraints on game table
+ALTER TABLE game
+ADD CONSTRAINT abb_valid
+CHECK(abb ~ '^[a-z0-9]+$');
+
+ALTER TABLE game
+ADD CONSTRAINT date_constraint
+CHECK (min_date <= release_date);
+
 -- Constraints on mode & level table
 ALTER TABLE mode
 ADD CONSTRAINT name_url_valid 
