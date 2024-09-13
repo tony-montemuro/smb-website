@@ -1,7 +1,9 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext, GameAddContext } from "../../utils/Contexts.js";
 import { useContext } from "react";
+import { isBefore } from "date-fns";
 import { isLowerAlphaNumeric, isUrlSafe } from "../../utils/RegexPatterns.js";
+import DateHelper from "../../helper/DateHelper.js";
 import ValidationHelper from "../../helper/ValidationHelper.js";
 
 const GameAddValidation = () => {
@@ -16,6 +18,7 @@ const GameAddValidation = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
+    const { getInclusiveDate } = DateHelper();
     const { validateDate } = ValidationHelper();
 
     // FUNCTION 1: validateAbb - function that validates the metadata abb form field
@@ -30,7 +33,27 @@ const GameAddValidation = () => {
         }
     };
 
-    // FUNCTION 2: validateMinDate - function that validates the metadata min_date form field
+    // FUNCTION 2: validateReleaseDate - function that validates the metadata release date form field
+    // PRECONDITIONS (1 parameter):
+    // 1.) releaseDate: a string, which represents a date. specifically, the release date of the game
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the relaseDate is not a valid date, or occurs after today, return a string containing the error message
+    // if the releaseDate is determined to be valid, return undefined
+    const validateReleaseDate = releaseDate => {
+        let error = validateDate(releaseDate);
+        if (error) {
+            return error;
+        }
+
+        let today = new Date();
+        today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        if (!isBefore(new Date(releaseDate), getInclusiveDate(today.toLocaleDateString("en-CA")))) {
+            error = "Release date cannot be in the future.";
+        }
+        return error;
+    };
+
+    // FUNCTION 3: validateMinDate - function that validates the metadata min_date form field
     // PRECONDITIONS (2 parameters):
     // 1.) minDate: a string, which will correspond to the `min_date` field of the game table
     // 2.) releaseDate: a string, which will correspond to the `release_date` field of the game table
@@ -43,15 +66,13 @@ const GameAddValidation = () => {
             return error;
         }
 
-        minDate = new Date(minDate).getTime();
-        releaseDate = new Date(releaseDate).getTime();
-        if (minDate > releaseDate) {
-            error = "Minimum Date cannot be after release date.";
+        if (!isBefore(new Date(minDate), getInclusiveDate(releaseDate))) {
+            error = "Minimum Date cannot be after Release Date.";
         }
         return error;
     };
 
-    // FUNCTION 2: validateEntityList - function that ensures each entity list is non-empty
+    // FUNCTION 4: validateEntityList - function that ensures each entity list is non-empty
     // PRECONDTIONS (2 parameters):
     // 1.) entities: the entities object from the `EntitiesForm`
     // 2.) entityName: a string containing the name of the entity list we want to validate
@@ -66,7 +87,7 @@ const GameAddValidation = () => {
         return `Must select at least one ${ entityName }.`;
     };
 
-    // FUNCTION 3: validateCategories - function that validates each category
+    // FUNCTION 5: validateCategories - function that validates each category
     // PRECONDITIONS (2 parameters):
     // 1.) categories - the list of categories we want to validate
     // 2.) modes - the list of modes from the structure object
@@ -110,7 +131,7 @@ const GameAddValidation = () => {
         return errorMsg ? errorMsg.slice(0, -1) : undefined;
     };
 
-    // FUNCTION 4: handleErrorReturn - function that is called at the end of certain validator functions to handle the return
+    // FUNCTION 6: handleErrorReturn - function that is called at the end of certain validator functions to handle the return
     // PRECONDITION (1 parameter):
     // 1.) errors: an array of errors
     // POSTCONDITIONS (2 possible outcomes):
@@ -129,7 +150,7 @@ const GameAddValidation = () => {
         return errors;
     };
 
-    // FUNCTION 5: duplicateCheck - generic function that checks a "seen" object for duplicates, & updates errors accordingly
+    // FUNCTION 7: duplicateCheck - generic function that checks a "seen" object for duplicates, & updates errors accordingly
     // PRECONDITIONS (3 parameters):
     // 1.) seen: an object, that maps some key to an array of ids
     // 2.) errors: a spare array of error messages
@@ -150,7 +171,7 @@ const GameAddValidation = () => {
         }
     };
 
-    // FUNCTION 6: validateModes - function that validates each mode
+    // FUNCTION 8: validateModes - function that validates each mode
     // PRECONDITIONS (3 parameters):
     // 1.) modes - the list of modes we want to validate
     // 2.) categories - the list of categories from the structure object
@@ -214,7 +235,7 @@ const GameAddValidation = () => {
         return handleErrorReturn(errors);
     };
 
-    // FUNCTION 7: validateLevels - function that validates each level
+    // FUNCTION 9: validateLevels - function that validates each level
     // PRECONDITIONS (3 parameters):
     // 1.) levels - the list of levels we want to validate
     // 2.) categories - the list of categories from the structure object
@@ -336,7 +357,7 @@ const GameAddValidation = () => {
         return handleErrorReturn(errors);
     };
 
-    // FUNCTION 8: validateMetadata - function that validates data from the metadata form
+    // FUNCTION 10: validateMetadata - function that validates data from the metadata form
     // PRECONDITIONS (1 parameter):
     // 1.) metadata: the metadata object we need to validate
     // POSTCONDITIONS (1 possible outcome):
@@ -345,15 +366,15 @@ const GameAddValidation = () => {
         const error = {};
 
         error.abb = validateAbb(metadata.abb);
-        error.release_date = validateDate(metadata.release_date);
+        error.release_date = validateReleaseDate(metadata.release_date);
         if (metadata.custom) {
-            error.min_date = validateDate(metadata.min_date);
+            error.min_date = validateMinDate(metadata.min_date);
         }
 
         return error;
     };
 
-    // FUNCTION 9: validateEntities - function that validates data from the entities form
+    // FUNCTION 11: validateEntities - function that validates data from the entities form
     // PRECONDITIONS (1 parameter):
     // 1.) entities: the entites object we need to validate
     // POSTCONDITIONS (1 possible outcome):
@@ -371,7 +392,7 @@ const GameAddValidation = () => {
         return error;
     };
 
-    // FUNCTION 10: validateStructure - function that validates data from the structures form
+    // FUNCTION 12: validateStructure - function that validates data from the structures form
     // PRECONDITIONS (1 parameter):
     // 1.) structure: the structure object we need to validate
     // POSTCONDITIONS (1 possible outcome):

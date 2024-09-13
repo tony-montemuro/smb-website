@@ -73,8 +73,10 @@ const MetadataForm = () => {
             case "values":
                 const updatedValues = { ...state.values, ...value };
 
-                // special case: if we are updating the creator id, we update local storage as well with updated data
-                if (Object.hasOwn(value, "creator")) {
+                // special case: if we are updating the creator id, release date, or min date, we update local storage with 
+                // updated data
+                const needsUpdates = ["creator", "release_date", "min_date"];
+                if (Object.keys(value).some(key => needsUpdates.includes(key))) {
                     updateLocal(updatedValues);
                 }
 
@@ -149,6 +151,7 @@ const MetadataForm = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the field is updated using the date the user selected by the date picker
     const handleDateChange = (e, id) => {
+        let value = {};
         let date = null;
 
         if (e && !isNaN(e.$D)) {
@@ -157,9 +160,21 @@ const MetadataForm = () => {
             const month = String(d.getMonth()+1).padStart(2, "0");
             const day = String(d.getDate()).padStart(2, "0");
             date = `${ year }-${ month }-${ day }`;
+            value[id] = date;
+            
+            // update minDate, if necessary
+            if (id === "release_date") {
+                const releaseDate = new Date(date).getTime();
+                const minDate = form.values.min_date ? new Date(form.values.min_date).getTime() : null;
+
+                // if game is not custom, OR min date is after release date
+                if (!form.values.custom || (releaseDate > 0 && minDate > 0 && minDate > releaseDate)) {
+                    value.min_date = date;
+                }
+            }
         }
 
-        dispatchForm({ field: "values", value: { [id]: date } });
+        dispatchForm({ field: "values", value });
     };
 
     // FUNCTION 6: validateAndUpdate - function that attempts to validate form values
