@@ -109,6 +109,7 @@ $$;
 ALTER TABLE game
 DROP COLUMN id;
 
+-- Enable admins to create new profiles
 DROP POLICY "Enable authenticated users to insert their own row" ON profile;
 
 CREATE POLICY "Enable insert for admins, & authenticated users their own row"
@@ -234,13 +235,13 @@ AS $$
   ) submission_row
 $$;
 
--- INSERT PERMISSIONS
+-- INSERT PERMISSIONS FOR ADMINS
 CREATE POLICY "Enable insert for administrators"
 ON category
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 CREATE POLICY "Enable insert for administrators"
@@ -248,7 +249,7 @@ ON game
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 CREATE POLICY "Enable insert for administrators"
@@ -256,7 +257,7 @@ ON game_monkey
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 CREATE POLICY "Enable insert for administrators"
@@ -264,7 +265,7 @@ ON game_platform
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 CREATE POLICY "Enable insert for administrators"
@@ -272,7 +273,7 @@ ON game_region
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 CREATE POLICY "Enable insert for administrators"
@@ -280,7 +281,7 @@ ON game_rule
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 CREATE POLICY "Enable insert for administrators"
@@ -288,7 +289,7 @@ ON level
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 CREATE POLICY "Enable insert for administrators"
@@ -296,7 +297,7 @@ ON mode
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 CREATE POLICY "Enable insert for administrators"
@@ -304,7 +305,7 @@ ON monkey
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 CREATE POLICY "Enable insert for administrators"
@@ -312,7 +313,7 @@ ON platform
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 CREATE POLICY "Enable insert for administrators"
@@ -320,7 +321,7 @@ ON region
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 CREATE POLICY "Enable insert for administrators"
@@ -328,7 +329,7 @@ ON rule
 FOR INSERT
 TO authenticated
 WITH CHECK (
-    (is_admin())
+  (is_admin())
 );
 
 -- Let's switch from integers to sequences for "entity" primary keys
@@ -434,12 +435,20 @@ $$ LANGUAGE sql;
 
 -- Constraints on game table
 ALTER TABLE game
-ADD CONSTRAINT abb_valid
-CHECK(abb ~ '^[a-z0-9]+$');
+ADD CONSTRAINT game_abb_valid
+CHECK (abb ~ '^[a-z0-9]+$');
 
 ALTER TABLE game
-ADD CONSTRAINT date_constraint
+ADD CONSTRAINT game_date_constraint
 CHECK (min_date <= release_date);
+
+ALTER TABLE game
+ADD CONSTRAINT game_name_constraint
+CHECK (length(name) > 0);
+
+ALTER TABLE game
+ADD CONSTRAINT game_download_constraint
+CHECK (download IS NULL OR length(download) > 0);
 
 -- Constraints on mode & level table
 ALTER TABLE mode
