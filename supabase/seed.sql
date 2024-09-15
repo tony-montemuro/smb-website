@@ -880,16 +880,12 @@ INSERT INTO "public"."mode" (game, name, id, category) VALUES
 	('hgs', 'master', 7, 'main'),
 	('hgs', 'master_extra', 8, 'main');
 
-ALTER TYPE "public"."timer_t" ADD VALUE 'sec_msec' AFTER 'sec_csec';
-ALTER TYPE "public"."timer_t" ADD VALUE 'min_sec_msec' AFTER 'min_sec_csec';
-ALTER TYPE "public"."timer_t" ADD VALUE 'hour_min_sec_msec' AFTER 'hour_min_sec_csec';
-
 --
 -- Data for Name: level; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO "public"."level" (id, game, mode, name, chart_type, "time", category, timer_type, ascending) VALUES
-	    (17, '651', 'world_2', 'world_2-7_-_fun_house_(blue)', 'both', 60, 'main', 'sec_csec', NULL),
+	(17, '651', 'world_2', 'world_2-7_-_fun_house_(blue)', 'both', 60, 'main', 'sec_csec', NULL),
 	(196, 'stardust', 'world_10', 'world_10-8_-_butterfly_(green)', 'both', 300, 'main', 'sec_csec', NULL),
 	(2, 'smb1', 'beginner', 'beginner_2', 'both', 60, 'main', 'sec_csec', NULL),
 	(2, 'smb2', 'beginner', 'beginner_2_-_hollow', 'both', 60, 'main', 'sec_csec', NULL),

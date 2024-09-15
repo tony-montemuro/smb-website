@@ -235,7 +235,7 @@ AS $$
   ) submission_row
 $$;
 
--- INSERT PERMISSIONS FOR ADMINS
+-- Insert permissions for admins
 CREATE POLICY "Enable insert for administrators"
 ON category
 FOR INSERT
@@ -435,8 +435,8 @@ $$ LANGUAGE sql;
 
 -- Constraints on game table
 ALTER TABLE game
-ADD CONSTRAINT game_abb_valid
-CHECK (abb ~ '^[a-z0-9]+$');
+ADD CONSTRAINT game_abb_constraint
+CHECK (abb ~ '^[a-z0-9]{1,12}$');
 
 ALTER TABLE game
 ADD CONSTRAINT game_date_constraint
@@ -450,11 +450,12 @@ ALTER TABLE game
 ADD CONSTRAINT game_download_constraint
 CHECK (download IS NULL OR length(download) > 0);
 
--- Constraints on mode & level table
+-- Constraints on mode table
 ALTER TABLE mode
 ADD CONSTRAINT name_url_valid 
 CHECK (is_url_safe(name) AND length(name) > 0);
 
+-- Constraints on level table
 ALTER TABLE level
 ADD CONSTRAINT name_url_valid
 CHECK (is_url_safe(name) AND length(name) > 0);
