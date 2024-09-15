@@ -1,9 +1,8 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext, GameAddContext } from "../../utils/Contexts.js";
 import { useContext } from "react";
-import { isBefore } from "date-fns";
+import { isAfter } from "date-fns";
 import { isLowerAlphaNumeric, isUrlSafe } from "../../utils/RegexPatterns.js";
-import DateHelper from "../../helper/DateHelper.js";
 import ValidationHelper from "../../helper/ValidationHelper.js";
 
 const GameAddValidation = () => {
@@ -18,7 +17,6 @@ const GameAddValidation = () => {
     /* ===== FUNCTIONS ===== */
 
     // helper functions
-    const { getInclusiveDate } = DateHelper();
     const { validateDate } = ValidationHelper();
 
     // FUNCTION 1: validateAbb - function that validates the metadata abb form field
@@ -45,9 +43,13 @@ const GameAddValidation = () => {
             return error;
         }
 
+        // convert today and releaseDate to have the same time
         let today = new Date();
         today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        if (!isBefore(new Date(releaseDate), getInclusiveDate(today.toLocaleDateString("en-CA")))) {
+        const [year, month, day] = releaseDate.split("-").map(num => parseInt(num));
+        releaseDate = new Date(year, month-1, day);
+        
+        if (isAfter(releaseDate, today)) {
             error = "Release date cannot be in the future.";
         }
         return error;
@@ -66,7 +68,10 @@ const GameAddValidation = () => {
             return error;
         }
 
-        if (!isBefore(new Date(minDate), getInclusiveDate(releaseDate))) {
+        minDate = new Date(minDate);
+        releaseDate = new Date(releaseDate);
+        
+        if (isAfter(minDate, releaseDate)) {
             error = "Minimum Date cannot be after Release Date.";
         }
         return error;
@@ -368,7 +373,7 @@ const GameAddValidation = () => {
         error.abb = validateAbb(metadata.abb);
         error.release_date = validateReleaseDate(metadata.release_date);
         if (metadata.custom) {
-            error.min_date = validateMinDate(metadata.min_date);
+            error.min_date = validateMinDate(metadata.min_date, metadata.release_date);
         }
 
         return error;

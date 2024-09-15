@@ -105,7 +105,6 @@ function MetadataForm() {
         />
 
         <DatePicker 
-          color={ form.error.release_date ? "error" : "primary" }
           disableHighlightToday
           disableFuture
           format="YYYY-MM-DD"
@@ -115,10 +114,12 @@ function MetadataForm() {
           onChange={ (e) => handleDateChange(e, "release_date") }
           slotProps={{
             field: { clearable: false },
-            textField: { 
+            textField: {
+              error: form.error.release_date ? true : false,
               helperText: form.error.release_date && form.error.release_date,
               variant: "filled", 
-              onBlur: () => updateLocal() // onBlur here for manual date entry
+              onBlur: () => updateLocal(), // onBlur here for manual date entry
+              required: true
             }
           }}
           value={ dayjs(form.values.release_date) }
@@ -157,7 +158,6 @@ function MetadataForm() {
         { /* Only render certain fields if this is a custom game */ }
         { form.values.custom && 
           <>
-            {console.log(form.error.min_date)}
             <DatePicker 
               disableHighlightToday
               disableFuture
@@ -171,10 +171,11 @@ function MetadataForm() {
               slotProps={{
                 field: { clearable: false },
                 textField: {
-                  color: form.error.min_date ? "error" : "primary",
+                  error: form.error.min_date ? true : false,
                   helperText: form.error.min_date && form.error.min_date, 
                   variant: "filled", 
-                  onBlur: () => updateLocal() // onBlur here for manual date entry
+                  onBlur: () => updateLocal(), // onBlur here for manual date entry
+                  required: true
                 }
               }}
               value={ dayjs(form.values.min_date) }
