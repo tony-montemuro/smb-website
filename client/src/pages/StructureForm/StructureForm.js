@@ -105,7 +105,6 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
         errors = errors ? [...errors] : undefined;
 
         // find incidies of elements whose id is >= `id`
-        debugger;
         const largerElementIndicies = elements.reduce((arr, element, index) => {
             if (element.id >= id) {
                 arr.push(index);
@@ -212,10 +211,18 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
             elements: updatedModes,
             errors: updatedModeErrors
         } = shiftElementsAndErrors(state.values.mode, state.error.mode, data.id);
+        
+        // now, we need to shift level mode ids, if necessary
+        const updatedLevels = state.values.level.map(level => {
+            if (level.mode.id >= data.id) {
+                level.mode.id++;
+            }
+            return level;
+        });
 
         updatedModes.push(data);
         updatedModes.sort((a, b) => a.id - b.id);
-        const updatedValues = { ...state.values, mode: updatedModes };
+        const updatedValues = { ...state.values, mode: updatedModes, level: updatedLevels };
         const updatedErrors = { ...state.error, mode: updatedModeErrors };
         return { ...state, values: updatedValues, error: updatedErrors };
     };
