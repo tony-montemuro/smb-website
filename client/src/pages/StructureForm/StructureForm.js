@@ -105,6 +105,7 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
         errors = errors ? [...errors] : undefined;
 
         // find incidies of elements whose id is >= `id`
+        debugger;
         const largerElementIndicies = elements.reduce((arr, element, index) => {
             if (element.id >= id) {
                 arr.push(index);
@@ -117,7 +118,7 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
         if (largerElementIndicies.length > 0 && elements[firstIndex].id === id) {
             largerElementIndicies.forEach(index => elements[index].id++);
             if (errors) {
-                errors = shiftErrors(errors, firstIndex);
+                errors = shiftErrors(errors, id);
             }
         }
 
@@ -189,7 +190,6 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
 
         } else {
             // now, we need to update category, and cascade change down to modes & levels
-            console.log(getCategoryDataWithName(data))
             updated.category.push(getCategoryDataWithName(data));
 
             const cascade = arg => arg.category === oldCategoryName ? { ...arg, category: data.category } : arg;

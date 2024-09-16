@@ -21,6 +21,8 @@
     --color-text-hover: 220, 220, 220;
     --container-border-radius: 15px;
     --font: 'Gabarito', cursive;
+    --mui-input-height: 56px;
+    --mui-helper-height: 19.91px;
     --navbar-height: 76px;
     --searchbar-height: 30px;
     --z-low: 1;

@@ -217,7 +217,7 @@ const GameAddValidation = () => {
 
             // ensure mode has >0 levels
             if (!hasLevels[name]) {
-                errorMsg += "Mode must have at least one level. ";
+                errorMsg += "Mode must have at least one chart. ";
             }
 
             // update seenModes object

@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext } from "../../../utils/Contexts.js";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import styles from "./LevelList.module.css";
 import AddIcon from "@mui/icons-material/Add";
 import Checkbox from "@mui/material/Checkbox";
@@ -22,7 +22,15 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
   /* ===== STATES & FUNCTIONS ===== */
 
   // states & functions from the js file
-  const { localState, updateLocalState } = LevelInputHelper(level);
+  const { localState, setLocalState, updateLocalState } = LevelInputHelper(level);
+
+  /* ===== EFFECTS ===== */
+
+  // code that re-updates the local state each time the id is changed
+  useEffect(() => {
+    setLocalState(level);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [level]);
 
   // helper variables & functions
   const { capitalize, timerTypeB2F } = FrontendHelper();
@@ -35,6 +43,7 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
   const isPracticeMode = appData.categories[categoryName].practice;
   const chartType = localState.chart_type;
   const id = `level-${ category.id }-${ mode.id }-${ level.id }`;
+  const LEVEL_LENGTH_MAX = 80;
   let timeTitle;
   if (chartType === "score") {
     timeTitle = "Score charts cannot have a time.";
@@ -50,9 +59,12 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
         <TextField
           className={ styles.nameInput }
           id={ `${ id }-name` }
+          inputProps={{ maxLength: LEVEL_LENGTH_MAX }}
+          helperText={ `${ localState.name.length }/${ LEVEL_LENGTH_MAX }` }
           label="Name"
           onBlur={ () => handleBlur(localState) }
           onChange={ e => updateLocalState(e) }
+          placeholder={ `Must be ${ LEVEL_LENGTH_MAX } characters or less` }
           value={ levelB2F(localState.name) }
           variant="filled"
         />
@@ -138,7 +150,7 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
         />
 
         { !isPracticeMode && 
-          <>
+          <div className={ styles.ascend }>
             <FormGroup title={ chartType === "time" ? "Cannot ascend score if chart type is time." : null }>
               <FormControlLabel 
                 control={ 
@@ -170,26 +182,28 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
                 label="Ascend Time"
               />
             </FormGroup>
-          </>
+          </div>
         }
 
-        <button
-          type="button"
-          title="Add chart"
-          className={ `${ styles.levelListBtn } center` }
-          onClick={ () => handleInsert(categoryName, mode, localState.id+1) }
-        >
-          <AddIcon />
-        </button>
+        <div className={ styles.btns }>
+          <button
+            type="button"
+            title="Add chart"
+            className={ `${ styles.levelListBtn } center` }
+            onClick={ () => handleInsert(categoryName, mode, level.id+1) }
+          >
+            <AddIcon />
+          </button>
 
-        <button
-          type="button"
-          title="Delete chart"
-          className={ `${ styles.levelListBtn } center` }
-          onClick={ () => handleDelete(localState.id) }
-        >
-          <DeleteIcon />
-        </button>
+          <button
+            type="button"
+            title="Delete chart"
+            className={ `${ styles.levelListBtn } center` }
+            onClick={ () => handleDelete(level.id) }
+          >
+            <DeleteIcon />
+          </button>
+        </div>
       </div>
 
       { error &&

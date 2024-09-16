@@ -68,7 +68,7 @@ const LevelInput = (level) => {
         setLocalState({ ...localState, ...update });
     };
 
-    return { localState, updateLocalState };
+    return { localState, setLocalState, updateLocalState };
 };
 
 /* ===== EXPORTS ===== */

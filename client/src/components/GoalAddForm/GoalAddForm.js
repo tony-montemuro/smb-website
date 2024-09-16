@@ -41,7 +41,7 @@ const GoalAddForm = (setSubmitting) => {
     // the form is updated with the change the user makes
     const handleChange = e => {
         const { id, value } = e.target;
-        setForm({ ...form, values: { ...form.values, [id]: value } });
+        setForm({ ...form, values: { ...form.values, [id]: value }, error: undefined });
     };
 
     // FUNCTION 2: validateName - code that checks if a goal color name is valid

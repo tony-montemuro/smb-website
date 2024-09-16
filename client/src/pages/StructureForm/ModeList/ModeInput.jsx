@@ -23,6 +23,11 @@ function ModeInput({
   error = null,
   children
 }) {
+  /* ===== FUNCTIONS ===== */
+
+  // helper functions
+  const { levelB2F } = LevelHelper();
+
   /* ===== VARIABLES ===== */
   const categoryName = category.category;
   const modeId = mode.id;
@@ -32,50 +37,53 @@ function ModeInput({
     "rgba(192, 192, 192, 0.3)"
   ];
   const weight = (modeId-firstModeId) % backgroundColors.length;
-
-  /* ===== FUNCTIONS ===== */
-
-  // helper functions
-  const { levelB2F } = LevelHelper();
+  const MODE_LENGTH_MAX = 50;
+  const modeName = levelB2F(mode.name);
 
   /* ===== MODE INPUT COMPONENT ===== */
   return (
     <div className={ styles.modeInputWrapper } style={ { backgroundColor: backgroundColors[weight] } }>
       <div className={ styles.modeInput }>
         <TextField
+          className={ styles.name }
           id={ id }
+          inputProps={{ maxLength: MODE_LENGTH_MAX }}
+          helperText={ `${ modeName.length }/${ MODE_LENGTH_MAX }` }
           label="Mode"
           onBlur={ () => handleBlur() }
           onChange={ e => handleChange(e.target.value, categoryName, modeId) }
-          value={ levelB2F(mode.name) }
+          placeholder={ `Must be ${ MODE_LENGTH_MAX } characters or less` }
+          value={ levelB2F(modeName) }
           variant="filled"
         />
 
-        <button
-          type="button"
-          title="Add mode"
-          onClick={ () => handleInsert(category, modeId+1) }
-          className="center"
-        >
-          <AddIcon />
-        </button>
-        <button 
-          type="button"
-          title="Delete mode"
-          onClick={ () => handleDelete(modeId) }
-          className="center"
-        >
-          <DeleteIcon />
-        </button>
-        <button
-          type="button"
-          title={ isVisibleCharts ? "Hide charts" : "Show charts" }
-          onClick={ () => isVisibleCharts ? setVisibleCharts(null) : setVisibleCharts(modeId) }
-          className="center"
-          id={ styles.toggleCharts }
-        >
-          { isVisibleCharts ? <ExpandMoreRoundedIcon sx={{ color: "white" }} /> : <ExpandLessRoundedIcon sx={{ color: "white" }} /> }
-        </button>
+        <div className={ styles.btns }>
+          <button
+            type="button"
+            title="Add mode"
+            onClick={ () => handleInsert(category, modeId+1) }
+            className="center"
+          >
+            <AddIcon />
+          </button>
+          <button 
+            type="button"
+            title="Delete mode"
+            onClick={ () => handleDelete(modeId) }
+            className="center"
+          >
+            <DeleteIcon />
+          </button>
+          <button
+            type="button"
+            title={ isVisibleCharts ? "Hide charts" : "Show charts" }
+            onClick={ () => isVisibleCharts ? setVisibleCharts(null) : setVisibleCharts(modeId) }
+            className="center"
+            id={ styles.toggleCharts }
+          >
+            { isVisibleCharts ? <ExpandMoreRoundedIcon sx={{ color: "white" }} /> : <ExpandLessRoundedIcon sx={{ color: "white" }} /> }
+          </button>
+        </div>
 
       </div>
 

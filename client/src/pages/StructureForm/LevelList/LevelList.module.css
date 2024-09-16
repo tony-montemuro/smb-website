@@ -21,8 +21,9 @@
 .levelInput {
     display: flex;
     gap: 8px;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
+    height: calc(var(--mui-input-height) + var(--mui-helper-height));
 }
 
 .levelInput .nameInput {
@@ -36,4 +37,11 @@
 
 .levelInput .wideDropdown {
     min-width: var(--dropdown-wide-min-width);
+}
+
+.ascend, .btns {
+    display: flex;
+    height: var(--mui-input-height);
+    gap: 8px;
+    align-items: center;
 }

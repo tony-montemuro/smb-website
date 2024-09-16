@@ -6,6 +6,10 @@ import TextField from "@mui/material/TextField";
 
 function EntityAddForm({ submitting, setSubmitting, refreshSelectDataFunc }) {
   /* ===== VARIABLES ===== */
+  const MONKEY_MAX_LENGTH = 20;
+  const PLATFORM_NAME_MAX_LENGTH = 30;
+  const PLATFORM_ABB_MAX_LENGTH = 10;
+  const REGION_MAX_LENGTH = 10;
   const RULE_HEIGHT = 8;
   const RULE_MAX_LENGTH = 1024;
 
@@ -24,6 +28,7 @@ function EntityAddForm({ submitting, setSubmitting, refreshSelectDataFunc }) {
         handleChange={ handleChange } 
         handleSubmit={ handleSubmit }
         disabled={ submitting }
+        maxLength={ MONKEY_MAX_LENGTH }
       />
 
       { /* Platform form */ }
@@ -31,14 +36,19 @@ function EntityAddForm({ submitting, setSubmitting, refreshSelectDataFunc }) {
         <span><strong>Platform</strong></span>
         <TextField
           id="platform_name"
+          helperText={ `${ form.platform.platform_name.length }/${ PLATFORM_NAME_MAX_LENGTH }` }
+          inputProps={ { maxLength: PLATFORM_NAME_MAX_LENGTH } }
           label="Platform"
           onChange={ handleChange }
+          placeholder={ `Must be under ${ PLATFORM_NAME_MAX_LENGTH } characters` }
           required
           value={ form.platform.platform_name }
           variant="filled"
         />
         <TextField
           id="platform_abb"
+          helperText={ `${ form.platform.platform_abb.length }/${ PLATFORM_ABB_MAX_LENGTH }` }
+          inputProps={ { maxLength: PLATFORM_ABB_MAX_LENGTH } }
           label="Platform Abbreviation"
           onChange={ handleChange }
           required
@@ -54,6 +64,7 @@ function EntityAddForm({ submitting, setSubmitting, refreshSelectDataFunc }) {
         handleChange={ handleChange } 
         handleSubmit={ handleSubmit }
         disabled={ submitting }
+        maxLength={ REGION_MAX_LENGTH }
       />
       <form id="rule" className={ styles.form } onSubmit={ handleSubmit }>
         <span><strong>Rule</strong></span>
@@ -78,7 +89,7 @@ function EntityAddForm({ submitting, setSubmitting, refreshSelectDataFunc }) {
   );
 };
 
-function SingleFieldForm({ entityName, form, handleChange, handleSubmit, disabled }) {
+function SingleFieldForm({ entityName, form, handleChange, handleSubmit, disabled, maxLength }) {
   /* ===== FUNCTIONS ===== */
   const { capitalize } = FrontendHelper();
 
@@ -92,8 +103,11 @@ function SingleFieldForm({ entityName, form, handleChange, handleSubmit, disable
       <span><strong>{ capitalizedEntityName }</strong></span>
       <TextField 
         id={ `${ entityName }_name` }
+        helperText={ `${ value.length }/${ maxLength }` }
+        inputProps={ { maxLength } }
         label={ capitalizedEntityName }
         onChange={ handleChange }
+        placeholder={ `Must be under ${ maxLength } characters` }
         required
         value={ value }
         variant="filled"

@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 
 function GoalAddForm({ submitting, setSubmitting }) {
   /* ===== VARIABLES ===== */
-  const NAME_LENGTH_MAX = 256;
+  const NAME_LENGTH_MAX = 15;
 
   /* ===== STATES & FUNCTIONS ===== */
 
@@ -22,7 +22,7 @@ function GoalAddForm({ submitting, setSubmitting }) {
           color={ form.error ? "error" : "primary" }
           error={ form.error ? true : false }
           id="name"
-          helperText={ form.error && form.error }
+          helperText={ form.error ? form.error : `${ form.values.name.length }/${ NAME_LENGTH_MAX }` }
           inputProps={{ maxLength: NAME_LENGTH_MAX }}
           label="Goal Color Name"
           onChange={ handleChange }
