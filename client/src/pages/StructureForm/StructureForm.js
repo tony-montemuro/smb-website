@@ -215,7 +215,7 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
         // now, we need to shift level mode ids, if necessary
         const updatedLevels = state.values.level.map(level => {
             if (level.mode.id >= data.id) {
-                level.mode.id++;
+                return { ...level, mode: { ...level.mode, id: level.mode.id+1 } };
             }
             return level;
         });
