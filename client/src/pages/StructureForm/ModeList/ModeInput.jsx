@@ -51,6 +51,7 @@ function ModeInput({
           helperText={ `${ modeName.length }/${ MODE_LENGTH_MAX }` }
           label="Mode"
           onBlur={ () => handleBlur() }
+          onFocus={ () => setVisibleCharts(modeId) }
           onChange={ e => handleChange(e.target.value, categoryName, modeId) }
           placeholder={ `Must be ${ MODE_LENGTH_MAX } characters or less` }
           value={ levelB2F(modeName) }

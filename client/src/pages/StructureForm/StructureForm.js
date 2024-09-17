@@ -169,12 +169,12 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
         const oldCategoryName = stateValues.category.find(c => c.id === data.id).category;
         if (!data.category) {
             // find children of category
-            const children = { mode: [], level: [] };
+            const children = {};
             children.mode = stateValues.mode.filter(mode => mode.category === oldCategoryName);
-            children.level = stateValues.level.filter(level => level.category.name === oldCategoryName);
+            children.level = stateValues.level.filter(level => level.category === oldCategoryName);
 
             let warning = "Deleting this category will also delete it's ";
-            warning += children.level.length > 0 ? "modes & levels." : "modes.";
+            warning += children.level.length > 0 ? "modes & charts." : "modes.";
             warning += " Are you sure you want to do this?";
 
             // special case: warn the users if there exist any children of the category. if they decide *not*
@@ -257,12 +257,17 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
     const deleteMode = (state, id) => {
         const updatedValues = { ...state.values }, updatedErrors = { ...state.error };
         const childrenLevels = state.values.level.filter(level => level.mode.id === id);
-        let warning = "Deleting this mode will also delete it's levels. Are you sure you want to do this?";
+        let warning = "Deleting this mode will also delete it's charts. Are you sure you want to do this?";
 
         // special case: warn the users if there exist any children of the mode. if they decide *not*
         // to delete the mode, this function does nothing
         if (childrenLevels.length > 0 && !window.confirm(warning)) {
             return state;
+        }
+
+        // special case: if mode charts are currently visible, let's nullify the visible chart state
+        if (visibleCharts === id) {
+            setVisibleCharts(null);
         }
 
         // delete mode, as well as any children levels, and mode error
@@ -510,9 +515,6 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
     // POSTCONDITIONS (1 possible outcome):
     // the system will attempt to delete the mode
     const handleModeDelete = id => {
-        if (visibleCharts === id) {
-            setVisibleCharts(null);
-        }
         dispatchForm({ type: dispatchTypes.DELETE_MODE.name, data: id });
     }
 
