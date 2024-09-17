@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import AddGamePages from "./AddGamePages.jsx";
 import GameAddLayoutLogic from "./GameAddLayout.js";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Loading from "../Loading/Loading.jsx";
 import styles from "./GameAddLayout.module.css";
 
@@ -87,6 +88,18 @@ function GameAddLayout() {
   return (
     <div className={ styles.gameAdd }>
       <h1>Add Game</h1>
+      <div className={ styles.disclaimer }>
+        <div className={ styles.disclaimerMsg }>
+          <InfoOutlinedIcon />
+          <strong>Important: Your progress is saved locally.</strong>
+        </div>
+        <span>To ensure you don't lose your progress, please avoid:</span>
+        <ul>
+          <li>Clearing your browser cache or data</li>
+          <li>Using private/incognito mode</li>
+          <li>If you have clearing browser data on exit enabled, do not close the browser</li>
+        </ul>
+      </div>
       
       { appData ? 
         <GameAddContext.Provider value={ contextData }>
