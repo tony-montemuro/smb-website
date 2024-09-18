@@ -130,7 +130,7 @@ const GameAddValidation = () => {
             errorMsg += "One or more categories have invalid values, contact TonySMB for help. ";
         }
         if (hasMissingModes) {
-            errorMsg += "One or more categories have no modes and no levels. ";
+            errorMsg += "One or more categories have no modes and no charts. ";
         }
 
         return errorMsg ? errorMsg.slice(0, -1) : undefined;

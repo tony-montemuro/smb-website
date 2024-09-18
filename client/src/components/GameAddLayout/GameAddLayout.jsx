@@ -91,7 +91,7 @@ function GameAddLayout() {
       <div className={ styles.disclaimer }>
         <div className={ styles.disclaimerMsg }>
           <InfoOutlinedIcon />
-          <strong>Important: Your progress is saved locally.</strong>
+          <h3>Important: Your progress is saved locally.</h3>
         </div>
         <span>To ensure you don't lose your progress, please avoid:</span>
         <ul>
