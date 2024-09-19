@@ -9,6 +9,7 @@ import TextField from "@mui/material/TextField";
 function CategoryAddForm({ submitting, setSubmitting }) {
   /* ===== VARIABLES ===== */
   const ABB_LENGTH_MAX = 15;
+  const NAME_LENGTH_MAX = 50;
 
   /* ===== STATES & FUNCTIONS ===== */
 
@@ -21,9 +22,12 @@ function CategoryAddForm({ submitting, setSubmitting }) {
       <h1>Add New Category</h1>
       <form className={ style.form } onSubmit={ handleSubmit }>
         <TextField
+          helperText={ `${ form.values.name.length }/${ NAME_LENGTH_MAX }` }
           id="name"
+          inputProps={ { maxLength: NAME_LENGTH_MAX } }
           label="Category Name"
           onChange={ handleChange }
+          placeholder={ `Must be ${ NAME_LENGTH_MAX } characters or less` }
           required
           value={ form.values.name }
           variant="filled"
@@ -33,7 +37,7 @@ function CategoryAddForm({ submitting, setSubmitting }) {
           error={ form.error.abb ? true : false }
           helperText={ form.error.abb ? form.error.abb : `${ form.values.abb.length }/${ ABB_LENGTH_MAX }` }
           id="abb"
-          inputProps={{ maxLength: ABB_LENGTH_MAX }}
+          inputProps={ { maxLength: ABB_LENGTH_MAX } }
           label="Category Abbreviation"
           onChange={ handleChange }
           placeholder={ `Must be ${ ABB_LENGTH_MAX } characters or less` }

@@ -51,6 +51,7 @@ function EntityAddForm({ submitting, setSubmitting, refreshSelectDataFunc }) {
           inputProps={ { maxLength: PLATFORM_ABB_MAX_LENGTH } }
           label="Platform Abbreviation"
           onChange={ handleChange }
+          placeholder={ `Must be under ${ PLATFORM_ABB_MAX_LENGTH } characters` }
           required
           value={ form.platform.platform_abb }
           variant="filled"

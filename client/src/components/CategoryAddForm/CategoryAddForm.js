@@ -76,6 +76,7 @@ const CategoryAddForm = (setSubmitting) => {
         const error = validateAbb(form.values.abb);
         if (error) {
             setForm({ ...form, error: { abb: error } });
+            addMessage("Form not validated, please see error messages.", "error", 8000);
             return;
         }
 
