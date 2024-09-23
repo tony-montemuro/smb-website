@@ -53,10 +53,8 @@ function Totalizer({ imageReducer }) {
   const [pageNum, setPageNum] = useState(1);
 
   // states and functions from the js file
-  const {
-    totals,
-    fetchTotals
-  } = TotalizerLogic();
+  const { totals, fetchTotals, getDecimalsByCategory } = TotalizerLogic();
+  const decimalPlaces = getDecimalsByCategory(game, category);
 
   // FUNCTION 1: handleTableStateChange - code that executes each time the user toggles the table state
   // PRECONDITIONS: NONE
@@ -131,7 +129,14 @@ function Totalizer({ imageReducer }) {
                   numCols={ TABLE_LENGTH }
                 >
                   { totals[tableState].slice((pageNum-1)*USERS_PER_PAGE, pageNum*USERS_PER_PAGE).map(row => {
-                    return <TotalizerRow row={ row } topTotal={ totals[tableState][0].total } imageReducer={ imageReducer } key={ row.profile.id } />
+                    return (
+                      <TotalizerRow 
+                        row={ row } 
+                        topTotal={ totals[tableState][0].total } 
+                        imageReducer={ imageReducer } key={ row.profile.id }
+                        decimalPlaces={ decimalPlaces }
+                      />
+                    );
                   })}
                 </TableContent>
               :

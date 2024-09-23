@@ -39,6 +39,7 @@ const Insert = (level, setSubmitting) => {
         minute: "",
         second: "",
         centisecond: "",
+        millisecond: "",
         both: false,
         score: type === "score",
         monkey_id: game.monkey[0].id,
@@ -62,14 +63,18 @@ const Insert = (level, setSubmitting) => {
             hour: null, 
             minute: null, 
             second: null, 
-            centisecond: null, 
+            centisecond: null,
+            millisecond: null,
             proof: null, 
             submitted_at: null,
             live: null
         }
 	};
     const MAX = 2147483647;
+    const MAX_MINUTE = 59;
+    const MAX_SECOND = 59;
     const MAX_CENTISECOND = 99;
+    const MAX_MILLISECOND = 999;
 
     /* ===== REDUCER FUNCTIONS ===== */
 
@@ -231,9 +236,9 @@ const Insert = (level, setSubmitting) => {
             return "Invalid value.";
         }
 
-        // next, if the "min" is at the middle or end of the timerType, we need to set it's max value to 60
-        if (["hour_min", "hour_min_sec", "hour_min_sec_csec"].includes(timerType) && minute >= 60) {
-            return "This field cannot exceed the value 59.";
+        // next, if the "min" is at the middle or end of the timerType, we need to set it's max value to `MAX_MINUTE`
+        if (["hour_min", "hour_min_sec", "hour_min_sec_csec", "hour_min_sec_msec"].includes(timerType) && minute > MAX_MINUTE) {
+            return `This field cannot exceed the value ${ MAX_MINUTE }.`;
         }
 
         return undefined;
@@ -258,9 +263,16 @@ const Insert = (level, setSubmitting) => {
             return "Invalid value.";
         }
 
-        // next, if the "sec" is at the middle or end of the timerType, we need to set it's max value to 60
-        if (["min_sec", "min_sec_csec", "hour_min_sec", "hour_min_sec_csec"].includes(timerType) && second >= 60) {
-            return "This field cannot exceed the value 59.";
+        // next, if the "sec" is at the middle or end of the timerType, we need to set it's max value to `MAX_SECOND`
+        if ([
+            "min_sec", 
+            "min_sec_csec", 
+            "min_sec_msec", 
+            "hour_min_sec", 
+            "hour_min_sec_csec", 
+            "hour_min_sec_msec"
+        ].includes(timerType) && second >= MAX_SECOND) {
+            return `This field cannot exceed the value ${ MAX_SECOND }.`;
         }
 
         return undefined;
@@ -288,25 +300,49 @@ const Insert = (level, setSubmitting) => {
         return undefined;
     };
 
-    // FUNCTION 9: recordToSeconds - function that takes the parts of the time submission (hour, minute, second, and centisecond)
+    // FUNCTION 9: validateMillisecond - given the millisecond field & timerType, validate the millisecond field
+    // PRECONDITIONS (2 parameters):
+    // 1.) millisecondField: a string value representing the milliseconds of the submission
+    // 2.) timerType: a string representing the timer type of the chart, which has an influence on how to validate this field
+    // POSTCONDITIONS (1 return, 2 possible outcomes):
+    // if the field is determined to be valid, return undefined
+    // if the field is determined to be invalid, return a string that contains the error message
+    const validateMillisecond = (millisecondField, timerType) => {
+        // first, if the timerType is "msec", this field is required
+        if (timerType === "msec" && !millisecondField) {
+            return "Decimals are required.";
+        }
+
+        // next, ensure this field has a max value of `MAX_MILLISECOND`
+        const millisecond = parseInt(millisecondField);
+        if (millisecond > MAX_MILLISECOND) {
+            return `Decimals cannot exceed the value ${ MAX_MILLISECOND }.`;
+        }
+
+        return undefined;
+    };
+
+    // FUNCTION 9: recordToSeconds - function that takes the parts of the time submission (hour, minute, second, centisecond, & millisecond)
     // and converts to a single float value in seconds
-    // PRECONDITIONS (4 parameters):
+    // PRECONDITIONS (5 parameters):
     // 1.) hourField: a string value representing the hours of the submission
     // 2.) minuteField: a string value representing the minutes of the submission
     // 3.) secondField: a string value representing the seconds of the submission
     // 4.) centisecondField: a string value representing the centiseconds of the submission
+    // 5.) millisecondField: a string value representing the milliseconds of the submission
     // POSTCONDITIONS (1 return, 1 possible outcome):
     // the parameters are used to compute the final time value in seconds, and this value is returned
-    const recordToSeconds = (hourField, minuteField, secondField, centisecondField) => {
+    const recordToSeconds = (hourField, minuteField, secondField, centisecondField, millisecondField) => {
         // first, define our time float, and parse all inputs to their integer value
         let time = 0;
-        const hour = parseInt(hourField), minute = parseInt(minuteField), second = parseInt(secondField), centisecond = parseInt(centisecondField);
+        const hour = parseInt(hourField), minute = parseInt(minuteField), second = parseInt(secondField), centisecond = parseInt(centisecondField), millisecond = parseInt(millisecondField);
 
         // next, let's perform the necessary math for each parameter
         if (hour) time += (hour*3600);
         if (minute) time += (minute*60);
         if (second) time += second;
         if (centisecond) time += (centisecond/100);
+        if (millisecond) time += (millisecondField/1000);
 
         return time;
     };
@@ -327,11 +363,11 @@ const Insert = (level, setSubmitting) => {
     // 1.) formVals: an object containing data generated from the submission form
     // POSTCONDITION (1 possible outcome):
     // an array of submission objects containing mostly the same information from formValues parameter is returned, but with
-    // fixed date value (backend format), as well as removing the `message`, `hour`, `minute`, `second`, & `centisecond` fields
+    // fixed date value (backend format), as well as removing the `message`, `hour`, `minute`, `second`, `centisecond`, & `millisecond` fields
     const getSubmissionsFromForm = formVals => {
         // create our new submission object, which is equivelent to formVals minus some fields not present in `submission` table
         let submissions = [];
-        const { hour, minute, second, centisecond, both, profile, submitted_at, ...submission } = formVals;
+        const { hour, minute, second, centisecond, millisecond, both, profile, submitted_at, ...submission } = formVals;
         const backendDate = getDateOfSubmission(submitted_at);
         if (backendDate) submission.submitted_at = backendDate;
         submission.profile_id = profile.id;
@@ -342,13 +378,13 @@ const Insert = (level, setSubmitting) => {
             const time = { 
                 ...submission, 
                 score: false, 
-                record: recordToSeconds(hour, minute, second, centisecond) 
+                record: recordToSeconds(hour, minute, second, centisecond, millisecond) 
             };
             type === "score" ? submissions.push(time) : submissions.unshift(time);    
         } else {
             submissions.push({ 
                 ...submission, 
-                record: type === "time" ? recordToSeconds(hour, minute, second, centisecond) : submission.record 
+                record: type === "time" ? recordToSeconds(hour, minute, second, centisecond, millisecond) : submission.record 
             });
         }
 
@@ -395,10 +431,10 @@ const Insert = (level, setSubmitting) => {
                 if (type === "time") {
                     dispatchForm({ field: "values", value: { record: defaultVals.record } });
                 } else {
-                    const { hour, minute, second, centisecond } = defaultVals;
+                    const { hour, minute, second, centisecond, millisecond } = defaultVals;
                     dispatchForm({ 
                         field: "values", 
-                        value: { hour, minute, second, centisecond }
+                        value: { hour, minute, second, centisecond, millisecond }
                     });
                 }
                 addMessage(`Your ${ otherType } submission succesfully added, but there was a problem adding your ${ type } submission. Try again or refresh the page.`, "error", 15000);
@@ -437,7 +473,8 @@ const Insert = (level, setSubmitting) => {
             error.minute = validateMinute(form.values.minute, timerType);
             error.second = validateSecond(form.values.second, timerType);
             error.centisecond = validateCentisecond(form.values.centisecond, timerType);
-            allBlank = !form.values.hour && !form.values.minute && !form.values.second && !form.values.centisecond;
+            error.millisecond = validateMillisecond(form.values.millisecond, timerType);
+            allBlank = !form.values.hour && !form.values.minute && !form.values.second && !form.values.centisecond && !form.values.millisecond;
         }
 		error.proof = validateVideoUrl(form.values.proof);
         error.submitted_at = validateDate(form.values.submitted_at);

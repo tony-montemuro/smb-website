@@ -80,21 +80,28 @@ const FrontendHelper = () => {
     // PRECONDITIONS (2 parameters):
     // 1.) record is a float number with at most two decimals places
     // 2.) type is either "score" or "time"
+    // 3.) decimalPlaces is an integer, specifying how many decimal places we should round to, typically this is 2.
+    // this parameter is only relevant when the type is "time"
     // POSTCONDITION (2 possible outcome):
     // if the type is time, we will compute the hours, minuntes, seconds, and centiseconds, and return a string with the
-    // following format: [X...X]X:XX:XX.XX
+    // following format: X[X...X]:XX:XX.XX
     // if the type is score, return a string representing a formatted integer (includes commas)
-    const secondsToHours = (record, type) => {
+    const secondsToHours = (record, type, decimalPlaces = 2) => {
         if (type === "time") {
             // calculate each unit of time
             let time = Math.floor(record);
             let hours = Math.floor(time/3600).toLocaleString("en-US", { minimumIntegerDigits: 1, useGrouping: false });
             let minutes = Math.floor((time%3600)/60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
             let seconds = Math.floor(time%60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
-            let centiseconds = Math.round((record%60-seconds)*100).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
 
-            // return with following format: XX:XX:XX.XX
-            return `${ hours }:${ minutes }:${ seconds }.${ centiseconds }`;
+            let multiplier = Math.pow(10, decimalPlaces);
+            let decimals = Math.round((record%60-seconds)*multiplier).toLocaleString("en-US", {
+                minimumIntegerDigits: decimalPlaces,
+                useGrouping: false
+            });
+
+            // return with following format: X[X...X]:XX:XX.X[X...X]
+            return `${ hours }:${ minutes }:${ seconds }.${ decimals }`;
         }
 
         // otherwise, just return formatted record
@@ -103,22 +110,29 @@ const FrontendHelper = () => {
 
     // FUNCTION 6: secondsToMinutes - convert a time from seconds to minutes
     // PRECONDITIONS (2 parameters):
-    // 1.) record is a float number with at most two decimals places
+    // 1.) record is a float number with at most three decimals places
     // 2.) type is either "score" or "time"
+    // 3.) decimalPlaces is an integer, specifying how many decimal places we should round to, typically this is 2.
+    // this parameter is only relevant when the type is "time"
     // POSTCONDITION (2 possible outcome):
-    // if the type is time, we will compute the minuntes, seconds, and centiseconds, and return a string with the
-    // following format: [X...X]X:XX.XX
+    // if the type is time, we will compute the minuntes, seconds, and decimals, and return a string with the
+    // following format: X[X...X]:XX.X[X...X]
     // if the type is score, return a string representing a formatted integer (includes commas)
-    const secondsToMinutes = (record, type) => {
+    const secondsToMinutes = (record, type, decimalPlaces = 2) => {
         if (type === "time") {
             // calculate each unit of time
             let time = Math.floor(record);
             let minutes = Math.floor(time/60).toLocaleString("en-US", { minimumIntegerDigits: 1, useGrouping: false });
             let seconds = Math.floor(time%60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
-            let centiseconds = Math.round((record%60-seconds)*100).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
 
-            // return with following format: XX:XX:XX.XX
-            return `${ minutes }:${ seconds }.${ centiseconds }`;
+            let multiplier = Math.pow(10, decimalPlaces);
+            let decimals = Math.round((record%60-seconds)*multiplier).toLocaleString("en-US", { 
+                minimumIntegerDigits: decimalPlaces, 
+                useGrouping: false 
+            });
+
+            // return with following format: X[X...X]:XX.X[X...X]
+            return `${ minutes }:${ seconds }.${ decimals }`;
         }
 
         // otherwise, just return formatted record
@@ -144,12 +158,16 @@ const FrontendHelper = () => {
                     return Math.floor(fixedRecord);
                 case "sec_csec":
                     return fixedRecord.toFixed(2);
+                case "sec_msec":
+                    return fixedRecord.toFixed(3);
                 case "min":
                     return secondsToMinutes(fixedRecord, type).split(":")[0];
                 case "min_sec":
                     return secondsToMinutes(fixedRecord, type).split(".")[0];
                 case "min_sec_csec":
                     return secondsToMinutes(fixedRecord, type);
+                case "min_sec_msec":
+                    return secondsToMinutes(fixedRecord, type, 3);
                 case "hour":
                     return secondsToHours(fixedRecord, type).split(":")[0];
                 case "hour_min":
@@ -159,6 +177,8 @@ const FrontendHelper = () => {
                     return secondsToHours(fixedRecord, type).split(".")[0];
                 case "hour_min_sec_csec":
                     return secondsToHours(fixedRecord, type);
+                case "hour_min_sec_msec":
+                    return secondsToHours(fixedRecord, type, 3);
                 default:
                     return fixedRecord.toFixed(2);
             };
@@ -207,9 +227,9 @@ const FrontendHelper = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the highest unit of time of the timer type is return as a string
     const timerType2TimeUnit = timerType => {
-        if (["sec", "sec_csec"].includes(timerType)) return "second";
-        if (["min", "min_sec", "min_sec_csec"].includes(timerType)) return "minute";
-        if (["hour", "hour_min", "hour_min_sec", "hour_min_sec_csec"].includes(timerType)) return "hour";
+        if (["sec", "sec_csec", "sec_msec"].includes(timerType)) return "second";
+        if (["min", "min_sec", "min_sec_csec", "min_sec_msec"].includes(timerType)) return "minute";
+        if (["hour", "hour_min", "hour_min_sec", "hour_min_sec_csec", "hour_min_sec_msec"].includes(timerType)) return "hour";
         return undefined;
     };
 

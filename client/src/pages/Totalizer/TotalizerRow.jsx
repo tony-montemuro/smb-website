@@ -4,7 +4,7 @@ import styles from "./Totalizer.module.css";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
 
-function TotalizerRow({ row, topTotal, imageReducer }) {
+function TotalizerRow({ row, topTotal, imageReducer, decimalPlaces }) {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
@@ -14,7 +14,7 @@ function TotalizerRow({ row, topTotal, imageReducer }) {
   const location = useLocation();
   const type = location.pathname.split("/")[5];
   const difference = type === "score" ? topTotal-row.total : row.total-topTotal;
-  const totalDifference = secondsToHours(difference, type);
+  const totalDifference = secondsToHours(difference, type, decimalPlaces);
 
   /* ===== TOTALIZER ROW COMPONENT ===== */
   return (
@@ -25,7 +25,7 @@ function TotalizerRow({ row, topTotal, imageReducer }) {
       </td>
       <td>
         <div className={ styles.total }>
-          { secondsToHours(row.total, type) }
+          { secondsToHours(row.total, type, decimalPlaces) }
           { row.position !== 1 && 
             <span 
               className={ styles.difference }
