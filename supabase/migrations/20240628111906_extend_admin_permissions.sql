@@ -457,6 +457,12 @@ UPDATE level
 SET name = REPLACE(name, '&', '%26')
 WHERE name LIKE '%&%';
 
+-- Function that tests if a string is "url-safe"
+CREATE OR REPLACE FUNCTION is_url_safe(input TEXT)
+RETURNS BOOLEAN AS $$
+  SELECT input ~ '^[a-zA-Z0-9\-_.!~*''()%]+$';
+$$ LANGUAGE sql;
+
 -- Queries that fix data, so all levels will pass new restrictions
 UPDATE level
 SET time = 0
@@ -465,12 +471,6 @@ WHERE ascending = 'time';
 UPDATE level
 SET timer_type = NULL
 WHERE chart_type = 'score';
-
--- Function that tests if a string is "url-safe"
-CREATE OR REPLACE FUNCTION is_url_safe(input TEXT)
-RETURNS BOOLEAN AS $$
-  SELECT input ~ '^[a-zA-Z0-9\-_.!~*''()%]+$';
-$$ LANGUAGE sql;
 
 -- Constraints on game table
 ALTER TABLE game
