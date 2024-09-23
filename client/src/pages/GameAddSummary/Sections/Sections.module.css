@@ -1,0 +1,58 @@
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background-color: rgb(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 12px 8px;
+}
+
+.section hr {
+    width: 100%;
+}
+
+.sectionContent, .asset {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.category {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.modeName {
+    padding-left: 5px;
+}
+
+.mode {
+    padding-left: 10px;
+}
+
+.levels {
+    overflow-x: auto;
+}
+
+.column {
+    width: 10%;
+}
+
+.errorable {
+    width: fit-content;
+}
+
+.errorable span, .errorable h3 {
+    background-color: rgb(var(--color-error));
+    border-radius: 3px;
+    width: fit-content;
+}
+
+.category .mode .levelError {
+    background-color: rgb(var(--color-error));
+}
+
+#download {
+    word-break: break-all;
+}

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ====== */
-import { CategoriesContext, GameContext } from "../../../utils/Contexts";
+import { AppDataContext, GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./RankingsContainer.module.css";
@@ -9,8 +9,8 @@ import GameHelper from "../../../helper/GameHelper";
 function RankingsContents({ category }) {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
   
   // game state from game context
   const { game } = useContext(GameContext);
@@ -20,7 +20,7 @@ function RankingsContents({ category }) {
   const { getGameCategories, getCategoryTypes } = GameHelper();
   
   /* ===== VARIABLES ===== */
-  const { name: categoryName, practice: isPracticeMode } = categories[category];
+  const { name: categoryName, practice: isPracticeMode } = appData.categories[category];
   const types = getCategoryTypes(game, category);
   const navigateTo = useNavigate();
   let rankings = [ { name: "World Records", path: "" } ];

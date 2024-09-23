@@ -1,0 +1,29 @@
+.gameAdd {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: var(--app-padding);
+}
+
+.gameAdd h1, .gameAdd h3 {
+    margin: 0;
+}
+
+.disclaimer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    background-color: rgba(var(--color-container-light));
+    border-radius: var(--container-border-radius);
+}
+
+.disclaimer ul {
+    margin: 0;
+}
+
+.disclaimerMsg {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

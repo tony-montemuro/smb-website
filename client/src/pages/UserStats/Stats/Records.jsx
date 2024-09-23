@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import styles from "./Stats.module.css";
 import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper";
+import LevelHelper from "../../../helper/LevelHelper.js";
 
 function Records({ rankings }) {
   /* ===== VARIABLES ===== */
@@ -14,7 +15,8 @@ function Records({ rankings }) {
   const type = path[5];
 
   /* ===== FUNCTIONS ===== */
-  const { capitalize, snakeToTitle, recordB2F, dateB2F } = FrontendHelper();
+  const { capitalize, recordB2F, dateB2F } = FrontendHelper();
+  const { levelB2F } = LevelHelper();
 
   /* ===== RECORDS COMPONENT ===== */
   return (
@@ -25,7 +27,7 @@ function Records({ rankings }) {
       { Object.keys(rankings).map(mode => {
         return (
           <Fragment key={ mode }>
-            <h3>{ snakeToTitle(mode) }</h3>
+            <h3>{ levelB2F(mode) }</h3>
             <div className="table">
               <table key={ mode }>
 

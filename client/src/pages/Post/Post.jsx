@@ -43,7 +43,7 @@ function Post() {
           id="title"
           inputProps={ { maxLength: TITLE_MAX_LENGTH } }
           label="Title"
-          placeholder="Must be under 200 characters"
+          placeholder={ `Must be under ${ TITLE_MAX_LENGTH } characters` } 
           onChange={ handleChange }
           required
           value={ form.values.title }
@@ -57,7 +57,7 @@ function Post() {
           inputProps={ { maxLength: BODY_MAX_LENGTH } }
           label="Body"
           multiline
-          placeholder="Must be under 3000 characters"
+          placeholder={ `Must be under ${ BODY_MAX_LENGTH } characters` }
           rows={ BODY_HEIGHT }
           onChange={ handleChange }
           required
@@ -71,7 +71,7 @@ function Post() {
           id="link"
           inputProps={ { maxLength: LINK_MAX_LENGTH } }
           label="Link"
-          placeholder="Must be under 256 characters"
+          placeholder={ `Must be under ${ LINK_MAX_LENGTH } characters` }
           onChange={ handleChange }
           type="url"
           value={ form.values.link }
@@ -85,7 +85,7 @@ function Post() {
           id="link_description"
           inputProps={ { maxLength: LINK_DESCRIPTION_MAX_LENGTH } }
           label="Link Description"
-          placeholder="Must be under 100 characters"
+          placeholder={ `Must be under ${ LINK_DESCRIPTION_MAX_LENGTH } characters` }
           onChange={ handleChange }
           value={ form.values.link_description }
           variant="filled"

@@ -13,6 +13,10 @@ function AdministratorLayout() {
       pageType: undefined, 
       content: "About Administrating"
     },
+    {
+      pageType: "game-add",
+      content: "Add Game"
+    },
     { 
       pageType: "game-moderators", 
       content: "Game Moderators"

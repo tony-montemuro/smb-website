@@ -1,0 +1,58 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.modeListWrapper {
+    padding-left: 15px;
+}
+
+.modeList {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgba(1, 1, 1, 0.3);
+}
+
+.modeList h3 {
+    margin: 0;
+}
+
+.modeInputWrapper {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.modeInput {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: flex-start;
+    overflow-x: auto;
+}
+
+.btns {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    height: var(--mui-input-height);
+}
+
+.modeInput button {
+    height: fit-content;
+}
+
+.modeInput .name {
+    min-width: 232px;
+    width: 350px;
+}
+
+#addModeBtn {
+    width: fit-content;
+}
+
+#toggleCharts {
+    background-color: transparent;
+    padding: 0;
+}

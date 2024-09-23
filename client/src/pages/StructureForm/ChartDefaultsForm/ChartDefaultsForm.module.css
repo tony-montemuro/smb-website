@@ -1,0 +1,25 @@
+.formWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    overflow-x: auto;
+}
+
+.nameInput {
+    width: var(--level-name-width);
+    min-width: var(--level-name-min-width);
+}
+
+.dropdown {
+    min-width: var(--dropdown-min-width);
+}
+
+.wideDropdown {
+    min-width: var(--dropdown-wide-min-width);
+}

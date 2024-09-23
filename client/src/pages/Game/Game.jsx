@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, GameContext } from "../../utils/Contexts";
+import { AppDataContext, GameContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Game.module.css";
@@ -13,8 +13,8 @@ import Rule from "./Rule/Rule.jsx";
 function Game() {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // game state from game context
   const { game } = useContext(GameContext);
@@ -29,6 +29,7 @@ function Game() {
   const abb = path[2];
   const category = path[3];
   const gameCategories = getGameCategories(game);
+  const firstCategory = gameCategories[0];
   
   /* ===== MEMOS ===== */
   const searchParams = useMemo(() => {
@@ -38,7 +39,7 @@ function Game() {
   }, [abb]);
 
   /* ===== STATES ===== */
-  const [selectedCategory, setSelectedCategory] = useState(category ? category : "main");
+  const [selectedCategory, setSelectedCategory] = useState(category ? category : firstCategory);
   const [selectedMode, setSelectedMode] = useState(null);
   const modes = game.mode.filter(mode => mode.category === selectedCategory);
 
@@ -55,7 +56,7 @@ function Game() {
   useEffect(() => {
     // special case: we are attempting to access a game page with a non-valid category
     if (category && !(gameCategories.includes(category))) {
-      setSelectedCategory("main");
+      setSelectedCategory(firstCategory);
       navigateTo(`/games/${ abb }`);
       return;
     }
@@ -92,7 +93,7 @@ function Game() {
           <div className={ styles.chartsBody }>
             { gameCategories.length > 1 &&
               <ButtonList
-                buttons={ gameCategories.map(category => ({ name: categories[category].name, value: category })) }
+                buttons={ gameCategories.map(category => ({ name: appData.categories[category].name, value: category })) }
                 current={ selectedCategory }
                 setCurrent={ handleChange }
                 wrap

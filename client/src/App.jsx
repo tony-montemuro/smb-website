@@ -1,13 +1,17 @@
 /* ===== IMPORTS ===== */
 import "./App.css";
-import { MessageContext, UserContext, CategoriesContext } from "./utils/Contexts";
+import { AppDataContext, MessageContext, UserContext } from "./utils/Contexts";
 import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import Administrator from "./pages/Administrator/Administrator.jsx";
 import AdministratorLayout from "./components/AdministratorLayout/AdministratorLayout.jsx";
 import AppLogic from "./App.js";
 import Approvals from "./pages/Approvals/Approvals.jsx";
+import AssetsForm from "./pages/AssetsForm/AssetsForm.jsx";
+import EntitiesForm from "./pages/EntitiesForm/EntitiesForm.jsx";
 import Game from "./pages/Game/Game.jsx";
+import GameAddLayout from "./components/GameAddLayout/GameAddLayout.jsx";
+import GameAddSummary from "./pages/GameAddSummary/GameAddSummary.jsx";
 import GameLayout from "./components/GameLayout/GameLayout.jsx";
 import GameModerators from "./pages/GameModerators/GameModerators.jsx";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
@@ -15,6 +19,7 @@ import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
 import MedalTable from "./pages/MedalTable/MedalTable.jsx";
 import Message from "./components/Message/Message.jsx";
+import MetadataForm from "./pages/MetadataForm/MetadataForm.jsx";
 import Moderator from "./pages/Moderator/Moderator.jsx";
 import ModeratorLayout from "./components/ModeratorLayout/ModeratorLayout.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
@@ -27,6 +32,7 @@ import Records from "./pages/Records/Records.jsx";
 import Reports from "./pages/Reports/Reports.jsx";
 import Resources from "./pages/Resources/Resources.jsx";
 import SignIn from "./pages/SignIn/SignIn.jsx";
+import StructureForm from "./pages/StructureForm/StructureForm.jsx";
 import SubmissionHistory from "./pages/SubmissionHistory/SubmissionHistory.jsx";
 import Support from "./pages/Support/Support.jsx";
 import Totalizer from "./pages/Totalizer/Totalizer.jsx";
@@ -43,14 +49,16 @@ function App() {
     user, 
     messageContent,
     images,
-    categories,
+    appData,
     dispatchImages,
     addMessage,
     handleMessageClose,
     updateUser,
     isModerator,
     callSessionListener,
-    getCategories
+    getAppData,
+    updateCategories,
+    updateGoals
   } = AppLogic();
 
   /* ===== VARIABLES ===== */
@@ -61,15 +69,15 @@ function App() {
   // code that is executed when the application is first loaded (when app component mounts)
   useEffect(() => {
     callSessionListener();
-    getCategories();
+    getAppData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* ===== APP COMPONENT ===== */
   return (
-    <MessageContext.Provider value={ { addMessage } }>
-      <UserContext.Provider value={ { user, updateUser, isModerator } }>
-        <CategoriesContext.Provider value={ { categories } }>
+    <AppDataContext.Provider value={ { appData, updateCategories, updateGoals  } } >
+      <MessageContext.Provider value={ { addMessage } }>
+        <UserContext.Provider value={ { user, updateUser, isModerator } }>
           <Navbar imageReducer={ imageReducer } />
           <div className="app">
 
@@ -143,6 +151,13 @@ function App() {
                   <GameModerators imageReducer={ imageReducer } />
                 }/>
                 <Route path="post" element={ <Post /> }/>
+                <Route path="game-add" element={ <GameAddLayout /> } >
+                  <Route index element={ <MetadataForm /> } />
+                  <Route path="game-entities" element={ <EntitiesForm /> } />
+                  <Route path="game-structure" element={ <StructureForm /> } />
+                  <Route path="game-assets" element={ <AssetsForm imageReducer={ imageReducer } /> } />
+                  <Route path="summary" element={ <GameAddSummary imageReducer={ imageReducer } /> } />
+                </Route>
               </Route>
               <Route path="moderator" element={ <ModeratorLayout /> } >
                 <Route index element={ <Moderator /> } />
@@ -157,9 +172,9 @@ function App() {
             </Routes>
 
           </div>
-        </CategoriesContext.Provider>
-      </UserContext.Provider>
-    </MessageContext.Provider>
+        </UserContext.Provider>
+      </MessageContext.Provider>
+    </AppDataContext.Provider>
   );
 };
 

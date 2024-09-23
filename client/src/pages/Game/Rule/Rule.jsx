@@ -11,7 +11,8 @@ function Rule({ rule }) {
   return (
     <li>
       { splitRule(rule).map((line, index) => {
-        return <p key={ `${ line }_${ index }` }>{ line }</p>;
+        const key = `${ index }-${ line.trim() || "empty" }`;
+        return <p key={ key }>{ line }</p>;
       })}
     </li>
   );

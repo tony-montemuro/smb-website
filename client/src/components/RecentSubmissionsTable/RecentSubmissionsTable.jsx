@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext } from "../../utils/Contexts.js";
+import { AppDataContext } from "../../utils/Contexts.js";
 import { useContext, useEffect, useState } from "react";
 import LoadingTable from "../LoadingTable/LoadingTable.jsx";
 import PageControls from "../PageControls/PageControls.jsx";
@@ -15,8 +15,8 @@ function RecentSubmissionsTable({ numSubmissions = 5, searchParams, renderGame, 
 
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
@@ -57,7 +57,7 @@ function RecentSubmissionsTable({ numSubmissions = 5, searchParams, renderGame, 
 
           { /* Table body - for each submission, render a row in the table */ }
           <tbody>
-            { submissions.data && categories ?
+            { submissions.data && appData ?
               <TableContent items={ submissions.data } emptyMessage="No recent submissions!" numCols={ NUM_COLS }>
                 { submissions.data.map(submission => {
                   return (

@@ -1,0 +1,13 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form h3 {
+    margin: 0;
+}
+
+.form button {
+    width: fit-content;
+}

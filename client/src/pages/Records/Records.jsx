@@ -1,5 +1,5 @@
 /* ===== IMPORTS ====== */
-import { CategoriesContext, GameContext, MessageContext } from "../../utils/Contexts";
+import { AppDataContext, GameContext, MessageContext } from "../../utils/Contexts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import styles from "./Records.module.css";
@@ -14,8 +14,8 @@ import ScrollHelper from "../../helper/ScrollHelper";
 function Records() {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // game state from game context
   const { game } = useContext(GameContext);
@@ -35,7 +35,7 @@ function Records() {
   const abb = path[2];
   const category = path[3];
   const type = path[4];
-  const categoryName = categories[category] ? categories[category].name : undefined;
+  const categoryName = appData.categories[category] ? appData.categories[category].name : undefined;
   const gameCategories = getGameCategories(game);
   const types = getCategoryTypes(game, category);
 

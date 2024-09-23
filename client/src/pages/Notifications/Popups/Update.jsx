@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, PopupContext } from "../../../utils/Contexts";
+import { AppDataContext, PopupContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Popups.module.css";
@@ -14,8 +14,8 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 function Update() {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // popup data state from popup context
   const { popupData } = useContext(PopupContext);
@@ -25,7 +25,7 @@ function Update() {
   const submission = notification.submission;
   const type = notification.score ? "score" : "time";
   const category = notification.level.category;
-  const { name: categoryName } = categories[category];
+  const { name: categoryName } = appData.categories[category];
 
   /* ===== FUNCTIONS ===== */
   const { capitalize, recordB2F, dateB2F } = FrontendHelper();

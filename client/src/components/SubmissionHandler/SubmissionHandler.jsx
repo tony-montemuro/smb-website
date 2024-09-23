@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, ModeratorLayoutContext } from "../../utils/Contexts";
+import { AppDataContext, ModeratorLayoutContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
 import styles from "./SubmissionHandler.module.css";
 import Container from "../Container/Container.jsx";
@@ -17,8 +17,8 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
 
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // games state from modereator layout context
   const { games } = useContext(ModeratorLayoutContext);
@@ -107,7 +107,7 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
 
               { /* Submission table body - Render information about each submission in submissions array */ }
               <tbody>
-                { submissions && categories ?
+                { submissions && appData ?
                   <TableContent 
                     items={ submissions } 
                     emptyMessage={ `This game has no ${ isUnapproved ? "new" : "reported" } submissions.` } 

@@ -1,11 +1,12 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, UserContext } from "../../../utils/Contexts";
-import { discordPattern, usernamePattern, twitchUsernamePattern, twitterHandlePattern, youtubeHandlePattern } from "../../../utils/RegexPatterns";
+import { MessageContext, PopupContext, UserContext } from "../../utils/Contexts.js";
+import { discordPattern, usernamePattern, twitchUsernamePattern, twitterHandlePattern, youtubeHandlePattern } from "../../utils/RegexPatterns";
 import { useContext, useReducer } from "react";
-import ProfileUpdate from "../../../database/update/ProfileUpdate";
-import ValidationHelper from "../../../helper/ValidationHelper";
+import CountriesRead from "../../database/read/CountriesRead.js";
+import ProfileUpdate from "../../database/update/ProfileUpdate.js";
+import ValidationHelper from "../../helper/ValidationHelper.js";
 
-const UserInfoForm = () => {
+const UserInfoForm = (setSubmitting, adminMode) => {
     /* ===== VARIABLES ===== */
     const defaultForm = {
         countries: [],
@@ -18,7 +19,6 @@ const UserInfoForm = () => {
             featured_video: undefined, 
             video_description: undefined
         },
-        uploading: false,
         user: null
     };
 
@@ -27,8 +27,18 @@ const UserInfoForm = () => {
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
-    // user state and update user function from user context
-    const { user, updateUser } = useContext(UserContext);
+    // generally, `closePopup` will be an empty function
+    // however, if we are in admin mode, we are accessing this component within a popup, so we can
+    // define `closePopup` as the closePopup function from the popup context
+    const popupContext = useContext(PopupContext);
+    let closePopup = adminMode.status ? popupContext.closePopup : () => {};
+
+    // generally, we will assign user to user state from user context
+    // however, if we are in admin mode, we want to ignore the current user's context
+    let { user, updateUser } = useContext(UserContext);
+    if (adminMode.status) {
+        user = null;
+    }
 
     /* ===== REDUCERS ===== */
 
@@ -37,18 +47,18 @@ const UserInfoForm = () => {
     // 1.) state: represents the current state of `form`
     // 2.) action: represents the payload passed by the dispatcher function, which should be an object containing two fields
         // a.) field: this essentially determines how this function behaves, should be either "section", "user", "error",
-        // "countries", or "uploading"
+        // or "countries"
         // b.) value: the new value we want to update the form to
     // POSTCONDITIONS (3 possible outcomes):
     // 1.) if the field is `user` or `error`, we update an individual, or the entire, user / error state
-    // 2.) if the field is `countries` or `uploading`, we update the entire countries / uploading state
+    // 2.) if the field is `countries`, we update the entire countries state
     // 3.) otherwise, this function does nothing (return state)
     const reducer = (state, action) => {
         const field = action.field, value = action.value;
         if (field === "user" || field === "error") {
             return { ...state, [field]: { ...state[field], ...value } };
         }
-        if (field === "countries" || field === "uploading") {
+        if (field === "countries") {
             return { ...state, [field]: value };
         }
         return state;
@@ -58,7 +68,8 @@ const UserInfoForm = () => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
-    const { upsertUserInfo } = ProfileUpdate();
+    const { queryCountries } = CountriesRead();
+    const { upsertUserInfo, insertUserInfo } = ProfileUpdate();
 
     // helper functions
     const { validateVideoUrl } = ValidationHelper();
@@ -69,8 +80,10 @@ const UserInfoForm = () => {
     // if the profile object is defined, return a form object that matches the data found in the profile object
     // otherwise, return the default form state, which is filled with empty values
     const generateFormVals = () => {
-        const userId = user.id;
-        const profile = user.profile;
+        // extract values from user object, which is typically defined, unless in admin mode
+        const userId = user?.id;
+        const profile = user?.profile;
+
         if (profile) {
             return {
                 id: profile.id,
@@ -89,7 +102,7 @@ const UserInfoForm = () => {
         } else {
             return {
                 id: "",
-                user_id: userId,
+                user_id: userId ?? null, // userId should be defined, unless in admin mode
                 username: "",
                 bio: "",
                 birthday: null,
@@ -105,17 +118,23 @@ const UserInfoForm = () => {
     };
 
     // FUNCTION 2: initForm - function that is called when the component first mounts that sets the user form
-    // PRECONDITIONS (1 parameter):
-    // 1.) countries: an array of country objects, which we will use in the user form for selecting a country
+    // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcome):
-    // if the current user has a profile, simply fill the form states with their information from the user object.
-    // otherwise, the form will be initialized with default data
-    const initForm = countries => {
+    // generally speaking, this function should sucessfully update the form state
+    // however, a rare case occurs when countries query fails. in this case, countries will remain an empty array, making
+    // the countries select unusable. function will render error message to user
+    const initForm = async () => {
         // we have two cases: user has set up a profile, or is a first time user
         dispatchForm({ field: "user", value: generateFormVals() });
+        try {
+            const countries = await queryCountries();
 
-        // finally, let's update user form with countries data
-        dispatchForm({ field: "countries", value: countries });
+            // finally, let's update user form with countries data
+            dispatchForm({ field: "countries", value: countries });
+
+        } catch (error) {
+            addMessage("There was an issue fetching country data, so you are unable to select a country. Refresh the page to try again.", "error", 9000);
+        }
     };
 
     // FUNCTION 3: handleChange - handle a change to the form
@@ -158,7 +177,7 @@ const UserInfoForm = () => {
     const hasChanged = section => {
         // nested function that checks if the profile section has changed
         const hasProfileSectionChanged = () => {
-            const profile = user.profile;
+            const profile = user?.profile;
             return profile && (
                 form.user.username !== profile.username ||
                 form.user.country !== (profile.country ? profile.country.iso2 : "") || 
@@ -169,7 +188,7 @@ const UserInfoForm = () => {
 
         // nested function that checks if the socials section has changed
         const hasSocialsSectionChanged = () => {
-            const profile = user.profile;
+            const profile = user?.profile;
             return profile && (
                 form.user.youtube_handle !== profile.youtube_handle ||
                 form.user.twitch_username !== profile.twitch_username ||
@@ -180,7 +199,7 @@ const UserInfoForm = () => {
 
         // nested function that checks if the featured video section has changed
         const hasFeaturedVideoSectionChanged = () => {
-            const profile = user.profile;
+            const profile = user?.profile;
             return profile && (
                 form.user.featured_video !== profile.featured_video ||
                 form.user.video_description !== profile.video_description 
@@ -322,7 +341,40 @@ const UserInfoForm = () => {
         return undefined;
     };
 
-    // FUNCTION 14: uploadUserInfo - function that validates, processes, & uploads the form containing the user info (upsert)
+    // FUNCTION 14: standardUpload - the typical function that actually uploads user information to database
+    // PRECONDITIONS (1 parameter):
+    // 1.) userInfo: an object containing user information defined in form (see `generateFormVals` function for more details)
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the data is successfully upserted, and the user is updated successfully with new data on client, render
+    // a success message
+    // otherwise, this function throws an error, which should be handled by the caller function 
+    const standardUpload = async userInfo => {
+        try {
+            await upsertUserInfo(userInfo);
+            await updateUser(user.id);
+            addMessage("Profile information has successfully updated!", "success", 5000);
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    // FUNCTION 15: adminUpload - function that exclusively uploads NEW profiles, accessible by admins in admin mode ONLY
+    // PRECONDITIONS (1 parameter):
+    // 1.) userInfo: an object containing user information defined in form (see `generateFormVals` function for more details)
+    // if the data successfully uploads, render a success message, rerender the search results, and close the popup
+    // otherwise, this function throws an error, which should be handled by the caller function
+    const adminModeUpload = async userInfo => {
+        try {
+            await insertUserInfo(userInfo);
+            addMessage(`Profile successfully created! Try searching for ${ userInfo.username } in the user searchbar!`);
+            adminMode.refreshUserSearchFunc();
+            closePopup();
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    // FUNCTION 16: uploadUserInfo - function that validates, processes, & uploads the form containing the user info (upsert)
     // PRECONDITIONS (1 parameter):
     // 1.) e: an event object that is generated when the user submits the form
     // POSTCONDITIONS (3 possible outcomes): 
@@ -330,7 +382,7 @@ const UserInfoForm = () => {
     // and return from the function early
     // if the user form is validated, we update the user's profile in the database
     // if the user form is validated, but the database update fails, we render an error to the user, and return
-    const uploadUserInfo = async (e) => {
+    const uploadUserInfo = async e => {
         // create error object to track form errors
         e.preventDefault();
         const error = {};
@@ -354,35 +406,36 @@ const UserInfoForm = () => {
 
         // if we made it this far, no errors were deteched, so we can go ahead and update the user profile
         try {
-            // set the uploading flag to true, fix form info for upload
-            dispatchForm({ field: "uploading", value: true });
+            setSubmitting(true);
             const userInfo = { ...form.user };
-            if (!user.profile) {
+            if (!user?.profile) {
                 delete userInfo.id; // user's with no profile yet have no id yet
             }
             const country = userInfo.country;
             userInfo.country = country ? country : null; 
 
             // attempt to upload user info. if it's a success, we also update user state, and render a success message
-            await upsertUserInfo(userInfo);
-            await updateUser(user.id);
-            addMessage("Profile information has successfully updated!", "success", 5000);
+            if (!adminMode.status) {
+                await standardUpload(userInfo);
+            } else {
+                await adminModeUpload(userInfo);
+            }
 
         } catch (error) {
             // special case: user attempted to update their username to a non-unique name
             if (error.code === "23505") {
                 addMessage("This username is already taken.", "error", 5000);
-                error.username = "Username must be unique.";
+                error.username = "Username already taken.";
                 dispatchForm({ field: "error", value: error });
             } 
             
-            // general case: render an error message, and reset the uploading flag
+            // general case: render an error message
             else {
                 addMessage("There was an error updating your profile. Try refreshing the page.", "error", 10000);
             }
 
         } finally {
-            dispatchForm({ field: "uploading", value: false });
+            setSubmitting(false);
         };
     };
 

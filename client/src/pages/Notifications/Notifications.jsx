@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, MessageContext, UserContext } from "../../utils/Contexts";
+import { AppDataContext, MessageContext, UserContext } from "../../utils/Contexts";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import styles from "./Notifications.module.css";
@@ -15,8 +15,8 @@ import TypeSymbol from "./TypeSymbol";
 function Notifications() {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -140,7 +140,7 @@ function Notifications() {
 
             { /* Table body - render a row for each notification */ }
             <tbody>
-              { notifications.all && categories ? 
+              { notifications.all && appData ? 
                 <TableContent items={ notifications.all } emptyMessage="You have no notifications!" numCols={ TABLE_WIDTH }>
                   { notifications.all.map(row => {
                     return <NotificationTableRow 

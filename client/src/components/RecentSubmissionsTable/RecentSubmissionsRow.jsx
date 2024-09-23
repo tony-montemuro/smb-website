@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext } from "../../utils/Contexts.js";
+import { AppDataContext } from "../../utils/Contexts.js";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import FancyLevel from "../FancyLevel/FancyLevel.jsx";
@@ -9,8 +9,8 @@ import Username from "../../components/Username/Username.jsx";
 function RecentSubmissionsRow({ submission, renderGame, renderLevelContext }) {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
   
   /* ===== VARIABLES ===== */
   const level = submission.level;
@@ -18,7 +18,7 @@ function RecentSubmissionsRow({ submission, renderGame, renderLevelContext }) {
   const game = submission.level.mode.game;
   const type = submission.score ? "score" : "time";
   const profile = submission.profile;
-  const { name: categoryName } = categories[category];
+  const { name: categoryName } = appData.categories[category];
 
   /* ===== FUNCTIONS ===== */
 

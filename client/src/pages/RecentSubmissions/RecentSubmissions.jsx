@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext } from "../../utils/Contexts.js";
+import { AppDataContext } from "../../utils/Contexts.js";
 import { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import styles from "./RecentSubmissions.module.css";
@@ -15,7 +15,9 @@ function RecentSubmissions({ imageReducer }) {
   const NUM_SUBMISSIONS = 100;
 
   /* ===== CONTEXTS ===== */
-  const { categories } = useContext(CategoriesContext);
+
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   /* ===== STATES & FUNCTIONS ===== */
   const [searchParams, setSearchParams] = useSearchParams();
@@ -35,11 +37,11 @@ function RecentSubmissions({ imageReducer }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // code that is executed when the component mounts, and when the categories state updates
+  // code that is executed when the component mounts, and when the `appData.categories` state updates
   useEffect(() => {
-    dispatchFiltersData({ type: "categories", value: categories });
+    dispatchFiltersData({ type: "categories", value: appData.categories });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categories]);
+  }, [appData.categories]);
 
   /* ===== RECENT SUBMISSIONS COMPONENT ===== */
   return (

@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import { formatDistanceToNowStrict } from "date-fns";
+import { isAlphaPattern } from "../utils/RegexPatterns";
 
 const FrontendHelper = () => {
     /* ===== FUNCTIONS ===== */
@@ -18,7 +19,7 @@ const FrontendHelper = () => {
     // 1.) str: a string with snake case formatting
     // POSTCONDITIONS (1 possible outcome):
     // generally, the first letter of each word is capitalized, and underscores are replaced with spaces. however, if
-    // the user wants to have a space, they can specify that with two underscores `__`, and this function will handle
+    // the user wants to have an underscore, they can specify that with two underscores `__`, and this function will handle
     // that request
     const snakeToTitle = str => {
         let title = "";
@@ -232,6 +233,53 @@ const FrontendHelper = () => {
         return undefined;
     };
 
+    // FUCNTION 11: snakeToTitleWithDashes - converts a string in snake case to title case, including "dashed" words
+    // PRECONDITIONS (1 parameter):
+    // 1.) str: a string with snake case formatting
+    // POSTCONDITIONS (1 possible outcome):
+    // generally, the first letter of each word is capitalized, and underscores are replaced with spaces. however, if
+    // the user wants to have an underscore, they can specify that with two underscores `__`, and this function will handle
+    // that request. this function additionally handles "dashes", such that if a letter occurs after a dash, it's capitalized
+    const snakeToTitleWithDashes = str => {
+        const title = snakeToTitle(str);
+
+        // logic for capitalizing letters after dashes
+        let titleWithDashes = "";
+        for (let i = 0; i < title.length; i++) {
+            let c = title[i];
+            if (i > 0 && title[i-1] === "-" && isAlphaPattern.test(c)) {
+                c = c.toUpperCase();
+            }
+            titleWithDashes += c;
+        }
+
+        return titleWithDashes;
+    };
+
+    // TODO: after timer rework, this function is no longer necessary
+    // FUNCTION 12: timerTypeB2F - code that converts timerType from back-end format to more user-friendly front-end format
+    // PRECONDITIONS (1 parameter):
+    // 1.) timerType: a string representing a back-end-formatted timer_type enum type
+    // POSTCONDITIONS (1 possible outcome):
+    // the string is converted into a more understandable format for most users
+    const timerTypeB2F = timerType => {
+        const words = timerType.split("_");
+        let fixedTimer = "";
+
+        for (let i = 0; i < words.length; i++) {
+            fixedTimer += words[i];
+            if (i < words.length-1) {
+                if (["csec", "msec"].includes(words[i+1])) {
+                    fixedTimer += ".";
+                } else {
+                    fixedTimer += ":";
+                }
+            }
+        }
+
+        return fixedTimer.toUpperCase();
+    };
+
     return { 
         capitalize,
         snakeToTitle,
@@ -241,7 +289,9 @@ const FrontendHelper = () => {
         recordB2F,
         getTimeAgo,
         runTypeB2F,
-        timerType2TimeUnit
+        timerType2TimeUnit,
+        snakeToTitleWithDashes,
+        timerTypeB2F
     };
 };
 

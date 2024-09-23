@@ -2,6 +2,7 @@
 import { MessageContext, UserContext } from "../../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import Download from "../../../database/storage/Download";
+import FileHelper from "../../../helper/FileHelper";
 import Upload from "../../../database/storage/Upload";
 
 const AvatarInfoForm = (MAX_IMG_LENGTH) => {
@@ -27,45 +28,10 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
     const { uploadAvatar } = Upload();
     const { updateImageByProfileId } = Download();
     
-    // FUNCTION 1: getFileInfo - determine the file information from an image form ref
-    // PRECONDITIONS (1 parameter):
-    // 1.) avatarRef: a ref to the image input for avatar form
-    // POSTCONDITIONS (2 returns):
-    // 1.) file: the file object associated with the ref hook
-    // 2.) fileExt: the extension of the file
-    const getFileInfo = avatarRef => {
-        const file = avatarRef.current.files[0];
-        return { file: file, fileExt: file.name.split(".").pop().toLowerCase() };
-    };
+    // helper functions
+    const { getFileInfo, checkImageDimension } = FileHelper();
 
-    // FUNCTION 2: checkImageDimension - code that checks the dimensions of the image uploaded by the user
-    // PRECONDITIONS (1 parameter):
-    // 1.) file: a File object of one of the three types: PNG, JPG, or JPEG
-    // POSTCONDITIONS (2 possible outcomes):
-    // when this function is called, a Promise is returned, which is expected to be handled asynchronously
-    // the promise will resolve if the image size is with in the `maxSize`x`maxSize` limit
-    // otherwise, the promise will reject with the reason that the dimensions are off
-    const checkImageDimension = file => {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-
-            // code that executes when the image has been loaded from file
-            img.onload = () => {
-                // extract dimensions, and check if they are within valid range
-                const width = img.width;
-                const height = img.height;
-                if (width > MAX_IMG_LENGTH || height > MAX_IMG_LENGTH) {
-                    reject(`Avatar dimensions are too large: (${ width }x${ height }). Avatar must be within ${ MAX_IMG_LENGTH }x${ MAX_IMG_LENGTH }.`);
-                } else {
-                    resolve();
-                }
-            };
-
-            img.src = URL.createObjectURL(file);
-        });
-    };
-
-    // FUNCTION 3: validateAvatar - determine if user has uploaded a valid avatar
+    // FUNCTION 1: validateAvatar - determine if user has uploaded a valid avatar
     // PRECONDITIONS (1 parameter):
     // 1.) avatarRef: a ref to the image input for avatar form
     // POSTCONDTIONS (1 parameter):
@@ -88,14 +54,14 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
 
         // finally, we need to check the file size. if the file exceeds the maximum dimensions, return an error
         try {
-            await checkImageDimension(file);
+            await checkImageDimension(file, MAX_IMG_LENGTH, MAX_IMG_LENGTH);
             return undefined;
         } catch (error) {
             return error;
         };
     };
 
-    // FUNCTION 4: convertToPNG - async function that takes a file object, and converts it to a PNG, if necessary
+    // FUNCTION 2: convertToPNG - async function that takes a file object, and converts it to a PNG, if necessary
     // PRECONDITIONS (1 parameter):
     // 1.) file: a File object of one of the three types: PNG, JPG, or JPEG
     // POSTCONDITIONS (3 possible outcomes):
@@ -145,7 +111,7 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
         return file;
     };
 
-    // FUNCTION 5: submitAvatar - function that validates, processes, & submits an avatar
+    // FUNCTION 3: submitAvatar - function that validates, processes, & submits an avatar
     // PRECONDITIONS (2 parameters):
     // 1.) e: an event object that is generated when the user submits the form
     // 2.) avatarRef: a ref hook that is assigned to the avatar input
@@ -180,7 +146,7 @@ const AvatarInfoForm = (MAX_IMG_LENGTH) => {
             await uploadAvatar(convertedFile, `${ profileId }.png`);
 
             // re-download the new image & update the global image state, and render a success message
-            await updateImageByProfileId(user.profile.id, imageReducer, true);
+            await updateImageByProfileId(profileId, imageReducer, true);
             addMessage("Avatar successfully uploaded. If it is not showing up, give it some time and reload the page.", "success", 9000);
             
         } catch (error) {

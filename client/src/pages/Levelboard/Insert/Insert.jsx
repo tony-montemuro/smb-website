@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { CategoriesContext, GameContext, UserContext } from "../../../utils/Contexts";
+import { AppDataContext, GameContext, UserContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import dayjs from "dayjs";
@@ -21,8 +21,8 @@ import UserSearch from "../../../components/UserSearch/UserSearch.jsx";
 function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // game state from game context
   const { game } = useContext(GameContext);
@@ -50,7 +50,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
     disableLink: true,
     onUserRowClick: onUserRowClick
   };
-  const isPracticeMode = categories[category] ? categories[category].practice : undefined;
+  const isPracticeMode = appData.categories[category] ? appData.categories[category].practice : undefined;
   const PROOF_MAX_LENGTH = 256;
   const COMMENT_MAX_LENGTH = 100;
   const COMMENT_ROWS = 2;

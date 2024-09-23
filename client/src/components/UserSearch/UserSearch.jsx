@@ -8,7 +8,7 @@ import SearchBarInput from "../SearchBarInput/SearchBarInput";
 import UserSearchLogic from "./UserSearch.js";
 import UserRow from "../UserRow/UserRow.jsx";
 
-function UserSearch({ usersPerPage, imageReducer = null, userRowOptions }) {
+function UserSearch({ usersPerPage, userRowOptions, imageReducer = null, parentRefreshTrigger = null }) {
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
   const [searchInput, setSearchInput] = useState("");
@@ -40,7 +40,7 @@ function UserSearch({ usersPerPage, imageReducer = null, userRowOptions }) {
       setPageNum(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchInput]);
+  }, [searchInput, parentRefreshTrigger]);
 
   /* ===== USER SEARCH BAR COMPONENT ===== */
   return (

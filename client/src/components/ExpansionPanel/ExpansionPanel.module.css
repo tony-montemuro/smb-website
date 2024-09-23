@@ -1,0 +1,22 @@
+.expansionPanel h3 {
+    display: inline;
+    margin: 0;
+}
+
+.expansionPanel summary {
+    background-color: rgb(var(--color-nav));
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.expansionPanel[open] summary {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.expansionPanel[open] .content {
+    background-color: rgba(var(--color-container-light));
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 5px;
+}

@@ -1,0 +1,49 @@
+/* ===== GENERAL STYLING ===== */
+
+.addGamePages {
+    display: flex;
+    padding: 20px 0;
+    gap: 5px;
+}
+
+.pageBtn {
+    width: 100%;
+    border-radius: 5px;
+    background-color: rgb(var(--color-button));
+    color: rgb(var(--color-background));
+    padding: 10px;
+    text-align: center;
+}
+
+.selected {
+    background-color: rgb(var(--color-button-selected));
+}
+
+.disabled {
+    background-color: rgba(var(--color-button), 0.2);
+    color: rgba(var(--color-background), 0.8);
+}
+
+.pageBtn:hover {
+    background-color: rgb(var(--color-button-hover));
+    cursor: pointer;
+}
+
+.disabled:hover {
+    background-color: rgba(var(--color-button), 0.2);
+    color: rgba(var(--color-background), 0.8);
+    cursor: default;
+}
+
+
+/* ===== MEDIA QUERIES FOR SMALLER DEVICES ===== */
+
+@media (max-width: 800px) {
+    .addGamePages {
+        flex-direction: column;
+    }
+    
+    .pageBtn {
+        width: auto;
+    }
+}

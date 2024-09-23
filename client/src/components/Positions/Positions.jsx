@@ -1,5 +1,6 @@
 /* ===== IMPORTS ===== */
 import styles from "./Positions.module.css";
+import ExpansionPanel from "../ExpansionPanel/ExpansionPanel";
 import FrontendHelper from "../../helper/FrontendHelper";
 
 /* ===== FUNCTIONS ===== */
@@ -24,19 +25,16 @@ export { renderPosition };
 // EXPORT 2: Position disclaimer component - render a disclaimer regarding the position and live position fields
 export function PositionDisclaimer() {
   return (
-    <div className={ styles.disclaimer }>
-      <details>
-        <summary><h3>About Position</h3></summary>
-        <div className={ styles.details }>
-          <span><strong>Position</strong> and <strong>Live Position</strong> are both recorded the moment the submission is first created, meaning these values may become inaccurate as time passes.</span>
-          <ul>
-            <li><strong>Position</strong> compares the submission against all other active submissions of the chart.</li>
-            <li><strong>Live Position</strong> is only calculated if the submission has a live proof, and compares the submission against all other active live submissions of the chart.</li>
-          </ul>
-          <span>Neither of these values are recorded if the date of the submission does not match the date it was submitted.</span>
-        </div>
-      </details>
-    </div>
+    <ExpansionPanel title="About Position">
+      <div className={ styles.details }>
+        <span><strong>Position</strong> and <strong>Live Position</strong> are both recorded the moment the submission is first created, meaning these values may become inaccurate as time passes.</span>
+        <ul>
+          <li><strong>Position</strong> compares the submission against all other active submissions of the chart.</li>
+          <li><strong>Live Position</strong> is only calculated if the submission has a live proof, and compares the submission against all other active live submissions of the chart.</li>
+        </ul>
+        <span>Neither of these values are recorded if the date of the submission does not match the date it was submitted.</span>
+      </div>
+    </ExpansionPanel>
   );
 };
 

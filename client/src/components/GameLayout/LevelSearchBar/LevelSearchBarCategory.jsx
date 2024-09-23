@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext, GameContext } from "../../../utils/Contexts";
+import { AppDataContext, GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
 import styles from "./LevelSearchBar.module.css";
 import FancyLevel from "../../FancyLevel/FancyLevel.jsx";
@@ -9,14 +9,14 @@ import TypeButtons from "../../TypeButtons/TypeButtons.jsx";
 function LevelSearchBarCategory({ category, filtered }) {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
 
   // game state from game context
   const { game } = useContext(GameContext);
 
   /* ===== VARIABLES ===== */
-  const { name: categoryName } = categories[category];
+  const { name: categoryName } = appData.categories[category];
 
   /* ===== FUNCTIONS ===== */
 

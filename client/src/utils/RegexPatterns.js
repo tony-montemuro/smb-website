@@ -38,3 +38,24 @@ export const imgurPattern = /^(?:https?:\/\/)?(?:i\.)?(?:www\.)?(?:imgur\.com\/)
 
 // Google Drive Regex
 export const googleDrivePattern = /^(?:https?:\/\/)?drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/[^/?]+)?(?:\?.*)?$/;
+
+// Is alpha regex
+export const isAlphaPattern = /[A-Za-z]/;
+
+// Is lower alphanumeric regex
+export const isLowerAlphaNumeric = /^[a-z0-9]+$/;
+
+// Is upper alpha regex
+export const isUpperAlphaPattern = /^[A-Z]+$/;
+
+// Is lower alpha regex
+export const isLowerAlphaPattern = /^[a-z]+$/;
+
+// Is upper alphanumeric regex
+export const isUpperAlphaNumeric = /^[A-Z0-9]+$/;
+
+// Is lower alphanumeric with underscores regex
+export const isLowerAlphaNumericWithUnderscores = /^[a-z0-9][a-z0-9_]*$/;
+
+// Is url-safe regex
+export const isUrlSafe = /^[a-zA-Z0-9\-_.!~*''()%]+$/;

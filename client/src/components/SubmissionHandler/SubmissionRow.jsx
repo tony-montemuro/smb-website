@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { CategoriesContext } from "../../utils/Contexts.js";
+import { AppDataContext } from "../../utils/Contexts.js";
 import { useContext } from "react";
 import styles from "./SubmissionHandler.module.css";
 import FancyLevel from "../FancyLevel/FancyLevel.jsx";
@@ -10,8 +10,8 @@ import Username from "../../components/Username/Username.jsx"
 function SubmissionRow({ submission, onClick, isUnapproved }) {
   /* ===== CONTEXTS ===== */
 
-  // categories state from categories context
-  const { categories } = useContext(CategoriesContext);
+  // appData state from app data context
+  const { appData } = useContext(AppDataContext);
   
   /* ===== FUNCTIONS ===== */
 
@@ -25,7 +25,7 @@ function SubmissionRow({ submission, onClick, isUnapproved }) {
   const level = submission.level;
   const creator = !isUnapproved ? submission.report.creator : undefined;
   const type = submission.score ? "score" : "time";
-  const { name: categoryName } = categories[level.category];
+  const { name: categoryName } = appData.categories[level.category];
 
   /* ===== SUBMISSION ROW COMPONENT ===== */
   return (
