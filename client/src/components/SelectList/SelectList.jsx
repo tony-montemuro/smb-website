@@ -8,7 +8,7 @@ function SelectList({ entities, inputData, selectData, children, colorBackground
   const emptyEntity = {
     id: entities.length > 0 ? entities.at(-1).id+1 : 1,
     [inputData.entityName]: ""
-  };
+  }; 
 
   /* ===== SELECT LIST COMPONENT ===== */
   return (

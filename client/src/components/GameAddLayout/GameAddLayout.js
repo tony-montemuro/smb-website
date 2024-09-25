@@ -139,7 +139,7 @@ const GameAddLayout = (page, setPage, pageInit, setEntitiesData, setStructureDat
     // the state is transform from a mapping of category names to category objects, to an array of category objects,
     // sorted by id, then practice flag
     const getTransformedCategories = () => {
-        return Object.values(appData.categories).toSorted((b, a) => b.practice - a.practice);
+        return [...Object.values(appData.categories)].sort((b, a) => b.practice - a.practice);
     };
 
     // FUNCTION 6: fetchStructureData - function that grabs all the data we need for structure in the form
@@ -153,9 +153,9 @@ const GameAddLayout = (page, setPage, pageInit, setEntitiesData, setStructureDat
             const [chartTypes, timerTypes] = await Promise.all(
                 [getChartTypes(), getTimerTypes()]
             );
-            let categoryList = getTransformedCategories();
+            const categories = getTransformedCategories();
 
-            setStructureData({ categories: categoryList, chartTypes, timerTypes });
+            setStructureData({ categories, chartTypes, timerTypes });
         } catch (error) {
             addMessage("Structure data failed to load. If reloading the page does not work, the system may be experiencing an outage.", "error", 15000);
         }
