@@ -43,7 +43,9 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
   // code that is executed when the component mounts, when the games state changes, OR when isUnapproved changes
   useEffect(() => {
     if (games) {
-      const sorted = isUnapproved ? games.toSorted((a, b) => b.unapproved - a.unapproved) : games.toSorted((a, b) => b.reported - a.reported);
+      const sorted = isUnapproved ? 
+        [...games].sort((a, b) => b.unapproved - a.unapproved) : 
+        [...games].sort((a, b) => b.reported - a.reported);
       setSortedGames(sorted);
       setGame(game ? game : sorted[0]);
     };
