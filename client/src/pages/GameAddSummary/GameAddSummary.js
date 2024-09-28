@@ -56,6 +56,7 @@ const GameAddSummary = (setError, setSubmitting) => {
             }
             level.game = abb;
             level.mode = level.mode.name;
+            level.timer_type = level.timer_type ? level.timer_type : null;
             return level;
         });
 
