@@ -28,11 +28,12 @@ function GameLayout({ imageReducer }) {
 
   /* ===== STATES ===== */
   const [game, setGame] = useState(undefined);
+  const [version, setVersion] = useState(null);
 
   /* ===== FUNCTIONS ===== */
 
   // database functions
-  const { fetchGame } = GameLayoutLogic();
+  const { fetchGame, handleVersionChange } = GameLayoutLogic(setVersion);
 
   // helper functions
   const { getGameCategories } = GameHelper();
@@ -64,7 +65,7 @@ function GameLayout({ imageReducer }) {
   return (
     <div className={ styles.gameLayout }>
       { game && appData ?
-        <GameContext.Provider value={ { game } }>
+        <GameContext.Provider value={ { game, version, handleVersionChange } }>
           <GameHeader imageReducer={ imageReducer } />
           <div className={ styles.body }>
 

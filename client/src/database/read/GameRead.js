@@ -64,7 +64,12 @@ const GameRead = () => {
                     ),
                     name,
                     profile!game_profile (id, username, country),
-                    release_date
+                    release_date,
+                    version (
+                        id,
+                        version,
+                        sequence
+                    )
                 `)
                 .order("custom")
                 .order("release_date")
@@ -78,9 +83,10 @@ const GameRead = () => {
                 throw error;
             }
 
-            // next, let's sort the list of profiles (game moderators) by username, as well as game_rules by id
+            // next, let's sort any unsorted lists
             game.profile.sort((a, b) => a.username.localeCompare(b.username));
             game.game_rule.sort((a, b) => a.id - b.id);
+            game.version.sort((a, b) => a.sequence - b.sequence);
 
             // return the game object
             return game;

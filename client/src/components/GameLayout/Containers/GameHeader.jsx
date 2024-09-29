@@ -8,6 +8,7 @@ import Container from "../../Container/Container.jsx";
 import DownloadIcon from "@mui/icons-material/Download";
 import LevelSearchBar from "../LevelSearchBar/LevelSearchBar.jsx";
 import Username from "../../Username/Username.jsx";
+import TextField from "@mui/material/TextField";
 
 function GameHeader({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -15,8 +16,8 @@ function GameHeader({ imageReducer }) {
 
   /* ===== CONTEXTS ===== */
   
-  // game state from game context
-  const { game } = useContext(GameContext);
+  // game state, version state, and handle version change function from game context
+  const { game, version, handleVersionChange } = useContext(GameContext);
   
   /* ===== GAME HEADER COMPONENT ===== */
   return (
@@ -44,6 +45,23 @@ function GameHeader({ imageReducer }) {
                   <DownloadIcon className="inline-icon" />
                 </a>
               </span>
+            }
+
+            { /* If game has any versions, let's allow user to update version here */ }
+            { game.version.length > 0 &&
+              <TextField
+                id="version"
+                label="Version"
+                select
+                SelectProps={{ native: true }}
+                onChange={ handleVersionChange }
+                value={ version.id }
+                variant="filled"
+              >
+                { game.version.map(version => (
+                  <option value={ version.id } key={ version.id } >{ version.version }</option>
+                ))}
+              </TextField>
             }
           </div>
 

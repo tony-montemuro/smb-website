@@ -2,7 +2,7 @@
 import GameHelper from "../../helper/GameHelper";
 import GameRead from "../../database/read/GameRead.js";
 
-const GameLayout = () => {
+const GameLayout = (setVersion) => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
@@ -28,7 +28,17 @@ const GameLayout = () => {
         };
     };
 
-    return { fetchGame };
+    // FUNCTION 2: handleVersionChange - code that is executed when the user changes the game version
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: the event object generated when the user selects a new version
+    // POSTCONDITIONS (1 possible outcome):
+    // the version is updated given the information in `e.target`
+    const handleVersionChange = e => {
+        const { value } = e.target;
+        setVersion(value);
+    }
+
+    return { fetchGame, handleVersionChange };
 };
 
 /* ===== EXPORTS ===== */
