@@ -23,8 +23,8 @@ function MedalTable({ imageReducer }) {
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
 
-  // game state from game context
-  const { game } = useContext(GameContext);
+  // game state and version state from game context
+  const { game, version } = useContext(GameContext);
   
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -84,6 +84,14 @@ function MedalTable({ imageReducer }) {
     scrollToTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
+
+  // code that executes when the version changes
+  useEffect(() => {
+    if (medalTable) {
+      fetchMedals(abb, category, type);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
       
   /* ===== MEDALS COMPONENT ===== */
   return (
@@ -120,7 +128,7 @@ function MedalTable({ imageReducer }) {
             { medalTable ?
               <TableContent 
                 items={ medalTable } 
-                emptyMessage="There have been no live submissions to this game's category!"
+                emptyMessage="There have been no live submissions to this game's category or version!"
                 numCols={ TABLE_LENGTH }
               >
                 { medalTable.slice((pageNum-1)*USERS_PER_PAGE, pageNum*USERS_PER_PAGE).map(row => {

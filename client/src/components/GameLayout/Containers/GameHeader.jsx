@@ -8,7 +8,6 @@ import Container from "../../Container/Container.jsx";
 import DownloadIcon from "@mui/icons-material/Download";
 import LevelSearchBar from "../LevelSearchBar/LevelSearchBar.jsx";
 import Username from "../../Username/Username.jsx";
-import TextField from "@mui/material/TextField";
 
 function GameHeader({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -49,19 +48,14 @@ function GameHeader({ imageReducer }) {
 
             { /* If game has any versions, let's allow user to update version here */ }
             { game.version.length > 0 &&
-              <TextField
-                id="version"
-                label="Version"
-                select
-                SelectProps={{ native: true }}
-                onChange={ handleVersionChange }
-                value={ version.id }
-                variant="filled"
-              >
-                { game.version.map(version => (
-                  <option value={ version.id } key={ version.id } >{ version.version }</option>
-                ))}
-              </TextField>
+              <div className={ styles.version }>
+                <label htmlFor="version">Version: </label>
+                <select id="version" onChange={ handleVersionChange } value={ version } >
+                  { game.version.map(version => (
+                    <option value={ version.id } key={ version.id } >{ version.version }</option>
+                  ))}
+                </select>
+              </div>
             }
           </div>
 

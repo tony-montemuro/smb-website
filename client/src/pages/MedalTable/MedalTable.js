@@ -1,10 +1,14 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import { GameContext } from "../../utils/Contexts";
 import RPCRead from "../../database/read/RPCRead";
 
 const MedalTable = () => {
     /* ===== CONTEXTS ===== */
+
+    // version state from game context
+    const { version } = useContext(GameContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -34,7 +38,7 @@ const MedalTable = () => {
 
         // then, attempt to query the database for the medals data
         try {
-            const medals = await getMedals(abb, category, type);
+            const medals = await getMedals(abb, category, type, version.id);
             setMedalTable(medals);
         } catch (error) {
 			addMessage("Failed to load medal table. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);

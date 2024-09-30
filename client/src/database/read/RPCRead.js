@@ -67,19 +67,21 @@ const RPCRead = () => {
     };
 
     // FUNCTION 3: getMedals - function that calls on a procedure to generate a medals array depending on the parameters
-    // PRECONDITIONS (3 parameters):
+    // PRECONDITIONS (4 parameters):
     // 1.) abb: a string representing the unique identifier for a game
     // 2.) category: a string representing a valid category
     // 3.) type: a string, either "score" or "time"
+    // 4.) version: an int OR null: an int if game has versions, otherwise null
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, an array of medals objects, sorted by position field, is returned
     // otherwise, this function throws an error, which should be handled by the caller function
-    const getMedals = async (abb, category, type) => {
+    const getMedals = async (abb, category, type, version) => {
         try {
             const { data: medals, error } = await supabase.rpc("get_medals", { 
                 abb: abb, 
-                category: category,
-                score: type === "score"
+                category,
+                score: type === "score",
+                version
             });
 
             // error handling

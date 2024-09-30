@@ -21,6 +21,7 @@ const GameLayout = (setVersion) => {
         try {
             const game = await queryGame(abb);
             cleanGameObject(game);
+            setVersion(game.version.at(-1));
             return game;
 
         } catch (error) {

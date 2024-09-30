@@ -28,6 +28,13 @@
    height: 30px;
 }
 
+.version {
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
 /* ===== MEDIA QUERY FOR SMALLER DEVICES ===== */
 
 @media (max-width: 940px) {
