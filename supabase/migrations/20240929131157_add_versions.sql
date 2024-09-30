@@ -180,3 +180,112 @@ ALTER TRIGGER report_before_insert_trigger ON report RENAME TO report_before_ins
 ALTER TRIGGER submission_after_insert_trigger ON submission RENAME TO submission_after_insert_row_trigger;
 ALTER TRIGGER submission_after_update_trigger ON submission RENAME TO submission_after_update_row_trigger;
 ALTER TRIGGER submission_before_insert_trigger ON submission RENAME TO submission_before_insert_row_trigger;
+
+-- Now, we need to update RPCs to allow for version specification
+
+CREATE OR REPLACE FUNCTION get_ranked_submissions(game_name text, category_name text, is_score boolean, live_only boolean, version_key int)
+RETURNS TABLE (
+  game_id text,
+  level_id text,
+  category text,
+  id integer,
+  username varchar(25),
+  country text,
+  record float8,
+  submitted_at timestamptz,
+  live boolean,
+  "position" integer
+)
+LANGUAGE sql
+AS $$
+  WITH ranked AS (
+    SELECT 
+      s.game_id, 
+      s.level_id, 
+      s.category, 
+      p.id, 
+      p.username, 
+      p.country, 
+      s.record, 
+      s.score, 
+      s.submitted_at, 
+      s.live, 
+      l.id AS level_ctr, 
+      ROW_NUMBER() OVER (PARTITION BY (
+        s.profile_id, 
+        s.game_id, 
+        s.category, 
+        s.level_id, 
+        s.score, 
+        CASE WHEN live_only THEN s.live ELSE NULL END,
+        CASE WHEN version_key IS NOT NULL THEN s.version ELSE NULL END
+      ) ORDER BY s.submitted_at DESC, s.id DESC) AS rn
+    FROM submission s
+    INNER JOIN profile p ON s.profile_id = p.id
+    INNER JOIN level l ON (
+      s.game_id = l.game AND 
+      s.level_id = l.name AND 
+      s.category = l.category
+    )  
+    WHERE 
+      s.game_id = game_name AND 
+      s.category = category_name AND 
+      s.score = is_score AND 
+      tas = false AND 
+      (NOT live_only OR s.live = true) AND
+      (version_key IS NULL OR s.version = version_key)
+  )
+  SELECT 
+    r.game_id, 
+    r.level_id, 
+    r.category, 
+    r.id, 
+    r.username, 
+    r.country, 
+    r.record, 
+    r.submitted_at, 
+    r.live, 
+    RANK() OVER (PARTITION BY r.level_id ORDER BY r.record DESC) AS "position"
+  FROM ranked r
+  WHERE r.rn = 1
+  ORDER BY r.level_ctr ASC, r.record DESC, r.submitted_at ASC
+$$;
+
+CREATE OR REPLACE FUNCTION get_medals(abb text, category text, score boolean, version int)
+RETURNS json
+LANGUAGE sql
+AS $$
+WITH ranked_submissions AS (
+  SELECT
+    level_id,
+    id,
+    username,
+    country,
+    "position"
+  FROM get_ranked_submissions(abb, category, score, true, version)
+),
+medal_counts AS (
+  SELECT
+    id,
+    username,
+    country,
+    COUNT(*) FILTER (WHERE "position" = 1 AND (SELECT COUNT(*) FROM ranked_submissions rs WHERE rs.level_id = ranked_submissions.level_id AND rs."position" = 1) = 1) AS platinum,
+    COUNT(*) FILTER (WHERE "position" = 1 AND (SELECT COUNT(*) FROM ranked_submissions rs WHERE rs.level_id = ranked_submissions.level_id AND rs."position" = 1) > 1) AS gold,
+    COUNT(*) FILTER (WHERE "position" = 2) AS silver,
+    COUNT(*) FILTER (WHERE "position" = 3) AS bronze
+  FROM ranked_submissions
+  GROUP BY id, username, country
+)
+SELECT CASE WHEN category IN (SELECT abb FROM category WHERE practice = true) THEN COALESCE((json_agg(row_to_json(medals_row))), '[]'::json) ELSE '[]'::json END
+FROM (
+  SELECT
+    (SELECT jsonb_build_object('country', mc.country, 'id', mc.id, 'username', mc.username)) AS profile,
+    platinum,
+    gold,
+    silver,
+    bronze,
+    RANK() OVER (ORDER BY platinum DESC, gold DESC, silver DESC, bronze DESC) AS "position"
+  FROM medal_counts mc
+  ORDER BY platinum DESC, gold DESC, silver DESC, bronze DESC
+) medals_row
+$$;
