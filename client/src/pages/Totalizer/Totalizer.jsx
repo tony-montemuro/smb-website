@@ -19,8 +19,8 @@ function Totalizer({ imageReducer }) {
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
 
-  // game state from game context
-  const { game } = useContext(GameContext);
+  // game state & version state from game context
+  const { game, version } = useContext(GameContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -88,6 +88,14 @@ function Totalizer({ imageReducer }) {
     scrollToTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
+
+  // code that executes each time the version state changes
+  useEffect(() => {
+    if (totals) {
+      fetchTotals(game, category, type);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
 
   /* ===== TOTALIZER COMPONENT ===== */
   return (

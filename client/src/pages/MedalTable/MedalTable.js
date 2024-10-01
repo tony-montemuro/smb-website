@@ -38,7 +38,7 @@ const MedalTable = () => {
 
         // then, attempt to query the database for the medals data
         try {
-            const medals = await getMedals(abb, category, type, version.id);
+            const medals = await getMedals(abb, category, type, version?.id);
             setMedalTable(medals);
         } catch (error) {
 			addMessage("Failed to load medal table. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);

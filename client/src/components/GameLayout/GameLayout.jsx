@@ -33,7 +33,7 @@ function GameLayout({ imageReducer }) {
   /* ===== FUNCTIONS ===== */
 
   // database functions
-  const { fetchGame, handleVersionChange } = GameLayoutLogic(setVersion);
+  const { fetchGame, handleVersionChange } = GameLayoutLogic(game, setVersion);
 
   // helper functions
   const { getGameCategories } = GameHelper();

@@ -2,7 +2,7 @@
 import GameHelper from "../../helper/GameHelper";
 import GameRead from "../../database/read/GameRead.js";
 
-const GameLayout = (setVersion) => {
+const GameLayout = (game, setVersion) => {
     /* ===== FUNCTIONS ===== */
 
     // database functions
@@ -36,7 +36,9 @@ const GameLayout = (setVersion) => {
     // the version is updated given the information in `e.target`
     const handleVersionChange = e => {
         const { value } = e.target;
-        setVersion(value);
+        const id = parseInt(value);
+        const version = game.version.find(version => version.id === id);
+        setVersion(version);
     }
 
     return { fetchGame, handleVersionChange };
