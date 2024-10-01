@@ -183,6 +183,7 @@ ALTER TRIGGER submission_before_insert_trigger ON submission RENAME TO submissio
 
 -- Now, we need to update RPCs to allow for version specification
 
+-- First, `get_ranked_submissions`. Many relevant RPCs depend on this.
 CREATE OR REPLACE FUNCTION get_ranked_submissions(game_name text, category_name text, is_score boolean, live_only boolean, version_key int)
 RETURNS TABLE (
   game_id text,
@@ -251,6 +252,7 @@ AS $$
   ORDER BY r.level_ctr ASC, r.record DESC, r.submitted_at ASC
 $$;
 
+-- Next, medals RPC.
 CREATE OR REPLACE FUNCTION get_medals(abb text, category text, score boolean, version int)
 RETURNS json
 LANGUAGE sql
@@ -288,4 +290,82 @@ FROM (
   FROM medal_counts mc
   ORDER BY platinum DESC, gold DESC, silver DESC, bronze DESC
 ) medals_row
+$$;
+
+-- Next, totals RPC.
+CREATE OR REPLACE FUNCTION get_totals(abb text, category text, score boolean, live_only boolean, version int)
+RETURNS json
+LANGUAGE plv8
+AS $$
+  // -- first, this code should only really execute for "practice mode" categories, should return an empty array otherwise
+  const practiceCategories = plv8.execute( 'SELECT abb FROM category WHERE practice = true' );
+  if (!practiceCategories.some(item => item.abb === category)) {
+    return [];
+  }
+
+  // -- next, get the ranked submissions according to the function parameters
+  let query = 'SELECT * FROM get_ranked_submissions($1, $2, $3, $4, $5)';
+  let paramTypes = ['text', 'text', 'boolean', 'boolean', 'int'];
+  let plan = plv8.prepare(query, paramTypes);
+  const submissions = plan.execute( [abb, category, score, live_only, version] );
+  plan.free();
+
+  // -- next, get the total time. note: this is only necessary to define if `score` is FALSE
+  let totalTime;
+  if (!score) {
+    query = 'SELECT get_category_time($1, $2)';
+    paramTypes = ['text', 'text'];
+    plan = plv8.prepare(query, paramTypes);
+    result = plan.execute( [abb, category] );
+    totalTime = result[0].get_category_time;
+    plan.free();
+  }
+
+  // -- next, we want to create our mapping of users to totals
+  const userToTotal = {};
+  submissions.forEach(submission => {
+
+    // -- first, extract information from submission object
+    const profile = { 
+      id: submission.id,
+      username: submission.username,
+      country: submission.country
+    };
+    const record = score ? submission.record : -Math.abs(submission.record);
+
+    // -- then, we can update the mapping object
+    // -- default case: user has already been added to mapping. simple increment the total field
+    if (profile.id in userToTotal) {
+      userToTotal[profile.id].total += record
+    } 
+    
+    // -- edge case: user has not yet been added to the mapping. add them, as well as the record (or sum of `totalTime` and `record`) as total
+    else {
+      userToTotal[profile.id] = { profile: profile, total: score ? record : totalTime + record };
+    }
+
+  });
+
+  // -- now, let's convert our mapping into an array of objects, sorted by `total`. NOTE: order of sort depends on the `score` parameter
+  let totals;
+  if (score) {
+    totals = Object.values(userToTotal).sort((a, b) => a.total > b.total ? -1 : 1);
+  } else {
+    totals = Object.values(userToTotal).sort((a, b) => a.total > b.total ? 1 : -1);
+  }
+
+  // -- now, let's add the position attribute
+  let trueCount = 1, posCount = trueCount;
+  totals.forEach((row, index) => {
+    row.position = posCount;
+    trueCount++;
+    
+    // -- if next element exists, and has a different total than the current total, update posCount
+    if (index < totals.length-1 && totals[index+1].total !== row.total) {
+      posCount = trueCount;
+    }
+  });
+
+  // -- finally, return our totals array of objects
+  return totals;
 $$;
