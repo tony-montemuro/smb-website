@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import RPCRead from "../../database/read/RPCRead";
 
@@ -8,6 +8,9 @@ const Records = () => {
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
+
+    // version state from game context
+    const { version } = useContext(GameContext);
 
     /* ===== STATES ===== */
     const [recordTable, setRecordTable] = useState(undefined);
@@ -36,11 +39,13 @@ const Records = () => {
         // then, attempt to query the database for the records data: both for all submissions, and live-only submissions
         try {
             const promises = [false, true].map(liveOnly => {
-                return getRecords(game.abb, category, type, liveOnly);
+                return getRecords(game.abb, category, type, liveOnly, version?.id);
             });
             const [all, live] = await Promise.all(promises);
             setRecordTable({ all, live });
         } catch (error) {
+            console.log(error);
+            
 			addMessage("Failed to fetch world record data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
         }
     };

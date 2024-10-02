@@ -17,8 +17,8 @@ function Records() {
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
 
-  // game state from game context
-  const { game } = useContext(GameContext);
+  // game state & version state from game context
+  const { game, version } = useContext(GameContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -73,6 +73,14 @@ function Records() {
     scrollToTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
+
+  // code that is executed when the version state changes
+  useEffect(() => {
+    if (recordTable) {
+      fetchRecords(game, category, type);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
 
   /* ===== RECORDS COMPONENT ===== */
   return (

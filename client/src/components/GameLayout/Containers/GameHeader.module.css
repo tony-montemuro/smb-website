@@ -35,6 +35,10 @@
     gap: 5px;
 }
 
+.version select:focus {
+    outline-width: 0;
+}
+
 /* ===== MEDIA QUERY FOR SMALLER DEVICES ===== */
 
 @media (max-width: 940px) {
