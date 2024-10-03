@@ -10,8 +10,8 @@ import RPCRead from "../../database/read/RPCRead";
 const Levelboard = () => {
 	/* ===== CONTEXTS ===== */
 
-	// game state from game context
-	const { game } = useContext(GameContext);
+	// game state & version state from game context
+	const { game, version } = useContext(GameContext);
 
 	// add message function from message context
 	const { addMessage } = useContext(MessageContext);
@@ -185,7 +185,7 @@ const Levelboard = () => {
 
 		try {
 			// get chart submissions, & perform filters
-			const all = await getChartSubmissions(abb, category, levelName, type);
+			const all = await getChartSubmissions(abb, category, levelName, type, version?.id);
 			const filtered = getFiltered(filters, all);
 			const userSubmissions = user.profile ?
 				all
@@ -198,6 +198,8 @@ const Levelboard = () => {
 			setBoard({ adjacent, all, filters, filtered, user: userSubmissions });
 
 		} catch (error) {
+			console.log(error);
+			
 			addMessage("Failed to fetch / update chart data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
 		}
 	};

@@ -35,8 +35,8 @@ function Levelboard({ imageReducer }) {
 	// appData state from app data context
 	const { appData } = useContext(AppDataContext);
 
-	// game state from game context
-  const { game } = useContext(GameContext);
+	// game state & version state from game context
+  const { game, version } = useContext(GameContext);
 
 	// add message function from message context
 	const { addMessage } = useContext(MessageContext);
@@ -148,6 +148,14 @@ function Levelboard({ imageReducer }) {
 		prevPathname.current = location.pathname;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.pathname]);
+
+	// code that is executed when the component mounts, or when the `version` state changes
+	useEffect(() => {
+		if (board.filtered) {
+			setupBoard();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [version]);
 
 	/* ===== LEVELBOARD COMPONENT ===== */
 	return level ?

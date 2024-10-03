@@ -82,7 +82,7 @@ const RPCRead = () => {
     const getMedals = async (abb, category, type, version) => {
         try {
             const { data: medals, error } = await supabase.rpc("get_medals", { 
-                abb: abb, 
+                abb, 
                 category,
                 score: type === "score",
                 version
@@ -140,17 +140,19 @@ const RPCRead = () => {
     // 2.) category: a string representing a valid category
     // 3.) level: a string representing the name of the level whose chart data we need to query
     // 4.) type: a string, either "score" or "time"
+    // 5.) version: an int OR null: an int if game has versions, otherwise null
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, an array of submissions, ordered by record in descending order, then by submitted_at in ascending
     // order, is returned
     // otherwise, this function throws an error, which should be handled by the caller function
-    const getChartSubmissions = async (abb, category, level, type) => {
+    const getChartSubmissions = async (abb, category, level, type, version) => {
         try {
             const { data: submissions, error } = await supabase.rpc("get_chart_submissions", { 
-                game: abb, 
-                category_name: category,
-                level: level,
-                is_score: type === "score"
+                abb, 
+                category,
+                level,
+                is_score: type === "score",
+                version
             });
 
             // error handling
