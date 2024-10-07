@@ -26,14 +26,12 @@ function GameLayout({ imageReducer }) {
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
 
-  /* ===== STATES ===== */
+  /* ===== STATES & FUNCTIONS ===== */
   const [game, setGame] = useState(undefined);
-  const [version, setVersion] = useState(null);
-
-  /* ===== FUNCTIONS ===== */
+  const [version, setVersion] = useState(undefined);
 
   // database functions
-  const { fetchGame, handleVersionChange } = GameLayoutLogic(game, setVersion);
+  const { disableVersionDropdown, fetchGame, handleVersionChange, setDisableVersionDropdown } = GameLayoutLogic(game, setVersion);
 
   // helper functions
   const { getGameCategories } = GameHelper();
@@ -65,8 +63,8 @@ function GameLayout({ imageReducer }) {
   return (
     <div className={ styles.gameLayout }>
       { game && appData ?
-        <GameContext.Provider value={ { game, version, handleVersionChange } }>
-          <GameHeader imageReducer={ imageReducer } />
+        <GameContext.Provider value={ { game, version, handleVersionChange, setDisableVersionDropdown } }>
+          <GameHeader disableVersionDropdown={ disableVersionDropdown } imageReducer={ imageReducer } />
           <div className={ styles.body }>
 
             { /* Left - render the content of the game layout */ }

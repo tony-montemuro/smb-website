@@ -53,9 +53,10 @@ function UserStats() {
   /* ===== STATES & FUNCTIONS ===== */
   const [game, setGame] = useState(undefined);
   const [allLiveFilter, setAllLiveFilter] = useState("live");
+  const [version, setVersion] = useState(undefined);
 
   // hooks and functions from the js file
-  const { stats, fetchUserStats } = UserStatsLogic(decimalPlaces);
+  const { stats, fetchUserStats, handleVersionChange } = UserStatsLogic(decimalPlaces, setVersion);
 
   /* ===== EFFECTS ===== */
 
@@ -89,11 +90,22 @@ function UserStats() {
     }
 
     // otherwise, update the game, filter, & user state hooks, and fetch user stats
+    const version = game.versions?.at(-1);
     setGame(game);
+    setVersion(version)
     setAllLiveFilter(game.live_preference ? "live" : "all");
-    fetchUserStats(game, profileId, category, type);
+    fetchUserStats(game, profileId, category, type, version?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
+
+  // code that is executed when the version state changes
+  useEffect(() => {
+    // this will ensure the code only executes AFTER component mounts
+    if (stats) {
+      fetchUserStats(game, profileId, category, type, version?.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
 
   /* ===== USER STATS COMPONENT ===== */
   return game && stats ?
@@ -101,8 +113,21 @@ function UserStats() {
       <div>
 
         { /* Header - render the category + type, as well as a live filter */ }
-        <div className={ styles.header }>
-          <h2>{ categoryName } ({ capitalize(type) })</h2>
+        <div className={ `${ styles.header } ${ styles.verticalPadding }` }>
+          <div className={ styles.header }>
+            <h2>{ categoryName } ({ capitalize(type) })</h2>
+
+            { game.versions?.length > 0 &&
+              <div className={ styles.version }>
+                <label htmlFor="version">Version: </label>
+                <select id="version" onChange={ (e) => handleVersionChange(e, game) } value={ version.id }>
+                  { game.versions.map(version => (
+                    <option value={ version.id } key={ version.id } >{ version.version }</option>
+                  ))}
+                </select>
+              </div>
+            }
+          </div>
 
           { /* Live filter: Toggle records page between rendering all records and just live records */ }
           <div className={ styles.filter }>

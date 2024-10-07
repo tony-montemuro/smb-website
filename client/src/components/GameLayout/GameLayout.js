@@ -1,4 +1,5 @@
 /* ===== IMPORTS ===== */
+import { useState } from "react";
 import GameHelper from "../../helper/GameHelper";
 import GameRead from "../../database/read/GameRead.js";
 
@@ -10,6 +11,9 @@ const GameLayout = (game, setVersion) => {
 
     // helper functions
     const { cleanGameObject } = GameHelper();
+
+    /* ===== STATES ===== */
+    const [disableVersionDropdown, setDisableVersionDropdown] = useState(false);
 
     // FUNCTION 1: fetchGame - code that is executed when the GameLayout component mounts, to fetch the desired game data
     // PRECONDITIONS (1 parameter):
@@ -41,7 +45,7 @@ const GameLayout = (game, setVersion) => {
         setVersion(version);
     }
 
-    return { fetchGame, handleVersionChange };
+    return { disableVersionDropdown, fetchGame, handleVersionChange, setDisableVersionDropdown };
 };
 
 /* ===== EXPORTS ===== */

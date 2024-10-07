@@ -9,7 +9,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import LevelSearchBar from "../LevelSearchBar/LevelSearchBar.jsx";
 import Username from "../../Username/Username.jsx";
 
-function GameHeader({ imageReducer }) {
+function GameHeader({ disableVersionDropdown, imageReducer }) {
   /* ===== VARIABLES ===== */
   const BOX_WIDTH = 146;
 
@@ -50,7 +50,7 @@ function GameHeader({ imageReducer }) {
             { game.version.length > 0 &&
               <div className={ styles.version }>
                 <label htmlFor="version">Version: </label>
-                <select id="version" onChange={ handleVersionChange } value={ version.id } >
+                <select id="version" onChange={ handleVersionChange } value={ version.id } disabled={ disableVersionDropdown } >
                   { game.version.map(version => (
                     <option value={ version.id } key={ version.id } >{ version.version }</option>
                   ))}

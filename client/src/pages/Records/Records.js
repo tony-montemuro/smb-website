@@ -9,8 +9,8 @@ const Records = () => {
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
-    // version state from game context
-    const { version } = useContext(GameContext);
+    // version state & set disable version dropdown function from game context
+    const { version, setDisableVersionDropdown } = useContext(GameContext);
 
     /* ===== STATES ===== */
     const [recordTable, setRecordTable] = useState(undefined);
@@ -44,9 +44,9 @@ const Records = () => {
             const [all, live] = await Promise.all(promises);
             setRecordTable({ all, live });
         } catch (error) {
-            console.log(error);
-            
 			addMessage("Failed to fetch world record data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+        } finally {
+            setDisableVersionDropdown(false);
         }
     };
 

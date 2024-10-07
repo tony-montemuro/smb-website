@@ -7,8 +7,8 @@ import RPCRead from "../../database/read/RPCRead";
 const MedalTable = () => {
     /* ===== CONTEXTS ===== */
 
-    // version state from game context
-    const { version } = useContext(GameContext);
+    // version state & set disable version dropdown function from game context
+    const { version, setDisableVersionDropdown } = useContext(GameContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -42,6 +42,8 @@ const MedalTable = () => {
             setMedalTable(medals);
         } catch (error) {
 			addMessage("Failed to load medal table. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+        } finally {
+            setDisableVersionDropdown(false);
         }
     };
 

@@ -10,18 +10,18 @@ const RPCRead = () => {
     // 2.) category: a string representing a valid category
     // 3.) type: a string, either "score" or "time"
     // 4.) live: a boolean value representing whether or not to filter by live submissions
-    // 5.) version: an int OR null: an int if game has versions, otherwise null
+    // 5.) version: an int OR undefined: an int if game has versions, otherwise undefined
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the array of modes containing the record objects is simply returned
     // otherwise, this function throws an error, which should be handled by the caller function
     const getRecords = async (abb, category, type, live, version) => {
         try {
-            const { data: records, error } = await supabase.rpc("get_records", { 
+            const { data: records, error } = await supabase.rpc("get_records", {
                 abb, 
                 category,
                 score: type === "score",
                 live_only: live,
-                version
+                version: version ?? null
             });
 
             // error handling
@@ -43,7 +43,7 @@ const RPCRead = () => {
     // 2.) category: a string representing a valid category
     // 3.) type: a string, either "score" or "time"
     // 4.) live: a boolean value representing whether or not to filter by live submissions
-    // 5.) version: an int OR null: an int if game has versions, otherwise null
+    // 5.) version: an int OR undefined: an int if game has versions, otherwise undefined
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, an array of totals objects, sorted by position field, is returned
     // otherwise, this function throws an error, which should be handled by the caller function
@@ -54,7 +54,7 @@ const RPCRead = () => {
                 category,
                 score: type === "score",
                 live_only: live,
-                version
+                version: version ?? null
             });
 
             // error handling
@@ -75,7 +75,7 @@ const RPCRead = () => {
     // 1.) abb: a string representing the unique identifier for a game
     // 2.) category: a string representing a valid category
     // 3.) type: a string, either "score" or "time"
-    // 4.) version: an int OR null: an int if game has versions, otherwise null
+    // 4.) version: an int OR undefined: an int if game has versions, otherwise undefined
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, an array of medals objects, sorted by position field, is returned
     // otherwise, this function throws an error, which should be handled by the caller function
@@ -85,7 +85,7 @@ const RPCRead = () => {
                 abb, 
                 category,
                 score: type === "score",
-                version
+                version: version ?? null
             });
 
             // error handling
@@ -102,23 +102,25 @@ const RPCRead = () => {
     };
 
     // FUNCTION 4: getUserRankings - function that calls on a procedure to generate user ranking object depending on the parameters
-    // PRECONDITIONS (5 parameters):
+    // PRECONDITIONS (6 parameters):
     // 1.) abb: a string representing the unique identifier for a game
     // 2.) category: a string representing a valid category
     // 3.) type: a string, either "score" or "time"
     // 4.) live: a boolean value representing whether or not to filter by live submissions
     // 5.) profileId: the id of the user whose rankings we want to grab
+    // 6.) version: an int OR undefined: an int if game has versions, otherwise undefined
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, a user ranking object is is returned
     // otherwise, this function throws an error, which should be handled by the caller function
-    const getUserRankings = async (abb, category, type, live, profileId) => {
+    const getUserRankings = async (abb, category, type, live, profileId, version) => {
         try {
             const { data: rankings, error } = await supabase.rpc("get_user_rankings", { 
-                abb: abb, 
-                category: category,
+                abb, 
+                category,
                 score: type === "score",
                 live_only: live,
-                profile_id: profileId
+                profile_id: profileId,
+                version_key: version ?? null
             });
 
             // error handling
@@ -140,7 +142,7 @@ const RPCRead = () => {
     // 2.) category: a string representing a valid category
     // 3.) level: a string representing the name of the level whose chart data we need to query
     // 4.) type: a string, either "score" or "time"
-    // 5.) version: an int OR null: an int if game has versions, otherwise null
+    // 5.) version: an int OR undefined: an int if game has versions, otherwise undefined
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, an array of submissions, ordered by record in descending order, then by submitted_at in ascending
     // order, is returned
@@ -148,11 +150,11 @@ const RPCRead = () => {
     const getChartSubmissions = async (abb, category, level, type, version) => {
         try {
             const { data: submissions, error } = await supabase.rpc("get_chart_submissions", { 
-                abb, 
-                category,
+                game: abb,
+                category_name: category,
                 level,
                 is_score: type === "score",
-                version
+                version_key: version ?? null
             });
 
             // error handling

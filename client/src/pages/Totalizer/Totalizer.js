@@ -7,8 +7,8 @@ import RPCRead from "../../database/read/RPCRead";
 const Totalizer = () => {
     /* ===== CONTEXTS ===== */
 
-    // version state from game context
-    const { version } = useContext(GameContext);
+    // version state & set disable version dropdown function from game context
+    const { version, setDisableVersionDropdown } = useContext(GameContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -46,9 +46,9 @@ const Totalizer = () => {
             const [all, live] = await Promise.all(promises);
             setTotals({ all, live });
         } catch (error) {
-            console.log(error);
-            
 			addMessage("Failed to fetch totalizer data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+        } finally {
+            setDisableVersionDropdown(false);
         };
     };
 

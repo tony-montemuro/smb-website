@@ -10,8 +10,8 @@ import RPCRead from "../../database/read/RPCRead";
 const Levelboard = () => {
 	/* ===== CONTEXTS ===== */
 
-	// game state & version state from game context
-	const { game, version } = useContext(GameContext);
+	// game state, version state, & set disabled version dropdown function from game context
+	const { game, version, setDisableVersionDropdown } = useContext(GameContext);
 
 	// add message function from message context
 	const { addMessage } = useContext(MessageContext);
@@ -198,9 +198,9 @@ const Levelboard = () => {
 			setBoard({ adjacent, all, filters, filtered, user: userSubmissions });
 
 		} catch (error) {
-			console.log(error);
-			
 			addMessage("Failed to fetch / update chart data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+		} finally {
+			setDisableVersionDropdown(false);
 		}
 	};
 
