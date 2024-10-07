@@ -375,7 +375,7 @@ $$;
 
 -- Next, get_records_submissions RPC, a dependency of records RPC.
 DROP FUNCTION get_record_submissions(text, text, boolean, boolean);
-CREATE OR REPLACE FUNCTION get_record_submissions(game_name text, category_name text, is_score boolean, live_only boolean, version_key int)
+CREATE OR REPLACE FUNCTION get_record_submissions(game_name text, category_name text, is_score boolean, live_only boolean, version_key int default null)
 RETURNS TABLE (
   id timestamptz,
   game_id text,
@@ -563,4 +563,145 @@ AS $$
     LEFT OUTER JOIN tas_ranked ON cs.id = tas_ranked.id
     ORDER BY cs.record DESC, cs.submitted_at ASC
   ) chart_row
+$$;
+
+-- Next, get profile RPC.
+CREATE OR REPLACE FUNCTION get_profile(p_id integer)
+RETURNS json
+LANGUAGE sql
+AS $$
+  SELECT row_to_json(profiles_row)
+  FROM (
+    SELECT
+      EXISTS (SELECT 1 FROM administrator a WHERE a.profile_id = p_id) AS administrator,
+      bio,
+      birthday,
+      (SELECT row_to_json(country_row) FROM (SELECT c.iso2, c.name FROM countries c WHERE c.iso2 = p.country) AS country_row) country,
+      discord,
+      featured_video,
+      id,
+      (
+        SELECT COALESCE ((json_agg(jsonb_build_object(
+          'abb', g.abb,
+          'custom', g.custom,
+          'name', g.name
+        ) ORDER BY g.release_date)), '[]'::json)
+        FROM (
+          SELECT g.abb, g.custom, g.release_date, g.name
+          FROM game_profile gp
+          INNER JOIN game AS g ON g.abb = gp.game
+          WHERE gp.profile = p_id
+          ORDER BY g.release_date
+        ) g
+      ) moderated_games,
+      (
+        SELECT COALESCE (json_agg(jsonb_build_object(
+          'abb', g.abb,
+          'categories', (
+            SELECT json_agg(jsonb_build_object(
+              'abb', c.category,
+              'types', (
+                SELECT json_agg(DISTINCT l.chart_type)
+                FROM level l
+                WHERE l.game = g.abb AND l.category = c.category
+              )
+            ))
+            FROM (
+              SELECT * FROM (
+                SELECT DISTINCT ON (m.category) m.category, m.id
+                FROM mode m
+                WHERE m.game = g.abb
+                ORDER BY m.category, m.id
+              ) dc ORDER BY dc.id
+            ) c
+          ),
+          'custom', g.custom,
+          'live_preference', g.live_preference,
+          'name', g.name,
+          'versions', (
+            SELECT json_agg(jsonb_build_object(
+              'id', v.id,
+              'version', v.version,
+              'sequence', v.sequence 
+            ))
+            FROM version v
+            WHERE v.game = g.abb
+          )
+        ) ORDER BY g.release_date), '[]'::json) AS submitted_games
+        FROM (
+          SELECT DISTINCT ON (s.game_id) s.game_id AS abb, g.custom, g.release_date, g.live_preference, g.name
+          FROM submission s
+          INNER JOIN game AS g ON g.abb = s.game_id
+          WHERE s.profile_id = p_id
+        ) g
+      ) submitted_games,
+      twitch_username,
+      twitter_handle,
+      username,
+      video_description,
+      youtube_handle
+    FROM profile p
+    WHERE p.id = p_id
+  ) profiles_row
+$$;
+
+-- Next, get user rankings RPC.
+DROP FUNCTION IF EXISTS get_user_rankings(text, text, boolean, boolean, integer);
+CREATE FUNCTION get_user_rankings(abb text, category text, score boolean, live_only boolean, profile_id int, version_key int)
+RETURNS json
+LANGUAGE plv8
+AS $$
+  // -- first, get the ranked submissions according to the function parameters
+  let query = 'SELECT * FROM get_ranked_submissions($1, $2, $3, $4, $5)';
+  let paramTypes = ['text', 'text', 'boolean', 'boolean', 'int'];
+  let plan = plv8.prepare(query, paramTypes);
+  const submissions = plan.execute( [abb, category, score, live_only, version_key] );
+  plan.free();
+
+  // -- next, get the list of modes for the abb, category, score combination
+  query = 'SELECT get_category_levels_by_mode($1, $2, $3)';
+  paramTypes = ['text', 'text', 'boolean'];
+  plan = plv8.prepare(query, paramTypes);
+  const result = plan.execute( [abb, category, score] );
+  const modes = JSON.parse(result[0].get_category_levels_by_mode);
+  plan.free();
+
+  // -- initialize variables used to generate the rankings
+  const rankings = {};
+  let index = 0;
+
+  // -- now, let's populate the rankings object
+  modes.forEach(mode => {
+    const modeRecords = []; // -- store the array of record objects for each level in the mode
+    mode.levels.forEach(level => {
+
+      // -- create default record object
+      const recordObj = {
+        level: level,
+        record: null,
+        date: null,
+        position: null
+      };
+
+      // -- loop through all submissions for the current level
+      while (index < submissions.length && submissions[index].level_id === level.name) {
+
+        // -- if current submission has id of `profile_id`, it is the user's submission. thus, we need to update record object
+        const submission = submissions[index];
+        if (submission.id === profile_id) {
+          recordObj.record = submission.record;
+          recordObj.date = submission.submitted_at;
+          recordObj.position = submission.position;
+        }
+        index++;
+      }
+      modeRecords.push(recordObj);
+    });
+    
+    // -- once we have gone through each level in the current mode, update the rankings object
+    rankings[mode.name] = modeRecords;
+  });
+
+  // -- finally, return rankings
+  return rankings;
 $$;
