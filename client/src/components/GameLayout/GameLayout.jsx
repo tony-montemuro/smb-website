@@ -30,8 +30,14 @@ function GameLayout({ imageReducer }) {
   const [game, setGame] = useState(undefined);
   const [version, setVersion] = useState(undefined);
 
-  // database functions
-  const { disableVersionDropdown, fetchGame, handleVersionChange, setDisableVersionDropdown } = GameLayoutLogic(game, setVersion);
+  // states & functions from the js file
+  const { 
+    disableVersionDropdown, 
+    fetchGame, 
+    fetchVersion, 
+    handleVersionChange, 
+    setDisableVersionDropdown 
+  } = GameLayoutLogic(game, setVersion);
 
   // helper functions
   const { getGameCategories } = GameHelper();
@@ -51,8 +57,9 @@ function GameLayout({ imageReducer }) {
         return;
       }
 
-      // update game state hook
+      // update game & version state hooks
       setGame(game);
+      setVersion(fetchVersion(game));
     };
    
     initGame();

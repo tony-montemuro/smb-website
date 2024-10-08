@@ -85,64 +85,73 @@ const SubmissionRead = () => {
     };
 
     // FUNCTION 2: getChartSubmissionsByProfile - function that fetches all submissions by a particular user on a particular chart
-    // PRECONDITIONS (4 parameters):
+    // PRECONDITIONS (6 parameters):
     // 1.) abb: a string that uniquely identifies a game
     // 2.) category: a string representing a valid category name
     // 3.) level: a string representing a valid level belonging to { abb, category } combination
     // 4.) type: a string, either "score" or "time"
     // 5.) profileId: the id of the profile who's submissions we seek to fetch
+    // 6.) version: an int OR undefined: an int if game has versions, otherwise undefined
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the list of submissions belonging to the user on the particular chart, sorted in descending
     // order by the `submitted_at` field, is returned
     // otherwise, this function will throw an error, which is to be handled by the caller function
-    const getChartSubmissionsByProfile = async (abb, category, level, type, profileId) => {
-        try {
-            const { data: submissions, error } = await supabase
-                .from("submission")
-                .select(`
-                    all_position,
-                    approve (
-                        creator_id
-                    ),
-                    comment,
+    const getChartSubmissionsByProfile = async (abb, category, level, type, profileId, version) => {
+        const query = supabase
+            .from("submission")
+            .select(`
+                all_position,
+                approve (
+                    creator_id
+                ),
+                comment,
+                id,
+                live,
+                mod_note,
+                monkey (
+                    id, 
+                    monkey_name
+                ),
+                platform (
+                    id, 
+                    platform_abb, 
+                    platform_name
+                ),
+                position,
+                profile (
+                    country,
                     id,
-                    live,
-                    mod_note,
-                    monkey (
-                        id, 
-                        monkey_name
-                    ),
-                    platform (
-                        id, 
-                        platform_abb, 
-                        platform_name
-                    ),
-                    position,
-                    profile (
-                        country,
-                        id,
-                        username
-                    ),
-                    proof,
-                    record,
-                    region (
-                        id, 
-                        region_name
-                    ),
-                    report (
-                        creator_id
-                    ),
-                    score,
-                    submitted_at,
-                    tas
-                `)
-                .eq("game_id", abb)
-                .eq("category", category)
-                .eq("level_id", level)
-                .eq("score", type === "score")
-                .eq("profile_id", profileId)
-                .order("submitted_at", { ascending: false })
-                .order("id", { ascending: false });
+                    username
+                ),
+                proof,
+                record,
+                region (
+                    id, 
+                    region_name
+                ),
+                report (
+                    creator_id
+                ),
+                score,
+                submitted_at,
+                tas
+            `)
+            .eq("game_id", abb)
+            .eq("category", category)
+            .eq("level_id", level)
+            .eq("score", type === "score")
+            .eq("profile_id", profileId);
+
+        if (version) {
+            query.eq("version", version);
+        }
+
+        query
+            .order("submitted_at", { ascending: false })
+            .order("id", { ascending: false });
+        
+        try {
+            const { data: submissions, error } = await query;
 
             // error handling
             if (error) {

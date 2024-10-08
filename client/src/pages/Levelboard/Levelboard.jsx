@@ -108,7 +108,7 @@ function Levelboard({ imageReducer }) {
 	const searchParams = useMemo(() => {
 		return getChartSearchParams();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [abb, category, type, levelName]);
+	}, [abb, category, type, levelName, version]);
 
 	/* ===== EFFECTS ===== */
 

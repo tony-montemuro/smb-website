@@ -249,6 +249,9 @@ const Levelboard = () => {
 		searchParams.append("category", category);
 		searchParams.append("score", type === "score");
 		searchParams.append("level_id", levelName);
+		if (version) {
+			searchParams.append("version", version.id);
+		}
 		return searchParams;
 	};
 
