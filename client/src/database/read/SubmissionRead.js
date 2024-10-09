@@ -41,7 +41,12 @@ const SubmissionRead = () => {
                 proof,
                 record,
                 score,
-                tas
+                tas,
+                version (
+                    id,
+                    sequence,
+                    version
+                )
             `,
             { count: "exact" }
             )

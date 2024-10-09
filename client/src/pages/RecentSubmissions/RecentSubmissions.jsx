@@ -11,13 +11,14 @@ import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/Rece
 import UserFilter from "./ListFilters/UserFilter.jsx";
 
 function RecentSubmissions({ imageReducer }) {
-  /* ===== VARIABLES ===== */
-  const NUM_SUBMISSIONS = 100;
-
   /* ===== CONTEXTS ===== */
 
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
+
+  /* ===== VARIABLES ===== */
+  const NUM_SUBMISSIONS = 100;
+  const categories = appData?.categories;
 
   /* ===== STATES & FUNCTIONS ===== */
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,9 +40,11 @@ function RecentSubmissions({ imageReducer }) {
 
   // code that is executed when the component mounts, and when the `appData.categories` state updates
   useEffect(() => {
-    dispatchFiltersData({ type: "categories", value: appData.categories });
+    if (categories) {
+      dispatchFiltersData({ type: "categories", value: appData.categories });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appData.categories]);
+  }, [categories]);
 
   /* ===== RECENT SUBMISSIONS COMPONENT ===== */
   return (

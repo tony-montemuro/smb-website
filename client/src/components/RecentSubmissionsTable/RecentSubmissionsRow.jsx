@@ -18,7 +18,14 @@ function RecentSubmissionsRow({ submission, renderGame, renderLevelContext }) {
   const game = submission.level.mode.game;
   const type = submission.score ? "score" : "time";
   const profile = submission.profile;
+  const version = submission.version;
   const { name: categoryName } = appData.categories[category];
+  let gameUrl = `/games/${ game.abb }`;
+  let gameName = game.name;
+  if (version) {
+    gameUrl += `?version=${ version.version }`;
+    gameName += ` (${ version.version })`;
+  }
 
   /* ===== FUNCTIONS ===== */
 
@@ -30,7 +37,13 @@ function RecentSubmissionsRow({ submission, renderGame, renderLevelContext }) {
     <tr>
       <td>{ getTimeAgo(submission.id) }</td>
       <td><Username profile={ profile } /></td>
-      { renderGame && <td><Link to={ `/games/${ game.abb }` }>{ game.name }</Link></td> }
+      { renderGame && 
+        <td>
+          <Link to={ gameUrl }>
+            { gameName }
+          </Link>
+        </td> 
+      }
       { renderLevelContext &&
         <>
           <td>{ categoryName }</td>
