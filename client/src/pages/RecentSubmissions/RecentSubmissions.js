@@ -45,7 +45,28 @@ const RecentSubmissions = () => {
     const { queryGameByList } = GameRead();
     const { queryProfileByList } = ProfileRead();
 
-    // FUNCTION 1: fetchGames - function that fetches any games that we are already fitering by
+    // FUNCTION 1: updateGames - code that executes when the user wants to update the `games` state
+    // PRECONDITIONS (1 parameter):
+    // 1.) games: an array of games
+    // POSTCONDITIONS (1 possible outcome):
+    // the `games` portion of the `filtersData` state is updated
+    const updateGames = games => dispatchFiltersData({ type: "games", value: games });
+
+    // FUNCTION 2: updateUsers - code that executes when the user wants to update the `users` state
+    // PRECONDITIONS (1 parameter):
+    // 1.) users: an array of users
+    // POSTCONDITIONS (1 possible outcome):
+    // the `users` portion of the `filtersData` state is updated
+    const updateUsers = users => dispatchFiltersData({ type: "users", value: users });
+
+    // FUNCTION 2: updateCategories - code that executes when the user wants to update the `categories` state
+    // PRECONDITIONS (1 parameter):
+    // 1.) categories: an array of categories
+    // POSTCONDITIONS (1 possible outcome):
+    // the `categories` portion of the `filtersData` state is updated
+    const updateCategories = categories => dispatchFiltersData({ type: "categories", value: categories });
+
+    // FUNCTION 4: fetchGames - function that fetches any games that we are already fitering by
     // PRECONDITIONS (1 parameter):
     // 1.) searchParams: a URLSearchParams object which defines the filters on the recent submissions
     // POSTCONDITIONS (3 possible outcomes):
@@ -74,10 +95,10 @@ const RecentSubmissions = () => {
                 games = null;
             };
         }
-        dispatchFiltersData({ type: "games", value: games });
+        updateGames(games);
     };
 
-    // FUNCTION 2: fetchUsers - function that fetches any users that we are already fitering by
+    // FUNCTION 5: fetchUsers - function that fetches any users that we are already fitering by
     // PRECONDITIONS (1 parameter):
     // 1.) searchParams: a URLSearchParams object which defines the filters on the recent submissions
     // POSTCONDITIONS (3 possible outcomes):
@@ -106,10 +127,17 @@ const RecentSubmissions = () => {
                 users = null;
             };
         }
-        dispatchFiltersData({ type: "users", value: users });
+        updateUsers(users);
     };
 
-    return { filtersData, dispatchFiltersData, fetchGames, fetchUsers };
+    return { 
+        updateGames,
+        updateUsers,
+        updateCategories,
+        filtersData,
+        fetchGames,
+        fetchUsers 
+    };
 };
 
 /* ===== EXPORTS ===== */

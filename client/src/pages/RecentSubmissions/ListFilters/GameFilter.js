@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import { MessageContext, PopupContext } from "../../../utils/Contexts";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
-const GameFilter = (games, dispatchFiltersData) => {
+const GameFilter = (updateGlobalGames) => {
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
@@ -10,10 +10,20 @@ const GameFilter = (games, dispatchFiltersData) => {
 
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
+
+    /* ===== STATES ===== */
+    const [games, setGames] = useState(undefined);
  
     /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: addGame - function that adds a game object to our games state
+    // FUNCTION 1: syncGames - code that is executed on component mount
+    // PRECONDITIONS (1 parameter):
+    // 1.) globalGames: an array containing the "global" set of games that we are filtering by
+    // POSTCONDITIONS (1 possible outcome):
+    // update our "local" state to be equivalent to the global state
+    const syncGames = globalGames => setGames(globalGames);
+
+    // FUNCTION 2: addGame - function that adds a game object to our games state
     // PRECONDITIONS (1 parameter):
     // 1.) game: an object containing information about a game
     // POSTCONDITIONS (2 possible outcomes):
@@ -21,30 +31,32 @@ const GameFilter = (games, dispatchFiltersData) => {
     // otherwise, this function renders an error message to the user
     const addGame = game => {
         if (!(games.some(row => row.abb === game.abb))) {
-            dispatchFiltersData({ type: "games", value: games.concat([game]) });
+            const updatedGames = games.concat([game]);
+            setGames(updatedGames);
         } else {
             addMessage("You are already filtering by this game.", "error", 6000);
         }
     };
 
-    // FUNCTION 2: removeGame - function that removes a game object from our games state
+    // FUNCTION 3: removeGame - function that removes a game object from our games state
     // PRECONDITIONS (1 parameter):
     // 1.) game: an object containing information about a game present in our array
     // POSTCONDITIONS (1 possible outcome):
     // the games state is updated with our games array with the game parameter filtered out
     const removeGame = game => {
-        dispatchFiltersData({ type: "games", value: games.filter(row => row.abb !== game.abb) });
+        const updatedGames = games.filter(row => row.abb !== game.abb)
+        setGames(updatedGames);
     };
 
-    // FUNCTION 3: resetFilter - function that sets the `games` state back to an empty array, effectively resetting it
+    // FUNCTION 4: resetFilter - function that sets the `games` state back to an empty array, effectively resetting it
     // PRECONDIITONS: NONE
     // POSTCONDITIONS (1 possible outcome):
-    // the `games` state is set to an empty array by calling the `dispatchFiltersData` setter function with an empty array as an argument
+    // the `games` state is set to an empty array by calling the `setGames` setter function with an empty array as an argument
     const resetFilter = () => {
-        dispatchFiltersData({ type: "games", value: [] });
+        setGames([]);
     };
 
-    // FUNCTION 4: closePopupAndUpdate - function that closes the game filter popup, and updates the search params state
+    // FUNCTION 5: closePopupAndUpdate - function that closes the game filter popup, and updates the search params state
     // PRECONDITIONS (2 parameter):
     // 1.) searchParams: a URLSearchParams specifying the filters currently applied to the recent submissions page
     // 2.) setSearchParams: a setter function we can use to update the search params
@@ -61,17 +73,18 @@ const GameFilter = (games, dispatchFiltersData) => {
             }
         };
 
-        // now, let's add any games from the `games` state
+        // now, let's add any games from the `games` state to our search params
         games.forEach(game => {
             newSearchParams.append("game_id", game.abb);
         });
-
-        // finally, let's update the search params state, and close the popup
         setSearchParams(newSearchParams);
+
+        // finally, update global games state, and close popup
+        updateGlobalGames(games);
         closePopup();
     };
     
-    return { addGame, removeGame, resetFilter, closePopupAndUpdate };
+    return { games, syncGames, addGame, removeGame, resetFilter, closePopupAndUpdate };
 };
 
 /* ===== EXPORTS ===== */
