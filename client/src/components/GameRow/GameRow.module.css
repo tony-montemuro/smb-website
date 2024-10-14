@@ -9,14 +9,25 @@
 .item {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 5px;
+    justify-content: space-between;
     padding: 8px 4px;
+}
+
+.game {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 5px;
 }
 
 .item:not(.selected):hover {
     background-color: rgba(var(--color-container-selected), 0.5);
     cursor: pointer;
+}
+
+.itemContent {
+    display: flex;
+    justify-content: space-between;
 }
 
 .selected {

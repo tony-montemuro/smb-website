@@ -186,7 +186,17 @@ const GameRead = () => {
         try {
             const { data: games, count, error } = await supabase
                 .from("game")
-                .select("abb, custom, name", { count: "exact" })
+                .select(`
+                    abb,
+                    custom,
+                    name,
+                    version (
+                        id,
+                        sequence,
+                        version
+                    )
+                `, { count: "exact" }
+                )
                 .in("custom", customFilter)
                 .or(`name.ilike.%${ userInput }%,abb.ilike.%${ userInput }%`)
                 .order("custom")
@@ -216,7 +226,16 @@ const GameRead = () => {
         try {
             const { data: games, error } = await supabase
                 .from("game")
-                .select("abb, custom, name")
+                .select(`
+                    abb,
+                    custom,
+                    name,
+                    version (
+                        id,
+                        sequence,
+                        version
+                    )
+                `)
                 .in("abb", abbs)
                 .order("custom")
                 .order("release_date")

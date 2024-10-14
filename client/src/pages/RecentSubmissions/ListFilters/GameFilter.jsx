@@ -11,7 +11,17 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, globalGames, 
   /* ===== FUNCTIONS ===== */
   
   // functions from the js file
-  const { games, syncGames, addGame, removeGame, resetFilter, closePopupAndUpdate } = GameFilterLogic(updateGlobalGames);
+  const { 
+    games,
+    versions,
+    syncGames,
+    addGame,
+    removeGame,
+    resetFilter,
+    updateVersion,
+    closePopupAndUpdate
+  } = GameFilterLogic(updateGlobalGames);
+  console.log(versions);
 
   /* ===== VARIABLES ===== */
   const GAMES_PER_PAGE = 20;
@@ -55,6 +65,11 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, globalGames, 
                       onClick={ removeGame }
                       index={ index }
                       key={ game.abb }
+                      versionsData={{
+                        version: versions[game.abb],
+                        versions: game.version,
+                        onChange: updateVersion
+                      }}
                     />
                   );
                 })}

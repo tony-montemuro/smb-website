@@ -78,18 +78,28 @@ const RecentSubmissions = () => {
     // the `dispatchFiltersData` setter function with an empty array argument
     const fetchGames = async searchParams => {
         // first, let's get all the games from the search params, if there are any
-        const abbs = [];
+        const gameParams = [];
         for (const [key, value] of searchParams) {
             if (key === "game_id") {
-                abbs.push(value);
+                const [abb, version] = value.split(":"); 
+                gameParams.push({
+                    abb,
+                    version
+                });
             }
         }
 
         // if there are any games in the search params, let's get all associated game objects, and update the games state
         let games = [];
-        if (abbs.length > 0) {
+        if (gameParams.length > 0) {
             try {
-                games = await queryGameByList(abbs);
+                games = await queryGameByList(games.map(game => game.abb));
+                games.forEach(game => {
+                    const version = gameParams.find(g => g.abb === game.abb && g.version)?.version;
+                    if (version) {
+                        game.version = version; 
+                    }
+                });
             } catch (error) {
                 addMessage("One or more filters has broken due loading failures.", "error", 7000);
                 games = null;

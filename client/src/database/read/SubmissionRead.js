@@ -65,7 +65,35 @@ const SubmissionRead = () => {
 
                 // add an `in` method for each key => value pair
                 Object.keys(filters).forEach(key => {
-                    query = query.in(key, filters[key]);
+                    // special case: each game_id might also include a version, so we need to add an aditional
+                    // filter for that, if applicable
+                    if (key === "game_id") {
+                        let versioned = [], versionless = [];
+
+                        filters[key].forEach(value => {
+                            const [game, version] = value.split(":");
+                            if (version) {
+                                versioned.push(`and(game_id.eq.${ game },version.eq.${ version })`);
+                            } else {
+                                versionless.push(game);
+                            }
+                        });
+
+                        versioned = versioned.join(",");
+                        versionless = versionless.length > 0 && `game_id.in.(${ versionless.join(",") })`;
+
+                        let condition = "";
+                        if (versioned.length > 0 && versionless.length > 0) {
+                            condition = `${ versioned },${ versionless }`;
+                        } else {
+                            condition = versioned.length > 0 ? versioned : versionless;
+                        }
+                        console.log(condition);
+
+                        query = query.or(condition);
+                    } else {
+                        query = query.in(key, filters[key]);
+                    }
                 });
             }
 
@@ -139,7 +167,11 @@ const SubmissionRead = () => {
                 ),
                 score,
                 submitted_at,
-                tas
+                tas,
+                version (
+                    id,
+                    version
+                )
             `)
             .eq("game_id", abb)
             .eq("category", category)

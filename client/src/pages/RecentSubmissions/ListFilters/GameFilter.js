@@ -13,6 +13,7 @@ const GameFilter = (updateGlobalGames) => {
 
     /* ===== STATES ===== */
     const [games, setGames] = useState(undefined);
+    const [versions, setVersions] = useState(undefined);
  
     /* ===== FUNCTIONS ===== */
 
@@ -21,7 +22,12 @@ const GameFilter = (updateGlobalGames) => {
     // 1.) globalGames: an array containing the "global" set of games that we are filtering by
     // POSTCONDITIONS (1 possible outcome):
     // update our "local" state to be equivalent to the global state
-    const syncGames = globalGames => setGames(globalGames);
+    const syncGames = globalGames => {
+        setGames(globalGames);
+        const versions = {};
+        globalGames.forEach(game => versions[game.abb] = "");
+        setVersions(versions);
+    };
 
     // FUNCTION 2: addGame - function that adds a game object to our games state
     // PRECONDITIONS (1 parameter):
@@ -33,6 +39,7 @@ const GameFilter = (updateGlobalGames) => {
         if (!(games.some(row => row.abb === game.abb))) {
             const updatedGames = games.concat([game]);
             setGames(updatedGames);
+            setVersions({ ...versions, [game.abb]: "" });
         } else {
             addMessage("You are already filtering by this game.", "error", 6000);
         }
@@ -46,6 +53,9 @@ const GameFilter = (updateGlobalGames) => {
     const removeGame = game => {
         const updatedGames = games.filter(row => row.abb !== game.abb)
         setGames(updatedGames);
+        const versionsCopy = { ...versions };
+        delete versions[game.abb];
+        setVersions(versionsCopy);
     };
 
     // FUNCTION 4: resetFilter - function that sets the `games` state back to an empty array, effectively resetting it
@@ -54,6 +64,14 @@ const GameFilter = (updateGlobalGames) => {
     // the `games` state is set to an empty array by calling the `setGames` setter function with an empty array as an argument
     const resetFilter = () => {
         setGames([]);
+        setVersions({});
+    };
+
+    const updateVersion = e => {
+        e.stopPropagation();
+        const { id, value } = e.target;
+        const abb = id.split("_")[0];
+        setVersions({ ...versions, [abb]: value });
     };
 
     // FUNCTION 5: closePopupAndUpdate - function that closes the game filter popup, and updates the search params state
@@ -84,7 +102,16 @@ const GameFilter = (updateGlobalGames) => {
         closePopup();
     };
     
-    return { games, syncGames, addGame, removeGame, resetFilter, closePopupAndUpdate };
+    return { 
+        games,
+        versions,
+        syncGames,
+        addGame,
+        removeGame,
+        resetFilter,
+        updateVersion,
+        closePopupAndUpdate
+    };
 };
 
 /* ===== EXPORTS ===== */
