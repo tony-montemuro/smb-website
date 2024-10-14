@@ -230,7 +230,7 @@ const GameRead = () => {
                     abb,
                     custom,
                     name,
-                    version (
+                    versions:version (
                         id,
                         sequence,
                         version

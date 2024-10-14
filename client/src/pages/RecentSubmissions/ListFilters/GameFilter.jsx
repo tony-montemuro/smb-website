@@ -13,7 +13,6 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, globalGames, 
   // functions from the js file
   const { 
     games,
-    versions,
     syncGames,
     addGame,
     removeGame,
@@ -21,7 +20,6 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, globalGames, 
     updateVersion,
     closePopupAndUpdate
   } = GameFilterLogic(updateGlobalGames);
-  console.log(versions);
 
   /* ===== VARIABLES ===== */
   const GAMES_PER_PAGE = 20;
@@ -66,8 +64,8 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, globalGames, 
                       index={ index }
                       key={ game.abb }
                       versionsData={{
-                        version: versions[game.abb],
-                        versions: game.version,
+                        version: game.version,
+                        versions: game.versions,
                         onChange: updateVersion
                       }}
                     />

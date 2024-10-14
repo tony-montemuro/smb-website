@@ -13,7 +13,6 @@ const GameFilter = (updateGlobalGames) => {
 
     /* ===== STATES ===== */
     const [games, setGames] = useState(undefined);
-    const [versions, setVersions] = useState(undefined);
  
     /* ===== FUNCTIONS ===== */
 
@@ -24,9 +23,6 @@ const GameFilter = (updateGlobalGames) => {
     // update our "local" state to be equivalent to the global state
     const syncGames = globalGames => {
         setGames(globalGames);
-        const versions = {};
-        globalGames.forEach(game => versions[game.abb] = "");
-        setVersions(versions);
     };
 
     // FUNCTION 2: addGame - function that adds a game object to our games state
@@ -39,7 +35,6 @@ const GameFilter = (updateGlobalGames) => {
         if (!(games.some(row => row.abb === game.abb))) {
             const updatedGames = games.concat([game]);
             setGames(updatedGames);
-            setVersions({ ...versions, [game.abb]: "" });
         } else {
             addMessage("You are already filtering by this game.", "error", 6000);
         }
@@ -53,9 +48,6 @@ const GameFilter = (updateGlobalGames) => {
     const removeGame = game => {
         const updatedGames = games.filter(row => row.abb !== game.abb)
         setGames(updatedGames);
-        const versionsCopy = { ...versions };
-        delete versions[game.abb];
-        setVersions(versionsCopy);
     };
 
     // FUNCTION 4: resetFilter - function that sets the `games` state back to an empty array, effectively resetting it
@@ -64,17 +56,32 @@ const GameFilter = (updateGlobalGames) => {
     // the `games` state is set to an empty array by calling the `setGames` setter function with an empty array as an argument
     const resetFilter = () => {
         setGames([]);
-        setVersions({});
     };
 
+    // FUNCTION 5: update version - function that updates the version attribute of a particular game
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: the event object generated when the user changes the game version
+    // POSTCONDITIONS (1 possible outcome):
+    // the `version` attribute of the selected game is updated
     const updateVersion = e => {
         e.stopPropagation();
+
         const { id, value } = e.target;
         const abb = id.split("_")[0];
-        setVersions({ ...versions, [abb]: value });
+        const updateIndex = games.findIndex(g => g.abb === abb);
+        
+        const updatedGames = games.map((game, index) => {
+            if (index === updateIndex) {
+                return { ...game, version: value };
+            } else {
+                return game;
+            }
+        });
+
+        setGames(updatedGames);
     };
 
-    // FUNCTION 5: closePopupAndUpdate - function that closes the game filter popup, and updates the search params state
+    // FUNCTION 6: closePopupAndUpdate - function that closes the game filter popup, and updates the search params state
     // PRECONDITIONS (2 parameter):
     // 1.) searchParams: a URLSearchParams specifying the filters currently applied to the recent submissions page
     // 2.) setSearchParams: a setter function we can use to update the search params
@@ -93,7 +100,8 @@ const GameFilter = (updateGlobalGames) => {
 
         // now, let's add any games from the `games` state to our search params
         games.forEach(game => {
-            newSearchParams.append("game_id", game.abb);
+            const abb = game.version ? `${ game.abb }_${ game.version }` : game.abb;
+            newSearchParams.append("game_id", abb);
         });
         setSearchParams(newSearchParams);
 
@@ -104,7 +112,6 @@ const GameFilter = (updateGlobalGames) => {
     
     return { 
         games,
-        versions,
         syncGames,
         addGame,
         removeGame,

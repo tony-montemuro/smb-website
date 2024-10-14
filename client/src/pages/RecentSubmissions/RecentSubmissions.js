@@ -81,7 +81,7 @@ const RecentSubmissions = () => {
         const gameParams = [];
         for (const [key, value] of searchParams) {
             if (key === "game_id") {
-                const [abb, version] = value.split(":"); 
+                const [abb, version] = value.split("_"); 
                 gameParams.push({
                     abb,
                     version
@@ -93,12 +93,10 @@ const RecentSubmissions = () => {
         let games = [];
         if (gameParams.length > 0) {
             try {
-                games = await queryGameByList(games.map(game => game.abb));
+                games = await queryGameByList(gameParams.map(game => game.abb));
                 games.forEach(game => {
                     const version = gameParams.find(g => g.abb === game.abb && g.version)?.version;
-                    if (version) {
-                        game.version = version; 
-                    }
+                    game.version = version ?? "";
                 });
             } catch (error) {
                 addMessage("One or more filters has broken due loading failures.", "error", 7000);

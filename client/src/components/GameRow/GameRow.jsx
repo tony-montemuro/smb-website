@@ -55,9 +55,9 @@ function GameRow({
             id={ `${ game.abb }_version` }
             onClick={ e => e.stopPropagation() } 
             onChange={ versionsData.onChange } 
-            value={ versionsData.version.id }
+            value={ versionsData.version }
           >
-            <option value={ "" }>-</option>
+            <option value={ "" }>All</option>
             { versionsData.versions.map(version => (
               <option value={ version.id } key={ version.id }>{ version.version }</option>
             ))}

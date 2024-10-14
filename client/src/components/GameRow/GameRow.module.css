@@ -13,16 +13,24 @@
     padding: 8px 4px;
 }
 
+.item:not(.selected):hover {
+    background-color: rgba(var(--color-container-selected), 0.5);
+    cursor: pointer;
+}
+
+.item select {
+    padding: 3px;
+}
+
+.item select:focus {
+    outline-width: 0;
+}
+
 .game {
     display: flex;
     align-items: center;
     flex-direction: row;
     gap: 5px;
-}
-
-.item:not(.selected):hover {
-    background-color: rgba(var(--color-container-selected), 0.5);
-    cursor: pointer;
 }
 
 .itemContent {

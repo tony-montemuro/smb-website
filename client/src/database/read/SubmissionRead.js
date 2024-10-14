@@ -71,7 +71,7 @@ const SubmissionRead = () => {
                         let versioned = [], versionless = [];
 
                         filters[key].forEach(value => {
-                            const [game, version] = value.split(":");
+                            const [game, version] = value.split("_");
                             if (version) {
                                 versioned.push(`and(game_id.eq.${ game },version.eq.${ version })`);
                             } else {
@@ -88,7 +88,6 @@ const SubmissionRead = () => {
                         } else {
                             condition = versioned.length > 0 ? versioned : versionless;
                         }
-                        console.log(condition);
 
                         query = query.or(condition);
                     } else {
