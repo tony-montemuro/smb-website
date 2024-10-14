@@ -54,7 +54,8 @@ const Insert = (level, setSubmitting) => {
         category: category,
         submitted_at: dateB2F(),
         tas: false,
-        mod_note: ""
+        mod_note: "",
+        version: game.version.length > 0 ? game.version.at(-1) : ""
     };
     const formInit = { 
 		values: defaultVals, 

@@ -97,6 +97,22 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
               }
 
               { /* Render all necessary inputs for a submission */ }
+              { game.version.length > 0 &&
+                <TextField
+                  fullWidth
+                  id="version_id"
+                  label="Game Version"
+                  select
+                  SelectProps={{ native: true }}
+                  onChange={ handleChange }
+                  value={ form.values.version }
+                  variant="filled"
+                >
+                  { game.version.map(version => (
+                    <option value={ version.id } key={ version.id } >{ version.version }</option>
+                  ))}
+                </TextField>
+              }
               <RecordInput 
                 form={ form } 
                 handleChange={ handleChange } 
