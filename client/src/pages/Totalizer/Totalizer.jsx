@@ -12,6 +12,7 @@ import ScrollHelper from "../../helper/ScrollHelper";
 import TableContent from "../../components/TableContent/TableContent";
 import TotalizerLogic from "./Totalizer.js";
 import TotalizerRow from "./TotalizerRow.jsx";
+import UrlHelper from "../../helper/UrlHelper.js";
 
 function Totalizer({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -29,6 +30,7 @@ function Totalizer({ imageReducer }) {
   const { capitalize } = FrontendHelper();
   const { getGameCategories, getCategoryTypes } = GameHelper();
   const { scrollToTop } = ScrollHelper();
+  const { addAllExistingSearchParams } = UrlHelper();
 
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 3;
@@ -70,16 +72,17 @@ function Totalizer({ imageReducer }) {
   // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
     // special case #1: we are attempting to access a totalizer page with a non-valid category or non-practice mode category
+    const gameUrl = addAllExistingSearchParams(`/games/${ abb }`);
     if (!(gameCategories.includes(category) && isPracticeMode)) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 
     // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
     if (!(types.includes(type))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 

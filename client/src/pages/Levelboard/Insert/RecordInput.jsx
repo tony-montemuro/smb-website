@@ -8,6 +8,7 @@ function RecordInput({ form, handleChange, timerType, type }) {
   if (type === "score") {
     return (
       <TextField
+        autoComplete="off"
         fullWidth
         helperText={ form.error.record ? form.error.record : null }
         id="record"
@@ -30,6 +31,7 @@ function RecordInput({ form, handleChange, timerType, type }) {
     <>
       { timerType.includes("hour") &&
         <TextField
+          autoComplete="off"
           color={ form.error.hour ? "error" : "primary" }
           fullWidth
           helperText={ form.error.hour ? form.error.hour : null }
@@ -46,6 +48,7 @@ function RecordInput({ form, handleChange, timerType, type }) {
       }
       { timerType.includes("min") &&
         <TextField
+          autoComplete="off"
           color={ form.error.minute ? "error" : "primary" }
           fullWidth
           helperText={ form.error.minute ? form.error.minute : null }
@@ -62,6 +65,7 @@ function RecordInput({ form, handleChange, timerType, type }) {
       }
       { timerType.includes("sec") &&
         <TextField
+          autoComplete="off"
           color={ form.error.second ? "error" : "primary" }
           fullWidth
           helperText={ form.error.second ? form.error.second : null }
@@ -78,6 +82,7 @@ function RecordInput({ form, handleChange, timerType, type }) {
       }
       { timerType.includes("csec") &&
         <TextField
+          autoComplete="off"
           color={ form.error.centisecond ? "error" : "primary" }
           fullWidth
           helperText={ form.error.centisecond ? form.error.centisecond : null }
@@ -94,6 +99,7 @@ function RecordInput({ form, handleChange, timerType, type }) {
       }
       { timerType.includes("msec") &&
         <TextField
+          autoComplete="off"
           color={ form.error.millisecond ? "error" : "primary" }
           fullWidth
           helperText={ form.error.millisecond ? form.error.millisecond : null }

@@ -10,6 +10,7 @@ import Loading from "../../components/Loading/Loading.jsx";
 import RecordsLogic from "./Records.js";
 import RecordTable from "./RecordTable/RecordTable.jsx";
 import ScrollHelper from "../../helper/ScrollHelper";
+import UrlHelper from "../../helper/UrlHelper.js";
 
 function Records() {
   /* ===== CONTEXTS ===== */
@@ -27,6 +28,7 @@ function Records() {
   const { capitalize } = FrontendHelper();
   const { getGameCategories, getCategoryTypes } = GameHelper();
   const { scrollToTop } = ScrollHelper();
+  const { addAllExistingSearchParams } = UrlHelper();
 
   /* ===== VARIABLES ===== */
   const navigateTo = useNavigate();
@@ -55,16 +57,17 @@ function Records() {
   // code that is executed when the component mounts, or when the user switches between score and time
   useEffect(() => {
     // special case #1: we are attempting to access a records page with a non-valid category
+    const gameUrl = addAllExistingSearchParams(`/games/${ abb }`);
     if (!(gameCategories.includes(category))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 
     // special case #2: we are attempting to access a records page with a valid category, but an invalid type
     if (!(types.includes(type))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 

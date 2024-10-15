@@ -16,6 +16,7 @@ import PlatinumIcon from "../../assets/svg/Icons/PlatinumIcon.jsx";
 import ScrollHelper from "../../helper/ScrollHelper";
 import SilverIcon from "../../assets/svg/Icons/SilverIcon.jsx";
 import TableContent from "../../components/TableContent/TableContent.jsx";
+import UrlHelper from "../../helper/UrlHelper.js";
 
 function MedalTable({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -33,6 +34,7 @@ function MedalTable({ imageReducer }) {
   const { capitalize } = FrontendHelper();
   const { getGameCategories, getCategoryTypes } = GameHelper();
   const { scrollToTop } = ScrollHelper();
+  const { addAllExistingSearchParams } = UrlHelper();
 
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 6;
@@ -66,16 +68,17 @@ function MedalTable({ imageReducer }) {
   // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
     // special case #1: we are attempting to access a medals page with a non-valid or non-practice mode category
+    const gameUrl = addAllExistingSearchParams(`/games/${ abb }`);
     if (!(gameCategories.includes(category) && isPracticeMode)) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 
     // special case #2: we are attempting to access a medals page with a valid category, but an invalid type
     if (!(types.includes(type))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 

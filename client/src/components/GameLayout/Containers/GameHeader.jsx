@@ -7,6 +7,7 @@ import BoxArt from "../../BoxArt/BoxArt.jsx";
 import Container from "../../Container/Container.jsx";
 import DownloadIcon from "@mui/icons-material/Download";
 import LevelSearchBar from "../LevelSearchBar/LevelSearchBar.jsx";
+import UrlHelper from "../../../helper/UrlHelper.js";
 import Username from "../../Username/Username.jsx";
 
 function GameHeader({ disableVersionDropdown, imageReducer }) {
@@ -17,6 +18,12 @@ function GameHeader({ disableVersionDropdown, imageReducer }) {
   
   // game state, version state, and handle version change function from game context
   const { game, version, handleVersionChange } = useContext(GameContext);
+
+  /* ===== FUNCTIONS ===== */
+
+  // helper functions
+  const { addAllExistingSearchParams } = UrlHelper();
+  const gameUrl = addAllExistingSearchParams(`/games/${ game.abb }`);
   
   /* ===== GAME HEADER COMPONENT ===== */
   return (
@@ -26,14 +33,14 @@ function GameHeader({ disableVersionDropdown, imageReducer }) {
 
           { /* Render the box art */ }
           <div id={ styles.boxart }>
-            <Link to={ `/games/${ game.abb }` }>
+            <Link to={ gameUrl }>
               <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
             </Link>
           </div>
 
           { /* Render the name of the game, and it's information */ }
           <div className={ styles.info }>
-            <Link to={ `/games/${ game.abb }` }>
+            <Link to={ gameUrl }>
               <h1>{ game.name }</h1>
             </Link>
             { game.custom && game.creator && <span>Custom Game by:&nbsp;&nbsp;<Username profile={ game.creator } /></span> }

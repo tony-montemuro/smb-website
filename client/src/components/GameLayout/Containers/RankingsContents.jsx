@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./RankingsContainer.module.css";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import GameHelper from "../../../helper/GameHelper";
+import UrlHelper from "../../../helper/UrlHelper";
 
 function RankingsContents({ category }) {
   /* ===== CONTEXTS ===== */
@@ -18,6 +19,7 @@ function RankingsContents({ category }) {
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize } = FrontendHelper();
   const { getGameCategories, getCategoryTypes } = GameHelper();
+  const { addAllExistingSearchParams } = UrlHelper();
   
   /* ===== VARIABLES ===== */
   const { name: categoryName, practice: isPracticeMode } = appData.categories[category];
@@ -47,7 +49,7 @@ function RankingsContents({ category }) {
                   return (
                     <button 
                       type="button"
-                      onClick={ () => navigateTo(`/games/${ game.abb }/${ category }${ ranking.path }/${ type }`) } 
+                      onClick={ () => navigateTo(addAllExistingSearchParams(`/games/${ game.abb }/${ category }${ ranking.path }/${ type }`)) } 
                       key={ type }
                     >
                       { capitalize(type) }

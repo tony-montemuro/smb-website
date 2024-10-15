@@ -2,6 +2,7 @@
 import { GameContext, MessageContext, PopupContext, UserContext } from "../../../utils/Contexts";
 import { useContext, useReducer } from "react";
 import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import DateHelper from "../../../helper/DateHelper";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import SubmissionUpdate from "../../../database/update/SubmissionUpdate";
@@ -28,11 +29,21 @@ const Insert = (level, setSubmitting) => {
     const { validateVideoUrl, validateDate, validateLive } = ValidationHelper();
 
     /* ===== VARIABLES ===== */
+    const [searchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
     const path = location.pathname.split("/");
     const category = path[3];
     const type = path[4];
     const otherType = type === "score" ? "time" : "score";
+    let version = "";
+    if (game.version.length > 0) {
+        const urlVersion = searchParams.get("version");
+        if (urlVersion) {
+            version = game.version.find(v => v.version === urlVersion).id;
+        } else {
+            version = game.version.at(-1).id;
+        }
+    }
     const defaultVals = {
         record: "",
         hour: "",
@@ -55,7 +66,7 @@ const Insert = (level, setSubmitting) => {
         submitted_at: dateB2F(),
         tas: false,
         mod_note: "",
-        version: game.version.length > 0 ? game.version.at(-1) : ""
+        version: version
     };
     const formInit = { 
 		values: defaultVals, 
@@ -368,10 +379,11 @@ const Insert = (level, setSubmitting) => {
     const getSubmissionsFromForm = formVals => {
         // create our new submission object, which is equivelent to formVals minus some fields not present in `submission` table
         let submissions = [];
-        const { hour, minute, second, centisecond, millisecond, both, profile, submitted_at, ...submission } = formVals;
+        const { hour, minute, second, centisecond, millisecond, both, profile, submitted_at, version, ...submission } = formVals;
         const backendDate = getDateOfSubmission(submitted_at);
         if (backendDate) submission.submitted_at = backendDate;
         submission.profile_id = profile.id;
+        submission.version = version ? version : null;
 
         // now, add to submissions array, depending on the truthiness of `both`
         if (both) {
