@@ -40,8 +40,8 @@ function SubmissionHistory() {
 
   /* ===== CONTEXTS ===== */
 
-  // game state, version state, and set disable version dropdown function from game context
-  const { game, version, setDisableVersionDropdown } = useContext(GameContext);
+  // game state & version state from game context
+  const { game, version } = useContext(GameContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -92,7 +92,6 @@ function SubmissionHistory() {
 
   // code that is executed when the version state changes
   useEffect(() => {
-    setDisableVersionDropdown(true);
     if (submissions[runType]) {
       fetchSubmissions();
     }

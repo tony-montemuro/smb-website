@@ -57,7 +57,12 @@ function GameHeader({ disableVersionDropdown, imageReducer }) {
             { game.version.length > 0 &&
               <div className={ styles.version }>
                 <label htmlFor="version">Version: </label>
-                <select id="version" onChange={ handleVersionChange } value={ version.id } disabled={ disableVersionDropdown }>
+                <select 
+                  id="version" 
+                  onChange={ (e) => handleVersionChange(e.target.value) } 
+                  value={ version.id } 
+                  disabled={ disableVersionDropdown }
+                >
                   { game.version.map(version => (
                     <option value={ version.id } key={ version.id }>{ version.version }</option>
                   ))}
