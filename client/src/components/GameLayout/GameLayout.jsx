@@ -66,12 +66,6 @@ function GameLayout({ imageReducer }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // code that executes when the version state changes
-  useEffect(() => {
-    setDisableVersionDropdown(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [version]);
-
   /* ===== GAME LAYOUT COMPONENT ===== */
   return (
     <div className={ styles.gameLayout }>

@@ -419,12 +419,11 @@ const Insert = (level, setSubmitting) => {
     const close = async (updateBoard, successMsg, timer) => {
         // if user submits with a version that differs from the current version, then we want to update the version
         // this action will automatically update the board, so we can rely on that instead of updating directly
-        debugger;
         const submissionVersion = form.values.version;
         if (submissionVersion !== "" && submissionVersion !== parseInt(version?.id)) {
             handleVersionChange(submissionVersion);
         } else {
-            await updateBoard();   
+            await updateBoard();
         }
 
         addMessage(successMsg, "success", timer);
@@ -443,7 +442,7 @@ const Insert = (level, setSubmitting) => {
         if (r1.status === "fulfilled") {
             let msg, timer;
 
-            if (r2.status === "fulfulled") {
+            if (r2.status === "fulfilled") {
                 msg = "Both submissions were successful!";
                 timer = 5000;
             } else {

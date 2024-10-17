@@ -63,13 +63,12 @@ const GameLayout = (game, setVersion) => {
 
     // FUNCTION 3: handleVersionChange - code that is executed when the user changes the game version
     // PRECONDITIONS (1 parameter):
-    // 1.) e: the event object generated when the user selects a new version
+    // 1.) versionId: an integer or string, representing the id of a version
     // POSTCONDITIONS (1 possible outcome):
-    // the version is updated given the information in `e.target`
-    const handleVersionChange = e => {
+    // the version is updated given `versionId`
+    const handleVersionChange = versionId => {
         // determine version
-        const { value } = e.target;
-        const id = parseInt(value);
+        const id = parseInt(versionId); // parse in-case of string
         const version = game.version.find(version => version.id === id);
 
         // next, let's update version search param

@@ -36,8 +36,8 @@ function Levelboard({ imageReducer }) {
 	// appData state from app data context
 	const { appData } = useContext(AppDataContext);
 
-	// game state & version state from game context
-  const { game, version } = useContext(GameContext);
+	// game state, version state, & set disable version dropdown function from game context
+  const { game, version, setDisableVersionDropdown } = useContext(GameContext);
 
 	// add message function from message context
 	const { addMessage } = useContext(MessageContext);
@@ -154,6 +154,7 @@ function Levelboard({ imageReducer }) {
 	// code that is executed when the component mounts, or when the `version` state changes
 	useEffect(() => {
 		if (board.filtered) {
+			setDisableVersionDropdown(true);
 			setupBoard();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

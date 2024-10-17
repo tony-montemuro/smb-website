@@ -24,8 +24,8 @@ function MedalTable({ imageReducer }) {
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
 
-  // game state & version state from game context
-  const { game, version } = useContext(GameContext);
+  // game state, version state, & set disable version dropdown function from game context
+  const { game, version, setDisableVersionDropdown } = useContext(GameContext);
   
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -91,6 +91,7 @@ function MedalTable({ imageReducer }) {
   // code that executes when the version changes
   useEffect(() => {
     if (medalTable) {
+      setDisableVersionDropdown(true);
       fetchMedals(abb, category, type);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

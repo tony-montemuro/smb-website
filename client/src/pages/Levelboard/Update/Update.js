@@ -124,7 +124,8 @@ const Update = (level, setSubmitting) => {
             category: category,
             submitted_at: dateB2F(submission.submitted_at),
             tas: submission.tas,
-            approved: submission.approve ? true : false
+            approved: submission.approve ? true : false,
+            version: submission.version ?? ""
         };
     }
 
@@ -185,9 +186,10 @@ const Update = (level, setSubmitting) => {
     // otherwise, return false
     const isFormUnchanged = () => {
         return form.values.submitted_at === dateB2F(form.submission.submitted_at)
-            && parseInt(form.values.region_id) === form.submission.region.id
+            && parseInt(form.values.version) === form.submission.version
             && parseInt(form.values.monkey_id) === form.submission.monkey.id
             && parseInt(form.values.platform_id) === form.submission.platform.id
+            && parseInt(form.values.region_id) === form.submission.region.id
             && form.values.proof === form.submission.proof
             && form.values.live === form.submission.live
             && form.values.tas === form.submission.tas

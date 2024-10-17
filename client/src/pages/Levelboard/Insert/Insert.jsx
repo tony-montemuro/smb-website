@@ -132,7 +132,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                   variant="filled"
                 >
                   { game.version.map(version => (
-                    <option value={ version.id } key={ version.id } >{ version.version }</option>
+                    <option value={ version.id } key={ version.id }>{ version.version }</option>
                   ))}
                 </TextField>
               }
