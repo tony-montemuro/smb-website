@@ -556,7 +556,8 @@ AS $$
       (SELECT row_to_json(region_row) FROM (SELECT rg.id, rg.region_name FROM region rg WHERE cs.region_id = rg.id) AS region_row) region,
       (SELECT row_to_json(report_row) FROM (SELECT rp.creator_id FROM report rp WHERE rp.submission_id = cs.id) AS report_row) report,
       cs.submitted_at,
-      cs.tas
+      cs.tas,
+      cs.version
     FROM chart_submissions cs
     LEFT OUTER JOIN ranked ON cs.id = ranked.id
     LEFT OUTER JOIN live_ranked ON cs.id = live_ranked.id
