@@ -20,6 +20,57 @@ ALTER TABLE submission
 ADD COLUMN version INT
 CONSTRAINT submission_version_fk REFERENCES version (id);
 
+GRANT UPDATE("version") ON TABLE submission TO "authenticated";
+
+-- Add version attribute to notification
+ALTER TABLE notification
+ADD COLUMN version_id INT;
+
+ALTER TABLE notification
+ADD CONSTRAINT notification_version_id_fkey
+FOREIGN KEY (version_id) REFERENCES version (id);
+
+-- Update RLS for notification table
+DROP POLICY "Enable restricted insert access for users" ON notification;
+CREATE POLICY "Enable restricted insert access for users" 
+ON "notification" 
+FOR INSERT 
+TO authenticated 
+WITH CHECK (
+  (
+    (notif_type = 'report'::notif_t)
+  AND
+    EXISTS (
+      SELECT 1
+      FROM submission
+      WHERE (
+        submission.id = notification.submission_id AND 
+        submission.game_id = notification.game_id AND 
+        submission.level_id = notification.level_id AND 
+        submission.category = notification.category AND 
+        submission.score = notification.score AND
+        submission.tas = notification.tas AND
+        submission.record = notification.record AND
+        submission.profile_id = notification.profile_id AND
+        submission.version = notification.version_id
+      )
+    )
+  AND 
+    (
+      EXISTS (
+        SELECT 1
+        FROM report
+        WHERE ((report.submission_id = notification.submission_id) AND (report.message = notification.message) AND (report.creator_id = notification.creator_id))
+      )
+    )
+  AND
+    (
+      NOT (is_already_notified(report_id))
+    )
+  )
+);
+
+-- Create new procedure for submission writes
 CREATE OR REPLACE PROCEDURE check_submission_version (game_id text, version_id int)
 LANGUAGE "plpgsql"
 AS $$
@@ -100,6 +151,7 @@ AS $$
   END;
 $$;
 
+-- Create new trigger that activates before submission update
 ALTER FUNCTION prepare_submission() RENAME TO prepare_submission_insert;
 
 CREATE OR REPLACE FUNCTION prepare_submission_update() RETURNS "trigger"
@@ -115,6 +167,49 @@ $$;
 CREATE TRIGGER submission_before_update_row_trigger
 BEFORE UPDATE ON submission
 FOR EACH ROW EXECUTE FUNCTION prepare_submission_update();
+
+-- Update function that activates after submission update
+CREATE OR REPLACE FUNCTION "public"."update_notify_and_unapprove"() RETURNS "trigger"
+  LANGUAGE "plpgsql"
+  AS $$
+DECLARE
+  changed_columns text[];
+  current_id int4;
+  user_id_for_notif uuid;
+BEGIN
+  -- First, let's determine which columns have changed
+  SELECT array_agg(o.key)
+  INTO changed_columns
+  FROM jsonb_each(to_jsonb(OLD)) AS o
+  CROSS JOIN jsonb_each(to_jsonb(NEW)) AS n
+  WHERE o.key = n.key AND o.value IS DISTINCT FROM n.value;
+
+  -- If only `level_id` has changed, let's exit trigger early
+  IF changed_columns = ARRAY['level_id'] THEN
+    return NEW;
+  END IF;
+
+  -- next, let's verify that the submission's profile is authenticated
+  SELECT user_id into user_id_for_notif
+  FROM profile
+  WHERE id = NEW.profile_id;
+
+  -- now, get the profile id of the user performing the UPDATE
+  current_id := get_profile_id();
+
+  -- if the submission being updated belongs to an authenticated user, AND the profile_id is not the same as the current_id, we need to send an UPDATE notification
+  IF user_id_for_notif IS NOT NULL AND NEW.profile_id <> current_id then
+    INSERT INTO notification (submission_id, game_id, level_id, category, score, tas, record, profile_id, creator_id, notif_type, submitted_at, region_id, monkey_id, platform_id, proof, live, comment, mod_note, version_id)
+    VALUES (NEW.id, NEW.game_id, NEW.level_id, NEW.category, NEW.score, OLD.tas, NEW.record, NEW.profile_id, current_id, 'update', OLD.submitted_at, OLD.region_id, OLD.monkey_id, OLD.platform_id, OLD.proof, OLD.live, OLD.comment, OLD.mod_note, OLD.version);
+  END IF;
+  
+  -- next, let's delete any approval of the submission, if there is one
+  DELETE from approve
+  WHERE submission_id = NEW.id;
+
+  RETURN NEW;
+END;
+$$;
 
 -- New triggers for version table, to ensure data integrity
 CREATE OR REPLACE FUNCTION validate_version_and_updatable_games()
@@ -705,4 +800,141 @@ AS $$
 
   // -- finally, return rankings
   return rankings;
+$$;
+
+-- Next, get unapproved counts RPC
+CREATE OR REPLACE FUNCTION get_unapproved_counts(abbs text[])
+RETURNS json
+LANGUAGE sql
+AS $$
+  SELECT json_agg(row_to_json(submission_row))
+  FROM (
+    SELECT 
+      g.abb AS abb,
+      g.min_date,
+      (
+        SELECT json_agg(monkey_row)
+        FROM (
+          SELECT m.id, m.monkey_name
+          FROM game_monkey gm
+          INNER JOIN monkey m ON gm.monkey = m.id
+          WHERE gm.game = g.abb
+          ORDER BY gm.id
+        ) monkey_row
+      ) AS monkey,
+      g.name,
+       (
+        SELECT json_agg(platform_row)
+        FROM (
+          SELECT p.id, p.platform_name
+          FROM game_platform gp
+          INNER JOIN platform p ON gp.platform = p.id
+          WHERE gp.game = g.abb
+          ORDER BY gp.id
+        ) platform_row
+      ) AS platform,
+      (
+        SELECT json_agg(region_row)
+        FROM (
+          SELECT r.id, r.region_name
+          FROM game_region gr
+          INNER JOIN region r ON gr.region = r.id
+          WHERE gr.game = g.abb
+          ORDER BY gr.id
+        ) region_row
+      ) AS region,
+      g.release_date,
+      COUNT(CASE WHEN s.id IS NOT NULL AND a.submission_id IS NULL AND r.submission_id IS NOT NULL THEN 1 ELSE NULL END) AS reported,
+      COUNT(CASE WHEN s.id IS NOT NULL AND a.submission_id IS NULL AND r.submission_id IS NULL THEN 1 ELSE NULL END) AS unapproved,
+      (
+        SELECT COALESCE(json_agg(version_row), '[]'::json)
+        FROM (
+          SELECT v.id, v.version, v.sequence
+          FROM version v
+          WHERE v.game = g.abb
+          ORDER BY v.sequence
+        ) version_row
+      ) AS version
+    FROM game g
+    LEFT JOIN submission s ON g.abb = s.game_id
+    LEFT JOIN approve a ON s.id = a.submission_id
+    LEFT JOIN report r ON s.id = r.submission_id
+    WHERE
+      CASE
+        WHEN array_length(abbs, 1) > 0 THEN g.abb = ANY(abbs)
+        ELSE true
+      END
+    GROUP BY g.abb
+    ORDER BY g.release_date
+  ) submission_row
+$$;
+
+-- Next, get unapproved RPC
+CREATE OR REPLACE FUNCTION get_unapproved(abb text)
+RETURNS json
+LANGUAGE sql
+AS $$
+  SELECT COALESCE((json_agg(row_to_json(submissions_row))), '[]'::json)
+  FROM (
+    SELECT
+      s.all_position,
+      s.comment,
+      s.id,
+      (SELECT jsonb_build_object('category', l.category, 'name', l.name, 'timer_type', l.timer_type, 'mode', jsonb_build_object('game', jsonb_build_object('abb', g.abb, 'name', g.name))) FROM level l INNER JOIN mode m ON l.game = m.game AND l.mode = m.name AND l.category = m.category INNER JOIN game g ON m.game = g.abb WHERE l.game = s.game_id AND l.name = s.level_id AND l.category = s.category) AS "level",
+      s.live,
+      s.mod_note,
+      (SELECT row_to_json(monkey_row) FROM (SELECT m.id, m.monkey_name FROM monkey m WHERE m.id = s.monkey_id) AS monkey_row) monkey,
+      (SELECT row_to_json(platform_row) FROM (SELECT pl.id, pl.platform_name FROM platform pl WHERE pl.id = s.platform_id) AS platform_row) platform,
+      s.position,
+      (SELECT row_to_json(profile_row) FROM (SELECT pr.country, pr.id, pr.username FROM profile pr WHERE pr.id = s.profile_id) AS profile_row) profile,
+      (SELECT row_to_json(region_row) FROM (SELECT rg.id, rg.region_name FROM region rg WHERE rg.id = s.region_id) AS region_row) region,
+      s.proof,
+      s.record,
+      s.score,
+      s.submitted_at,
+      s.tas,
+      s.version
+    FROM submission s
+    LEFT OUTER JOIN approve a ON a.submission_id = s.id
+    LEFT OUTER JOIN report r ON r.submission_id = s.id
+    WHERE
+      (a.approve_date IS NULL) AND
+      (r.report_date IS NULL) AND
+      (s.game_id = abb)
+    ORDER BY s.id
+  ) submissions_row
+$$;
+
+-- Next, get reported RPC
+CREATE OR REPLACE FUNCTION get_reported(abb text)
+RETURNS json
+LANGUAGE sql
+AS $$
+  SELECT COALESCE((json_agg(row_to_json(submissions_row))), '[]'::json)
+  FROM (
+    SELECT
+      s.all_position,
+      s.comment,
+      s.id,
+      (SELECT jsonb_build_object('category', l.category, 'name', l.name, 'timer_type', l.timer_type, 'mode', jsonb_build_object('game', jsonb_build_object('abb', g.abb, 'name', g.name))) FROM level l INNER JOIN mode m ON l.game = m.game AND l.mode = m.name AND l.category = m.category INNER JOIN game g ON m.game = g.abb WHERE l.game = s.game_id AND l.name = s.level_id AND l.category = s.category) AS "level",
+      s.live,
+      s.mod_note,
+      (SELECT row_to_json(monkey_row) FROM (SELECT m.id, m.monkey_name FROM monkey m WHERE m.id = s.monkey_id) AS monkey_row) monkey,
+      (SELECT row_to_json(platform_row) FROM (SELECT pl.id, pl.platform_name FROM platform pl WHERE pl.id = s.platform_id) AS platform_row) platform,
+      s.position,
+      (SELECT row_to_json(profile_row) FROM (SELECT pr.country, pr.id, pr.username FROM profile pr WHERE pr.id = s.profile_id) AS profile_row) profile,
+      (SELECT row_to_json(region_row) FROM (SELECT rg.id, rg.region_name FROM region rg WHERE rg.id = s.region_id) AS region_row) region,
+      (SELECT jsonb_build_object('creator', jsonb_build_object('country', p.country, 'id', p.id, 'username', p.username), 'message', r.message, 'report_date', r.report_date)) AS "report",
+      s.proof,
+      s.record,
+      s.score,
+      s.submitted_at,
+      s.tas,
+      s.version
+    FROM submission s
+    INNER JOIN report r ON r.submission_id = s.id
+    INNER JOIN profile p ON p.id = r.creator_id
+    WHERE s.game_id = abb
+    ORDER BY r.report_date
+  ) submissions_row
 $$;
