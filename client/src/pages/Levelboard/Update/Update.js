@@ -83,8 +83,8 @@ const Update = (level, setSubmitting) => {
 
     /* ===== CONTEXTS ===== */
 
-    // game state from game context
-    const { game } = useContext(GameContext);
+    // game state, version state, & handle version change function from game context
+    const { game, version, handleVersionChange } = useContext(GameContext);
 
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
@@ -264,15 +264,23 @@ const Update = (level, setSubmitting) => {
 		const updatedData = getUpdateFromForm(form.values, backendDate);
         const id = submission.id;
         try {
-            // attempt to update the submission using updated data, and update the board
             await updateSubmission(updatedData, id);
-            await updateBoard();
+
+            // if user submits with a version that differs from the current version, then we want to update the version
+            // this action will automatically update the board, so we can rely on that instead of updating directly
+            const submissionVersion = updatedData.version;
+            if (submissionVersion !== "" && submissionVersion !== parseInt(version?.id)) {
+                handleVersionChange(submissionVersion);
+            } else {
+                await updateBoard();
+            }
 
             // finally, let the user know that they successfully submitted their submission, and close the popup
             addMessage("Your submission was successfully updated!", "success", 5000);
             closePopup();
 
         } catch (error) {
+            console.log(updatedData, error);
             addMessage("Ther was a problem updating your submission. Try refreshing the page.", "error", 8000);
 
         } finally {

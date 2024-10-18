@@ -149,6 +149,24 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                   }
                 }}
               />
+              { game.version.length > 0 &&
+                <TextField
+                  color={ parseInt(form.values.version) !== submission.version ? "success" : "primary" }
+                  fullWidth
+                  helperText={ parseInt(form.values.version) !== submission.version ? updateFieldText : null }
+                  id="version"
+                  label="Game Version"
+                  select
+                  SelectProps={{ native: true }}
+                  onChange={ handleChange }
+                  value={ form.values.version }
+                  variant="filled"
+                >
+                  { game.version.map(version => (
+                    <option value={ version.id } key={ version.id } >{ version.version }</option>
+                  ))}
+                </TextField>
+              }
               <TextField
                 color={ parseInt(form.values.monkey_id) !== submission.monkey.id ? "success" : "primary" }
                 fullWidth
@@ -198,6 +216,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 ))}
               </TextField>
               <TextField 
+                autoComplete="off"
                 color={ form.error.proof ? "error" : (form.values.proof !== submission.proof ? "success" : "primary") }
                 fullWidth
                 helperText={ form.error.proof ? form.error.proof : (form.values.proof !== submission.proof ? updateFieldText : null) }

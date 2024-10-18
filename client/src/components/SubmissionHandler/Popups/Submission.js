@@ -59,6 +59,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         setForm({ 
             values: {
                 submitted_at: dateB2F(submission.submitted_at),
+                version: submission.version ?? "",
                 region_id: submission.region.id.toString(),
                 monkey_id: submission.monkey.id.toString(),
                 platform_id: submission.platform.id.toString(),
@@ -153,15 +154,16 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     // if not a single form value is different than the value in submission, we return true
     // otherwise, return false
     const isFormUnchanged = () => {
-        return form.values.submitted_at === dateB2F(submission.submitted_at)
-            && form.values.region_id === submission.region.id.toString()
-            && form.values.monkey_id === submission.monkey.id.toString()
-            && form.values.platform_id === submission.platform.id.toString()
-            && form.values.proof === submission.proof
-            && form.values.live === submission.live
-            && form.values.tas === submission.tas
-            && form.values.comment === submission.comment
-            && form.values.mod_note === submission.mod_note;
+        return form.values.submitted_at === dateB2F(submission.submitted_at) &&
+            (!submission.version || form.values.version === submission.version) &&
+            form.values.region_id === submission.region.id.toString() &&
+            form.values.monkey_id === submission.monkey.id.toString() &&
+            form.values.platform_id === submission.platform.id.toString() &&
+            form.values.proof === submission.proof &&
+            form.values.live === submission.live &&
+            form.values.tas === submission.tas &&
+            form.values.comment === submission.comment &&
+            form.values.mod_note === submission.mod_note;
     };
 
     // FUNCTION 9: approveSubmission - function that runs when the user approves a submission with NO changes to it
