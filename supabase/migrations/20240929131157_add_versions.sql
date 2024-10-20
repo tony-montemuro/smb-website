@@ -88,6 +88,63 @@ BEGIN
 END;
 $$;
 
+-- Also, update `get_position` function
+CREATE OR REPLACE FUNCTION "public"."get_position"("newrecord" "public"."submission", "liveonly" boolean) RETURNS integer
+  LANGUAGE "plpgsql"
+  AS $$
+DECLARE
+  submissions CURSOR FOR
+    SELECT s2.record
+    FROM submission s2
+    JOIN (
+      SELECT profile_id, MAX(submitted_at) AS max_submitted_at
+      FROM submission
+      WHERE game_id = newRecord.game_id
+        AND level_id = newRecord.level_id
+        AND category = newRecord.category
+        AND score = newRecord.score
+        AND profile_id <> (get_profile_id())
+        AND tas = newRecord.tas
+        AND (NOT liveOnly OR live = TRUE)
+        AND (newRecord.version IS NULL OR version = newRecord.version)
+      GROUP BY profile_id
+    ) latest_submissions ON s2.profile_id = latest_submissions.profile_id AND s2.submitted_at = latest_submissions.max_submitted_at
+    WHERE game_id = newRecord.game_id
+      AND level_id = newRecord.level_id
+      AND category = newRecord.category
+      AND score = newRecord.score
+      AND s2.profile_id <> (get_profile_id())
+      AND tas = newRecord.tas
+      AND (NOT liveOnly OR live = TRUE)
+      AND (newRecord.version IS NULL OR version = newRecord.version)
+    ORDER BY s2.record DESC;
+
+  prevRecord FLOAT8 := 1.7976931348623157E308;
+  trueCount INTEGER := 1;
+  posCount INTEGER := 1;
+BEGIN
+  FOR submission IN submissions LOOP
+    -- If current record is less than previous record, update posCount
+    IF submission.record < prevRecord THEN
+      posCount := trueCount;
+    END IF;
+
+    -- If current record is less than or equal, then return posCount
+    IF submission.record <= newRecord.record THEN
+      RETURN posCount;
+    END IF;
+
+    -- update trueCount and prevRecord
+    trueCount := trueCount + 1;
+    prevRecord := submission.record;
+
+  END LOOP;
+
+  -- If the loop completes, just return trueCount
+  RETURN trueCount;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION prepare_submission() RETURNS "trigger"
 LANGUAGE "plpgsql"
 AS $$
@@ -893,7 +950,7 @@ AS $$
       s.score,
       s.submitted_at,
       s.tas,
-      s.version
+      (SELECT row_to_json(version_row) FROM (SELECT v.id, v.version, v.sequence FROM version v WHERE v.id = s.version) AS version_row) version
     FROM submission s
     LEFT OUTER JOIN approve a ON a.submission_id = s.id
     LEFT OUTER JOIN report r ON r.submission_id = s.id
@@ -930,7 +987,7 @@ AS $$
       s.score,
       s.submitted_at,
       s.tas,
-      s.version
+      (SELECT row_to_json(version_row) FROM (SELECT v.id, v.version, v.sequence FROM version v WHERE v.id = s.version) AS version_row) version
     FROM submission s
     INNER JOIN report r ON r.submission_id = s.id
     INNER JOIN profile p ON p.id = r.creator_id
