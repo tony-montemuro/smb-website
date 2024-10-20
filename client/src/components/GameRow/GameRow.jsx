@@ -32,7 +32,9 @@ function GameRow({
       <div className={ styles.card } style={ { width: `${ BOX_WIDTH }px` } }>
         <Link to={ { pathname: `/games/${ game.abb }` } }>
           <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
-          <p>{ name }</p>
+          <div className="center">
+            <p>{ name }</p>
+          </div>
         </Link>
       </div>
     );

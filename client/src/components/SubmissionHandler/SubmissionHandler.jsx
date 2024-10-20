@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext, ModeratorLayoutContext } from "../../utils/Contexts";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./SubmissionHandler.module.css";
 import Container from "../Container/Container.jsx";
 import LoadingTable from "../LoadingTable/LoadingTable.jsx";
@@ -12,9 +12,6 @@ import SubmissionRow from "./SubmissionRow";
 import TableContent from "../TableContent/TableContent";
 
 function SubmissionHandler({ imageReducer, isUnapproved }) {
-  /* ===== VARIABLES ===== */
-  const NUM_COLS = isUnapproved ? 5 : 6;
-
   /* ===== CONTEXTS ===== */
 
   // appData state from app data context
@@ -57,6 +54,26 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
     if (game) {
       fetchSubmissions(game);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game]);
+
+  /* ===== MEMOS ===== */
+
+  // update this value based on game state
+  const NUM_COLS = useMemo(() => {
+    let n = 6;
+    
+    // if we are looking at reported submissions, add an extra column
+    if (!isUnapproved) {
+      n++;
+    }
+
+    // if game has versions, add an extra column
+    if (game?.version.length > 0) {
+      n++;
+    }
+    
+    return n;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game]);
 
@@ -104,6 +121,7 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
                   <th>Category</th>
                   <th>Level</th>
                   <th>Record</th>
+                  { game && game.version.length > 0 && <th>Version</th> }
                 </tr>
               </thead>
 

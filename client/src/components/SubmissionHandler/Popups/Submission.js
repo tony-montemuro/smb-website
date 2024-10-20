@@ -59,7 +59,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         setForm({ 
             values: {
                 submitted_at: dateB2F(submission.submitted_at),
-                version: submission.version ?? "",
+                version: submission.version ? submission.version.id.toString() : "",
                 region_id: submission.region.id.toString(),
                 monkey_id: submission.monkey.id.toString(),
                 platform_id: submission.platform.id.toString(),
@@ -155,7 +155,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     // otherwise, return false
     const isFormUnchanged = () => {
         return form.values.submitted_at === dateB2F(submission.submitted_at) &&
-            (!submission.version || form.values.version === submission.version) &&
+            (!submission.version || form.values.version === submission.version.id.toString()) &&
             form.values.region_id === submission.region.id.toString() &&
             form.values.monkey_id === submission.monkey.id.toString() &&
             form.values.platform_id === submission.platform.id.toString() &&
@@ -212,8 +212,9 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         setSubmitting(true);
         try {
             // first, update submission with values from the form
-            const { message, submitted_at, ...payload } = form.values;
+            const { message, submitted_at, version, ...payload } = form.values;
             payload.submitted_at = getDateOfSubmission(form.values.submitted_at, submission.submitted_at);
+            payload.version = version !== "" ? version : null;
             await updateSubmission(payload, submission.id);
 
             // next, insert approval
@@ -276,7 +277,8 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
                     profile_id: submission.profile.id,
                     creator_id: user.profile.id,
                     notif_type: "delete",
-                    tas: submission.tas
+                    tas: submission.tas,
+                    version: submission.version ?? null
                 };
                 await insertNotification(notification);
             }

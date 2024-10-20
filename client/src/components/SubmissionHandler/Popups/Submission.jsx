@@ -151,9 +151,9 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
               />
               { game.version.length > 0 &&
                 <TextField
-                  color={ parseInt(form.values.version) !== submission.version ? "success" : "primary" }
+                  color={ parseInt(form.values.version) !== submission.version.id ? "success" : "primary" }
                   fullWidth
-                  helperText={ parseInt(form.values.version) !== submission.version ? updateFieldText : null }
+                  helperText={ parseInt(form.values.version) !== submission.version.id ? updateFieldText : null }
                   id="version"
                   label="Game Version"
                   select

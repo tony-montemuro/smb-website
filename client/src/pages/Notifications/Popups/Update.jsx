@@ -26,6 +26,17 @@ function Update() {
   const type = notification.score ? "score" : "time";
   const category = notification.level.category;
   const { name: categoryName } = appData.categories[category];
+  const game = notification.level.mode.game;
+  const version = submission.version;
+  let gameUrl = `/games/${ game.abb }`;
+  let gameName = game.name;
+  let chartUrl = `/games/${ game.abb }/${ category }/${ notification.score ? "score" : "time" }/${ notification.level.name }`;
+  if (game.version.length > 0 && submission.version) {
+    const versionSearchParam = `?version=${ version.version }`;
+    gameUrl += versionSearchParam;
+    gameName += ` (${ version.version })`;
+    chartUrl += versionSearchParam;
+  }
 
   /* ===== FUNCTIONS ===== */
   const { capitalize, recordB2F, dateB2F } = FrontendHelper();
@@ -47,7 +58,7 @@ function Update() {
           { /* Link to the game corresponding to the notification prop */ }
           <li>
             <span className={ styles.wrapper }>
-              Game:&nbsp;<Link to={`/games/${ notification.level.mode.game.abb }`}>{ notification.level.mode.game.name }</Link> 
+              Game:&nbsp;<Link to={ gameUrl }>{ gameName }</Link> 
             </span>
           </li>
 
@@ -62,7 +73,7 @@ function Update() {
           <li>
             <span className={ styles.wrapper }>
               Chart:&nbsp;
-              <Link to={`/games/${ notification.level.mode.game.abb }/${ category }/${ notification.score ? "score" : "time" }/${ notification.level.name }`}>
+              <Link to={ chartUrl }>
                 <div><FancyLevel level={ notification.level.name } />&nbsp;({ capitalize(notification.score ? "score" : "time") })</div>
               </Link>
             </span>
@@ -72,6 +83,17 @@ function Update() {
           <li>
             <span className={ styles.wrapper }>{ capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }</span>
           </li>
+
+          { /* Render version, if game has any, ONLY if version has changed */ }
+          { game.version.length > 0 && notification.version.id !== submission.version.id &&
+            <li>
+              <div className={ styles.updated }>
+                <span className={ styles.wrapper }>
+                  Game Version: { notification.version.version } → { submission.version.version }
+                </span>
+              </div>
+            </li>
+          }
 
           { /* Render the submission date. If the submission date was updated, render both the old submission date, and the new
           submission date. */ }
