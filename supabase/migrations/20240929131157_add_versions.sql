@@ -233,40 +233,67 @@ DECLARE
   changed_columns text[];
   current_id int4;
   user_id_for_notif uuid;
+  affected_row record;
+  row_count int;
 BEGIN
-  -- First, let's determine which columns have changed
-  SELECT array_agg(o.key)
-  INTO changed_columns
-  FROM jsonb_each(to_jsonb(OLD)) AS o
-  CROSS JOIN jsonb_each(to_jsonb(NEW)) AS n
-  WHERE o.key = n.key AND o.value IS DISTINCT FROM n.value;
-
-  -- If only `level_id` has changed, let's exit trigger early
-  IF changed_columns = ARRAY['level_id'] THEN
-    return NEW;
-  END IF;
-
-  -- next, let's verify that the submission's profile is authenticated
-  SELECT user_id into user_id_for_notif
-  FROM profile
-  WHERE id = NEW.profile_id;
-
-  -- now, get the profile id of the user performing the UPDATE
+  -- Get the profile id of the user performing the UPDATE
   current_id := get_profile_id();
 
-  -- if the submission being updated belongs to an authenticated user, AND the profile_id is not the same as the current_id, we need to send an UPDATE notification
-  IF user_id_for_notif IS NOT NULL AND NEW.profile_id <> current_id then
-    INSERT INTO notification (submission_id, game_id, level_id, category, score, tas, record, profile_id, creator_id, notif_type, submitted_at, region_id, monkey_id, platform_id, proof, live, comment, mod_note, version_id)
-    VALUES (NEW.id, NEW.game_id, NEW.level_id, NEW.category, NEW.score, OLD.tas, NEW.record, NEW.profile_id, current_id, 'update', OLD.submitted_at, OLD.region_id, OLD.monkey_id, OLD.platform_id, OLD.proof, OLD.live, OLD.comment, OLD.mod_note, OLD.version);
-  END IF;
-  
-  -- next, let's delete any approval of the submission, if there is one
-  DELETE from approve
-  WHERE submission_id = NEW.id;
+  -- Count the number of affected rows by the UPDATE that caused this trigger
+  SELECT COUNT(*) INTO row_count FROM new_table;
 
-  RETURN NEW;
+  -- Iterate over affected rows
+  FOR affected_row IN
+    SELECT * FROM new_table
+  LOOP
+    -- Determine which columns have changed
+    SELECT array_agg(o.key)
+    INTO changed_columns
+    FROM jsonb_each(to_jsonb(OLD)) AS o
+    CROSS JOIN jsonb_each(to_jsonb(NEW)) AS n
+    WHERE o.key = n.key AND o.value IS DISTINCT FROM n.value;
+
+    -- If only `level_id` has changed, let continue
+    IF changed_columns = ARRAY['level_id'] THEN
+      CONTINUE;
+    END IF;
+
+    -- Next, let's fetch submission's profile's `user_id`
+    SELECT user_id into user_id_for_notif
+    FROM profile
+    WHERE id = NEW.profile_id;
+
+    -- If we are performing a bulk update on a set of submissions, the only column changed is `version`, and the current
+    -- user is an admin, we can assume the user is adding a new version. In this case, we can ignore notifications, unapprovals, etc.
+    IF (
+      row_count > 1 AND
+      changed_columns = ARRAY['version'] AND
+      is_admin()
+    ) THEN
+      CONTINUE;
+    END IF;
+
+    -- if the submission being updated belongs to an authenticated user, AND the profile_id is not the same as the current_id, we need to send an UPDATE notification
+    IF user_id_for_notif IS NOT NULL AND NEW.profile_id <> current_id then
+      INSERT INTO notification (submission_id, game_id, level_id, category, score, tas, record, profile_id, creator_id, notif_type, submitted_at, region_id, monkey_id, platform_id, proof, live, comment, mod_note, version_id)
+      VALUES (NEW.id, NEW.game_id, NEW.level_id, NEW.category, NEW.score, OLD.tas, NEW.record, NEW.profile_id, current_id, 'update', OLD.submitted_at, OLD.region_id, OLD.monkey_id, OLD.platform_id, OLD.proof, OLD.live, OLD.comment, OLD.mod_note, OLD.version);
+    END IF;
+    
+    -- next, let's delete any approval of the submission, if there is one
+    DELETE from approve
+    WHERE submission_id = NEW.id;
+  END LOOP;
+
+  RETURN NULL;
 END;
 $$;
+
+-- Recreate trigger, but make it STATEMENT this time.
+DROP TRIGGER IF EXISTS submission_after_update_trigger ON submission;
+
+CREATE TRIGGER submission_after_update_statement_trigger 
+AFTER UPDATE ON submission 
+FOR EACH STATEMENT EXECUTE FUNCTION update_notify_and_unapprove();
 
 -- New triggers for version table, to ensure data integrity
 CREATE OR REPLACE FUNCTION validate_version_and_updatable_games()
@@ -330,7 +357,6 @@ ALTER TRIGGER report_after_delete_trigger ON report RENAME TO report_after_delet
 ALTER TRIGGER report_after_insert_trigger ON report RENAME TO report_after_insert_row_trigger;
 ALTER TRIGGER report_before_insert_trigger ON report RENAME TO report_before_insert_row_trigger;
 ALTER TRIGGER submission_after_insert_trigger ON submission RENAME TO submission_after_insert_row_trigger;
-ALTER TRIGGER submission_after_update_trigger ON submission RENAME TO submission_after_update_row_trigger;
 ALTER TRIGGER submission_before_insert_trigger ON submission RENAME TO submission_before_insert_row_trigger;
 
 -- Now, we need to update RPCs to allow for version specification
