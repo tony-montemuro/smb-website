@@ -140,7 +140,12 @@ const GameRead = () => {
                     ),
                     name,
                     moderators:profile!game_profile (id, username, country),
-                    release_date
+                    release_date,
+                    version (
+                        id,
+                        version,
+                        sequence
+                    )
                 `)
                 .order("custom")
                 .order("release_date")

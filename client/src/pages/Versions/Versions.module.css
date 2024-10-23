@@ -1,0 +1,17 @@
+.versions {
+    display: flex;
+    padding: var(--app-padding);
+    gap: var(--app-padding);
+}
+
+.versions h3 {
+    margin: 0;
+}
+
+.left {
+    width: var(--sidebar-width);
+}
+
+.right {
+    flex: 1;
+}

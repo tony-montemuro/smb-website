@@ -22,6 +22,10 @@ function AdministratorLayout() {
       content: "Game Moderators"
     },
     {
+      pageType: "versions",
+      content: "Game Versions"
+    },
+    {
       pageType: "post",
       content: "Create Post"
     }
