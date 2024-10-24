@@ -2,11 +2,15 @@
 CREATE TABLE version (
   id SERIAL PRIMARY KEY,
   game text NOT NULL,
-  version VARCHAR(25) NOT NULL,
+  version VARCHAR(10) NOT NULL,
   sequence int NOT NULL,
   FOREIGN KEY (game) REFERENCES game,
   UNIQUE (game, version)
 );
+
+ALTER TABLE version
+ADD CONSTRAINT version_version_constraint
+CHECK (version ~ '^[a-zA-Z0-9][a-zA-Z0-9.]{0,9}$'::text);
 
 ALTER TABLE version
 ENABLE ROW LEVEL SECURITY;
