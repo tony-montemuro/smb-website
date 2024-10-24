@@ -4,7 +4,7 @@
     gap: var(--app-padding);
 }
 
-.versions h3 {
+.versions h3, .versions h2, .versions hr {
     margin: 0;
 }
 
@@ -14,4 +14,24 @@
 
 .right {
     flex: 1;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.versionForm {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.versionForm div {
+    max-width: 300px;
+}
+
+.versionForm button {
+    width: fit-content;
 }

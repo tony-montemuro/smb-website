@@ -2,13 +2,18 @@
 import { useEffect } from "react";
 import styles from "./Versions.module.css";
 import Container from "../../components/Container/Container.jsx";
-import SimpleGameSelect from "../../components/SimpleGameSelect/SimpleGameSelect";
-import VersionsLogic from "./Versions.js";
 import Loading from "../../components/Loading/Loading.jsx";
+import SimpleGameSelect from "../../components/SimpleGameSelect/SimpleGameSelect";
+import TextField from "@mui/material/TextField";
+import VersionsLogic from "./Versions.js";
 
 function Versions({ imageReducer }) {
   /* ===== STATES & FUNCTIONS ===== */
-  const { game, games, setGame, queryGames } = VersionsLogic();
+  const componentData = VersionsLogic();
+  const { game, games, setGame, queryGames } = componentData;
+
+  /* ===== VARIABLES ===== */
+  const versionCount = game?.version.length ? game.version.length : 1;
 
   /* ===== EFFECTS ===== */
 
@@ -31,11 +36,13 @@ function Versions({ imageReducer }) {
       </div>
 
       <div className={ styles.right }>
-        <Container title="Versions" largeTitle>
+        <Container title="Game Versions" largeTitle>
           { game ?
-            <div>
+            <div className={ styles.header }>
               <h3>On this screen, you are able to add new versions to a game.</h3>
-              <span>{ game.name } has { game.version.length } versions.</span>
+              <span>{ game.name } currently has { versionCount } version(s).</span>
+              <hr />
+              <VersionsForm formData={ componentData } />
             </div>
           :
             <Loading />
@@ -43,6 +50,32 @@ function Versions({ imageReducer }) {
         </Container>
       </div>
     </div>
+  );
+};
+
+function VersionsForm({ formData }) {
+  /* ===== VARIABLES ===== */
+  const VERSION_LENGTH_MAX = 10;
+
+  /* ===== FUNCTIONS ===== */
+  const { version, handleVersionChange, handleSubmit } = formData;
+
+  return (
+    <form className={ styles.versionForm } onSubmit={ handleSubmit }>
+      <h2>Add Version</h2>
+      <TextField
+        helperText={ `${ version.length }/${ VERSION_LENGTH_MAX }` }
+        id="version"
+        inputProps={ { maxLength: VERSION_LENGTH_MAX } }
+        label="Version"
+        onChange={ handleVersionChange }
+        placeholder={ `Must be ${ VERSION_LENGTH_MAX } characters or less` }
+        required
+        value={ version }
+        variant="filled"
+      />
+      <button type="submit">Add Version</button>
+    </form>
   );
 };
 

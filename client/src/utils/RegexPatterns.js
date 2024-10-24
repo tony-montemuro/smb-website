@@ -59,3 +59,6 @@ export const isLowerAlphaNumericWithUnderscores = /^[a-z0-9][a-z0-9_]*$/;
 
 // Is url-safe regex
 export const isUrlSafe = /^[a-zA-Z0-9\-_.!~*''()%]+$/;
+
+// Version regex
+export const versionPattern = /^[a-zA-Z0-9][a-zA-Z0-9.]{0,9}$/;

@@ -23,7 +23,7 @@ export function General() {
 export function Types() {
   return (
     <div className={ styles.content }>
-      Genearlly, there are two types of competition in Super Monkey Ball games: <strong>time</strong> and <strong>score</strong>, with the straightforward objectives of achieving the fastest time or highest score respectively.<br /><br />
+      Generally, there are two types of competition in Super Monkey Ball games: <strong>time</strong> and <strong>score</strong>, with the straightforward objectives of achieving the fastest time or highest score respectively.<br /><br />
       For time submissions, please submit the time remaining on the timer when you finish your run; do <strong>not</strong> calculate and submit the actual time taken. For example, if you finish at 58.33, submit 58.33, <strong>not</strong> 1.67. Time charts are displayed in descending order, so the higher your time, the better.<br /><br />
       For score submissions, simply submit the final score displayed after you finish your run.
     </div>
