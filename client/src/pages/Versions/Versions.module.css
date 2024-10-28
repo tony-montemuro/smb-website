@@ -35,3 +35,9 @@
 .versionForm button {
     width: fit-content;
 }
+
+.item {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
