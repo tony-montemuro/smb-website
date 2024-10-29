@@ -28,8 +28,8 @@
     gap: 5px;
 }
 
-.versionForm div {
-    max-width: 300px;
+.versionInput {
+    width: 300px;
 }
 
 .versionForm button {
@@ -38,6 +38,7 @@
 
 .item {
     display: flex;
+    align-items: center;
     flex-direction: row;
     gap: 5px;
 }

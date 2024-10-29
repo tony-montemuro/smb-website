@@ -58,42 +58,92 @@ function Versions({ imageReducer }) {
   );
 };
 
-function VersionsForm({ formData }) {
-  /* ===== STATES & FUNCTIONS ===== */
-  const { game, version, versions, handleVersionChange, handleSubmit } = formData;
-
+function VersionInput({ state, error, sequence = null, onChange, onBlur = () => {} }) {
   /* ===== VARIABLES ===== */
   const VERSION_LENGTH_MAX = 10;
-  const latest = game.version.length > 0 ? game.version.at(-1).sequence : 1;
+  const key = sequence ? `version_${ sequence }` : "version";
+
+  /* ===== VERSIONS INPUT ===== */
+  return (
+    <TextField
+      autoComplete="false"
+      color={ error ? "error" : "primary" }
+      error={ error ? true : false }
+      className={ styles.versionInput }
+      helperText={ error ?? `${ state.length }/${ VERSION_LENGTH_MAX }` }
+      id={ key }
+      key={ key }
+      inputProps={ { maxLength: VERSION_LENGTH_MAX } }
+      label="Version"
+      onBlur={ onBlur }
+      onChange={ onChange }
+      placeholder={ `Must be ${ VERSION_LENGTH_MAX } characters or less` }
+      required
+      value={ state }
+      variant="filled"
+    />
+  );
+};
+
+function VersionsForm({ formData }) {
+  /* ===== STATES & FUNCTIONS ===== */
+  const { version, versions, handleVersionChange, handleSubmit } = formData;
 
   return (
     <form className={ styles.versionForm } onSubmit={ handleSubmit }>
       <h2>Versions</h2>
-      { versions.map(version => {
-        return (
-          <div className={ styles.item } key={ version.sequence }>
-            <span>{ version.version }</span>
-            { version.sequence === latest && <em>Current latest version</em> }
-          </div>
-        );
+      { versions.values.map(version => {
+        return <VersionItem version={ version } formData={ formData } key={ version.sequence } />;
       })}
+
       <h3>Add Version</h3>
-      <TextField
-        autoComplete="false"
-        color={ version.error ? "error" : "primary" }
-        error={ version.error ? true : false }
-        helperText={ version.error ?? `${ version.value.length }/${ VERSION_LENGTH_MAX }` }
-        id="version"
-        inputProps={ { maxLength: VERSION_LENGTH_MAX } }
-        label="Version"
+      <VersionInput
+        state={ version.value }
+        error={ version.error }
         onChange={ handleVersionChange }
-        placeholder={ `Must be ${ VERSION_LENGTH_MAX } characters or less` }
-        required
-        value={ version.value }
-        variant="filled"
       />
       <button type="submit">Add Version</button>
     </form>
+  );
+};
+
+function VersionItem({ version, formData }) {
+  /* ===== VARIABLES, STATES, & FUNCTIONS ===== */
+  const { game, versions, handleVersionsChange, validateVersions } = formData;
+  const { id, sequence } = version;
+  version = version.version;
+  const state = versions.values.find(version => version.sequence === sequence);
+  const error = versions.errors[sequence];
+  const latest = game.version.length > 0 ? game.version.at(-1).sequence : 1;
+  const children = [];
+
+  // build out children components
+  if (id) {
+    children.push(
+      <span key={ `version_${ version.sequence }` }>{ version }</span>
+    );
+  } else {
+    children.push(
+      <VersionInput
+        state={ state.version }
+        error={ error }
+        sequence={ sequence }
+        onChange={ handleVersionsChange }
+        onBlur={ validateVersions }
+        key={ `version_${ sequence }` }
+      />
+    );
+  }
+
+  if (sequence === latest) {
+    children.push(<em key="version_latest">Current latest version</em>);
+  }
+
+  /* ===== VERSIONS COMPONENT ===== */
+  return (
+    <div className={ styles.item }>
+      { children }
+    </div>
   );
 };
 
