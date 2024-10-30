@@ -2,6 +2,7 @@
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { versionPattern } from "../../utils/RegexPatterns";
+import CategoryRead from "../../database/read/CategoryRead.js";
 import GameRead from "../../database/read/GameRead";
 import ScrollHelper from "../../helper/ScrollHelper.js";
 import StylesHelper from "../../helper/StylesHelper.js";
@@ -36,28 +37,25 @@ const Versions = () => {
     
     // database functions
     const { queryGamesForModerators } = GameRead();
+    const { queryStructureByGame } = CategoryRead();
 
     // helper functions
     const { scrollToId } = ScrollHelper();
     const { getNavbarHeight } = StylesHelper();
 
-    // FUNCTION 1: queryGames - code that is executed when the `Versions` component mounts
-    // PRECONDITIONS: NONE
+    // FUNCTION 1: getStructure - code that is excuted after a change to the game state
+    // PRECONDITIONS (1 parameter):
+    // 1.) game: a game object, which we want to grab the structure for
     // POSTCONDITIONS (2 possible outcomes):
-    // if the games are successfully queried, simply update the `game` & `games` state by calling the `setGame` & `setGames` setter functions
-    // if the games are unsuccessfully queried, render an error message, which should keep the component loading
-    const queryGames = async () => {
+    // if the query is successful, we update the game state to include this information
+    // if the query is unsuccessful, we render an error message to the user
+    const getStructure = async game => {
         try {
-            const games = await queryGamesForModerators();
-            const game = games[0];
-            setGame(game);
-            setGames(games);
-            if (game.version.length > 0) {
-                setVersions({ ...versions, values: game.version });
-            }
+            const structure = await queryStructureByGame(game.abb);
+            setGame({ ...game, structure });
         } catch (error) {
-            addMessage("There was an error fetching the moderator data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
-        };
+            addMessage("There was a problem loading the levels for this game. If this error persists, the system may be experiencing an outage.", "error", 15000);
+        }
     };
 
     // FUNCTION 2: switchGame - code that is executed when the administrator selects a game
@@ -65,17 +63,39 @@ const Versions = () => {
     // 1.) game: a game object, which belongs to the game the user selected
     // POSTCONDITIONS (1 possible outcome):
     // the game state is updated, and the user is scrolled to the moderation editor
-    const switchGame = game => {
+    const switchGame = async game => {
+        // first, update game and versions states
         setGame(game);
-        setVersions(game.version.length > 0 ? game.version : [firstVersion]);
+        const updatedVersions = { ...versions, values: game.version.length > 0 ? game.version : [firstVersion] }; 
+        setVersions(updatedVersions);
+
+        // next, let's scroll
         let tabsHeight = getNavbarHeight()/2;
         if (window.innerWidth <= 800) {
             tabsHeight *= 3;
         }
         scrollToId("content", tabsHeight);
+
+        // finally, we need to grab the game structure from the backend
+        await getStructure(game);
     };
 
-    // FUNCTION 3: handleVersionChange - code that is executed when the user makes changes to the version field
+    // FUNCTION 3: queryGames - code that is executed when the `Versions` component mounts
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the games are successfully queried, simply update the `game` & `games` state by calling the `setGame` & `setGames` setter functions
+    // if the games are unsuccessfully queried, render an error message, which should keep the component loading
+    const queryGames = async () => {
+        try {
+            const games = await queryGamesForModerators();
+            setGames(games);
+            switchGame(games[0]);
+        } catch (error) {
+            addMessage("There was an error fetching the moderator data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+        };
+    };
+
+    // FUNCTION 4: handleVersionChange - code that is executed when the user makes changes to the version field
     // PRECONDITIONS (1 parameter):
     // 1.) e: the event object that is generated when the user makes a change to the version input
     // POSTCONDITIONS (1 possible outcome):
@@ -86,7 +106,7 @@ const Versions = () => {
         error: undefined 
     });
 
-    // FUNCTION 4: handleVersionsChange - code that is executed when the user makes changes to one of many fields
+    // FUNCTION 5: handleVersionsChange - code that is executed when the user makes changes to one of many fields
     // rendered by the `versions` state
     // PRECONDITIONS (1 parameter):
     // 1.) e: the event object that is generated when the user makes a change to the version input
@@ -95,7 +115,6 @@ const Versions = () => {
     const handleVersionsChange = e => {
         const { id, value } = e.target;
         let sequence = parseInt(id.split("_").at(-1));
-        console.log(id, value, sequence);
         const updatedVersions = versions.values.map(version => version.sequence === sequence ? 
             { ...version, version: value } : 
             version
@@ -112,7 +131,7 @@ const Versions = () => {
         setVersions({ values: updatedVersions, errors });
     };
     
-    // FUNCTION 5: validateVersion - code that validates a version is correctly formatted
+    // FUNCTION 6: validateVersion - code that validates a version is correctly formatted
     // PRECONDITIONS (1 parameter):
     // 1.) version: a version string, entered by a user
     // POSTCONDITIONS (2 possible outcomes):
@@ -126,7 +145,7 @@ const Versions = () => {
         return undefined;
     };
 
-    // FUNCTION 6: validateVersions - code that is executed each time the user finishes making changes to one of
+    // FUNCTION 7: validateVersions - code that is executed each time the user finishes making changes to one of
     // the versions rendered by the `versions` state
     // PRECONDITIONS (1 parameter):
     // 1.) e: the event object generated by the "blur" event on a `versions` input
@@ -143,7 +162,7 @@ const Versions = () => {
         }
     };
 
-    // FUNCTION 7: handleSubmit - code that is executed when the version form is submitted
+    // FUNCTION 8: handleSubmit - code that is executed when the version form is submitted
     // PRECONDITIONS (1 parameter):
     // 1.) e: the event object that is generated when the user submits the form
     // POSTCONDITIONS (2 possible outcome):

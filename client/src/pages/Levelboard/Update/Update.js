@@ -280,7 +280,6 @@ const Update = (level, setSubmitting) => {
             closePopup();
 
         } catch (error) {
-            console.log(updatedData, error);
             addMessage("Ther was a problem updating your submission. Try refreshing the page.", "error", 8000);
 
         } finally {

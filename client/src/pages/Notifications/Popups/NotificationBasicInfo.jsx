@@ -17,7 +17,6 @@ function NotificationBasicInfo({ notification }) {
   const { name: categoryName } = appData.categories[category];
   const submission = notification.submission;
   const version = submission ? submission.version : notification.version;
-  console.log(notification);
   
   let gameUrl = `/games/${ game.abb }`;
   let gameName = game.name;

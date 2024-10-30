@@ -48,6 +48,7 @@ function Versions({ imageReducer }) {
               <span>{ game.name } currently has { versionCount } version(s).</span>
               <hr />
               <VersionsForm formData={ componentData } />
+              { game.structure ? "Structure Loaded" : <Loading /> }
             </div>
           :
             <Loading />
