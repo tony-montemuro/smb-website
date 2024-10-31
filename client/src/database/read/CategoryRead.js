@@ -50,7 +50,9 @@ const CategoryRead = () => {
                         )
                     )
                 `)
-                .eq('mode.game', abb);
+                .eq("mode.game", abb)
+                .order("id", { foreignTable: "mode" })
+                .order("id", { foreignTable: "mode.level" });
 
             // error handling
             if (error) {

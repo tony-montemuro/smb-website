@@ -2,10 +2,14 @@
 import { useEffect } from "react";
 import styles from "./Versions.module.css";
 import Container from "../../components/Container/Container.jsx";
+import FancyLevel from "../../components/FancyLevel/FancyLevel.jsx";
+import LevelHelper from "../../helper/LevelHelper.js";
 import Loading from "../../components/Loading/Loading.jsx";
 import SimpleGameSelect from "../../components/SimpleGameSelect/SimpleGameSelect";
 import TextField from "@mui/material/TextField";
 import VersionsLogic from "./Versions.js";
+
+/* ===== COMPONENTS ===== */
 
 function Versions({ imageReducer }) {
   /* ===== STATES & FUNCTIONS ===== */
@@ -48,7 +52,14 @@ function Versions({ imageReducer }) {
               <span>{ game.name } currently has { versionCount } version(s).</span>
               <hr />
               <VersionsForm formData={ componentData } />
-              { game.structure ? "Structure Loaded" : <Loading /> }
+              <hr />
+
+              { /* Load game structure when loaded */ }
+              { game.structure ? 
+                <Structure structure={ game.structure } /> 
+              : 
+                <Loading /> 
+              }
             </div>
           :
             <Loading />
@@ -90,6 +101,7 @@ function VersionsForm({ formData }) {
   /* ===== STATES & FUNCTIONS ===== */
   const { version, versions, handleVersionChange, handleSubmit } = formData;
 
+  /* ===== VERSIONS FORM COMPONENT ===== */
   return (
     <form className={ styles.versionForm } onSubmit={ handleSubmit }>
       <h2>Versions</h2>
@@ -147,6 +159,63 @@ function VersionItem({ version, formData }) {
     </div>
   );
 };
+
+function Structure({ structure }) {
+  /* ===== FUNCTIONS ===== */
+  
+  // helper functions
+  const { levelB2F } = LevelHelper();
+
+  /* ===== STRUCTURE COMPONENT ===== */
+  return (
+    <div id={ styles.structure }>
+      <div className={ styles.header }>
+        <h2>Chart Update Submissions Tool</h2>
+        <span>
+          Using this tool, if there exist charts that are unchanged between the <strong>current latest version</strong> and
+          any new versions added, you can specify which charts should update all <strong>current</strong> submissions to the
+          version specified.
+        </span>
+      </div>
+      
+      { structure.map(category => {
+        return (
+          <div className={ styles.category } key={ category.name }>
+            <h3>{ category.name }</h3>
+    
+            { category.mode.map(mode => {
+              return (
+                <div className={ styles.mode } key={ mode.name }>
+                  <strong>{ levelB2F(mode.name) }</strong>
+                  <Levels levels={ mode.level } />
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+function Levels({ levels }) {
+  return (
+    <table className={ styles.levels }>
+      <tbody>
+        { levels.map(level => {
+          const levelName = level.name;
+          return (
+            <tr key={ levelName }>
+              <td>
+                <FancyLevel level={ levelName } />
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  )
+}
 
 /* ===== EXPORTS ===== */
 export default Versions;
