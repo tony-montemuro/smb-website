@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import styles from "./Versions.module.css";
 import Container from "../../components/Container/Container.jsx";
+import Checkbox from "@mui/material/Checkbox";
 import FancyLevel from "../../components/FancyLevel/FancyLevel.jsx";
 import LevelHelper from "../../helper/LevelHelper.js";
 import Loading from "../../components/Loading/Loading.jsx";
@@ -17,12 +18,17 @@ function Versions({ imageReducer }) {
   const { 
     game,
     games,
+    versions,
     queryGames,
-    switchGame
+    switchGame,
+    onVersionCheck
   } = componentData;
 
   /* ===== VARIABLES ===== */
   const versionCount = game?.version.length ? game.version.length : 1;
+  const newVersions = versions.values.filter(version => !version.id);
+  const isRenderStructure = (game?.version.length === 0 && versions?.values.length > 1) || 
+    (game?.version.length > 0 && versions?.values.length > 0);
 
   /* ===== EFFECTS ===== */
 
@@ -52,13 +58,19 @@ function Versions({ imageReducer }) {
               <span>{ game.name } currently has { versionCount } version(s).</span>
               <hr />
               <VersionsForm formData={ componentData } />
-              <hr />
 
               { /* Load game structure when loaded */ }
-              { game.structure ? 
-                <Structure structure={ game.structure } /> 
+              { isRenderStructure ?
+                game.structure ? 
+                  <Structure 
+                    structure={ game.structure }
+                    versions={ newVersions }
+                    onVersionCheck={ onVersionCheck }
+                  /> 
+                : 
+                  <Loading /> 
               : 
-                <Loading /> 
+                null
               }
             </div>
           :
@@ -160,7 +172,7 @@ function VersionItem({ version, formData }) {
   );
 };
 
-function Structure({ structure }) {
+function Structure({ structure, versions, onVersionCheck }) {
   /* ===== FUNCTIONS ===== */
   
   // helper functions
@@ -169,6 +181,7 @@ function Structure({ structure }) {
   /* ===== STRUCTURE COMPONENT ===== */
   return (
     <div id={ styles.structure }>
+      <hr />
       <div className={ styles.header }>
         <h2>Chart Update Submissions Tool</h2>
         <span>
@@ -187,7 +200,12 @@ function Structure({ structure }) {
               return (
                 <div className={ styles.mode } key={ mode.name }>
                   <strong>{ levelB2F(mode.name) }</strong>
-                  <Levels levels={ mode.level } />
+                  <Levels 
+                    levels={ mode.level }
+                    versions={ versions }
+                    category={ category.name }
+                    onVersionCheck={ onVersionCheck }
+                  />
                 </div>
               );
             })}
@@ -198,24 +216,70 @@ function Structure({ structure }) {
   );
 };
 
-function Levels({ levels }) {
+function Levels({ levels, versions, category, onVersionCheck }) {
+  /* ===== LEVELS COMPONENT ===== */
   return (
     <table className={ styles.levels }>
+      <thead>
+        <tr>
+          <th>Chart</th>
+          { versions.map(version => {
+            return (
+              <th key={ version.version }>{ version.version }</th>
+            );
+          })}
+        </tr>
+      </thead>
+
       <tbody>
         { levels.map(level => {
-          const levelName = level.name;
           return (
-            <tr key={ levelName }>
-              <td>
-                <FancyLevel level={ levelName } />
-              </td>
-            </tr>
+            <LevelRow 
+              level={ level }
+              versions={ versions }
+              category={ category }
+              onVersionCheck={ onVersionCheck }
+              key={ level.name } 
+            />
           );
         })}
       </tbody>
     </table>
   )
-}
+};
+
+function LevelRow({ level, versions, category, onVersionCheck }) {
+  /* ===== VARIABLES ===== */
+  const name = level.name;
+  const levelVersion = level.version;
+
+  /* ===== LEVEL ROW COMPONENT ===== */
+  return (
+    <tr>
+      <td className={ styles.levelColumn }>
+        <FancyLevel level={ name } />
+      </td>
+      { versions.map(v => {
+        const { version } = v;
+        return (
+          <td key={ version }>
+            <Checkbox 
+              checked={ version === levelVersion } 
+              name={ JSON.stringify({
+                version,
+                categoryName: category,
+                levelName: name
+              })}
+              onChange={ onVersionCheck } 
+              inputProps={{ "aria-label": "controlled" }}
+              sx={{ padding: 0 }}
+            />
+          </td>
+        );
+      })}
+    </tr>
+  );
+};
 
 /* ===== EXPORTS ===== */
 export default Versions;

@@ -52,6 +52,14 @@ const Versions = () => {
     const getStructure = async game => {
         try {
             const structure = await queryStructureByGame(game.abb);
+            
+            // now, let's add a "version" property to each level
+            structure.forEach(category => {
+                category.mode.forEach(mode => {
+                    mode.level.forEach(level => level.version = undefined);
+                });
+            });
+
             setGame({ ...game, structure });
         } catch (error) {
             addMessage("There was a problem loading the levels for this game. If this error persists, the system may be experiencing an outage.", "error", 15000);
@@ -186,6 +194,27 @@ const Versions = () => {
         setVersion(versionInit);
     };
 
+    // FUNCTION 9: onVersionCheck - code that is executed when the user selects a version checkbox
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: the event object generated when the user checks a version checkbox
+    // POSTCONDITIONS (2 possible outcome):
+    const onVersionCheck = e => {
+        const { name, checked } = e.target;
+        const { version, categoryName, levelName } = JSON.parse(name);
+        const gameCopy = { ...game };
+        const category = gameCopy.structure.find(category => category.name === categoryName);
+
+        category.mode.forEach(mode => {
+            mode.level.forEach(level => {
+                if (level.name === levelName) {
+                    level.version = checked ? version : undefined;
+                }
+            });
+        });
+        
+        setGame(gameCopy);
+    };
+
     return { 
         game,
         games,
@@ -196,7 +225,8 @@ const Versions = () => {
         handleVersionChange,
         handleVersionsChange,
         validateVersions,
-        handleSubmit
+        handleSubmit,
+        onVersionCheck
     };
 };
 

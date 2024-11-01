@@ -49,10 +49,18 @@
     gap: 10px;
 }
 
+#structure th {
+    text-align: left;
+}
+
 .mode {
     padding-left: 10px;
 }
 
 .levels {
     padding-left: 10px;
+}
+
+.levelColumn {
+    width: 400px;
 }
