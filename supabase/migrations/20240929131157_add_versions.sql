@@ -237,7 +237,7 @@ DECLARE
   changed_columns text[];
   current_id int4;
   user_id_for_notif uuid;
-  affected_row record;
+  new_row record;
   row_count int;
 BEGIN
   -- Get the profile id of the user performing the UPDATE
@@ -247,14 +247,12 @@ BEGIN
   SELECT COUNT(*) INTO row_count FROM new_table;
 
   -- Iterate over affected rows
-  FOR affected_row IN
-    SELECT * FROM new_table
-  LOOP
+  FOR new_row IN SELECT * FROM new_table LOOP
     -- Determine which columns have changed
     SELECT array_agg(o.key)
     INTO changed_columns
     FROM jsonb_each(to_jsonb(OLD)) AS o
-    CROSS JOIN jsonb_each(to_jsonb(NEW)) AS n
+    CROSS JOIN jsonb_each(to_jsonb(new_row)) AS n
     WHERE o.key = n.key AND o.value IS DISTINCT FROM n.value;
 
     -- If only `level_id` has changed, let continue
@@ -265,7 +263,7 @@ BEGIN
     -- Next, let's fetch submission's profile's `user_id`
     SELECT user_id into user_id_for_notif
     FROM profile
-    WHERE id = NEW.profile_id;
+    WHERE id = new_row.profile_id;
 
     -- If we are performing a bulk update on a set of submissions, the only column changed is `version`, and the current
     -- user is an admin, we can assume the user is adding a new version. In this case, we can ignore notifications, unapprovals, etc.
@@ -278,14 +276,14 @@ BEGIN
     END IF;
 
     -- if the submission being updated belongs to an authenticated user, AND the profile_id is not the same as the current_id, we need to send an UPDATE notification
-    IF user_id_for_notif IS NOT NULL AND NEW.profile_id <> current_id then
+    IF user_id_for_notif IS NOT NULL AND new_row.profile_id <> current_id then
       INSERT INTO notification (submission_id, game_id, level_id, category, score, tas, record, profile_id, creator_id, notif_type, submitted_at, region_id, monkey_id, platform_id, proof, live, comment, mod_note, version_id)
-      VALUES (NEW.id, NEW.game_id, NEW.level_id, NEW.category, NEW.score, OLD.tas, NEW.record, NEW.profile_id, current_id, 'update', OLD.submitted_at, OLD.region_id, OLD.monkey_id, OLD.platform_id, OLD.proof, OLD.live, OLD.comment, OLD.mod_note, OLD.version);
+      VALUES (new_row.id, new_row.game_id, new_row.level_id, new_row.category, new_row.score, new_row.tas, new_row.record, new_row.profile_id, current_id, 'update', OLD.submitted_at, OLD.region_id, OLD.monkey_id, OLD.platform_id, OLD.proof, OLD.live, OLD.comment, OLD.mod_note, OLD.version);
     END IF;
     
     -- next, let's delete any approval of the submission, if there is one
     DELETE from approve
-    WHERE submission_id = NEW.id;
+    WHERE submission_id = new_row.id;
   END LOOP;
 
   RETURN NULL;
@@ -297,6 +295,7 @@ DROP TRIGGER IF EXISTS submission_after_update_trigger ON submission;
 
 CREATE TRIGGER submission_after_update_statement_trigger 
 AFTER UPDATE ON submission 
+REFERENCING NEW TABLE AS new_table
 FOR EACH STATEMENT EXECUTE FUNCTION update_notify_and_unapprove();
 
 -- New triggers for version table, to ensure data integrity
