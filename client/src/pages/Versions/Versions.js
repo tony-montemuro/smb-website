@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { versionPattern } from "../../utils/RegexPatterns";
 import CategoryRead from "../../database/read/CategoryRead.js";
 import GameRead from "../../database/read/GameRead";
@@ -72,12 +72,20 @@ const Versions = () => {
     // POSTCONDITIONS (1 possible outcome):
     // the game state is updated, and the user is scrolled to the moderation editor
     const switchGame = async game => {
-        // first, update game and versions states
+        const unsaved = 
+            (game.version.length === 0 && versions.values.length > 1) || // case 1: game has no versions, and user has entered at least 1
+            (game.version.length > 0 && game.version.length !== versions.length); // case 2: game has versions, and user has entered at least 1
+        if (unsaved && !window.confirm("Are you sure you want to switch games? Your progress will be lost!")) {
+            return;
+        }
+
+        // update game, version, & versions states
         setGame(game);
+        setVersion(versionInit);
         const updatedVersions = { ...versions, values: game.version.length > 0 ? game.version : [firstVersion] }; 
         setVersions(updatedVersions);
 
-        // next, let's scroll
+        // scroll
         let tabsHeight = getNavbarHeight()/2;
         if (window.innerWidth <= 800) {
             tabsHeight *= 3;
@@ -198,9 +206,14 @@ const Versions = () => {
     // PRECONDITIONS (1 parameter):
     // 1.) e: the event object generated when the user checks a version checkbox
     // POSTCONDITIONS (2 possible outcome):
-    const onVersionCheck = e => {
+    // if the box is already checked, the version should be set to undefined
+    // if the box is not already checked, the version should be set to the version specified by the name of the input
+    const onVersionCheck = useCallback(e => {
         const { name, checked } = e.target;
-        const { version, categoryName, levelName } = JSON.parse(name);
+        const nameParts = name.split(":");
+        const version = nameParts[0];
+        const categoryName = nameParts[1];
+        const levelName = nameParts.slice(2).join(":");
         const gameCopy = { ...game };
         const category = gameCopy.structure.find(category => category.name === categoryName);
 
@@ -213,7 +226,7 @@ const Versions = () => {
         });
         
         setGame(gameCopy);
-    };
+    }, [game, setGame]); // should only be redefined when game OR setGame is updated
 
     return { 
         game,

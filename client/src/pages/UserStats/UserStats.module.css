@@ -38,6 +38,11 @@
     gap: 3px;
 }
 
+#live {
+    width: var(--vanilla-checkbox-length);
+    height: var(--vanilla-checkbox-length);
+}
+
 /* ===== MEDIA QUERY FOR SMALLER DEVICE ===== */
 
 @media (max-width: 630px) {

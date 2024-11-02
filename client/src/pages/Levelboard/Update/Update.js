@@ -217,11 +217,13 @@ const Update = (level, setSubmitting) => {
             all_position,
             profile_id,
             approved,
+            version,
             ...updatedData 
         } = formVals;
 
         // add additional fields to submission object
         updatedData.submitted_at = date;
+        updatedData.version = version ? version : null
 
         return updatedData;
     };
@@ -269,7 +271,7 @@ const Update = (level, setSubmitting) => {
             // if user submits with a version that differs from the current version, then we want to update the version
             // this action will automatically update the board, so we can rely on that instead of updating directly
             const submissionVersion = updatedData.version;
-            if (submissionVersion !== "" && submissionVersion !== parseInt(version?.id)) {
+            if (submissionVersion !== null && submissionVersion !== parseInt(version?.id)) {
                 handleVersionChange(submissionVersion);
             } else {
                 await updateBoard();

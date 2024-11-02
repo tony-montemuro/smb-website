@@ -131,9 +131,9 @@ function UserStats() {
 
           { /* Live filter: Toggle records page between rendering all records and just live records */ }
           <div className={ styles.filter }>
-            <label htmlFor="live">Live-{ type }s only: </label>
+            <label htmlFor={ styles.live }>Live-{ type }s only: </label>
             <input
-              id="live"
+              id={ styles.live }
               type="checkbox"
               checked={ allLiveFilter === "live" }
               onChange={ () => setAllLiveFilter(allLiveFilter === "live" ? "all" : "live") }

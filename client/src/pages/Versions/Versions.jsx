@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { useEffect } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import styles from "./Versions.module.css";
 import Container from "../../components/Container/Container.jsx";
 import Checkbox from "@mui/material/Checkbox";
@@ -26,9 +26,13 @@ function Versions({ imageReducer }) {
 
   /* ===== VARIABLES ===== */
   const versionCount = game?.version.length ? game.version.length : 1;
-  const newVersions = versions.values.filter(version => !version.id);
   const isRenderStructure = (game?.version.length === 0 && versions?.values.length > 1) || 
     (game?.version.length > 0 && versions?.values.length > 0);
+
+  /* ===== MEMOS ===== */
+  const newVersions = useMemo(() => {
+    return versions.values.filter(version => !version.id && version.sequence > 1);
+  }, [versions]);
 
   /* ===== EFFECTS ===== */
 
@@ -60,17 +64,17 @@ function Versions({ imageReducer }) {
               <VersionsForm formData={ componentData } />
 
               { /* Load game structure when loaded */ }
-              { isRenderStructure ?
-                game.structure ? 
-                  <Structure 
+              { isRenderStructure ? 
+                game.structure ?
+                  <Structure
                     structure={ game.structure }
                     versions={ newVersions }
                     onVersionCheck={ onVersionCheck }
-                  /> 
-                : 
+                  />
+                :
                   <Loading /> 
               : 
-                null
+                null 
               }
             </div>
           :
@@ -172,8 +176,12 @@ function VersionItem({ version, formData }) {
   );
 };
 
-function Structure({ structure, versions, onVersionCheck }) {
+const Structure = memo(function Structure({ structure, versions, onVersionCheck }) {
   /* ===== FUNCTIONS ===== */
+
+  useEffect(() => {
+    console.log("versions updated")
+  }, [versions]);
   
   // helper functions
   const { levelB2F } = LevelHelper();
@@ -199,7 +207,7 @@ function Structure({ structure, versions, onVersionCheck }) {
             { category.mode.map(mode => {
               return (
                 <div className={ styles.mode } key={ mode.name }>
-                  <strong>{ levelB2F(mode.name) }</strong>
+                  <h3>{ levelB2F(mode.name) }</h3>
                   <Levels 
                     levels={ mode.level }
                     versions={ versions }
@@ -214,7 +222,7 @@ function Structure({ structure, versions, onVersionCheck }) {
       })}
     </div>
   );
-};
+});
 
 function Levels({ levels, versions, category, onVersionCheck }) {
   /* ===== LEVELS COMPONENT ===== */
@@ -249,9 +257,25 @@ function Levels({ levels, versions, category, onVersionCheck }) {
 };
 
 function LevelRow({ level, versions, category, onVersionCheck }) {
+  /* ===== STATES ===== */
+  const [version, setVersion] = useState(null);
+
+  /* ===== FUNCTIONS ===== */
+  const handleChange = e => {
+    const { name } = e.target;
+    const nameParts = name.split(":");
+    const newVersion = nameParts[0];
+    setVersion(newVersion === version ? null : newVersion);
+
+    // This is a "hack" that improves performance - allows "frontend" focused state, that being `checkedBox`
+    // to render BEFORE we attempt to update the larger, less performant "game" state
+    setTimeout(() => {
+      onVersionCheck(e);
+    }, [0]);
+  };
+
   /* ===== VARIABLES ===== */
   const name = level.name;
-  const levelVersion = level.version;
 
   /* ===== LEVEL ROW COMPONENT ===== */
   return (
@@ -260,17 +284,13 @@ function LevelRow({ level, versions, category, onVersionCheck }) {
         <FancyLevel level={ name } />
       </td>
       { versions.map(v => {
-        const { version } = v;
+        const value = v.version;
         return (
-          <td key={ version }>
+          <td key={ value }>
             <Checkbox 
-              checked={ version === levelVersion } 
-              name={ JSON.stringify({
-                version,
-                categoryName: category,
-                levelName: name
-              })}
-              onChange={ onVersionCheck } 
+              checked={ value === version } 
+              name={ `${ value }:${ category }:${ name }` }
+              onChange={ handleChange } 
               inputProps={{ "aria-label": "controlled" }}
               sx={{ padding: 0 }}
             />

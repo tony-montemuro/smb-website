@@ -27,6 +27,7 @@
     --navbar-height: 76px;
     --sidebar-width: 360px;
     --searchbar-height: 30px;
+    --vanilla-checkbox-length: 15px;
     --z-low: 1;
     --z-medium: 2;
     --z-high: 3;
@@ -86,8 +87,6 @@ hr {
 
 input[type=checkbox] {
     cursor: pointer;
-    width: 15px;
-    height: 15px;
 }
 
 input[type=file], input[type=file]::-webkit-file-upload-button {

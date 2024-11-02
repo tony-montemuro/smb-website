@@ -110,9 +110,9 @@ function Totalizer({ imageReducer }) {
         <div className={ styles.header }>
           <h2>{ categoryName }</h2>
           <div className={ styles.filter }>
-            <label htmlFor="filter">Live-{ type }s only: </label>
+            <label htmlFor={ styles.live }>Live-{ type }s only: </label>
             <input
-              id="filter"
+              id={ styles.live }
               type="checkbox"
               checked={ tableState === "live" }
               onChange={ handleTableStateChange }

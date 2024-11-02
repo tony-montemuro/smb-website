@@ -94,9 +94,9 @@ function Records() {
       <div className={ styles.header }>
         <h2>{ categoryName }</h2>
         <div className={ styles.filter }>
-          <label htmlFor="live">Live-records only: </label>
+          <label htmlFor={ styles.live }>Live-records only: </label>
           <input
-            id="live"
+            id={ styles.live }
             type="checkbox"
             checked={ filter === "live" }
             onChange={ () => setFilter(filter === "live" ? "all" : "live") }

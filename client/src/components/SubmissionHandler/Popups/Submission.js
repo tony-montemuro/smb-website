@@ -228,7 +228,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         } catch (error) {
             if (error.message === "approve") {
                 addMessage("There was a problem approving this submission.", "error", 7000);
-            } else {
+            } else { 
                 addMessage("There was a problem updating this submission.", "error", 7000);
             }
         } finally {
