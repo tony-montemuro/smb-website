@@ -1,25 +1,17 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useCallback, useContext, useState } from "react";
-import { versionPattern } from "../../utils/RegexPatterns";
 import CategoryRead from "../../database/read/CategoryRead.js";
 import GameRead from "../../database/read/GameRead";
 import ScrollHelper from "../../helper/ScrollHelper.js";
 import StylesHelper from "../../helper/StylesHelper.js";
+import ValidationHelper from "../../helper/ValidationHelper.js";
 
 const Versions = () => {
     /* ===== VARIABLES ===== */
-    const versionInit = {
-        value: "",
-        error: undefined
-    };
     const firstVersion = {
         sequence: 1,
         version: "1.0"
-    };
-    const versionsInit = {
-        values: [firstVersion],
-        errors: {}
     };
 
     /* ===== CONTEXTS ===== */
@@ -30,8 +22,7 @@ const Versions = () => {
     /* ===== STATES ===== */
     const [game, setGame] = useState(undefined);
     const [games, setGames] = useState(undefined);
-    const [version, setVersion] = useState(versionInit);
-    const [versions, setVersions] = useState(versionsInit);
+    const [versions, setVersions] = useState([firstVersion]);
 
     /* ===== FUNCTIONS ===== */
     
@@ -42,6 +33,7 @@ const Versions = () => {
     // helper functions
     const { scrollToId } = ScrollHelper();
     const { getNavbarHeight } = StylesHelper();
+    const { validateVersion } = ValidationHelper();
 
     // FUNCTION 1: getStructure - code that is excuted after a change to the game state
     // PRECONDITIONS (1 parameter):
@@ -61,6 +53,7 @@ const Versions = () => {
             });
 
             setGame({ ...game, structure });
+            
         } catch (error) {
             addMessage("There was a problem loading the levels for this game. If this error persists, the system may be experiencing an outage.", "error", 15000);
         }
@@ -73,7 +66,7 @@ const Versions = () => {
     // the game state is updated, and the user is scrolled to the moderation editor
     const switchGame = async game => {
         const unsaved = 
-            (game.version.length === 0 && versions.values.length > 1) || // case 1: game has no versions, and user has entered at least 1
+            (game.version.length === 0 && versions.length > 1) || // case 1: game has no versions, and user has entered at least 1
             (game.version.length > 0 && game.version.length !== versions.length); // case 2: game has versions, and user has entered at least 1
         if (unsaved && !window.confirm("Are you sure you want to switch games? Your progress will be lost!")) {
             return;
@@ -81,9 +74,7 @@ const Versions = () => {
 
         // update game, version, & versions states
         setGame(game);
-        setVersion(versionInit);
-        const updatedVersions = { ...versions, values: game.version.length > 0 ? game.version : [firstVersion] }; 
-        setVersions(updatedVersions);
+        setVersions(game.version.length > 0 ? game.version : [firstVersion]);
 
         // scroll
         let tabsHeight = getNavbarHeight()/2;
@@ -111,18 +102,7 @@ const Versions = () => {
         };
     };
 
-    // FUNCTION 4: handleVersionChange - code that is executed when the user makes changes to the version field
-    // PRECONDITIONS (1 parameter):
-    // 1.) e: the event object that is generated when the user makes a change to the version input
-    // POSTCONDITIONS (1 possible outcome):
-    // the version state is updated with the user's changes
-    const handleVersionChange = e => setVersion({ 
-        ...version, 
-        value: e.target.value, 
-        error: undefined 
-    });
-
-    // FUNCTION 5: handleVersionsChange - code that is executed when the user makes changes to one of many fields
+    // FUNCTION 4: handleVersionsChange - code that is executed when the user makes changes to one of many fields
     // rendered by the `versions` state
     // PRECONDITIONS (1 parameter):
     // 1.) e: the event object that is generated when the user makes a change to the version input
@@ -131,78 +111,51 @@ const Versions = () => {
     const handleVersionsChange = e => {
         const { id, value } = e.target;
         let sequence = parseInt(id.split("_").at(-1));
-        const updatedVersions = versions.values.map(version => version.sequence === sequence ? 
+        const oldVersion = versions.find(version => version.sequence === sequence).version;
+        const updatedVersions = versions.map(version => version.sequence === sequence ? 
             { ...version, version: value } : 
             version
         );
 
-        // now, if there exists any errors on current input, let's remove them
-        let errors = versions.errors;
-        sequence = `${ sequence }`;
-        if (sequence in versions.errors) {
-            errors = Object.fromEntries(
-                Object.entries(errors).filter(([key]) => key !== sequence)
-            );
-        }
-        setVersions({ values: updatedVersions, errors });
-    };
-    
-    // FUNCTION 6: validateVersion - code that validates a version is correctly formatted
-    // PRECONDITIONS (1 parameter):
-    // 1.) version: a version string, entered by a user
-    // POSTCONDITIONS (2 possible outcomes):
-    // the function returns a string containing an error message if validation fails
-    // otherwise, this function returns undefined, meaning no issues
-    const validateVersion = version => {
-        if (!versionPattern.test(version)) {
-            return "Version must consist of letters, numbers, and periods (.), and cannot start with a period (.).";
-        }
+        // cascade version update down to structure
+        const updatedGame = { ...game };
+        updatedGame.structure.forEach(category => {
+            category.mode.forEach(mode => {
+                for (let i = 0; i < mode.level.length; i++) {
+                    const level = mode.level[i];
+                    if (level.version === oldVersion) {
+                        mode.level[i] = { ...level, version: value };
+                    }
+                }
+            });
+        });
 
-        return undefined;
+        // update `versions` & `game` states
+        setVersions(updatedVersions);
+        setGame(updatedGame);
     };
 
-    // FUNCTION 7: validateVersions - code that is executed each time the user finishes making changes to one of
-    // the versions rendered by the `versions` state
+    // FUNCTION 5: handleNewVersionSubmit - code that is executed when the new version form is submitted
     // PRECONDITIONS (1 parameter):
-    // 1.) e: the event object generated by the "blur" event on a `versions` input
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the particular version we are observing has an error, we update the `errors` field of the versions state
-    // otherwise, this function does nothing
-    const validateVersions = e => {
-        const { id, value } = e.target;
-        const sequence = id.split("_").at(-1);
-        const error = validateVersion(value);
-
-        if (error) {
-            setVersions({ ...versions, errors: { [sequence]: error } });
-        }
-    };
-
-    // FUNCTION 8: handleSubmit - code that is executed when the version form is submitted
-    // PRECONDITIONS (1 parameter):
-    // 1.) e: the event object that is generated when the user submits the form
+    // 1.) version: a string representing the version input that the user wants to add
     // POSTCONDITIONS (2 possible outcome):
-    // if the version is not validated, we updated the error field in the `version` state, and return early
-    // the new version is added to the `versions` state
-    const handleSubmit = e => {
-        e.preventDefault();
-
+    // if the version is not validated, we updated the error field in the `version` state, and return early with `error`
+    // otherwise, the new version is added to the `versions` state
+    const handleNewVersionSubmit = version => {
         // attempt to validate version
-        const error = validateVersion(version.value);
+        const error = validateVersion(version, versions);
         if (error) {
             addMessage("There was a problem adding this version.", "error", 6000);
-            setVersion({ ...version, error });
-            return;
+            return error;
         }
         
-        // now, we will update the versions state, as well as clearing the version state
-        setVersions({ ...versions, values: [...versions.values, { 
-            version: version.value, sequence: versions.values.at(-1).sequence + 1 
-        }]});
-        setVersion(versionInit);
+        // now, we will update the versions state
+        setVersions([...versions, { 
+            version: version, sequence: versions.at(-1).sequence + 1 
+        }]);
     };
 
-    // FUNCTION 9: onVersionCheck - code that is executed when the user selects a version checkbox
+    // FUNCTION 6: onVersionCheck - code that is executed when the user selects a version checkbox
     // PRECONDITIONS (1 parameter):
     // 1.) e: the event object generated when the user checks a version checkbox
     // POSTCONDITIONS (2 possible outcome):
@@ -231,14 +184,11 @@ const Versions = () => {
     return { 
         game,
         games,
-        version,
         versions,
         queryGames,
         switchGame,
-        handleVersionChange,
         handleVersionsChange,
-        validateVersions,
-        handleSubmit,
+        handleNewVersionSubmit,
         onVersionCheck
     };
 };

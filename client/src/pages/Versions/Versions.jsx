@@ -7,7 +7,7 @@ import FancyLevel from "../../components/FancyLevel/FancyLevel.jsx";
 import LevelHelper from "../../helper/LevelHelper.js";
 import Loading from "../../components/Loading/Loading.jsx";
 import SimpleGameSelect from "../../components/SimpleGameSelect/SimpleGameSelect";
-import TextField from "@mui/material/TextField";
+import VersionInput from "./VersionInput/VersionInput.jsx";
 import VersionsLogic from "./Versions.js";
 
 /* ===== COMPONENTS ===== */
@@ -26,12 +26,13 @@ function Versions({ imageReducer }) {
 
   /* ===== VARIABLES ===== */
   const versionCount = game?.version.length ? game.version.length : 1;
-  const isRenderStructure = (game?.version.length === 0 && versions?.values.length > 1) || 
-    (game?.version.length > 0 && versions?.values.length > 0);
+  const isRenderStructure = (game?.version.length === 0 && versions?.length > 1) || 
+    (game?.version.length > 0 && versions?.length > 0);
+  
 
   /* ===== MEMOS ===== */
   const newVersions = useMemo(() => {
-    return versions.values.filter(version => !version.id && version.sequence > 1);
+    return versions.filter(version => !version.id && version.sequence > 1);
   }, [versions]);
 
   /* ===== EFFECTS ===== */
@@ -86,63 +87,29 @@ function Versions({ imageReducer }) {
   );
 };
 
-function VersionInput({ state, error, sequence = null, onChange, onBlur = () => {} }) {
-  /* ===== VARIABLES ===== */
-  const VERSION_LENGTH_MAX = 10;
-  const key = sequence ? `version_${ sequence }` : "version";
-
-  /* ===== VERSIONS INPUT ===== */
-  return (
-    <TextField
-      autoComplete="false"
-      color={ error ? "error" : "primary" }
-      error={ error ? true : false }
-      className={ styles.versionInput }
-      helperText={ error ?? `${ state.length }/${ VERSION_LENGTH_MAX }` }
-      id={ key }
-      key={ key }
-      inputProps={ { maxLength: VERSION_LENGTH_MAX } }
-      label="Version"
-      onBlur={ onBlur }
-      onChange={ onChange }
-      placeholder={ `Must be ${ VERSION_LENGTH_MAX } characters or less` }
-      required
-      value={ state }
-      variant="filled"
-    />
-  );
-};
-
 function VersionsForm({ formData }) {
   /* ===== STATES & FUNCTIONS ===== */
-  const { version, versions, handleVersionChange, handleSubmit } = formData;
+  const { versions, handleNewVersionSubmit } = formData;
 
   /* ===== VERSIONS FORM COMPONENT ===== */
   return (
-    <form className={ styles.versionForm } onSubmit={ handleSubmit }>
+    <form className={ styles.versionForm }>
       <h2>Versions</h2>
-      { versions.values.map(version => {
+      { versions.map(version => {
         return <VersionItem version={ version } formData={ formData } key={ version.sequence } />;
       })}
 
       <h3>Add Version</h3>
-      <VersionInput
-        state={ version.value }
-        error={ version.error }
-        onChange={ handleVersionChange }
-      />
-      <button type="submit">Add Version</button>
+      <VersionInput versions={ versions } addBtnSubmit={ handleNewVersionSubmit } />
     </form>
   );
 };
 
 function VersionItem({ version, formData }) {
   /* ===== VARIABLES, STATES, & FUNCTIONS ===== */
-  const { game, versions, handleVersionsChange, validateVersions } = formData;
+  const { game, versions, handleVersionsChange } = formData;
   const { id, sequence } = version;
   version = version.version;
-  const state = versions.values.find(version => version.sequence === sequence);
-  const error = versions.errors[sequence];
   const latest = game.version.length > 0 ? game.version.at(-1).sequence : 1;
   const children = [];
 
@@ -153,13 +120,12 @@ function VersionItem({ version, formData }) {
     );
   } else {
     children.push(
-      <VersionInput
-        state={ state.version }
-        error={ error }
-        sequence={ sequence }
-        onChange={ handleVersionsChange }
-        onBlur={ validateVersions }
-        key={ `version_${ sequence }` }
+      <VersionInput 
+        versions={ versions }
+        currentVersion={ version } 
+        updateVersions={ handleVersionsChange } 
+        sequence={ sequence } 
+        key={ sequence } 
       />
     );
   }
@@ -178,10 +144,6 @@ function VersionItem({ version, formData }) {
 
 const Structure = memo(function Structure({ structure, versions, onVersionCheck }) {
   /* ===== FUNCTIONS ===== */
-
-  useEffect(() => {
-    console.log("versions updated")
-  }, [versions]);
   
   // helper functions
   const { levelB2F } = LevelHelper();
@@ -276,6 +238,16 @@ function LevelRow({ level, versions, category, onVersionCheck }) {
 
   /* ===== VARIABLES ===== */
   const name = level.name;
+
+  /* ===== EFFECTS ===== */
+
+  // code that executes each time the level parameter changes
+  useEffect(() => {
+    if (level.version && version) {
+      setVersion(level.version);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [level]);
 
   /* ===== LEVEL ROW COMPONENT ===== */
   return (

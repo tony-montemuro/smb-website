@@ -210,7 +210,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             ))}
           </TextField>
           <TextField 
-            autoComplete="false"
+            autoComplete="off"
             color={ form.error.proof ? "error" : (form.values.proof !== form.submission.proof ? "success" : "primary") }
             fullWidth
             helperText={ form.error.proof ? form.error.proof : (form.values.proof !== form.submission.proof ? updateFieldText : null) }
