@@ -118,8 +118,8 @@ const Versions = () => {
         );
 
         // cascade version update down to structure
-        const updatedGame = { ...game };
-        updatedGame.structure.forEach(category => {
+        const gameCopy = { ...game };
+        gameCopy.structure.forEach(category => {
             category.mode.forEach(mode => {
                 for (let i = 0; i < mode.level.length; i++) {
                     const level = mode.level[i];
@@ -132,7 +132,7 @@ const Versions = () => {
 
         // update `versions` & `game` states
         setVersions(updatedVersions);
-        setGame(updatedGame);
+        setGame(gameCopy);
     };
 
     // FUNCTION 5: handleNewVersionSubmit - code that is executed when the new version form is submitted
@@ -181,6 +181,47 @@ const Versions = () => {
         setGame(gameCopy);
     }, [game, setGame]); // should only be redefined when game OR setGame is updated
 
+    // FUNCTION 7: toggleAllPerCategory
+    const toggleAllPerCategory = useCallback(e => {
+        const { checked, name } = e.target;
+        const [version, categoryName] = name.split(":");
+        const gameCopy = { ...game };
+        gameCopy.structure = [...gameCopy.structure]; // this forces a re-render of structure component
+        const category = gameCopy.structure.find(category => category.name === categoryName);
+
+        category.mode.forEach(mode => {
+            for (let i = 0; i < mode.level.length; i++) {
+                const level = mode.level[i];
+                mode.level[i] = { ...level, version: checked ? version : undefined };
+            }
+        });
+
+        setGame(gameCopy);
+    }, [game, setGame]); // should only be redefined when game OR setGame is updated
+
+    // FUNCTION 8: toggleAllPerMode - function that toggles the checkboxes on all levels within a mode
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: the event object generated when the user clicks the checkbox
+    // POSTCONDITIONS (2 possible outcomes):
+    // if `isAllChecked` is true, we shut off all checkboxes on the level
+    // if `isAllChecked` is true, we enable all remaining unchecked checkboxes in the set of levels (specifically, the
+    // checkbox associated with the version specified by the user)
+    const toggleAllPerMode = useCallback(e => {
+        const { checked, name } = e.target;
+        const [version, categoryName, modeName] = name.split(":");
+        const gameCopy = { ...game };
+        gameCopy.structure = [...gameCopy.structure]; // this forces a re-render of structure component
+        const category = gameCopy.structure.find(category => category.name === categoryName);
+        const mode = category.mode.find(mode => mode.name === modeName);
+
+        for (let i = 0; i < mode.level.length; i++) {
+            const level = mode.level[i];
+            mode.level[i] = { ...level, version: checked ? version : undefined };
+        }
+
+        setGame(gameCopy);
+    }, [game, setGame]); // should only be redefined when game OR setGame is updated
+
     return { 
         game,
         games,
@@ -189,7 +230,9 @@ const Versions = () => {
         switchGame,
         handleVersionsChange,
         handleNewVersionSubmit,
-        onVersionCheck
+        onVersionCheck,
+        toggleAllPerCategory,
+        toggleAllPerMode
     };
 };
 

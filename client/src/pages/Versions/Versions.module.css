@@ -49,6 +49,12 @@
     text-align: left;
 }
 
+.categoryHeader {
+    display: flex;
+    flex-direction: row;
+    gap: 300px;   
+}
+
 .mode {
     padding-left: 10px;
 }

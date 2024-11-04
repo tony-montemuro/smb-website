@@ -21,7 +21,9 @@ function Versions({ imageReducer }) {
     versions,
     queryGames,
     switchGame,
-    onVersionCheck
+    onVersionCheck,
+    toggleAllPerCategory,
+    toggleAllPerMode
   } = componentData;
 
   /* ===== VARIABLES ===== */
@@ -71,6 +73,8 @@ function Versions({ imageReducer }) {
                     structure={ game.structure }
                     versions={ newVersions }
                     onVersionCheck={ onVersionCheck }
+                    toggleAllPerCategory={ toggleAllPerCategory }
+                    toggleAllPerMode={ toggleAllPerMode }
                   />
                 :
                   <Loading /> 
@@ -142,8 +146,8 @@ function VersionItem({ version, formData }) {
   );
 };
 
-const Structure = memo(function Structure({ structure, versions, onVersionCheck }) {
-  /* ===== FUNCTIONS ===== */
+const Structure = memo(function Structure({ structure, versions, onVersionCheck, toggleAllPerCategory, toggleAllPerMode }) {
+  /* ===== FUNCTIONS ===== */ 
   
   // helper functions
   const { levelB2F } = LevelHelper();
@@ -164,7 +168,30 @@ const Structure = memo(function Structure({ structure, versions, onVersionCheck 
       { structure.map(category => {
         return (
           <div className={ styles.category } key={ category.name }>
-            <h3>{ category.name }</h3>
+            <div className={ styles.categoryHeader }>
+              <h3>{ category.name }</h3>
+              <div>
+                { versions.map(version => {
+                  let isAllChecked = true;
+                  category.mode.forEach(mode => {
+                    if (!mode.level.every(level => level.version === version.version)) {
+                      isAllChecked = false;
+                    }
+                  });
+
+                  return (
+                    <Checkbox
+                      checked={ isAllChecked } 
+                      name={ `${ version.version }:${ category.name }` }
+                      onChange={ toggleAllPerCategory } 
+                      inputProps={{ "aria-label": "controlled" }}
+                      sx={{ padding: 0 }}
+                      key={ version.version }
+                    />
+                  );
+                })}
+              </div>
+            </div>
     
             { category.mode.map(mode => {
               return (
@@ -174,7 +201,9 @@ const Structure = memo(function Structure({ structure, versions, onVersionCheck 
                     levels={ mode.level }
                     versions={ versions }
                     category={ category.name }
+                    mode={ mode.name }
                     onVersionCheck={ onVersionCheck }
+                    toggleAllPerMode={ toggleAllPerMode }
                   />
                 </div>
               );
@@ -186,7 +215,7 @@ const Structure = memo(function Structure({ structure, versions, onVersionCheck 
   );
 });
 
-function Levels({ levels, versions, category, onVersionCheck }) {
+function Levels({ levels, versions, category, mode, onVersionCheck, toggleAllPerMode }) {
   /* ===== LEVELS COMPONENT ===== */
   return (
     <table className={ styles.levels }>
@@ -194,8 +223,18 @@ function Levels({ levels, versions, category, onVersionCheck }) {
         <tr>
           <th>Chart</th>
           { versions.map(version => {
+            const isAllChecked = levels.every(level => level.version === version.version);
             return (
-              <th key={ version.version }>{ version.version }</th>
+              <th key={ version.version }>
+                <Checkbox
+                  checked={ isAllChecked } 
+                  name={ `${ version.version }:${ category }:${ mode }` }
+                  onChange={ toggleAllPerMode } 
+                  inputProps={{ "aria-label": "controlled" }}
+                  sx={{ padding: 0 }}
+                />
+                { version.version }
+              </th>
             );
           })}
         </tr>
@@ -220,14 +259,14 @@ function Levels({ levels, versions, category, onVersionCheck }) {
 
 function LevelRow({ level, versions, category, onVersionCheck }) {
   /* ===== STATES ===== */
-  const [version, setVersion] = useState(null);
+  const [version, setVersion] = useState(undefined);
 
   /* ===== FUNCTIONS ===== */
   const handleChange = e => {
     const { name } = e.target;
     const nameParts = name.split(":");
     const newVersion = nameParts[0];
-    setVersion(newVersion === version ? null : newVersion);
+    setVersion(newVersion === version ? undefined : newVersion);
 
     // This is a "hack" that improves performance - allows "frontend" focused state, that being `checkedBox`
     // to render BEFORE we attempt to update the larger, less performant "game" state
@@ -243,9 +282,7 @@ function LevelRow({ level, versions, category, onVersionCheck }) {
 
   // code that executes each time the level parameter changes
   useEffect(() => {
-    if (level.version && version) {
-      setVersion(level.version);
-    }
+    setVersion(level.version);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
 
