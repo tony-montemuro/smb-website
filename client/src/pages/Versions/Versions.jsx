@@ -22,6 +22,7 @@ function Versions({ imageReducer }) {
     queryGames,
     switchGame,
     onVersionCheck,
+    toggleAll,
     toggleAllPerCategory,
     toggleAllPerMode
   } = componentData;
@@ -73,6 +74,7 @@ function Versions({ imageReducer }) {
                     structure={ game.structure }
                     versions={ newVersions }
                     onVersionCheck={ onVersionCheck }
+                    toggleAll={ toggleAll }
                     toggleAllPerCategory={ toggleAllPerCategory }
                     toggleAllPerMode={ toggleAllPerMode }
                   />
@@ -146,7 +148,20 @@ function VersionItem({ version, formData }) {
   );
 };
 
-const Structure = memo(function Structure({ structure, versions, onVersionCheck, toggleAllPerCategory, toggleAllPerMode }) {
+const Structure = memo(function Structure({ 
+  structure,
+  versions,
+  onVersionCheck,
+  toggleAllPerCategory,
+  toggleAllPerMode,
+  toggleAll
+}) {
+  /* ===== VARIABLES ===== */
+  const isAllChecked = {};
+  const categoryObj = {};
+  structure.forEach(category => categoryObj[category.name] = true);
+  versions.forEach(version => isAllChecked[version.version] = { ...categoryObj });
+
   /* ===== FUNCTIONS ===== */ 
   
   // helper functions
@@ -164,28 +179,49 @@ const Structure = memo(function Structure({ structure, versions, onVersionCheck,
           version specified.
         </span>
       </div>
+      <div className={ styles.structureHeader }>
+        <div className={ styles.boxPadding }><h2>Versions</h2></div>
+        <div className={ styles.structureVersions }>
+          { versions.map(version => {
+            structure.forEach(category => {
+              category.mode.forEach(mode => {
+                if (!mode.level.every(level => level.version === version.version)) {
+                  isAllChecked[version.version][category.name] = false;
+                }
+              });
+            });
+
+            return (
+              <div className={ styles.toggleAll }>
+                <span>{ version.version }</span>
+                <Checkbox
+                  checked={ Object.values(isAllChecked[version.version]).every(val => val) }
+                  name={ version.version }
+                  onChange={ toggleAll }
+                  inputProps={{ "aria-label": "controlled" }}
+                  sx={{ padding: "1px" }}
+                  key={ version.version }
+                />
+              </div>
+            );
+          })}
+        </div>
+      </div>
       
       { structure.map(category => {
         return (
           <div className={ styles.category } key={ category.name }>
-            <div className={ styles.categoryHeader }>
-              <h3>{ category.name }</h3>
-              <div>
+            <div className={ styles.structureHeader }>
+              <h3 className={ styles.boxPadding }>{ category.name }</h3>
+              <div className={ styles.structureVersions }>
                 { versions.map(version => {
-                  let isAllChecked = true;
-                  category.mode.forEach(mode => {
-                    if (!mode.level.every(level => level.version === version.version)) {
-                      isAllChecked = false;
-                    }
-                  });
-
                   return (
                     <Checkbox
-                      checked={ isAllChecked } 
+                      checked={ isAllChecked[version.version][category.name] } 
                       name={ `${ version.version }:${ category.name }` }
                       onChange={ toggleAllPerCategory } 
                       inputProps={{ "aria-label": "controlled" }}
-                      sx={{ padding: 0 }}
+                      sx={{ padding: "1px" }}
                       key={ version.version }
                     />
                   );
@@ -196,7 +232,27 @@ const Structure = memo(function Structure({ structure, versions, onVersionCheck,
             { category.mode.map(mode => {
               return (
                 <div className={ styles.mode } key={ mode.name }>
-                  <h3>{ levelB2F(mode.name) }</h3>
+                  <div className={ styles.structureHeader }>
+                    <div className={ styles.boxPadding }>
+                      <h3 className={ styles.modeHeader }>{ levelB2F(mode.name) }</h3>
+                    </div>
+                    <div className={ styles.structureVersions }>
+                      { versions.map(version => {
+                        const isAllChecked = mode.level.every(level => level.version === version.version);
+                        return (
+                          <Checkbox
+                            checked={ isAllChecked } 
+                            name={ `${ version.version }:${ category.name }:${ mode.name }` }
+                            onChange={ toggleAllPerMode } 
+                            inputProps={{ "aria-label": "controlled" }}
+                            sx={{ padding: "1px" }}
+                            key={ version.version }
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <Levels 
                     levels={ mode.level }
                     versions={ versions }
@@ -222,21 +278,7 @@ function Levels({ levels, versions, category, mode, onVersionCheck, toggleAllPer
       <thead>
         <tr>
           <th>Chart</th>
-          { versions.map(version => {
-            const isAllChecked = levels.every(level => level.version === version.version);
-            return (
-              <th key={ version.version }>
-                <Checkbox
-                  checked={ isAllChecked } 
-                  name={ `${ version.version }:${ category }:${ mode }` }
-                  onChange={ toggleAllPerMode } 
-                  inputProps={{ "aria-label": "controlled" }}
-                  sx={{ padding: 0 }}
-                />
-                { version.version }
-              </th>
-            );
-          })}
+          <th></th>
         </tr>
       </thead>
 

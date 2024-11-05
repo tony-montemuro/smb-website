@@ -181,7 +181,55 @@ const Versions = () => {
         setGame(gameCopy);
     }, [game, setGame]); // should only be redefined when game OR setGame is updated
 
-    // FUNCTION 7: toggleAllPerCategory
+    // FUNCTION 7: modeToggle - toggles all levels within a mode by version, either ON or OFF
+    // PRECONDITIONS (3 parameters):
+    // 1.) mode: a mode object, which contains the `level` key, an array of level objects
+    // 2.) version: a string representing the version we are targetting
+    // 3.) checked: a boolean, which determines whether or not we turn ON or OFF
+    // POSTCONDITIONS (2 possible outcomes):
+    // if checked is true, for each level, we set `version` to the `version` parameter
+    // if checked is false, for each level, we unset `version`
+    const modeToggle = (mode, version, checked) => {
+        for (let i = 0; i < mode.level.length; i++) {
+            const level = mode.level[i];
+            mode.level[i] = { ...level, version: checked ? version : undefined };
+        }
+    }
+
+    // FUNCTION 8: categoryToggle - toggles all levels within a category by version, either ON or OFF
+    // PRECONDITIONS (3 parameters):
+    // 1.) category: a category object, which contains the `mode` key, an array of mode objects
+    // 2.) version: a string representing the version we are targetting
+    // 3.) checked: a boolean, which determines whether or not we turn ON or OFF
+    // POSTCONDITIONS (2 possible outcomes):
+    // if checked is true, for each level, we set `version` to the `version` parameter
+    // if checked is false, for each level, we unset `version`
+    const categoryToggle = useCallback((category, version, checked) => {
+        category.mode.forEach(mode => modeToggle(mode, version, checked));
+    }, []);
+
+    // FUNCTION 9: toggleAll - code that is executed when the user selects the "all" checkbox for a game
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: the event object generated when the user clicks the checkbox
+    // POSTCONDITIONS (2 possible outcomes):
+    // if between 0 and (N-1) checkboxes are selected of `version`, we select all remaining boxes
+    // if all checkboxes of selected `version` are on, we deselect all checkboxes
+    const toggleAll = useCallback(e => {
+        const { checked, name } = e.target;
+        const version = name;
+        const gameCopy = { ...game };
+        gameCopy.structure = [...gameCopy.structure]; // this forces a re-render
+
+        gameCopy.structure.forEach(category => categoryToggle(category, version, checked));
+        setGame(gameCopy);
+    }, [game, setGame, categoryToggle]);
+
+    // FUNCTION 10: toggleAllPerCategory - code that is executed when the user selects a category checkbox
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: the event object generated when the user clicks the checkbox
+    // POSTCONDITIONS (2 possible outcomes):
+    // if between 0 and (N-1) checkboxes are selected of `version` within a category, we select all remaining boxes
+    // if all checkboxes of selected `version` are on within a category, we deselect all checkboxes
     const toggleAllPerCategory = useCallback(e => {
         const { checked, name } = e.target;
         const [version, categoryName] = name.split(":");
@@ -189,17 +237,11 @@ const Versions = () => {
         gameCopy.structure = [...gameCopy.structure]; // this forces a re-render of structure component
         const category = gameCopy.structure.find(category => category.name === categoryName);
 
-        category.mode.forEach(mode => {
-            for (let i = 0; i < mode.level.length; i++) {
-                const level = mode.level[i];
-                mode.level[i] = { ...level, version: checked ? version : undefined };
-            }
-        });
-
+        categoryToggle(category, version, checked);
         setGame(gameCopy);
-    }, [game, setGame]); // should only be redefined when game OR setGame is updated
+    }, [game, setGame, categoryToggle]); // should only be redefined when game OR setGame is updated
 
-    // FUNCTION 8: toggleAllPerMode - function that toggles the checkboxes on all levels within a mode
+    // FUNCTION 11: toggleAllPerMode - function that toggles the checkboxes on all levels within a mode
     // PRECONDITIONS (1 parameter):
     // 1.) e: the event object generated when the user clicks the checkbox
     // POSTCONDITIONS (2 possible outcomes):
@@ -214,11 +256,7 @@ const Versions = () => {
         const category = gameCopy.structure.find(category => category.name === categoryName);
         const mode = category.mode.find(mode => mode.name === modeName);
 
-        for (let i = 0; i < mode.level.length; i++) {
-            const level = mode.level[i];
-            mode.level[i] = { ...level, version: checked ? version : undefined };
-        }
-
+        modeToggle(mode, version, checked);
         setGame(gameCopy);
     }, [game, setGame]); // should only be redefined when game OR setGame is updated
 
@@ -231,6 +269,7 @@ const Versions = () => {
         handleVersionsChange,
         handleNewVersionSubmit,
         onVersionCheck,
+        toggleAll,
         toggleAllPerCategory,
         toggleAllPerMode
     };

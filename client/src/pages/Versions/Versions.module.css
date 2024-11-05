@@ -40,6 +40,8 @@
 }
 
 #structure {
+    --chart-name-width: 400px;
+    --step-padding: 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -49,18 +51,33 @@
     text-align: left;
 }
 
-.categoryHeader {
+.structureHeader {
     display: flex;
     flex-direction: row;
-    gap: 300px;   
+    align-items: center;
 }
 
-.mode {
-    padding-left: 10px;
+.structureVersions {
+    display: flex;
+    gap: 2px;
+}
+
+.toggleAll {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.boxPadding {
+    width: calc(var(--chart-name-width) + var(--step-padding) + var(--step-padding) + 6px);
+}
+
+.modeHeader {
+    padding-left: var(--step-padding);
 }
 
 .levels {
-    padding-left: 10px;
+    padding-left: calc(2 * var(--step-padding));
 }
 
 .levelColumn {
