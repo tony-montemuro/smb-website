@@ -31,7 +31,8 @@
     --z-low: 1;
     --z-medium: 2;
     --z-high: 3;
-    --z-top: 4;
+    --z-higher: 4;
+    --z-top: 5;
 }
 
 /* ===== HTML TAGS ===== */

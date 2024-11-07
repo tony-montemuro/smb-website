@@ -5,7 +5,7 @@
     position: -webkit-sticky;
     position: sticky;
     top: var(--navbar-height);
-    z-index: var(--z-medium);
+    z-index: var(--z-higher);
     background-color: rgb(var(--color-background));
 }
 

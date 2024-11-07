@@ -42,6 +42,9 @@
 #structure {
     --chart-name-width: 400px;
     --step-padding: 10px;
+    --toggle-all-height: 45px;
+    --toggle-category-height: 26px;
+    --screen-top: calc(var(--navbar-height) + var(--navbar-height) / 2);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -62,6 +65,13 @@
     gap: 2px;
 }
 
+.all {
+    top: calc(var(--screen-top) + 1px);
+    position: sticky;
+    background-color: rgb(var(--color-container));
+    z-index: var(--z-higher);
+}
+
 .toggleAll {
     display: flex;
     flex-direction: column;
@@ -72,8 +82,34 @@
     width: calc(var(--chart-name-width) + var(--step-padding) + var(--step-padding) + 6px);
 }
 
-.modeHeader {
+.structureInner {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.categoryHeader {
+    top: calc(var(--screen-top) + var(--toggle-all-height));
+    position: sticky;
+    background-color: rgb(var(--color-container));
+    z-index: var(--z-high);
+}
+
+.modeTitle {
     padding-left: var(--step-padding);
+}
+
+.modeHeader {
+    top: calc(var(--screen-top) + var(--toggle-all-height) + var(--toggle-category-height));
+    position: sticky;
+    background-color: rgb(var(--color-container));
+    z-index: var(--z-medium);
 }
 
 .levels {

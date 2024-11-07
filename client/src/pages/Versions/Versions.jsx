@@ -179,7 +179,7 @@ const Structure = memo(function Structure({
           version specified.
         </span>
       </div>
-      <div className={ styles.structureHeader }>
+      <div className={ `${ styles.structureHeader } ${ styles.all }` }>
         <div className={ styles.boxPadding }><h2>Versions</h2></div>
         <div className={ styles.structureVersions }>
           { versions.map(version => {
@@ -208,65 +208,69 @@ const Structure = memo(function Structure({
         </div>
       </div>
       
-      { structure.map(category => {
-        return (
-          <div className={ styles.category } key={ category.name }>
-            <div className={ styles.structureHeader }>
-              <h3 className={ styles.boxPadding }>{ category.name }</h3>
-              <div className={ styles.structureVersions }>
-                { versions.map(version => {
+      <div className={ styles.structureInner }>
+        { structure.map(category => {
+          return (
+            <div className={ styles.category } key={ category.name }>
+              <div className={ `${ styles.structureHeader } ${ styles.categoryHeader }` }>
+                <h3 className={ styles.boxPadding }>{ category.name }</h3>
+                <div className={ styles.structureVersions }>
+                  { versions.map(version => {
+                    return (
+                      <Checkbox
+                        checked={ isAllChecked[version.version][category.name] } 
+                        name={ `${ version.version }:${ category.name }` }
+                        onChange={ toggleAllPerCategory } 
+                        inputProps={{ "aria-label": "controlled" }}
+                        sx={{ padding: "1px" }}
+                        key={ version.version }
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+      
+              <div className={ styles.modes }>
+                { category.mode.map(mode => {
                   return (
-                    <Checkbox
-                      checked={ isAllChecked[version.version][category.name] } 
-                      name={ `${ version.version }:${ category.name }` }
-                      onChange={ toggleAllPerCategory } 
-                      inputProps={{ "aria-label": "controlled" }}
-                      sx={{ padding: "1px" }}
-                      key={ version.version }
-                    />
+                    <div className={ styles.mode } key={ mode.name }>
+                      <div className={ `${ styles.structureHeader } ${ styles.modeHeader }` }>
+                        <div className={ styles.boxPadding }>
+                          <h3 className={ styles.modeTitle }>{ levelB2F(mode.name) }</h3>
+                        </div>
+                        <div className={ styles.structureVersions }>
+                          { versions.map(version => {
+                            const isAllChecked = mode.level.every(level => level.version === version.version);
+                            return (
+                              <Checkbox
+                                checked={ isAllChecked } 
+                                name={ `${ version.version }:${ category.name }:${ mode.name }` }
+                                onChange={ toggleAllPerMode } 
+                                inputProps={{ "aria-label": "controlled" }}
+                                sx={{ padding: "1px" }}
+                                key={ version.version }
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <Levels 
+                        levels={ mode.level }
+                        versions={ versions }
+                        category={ category.name }
+                        mode={ mode.name }
+                        onVersionCheck={ onVersionCheck }
+                        toggleAllPerMode={ toggleAllPerMode }
+                      />
+                    </div>
                   );
                 })}
               </div>
             </div>
-    
-            { category.mode.map(mode => {
-              return (
-                <div className={ styles.mode } key={ mode.name }>
-                  <div className={ styles.structureHeader }>
-                    <div className={ styles.boxPadding }>
-                      <h3 className={ styles.modeHeader }>{ levelB2F(mode.name) }</h3>
-                    </div>
-                    <div className={ styles.structureVersions }>
-                      { versions.map(version => {
-                        const isAllChecked = mode.level.every(level => level.version === version.version);
-                        return (
-                          <Checkbox
-                            checked={ isAllChecked } 
-                            name={ `${ version.version }:${ category.name }:${ mode.name }` }
-                            onChange={ toggleAllPerMode } 
-                            inputProps={{ "aria-label": "controlled" }}
-                            sx={{ padding: "1px" }}
-                            key={ version.version }
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  <Levels 
-                    levels={ mode.level }
-                    versions={ versions }
-                    category={ category.name }
-                    mode={ mode.name }
-                    onVersionCheck={ onVersionCheck }
-                    toggleAllPerMode={ toggleAllPerMode }
-                  />
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 });
