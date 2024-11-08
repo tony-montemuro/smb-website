@@ -157,10 +157,7 @@ const Structure = memo(function Structure({
   toggleAll
 }) {
   /* ===== VARIABLES ===== */
-  const isAllChecked = {};
-  const categoryObj = {};
-  structure.forEach(category => categoryObj[category.name] = true);
-  versions.forEach(version => isAllChecked[version.version] = { ...categoryObj });
+  const checks = {};
 
   /* ===== FUNCTIONS ===== */ 
   
@@ -180,22 +177,24 @@ const Structure = memo(function Structure({
         </span>
       </div>
       <div className={ `${ styles.structureHeader } ${ styles.all }` }>
-        <div className={ styles.boxPadding }><h2>Versions</h2></div>
+        <div className={ styles.boxPadding }>
+          <h2>Versions</h2>
+        </div>
         <div className={ styles.structureVersions }>
           { versions.map(version => {
+            checks[version.version] = {};
             structure.forEach(category => {
+              checks[version.version][category.name] = {};
               category.mode.forEach(mode => {
-                if (!mode.level.every(level => level.version === version.version)) {
-                  isAllChecked[version.version][category.name] = false;
-                }
+                checks[version.version][category.name][mode.name] = mode.level.every(level => level.version === version.version); 
               });
             });
 
             return (
-              <div className={ styles.toggleAll }>
+              <div className={ styles.toggleAll } key={ version.version }>
                 <span>{ version.version }</span>
                 <Checkbox
-                  checked={ Object.values(isAllChecked[version.version]).every(val => val) }
+                  checked={ Object.values(checks[version.version]).every(category => Object.values(category).every(val => val)) }
                   name={ version.version }
                   onChange={ toggleAll }
                   inputProps={{ "aria-label": "controlled" }}
@@ -218,7 +217,7 @@ const Structure = memo(function Structure({
                   { versions.map(version => {
                     return (
                       <Checkbox
-                        checked={ isAllChecked[version.version][category.name] } 
+                        checked={ Object.values(checks[version.version][category.name]).every(val => val) } 
                         name={ `${ version.version }:${ category.name }` }
                         onChange={ toggleAllPerCategory } 
                         inputProps={{ "aria-label": "controlled" }}
@@ -240,10 +239,9 @@ const Structure = memo(function Structure({
                         </div>
                         <div className={ styles.structureVersions }>
                           { versions.map(version => {
-                            const isAllChecked = mode.level.every(level => level.version === version.version);
                             return (
                               <Checkbox
-                                checked={ isAllChecked } 
+                                checked={ checks[version.version][category.name][mode.name] } 
                                 name={ `${ version.version }:${ category.name }:${ mode.name }` }
                                 onChange={ toggleAllPerMode } 
                                 inputProps={{ "aria-label": "controlled" }}
@@ -259,9 +257,7 @@ const Structure = memo(function Structure({
                         levels={ mode.level }
                         versions={ versions }
                         category={ category.name }
-                        mode={ mode.name }
                         onVersionCheck={ onVersionCheck }
-                        toggleAllPerMode={ toggleAllPerMode }
                       />
                     </div>
                   );
@@ -275,7 +271,7 @@ const Structure = memo(function Structure({
   );
 });
 
-function Levels({ levels, versions, category, mode, onVersionCheck, toggleAllPerMode }) {
+function Levels({ levels, versions, category, onVersionCheck }) {
   /* ===== LEVELS COMPONENT ===== */
   return (
     <table className={ styles.levels }>

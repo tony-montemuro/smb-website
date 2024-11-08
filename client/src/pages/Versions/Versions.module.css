@@ -68,7 +68,7 @@
 .all {
     top: calc(var(--screen-top) + 1px);
     position: sticky;
-    background-color: rgb(var(--color-container));
+    background-color: rgba(var(--color-container-selected));
     z-index: var(--z-higher);
 }
 
@@ -97,7 +97,7 @@
 .categoryHeader {
     top: calc(var(--screen-top) + var(--toggle-all-height));
     position: sticky;
-    background-color: rgb(var(--color-container));
+    background-color: rgb(var(--color-container-selected));
     z-index: var(--z-high);
 }
 
@@ -108,7 +108,7 @@
 .modeHeader {
     top: calc(var(--screen-top) + var(--toggle-all-height) + var(--toggle-category-height));
     position: sticky;
-    background-color: rgb(var(--color-container));
+    background-color: rgb(var(--color-container-selected));
     z-index: var(--z-medium);
 }
 
