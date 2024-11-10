@@ -42,6 +42,7 @@ const CategoryRead = () => {
             const { data: categories, error } = await supabase
                 .from("category")
                 .select(`
+                    abb,
                     name,
                     mode!inner (
                         name,

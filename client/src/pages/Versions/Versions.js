@@ -264,8 +264,26 @@ const Versions = () => {
         e.preventDefault();
         
         const newVersions = versions.filter(version => !version.id);
-        console.log(newVersions);
-    }, [versions]); // should only be redefined when versions is updated
+        const updatedCharts = [];
+        const gameAbb = game.abb;
+        game.structure.forEach(category => {
+            category.mode.forEach(mode => {
+                const categoryAbb = category.abb;
+                mode.level.forEach(level => {
+                    if (level.version) {
+                        updatedCharts.push({
+                            game_id: gameAbb,
+                            level_id: level.name,
+                            category: categoryAbb,
+                            version: level.version
+                        });
+                    }
+                });
+            });
+        });
+        
+        console.log({ versions: newVersions, charts: updatedCharts });
+    }, [versions, game]); // should only be redefined when versions OR game states are updated
 
     return { 
         game,

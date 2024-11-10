@@ -14,7 +14,7 @@ import VersionsLogic from "./Versions.js";
 /* ===== COMPONENTS ===== */
 
 function Versions({ imageReducer }) {
-  /* ===== STATES & FUNCTIONS ===== */
+  /* ===== STATES & FUNCTIONS ===== */  
   const componentData = VersionsLogic();
   const { 
     game,
