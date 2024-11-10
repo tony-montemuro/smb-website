@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { memo, useEffect, useMemo, useState } from "react";
 import styles from "./Versions.module.css";
+import AddIcon from "@mui/icons-material/Add";
 import Container from "../../components/Container/Container.jsx";
 import Checkbox from "@mui/material/Checkbox";
 import FancyLevel from "../../components/FancyLevel/FancyLevel.jsx";
@@ -24,14 +25,12 @@ function Versions({ imageReducer }) {
     onVersionCheck,
     toggleAll,
     toggleAllPerCategory,
-    toggleAllPerMode
+    toggleAllPerMode,
+    handleStructureSubmit
   } = componentData;
 
   /* ===== VARIABLES ===== */
   const versionCount = game?.version.length ? game.version.length : 1;
-  const isRenderStructure = (game?.version.length === 0 && versions?.length > 1) || 
-    (game?.version.length > 0 && versions?.length > 0);
-  
 
   /* ===== MEMOS ===== */
   const newVersions = useMemo(() => {
@@ -68,7 +67,7 @@ function Versions({ imageReducer }) {
               <VersionsForm formData={ componentData } />
 
               { /* Load game structure when loaded */ }
-              { isRenderStructure ? 
+              { newVersions.length > 0 ? 
                 game.structure ?
                   <Structure
                     structure={ game.structure }
@@ -77,6 +76,7 @@ function Versions({ imageReducer }) {
                     toggleAll={ toggleAll }
                     toggleAllPerCategory={ toggleAllPerCategory }
                     toggleAllPerMode={ toggleAllPerMode }
+                    onSubmit={ handleStructureSubmit }
                   />
                 :
                   <Loading /> 
@@ -154,7 +154,8 @@ const Structure = memo(function Structure({
   onVersionCheck,
   toggleAllPerCategory,
   toggleAllPerMode,
-  toggleAll
+  toggleAll,
+  onSubmit
 }) {
   /* ===== VARIABLES ===== */
   const checks = {};
@@ -166,14 +167,14 @@ const Structure = memo(function Structure({
 
   /* ===== STRUCTURE COMPONENT ===== */
   return (
-    <div id={ styles.structure }>
+    <form id={ styles.structure } onSubmit={ onSubmit }>
       <hr />
       <div className={ styles.header }>
         <h2>Chart Update Submissions Tool</h2>
         <span>
           Using this tool, if there exist charts that are unchanged between the <strong>current latest version</strong> and
-          any new versions added, you can specify which charts should update all <strong>current</strong> submissions to the
-          version specified.
+          any new versions added, you can specify which charts should update all submissions on the&nbsp;
+          <strong>current latest version</strong> to the version specified.
         </span>
       </div>
       <div className={ `${ styles.structureHeader } ${ styles.all }` }>
@@ -218,8 +219,7 @@ const Structure = memo(function Structure({
                     return (
                       <Checkbox
                         checked={ Object.values(checks[version.version][category.name]).every(val => val) } 
-                        name={ `${ version.version }:${ category.name }` }
-                        onChange={ toggleAllPerCategory } 
+                        onChange={ (e) => toggleAllPerCategory(e.target.checked, version.version, category) } 
                         inputProps={{ "aria-label": "controlled" }}
                         sx={{ padding: "1px" }}
                         key={ version.version }
@@ -242,8 +242,7 @@ const Structure = memo(function Structure({
                             return (
                               <Checkbox
                                 checked={ checks[version.version][category.name][mode.name] } 
-                                name={ `${ version.version }:${ category.name }:${ mode.name }` }
-                                onChange={ toggleAllPerMode } 
+                                onChange={ (e) => toggleAllPerMode(e.target.checked, version.version, mode) } 
                                 inputProps={{ "aria-label": "controlled" }}
                                 sx={{ padding: "1px" }}
                                 key={ version.version }
@@ -256,7 +255,7 @@ const Structure = memo(function Structure({
                       <Levels 
                         levels={ mode.level }
                         versions={ versions }
-                        category={ category.name }
+                        category={ category }
                         onVersionCheck={ onVersionCheck }
                       />
                     </div>
@@ -267,7 +266,12 @@ const Structure = memo(function Structure({
           );
         })}
       </div>
-    </div>
+
+      <button type="submit" id={ styles.submit } className="center">
+        <AddIcon />
+        <span>Add New Version(s)</span>
+      </button>
+    </form>
   );
 });
 
@@ -303,22 +307,20 @@ function LevelRow({ level, versions, category, onVersionCheck }) {
   /* ===== STATES ===== */
   const [version, setVersion] = useState(undefined);
 
+  /* ===== VARIABLES ===== */
+  const levelName = level.name;
+  const categoryName = category.name;
+
   /* ===== FUNCTIONS ===== */
-  const handleChange = e => {
-    const { name } = e.target;
-    const nameParts = name.split(":");
-    const newVersion = nameParts[0];
+  const handleChange = (checked, newVersion) => {
     setVersion(newVersion === version ? undefined : newVersion);
 
-    // This is a "hack" that improves performance - allows "frontend" focused state, that being `checkedBox`
+    // This is a "hack" that improves performance - allows "frontend" focused state, that being `version`
     // to render BEFORE we attempt to update the larger, less performant "game" state
     setTimeout(() => {
-      onVersionCheck(e);
+      onVersionCheck(checked, newVersion, categoryName, levelName);
     }, [0]);
   };
-
-  /* ===== VARIABLES ===== */
-  const name = level.name;
 
   /* ===== EFFECTS ===== */
 
@@ -332,7 +334,7 @@ function LevelRow({ level, versions, category, onVersionCheck }) {
   return (
     <tr>
       <td className={ styles.levelColumn }>
-        <FancyLevel level={ name } />
+        <FancyLevel level={ levelName } />
       </td>
       { versions.map(v => {
         const value = v.version;
@@ -340,8 +342,7 @@ function LevelRow({ level, versions, category, onVersionCheck }) {
           <td key={ value }>
             <Checkbox 
               checked={ value === version } 
-              name={ `${ value }:${ category }:${ name }` }
-              onChange={ handleChange } 
+              onChange={ (e) => handleChange(e.target.checked, value) } 
               inputProps={{ "aria-label": "controlled" }}
               sx={{ padding: 0 }}
             />

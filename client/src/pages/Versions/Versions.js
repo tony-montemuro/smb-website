@@ -60,21 +60,24 @@ const Versions = () => {
     };
 
     // FUNCTION 2: switchGame - code that is executed when the administrator selects a game
-    // PRECONDITIONS (1 parameter):
-    // 1.) game: a game object, which belongs to the game the user selected
+    // PRECONDITIONS: 1 parameter
+    // 1.) newGame: a game object; the game we want to swap to
     // POSTCONDITIONS (1 possible outcome):
     // the game state is updated, and the user is scrolled to the moderation editor
-    const switchGame = async game => {
-        const unsaved = 
-            (game.version.length === 0 && versions.length > 1) || // case 1: game has no versions, and user has entered at least 1
-            (game.version.length > 0 && game.version.length !== versions.length); // case 2: game has versions, and user has entered at least 1
-        if (unsaved && !window.confirm("Are you sure you want to switch games? Your progress will be lost!")) {
-            return;
+    const switchGame = async newGame => {
+        // if we are truly "switching games", let's prevent accidental swaps by giving the user a warning (if necessary)
+        if (game) {
+            const unsaved = 
+                (game.version.length === 0 && versions.length > 1) || // case 1: game has no versions, and user has entered at least 1
+                (game.version.length > 0 && game.version.length !== versions.length); // case 2: game has versions, and user has entered at least 1
+            if (unsaved && !window.confirm("Are you sure you want to switch games? Your progress will be lost!")) {
+                return;
+            }
         }
 
         // update game, version, & versions states
-        setGame(game);
-        setVersions(game.version.length > 0 ? game.version : [firstVersion]);
+        setGame(newGame);
+        setVersions(newGame.version.length > 0 ? newGame.version : [firstVersion]);
 
         // scroll
         let tabsHeight = getNavbarHeight()/2;
@@ -84,7 +87,7 @@ const Versions = () => {
         scrollToId("content", tabsHeight);
 
         // finally, we need to grab the game structure from the backend
-        await getStructure(game);
+        await getStructure(newGame);
     };
 
     // FUNCTION 3: queryGames - code that is executed when the `Versions` component mounts
@@ -156,20 +159,17 @@ const Versions = () => {
     };
 
     // FUNCTION 6: onVersionCheck - code that is executed when the user selects a version checkbox
-    // PRECONDITIONS (1 parameter):
-    // 1.) e: the event object generated when the user checks a version checkbox
+    // PRECONDITIONS (4 parameters):
+    // 1.) checked: a boolean value that determines whether or not the user is turning the checkbox ON or OFF
+    // 2.) version: a string representing the version of the box we are modifying
+    // 3.) categoryName: a string representing the name of the category the box is within
+    // 4.) levelName: a string representing the name of the level the box is associated with
     // POSTCONDITIONS (2 possible outcome):
     // if the box is already checked, the version should be set to undefined
     // if the box is not already checked, the version should be set to the version specified by the name of the input
-    const onVersionCheck = useCallback(e => {
-        const { name, checked } = e.target;
-        const nameParts = name.split(":");
-        const version = nameParts[0];
-        const categoryName = nameParts[1];
-        const levelName = nameParts.slice(2).join(":");
+    const onVersionCheck = useCallback((checked, version, categoryName, levelName) => {
         const gameCopy = { ...game };
         const category = gameCopy.structure.find(category => category.name === categoryName);
-
         category.mode.forEach(mode => {
             mode.level.forEach(level => {
                 if (level.name === levelName) {
@@ -219,46 +219,53 @@ const Versions = () => {
         const version = name;
         const gameCopy = { ...game };
         gameCopy.structure = [...gameCopy.structure]; // this forces a re-render
-
         gameCopy.structure.forEach(category => categoryToggle(category, version, checked));
         setGame(gameCopy);
     }, [game, setGame, categoryToggle]);
 
     // FUNCTION 10: toggleAllPerCategory - code that is executed when the user selects a category checkbox
-    // PRECONDITIONS (1 parameter):
-    // 1.) e: the event object generated when the user clicks the checkbox
+    // PRECONDITIONS (3 parameters):
+    // 1.) checked: determines whether or not the user turned the checkbox on or off
+    // 2.) version: the version we want to toggle on/off
+    // 3.) category: an object; the set of checkboxes we want to toggle on/off should be within this category
     // POSTCONDITIONS (2 possible outcomes):
     // if between 0 and (N-1) checkboxes are selected of `version` within a category, we select all remaining boxes
     // if all checkboxes of selected `version` are on within a category, we deselect all checkboxes
-    const toggleAllPerCategory = useCallback(e => {
-        const { checked, name } = e.target;
-        const [version, categoryName] = name.split(":");
+    const toggleAllPerCategory = useCallback((checked, version, category) => {
         const gameCopy = { ...game };
         gameCopy.structure = [...gameCopy.structure]; // this forces a re-render of structure component
-        const category = gameCopy.structure.find(category => category.name === categoryName);
-
         categoryToggle(category, version, checked);
         setGame(gameCopy);
     }, [game, setGame, categoryToggle]); // should only be redefined when game OR setGame is updated
 
     // FUNCTION 11: toggleAllPerMode - function that toggles the checkboxes on all levels within a mode
-    // PRECONDITIONS (1 parameter):
-    // 1.) e: the event object generated when the user clicks the checkbox
+    // PRECONDITIONS (3 parameters):
+    // 1.) checked: determines whether or not the user turned the checkbox on or off
+    // 2.) version: the version we want to toggle on/off
+    // 3.) mode: an object; the set of checkboxes we want to toggle on/off should be within the mode
     // POSTCONDITIONS (2 possible outcomes):
     // if `isAllChecked` is true, we shut off all checkboxes on the level
     // if `isAllChecked` is true, we enable all remaining unchecked checkboxes in the set of levels (specifically, the
     // checkbox associated with the version specified by the user)
-    const toggleAllPerMode = useCallback(e => {
-        const { checked, name } = e.target;
-        const [version, categoryName, modeName] = name.split(":");
+    const toggleAllPerMode = useCallback((checked, version, mode) => {
         const gameCopy = { ...game };
         gameCopy.structure = [...gameCopy.structure]; // this forces a re-render of structure component
-        const category = gameCopy.structure.find(category => category.name === categoryName);
-        const mode = category.mode.find(mode => mode.name === modeName);
-
         modeToggle(mode, version, checked);
         setGame(gameCopy);
     }, [game, setGame]); // should only be redefined when game OR setGame is updated
+
+    // FUNCTION 12: handleStructureSubmit - code that is executed when the user submits the structure form
+    // PRECONDITIONS (1 parameter):
+    // 1.) e: the event object generated when the user submits the form
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the form is validated, we add the new versions to the system, and update any submissions (if necessary)
+    // if the form is not validated, we return early, and render an error message to the user
+    const handleStructureSubmit = useCallback(e => {
+        e.preventDefault();
+        
+        const newVersions = versions.filter(version => !version.id);
+        console.log(newVersions);
+    }, [versions]); // should only be redefined when versions is updated
 
     return { 
         game,
@@ -271,7 +278,8 @@ const Versions = () => {
         onVersionCheck,
         toggleAll,
         toggleAllPerCategory,
-        toggleAllPerMode
+        toggleAllPerMode,
+        handleStructureSubmit
     };
 };
 

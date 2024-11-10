@@ -1,3 +1,5 @@
+/* ===== GENERAL STYLING ===== */
+
 .versions {
     display: flex;
     padding: var(--app-padding);
@@ -118,4 +120,36 @@
 
 .levelColumn {
     width: 400px;
+}
+
+#submit {
+    width: fit-content;
+    gap: 4px;
+}
+
+/* ===== MEDIA QUERY FOR MOBILE DEVICES ===== */
+
+@media (max-width: 800px) {
+    .versions {
+        flex-direction: column;
+    }
+
+    .left {
+        width: 100%;
+    }
+
+    .all {
+        position: static;
+        z-index: var(--z-low);
+    }
+
+    .categoryHeader {
+        position: static;
+        z-index: var(--z-low);
+    }
+
+    .modeHeader {
+        position: static;
+        z-index: var(--z-low);
+    }
 }

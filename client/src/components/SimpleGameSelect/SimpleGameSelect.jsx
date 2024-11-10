@@ -10,7 +10,7 @@ function SimpleGameSelect({ games, game, setGame, imageReducer, countType = null
     <div className={ styles.simpleGameSelect }>
       <Container title="Games" largeTitle>
 
-        { games ?
+        { games && game ?
           // If games is defined, for each game that the user moderates, render a game row that will update the administrator view when 
           // clicked
           <div className={ styles.tabs }>
