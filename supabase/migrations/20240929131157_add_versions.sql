@@ -331,7 +331,7 @@ CREATE OR REPLACE FUNCTION submission_version_cascade()
 RETURNS "trigger"
 LANGUAGE "plpgsql" AS $$
   BEGIN
-    -- If we have any "updatable games", let's cascade most "recent" version to all relevant submissions
+    -- If we have any "updatable games", let's cascade least "recent" version to all relevant submissions
     IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_type = 'LOCAL TEMPORARY' AND table_name = 'updatable_games') THEN
       UPDATE submission
       SET version = v.id
@@ -340,7 +340,7 @@ LANGUAGE "plpgsql" AS $$
       WHERE 
         submission.game_id = v.game AND
         submission.version IS NULL AND
-        v.id IN (SELECT id FROM version WHERE game = v.game ORDER BY sequence DESC LIMIT 1);
+        v.id IN (SELECT id FROM version WHERE game = v.game ORDER BY sequence ASC LIMIT 1);
 
       -- Destroy temporary table
       DROP TABLE IF EXISTS updatable_games;
@@ -1024,3 +1024,63 @@ AS $$
     ORDER BY r.report_date
   ) submissions_row
 $$;
+
+-- Create an RPC for adding versions from admin panel
+CREATE OR REPLACE FUNCTION add_versions (versions JSONB)
+RETURNS VOID
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  game_abb text;
+  latest_version int;
+  version_ids int[];
+  i int;
+  version_charts jsonb;
+  version_id int;
+BEGIN
+  -- Validate `versions` array is non-empty
+  IF jsonb_array_length(versions) = 0 THEN
+    RAISE EXCEPTION 'Must add at least one version.';
+  END IF;
+
+  -- Determine game from `versions` parameter
+  game_abb := (versions->0->>'game')::text;
+
+  -- If we have at least one chart, fetch the id of the most recent version belonging to `game_abb`
+  SELECT id
+  INTO latest_version
+  FROM version
+  WHERE game = game_abb
+  ORDER BY sequence DESC
+  LIMIT 1;
+
+  -- Insert into `versions` table, and capture the IDs
+  WITH inserted_versions AS (
+    INSERT INTO version (game, sequence, version)
+    SELECT game, sequence, version
+    FROM jsonb_to_recordset(versions) AS v(game text, sequence int, version text)
+    RETURNING id, sequence
+  )
+  SELECT array_agg(id ORDER BY sequence)
+  INTO version_ids
+  FROM inserted_versions;
+
+  -- Loop over versions, and update chart submissions, if any
+  FOR i IN 1..jsonb_array_length(versions) LOOP
+    version_charts := (versions->(i-1))->'charts';
+    version_id := version_ids[i];
+
+    IF version_charts IS NOT NULL THEN
+      UPDATE submission s
+      SET version = version_id
+      WHERE 
+        (s.version = latest_version OR (latest_version IS NULL)) AND
+        (s.category, s.game_id, s.level_id) IN (
+          SELECT category, game_id, level_id
+          FROM jsonb_to_recordset(version_charts)
+          AS charts(category text, game_id text, level_id text)
+        );
+    END IF;
+  END LOOP;
+END;
+$$
