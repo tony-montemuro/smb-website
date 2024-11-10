@@ -39,7 +39,28 @@ const RPCUpdate = () => {
         }
     };
 
-    return { addGame };
+    // FUNCTION 2: addVersions - code that is called by administrators to add new versions to the system
+    // PRECONDITIONS (1 parameter):
+    // 1.) versions: an array of version objects; must have at least one version, and must be sorted by the `sequence` field
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the query is successful, this function simply returns
+    // if the query is unsuccessful, this function will throw an error, which should be handled by the caller function
+    const addVersions = async versions => {
+        try {
+            const { error } = await supabase.rpc("add_versions", { versions });
+
+            // error handling
+            if (error) {
+                throw error;
+            }
+
+        } catch (error) {
+            // error should be handled by the caller function
+            throw error;
+        }
+    };
+
+    return { addGame, addVersions };
 };
 
 /* ===== EXPORTS ===== */

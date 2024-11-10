@@ -3,6 +3,7 @@ import { MessageContext } from "../../utils/Contexts";
 import { useCallback, useContext, useState } from "react";
 import CategoryRead from "../../database/read/CategoryRead.js";
 import GameRead from "../../database/read/GameRead";
+import RPCUpdate from "../../database/update/RPCUpdate.js";
 import ScrollHelper from "../../helper/ScrollHelper.js";
 import StylesHelper from "../../helper/StylesHelper.js";
 import ValidationHelper from "../../helper/ValidationHelper.js";
@@ -29,6 +30,7 @@ const Versions = () => {
     // database functions
     const { queryGamesForModerators } = GameRead();
     const { queryStructureByGame } = CategoryRead();
+    const { addVersions } = RPCUpdate();
 
     // helper functions
     const { scrollToId } = ScrollHelper();
@@ -260,30 +262,63 @@ const Versions = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // if the form is validated, we add the new versions to the system, and update any submissions (if necessary)
     // if the form is not validated, we return early, and render an error message to the user
-    const handleStructureSubmit = useCallback(e => {
+    const handleStructureSubmit = useCallback(async e => {
         e.preventDefault();
-        
-        const newVersions = versions.filter(version => !version.id);
-        const updatedCharts = [];
+
+        let newVersions = {};
+        versions.forEach(version => {
+            if (!version.id) {
+                newVersions[version.version] = { ...version, game: game.abb, charts: [] }
+            }
+        });
+
+        if (newVersions.length === 0) {
+            addMessage("Must be adding at least one new version.", "error", 6000);
+        }
+
         const gameAbb = game.abb;
+        let malformedVersions = 0;
         game.structure.forEach(category => {
             category.mode.forEach(mode => {
                 const categoryAbb = category.abb;
                 mode.level.forEach(level => {
                     if (level.version) {
-                        updatedCharts.push({
-                            game_id: gameAbb,
-                            level_id: level.name,
-                            category: categoryAbb,
-                            version: level.version
-                        });
+                        if (!newVersions[level.version]) {
+                            malformedVersions++;
+                        } else {
+                            newVersions[level.version].charts.push({
+                                game_id: gameAbb,
+                                level_id: level.name,
+                                category: categoryAbb,
+                            });
+                        }
                     }
                 });
             });
         });
+
+        if (malformedVersions.length > 0) {
+            addMessage("A fatal error has occured. Please contact TonySMB about this error, and refresh the page. Apologies for the inconvenience.", "error", 15000);
+            return;
+        }
         
-        console.log({ versions: newVersions, charts: updatedCharts });
-    }, [versions, game]); // should only be redefined when versions OR game states are updated
+        newVersions = Object.values(newVersions).sort((a, b) => a.sequence - b.sequence);
+        try {
+            await addVersions(newVersions);
+
+            let successMsg = `New versions successfully added to ${ game.name }`;
+            if (newVersions.some(version => version.charts.length > 0)) {
+                successMsg += ", and all relevant submissions' versions were updated.";
+            } else {
+                successMsg += ".";
+            }
+
+            addMessage(successMsg, "success", 13000);
+        } catch (error) {
+            addMessage(`There was a problem adding the new versions: ${ error.message }. Consider refreshing the page.`, "error", 20000);
+        }
+        
+    }, [versions, game, addMessage, addVersions]); // should only be redefined when versions OR game states are updated
 
     return { 
         game,
