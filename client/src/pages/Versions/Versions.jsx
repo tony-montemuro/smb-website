@@ -148,7 +148,7 @@ function VersionItem({ version, formData }) {
   );
 };
 
-const Structure = memo(function Structure({ 
+function Structure({ 
   structure,
   versions,
   onVersionCheck,
@@ -157,17 +157,12 @@ const Structure = memo(function Structure({
   toggleAll,
   onSubmit
 }) {
-  /* ===== VARIABLES ===== */
-  const checks = {};
-
-  /* ===== FUNCTIONS ===== */ 
-  
-  // helper functions
-  const { levelB2F } = LevelHelper();
+  /* ===== STATES ===== */
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   /* ===== STRUCTURE COMPONENT ===== */
   return (
-    <form id={ styles.structure } onSubmit={ onSubmit }>
+    <form id={ styles.structure } onSubmit={ (e) => onSubmit(e, setIsSubmitting) }>
       <hr />
       <div className={ styles.header }>
         <h2>Chart Update Submissions Tool</h2>
@@ -177,7 +172,44 @@ const Structure = memo(function Structure({
           <strong>current latest version</strong> to the version specified.
         </span>
       </div>
-      <div className={ `${ styles.structureHeader } ${ styles.all }` }>
+      
+      <StructureBody
+        structure={ structure }
+        versions={ versions }
+        onVersionCheck={ onVersionCheck }
+        toggleAll={ toggleAll }
+        toggleAllPerCategory={ toggleAllPerCategory }
+        toggleAllPerMode={ toggleAllPerMode }
+      />
+
+      <button type="submit" id={ styles.submit } className="center" disabled={ isSubmitting }>
+        <AddIcon />
+        <span>Add New Version(s)</span>
+      </button>
+    </form>
+  );
+};
+
+const StructureBody = memo(function({
+  structure,
+  versions,
+  onVersionCheck,
+  toggleAllPerCategory,
+  toggleAllPerMode,
+  toggleAll
+}) {
+  /* ===== VARIABLES ===== */
+  const checks = {};
+
+  /* ===== FUNCTIONS ===== */ 
+  
+  // helper functions
+  const { levelB2F } = LevelHelper();
+
+  /* ===== STRUCTURE BODY COMPONENT ===== */
+  return (
+    <>
+     <div className={ `${ styles.structureHeader } ${ styles.all }` }>
         <div className={ styles.boxPadding }>
           <h2>Versions</h2>
         </div>
@@ -266,12 +298,7 @@ const Structure = memo(function Structure({
           );
         })}
       </div>
-
-      <button type="submit" id={ styles.submit } className="center">
-        <AddIcon />
-        <span>Add New Version(s)</span>
-      </button>
-    </form>
+    </>
   );
 });
 

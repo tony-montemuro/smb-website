@@ -257,14 +257,17 @@ const Versions = () => {
     }, [game, setGame]); // should only be redefined when game OR setGame is updated
 
     // FUNCTION 12: handleStructureSubmit - code that is executed when the user submits the structure form
-    // PRECONDITIONS (1 parameter):
+    // PRECONDITIONS (2 parameters):
     // 1.) e: the event object generated when the user submits the form
+    // 2.) setIsSubmitting: function used to update the `submitting` state, which will disable the submit button when true
     // POSTCONDITIONS (2 possible outcomes):
     // if the form is validated, we add the new versions to the system, and update any submissions (if necessary)
     // if the form is not validated, we return early, and render an error message to the user
-    const handleStructureSubmit = useCallback(async e => {
+    const handleStructureSubmit = useCallback(async (e, setIsSubmitting) => {
         e.preventDefault();
 
+        // define `newVersions` object, which will eventually transform into an array of versions, sorted by sequence,
+        // where each version includes the game, version, sequence, and list of charts that need updates
         let newVersions = {};
         versions.forEach(version => {
             if (!version.id) {
@@ -303,7 +306,10 @@ const Versions = () => {
         }
         
         newVersions = Object.values(newVersions).sort((a, b) => a.sequence - b.sequence);
+
+        // submit new versions
         try {
+            setIsSubmitting(true);
             await addVersions(newVersions);
 
             let successMsg = `New versions successfully added to ${ game.name }`;
@@ -316,6 +322,8 @@ const Versions = () => {
             addMessage(successMsg, "success", 13000);
         } catch (error) {
             addMessage(`There was a problem adding the new versions: ${ error.message }. Consider refreshing the page.`, "error", 20000);
+        } finally {
+            setIsSubmitting(false);
         }
         
     }, [versions, game, addMessage, addVersions]); // should only be redefined when versions OR game states are updated
