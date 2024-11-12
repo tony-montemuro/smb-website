@@ -43,7 +43,7 @@ const Versions = () => {
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, we update the game state to include this information
     // if the query is unsuccessful, we render an error message to the user
-    const getStructure = async game => {
+    const getStructure = useCallback(async game => {
         try {
             const structure = await queryStructureByGame(game.abb);
             
@@ -57,9 +57,9 @@ const Versions = () => {
             setGame({ ...game, structure });
             
         } catch (error) {
-            addMessage("There was a problem loading the levels for this game. If this error persists, the system may be experiencing an outage.", "error", 15000);
+            addMessage("There was a problem loading the charts for this game. If this error persists, the system may be experiencing an outage.", "error", 15000);
         }
-    };
+    }, [queryStructureByGame, setGame, addMessage]); // this prevents function from ever being redefined: none of these should change
 
     // FUNCTION 2: switchGame - code that is executed when the administrator selects a game
     // PRECONDITIONS: 1 parameter
@@ -107,7 +107,30 @@ const Versions = () => {
         };
     };
 
-    // FUNCTION 4: handleVersionsChange - code that is executed when the user makes changes to one of many fields
+    // FUNCTION 4: resetAll - code that is executed to reset the state of the component
+    // PRECONDITIONS: NONE
+    // POSTCONDITIONS (2 possible outcomes):
+    // if all queries are successful, this function resets every state, and returns nothing
+    // if a query fails, an exception will be thrown, which should be handled by the caller function
+    const resetAll = useCallback(async () => {
+        const newGames = await queryGamesForModerators();
+        const newGame = newGames.find(g => g.abb === game.abb);
+
+        setGames(newGames);
+        setGame(newGame);
+        setVersions(newGame.version);
+        await getStructure(newGame);
+    }, 
+    [
+        queryGamesForModerators,
+        setGames,
+        setGame,
+        setVersions,
+        getStructure,
+        game?.abb
+    ]);
+
+    // FUNCTION 5: handleVersionsChange - code that is executed when the user makes changes to one of many fields
     // rendered by the `versions` state
     // PRECONDITIONS (1 parameter):
     // 1.) e: the event object that is generated when the user makes a change to the version input
@@ -140,7 +163,7 @@ const Versions = () => {
         setGame(gameCopy);
     };
 
-    // FUNCTION 5: handleNewVersionSubmit - code that is executed when the new version form is submitted
+    // FUNCTION 6: handleNewVersionSubmit - code that is executed when the new version form is submitted
     // PRECONDITIONS (1 parameter):
     // 1.) version: a string representing the version input that the user wants to add
     // POSTCONDITIONS (2 possible outcome):
@@ -160,7 +183,7 @@ const Versions = () => {
         }]);
     };
 
-    // FUNCTION 6: onVersionCheck - code that is executed when the user selects a version checkbox
+    // FUNCTION 7: onVersionCheck - code that is executed when the user selects a version checkbox
     // PRECONDITIONS (4 parameters):
     // 1.) checked: a boolean value that determines whether or not the user is turning the checkbox ON or OFF
     // 2.) version: a string representing the version of the box we are modifying
@@ -181,9 +204,9 @@ const Versions = () => {
         });
         
         setGame(gameCopy);
-    }, [game, setGame]); // should only be redefined when game OR setGame is updated
+    }, [game, setGame]);
 
-    // FUNCTION 7: modeToggle - toggles all levels within a mode by version, either ON or OFF
+    // FUNCTION 8: modeToggle - toggles all levels within a mode by version, either ON or OFF
     // PRECONDITIONS (3 parameters):
     // 1.) mode: a mode object, which contains the `level` key, an array of level objects
     // 2.) version: a string representing the version we are targetting
@@ -198,7 +221,7 @@ const Versions = () => {
         }
     }
 
-    // FUNCTION 8: categoryToggle - toggles all levels within a category by version, either ON or OFF
+    // FUNCTION 9: categoryToggle - toggles all levels within a category by version, either ON or OFF
     // PRECONDITIONS (3 parameters):
     // 1.) category: a category object, which contains the `mode` key, an array of mode objects
     // 2.) version: a string representing the version we are targetting
@@ -210,7 +233,7 @@ const Versions = () => {
         category.mode.forEach(mode => modeToggle(mode, version, checked));
     }, []);
 
-    // FUNCTION 9: toggleAll - code that is executed when the user selects the "all" checkbox for a game
+    // FUNCTION 10: toggleAll - code that is executed when the user selects the "all" checkbox for a game
     // PRECONDITIONS (1 parameter):
     // 1.) e: the event object generated when the user clicks the checkbox
     // POSTCONDITIONS (2 possible outcomes):
@@ -225,7 +248,7 @@ const Versions = () => {
         setGame(gameCopy);
     }, [game, setGame, categoryToggle]);
 
-    // FUNCTION 10: toggleAllPerCategory - code that is executed when the user selects a category checkbox
+    // FUNCTION 11: toggleAllPerCategory - code that is executed when the user selects a category checkbox
     // PRECONDITIONS (3 parameters):
     // 1.) checked: determines whether or not the user turned the checkbox on or off
     // 2.) version: the version we want to toggle on/off
@@ -238,9 +261,9 @@ const Versions = () => {
         gameCopy.structure = [...gameCopy.structure]; // this forces a re-render of structure component
         categoryToggle(category, version, checked);
         setGame(gameCopy);
-    }, [game, setGame, categoryToggle]); // should only be redefined when game OR setGame is updated
+    }, [game, setGame, categoryToggle]);
 
-    // FUNCTION 11: toggleAllPerMode - function that toggles the checkboxes on all levels within a mode
+    // FUNCTION 12: toggleAllPerMode - function that toggles the checkboxes on all levels within a mode
     // PRECONDITIONS (3 parameters):
     // 1.) checked: determines whether or not the user turned the checkbox on or off
     // 2.) version: the version we want to toggle on/off
@@ -254,20 +277,14 @@ const Versions = () => {
         gameCopy.structure = [...gameCopy.structure]; // this forces a re-render of structure component
         modeToggle(mode, version, checked);
         setGame(gameCopy);
-    }, [game, setGame]); // should only be redefined when game OR setGame is updated
+    }, [game, setGame]);
 
-    // FUNCTION 12: handleStructureSubmit - code that is executed when the user submits the structure form
-    // PRECONDITIONS (2 parameters):
-    // 1.) e: the event object generated when the user submits the form
-    // 2.) setIsSubmitting: function used to update the `submitting` state, which will disable the submit button when true
+    // FUNCTION 13: buildVersions - code that builds a version object for submissiopn
+    // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
-    // if the form is validated, we add the new versions to the system, and update any submissions (if necessary)
-    // if the form is not validated, we return early, and render an error message to the user
-    const handleStructureSubmit = useCallback(async (e, setIsSubmitting) => {
-        e.preventDefault();
-
-        // define `newVersions` object, which will eventually transform into an array of versions, sorted by sequence,
-        // where each version includes the game, version, sequence, and list of charts that need updates
+    // if no errors are encountered, an array of the new versoins is returned
+    // if an error is encountered, this function returns undefined, and should render an error message to the user
+    const buildVersions = useCallback(() => {
         let newVersions = {};
         versions.forEach(version => {
             if (!version.id) {
@@ -275,8 +292,10 @@ const Versions = () => {
             }
         });
 
-        if (newVersions.length === 0) {
+        // if we have no "new versions", let's return early
+        if (Object.keys(newVersions).length === 0) {
             addMessage("Must be adding at least one new version.", "error", 6000);
+            return undefined;
         }
 
         const gameAbb = game.abb;
@@ -300,20 +319,38 @@ const Versions = () => {
             });
         });
 
+        // if one or more charts have "malformed" versions (this really should never happen: more of a safety mechanism),
+        // let's return early
         if (malformedVersions.length > 0) {
             addMessage("A fatal error has occured. Please contact TonySMB about this error, and refresh the page. Apologies for the inconvenience.", "error", 15000);
-            return;
+            return undefined;
         }
-        
-        newVersions = Object.values(newVersions).sort((a, b) => a.sequence - b.sequence);
+
+        return Object.values(newVersions).sort((a, b) => a.sequence - b.sequence);
+    }, [versions, addMessage, game?.abb, game?.structure]);
+
+    // FUNCTION 14: handleStructureSubmit - code that is executed when the user submits the structure form
+    // PRECONDITIONS (2 parameters):
+    // 1.) e: the event object generated when the user submits the form
+    // 2.) setIsSubmitting: function used to update the `submitting` state, which will disable the submit button when true
+    // POSTCONDITIONS (2 possible outcomes):
+    // if the form is validated, we add the new versions to the system, and update any submissions (if necessary)
+    // if the form is not validated, we return early, and render an error message to the user
+    const handleStructureSubmit = useCallback(async (e, setIsSubmitting) => {
+        e.preventDefault();
+        const versions = buildVersions();
+        if (!versions) return; // return early if versions is undefined
+        let isVersionsUpdateSuccess = false;
 
         // submit new versions
         try {
             setIsSubmitting(true);
-            await addVersions(newVersions);
+            await addVersions(versions);
+            isVersionsUpdateSuccess = true;
+            await resetAll();
 
-            let successMsg = `New versions successfully added to ${ game.name }`;
-            if (newVersions.some(version => version.charts.length > 0)) {
+            let successMsg = `New version(s) successfully added to ${ game.name }`;
+            if (versions.some(version => version.charts.length > 0)) {
                 successMsg += ", and all relevant submissions' versions were updated.";
             } else {
                 successMsg += ".";
@@ -321,12 +358,16 @@ const Versions = () => {
 
             addMessage(successMsg, "success", 13000);
         } catch (error) {
-            addMessage(`There was a problem adding the new versions: ${ error.message }. Consider refreshing the page.`, "error", 20000);
+            if (isVersionsUpdateSuccess) {
+                addMessage(`There was a problem adding the new version(s): ${ error.message }. Consider refreshing the page.`, "error", 20000);
+            } else {
+                addMessage(`New version(s) successfully added to ${ game.name }, but there was a problem resetting the page. Please refresh the page.`, "error", 15000);
+            }
         } finally {
             setIsSubmitting(false);
         }
         
-    }, [versions, game, addMessage, addVersions]); // should only be redefined when versions OR game states are updated
+    }, [buildVersions, game, addMessage, addVersions, resetAll]); // should only be redefined when versions OR game states are updated
 
     return { 
         game,

@@ -81,6 +81,13 @@ function EntitiesForm() {
             appear on the website!</strong>
           </em>
         </span>
+        <span>
+          <em>
+            <strong>Note:</strong> For adding <strong>versions</strong>, please use the <strong>Game Versions</strong> administration 
+            portal <strong>after</strong> you
+            have finished creating this game.
+          </em>
+        </span>
 
         { /* Entities form */ }
         { entitiesData ?
