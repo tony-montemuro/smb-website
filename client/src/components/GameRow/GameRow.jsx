@@ -5,11 +5,11 @@ import BoxArt from "../BoxArt/BoxArt.jsx";
 import StylesHelper from "../../helper/StylesHelper.js";
 
 function GameRow({ 
-    game, 
-    imageReducer, 
-    useCard, 
-    onClick = undefined, 
-    index = 0, 
+    game,
+    imageReducer,
+    useCard,
+    onClick = undefined,
+    index = 0,
     extraContent = undefined,
     selectedGame = undefined,
     versionsData = undefined

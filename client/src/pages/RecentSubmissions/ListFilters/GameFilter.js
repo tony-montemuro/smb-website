@@ -33,7 +33,13 @@ const GameFilter = (updateGlobalGames) => {
     // otherwise, this function renders an error message to the user
     const addGame = game => {
         if (!(games.some(row => row.abb === game.abb))) {
-            const updatedGames = games.concat([game]);
+            const updatedGame = { ...game };
+
+            // rename `version` key to `versions`
+            updatedGame.versions = game.version;
+            delete updatedGame.version;
+            
+            const updatedGames = games.concat([updatedGame]);
             setGames(updatedGames);
         } else {
             addMessage("You are already filtering by this game.", "error", 6000);

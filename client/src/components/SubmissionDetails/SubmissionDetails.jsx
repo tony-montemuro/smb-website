@@ -24,8 +24,6 @@ function SubmissionDetails({ level, updateBoards }) {
 
   /* ===== VARIABLES ===== */
   const submission = popupData;
-  console.log(submission);
-  
   const location = useLocation();
   const levelName = location.pathname.split("/")[5];
   const profile = submission.profile;
