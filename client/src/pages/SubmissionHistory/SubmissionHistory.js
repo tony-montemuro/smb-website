@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import RPCRead from "../../database/read/RPCRead";
 import SubmissionRead from "../../database/read/SubmissionRead";
+import UrlHelper from "../../helper/UrlHelper";
 
 const SubmissionHistory = () => {
     /* ===== VARIABLES ===== */
@@ -34,6 +35,9 @@ const SubmissionHistory = () => {
     // database functions
     const { getChartSubmissionsByProfile } = SubmissionRead();
     const { getProfile } = RPCRead();
+
+    // helper functions
+    const { addAllExistingSearchParams } = UrlHelper();
 
     // FUNCTION 1: fetchProfile - code that is executed when the SubmissionHistory component mounts, to validate the URL path
     // PRECONDITIONS (1 parameter):
@@ -84,7 +88,9 @@ const SubmissionHistory = () => {
     // otherwise, the user will be navigated to the "other" submission history page for the other run type
     const handleTabClick = otherRunType => {
         if (runType !== otherRunType) {
-            navigateTo(`/games/${ abb }/${ category }/${ type }/${ levelName }/${ profileId }/${ otherRunType }`);
+            navigateTo(addAllExistingSearchParams(
+                `/games/${ abb }/${ category }/${ type }/${ levelName }/${ profileId }/${ otherRunType }`
+            ));
         }
     };
 

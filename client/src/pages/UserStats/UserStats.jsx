@@ -10,6 +10,7 @@ import Loading from "../../components/Loading/Loading.jsx";
 import Medals from "./Stats/Medals.jsx";
 import Records from "./Stats/Records.jsx";
 import Total from "./Stats/Total.jsx";
+import UrlHelper from "../../helper/UrlHelper.js";
 import UserStatsLogic from "./UserStats.js";
 
 function UserStats() {
@@ -27,6 +28,7 @@ function UserStats() {
   /* ===== HELPER FUNCTIONS ===== */
   const { capitalize } = FrontendHelper();
   const { getGameCategories, getCategoryTypes } = GameHelper();
+  const { getInitialVersion } = UrlHelper();
 
   /* ===== VARIABLES ===== */
   const navigateTo = useNavigate();
@@ -90,9 +92,9 @@ function UserStats() {
     }
 
     // otherwise, update the game, filter, & user state hooks, and fetch user stats
-    const version = game.versions?.at(-1);
+    const version = getInitialVersion(game); 
     setGame(game);
-    setVersion(version)
+    setVersion(version);
     setAllLiveFilter(game.live_preference ? "live" : "all");
     fetchUserStats(game, profileId, category, type, version?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,7 +122,11 @@ function UserStats() {
             { game.versions?.length > 0 &&
               <div className={ styles.version }>
                 <label htmlFor="version">Version: </label>
-                <select id="version" onChange={ (e) => handleVersionChange(e, game) } value={ version.id }>
+                <select 
+                  id="version" 
+                  onChange={ (e) => handleVersionChange(e, game) } 
+                  value={ version.id }
+                >
                   { game.versions.map(version => (
                     <option value={ version.id } key={ version.id } >{ version.version }</option>
                   ))}
@@ -158,7 +164,7 @@ function UserStats() {
           }
 
           { /* Stats records */ }
-          <Records rankings={ stats[allLiveFilter].rankings } />
+          <Records rankings={ stats[allLiveFilter].rankings } game={ game } version={ version } />
 
         </>
       </div>

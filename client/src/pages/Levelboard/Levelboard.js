@@ -6,6 +6,7 @@ import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
 import FrontendHelper from "../../helper/FrontendHelper";
 import RPCRead from "../../database/read/RPCRead";
+import UrlHelper from "../../helper/UrlHelper";
 
 const Levelboard = () => {
 	/* ===== CONTEXTS ===== */
@@ -46,6 +47,7 @@ const Levelboard = () => {
 	// helper functions
 	const { getInclusiveDate } = DateHelper();
 	const { capitalize } = FrontendHelper();
+	const { addAllExistingSearchParams } = UrlHelper();
 
 	// FUNCTION 1: getPrevAndNext - get the previous and next level names
     // PRECONDTIONS (2 parameters):
@@ -225,7 +227,9 @@ const Levelboard = () => {
 	// otherwise, the user is navigated to the current level's other board
 	const handleTabClick = otherType => {
 		if (otherType !== type) {
-			navigateTo(`/games/${ abb }/${ category }/${ otherType }/${ levelName }`);
+			navigateTo(addAllExistingSearchParams(
+				`/games/${ abb }/${ category }/${ otherType }/${ levelName }`
+			));
 		}
 	};
 

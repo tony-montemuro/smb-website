@@ -5,9 +5,6 @@ import GameHelper from "../../helper/GameHelper";
 import GameRead from "../../database/read/GameRead.js";
 
 const GameLayout = (game, setVersion) => {
-    /* ===== VARIABLES ===== */
-    const versionKey = "version";
-
     /* ===== FUNCTIONS ===== */
 
     // database functions
@@ -37,31 +34,7 @@ const GameLayout = (game, setVersion) => {
         };
     };
 
-    // FUNCTION 2: fetchVersion - code that is executed when the GameLayout component mounts; to determine version
-    // based on game & `version` search param
-    // PRECONDITIONS (1 parameter):
-    // 1.) game: a game object which contains information about the game
-    // POSTCONDITIONS (3 possible outcomes):
-    // if the version search parameter is defined, and corresponds to a version of the game, return that version
-    // if the version search parameter is defined, but does not correspond to a version of the game, return the final version,
-    // if exists. otherwise, return undefined
-    // if the version search parameter is undefined, return the final version, if exists. otherwise, undefined.
-    const fetchVersion = game => {
-        const versionParam = searchParams.get(versionKey);
-
-        if (versionParam) {
-            const version = game.version?.find(v => v.version === versionParam);
-            if (version) {
-                return version;
-            } else {
-                setSearchParams(searchParams.delete(versionKey));
-            }
-        }
-       
-        return game.version?.at(-1);
-    };
-
-    // FUNCTION 3: handleVersionChange - code that is executed when the user changes the game version
+    // FUNCTION 2: handleVersionChange - code that is executed when the user changes the game version
     // PRECONDITIONS (1 parameter):
     // 1.) versionId: an integer or string, representing the id of a version
     // POSTCONDITIONS (1 possible outcome):
@@ -79,7 +52,7 @@ const GameLayout = (game, setVersion) => {
         setVersion(version);
     }
 
-    return { disableVersionDropdown, fetchGame, fetchVersion, handleVersionChange, setDisableVersionDropdown };
+    return { disableVersionDropdown, fetchGame, handleVersionChange, setDisableVersionDropdown };
 };
 
 /* ===== EXPORTS ===== */

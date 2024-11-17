@@ -1,6 +1,7 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import GameHelper from "../../helper/GameHelper";
 import RPCRead from "../../database/read/RPCRead";
 
@@ -12,6 +13,7 @@ const UserStats = (decimalPlaces, setVersion) => {
 
     /* ===== STATES ===== */
     const [stats, setStats] = useState(undefined);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     /* ===== FUNCTIONS ===== */
 
@@ -100,9 +102,16 @@ const UserStats = (decimalPlaces, setVersion) => {
     // POSTCONDITIONS (1 possible outcome):
     // the version is updated given the information in `e.target`
     const handleVersionChange = (e, game) => {
+        // determine version
         const { value } = e.target;
         const id = parseInt(value);
         const version = game.versions.find(version => version.id === id);
+       
+        // next, update version search param
+        const params = Object.fromEntries(searchParams);
+        setSearchParams({ ...params, version: version.version });
+
+        // finally, update version state
         setVersion(version);
     }
 

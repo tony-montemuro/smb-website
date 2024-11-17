@@ -11,6 +11,7 @@ import GameLayoutLogic from "./GameLayout.js";
 import Loading from "../../components/Loading/Loading.jsx";
 import ModeratorContainer from "./Containers/ModeratorContainer";
 import RankingsContents from "./Containers/RankingsContents.jsx";
+import UrlHelper from "../../helper/UrlHelper.js";
 
 function GameLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -32,15 +33,15 @@ function GameLayout({ imageReducer }) {
 
   // states & functions from the js file
   const { 
-    disableVersionDropdown, 
-    fetchGame, 
-    fetchVersion, 
-    handleVersionChange, 
-    setDisableVersionDropdown 
+    disableVersionDropdown,
+    fetchGame,
+    handleVersionChange,
+    setDisableVersionDropdown
   } = GameLayoutLogic(game, setVersion);
 
   // helper functions
   const { getGameCategories } = GameHelper();
+  const { getInitialVersion } = UrlHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -59,7 +60,7 @@ function GameLayout({ imageReducer }) {
 
       // update game & version state hooks
       setGame(game);
-      setVersion(fetchVersion(game));
+      setVersion(getInitialVersion(game));
     };
    
     initGame();

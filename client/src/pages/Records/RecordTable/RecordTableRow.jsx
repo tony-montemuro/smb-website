@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import styles from "./RecordTable.module.css";
 import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper.js";
+import UrlHelper from "../../../helper/UrlHelper.js";
 import Username from "../../../components/Username/Username.jsx";
 
 function RecordTableRow({ row, filter, allRecord, isAllGreater }) {
@@ -11,6 +12,7 @@ function RecordTableRow({ row, filter, allRecord, isAllGreater }) {
 
   // helper functions
   const { recordB2F, timerType2TimeUnit } = FrontendHelper();
+  const { addAllExistingSearchParams } = UrlHelper();
   
   /* ===== VARIABLES ===== */
   const location = useLocation();
@@ -25,7 +27,7 @@ function RecordTableRow({ row, filter, allRecord, isAllGreater }) {
   return (
     <tr key={ row.level.name }>
       <td className={ styles.level }>
-        <Link to={ `/games/${ abb }/${ category }/${ type }/${ row.level.name }` }>
+        <Link to={ addAllExistingSearchParams(`/games/${ abb }/${ category }/${ type }/${ row.level.name }`) }>
           <FancyLevel level={ row.level.name } />
         </Link>
       </td>
