@@ -357,11 +357,11 @@ const Versions = () => {
             }
 
             addMessage(successMsg, "success", 13000);
-        } catch (error) {
+        } catch (error) {        
             if (isVersionsUpdateSuccess) {
-                addMessage(`There was a problem adding the new version(s): ${ error.message }. Consider refreshing the page.`, "error", 20000);
-            } else {
                 addMessage(`New version(s) successfully added to ${ game.name }, but there was a problem resetting the page. Please refresh the page.`, "error", 15000);
+            } else {
+                addMessage(`There was a problem adding the new version(s): ${ error.message }. Consider refreshing the page.`, "error", 20000);
             }
         } finally {
             setIsSubmitting(false);

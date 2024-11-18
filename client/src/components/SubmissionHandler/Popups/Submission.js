@@ -278,7 +278,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
                     creator_id: user.profile.id,
                     notif_type: "delete",
                     tas: submission.tas,
-                    version: submission.version ?? null
+                    version_id: submission.version?.id ?? null
                 };
                 await insertNotification(notification);
             }
@@ -291,6 +291,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
             if (error.message === "delete") {
                 addMessage("There was a problem deleting this submission.", "error", 7000);
             } else {
+                console.log(error); 
                 addMessage("The submission successfully was rejected, but the notification system failed to notify the user.", "error", 10000);
             }
         } finally {
