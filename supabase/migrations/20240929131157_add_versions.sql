@@ -414,13 +414,13 @@ LANGUAGE "plpgsql" AS $$
   BEGIN
     -- If we have any "updatable games", let's cascade least "recent" version to all relevant submissions
     IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_type = 'LOCAL TEMPORARY' AND table_name = 'updatable_games') THEN
-      UPDATE submission
+      UPDATE submission s
       SET version = v.id
       FROM version v
       JOIN updatable_games ug ON v.game = ug.game
       WHERE 
-        submission.game_id = v.game AND
-        submission.version IS NULL AND
+        s.game_id = v.game AND
+        s.version IS NULL AND
         v.id IN (SELECT id FROM version WHERE game = v.game ORDER BY sequence ASC LIMIT 1);
 
       -- Destroy temporary table
@@ -1118,6 +1118,7 @@ DECLARE
   i int;
   version_charts jsonb;
   version_id int;
+  count int;
 BEGIN
   -- Validate `versions` array is non-empty
   IF jsonb_array_length(versions) = 0 THEN
