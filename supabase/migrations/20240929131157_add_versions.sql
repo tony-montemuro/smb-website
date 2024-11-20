@@ -443,6 +443,61 @@ ALTER TRIGGER report_before_insert_trigger ON report RENAME TO report_before_ins
 ALTER TRIGGER submission_after_insert_trigger ON submission RENAME TO submission_after_insert_row_trigger;
 ALTER TRIGGER submission_before_insert_trigger ON submission RENAME TO submission_before_insert_row_trigger;
 
+-- Add RLS to allow admins to update the version changed of ANY submission
+CREATE OR REPLACE FUNCTION is_only_version_changed (
+  submission_id TIMESTAMPTZ,
+  new_tas BOOLEAN,
+  new_submitted_at TIMESTAMPTZ,
+  new_monkey_id INT,
+  new_platform_id INT,
+  new_region_id INT,
+  new_proof TEXT,
+  new_comment TEXT,
+  new_live BOOLEAN,
+  new_mod_note TEXT,
+  new_version INT
+)
+RETURNS BOOLEAN
+LANGUAGE sql
+AS $$
+  SELECT (
+    s.tas = new_tas AND
+    s.submitted_at = new_submitted_at AND
+    s.monkey_id = new_monkey_id AND
+    s.platform_id = new_platform_id AND
+    s.region_id = new_region_id AND
+    s.proof = new_proof AND
+    s.comment = new_comment AND
+    s.live = new_live AND
+    s.mod_note = new_mod_note AND
+    COALESCE(s.version, -1) <> COALESCE(new_version, -1)
+  )
+  FROM submission s
+  WHERE s.id = submission_id
+$$;
+
+CREATE POLICY "Enable admins to update version of any submission"
+ON submission 
+AS PERMISSIVE
+FOR UPDATE 
+TO authenticated 
+USING (is_admin()) 
+WITH CHECK (
+  is_only_version_changed(
+    submission.id,
+    submission.tas,
+    submission.submitted_at,
+    submission.monkey_id,
+    submission.platform_id,
+    submission.region_id,
+    submission.proof,
+    submission.comment,
+    submission.live,
+    submission.mod_note,
+    submission.version
+  )
+);
+
 -- Now, we need to update RPCs to allow for version specification
 
 -- First, `get_ranked_submissions`. Many relevant RPCs depend on this.
@@ -1166,58 +1221,3 @@ BEGIN
   END LOOP;
 END;
 $$;
-
--- Add RLS to allow admins to update the version changed of ANY submission
-CREATE OR REPLACE FUNCTION is_only_version_changed (
-  submission_id TIMESTAMPTZ,
-  new_tas BOOLEAN,
-  new_submitted_at TIMESTAMPTZ,
-  new_monkey_id INT,
-  new_platform_id INT,
-  new_region_id INT,
-  new_proof TEXT,
-  new_comment TEXT,
-  new_live BOOLEAN,
-  new_mod_note TEXT,
-  new_version INT
-)
-RETURNS BOOLEAN
-LANGUAGE sql
-AS $$
-  SELECT (
-    s.tas = new_tas AND
-    s.submitted_at = new_submitted_at AND
-    s.monkey_id = new_monkey_id AND
-    s.platform_id = new_platform_id AND
-    s.region_id = new_region_id AND
-    s.proof = new_proof AND
-    s.comment = new_comment AND
-    s.live = new_live AND
-    s.mod_note = new_mod_note AND
-    COALESCE(s.version, -1) <> COALESCE(new_version, -1)
-  )
-  FROM submission s
-  WHERE s.id = submission_id
-$$;
-
-CREATE POLICY "Enable admins to update version"
-ON submission 
-AS PERMISSIVE
-FOR UPDATE 
-TO authenticated 
-USING (is_admin()) 
-WITH CHECK (
-  is_only_version_changed(
-    submission.id,
-    submission.tas,
-    submission.submitted_at,
-    submission.monkey_id,
-    submission.platform_id,
-    submission.region_id,
-    submission.proof,
-    submission.comment,
-    submission.live,
-    submission.mod_note,
-    submission.version
-  )
-);
