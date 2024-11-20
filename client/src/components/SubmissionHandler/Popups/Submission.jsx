@@ -36,6 +36,10 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
   const COMMENT_ROWS = 2;
   const updateFieldText = "This field has been updated.";
   const immutableText = "This field cannot be updated.";
+  let chartUrl = `/games/${ game.abb }/${ category }/${ type }/${ submission.level.name }`;
+  if (game.version.length > 0) {
+    chartUrl += `?version=${ submission.version.version }`;
+  }
 
   /* ===== FUNCTIONS ===== */
 
@@ -72,7 +76,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
       { /* Header - render the basic submission information, and any report data, if the submission was reporeted */ }
       <div className={ styles.header }>
         <h1>
-          <Link to={ `/games/${ game.abb }/${ category }/${ type }/${ submission.level.name }` }>
+          <Link to={ chartUrl }>
             <FancyLevel level={ submission.level.name } />
           </Link>
         </h1>
