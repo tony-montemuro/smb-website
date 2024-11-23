@@ -1,9 +1,10 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts";
+import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import RPCRead from "../../database/read/RPCRead";
 import SubmissionRead from "../../database/read/SubmissionRead";
+import UrlHelper from "../../helper/UrlHelper";
 
 const SubmissionHistory = () => {
     /* ===== VARIABLES ===== */
@@ -19,6 +20,9 @@ const SubmissionHistory = () => {
 
     /* ===== CONTEXTS ===== */
 
+    // version state & set disable version dropdown function from game context
+    const { version, setDisableVersionDropdown } = useContext(GameContext);
+
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
 
@@ -31,6 +35,9 @@ const SubmissionHistory = () => {
     // database functions
     const { getChartSubmissionsByProfile } = SubmissionRead();
     const { getProfile } = RPCRead();
+
+    // helper functions
+    const { addAllExistingSearchParams } = UrlHelper();
 
     // FUNCTION 1: fetchProfile - code that is executed when the SubmissionHistory component mounts, to validate the URL path
     // PRECONDITIONS (1 parameter):
@@ -55,9 +62,11 @@ const SubmissionHistory = () => {
     // we query a highly filtered list of submissions according to the url path, and update the submissions state by calling the 
     // setSubmissions() function
     const fetchSubmissions = async () => {
+        setSubmissions(submissionsInit);
+
         try {
             // attempt to grab the submissions
-            const submissions = await getChartSubmissionsByProfile(abb, category, levelName, type, profileId);
+            const submissions = await getChartSubmissionsByProfile(abb, category, levelName, type, profileId, version?.id);
 
             // if query is successful, next split submissions into two arrays: normal, and tas, and update submission state
             const normal = submissions.filter(submission => !submission.tas);
@@ -66,6 +75,8 @@ const SubmissionHistory = () => {
 
         } catch (error) {
             addMessage("Failed to fetch some or all of Submission History data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
+        } finally {
+            setDisableVersionDropdown(false);
         }
     };
 
@@ -77,7 +88,9 @@ const SubmissionHistory = () => {
     // otherwise, the user will be navigated to the "other" submission history page for the other run type
     const handleTabClick = otherRunType => {
         if (runType !== otherRunType) {
-            navigateTo(`/games/${ abb }/${ category }/${ type }/${ levelName }/${ profileId }/${ otherRunType }`);
+            navigateTo(addAllExistingSearchParams(
+                `/games/${ abb }/${ category }/${ type }/${ levelName }/${ profileId }/${ otherRunType }`
+            ));
         }
     };
 

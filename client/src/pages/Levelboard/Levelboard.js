@@ -6,12 +6,13 @@ import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
 import FrontendHelper from "../../helper/FrontendHelper";
 import RPCRead from "../../database/read/RPCRead";
+import UrlHelper from "../../helper/UrlHelper";
 
 const Levelboard = () => {
 	/* ===== CONTEXTS ===== */
 
-	// game state from game context
-	const { game } = useContext(GameContext);
+	// game state, version state, & set disabled version dropdown function from game context
+	const { game, version, setDisableVersionDropdown } = useContext(GameContext);
 
 	// add message function from message context
 	const { addMessage } = useContext(MessageContext);
@@ -46,6 +47,7 @@ const Levelboard = () => {
 	// helper functions
 	const { getInclusiveDate } = DateHelper();
 	const { capitalize } = FrontendHelper();
+	const { addAllExistingSearchParams } = UrlHelper();
 
 	// FUNCTION 1: getPrevAndNext - get the previous and next level names
     // PRECONDTIONS (2 parameters):
@@ -185,7 +187,7 @@ const Levelboard = () => {
 
 		try {
 			// get chart submissions, & perform filters
-			const all = await getChartSubmissions(abb, category, levelName, type);
+			const all = await getChartSubmissions(abb, category, levelName, type, version?.id);
 			const filtered = getFiltered(filters, all);
 			const userSubmissions = user.profile ?
 				all
@@ -199,6 +201,8 @@ const Levelboard = () => {
 
 		} catch (error) {
 			addMessage("Failed to fetch / update chart data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+		} finally {
+			setDisableVersionDropdown(false);
 		}
 	};
 
@@ -223,7 +227,9 @@ const Levelboard = () => {
 	// otherwise, the user is navigated to the current level's other board
 	const handleTabClick = otherType => {
 		if (otherType !== type) {
-			navigateTo(`/games/${ abb }/${ category }/${ otherType }/${ levelName }`);
+			navigateTo(addAllExistingSearchParams(
+				`/games/${ abb }/${ category }/${ otherType }/${ levelName }`
+			));
 		}
 	};
 
@@ -237,13 +243,13 @@ const Levelboard = () => {
 		setupBoard({ ...board.filters, live });
 	};
 
-	// FUNCTION 7: getChartSearchParams - using url path information, generate the equivalent URLSearchParams object
+	// FUNCTION 8: getChartSearchParams - using url path information, generate the equivalent URLSearchParams object
 	// PRECONDITIONS: NONE
 	// POSTCONDITIONS (1 possible outcome):
 	// a URLSearchParams is defined with filters defined by the path, and returned
 	const getChartSearchParams = () => {
 		const searchParams = new URLSearchParams();
-		searchParams.append("game_id", abb);
+		searchParams.append("game_id", version ? `${ abb }_${ version.id }` : abb);
 		searchParams.append("category", category);
 		searchParams.append("score", type === "score");
 		searchParams.append("level_id", levelName);

@@ -40,6 +40,7 @@ import User from "./pages/User/User.jsx";
 import Users from "./pages/Users/Users.jsx";
 import UserLayout from "./components/UserLayout/UserLayout.jsx";
 import UserStats from "./pages/UserStats/UserStats.jsx";
+import Versions from "./pages/Versions/Versions.jsx";
 
 function App() {
   /* ===== STATES AND FUNCTIONS ===== */
@@ -158,6 +159,7 @@ function App() {
                   <Route path="game-assets" element={ <AssetsForm imageReducer={ imageReducer } /> } />
                   <Route path="summary" element={ <GameAddSummary imageReducer={ imageReducer } /> } />
                 </Route>
+                <Route path="versions" element={ <Versions imageReducer={ imageReducer } /> } />
               </Route>
               <Route path="moderator" element={ <ModeratorLayout /> } >
                 <Route index element={ <Moderator /> } />

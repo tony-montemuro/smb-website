@@ -59,13 +59,16 @@ const NotificationRead = () => {
                         position,
                         all_position,
                         tas,
-                        mod_note
+                        mod_note,
+                        version (id, version)
                     ),
                     level (
                         category, 
                         mode (
                             game (
-                                abb, name
+                                abb, 
+                                name,
+                                version (id)
                             )
                         ), 
                         name,
@@ -81,7 +84,8 @@ const NotificationRead = () => {
                     proof,
                     live,
                     comment,
-                    tas
+                    tas,
+                    version (id, version)
                 `,
                 { count: "exact" })
                 .order("notif_date", { ascending: false })

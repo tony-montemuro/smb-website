@@ -59,6 +59,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         setForm({ 
             values: {
                 submitted_at: dateB2F(submission.submitted_at),
+                version: submission.version ? submission.version.id.toString() : "",
                 region_id: submission.region.id.toString(),
                 monkey_id: submission.monkey.id.toString(),
                 platform_id: submission.platform.id.toString(),
@@ -153,15 +154,16 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     // if not a single form value is different than the value in submission, we return true
     // otherwise, return false
     const isFormUnchanged = () => {
-        return form.values.submitted_at === dateB2F(submission.submitted_at)
-            && form.values.region_id === submission.region.id.toString()
-            && form.values.monkey_id === submission.monkey.id.toString()
-            && form.values.platform_id === submission.platform.id.toString()
-            && form.values.proof === submission.proof
-            && form.values.live === submission.live
-            && form.values.tas === submission.tas
-            && form.values.comment === submission.comment
-            && form.values.mod_note === submission.mod_note;
+        return form.values.submitted_at === dateB2F(submission.submitted_at) &&
+            (!submission.version || form.values.version === submission.version.id.toString()) &&
+            form.values.region_id === submission.region.id.toString() &&
+            form.values.monkey_id === submission.monkey.id.toString() &&
+            form.values.platform_id === submission.platform.id.toString() &&
+            form.values.proof === submission.proof &&
+            form.values.live === submission.live &&
+            form.values.tas === submission.tas &&
+            form.values.comment === submission.comment &&
+            form.values.mod_note === submission.mod_note;
     };
 
     // FUNCTION 9: approveSubmission - function that runs when the user approves a submission with NO changes to it
@@ -210,8 +212,9 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         setSubmitting(true);
         try {
             // first, update submission with values from the form
-            const { message, submitted_at, ...payload } = form.values;
+            const { message, submitted_at, version, ...payload } = form.values;
             payload.submitted_at = getDateOfSubmission(form.values.submitted_at, submission.submitted_at);
+            payload.version = version !== "" ? version : null;
             await updateSubmission(payload, submission.id);
 
             // next, insert approval
@@ -225,7 +228,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         } catch (error) {
             if (error.message === "approve") {
                 addMessage("There was a problem approving this submission.", "error", 7000);
-            } else {
+            } else { 
                 addMessage("There was a problem updating this submission.", "error", 7000);
             }
         } finally {
@@ -274,7 +277,8 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
                     profile_id: submission.profile.id,
                     creator_id: user.profile.id,
                     notif_type: "delete",
-                    tas: submission.tas
+                    tas: submission.tas,
+                    version_id: submission.version?.id ?? null
                 };
                 await insertNotification(notification);
             }
@@ -287,6 +291,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
             if (error.message === "delete") {
                 addMessage("There was a problem deleting this submission.", "error", 7000);
             } else {
+                console.log(error); 
                 addMessage("The submission successfully was rejected, but the notification system failed to notify the user.", "error", 10000);
             }
         } finally {

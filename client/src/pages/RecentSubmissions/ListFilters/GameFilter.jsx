@@ -1,4 +1,5 @@
 /* ===== IMPORTS ===== */
+import { useEffect } from "react";
 import styles from "./ListFilters.module.css";
 import GameFilterLogic from "./GameFilter.js";
 import GameSearch from "../../../components/GameSearch/GameSearch.jsx";
@@ -6,11 +7,19 @@ import GameRow from "../../../components/GameRow/GameRow.jsx";
 import Items from "../../../components/Items/Items.jsx";
 import Loading from "../../../components/Loading/Loading.jsx";
 
-function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispatchFiltersData }) {
+function GameFilter({ searchParams, setSearchParams, imageReducer, globalGames, updateGlobalGames }) {
   /* ===== FUNCTIONS ===== */
   
   // functions from the js file
-  const { addGame, removeGame, resetFilter, closePopupAndUpdate } = GameFilterLogic(games, dispatchFiltersData);
+  const { 
+    games,
+    syncGames,
+    addGame,
+    removeGame,
+    resetFilter,
+    updateVersion,
+    closePopupAndUpdate
+  } = GameFilterLogic(updateGlobalGames);
 
   /* ===== VARIABLES ===== */
   const GAMES_PER_PAGE = 20;
@@ -18,6 +27,14 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
     useCard: false,
     onGameRowClick: addGame
   };
+
+  /* ===== EFFECTS ===== */
+
+  // code that is executed when the component mounts
+  useEffect(() => {
+    syncGames(globalGames);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ===== GAME FILTER COMPONENT ===== */
   return (
@@ -46,6 +63,11 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, games, dispat
                       onClick={ removeGame }
                       index={ index }
                       key={ game.abb }
+                      versionsData={{
+                        version: game.version,
+                        versions: game.versions,
+                        onChange: updateVersion
+                      }}
                     />
                   );
                 })}

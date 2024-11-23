@@ -6,13 +6,14 @@ import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import LevelHelper from "../../../helper/LevelHelper.js";
 
-function Records({ rankings }) {
+function Records({ rankings, game, version }) {
   /* ===== VARIABLES ===== */
   const location = useLocation();
   const path = location.pathname.split("/");
   const abb = path[3];
   const category = path[4];
   const type = path[5];
+  const isLatestVersion = !version || version.id === game.versions?.at(-1).id;
 
   /* ===== FUNCTIONS ===== */
   const { capitalize, recordB2F, dateB2F } = FrontendHelper();
@@ -44,10 +45,15 @@ function Records({ rankings }) {
                 { /* Table body - Renders the information itself */ }
                 <tbody>
                   { rankings[mode].map(row => {
+                    let levelUrl = `/games/${ abb }/${ category }/${ type }/${ row.level.name }`;
+                    if (!isLatestVersion) {
+                      levelUrl += `?version=${ version.version }`;
+                    }
+
                     return (
                       <tr key={ row.level.name }>
                         <td className={ styles.name }>
-                          <Link to={ `/games/${ abb }/${ category }/${ type }/${ row.level.name }` }>
+                          <Link to={ levelUrl }>
                             <FancyLevel level={ row.level.name } />
                           </Link>
                         </td>

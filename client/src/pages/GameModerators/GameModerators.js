@@ -32,7 +32,7 @@ const GameModerators = () => {
     // FUNCTION 1: queryGames - code that is executed when the `GameModerators` component mounts, or when the game state is updated
     // PRECONDITIONS: NONE
     // POSTCONDITIONS (2 possible outcomes):
-    // if the games are successfully queried, simply update the `game` & `games state by calling the `setGame` & `setGames` setter functions
+    // if the games are successfully queried, simply update the `game` & `games` state by calling the `setGame` & `setGames` setter functions
     // if the games are unsuccessfully queried, render an error message, which should keep the component loading
     const queryGames = async () => {
         try {

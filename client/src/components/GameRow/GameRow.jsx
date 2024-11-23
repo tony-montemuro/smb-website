@@ -5,17 +5,19 @@ import BoxArt from "../BoxArt/BoxArt.jsx";
 import StylesHelper from "../../helper/StylesHelper.js";
 
 function GameRow({ 
-    game, 
-    imageReducer, 
-    useCard, 
-    onClick = undefined, 
-    index = 0, 
+    game,
+    imageReducer,
+    useCard,
+    onClick = undefined,
+    index = 0,
     extraContent = undefined,
-    selectedGame = undefined
+    selectedGame = undefined,
+    versionsData = undefined
   }) {
   /* ===== VARIABLES ===== */
   const BOX_WIDTH = useCard ? 200 : 50;
   const name = extraContent ? game.name + " " + extraContent : game.name;
+  const isRenderVersion = versionsData?.versions && versionsData.versions.length > 0 ? true : false;
 
   /* ===== FUNCTIONS ===== */
 
@@ -30,7 +32,9 @@ function GameRow({
       <div className={ styles.card } style={ { width: `${ BOX_WIDTH }px` } }>
         <Link to={ { pathname: `/games/${ game.abb }` } }>
           <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
-          <p>{ name }</p>
+          <div className="center">
+            <p>{ name }</p>
+          </div>
         </Link>
       </div>
     );
@@ -43,8 +47,24 @@ function GameRow({
         className={ `${ styles.item } ${ selectedGame && game.abb === selectedGame ? styles.selected : indexToParity(index) }` }
         onClick={ onClick ? () => onClick(game) : null }
       >
-        <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
-        <p>{ name } </p>
+        <div className={ styles.game }>
+          <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
+          <p>{ name } </p>
+        </div>
+
+        { isRenderVersion && 
+          <select 
+            id={ `${ game.abb }_version` }
+            onClick={ e => e.stopPropagation() } 
+            onChange={ versionsData.onChange } 
+            value={ versionsData.version }
+          >
+            <option value={ "" }>All</option>
+            { versionsData.versions.map(version => (
+              <option value={ version.id } key={ version.id }>{ version.version }</option>
+            ))}
+          </select>
+        }
       </div>
     );
 

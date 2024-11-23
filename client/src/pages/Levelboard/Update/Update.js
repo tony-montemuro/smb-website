@@ -83,8 +83,8 @@ const Update = (level, setSubmitting) => {
 
     /* ===== CONTEXTS ===== */
 
-    // game state from game context
-    const { game } = useContext(GameContext);
+    // game state, version state, & handle version change function from game context
+    const { game, version, handleVersionChange } = useContext(GameContext);
 
     // close popup function from popup context
     const { closePopup } = useContext(PopupContext);
@@ -124,7 +124,8 @@ const Update = (level, setSubmitting) => {
             category: category,
             submitted_at: dateB2F(submission.submitted_at),
             tas: submission.tas,
-            approved: submission.approve ? true : false
+            approved: submission.approve ? true : false,
+            version: submission.version ?? ""
         };
     }
 
@@ -185,9 +186,10 @@ const Update = (level, setSubmitting) => {
     // otherwise, return false
     const isFormUnchanged = () => {
         return form.values.submitted_at === dateB2F(form.submission.submitted_at)
-            && parseInt(form.values.region_id) === form.submission.region.id
+            && parseInt(form.values.version) === form.submission.version
             && parseInt(form.values.monkey_id) === form.submission.monkey.id
             && parseInt(form.values.platform_id) === form.submission.platform.id
+            && parseInt(form.values.region_id) === form.submission.region.id
             && form.values.proof === form.submission.proof
             && form.values.live === form.submission.live
             && form.values.tas === form.submission.tas
@@ -215,11 +217,13 @@ const Update = (level, setSubmitting) => {
             all_position,
             profile_id,
             approved,
+            version,
             ...updatedData 
         } = formVals;
 
         // add additional fields to submission object
         updatedData.submitted_at = date;
+        updatedData.version = version ? version : null
 
         return updatedData;
     };
@@ -262,9 +266,16 @@ const Update = (level, setSubmitting) => {
 		const updatedData = getUpdateFromForm(form.values, backendDate);
         const id = submission.id;
         try {
-            // attempt to update the submission using updated data, and update the board
             await updateSubmission(updatedData, id);
-            await updateBoard();
+
+            // if user submits with a version that differs from the current version, then we want to update the version
+            // this action will automatically update the board, so we can rely on that instead of updating directly
+            const submissionVersion = updatedData.version;
+            if (submissionVersion !== null && submissionVersion !== parseInt(version?.id)) {
+                handleVersionChange(submissionVersion);
+            } else {
+                await updateBoard();
+            }
 
             // finally, let the user know that they successfully submitted their submission, and close the popup
             addMessage("Your submission was successfully updated!", "success", 5000);

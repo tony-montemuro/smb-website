@@ -1,11 +1,14 @@
 /* ===== IMPORTS ===== */
-import { MessageContext } from "../../utils/Contexts"; 
+import { GameContext, MessageContext } from "../../utils/Contexts"; 
 import { useContext, useState } from "react";
 import GameHelper from "../../helper/GameHelper";
 import RPCRead from "../../database/read/RPCRead";
 
 const Totalizer = () => {
     /* ===== CONTEXTS ===== */
+
+    // version state & set disable version dropdown function from game context
+    const { version, setDisableVersionDropdown } = useContext(GameContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -38,12 +41,14 @@ const Totalizer = () => {
         // then, attempt to query the database for the totals data: both for all submissions, and live-only submissions
         try {
             const promises = [false, true].map(liveOnly => {
-                return getTotals(game.abb, category, type, liveOnly);
+                return getTotals(game.abb, category, type, liveOnly, version?.id);
             });
             const [all, live] = await Promise.all(promises);
             setTotals({ all, live });
         } catch (error) {
 			addMessage("Failed to fetch totalizer data. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
+        } finally {
+            setDisableVersionDropdown(false);
         };
     };
 

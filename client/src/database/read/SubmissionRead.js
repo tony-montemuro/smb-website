@@ -41,7 +41,12 @@ const SubmissionRead = () => {
                 proof,
                 record,
                 score,
-                tas
+                tas,
+                version (
+                    id,
+                    sequence,
+                    version
+                )
             `,
             { count: "exact" }
             )
@@ -60,7 +65,34 @@ const SubmissionRead = () => {
 
                 // add an `in` method for each key => value pair
                 Object.keys(filters).forEach(key => {
-                    query = query.in(key, filters[key]);
+                    // special case: each game_id might also include a version, so we need to add an aditional
+                    // filter for that, if applicable
+                    if (key === "game_id") {
+                        let versioned = [], versionless = [];
+
+                        filters[key].forEach(value => {
+                            const [game, version] = value.split("_");
+                            if (version) {
+                                versioned.push(`and(game_id.eq.${ game },version.eq.${ version })`);
+                            } else {
+                                versionless.push(game);
+                            }
+                        });
+
+                        versioned = versioned.join(",");
+                        versionless = versionless.length > 0 && `game_id.in.(${ versionless.join(",") })`;
+
+                        let condition = "";
+                        if (versioned.length > 0 && versionless.length > 0) {
+                            condition = `${ versioned },${ versionless }`;
+                        } else {
+                            condition = versioned.length > 0 ? versioned : versionless;
+                        }
+
+                        query = query.or(condition);
+                    } else {
+                        query = query.in(key, filters[key]);
+                    }
                 });
             }
 
@@ -85,64 +117,77 @@ const SubmissionRead = () => {
     };
 
     // FUNCTION 2: getChartSubmissionsByProfile - function that fetches all submissions by a particular user on a particular chart
-    // PRECONDITIONS (4 parameters):
+    // PRECONDITIONS (6 parameters):
     // 1.) abb: a string that uniquely identifies a game
     // 2.) category: a string representing a valid category name
     // 3.) level: a string representing a valid level belonging to { abb, category } combination
     // 4.) type: a string, either "score" or "time"
     // 5.) profileId: the id of the profile who's submissions we seek to fetch
+    // 6.) version: an int OR undefined: an int if game has versions, otherwise undefined
     // POSTCONDITIONS (2 possible outcomes):
     // if the query is successful, the list of submissions belonging to the user on the particular chart, sorted in descending
     // order by the `submitted_at` field, is returned
     // otherwise, this function will throw an error, which is to be handled by the caller function
-    const getChartSubmissionsByProfile = async (abb, category, level, type, profileId) => {
-        try {
-            const { data: submissions, error } = await supabase
-                .from("submission")
-                .select(`
-                    all_position,
-                    approve (
-                        creator_id
-                    ),
-                    comment,
+    const getChartSubmissionsByProfile = async (abb, category, level, type, profileId, version) => {
+        const query = supabase
+            .from("submission")
+            .select(`
+                all_position,
+                approve (
+                    creator_id
+                ),
+                comment,
+                id,
+                live,
+                mod_note,
+                monkey (
+                    id, 
+                    monkey_name
+                ),
+                platform (
+                    id, 
+                    platform_abb, 
+                    platform_name
+                ),
+                position,
+                profile (
+                    country,
                     id,
-                    live,
-                    mod_note,
-                    monkey (
-                        id, 
-                        monkey_name
-                    ),
-                    platform (
-                        id, 
-                        platform_abb, 
-                        platform_name
-                    ),
-                    position,
-                    profile (
-                        country,
-                        id,
-                        username
-                    ),
-                    proof,
-                    record,
-                    region (
-                        id, 
-                        region_name
-                    ),
-                    report (
-                        creator_id
-                    ),
-                    score,
-                    submitted_at,
-                    tas
-                `)
-                .eq("game_id", abb)
-                .eq("category", category)
-                .eq("level_id", level)
-                .eq("score", type === "score")
-                .eq("profile_id", profileId)
-                .order("submitted_at", { ascending: false })
-                .order("id", { ascending: false });
+                    username
+                ),
+                proof,
+                record,
+                region (
+                    id, 
+                    region_name
+                ),
+                report (
+                    creator_id
+                ),
+                score,
+                submitted_at,
+                tas,
+                version (
+                    id,
+                    version
+                )
+            `)
+            .eq("game_id", abb)
+            .eq("category", category)
+            .eq("level_id", level)
+            .eq("score", type === "score")
+            .eq("profile_id", profileId);
+
+        if (version) {
+            query.eq("version", version);
+        }
+
+        query
+            .order("submitted_at", { ascending: false })
+            .order("id", { ascending: false });
+        
+        try {
+            const { data: submissions, error } = await query;
 
             // error handling
             if (error) {

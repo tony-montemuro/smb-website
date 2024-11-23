@@ -1,4 +1,5 @@
 /* ===== IMPORTS ===== */
+import { useEffect } from "react";
 import styles from "./ListFilters.module.css";
 import Items from "../../../components/Items/Items.jsx";
 import Loading from "../../../components/Loading/Loading.jsx";
@@ -6,11 +7,11 @@ import UserFilterLogic from "./UserFilter.js";
 import UserSearch from "../../../components/UserSearch/UserSearch.jsx";
 import UserRow from "../../../components/UserRow/UserRow.jsx";
 
-function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData }) {
+function UserFilter({ searchParams, setSearchParams, globalUsers, updateGlobalUsers }) {
   /* ===== FUNCTIONS ===== */
   
   // functions from the js file
-  const { addUser, removeUser, resetFilter, closePopupAndUpdate } = UserFilterLogic(users, dispatchFiltersData);
+  const { syncUsers, users, addUser, removeUser, resetFilter, closePopupAndUpdate } = UserFilterLogic(updateGlobalUsers);
 
   /* ===== VARIABLES ===== */
   const USERS_PER_PAGE = 20;
@@ -18,6 +19,14 @@ function UserFilter({ searchParams, setSearchParams, users, dispatchFiltersData 
     disableLink: true,
     onUserRowClick: addUser
   };
+
+  /* ===== EFFECTS ===== */
+
+  // code that is executed on component mount
+  useEffect(() => {
+    syncUsers(globalUsers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   /* ===== USER FILTER COMPONENT ===== */
   return (

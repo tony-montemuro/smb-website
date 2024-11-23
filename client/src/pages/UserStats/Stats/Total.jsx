@@ -41,10 +41,10 @@ function Total({ total, filter, decimalPlaces }) {
       :
         filter === "live" ?
           // If the filter is set to live, render this message.
-          <span><i>This user has not submitted any live records to this category.</i></span>
+          <span><i>This user has not submitted any live records to this category and version.</i></span>
         :
           // Otherwise, render this message.
-          <span><i>This user has not submitted to this category.</i></span>
+          <span><i>This user has not submitted to this category and version.</i></span>
       }
     </div>
   );

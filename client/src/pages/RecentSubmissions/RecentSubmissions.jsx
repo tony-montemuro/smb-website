@@ -11,13 +11,14 @@ import RecentSubmissionsTable from "../../components/RecentSubmissionsTable/Rece
 import UserFilter from "./ListFilters/UserFilter.jsx";
 
 function RecentSubmissions({ imageReducer }) {
-  /* ===== VARIABLES ===== */
-  const NUM_SUBMISSIONS = 100;
-
   /* ===== CONTEXTS ===== */
 
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
+
+  /* ===== VARIABLES ===== */
+  const NUM_SUBMISSIONS = 100;
+  const categories = appData?.categories;
 
   /* ===== STATES & FUNCTIONS ===== */
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,7 +27,14 @@ function RecentSubmissions({ imageReducer }) {
   const [otherPopup, setOtherPopup] = useState(undefined);
 
   // states & functions from the js file
-  const { filtersData, dispatchFiltersData, fetchGames, fetchUsers } = RecentSubmissionsLogic();
+  const {
+    updateGames,
+    updateUsers,
+    updateCategories,
+    filtersData,
+    fetchGames,
+    fetchUsers 
+  } = RecentSubmissionsLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -39,9 +47,11 @@ function RecentSubmissions({ imageReducer }) {
 
   // code that is executed when the component mounts, and when the `appData.categories` state updates
   useEffect(() => {
-    dispatchFiltersData({ type: "categories", value: appData.categories });
+    if (categories) {
+      updateCategories(appData.categories)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appData.categories]);
+  }, [categories]);
 
   /* ===== RECENT SUBMISSIONS COMPONENT ===== */
   return (
@@ -53,16 +63,16 @@ function RecentSubmissions({ imageReducer }) {
           searchParams={ searchParams } 
           setSearchParams={ setSearchParams } 
           imageReducer={ imageReducer }
-          games={ filtersData.games }
-          dispatchFiltersData={ dispatchFiltersData }
+          globalGames={ filtersData.games }
+          updateGlobalGames={ updateGames }
         />
       </Popup>
       <Popup renderPopup={ userPopup } setRenderPopup={ setUserPopup } width="1200px" >
         <UserFilter 
           searchParams={ searchParams } 
           setSearchParams={ setSearchParams }
-          users={ filtersData.users }
-          dispatchFiltersData={ dispatchFiltersData }
+          globalUsers={ filtersData.users }
+          updateGlobalUsers={ updateUsers }
         />
       </Popup>
       <Popup renderPopup={ otherPopup } setRenderPopup={ setOtherPopup } width="1200px" >

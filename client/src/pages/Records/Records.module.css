@@ -22,6 +22,11 @@
     justify-content: center;
 }
 
+#live {
+    width: var(--vanilla-checkbox-length);
+    height: var(--vanilla-checkbox-length);
+}
+
 /* ===== MEDIA QUERY FOR SMALLER DEVICE ===== */
 
 @media (max-width: 550px) {

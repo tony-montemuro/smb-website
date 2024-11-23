@@ -40,15 +40,13 @@ function SubmissionHistory() {
 
   /* ===== CONTEXTS ===== */
 
-  // game state from game context
-  const { game } = useContext(GameContext);
+  // game state, version state, & set disable version dropdown function from game context
+  const { game, version, setDisableVersionDropdown } = useContext(GameContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES & FUNCTIONS ====== */
-
-  // states
   const [level, setLevel] = useState(undefined);
   const [profile, setProfile] = useState(undefined);
   const [detailSubmission, setDetailSubmission] = useState(undefined);
@@ -91,6 +89,15 @@ function SubmissionHistory() {
     setRunType(runTypeParam);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
+
+  // code that is executed when the version state changes
+  useEffect(() => {
+    if (submissions[runType]) {
+      setDisableVersionDropdown(true);
+      fetchSubmissions();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
  
   /* ===== RECORD HISTORY COMPONENT ===== */
   return (

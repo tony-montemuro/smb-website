@@ -658,6 +658,11 @@ const StructureForm = (chartDefaults, setChartDefaults) => {
             id = "ascending";
         }
 
+        // special case: if id is time, and value is defined, we need to parse value to an integer
+        if (id === "time" && value !== "") {
+            value = parseInt(value);
+        }
+
         setChartDefaults({ ...chartDefaults, [id]: value });
     };
 

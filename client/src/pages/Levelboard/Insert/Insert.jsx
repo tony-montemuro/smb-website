@@ -120,6 +120,22 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                   }
                 }}
               />
+              { game.version.length > 0 &&
+                <TextField
+                  fullWidth
+                  id="version"
+                  label="Game Version"
+                  select
+                  SelectProps={{ native: true }}
+                  onChange={ handleChange }
+                  value={ form.values.version }
+                  variant="filled"
+                >
+                  { game.version.map(version => (
+                    <option value={ version.id } key={ version.id }>{ version.version }</option>
+                  ))}
+                </TextField>
+              }
               <TextField
                 fullWidth
                 id="monkey_id"
@@ -163,6 +179,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 ))}
               </TextField>
               <TextField
+                autoComplete="off"
                 color={ form.error.proof ? "error" : "primary" }
                 fullWidth
                 helperText={ form.error.proof ? form.error.proof : "A proof is highly recommended!" }

@@ -21,7 +21,7 @@ function Support() {
       <ul>
         <li>Creating news posts to announce developments within the community</li>
         <li>Adding/removing game moderators</li>
-        <li>Adding charts for new Monkey Ball games <em>[Coming Soon]</em></li> 
+        <li>Adding charts for new Monkey Ball games</li> 
       </ul>
       <p>Site Administrators are also well-trusted, meaning that changes they suggest are most likely to be implemented.</p>
       <p>To become an adiminstrator, start by offering to moderate at least one game. Develop enough trust over time, and you may earn the privilege of site administrator!</p>

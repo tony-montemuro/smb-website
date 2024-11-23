@@ -30,6 +30,7 @@ function Administrator() {
           <li>Perform moderation action for <strong>any</strong> game</li>
           <li><strong>Add new games</strong> to the website</li>
           <li><strong>Add</strong> and <strong>remove</strong> game moderators</li>
+          <li><strong>Add versions</strong> to games with multiple versions</li>
           <li><strong>Create</strong> site-wide posts</li>
         </ul>
         <p>Administrators also have direct contact to other administrators through Discord, which you can use to coordinate site-wide actions, such as getting new games added, handling problematic users, etc.</p>

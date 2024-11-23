@@ -26,6 +26,7 @@ function SubmissionRow({ submission, onClick, isUnapproved }) {
   const creator = !isUnapproved ? submission.report.creator : undefined;
   const type = submission.score ? "score" : "time";
   const { name: categoryName } = appData.categories[level.category];
+  const version = submission.version?.version;  
 
   /* ===== SUBMISSION ROW COMPONENT ===== */
   return (
@@ -72,6 +73,13 @@ function SubmissionRow({ submission, onClick, isUnapproved }) {
       <td>
         <div>{ recordB2F(submission.record, type, level.timer_type) }</div>
       </td>
+
+      { /* Render the version */ }
+      { version &&
+        <td>
+          <div>{ version }</div>
+        </td>
+      }
       
     </tr>
   );

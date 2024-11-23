@@ -1,10 +1,11 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import GameHelper from "../../helper/GameHelper";
 import RPCRead from "../../database/read/RPCRead";
 
-const UserStats = (decimalPlaces) => {
+const UserStats = (decimalPlaces, setVersion) => {
     /* ===== CONTEXTS ===== */
 
     // add message function from message context
@@ -12,6 +13,7 @@ const UserStats = (decimalPlaces) => {
 
     /* ===== STATES ===== */
     const [stats, setStats] = useState(undefined);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     /* ===== FUNCTIONS ===== */
 
@@ -40,17 +42,18 @@ const UserStats = (decimalPlaces) => {
     };
 
     // FUNCTION 2: fetchUserStats - given path information & game object, fetch the stats object
-    // PRECONDITIONS (3 parameters):
+    // PRECONDITIONS (5 parameters):
     // 1.) game: an object containing information about the game defined in the path
     // 2.) profileId: an integer representing the id of the user who's info we want to query
     // 3.) category: the current category. category is fetched from the URL
     // 4.) type: the current type, either "time" or "score". type is fetched from the URL
+    // 5.) version: an integer representing the id of the version who's submission we want to grab from
     // POSTCONDITIONS (1 possible outcome):
     // if all queries succeed, we generate two separate userStats objects. these two objects are then combined to form 'stats',
     // a single object which contains both user stats objects. the setStats() function is called to update the stats object
     // if the submissions fail to be retrieved, an error message is rendered to the user, and the stats state is NOT updated, 
     // leaving the UserStats component stuck loading
-    const fetchUserStats = async (game, profileId, category, type) => {
+    const fetchUserStats = async (game, profileId, category, type, version) => {
         // first, reset stats state to default value (undefined), unpack path parameter, and define our stats
         // collection objects
         setStats(undefined);
@@ -58,11 +61,11 @@ const UserStats = (decimalPlaces) => {
         try {
             // get create our array of promises, and make concurrent call to database for all user data we need
             let promises = [false, true].map(liveOnly => {
-                return getTotals(game.abb, category, type, liveOnly);
+                return getTotals(game.abb, category, type, liveOnly, version);
             });
-            promises.push(getMedals(game.abb, category, type));
+            promises.push(getMedals(game.abb, category, type, version));
             promises = promises.concat([false, true].map(liveOnly => {
-                return getUserRankings(game.abb, category, type, liveOnly, profileId);
+                return getUserRankings(game.abb, category, type, liveOnly, profileId, version);
             }));
             const [allTotals, liveTotals, medals, allRankings, liveRankings] = await Promise.all(promises);
 
@@ -92,9 +95,30 @@ const UserStats = (decimalPlaces) => {
         };
     };
 
+    // FUNCTION 3: handleVersionChange - code that is executed when the user changes the game version
+    // PRECONDITIONS (2 parameters):
+    // 1.) e: the event object generated when the user selects a new version
+    // 1.) game: an object containing information about the game defined in the path
+    // POSTCONDITIONS (1 possible outcome):
+    // the version is updated given the information in `e.target`
+    const handleVersionChange = (e, game) => {
+        // determine version
+        const { value } = e.target;
+        const id = parseInt(value);
+        const version = game.versions.find(version => version.id === id);
+       
+        // next, update version search param
+        const params = Object.fromEntries(searchParams);
+        setSearchParams({ ...params, version: version.version });
+
+        // finally, update version state
+        setVersion(version);
+    }
+
     return { 
         stats,
-        fetchUserStats
+        fetchUserStats,
+        handleVersionChange
     };
 };
 

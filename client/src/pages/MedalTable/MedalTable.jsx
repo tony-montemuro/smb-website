@@ -16,6 +16,7 @@ import PlatinumIcon from "../../assets/svg/Icons/PlatinumIcon.jsx";
 import ScrollHelper from "../../helper/ScrollHelper";
 import SilverIcon from "../../assets/svg/Icons/SilverIcon.jsx";
 import TableContent from "../../components/TableContent/TableContent.jsx";
+import UrlHelper from "../../helper/UrlHelper.js";
 
 function MedalTable({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -23,8 +24,8 @@ function MedalTable({ imageReducer }) {
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
 
-  // game state from game context
-  const { game } = useContext(GameContext);
+  // game state, version state, & set disable version dropdown function from game context
+  const { game, version, setDisableVersionDropdown } = useContext(GameContext);
   
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -33,6 +34,7 @@ function MedalTable({ imageReducer }) {
   const { capitalize } = FrontendHelper();
   const { getGameCategories, getCategoryTypes } = GameHelper();
   const { scrollToTop } = ScrollHelper();
+  const { addAllExistingSearchParams } = UrlHelper();
 
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 6;
@@ -66,16 +68,17 @@ function MedalTable({ imageReducer }) {
   // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
     // special case #1: we are attempting to access a medals page with a non-valid or non-practice mode category
+    const gameUrl = addAllExistingSearchParams(`/games/${ abb }`);
     if (!(gameCategories.includes(category) && isPracticeMode)) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 
     // special case #2: we are attempting to access a medals page with a valid category, but an invalid type
     if (!(types.includes(type))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 
@@ -84,6 +87,15 @@ function MedalTable({ imageReducer }) {
     scrollToTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
+
+  // code that executes when the version changes
+  useEffect(() => {
+    if (medalTable) {
+      setDisableVersionDropdown(true);
+      fetchMedals(abb, category, type);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
       
   /* ===== MEDALS COMPONENT ===== */
   return (
@@ -120,7 +132,7 @@ function MedalTable({ imageReducer }) {
             { medalTable ?
               <TableContent 
                 items={ medalTable } 
-                emptyMessage="There have been no live submissions to this game's category!"
+                emptyMessage="There have been no live submissions to this game's category or version!"
                 numCols={ TABLE_LENGTH }
               >
                 { medalTable.slice((pageNum-1)*USERS_PER_PAGE, pageNum*USERS_PER_PAGE).map(row => {

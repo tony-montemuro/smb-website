@@ -3,20 +3,40 @@
 }
 
 .card p {
+    width: 200px;
     text-align: center;
 }
 
 .item {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 5px;
+    justify-content: space-between;
     padding: 8px 4px;
 }
 
 .item:not(.selected):hover {
     background-color: rgba(var(--color-container-selected), 0.5);
     cursor: pointer;
+}
+
+.item select {
+    padding: 3px;
+}
+
+.item select:focus {
+    outline-width: 0;
+}
+
+.game {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.itemContent {
+    display: flex;
+    justify-content: space-between;
 }
 
 .selected {

@@ -25,6 +25,11 @@
     gap: 10px;
 }
 
+.body input[type="checkbox"] {
+    width: var(--vanilla-checkbox-length);
+    height: var(--vanilla-checkbox-length);
+}
+
 .body input[type="checkbox"]:disabled {
     cursor: auto;
 }

@@ -10,6 +10,7 @@ import Loading from "../../components/Loading/Loading.jsx";
 import RecordsLogic from "./Records.js";
 import RecordTable from "./RecordTable/RecordTable.jsx";
 import ScrollHelper from "../../helper/ScrollHelper";
+import UrlHelper from "../../helper/UrlHelper.js";
 
 function Records() {
   /* ===== CONTEXTS ===== */
@@ -17,8 +18,8 @@ function Records() {
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
 
-  // game state from game context
-  const { game } = useContext(GameContext);
+  // game state, version state, & set disable version dropdown function from game context
+  const { game, version, setDisableVersionDropdown } = useContext(GameContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -27,6 +28,7 @@ function Records() {
   const { capitalize } = FrontendHelper();
   const { getGameCategories, getCategoryTypes } = GameHelper();
   const { scrollToTop } = ScrollHelper();
+  const { addAllExistingSearchParams } = UrlHelper();
 
   /* ===== VARIABLES ===== */
   const navigateTo = useNavigate();
@@ -55,16 +57,17 @@ function Records() {
   // code that is executed when the component mounts, or when the user switches between score and time
   useEffect(() => {
     // special case #1: we are attempting to access a records page with a non-valid category
+    const gameUrl = addAllExistingSearchParams(`/games/${ abb }`);
     if (!(gameCategories.includes(category))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 
     // special case #2: we are attempting to access a records page with a valid category, but an invalid type
     if (!(types.includes(type))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 
@@ -74,6 +77,15 @@ function Records() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
+  // code that is executed when the version state changes
+  useEffect(() => {
+    if (recordTable) {
+      setDisableVersionDropdown(true);
+      fetchRecords(game, category, type);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
+
   /* ===== RECORDS COMPONENT ===== */
   return (
     <Container title={ `${ capitalize(type) } World Records` } largeTitle>
@@ -82,9 +94,9 @@ function Records() {
       <div className={ styles.header }>
         <h2>{ categoryName }</h2>
         <div className={ styles.filter }>
-          <label htmlFor="live">Live-records only: </label>
+          <label htmlFor={ styles.live }>Live-records only: </label>
           <input
-            id="live"
+            id={ styles.live }
             type="checkbox"
             checked={ filter === "live" }
             onChange={ () => setFilter(filter === "live" ? "all" : "live") }

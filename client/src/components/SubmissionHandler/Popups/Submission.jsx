@@ -36,6 +36,10 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
   const COMMENT_ROWS = 2;
   const updateFieldText = "This field has been updated.";
   const immutableText = "This field cannot be updated.";
+  let chartUrl = `/games/${ game.abb }/${ category }/${ type }/${ submission.level.name }`;
+  if (game.version.length > 0) {
+    chartUrl += `?version=${ submission.version.version }`;
+  }
 
   /* ===== FUNCTIONS ===== */
 
@@ -72,7 +76,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
       { /* Header - render the basic submission information, and any report data, if the submission was reporeted */ }
       <div className={ styles.header }>
         <h1>
-          <Link to={ `/games/${ game.abb }/${ category }/${ type }/${ submission.level.name }` }>
+          <Link to={ chartUrl }>
             <FancyLevel level={ submission.level.name } />
           </Link>
         </h1>
@@ -149,6 +153,24 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                   }
                 }}
               />
+              { game.version.length > 0 &&
+                <TextField
+                  color={ parseInt(form.values.version) !== submission.version.id ? "success" : "primary" }
+                  fullWidth
+                  helperText={ parseInt(form.values.version) !== submission.version.id ? updateFieldText : null }
+                  id="version"
+                  label="Game Version"
+                  select
+                  SelectProps={{ native: true }}
+                  onChange={ handleChange }
+                  value={ form.values.version }
+                  variant="filled"
+                >
+                  { game.version.map(version => (
+                    <option value={ version.id } key={ version.id } >{ version.version }</option>
+                  ))}
+                </TextField>
+              }
               <TextField
                 color={ parseInt(form.values.monkey_id) !== submission.monkey.id ? "success" : "primary" }
                 fullWidth
@@ -198,6 +220,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 ))}
               </TextField>
               <TextField 
+                autoComplete="off"
                 color={ form.error.proof ? "error" : (form.values.proof !== submission.proof ? "success" : "primary") }
                 fullWidth
                 helperText={ form.error.proof ? form.error.proof : (form.values.proof !== submission.proof ? updateFieldText : null) }

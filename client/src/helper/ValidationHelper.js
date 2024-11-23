@@ -1,6 +1,13 @@
 /* ===== IMPORTS ===== */
 import { emailPattern } from "../utils/RegexPatterns";
-import { twitterPatttern, twitchPattern, youtubePattern, imgurPattern, googleDrivePattern } from "../utils/RegexPatterns";
+import { 
+    twitterPatttern,
+    twitchPattern,
+    youtubePattern,
+    imgurPattern,
+    googleDrivePattern,
+    versionPattern
+} from "../utils/RegexPatterns";
 
 const ValidationHelper = () => {
     /* ===== FUNCTIONS ===== */
@@ -65,7 +72,38 @@ const ValidationHelper = () => {
         return undefined;
     };
 
-    return { validateEmail, validateVideoUrl, validateDate, validateLive };
+    // FUNCTION 5: validateVersion - code that validates a version is correctly formatted
+    // PRECONDITIONS (2 parameters):
+    // 1.) version: a version string, entered by a user
+    // 2.) versions: an array of versions
+    // 3.) sequence: an optional integer parameter, which represents the sequence of the version we are currently validating
+    // POSTCONDITIONS (2 possible outcomes):
+    // the function returns a string containing an error message if validation fails
+    // otherwise, this function returns undefined, meaning no issues
+    const validateVersion = (version, versions, sequence = undefined) => {
+        // check if version is well-formed
+        if (!versionPattern.test(version)) {
+            return "Version must consist of letters, numbers, and periods (.), and cannot start with a period (.).";
+        }
+
+        let filteredVersions;
+        if (sequence !== undefined) {
+            filteredVersions = versions.filter(version => version.sequence !== sequence);
+        } else {
+            filteredVersions = versions;
+        }
+
+        // check for uniqueness
+        for (const v of filteredVersions) {
+            if (v.version === version) {
+                return "Version already exists.";
+            }
+        }
+
+        return undefined;
+    };
+
+    return { validateEmail, validateVideoUrl, validateDate, validateLive, validateVersion };
 };
 
 /* ===== EXPORTS ===== */

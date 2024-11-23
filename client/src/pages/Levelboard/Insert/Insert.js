@@ -10,8 +10,8 @@ import ValidationHelper from "../../../helper/ValidationHelper";
 const Insert = (level, setSubmitting) => {
     /* ===== CONTEXTS ===== */
 
-    // game state from game context
-    const { game } = useContext(GameContext);
+    // game state, version state, & handle version change function from game context
+    const { game, version, handleVersionChange } = useContext(GameContext);
 
     // add message function from message context
     const { addMessage } = useContext(MessageContext);
@@ -54,7 +54,8 @@ const Insert = (level, setSubmitting) => {
         category: category,
         submitted_at: dateB2F(),
         tas: false,
-        mod_note: ""
+        mod_note: "",
+        version: version ? version.id : ""
     };
     const formInit = { 
 		values: defaultVals, 
@@ -367,10 +368,11 @@ const Insert = (level, setSubmitting) => {
     const getSubmissionsFromForm = formVals => {
         // create our new submission object, which is equivelent to formVals minus some fields not present in `submission` table
         let submissions = [];
-        const { hour, minute, second, centisecond, millisecond, both, profile, submitted_at, ...submission } = formVals;
+        const { hour, minute, second, centisecond, millisecond, both, profile, submitted_at, version, ...submission } = formVals;
         const backendDate = getDateOfSubmission(submitted_at);
         if (backendDate) submission.submitted_at = backendDate;
         submission.profile_id = profile.id;
+        submission.version = version ? version : null;
 
         // now, add to submissions array, depending on the truthiness of `both`
         if (both) {
@@ -406,7 +408,29 @@ const Insert = (level, setSubmitting) => {
         };
     };
 
-    // FUNCTION 13: handleResults - function that takes two results, and decides how to proceed
+    // FUNCTION 13: close - code that executes once everything has successfully submitted, and we want to return
+    // to main page
+    // PRECONDITIONS (3 parameters):
+    // 1.) updateBoard: a function that, when called, updates the board state displaying all the submissions
+    // 2.) successMsg: the message we should render to the screen in the event of a successful query
+    // 3.) timer: how long we should display `successMsg` for
+    // POSTCONDITIONS (1 possible outcome):
+    // we update the level board, update search parameter (if necessary), render the success message, and close the popup
+    const close = async (updateBoard, successMsg, timer) => {
+        // if user submits with a version that differs from the current version, then we want to update the version
+        // this action will automatically update the board, so we can rely on that instead of updating directly
+        const submissionVersion = form.values.version;
+        if (submissionVersion !== "" && submissionVersion !== parseInt(version?.id)) {
+            handleVersionChange(submissionVersion);
+        } else {
+            await updateBoard();
+        }
+
+        addMessage(successMsg, "success", timer);
+        closePopup();
+    };
+
+    // FUNCTION 14: handleResults - function that takes two results, and decides how to proceed
     // PRECONDITIONS (3 parameters):
     // 1.) r1: a result object from query 1
     // 2.) r2: a result object from query 2
@@ -416,13 +440,17 @@ const Insert = (level, setSubmitting) => {
     // if r2 resolves to rejected, this function will keep the popup, and render a message / handle the form based on r1's status
     const handleResults = async (r1, r2, updateBoard) => {
         if (r1.status === "fulfilled") {
-            await updateBoard();
+            let msg, timer;
+
             if (r2.status === "fulfilled") {
-                addMessage("Both submissions were successful!", "success", 5000);
+                msg = "Both submissions were successful!";
+                timer = 5000;
             } else {
-                addMessage(`Your ${ type } submission succesfully added, but there was a problem adding your ${ otherType } submission. Try again on the ${ otherType } chart.`, "error", 15000);
+                msg = `Your ${ type } submission succesfully added, but there was a problem adding your ${ otherType } submission. Try again on the ${ otherType } chart.`;
+                timer = 15000;
             }
-            closePopup();
+
+            await close(updateBoard, msg, timer);
         }
 
         else {
@@ -444,7 +472,7 @@ const Insert = (level, setSubmitting) => {
         }
     };
 
-    // FUNCTION 14: handleSubmit - function that validates and submits a record to the database
+    // FUNCTION 15: handleSubmit - function that validates and submits a record to the database
 	// PRECONDITIONS (3 parameters):
 	// 1.) e: an event object generated when the user submits the submission form
     // 2.) timerType: a string representing the time of timer of the chart. only really relevent for time charts
@@ -500,13 +528,11 @@ const Insert = (level, setSubmitting) => {
         // if both is set to false, we only need to worry about a single result
         if (!form.values.both) {
             if (r1.status === "fulfilled") {
-                await updateBoard();
-                addMessage("Your submission was successful!", "success", 5000);
-                closePopup();
+                await close(updateBoard, "Your submission was successful!", 5000);
             } else {
                 addMessage("There was a problem adding your submission. Try refreshing the page.", "error", 8000);
             }
-        } 
+        }
         
         // otherwise, we need to submit the next submission, and handle any errors from both results
         else {

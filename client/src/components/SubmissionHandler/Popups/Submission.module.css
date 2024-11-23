@@ -30,7 +30,7 @@
 }
 
 .right {
-    width: 360px;
+    width: var(--sidebar-width);
 }
 
 .formWrapper {

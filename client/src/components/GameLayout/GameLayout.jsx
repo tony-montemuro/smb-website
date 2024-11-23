@@ -11,6 +11,7 @@ import GameLayoutLogic from "./GameLayout.js";
 import Loading from "../../components/Loading/Loading.jsx";
 import ModeratorContainer from "./Containers/ModeratorContainer";
 import RankingsContents from "./Containers/RankingsContents.jsx";
+import UrlHelper from "../../helper/UrlHelper.js";
 
 function GameLayout({ imageReducer }) {
   /* ===== VARIABLES ===== */
@@ -26,16 +27,21 @@ function GameLayout({ imageReducer }) {
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
 
-  /* ===== STATES ===== */
+  /* ===== STATES & FUNCTIONS ===== */
   const [game, setGame] = useState(undefined);
+  const [version, setVersion] = useState(undefined);
 
-  /* ===== FUNCTIONS ===== */
-
-  // database functions
-  const { fetchGame } = GameLayoutLogic();
+  // states & functions from the js file
+  const { 
+    disableVersionDropdown,
+    fetchGame,
+    handleVersionChange,
+    setDisableVersionDropdown
+  } = GameLayoutLogic(game, setVersion);
 
   // helper functions
   const { getGameCategories } = GameHelper();
+  const { getInitialVersion } = UrlHelper();
 
   /* ===== EFFECTS ===== */
 
@@ -52,8 +58,9 @@ function GameLayout({ imageReducer }) {
         return;
       }
 
-      // update game state hook
+      // update game & version state hooks
       setGame(game);
+      setVersion(getInitialVersion(game));
     };
    
     initGame();
@@ -64,8 +71,8 @@ function GameLayout({ imageReducer }) {
   return (
     <div className={ styles.gameLayout }>
       { game && appData ?
-        <GameContext.Provider value={ { game } }>
-          <GameHeader imageReducer={ imageReducer } />
+        <GameContext.Provider value={ { game, version, handleVersionChange, setDisableVersionDropdown } }>
+          <GameHeader disableVersionDropdown={ disableVersionDropdown } imageReducer={ imageReducer } />
           <div className={ styles.body }>
 
             { /* Left - render the content of the game layout */ }

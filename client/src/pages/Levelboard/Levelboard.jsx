@@ -28,6 +28,7 @@ import TableContent from "../../components/TableContent/TableContent.jsx";
 import TableTabs from "../../components/TableTabs/TableTabs";
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import Update from "./Update/Update.jsx";
+import UrlHelper from "../../helper/UrlHelper.js";
 
 function Levelboard({ imageReducer }) {
 	/* ===== CONTEXTS ===== */
@@ -35,8 +36,8 @@ function Levelboard({ imageReducer }) {
 	// appData state from app data context
 	const { appData } = useContext(AppDataContext);
 
-	// game state from game context
-  const { game } = useContext(GameContext);
+	// game state, version state, & set disable version dropdown function from game context
+  const { game, version, setDisableVersionDropdown } = useContext(GameContext);
 
 	// add message function from message context
 	const { addMessage } = useContext(MessageContext);
@@ -48,6 +49,7 @@ function Levelboard({ imageReducer }) {
 	const { capitalize, dateB2F } = FrontendHelper();
 	const { fetchLevelFromGame } = GameHelper();
 	const { scrollToTop } = ScrollHelper();
+	const { addAllExistingSearchParams } = UrlHelper();
 
 	/* ===== REFS ===== */
 	const prevPathname = useRef(undefined);
@@ -108,7 +110,7 @@ function Levelboard({ imageReducer }) {
 	const searchParams = useMemo(() => {
 		return getChartSearchParams();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [abb, category, type, levelName]);
+	}, [abb, category, type, levelName, version]);
 
 	/* ===== EFFECTS ===== */
 
@@ -124,10 +126,10 @@ function Levelboard({ imageReducer }) {
 			// see if levelName corresponds to a level stored in the game object
 			const level = fetchLevelFromGame(game, levelName, category, type);
 			
-			// if not, we will print an error message, and navigate to the home screen
+			// if not, we will print an error message, and navigate to the game screen
 			if (!level) {
 				addMessage("Chart does not exist.", "error", 5000);
-				navigateTo(`/games/${ abb }/${ category }`);
+				navigateTo(addAllExistingSearchParams(`/games/${ abb }/${ category }`));
 				return;
 			}
 
@@ -148,6 +150,15 @@ function Levelboard({ imageReducer }) {
 		prevPathname.current = location.pathname;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.pathname]);
+
+	// code that is executed when the component mounts, or when the `version` state changes
+	useEffect(() => {
+		if (board.filtered) {
+			setDisableVersionDropdown(true);
+			setupBoard();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [version]);
 
 	/* ===== LEVELBOARD COMPONENT ===== */
 	return level ?
@@ -185,7 +196,7 @@ function Levelboard({ imageReducer }) {
 
 					{ /* Previous level button */ }
 					{ board.adjacent && board.adjacent.prev ?
-							<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.prev }` }>
+							<Link to={ addAllExistingSearchParams(`/games/${ abb }/${ category }/${ type }/${ board.adjacent.prev }`) }>
 								<button type="button">←Prev</button>
 							</Link>
 						:
@@ -199,7 +210,7 @@ function Levelboard({ imageReducer }) {
 
 					{ /* Next level button */ }
 					{ board.adjacent && board.adjacent.next ?
-							<Link to={ `/games/${ abb }/${ category }/${ type }/${ board.adjacent.next }` }>
+							<Link to={ addAllExistingSearchParams(`/games/${ abb }/${ category }/${ type }/${ board.adjacent.next }`) }>
 								<button type="button">Next→</button>
 							</Link>
 						:

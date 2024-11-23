@@ -16,8 +16,8 @@ function Game() {
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
 
-  // game state from game context
-  const { game } = useContext(GameContext);
+  // game state & version state from game context
+  const { game, version } = useContext(GameContext);
 
   /* ===== HELPER FUNCTIONS ===== */
   const { getGameCategories } = GameHelper();
@@ -34,9 +34,9 @@ function Game() {
   /* ===== MEMOS ===== */
   const searchParams = useMemo(() => {
     const params = new URLSearchParams();
-    params.append("game_id", abb);
+    params.append("game_id", version ? `${ abb }_${ version.id }` : abb);
     return params;
-  }, [abb]);
+  }, [abb, version]);
 
   /* ===== STATES ===== */
   const [selectedCategory, setSelectedCategory] = useState(category ? category : firstCategory);
@@ -80,7 +80,7 @@ function Game() {
             </div>
           </Container>
           <div className={ styles.recent }>
-            <Container title="Recent Submissions" href={ `/recent-submissions?game_id=${ abb }` } largeTitle>
+            <Container title="Recent Submissions" href={ `/recent-submissions?game_id=${ searchParams.get("game_id") }` } largeTitle>
               <RecentSubmissionsTable searchParams={ searchParams } renderLevelContext />
             </Container>
           </div>

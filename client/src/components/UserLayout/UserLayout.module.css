@@ -5,8 +5,8 @@
 }
 
 .left {
-    max-width: 360px;
-    width: 360px;
+    max-width: var(--sidebar-width);
+    width: var(--sidebar-width);
     display: flex;
     flex-direction: column;
     gap: var(--app-padding);

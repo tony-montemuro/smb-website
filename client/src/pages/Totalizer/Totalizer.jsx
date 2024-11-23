@@ -12,6 +12,7 @@ import ScrollHelper from "../../helper/ScrollHelper";
 import TableContent from "../../components/TableContent/TableContent";
 import TotalizerLogic from "./Totalizer.js";
 import TotalizerRow from "./TotalizerRow.jsx";
+import UrlHelper from "../../helper/UrlHelper.js";
 
 function Totalizer({ imageReducer }) {
   /* ===== CONTEXTS ===== */
@@ -19,8 +20,8 @@ function Totalizer({ imageReducer }) {
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
 
-  // game state from game context
-  const { game } = useContext(GameContext);
+  // game state, version state, & set disable version dropdown function from game context
+  const { game, version, setDisableVersionDropdown } = useContext(GameContext);
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
@@ -29,6 +30,7 @@ function Totalizer({ imageReducer }) {
   const { capitalize } = FrontendHelper();
   const { getGameCategories, getCategoryTypes } = GameHelper();
   const { scrollToTop } = ScrollHelper();
+  const { addAllExistingSearchParams } = UrlHelper();
 
   /* ===== VARIABLES ===== */
   const TABLE_LENGTH = 3;
@@ -70,16 +72,17 @@ function Totalizer({ imageReducer }) {
   // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
     // special case #1: we are attempting to access a totalizer page with a non-valid category or non-practice mode category
+    const gameUrl = addAllExistingSearchParams(`/games/${ abb }`);
     if (!(gameCategories.includes(category) && isPracticeMode)) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 
     // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
     if (!(types.includes(type))) {
       addMessage("Ranking does not exist.", "error", 5000);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(gameUrl);
       return;
     }
 
@@ -88,6 +91,15 @@ function Totalizer({ imageReducer }) {
     scrollToTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
+
+  // code that executes each time the version state changes
+  useEffect(() => {
+    if (totals) {
+      setDisableVersionDropdown(true);
+      fetchTotals(game, category, type);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
 
   /* ===== TOTALIZER COMPONENT ===== */
   return (
@@ -98,9 +110,9 @@ function Totalizer({ imageReducer }) {
         <div className={ styles.header }>
           <h2>{ categoryName }</h2>
           <div className={ styles.filter }>
-            <label htmlFor="filter">Live-{ type }s only: </label>
+            <label htmlFor={ styles.live }>Live-{ type }s only: </label>
             <input
-              id="filter"
+              id={ styles.live }
               type="checkbox"
               checked={ tableState === "live" }
               onChange={ handleTableStateChange }
