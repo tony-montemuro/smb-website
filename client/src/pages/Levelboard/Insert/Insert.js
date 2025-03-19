@@ -272,7 +272,7 @@ const Insert = (level, setSubmitting) => {
             "hour_min_sec", 
             "hour_min_sec_csec", 
             "hour_min_sec_msec"
-        ].includes(timerType) && second >= MAX_SECOND) {
+        ].includes(timerType) && second > MAX_SECOND) {
             return `This field cannot exceed the value ${ MAX_SECOND }.`;
         }
 
