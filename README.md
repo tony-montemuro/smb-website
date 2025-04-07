@@ -47,7 +47,30 @@ Once this has finished, run:
 cd smb-website
 ```
 
-### [Server Setup](#server-setup)
+From here, there are two ways to proceed:
+
+1. **Automatic setup**: Run a bash script, which should get you up and running in a few minutes!
+2. **Manual setup**: Perform each step manually (not recommended, but you *will* better understand development environment pitfalls this way)
+
+### Automatic setup
+
+To run the setup script, ensure you have the following software installed:
+
+- [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started)
+- [Docker](https://docs.docker.com/get-docker/)
+- [Node.js](https://nodejs.org/en)
+
+Then, run the following command:
+
+```bash
+./init.sh
+```
+
+And you are done!
+
+### Manual setup
+
+#### [Server Setup](#server-setup)
 
 **Note:** Before you begin, you must have the following software installed:
 
@@ -56,25 +79,41 @@ cd smb-website
 
 Before you can run the app, a local database server must be running for the client to connect to. Here are the steps you must follow:
 
-1. Ensure Docker is running on your machine.
+1. Ensure the Docker daemon is running on your machine.
 2. Run the following command:
+
+    ```bash
+    sed -i 's/CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";/-- &/g' ./supabase/migrations/20230905161842_remote_schema.sql
+    ```
+
+    This comments out a line that tries to create a PostgreSQL extension that no longer exists (without doing this, database cannot start after supabase upgraded to PostgreSQL `15.8.1.060`).
+
+3. Run the following command:
+
+    ```bash
+    git update-index --skip-worktree ./supabase/migrations/20230905161842_remote_schema.sql
+    ```
+
+    This tells git to ignore changes to this file, as we do not want to make changes to old migration files.
+
+4. Run the following command:
 
     ```bash
     supabase start
     ```
     Please do keep in mind that this command may take several minutes to complete. Once this command does complete, the server should be up and running!
-3. Run the following command:
+5. Run the following command:
     ```bash
     supabase status
     ```
-    This command will display information about your local development server instance. Make note of the `API_URL` and `anon key` parameters.
-4. Run these commands:
+    This command will display information about your local development server instance. Make note of the `API URL` and `anon key` parameters.
+6. Run these commands:
     ```bash
     cd client
     touch .env.development.local
     ```
     This will create a file in the `client` directory for storing environment variables, which are necessary to connect to the server.
-5. Open `.env.development.local` into a text editor, add the following, and save:
+7. Open `.env.development.local` into a text editor, add the following, and save:
     ```env
     REACT_APP_SUPABASE_URL=<YOUR_API_URL>
     REACT_APP_SUPABASE_ANON_KEY=<YOUR_ANON_KEY>
@@ -83,7 +122,7 @@ Before you can run the app, a local database server must be running for the clie
 
 This is what is *required* for setting up the server. The following information is nice to have, but not a necessity. If you just want to set up the client application, skip to the [client](#client-setup) section.
 
-#### Supabase Studio
+##### Supabase Studio
 
 The Supabase CLI provides an easy way to access a GUI interface of the database. To do this, run:
 ```bash
@@ -93,7 +132,7 @@ Copy the `Studio URL` parameter, and paste it into your browser. It should open 
 ![Supabase Studio](https://i.imgur.com/VLLSejw.png)
 This is an easy way to interface with the database.
 
-#### Adding Game Box Art
+##### Adding Game Box Art
 
 This is a totally optional thing, but included in the repository are box art for some of the games within the `seed` data. To upload the box art to your local server:
 1. Starting in the root directory, navigate to the `supabase` directory by running:
@@ -111,7 +150,7 @@ This is a totally optional thing, but included in the repository are box art for
     ```bash
     supabase status
     ```
-    Make note of the `API_URL` and `service_role key` parameters.
+    Make note of the `API URL` and `service_role key` parameters.
 
 4. Finally, run:
     ```bash
@@ -121,7 +160,7 @@ This is a totally optional thing, but included in the repository are box art for
 
 Note that this process can sometimes not work properly; the local supabase storage system can be finicky. If this does not work, it is safe to ignore this section.
 
-### [Client Setup](#client-setup)
+#### [Client Setup](#client-setup)
 
 **Note:** Before you begin, you must have the following software installed:
 
