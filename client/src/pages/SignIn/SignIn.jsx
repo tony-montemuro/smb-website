@@ -14,7 +14,7 @@ function SignIn() {
   const navigateTo = useNavigate();
   const theme = {
     theme: {
-      ...ThemeSupa, 
+      ...ThemeSupa,
       dark: {
         ...ThemeSupa.dark,
         colors: {
@@ -77,12 +77,12 @@ function SignIn() {
         <div className={ styles.logo }>
           <Logo />
         </div>
-        <MemoizedAuth 
+        <MemoizedAuth
           supabaseClient={ supabase }
           theme="dark"
           appearance={ theme }
           providers={ [] }
-          redirectTo={ `${ window.location.origin }` }
+          redirectTo={ `${window.location.origin}` }
         />
       </div>
 
