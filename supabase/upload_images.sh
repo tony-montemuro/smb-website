@@ -7,7 +7,7 @@ if [ "$#" -lt 2 ]; then
     api_url=$(echo "$status" | grep "API_URL" | cut -d "=" -f2 | tr -d '"')
     service_role=$(echo "$status" | grep "SERVICE_ROLE_KEY" | cut -d "=" -f2 | tr -d '"')
 else
-    api_key="$1"
+    api_url="$1"
     service_role="$2"
 fi
 

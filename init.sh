@@ -41,7 +41,6 @@ fi
 
 ## Upload images to local storage
 echo "d.) Uploading images to supabase storage..."
-echo "$status"
 cd ./supabase
 ./upload_images.sh "$api_url" "$service_role"
 cd ..
