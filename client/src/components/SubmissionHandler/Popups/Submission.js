@@ -13,8 +13,8 @@ import ValidationHelper from "../../../helper/ValidationHelper";
 const Submission = (submission, game, isUnapproved, setSubmissions, setSubmitting) => {
     /* ===== VARIABLES ===== */
     const defaultError = { proof: undefined, submitted_at: undefined, live: undefined };
-    const defaultForm = { 
-        values: null, 
+    const defaultForm = {
+        values: null,
         error: defaultError
     };
 
@@ -38,7 +38,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     const [clearToggle, setClearToggle] = useState(false);
 
     /* ===== FUNCTIONS ===== */
-    
+
     // helper functions
     const { dateB2F } = FrontendHelper();
     const { validateVideoUrl, validateDate, validateLive } = ValidationHelper();
@@ -56,7 +56,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     // POSTCONDITIONS (1 possible outcome):
     // using data from the submission object, we fill the form values, and also set the clearForm value back to false
     const fillForm = () => {
-        setForm({ 
+        setForm({
             values: {
                 submitted_at: dateB2F(submission.submitted_at),
                 version: submission.version ? submission.version.id.toString() : "",
@@ -80,14 +80,14 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
     // 1.) e: an event object generated when the user makes a change to the form
     // POSTCONDITIONS (2 possible outcomes):
     // if the field id is live / tas, we use the checked variable rather than the value variable to update the form
-	// otherwise, we simply update the form field based on the value variable
+    // otherwise, we simply update the form field based on the value variable
     const handleChange = e => {
         const { id, value, checked } = e.target;
         const val = id === "live" || id === "tas" ? checked : value;
-        setForm({ 
-            ...form, 
+        setForm({
+            ...form,
             values: { ...form.values, [id]: val },
-            error: Object.keys(form.error).includes(id) ? { ...form.error, [id]: null } : { ...form.error } 
+            error: Object.keys(form.error).includes(id) ? { ...form.error, [id]: null } : { ...form.error }
         });
     };
 
@@ -101,9 +101,9 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         if (e) {
             let { $d: date } = e;
             const year = date.getFullYear();
-            const month = String(date.getMonth()+1).padStart(2, "0");
+            const month = String(date.getMonth() + 1).padStart(2, "0");
             const day = String(date.getDate()).padStart(2, "0");
-            submitted_at = `${ year }-${ month }-${ day }`;
+            submitted_at = `${year}-${month}-${day}`;
         }
         setForm({ ...form, values: { ...form.values, submitted_at } });
     };
@@ -228,7 +228,7 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         } catch (error) {
             if (error.message === "approve") {
                 addMessage("There was a problem approving this submission.", "error", 7000);
-            } else { 
+            } else {
                 addMessage("There was a problem updating this submission.", "error", 7000);
             }
         } finally {
@@ -291,7 +291,6 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
             if (error.message === "delete") {
                 addMessage("There was a problem deleting this submission.", "error", 7000);
             } else {
-                console.log(error); 
                 addMessage("The submission successfully was rejected, but the notification system failed to notify the user.", "error", 10000);
             }
         } finally {
@@ -299,12 +298,12 @@ const Submission = (submission, game, isUnapproved, setSubmissions, setSubmittin
         };
     };
 
-    return { 
-        form, 
-        showReject, 
-        setShowReject, 
-        fillForm, 
-        handleChange, 
+    return {
+        form,
+        showReject,
+        setShowReject,
+        fillForm,
+        handleChange,
         handleSubmittedAtChange,
         handleToggle,
         clearMessage,

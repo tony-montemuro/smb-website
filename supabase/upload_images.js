@@ -28,8 +28,6 @@ async function uploadImage(file) {
             throw error;
         }
 
-        console.log("File uploaded!");
-
     } catch (error) {
         throw error;
     }
@@ -48,7 +46,6 @@ async function uploadAll(files) {
     // now, perform the upload
     try {
         await Promise.all(promises);
-        console.log("All files uploaded successfully!");
     } catch (error) {
         console.error("One or more files failed to upload!", error);
     };
