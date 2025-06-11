@@ -75,6 +75,10 @@ const GameRead = () => {
                 .order("release_date")
                 .order("id", { foreignTable: "mode", ascending: true })
                 .order("id", { foreignTable: "mode.level", ascending: true })
+                .order("id", { foreignTable: "game_monkey", ascending: true })
+                .order("id", { foreignTable: "game_platform", ascending: true })
+                .order("id", { foreignTable: "game_region", ascending: true })
+                .order("id", { foreignTable: "game_rule", ascending: true })
                 .eq("abb", abb)
                 .maybeSingle();
 
@@ -85,7 +89,6 @@ const GameRead = () => {
 
             // next, let's sort any unsorted lists
             game.profile.sort((a, b) => a.username.localeCompare(b.username));
-            game.game_rule.sort((a, b) => a.id - b.id);
             game.version.sort((a, b) => a.sequence - b.sequence);
 
             // return the game object
@@ -149,7 +152,11 @@ const GameRead = () => {
                 `)
                 .order("custom")
                 .order("release_date")
-                .order("name");
+                .order("name")
+                .order("id", { foreignTable: "game_monkey", ascending: true })
+                .order("id", { foreignTable: "game_platform", ascending: true })
+                .order("id", { foreignTable: "game_region", ascending: true })
+                .order("id", { foreignTable: "game_rule", ascending: true });
 
             // error handling
             if (error) {
@@ -174,9 +181,9 @@ const GameRead = () => {
     // 4.) gameTypeFilter: a value which determines how the games should be filtered. can be 3 values: "main", "custom", or undefined
     // POSTCONDITIONS (2 returns, 2 possible outcomes):
     // if the query is successful, an object with two fields is returned:
-        // 1.) games: an array of gane objects, which have a substring matching the user input (case-insensitive)
-        // 2.) count: the total number of games that match the user input. in some cases, this number will be larger 
-        // than `games.length`
+    // 1.) games: an array of gane objects, which have a substring matching the user input (case-insensitive)
+    // 2.) count: the total number of games that match the user input. in some cases, this number will be larger 
+    // than `games.length`
     // if the query fails, this function throws an error, which should be handled by the caller function
     const searchForGames = async (userInput, start, end, gameTypeFilter) => {
         // first, let's generate our `custom` field filter
@@ -186,7 +193,7 @@ const GameRead = () => {
         }
         if (!gameTypeFilter || gameTypeFilter === "main") {
             customFilter.push(false)
-        } 
+        }
 
         try {
             const { data: games, count, error } = await supabase
@@ -203,7 +210,7 @@ const GameRead = () => {
                 `, { count: "exact" }
                 )
                 .in("custom", customFilter)
-                .or(`name.ilike.%${ userInput }%,abb.ilike.%${ userInput }%`)
+                .or(`name.ilike.%${userInput}%,abb.ilike.%${userInput}%`)
                 .order("custom")
                 .order("release_date")
                 .order("name")
@@ -244,7 +251,7 @@ const GameRead = () => {
                 .in("abb", abbs)
                 .order("custom")
                 .order("release_date")
-                .order("name");    
+                .order("name");
 
             // error handling
             if (error) {
