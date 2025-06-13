@@ -11,7 +11,7 @@ const FrontendHelper = () => {
     // POSTCONDITIONS (1 possible outcome): 
     // a copy of str is returned with it's first letter capitalized
     const capitalize = str => {
-        return str.charAt(0).toUpperCase()+str.slice(1);
+        return str.charAt(0).toUpperCase() + str.slice(1);
     };
 
     // FUCNTION 2: snakeToTitle - converts a string in snake case to title case
@@ -27,17 +27,17 @@ const FrontendHelper = () => {
 
             // special case: handle if character is underscore, including double underscores
             if (str[i] === "_") {
-                if (i < str.length-1 && str[i+1] === "_") {
+                if (i < str.length - 1 && str[i + 1] === "_") {
                     title += "_";
                     i += 1;
                 } else {
                     title += " ";
                 }
-            } 
-            
+            }
+
             // general case: handle any other character, and perform capitalization when necessary
             else {
-                if (i > 0 && str[i-1] === "_") {
+                if (i > 0 && str[i - 1] === "_") {
                     title += str[i].toUpperCase();
                 } else {
                     title += str[i];
@@ -52,8 +52,8 @@ const FrontendHelper = () => {
     // FUNCTION 3: dateB2F - ("date backend-to-frontend") converts a back-end date to front-end style 
     // PRECONDITIONS (1 parameter):
     // 1.) date: a string representing a date, which can take two possible states:
-        // a.) a postgresql timestamptz formatted date
-        // b.) null
+    // a.) a postgresql timestamptz formatted date
+    // b.) null
     // POSTCONDITIONS (2 possible outcomes):
     // if null, the function will return the current date. 
     // otherwise, the function will return the formatted date, converted to the client's location (timezone). output will have the 
@@ -61,8 +61,8 @@ const FrontendHelper = () => {
     const dateB2F = date => {
         const d = date ? new Date(date) : new Date();
         const year = d.getFullYear();
-        const month = ("0"+(d.getMonth()+1)).slice(-2);
-        const day = ("0"+d.getDate()).slice(-2);
+        const month = ("0" + (d.getMonth() + 1)).slice(-2);
+        const day = ("0" + d.getDate()).slice(-2);
         return `${year}-${month}-${day}`;
     };
 
@@ -89,19 +89,20 @@ const FrontendHelper = () => {
     const secondsToHours = (record, type, decimalPlaces = 2) => {
         if (type === "time") {
             // calculate each unit of time
+            record = parseFloat(record.toFixed(decimalPlaces));
             let time = Math.floor(record);
-            let hours = Math.floor(time/3600).toLocaleString("en-US", { minimumIntegerDigits: 1, useGrouping: false });
-            let minutes = Math.floor((time%3600)/60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
-            let seconds = Math.floor(time%60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
+            let hours = Math.floor(time / 3600).toLocaleString("en-US", { minimumIntegerDigits: 1, useGrouping: false });
+            let minutes = Math.floor((time % 3600) / 60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
+            let seconds = Math.floor(time % 60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
 
             let multiplier = Math.pow(10, decimalPlaces);
-            let decimals = Math.round((record%60-seconds)*multiplier).toLocaleString("en-US", {
+            let decimals = Math.round((record % 60 - seconds) * multiplier).toLocaleString("en-US", {
                 minimumIntegerDigits: decimalPlaces,
                 useGrouping: false
             });
 
             // return with following format: X[X...X]:XX:XX.X[X...X]
-            return `${ hours }:${ minutes }:${ seconds }.${ decimals }`;
+            return `${hours}:${minutes}:${seconds}.${decimals}`;
         }
 
         // otherwise, just return formatted record
@@ -121,18 +122,19 @@ const FrontendHelper = () => {
     const secondsToMinutes = (record, type, decimalPlaces = 2) => {
         if (type === "time") {
             // calculate each unit of time
+            record = parseFloat(record.toFixed(decimalPlaces));
             let time = Math.floor(record);
-            let minutes = Math.floor(time/60).toLocaleString("en-US", { minimumIntegerDigits: 1, useGrouping: false });
-            let seconds = Math.floor(time%60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
+            let minutes = Math.floor(time / 60).toLocaleString("en-US", { minimumIntegerDigits: 1, useGrouping: false });
+            let seconds = Math.floor(time % 60).toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
 
             let multiplier = Math.pow(10, decimalPlaces);
-            let decimals = Math.round((record%60-seconds)*multiplier).toLocaleString("en-US", { 
-                minimumIntegerDigits: decimalPlaces, 
-                useGrouping: false 
+            let decimals = Math.round((record % 60 - seconds) * multiplier).toLocaleString("en-US", {
+                minimumIntegerDigits: decimalPlaces,
+                useGrouping: false
             });
 
             // return with following format: X[X...X]:XX.X[X...X]
-            return `${ minutes }:${ seconds }.${ decimals }`;
+            return `${minutes}:${seconds}.${decimals}`;
         }
 
         // otherwise, just return formatted record
@@ -172,7 +174,7 @@ const FrontendHelper = () => {
                     return secondsToHours(fixedRecord, type).split(":")[0];
                 case "hour_min":
                     const splitTime = secondsToHours(fixedRecord, type).split(":");
-                    return `${ splitTime[0] }:${ splitTime[1] }`;
+                    return `${splitTime[0]}:${splitTime[1]}`;
                 case "hour_min_sec":
                     return secondsToHours(fixedRecord, type).split(".")[0];
                 case "hour_min_sec_csec":
@@ -211,7 +213,7 @@ const FrontendHelper = () => {
     // if the run type is valid, it is manipulated in some way, and returned
     // otherwise, an empty string is returned
     const runTypeB2F = runType => {
-        switch(runType) {
+        switch (runType) {
             case "normal":
                 return capitalize(runType);
             case "tas":
@@ -247,7 +249,7 @@ const FrontendHelper = () => {
         let titleWithDashes = "";
         for (let i = 0; i < title.length; i++) {
             let c = title[i];
-            if (i > 0 && title[i-1] === "-" && isAlphaPattern.test(c)) {
+            if (i > 0 && title[i - 1] === "-" && isAlphaPattern.test(c)) {
                 c = c.toUpperCase();
             }
             titleWithDashes += c;
@@ -268,8 +270,8 @@ const FrontendHelper = () => {
 
         for (let i = 0; i < words.length; i++) {
             fixedTimer += words[i];
-            if (i < words.length-1) {
-                if (["csec", "msec"].includes(words[i+1])) {
+            if (i < words.length - 1) {
+                if (["csec", "msec"].includes(words[i + 1])) {
                     fixedTimer += ".";
                 } else {
                     fixedTimer += ":";
@@ -280,12 +282,12 @@ const FrontendHelper = () => {
         return fixedTimer.toUpperCase();
     };
 
-    return { 
+    return {
         capitalize,
         snakeToTitle,
         dateB2F,
         numberWithCommas,
-        secondsToHours, 
+        secondsToHours,
         recordB2F,
         getTimeAgo,
         runTypeB2F,
