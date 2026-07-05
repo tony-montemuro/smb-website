@@ -22,12 +22,12 @@ function Metadata({ metadata, error }) {
           <span>Abbreviation: { metadata.abb }</span>
         </Errorable>
         <Errorable error={ error?.release_date } renderMessage>
-          <span>Release Data: { metadata.release_date }</span>
+          <span>Release Date: { metadata.release_date }</span>
         </Errorable>
-        
+
         { metadata.custom &&
           <Errorable error={ error?.min_date } renderMessage>
-            <span>Minimum Data: { metadata.min_date }</span>
+            <span>Minimum Date: { metadata.min_date }</span>
           </Errorable>
         }
 
