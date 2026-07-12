@@ -1,6 +1,8 @@
 /* ===== IMPORTS ===== */
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { CaptureCards, OBS } from "./Contents/GettingStarted.jsx";
+import { Emulators, General, PausingRule, ProofRequirements, Regions, ReplayErrors, ScoreCalculation, Types } from "./Contents/Overview.jsx";
 import styles from "./Resources.module.css";
 import Container from "../../components/Container/Container.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
@@ -10,7 +12,7 @@ import ScrollHelper from "../../helper/ScrollHelper";
 
 function Resources({ imageReducer }) {
   /* ===== STATES & FUNCTIONS ===== */
-  const { pages, currentPage, setCurrentPage, handlePageClick } = ResourcesLogic(imageReducer);
+  const { currentPage, setCurrentPage, handlePageClick } = ResourcesLogic();
   const navigateTo = useNavigate();
 
   // helper functions
@@ -18,6 +20,28 @@ function Resources({ imageReducer }) {
   const { snakeToTitle } = FrontendHelper();
 
   /* ===== VARIABLES ===== */
+  const pages = [
+    {
+      name: "overview",
+      headers: {
+        general: <General />,
+        types: <Types />,
+        score_calculation: <ScoreCalculation />,
+        pausing_rule: <PausingRule />,
+        proof_requirements: <ProofRequirements />,
+        regions: <Regions imageReducer={ imageReducer } />,
+        replay_errors: <ReplayErrors />,
+        emulators: <Emulators />
+      }
+    },
+    {
+      name: "getting_started",
+      headers: {
+        capture_cards: <CaptureCards />,
+        OBS: <OBS />
+      }
+    }
+  ];
   const pageInfo = pages.find(page => page.name === currentPage);
 
   /* ===== EFFECTS ===== */
@@ -40,15 +64,15 @@ function Resources({ imageReducer }) {
         <ul className={ styles.sidebarList }>
           { pages.map(page => {
             return (
-              <PageItem 
+              <PageItem
                 page={ page }
                 currentPage={ currentPage }
                 headerClickFunc={ scrollToId }
-                pageClickFunc={ handlePageClick } 
-                key={ page.name } 
+                pageClickFunc={ handlePageClick }
+                key={ page.name }
               />
             );
-          })}
+          }) }
         </ul>
       </div>
 
@@ -65,9 +89,9 @@ function Resources({ imageReducer }) {
               </Container>
             </div>
           );
-        })}
+        }) }
       </div>
-      
+
     </div>;
 };
 
