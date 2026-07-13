@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.0",
@@ -11,10 +11,6 @@
     "@supabase/auth-ui-react": "^0.4.2",
     "@supabase/auth-ui-shared": "^0.1.6",
     "@supabase/supabase-js": "^2.10.0",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.2.0",
-    "@testing-library/user-event": "^13.5.0",
-    "axios": "^0.27.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "flag-icons": "^6.6.4",
@@ -23,7 +19,6 @@
     "react-router-dom": "^6.3.0",
     "react-tweet": "^3.0.4",
     "react-youtube": "^10.1.0",
-    "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
