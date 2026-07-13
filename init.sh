@@ -34,8 +34,8 @@ if [[ -s "$env_file" ]]; then
 else
     touch $env_file
     exec 3<> $env_file
-    echo "REACT_APP_SUPABASE_URL=$api_url" >&3
-    echo "REACT_APP_SUPABASE_ANON_KEY=$anon_key" >&3
+    echo "VITE_APP_SUPABASE_URL=$api_url" >&3
+    echo "VITE_APP_SUPABASE_ANON_KEY=$anon_key" >&3
     exec 3>&-
 fi
 

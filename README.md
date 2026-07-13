@@ -115,8 +115,8 @@ Before you can run the app, a local database server must be running for the clie
     This will create a file in the `client` directory for storing environment variables, which are necessary to connect to the server.
 7. Open `.env.development.local` into a text editor, add the following, and save:
     ```env
-    REACT_APP_SUPABASE_URL=<YOUR_API_URL>
-    REACT_APP_SUPABASE_ANON_KEY=<YOUR_ANON_KEY>
+    VITE_APP_SUPABASE_URL=<YOUR_API_URL>
+    VITE_APP_SUPABASE_ANON_KEY=<YOUR_ANON_KEY>
     ```
     Replacing `<YOUR_API_URL>` and `<YOUR_ANON_KEY>` with `API URL` and `anon key` respectively from the `supabase status` command in step 3.
 
