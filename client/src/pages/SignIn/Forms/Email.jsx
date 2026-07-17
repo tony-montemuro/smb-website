@@ -1,7 +1,7 @@
+/* ===== IMPORTS ===== */
 import TextField from "@mui/material/TextField";
 
 function Email({ email, handleEmailChange, errorMsg }) {
-
   /* ===== EMAIL COMPONENT ===== */
   return (
     <TextField

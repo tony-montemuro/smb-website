@@ -1,3 +1,4 @@
+/* ===== IMPORTS ===== */
 import { useState } from "react";
 
 const Auth = () => {
