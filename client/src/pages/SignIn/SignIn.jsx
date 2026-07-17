@@ -5,6 +5,7 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./SignIn.module.css";
+import Auth from "./Forms/Auth.jsx";
 import Logo from "../../assets/svg/Logo.jsx";
 import LoginImage from "../../assets/png/login.png";
 import MemoizedAuth from "./MemoizedAuth.jsx";
@@ -77,6 +78,7 @@ function SignIn() {
         <div className={ styles.logo }>
           <Logo />
         </div>
+        <Auth isSignIn />
         <MemoizedAuth
           supabaseClient={ supabase }
           theme="dark"
