@@ -2,7 +2,7 @@
 import AuthLogic from "./Auth.js";
 import TextField from "@mui/material/TextField";
 
-function Password({ password, handlePasswordChange, mode, errorMsg }) {
+function Password({ password, handlePasswordChange, mode, isError }) {
   /* ===== VARIABLES ===== */
   const { MODE_SIGNIN, MODE_FORGOT_PASSWORD } = AuthLogic();
 
@@ -10,8 +10,8 @@ function Password({ password, handlePasswordChange, mode, errorMsg }) {
   return mode !== MODE_FORGOT_PASSWORD && (
     <TextField
       autoComplete={ mode === MODE_SIGNIN ? "current-password" : "password" }
-      color={ errorMsg ? "error" : "primary" }
-      error={ errorMsg ? true : false }
+      color={ isError ? "error" : "primary" }
+      error={ isError }
       fullWidth
       id="password"
       label="Password"

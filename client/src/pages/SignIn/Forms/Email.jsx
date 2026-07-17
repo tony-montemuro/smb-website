@@ -1,16 +1,15 @@
 /* ===== IMPORTS ===== */
 import TextField from "@mui/material/TextField";
 
-function Email({ email, handleEmailChange, errorMsg }) {
+function Email({ email, handleEmailChange, isError }) {
   /* ===== EMAIL COMPONENT ===== */
   return (
     <TextField
       autoComplete="email"
-      color={ errorMsg ? "error" : "primary" }
-      error={ errorMsg ? true : false }
+      color={ isError ? "error" : "primary" }
+      error={ isError }
       fullWidth
       id="email"
-      helperText={ errorMsg }
       label="Email"
       placeholder="Your email address"
       onChange={ handleEmailChange }
