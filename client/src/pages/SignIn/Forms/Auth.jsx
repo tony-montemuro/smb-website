@@ -10,11 +10,13 @@ function Auth() {
   const {
     email,
     password,
+    confirmPassword,
     mode,
     loading,
     error,
     handleEmailChange,
     handlePasswordChange,
+    handleConfirmPasswordChange,
     getButtonText,
     toSignIn,
     toSignUp,
@@ -28,7 +30,14 @@ function Auth() {
     <form id={ styles.form } className={ styles.container } onSubmit={ handleSubmit } autoComplete="on">
       <div className={ styles.container }>
         <Email email={ email } handleEmailChange={ handleEmailChange } isError={ error.email } />
-        <Password password={ password } handlePasswordChange={ handlePasswordChange } mode={ mode } isError={ error.password } />
+        <Password
+          password={ password }
+          handlePasswordChange={ handlePasswordChange }
+          confirmPassword={ confirmPassword }
+          handleConfirmPasswordChange={ handleConfirmPasswordChange }
+          mode={ mode }
+          error={ error }
+        />
       </div>
       <button id={ styles.button } type="submit" disabled={ loading }>{ getButtonText() }</button>
       <div className="center">
