@@ -8,19 +8,11 @@ import Links from "./Links.jsx";
 function Auth() {
   /* ===== STATES & FUNCTIONS ===== */
   const {
-    email,
-    password,
-    confirmPassword,
-    mode,
-    loading,
+    form,
     error,
-    handleEmailChange,
-    handlePasswordChange,
-    handleConfirmPasswordChange,
+    handleChange,
     getButtonText,
-    toSignIn,
-    toSignUp,
-    toForgotPassword,
+    setMode,
     handleSubmit
   } = AuthLogic();
 
@@ -29,21 +21,19 @@ function Auth() {
   return (
     <form id={ styles.form } className={ styles.container } onSubmit={ handleSubmit } autoComplete="on">
       <div className={ styles.container }>
-        <Email email={ email } handleEmailChange={ handleEmailChange } isError={ error.email } />
+        <Email email={ form.email } handleEmailChange={ handleChange } isError={ error.email } />
         <Password
-          password={ password }
-          handlePasswordChange={ handlePasswordChange }
-          confirmPassword={ confirmPassword }
-          handleConfirmPasswordChange={ handleConfirmPasswordChange }
-          mode={ mode }
+          form={ form }
+          handleChange={ handleChange }
+          mode={ form.mode }
           error={ error }
         />
       </div>
-      <button id={ styles.button } type="submit" disabled={ loading }>{ getButtonText() }</button>
+      <button id={ styles.button } type="submit" disabled={ form.loading }>{ getButtonText() }</button>
       <div className="center">
         { error.message && <span id={ styles.error }>{ error.message }</span> }
       </div>
-      <Links mode={ mode } signIn={ toSignIn } signUp={ toSignUp } forgotPassword={ toForgotPassword } />
+      <Links mode={ form.mode } setMode={ setMode } />
     </form>
   )
 }

@@ -2,7 +2,7 @@
 import AuthLogic from "./Auth.js";
 import TextField from "@mui/material/TextField";
 
-function Password({ password, handlePasswordChange, confirmPassword, handleConfirmPasswordChange, mode, error }) {
+function Password({ form, handleChange, mode, error }) {
   /* ===== VARIABLES ===== */
   const { MODE_SIGNIN, MODE_SIGNUP, MODE_FORGOT_PASSWORD } = AuthLogic();
   const MIN_PASSWORD_LENGTH = 10;
@@ -20,10 +20,10 @@ function Password({ password, handlePasswordChange, confirmPassword, handleConfi
         label="Password"
         name="password"
         placeholder="Your password"
-        onChange={ handlePasswordChange }
+        onChange={ handleChange }
         required
         type="password"
-        value={ password }
+        value={ form.password }
         variant="filled"
       />
       {
@@ -35,12 +35,12 @@ function Password({ password, handlePasswordChange, confirmPassword, handleConfi
           id="confirm-passowrd"
           inputProps={ { minLength: MIN_PASSWORD_LENGTH } }
           label="Confirm Password"
-          name="confirm-password"
+          name="confirmPassword"
           placeholder="Your password"
-          onChange={ handleConfirmPasswordChange }
+          onChange={ handleChange }
           required
           type="password"
-          value={ confirmPassword }
+          value={ form.confirmPassword }
           variant="filled"
         />
       }

@@ -15,57 +15,46 @@ const Auth = () => {
     confirmPassword: false,
     message: ""
   };
+  const defaultForm = {
+    email: "",
+    password: "",
+    confirmPassword: "",
+    mode: MODE_SIGNIN,
+    loading: false
+  };
   const navigateTo = useNavigate();
 
   /* ===== CONTEXTS ===== */
   const { addMessage } = useContext(MessageContext);
 
   /* ===== STATES ===== */
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [mode, setMode] = useState(MODE_SIGNIN);
-  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState(defaultForm);
   const [error, setError] = useState(defaultError);
 
   /* ===== FUNCTIONS ===== */
-
-  // FUNCTION 1: handleChange - handle changes to the email input 
+  // FUNCTION 1: handleChange - handle changes to form inputs 
   // PRECONDITIONS (1 parameter):
   // 1.) e: an event object generated when the user makes a change to the email input 
   // POSTCONDITIONS (1 possible outcome):
-  // the email state hook is updated based on e.target.value
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    setError({ ...error, email: false });
+  // the relevant part of the form state hook is updated based on e.target.value,
+  // as well as e.target.name. the error state hook is also updated accordingly
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+
+    let err = { ...error, email: false };
+    if (name.toLowerCase().includes("password")) {
+      err = { ...error, password: false, confirmPassword: false };
+    }
+    setError(err);
   }
 
-  // FUNCTION 2: handleChange - handle changes to the password input 
-  // PRECONDITIONS (1 parameter):
-  // 1.) e: an event object generated when the user makes a change to the password input 
-  // POSTCONDITIONS (1 possible outcome):
-  // the password state hook is updated based on e.target.value
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    setError({ ...error, password: false, confirmPassword: false });
-  }
-
-  // FUNCTION 3: handleChange - handle changes to the password input 
-  // PRECONDITIONS (1 parameter):
-  // 1.) e: an event object generated when the user makes a change to the password input 
-  // POSTCONDITIONS (1 possible outcome):
-  // the password state hook is updated based on e.target.value
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-    setError({ ...error, password: false, confirmPassword: false });
-  }
-
-  // FUNCTION 4: getButtonText - get text for form button
+  // FUNCTION 2: getButtonText - get text for form button
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (3 possible outcomes):
   // based on the 3 possible modes, return the appropriate button text
   const getButtonText = () => {
-    switch (mode) {
+    switch (form.mode) {
       case MODE_SIGNIN:
         return "Sign In";
       case MODE_SIGNUP:
@@ -78,31 +67,27 @@ const Auth = () => {
   }
 
 
-  // FUNCTION 5: toSignIn - change mode to MODE_SIGNIN
-  // PRECONDITIONS: NONE
+  // FUNCTION 3: setMode - set mode field of form state hook
+  // PRECONDITIONS (1 parameter):
+  // 1.) mode: a string, one of the 3 (MODE_FORGOT_PASSWORD, MODE_SIGNIN, MODE_SIGNUP)
   // POSTCONDITIONS (1 possible outcome):
-  // the mode statehook is update to MODE_SIGNIN
-  const toSignIn = () => {
-    setMode(MODE_SIGNIN);
+  // the mode field of the form state hook is update to be `mode`, &
+  // the error state hook is reset
+  const setMode = mode => {
+    setForm({ ...form, mode: mode });
+    setError(defaultError);
   }
 
-  // FUNCTION 6: toSignUp - change mode to MODE_SIGNUP
-  // PRECONDITIONS: NONE
+  // FUNCTION 4: setLoading - set loading field of form state hook
+  // PRECONDITIONS (1 parameter):
+  // 1.) isLoading: a bool, determines whether form is in loading state or not
   // POSTCONDITIONS (1 possible outcome):
-  // the mode statehook is update to MODE_SIGNUP
-  const toSignUp = () => {
-    setMode(MODE_SIGNUP);
+  // the loading field of the form state hook is update to be `loading`
+  const setLoading = isLoading => {
+    setForm({ ...form, loading: isLoading });
   }
 
-  // FUNCTION 7: toForgotPassword - change mode to MODE_HANDLE_PASSWORD
-  // PRECONDITIONS: NONE
-  // POSTCONDITIONS (1 possible outcome):
-  // the mode statehook is update to MODE_HANDLE_PASSWORD
-  const toForgotPassword = () => {
-    setMode(MODE_FORGOT_PASSWORD);
-  }
-
-  // FUNCTION 8: handleSubmit - function that executes when user submits form
+  // FUNCTION 5: handleSubmit - function that executes when user submits form
   // PRECONDITIONS (1 parameter):
   // 1.) e: event object generated when the user submits the form
   // POSTCONDITIONS (2 possible outcomes):
@@ -114,10 +99,11 @@ const Auth = () => {
     setLoading(true);
     setError(defaultError);
 
-    switch (mode) {
+    switch (form.mode) {
       case MODE_SIGNIN:
         await signIn();
-        break;
+        setLoading(false);
+        return;
       case MODE_SIGNUP:
         await signUp();
         break;
@@ -126,16 +112,17 @@ const Auth = () => {
         break;
     }
 
-    setLoading(false);
+    setForm(defaultForm);
   }
 
-  // FUNCTION 9: signIn - function that signs in user
+  // FUNCTION 6: signIn - function that signs in user
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes)
   // if sign in is successful, user is informed that the sign in was successful, and
   // they are redirected to the home screen.
   // if unsuccessful, error message is rendered to the user
   const signIn = async () => {
+    const { email, password } = form;
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password
@@ -146,16 +133,16 @@ const Auth = () => {
       return
     }
 
-    addMessage("Sign in successful!");
-    navigateTo("/");
+    addMessage("Login successful!", "success", 5000);
   }
 
-  // FUNCTION 10: signIn - function that signs up user
+  // FUNCTION 7: signIn - function that signs up user
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes)
   // if sign up is successful, user is informed that they can find an email to proceed
   // if unsuccessful, error message is rendered to user 
   const signUp = async () => {
+    const { email, password, confirmPassword } = form;
     if (password !== confirmPassword) {
       setError({ password: true, confirmPassword: true, message: "Passwords don't match." });
       return;
@@ -179,12 +166,13 @@ const Auth = () => {
     }
   }
 
-  // FUNCTION 11: passwordReset - function that resets user password
+  // FUNCTION 8: passwordReset - function that resets user password
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes)
   // if password reset is successful, user is informed that they can find an email to proceed
   // if unsuccessful, error message is rendered to user 
   const passwordReset = async () => {
+    const { email } = form;
     const { error } = await supabase.auth.resetPasswordForEmail(email);
 
     if (error) {
@@ -199,19 +187,11 @@ const Auth = () => {
     MODE_SIGNIN,
     MODE_SIGNUP,
     MODE_FORGOT_PASSWORD,
-    email,
-    password,
-    confirmPassword,
-    mode,
-    loading,
+    form,
     error,
-    handleEmailChange,
-    handlePasswordChange,
-    handleConfirmPasswordChange,
+    handleChange,
     getButtonText,
-    toSignIn,
-    toSignUp,
-    toForgotPassword,
+    setMode,
     handleSubmit
   };
 }

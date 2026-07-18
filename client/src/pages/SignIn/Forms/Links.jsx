@@ -2,17 +2,17 @@
 import styles from "./Auth.module.css";
 import AuthHelper from "./Auth.js";
 
-function Links({ mode, signIn, signUp, forgotPassword }) {
+function Links({ mode, setMode }) {
   /* ===== VARIABLES ===== */
-  const { MODE_SIGNIN } = AuthHelper();
+  const { MODE_SIGNIN, MODE_SIGNUP, MODE_FORGOT_PASSWORD } = AuthHelper();
 
   if (mode === MODE_SIGNIN) {
     return (
       <div className={ `${styles.container} ${styles.links} center` }>
-        <span onClick={ forgotPassword }>
+        <span onClick={ () => setMode(MODE_FORGOT_PASSWORD) }>
           Forgot your password?
         </span>
-        <span onClick={ signUp }>
+        <span onClick={ () => setMode(MODE_SIGNUP) }>
           Don't have an account? Sign up
         </span>
       </div>
@@ -21,7 +21,7 @@ function Links({ mode, signIn, signUp, forgotPassword }) {
 
   return (
     <div className={ `${styles.container} ${styles.links} center` }>
-      <span onClick={ signIn }>Already have an account? Sign in</span>
+      <span onClick={ () => setMode(MODE_SIGNIN) }>Already have an account? Sign in</span>
     </div>
   );
 }

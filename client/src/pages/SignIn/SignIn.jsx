@@ -61,6 +61,12 @@ function SignIn() {
   /* ===== EFFECTS ===== */
 
   // code that is executed each time the user state is updated
+  useEffect(() => {
+    if (user.id) {
+      navigateTo("/");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
 
   /* ===== SIGN IN COMPONENT ===== */
