@@ -61,13 +61,7 @@ function SignIn() {
   /* ===== EFFECTS ===== */
 
   // code that is executed each time the user state is updated
-  useEffect(() => {
-    if (user.id) {
-      addMessage("Login successful!", "success", 5000);
-      navigateTo("/");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+
 
   /* ===== SIGN IN COMPONENT ===== */
   return (
@@ -78,14 +72,14 @@ function SignIn() {
         <div className={ styles.logo }>
           <Logo />
         </div>
-        <Auth isSignIn />
-        <MemoizedAuth
-          supabaseClient={ supabase }
-          theme="dark"
-          appearance={ theme }
-          providers={ [] }
-          redirectTo={ `${window.location.origin}` }
-        />
+        <Auth />
+        {/* <MemoizedAuth */ }
+        {/*   supabaseClient={ supabase } */ }
+        {/*   theme="dark" */ }
+        {/*   appearance={ theme } */ }
+        {/*   providers={ [] } */ }
+        {/*   redirectTo={ `${window.location.origin}` } */ }
+        {/* /> */ }
       </div>
 
       { /* Right: render a fancy image (1000px) */ }

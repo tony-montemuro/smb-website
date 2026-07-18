@@ -1,0 +1,27 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.links span {
+	cursor: pointer;
+	text-decoration: underline;
+	color: rgb(var(--color-link));
+}
+
+.links span:hover {
+	color: rgb(var(--color-link-hover));
+}
+
+#form {
+	padding: var(--app-padding) 0;
+}
+
+#button {
+	padding: 15px;
+}
+
+#error {
+	color: rgb(var(--color-error));
+}

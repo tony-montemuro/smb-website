@@ -1,4 +1,5 @@
 /* ===== IMPORTS ===== */
+import styles from "./Auth.module.css";
 import AuthHelper from "./Auth.js";
 
 function Links({ mode, signIn, signUp, forgotPassword }) {
@@ -7,7 +8,7 @@ function Links({ mode, signIn, signUp, forgotPassword }) {
 
   if (mode === MODE_SIGNIN) {
     return (
-      <div>
+      <div className={ `${styles.container} ${styles.links} center` }>
         <span onClick={ forgotPassword }>
           Forgot your password?
         </span>
@@ -19,7 +20,7 @@ function Links({ mode, signIn, signUp, forgotPassword }) {
   }
 
   return (
-    <div>
+    <div className={ `${styles.container} ${styles.links} center` }>
       <span onClick={ signIn }>Already have an account? Sign in</span>
     </div>
   );
