@@ -2,7 +2,6 @@
 import { MessageContext } from "../../../utils/Contexts";
 import { supabase } from "../../../database/SupabaseClient.jsx";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
   /* ===== VARIABLES ===== */
@@ -22,7 +21,6 @@ const Auth = () => {
     mode: MODE_SIGNIN,
     loading: false
   };
-  const navigateTo = useNavigate();
 
   /* ===== CONTEXTS ===== */
   const { addMessage } = useContext(MessageContext);
@@ -99,17 +97,23 @@ const Auth = () => {
     setLoading(true);
     setError(defaultError);
 
+    let success;
     switch (form.mode) {
       case MODE_SIGNIN:
         await signIn();
         setLoading(false);
         return;
       case MODE_SIGNUP:
-        await signUp();
+        success = await signUp();
         break;
       case MODE_FORGOT_PASSWORD:
-        await passwordReset();
+        success = await passwordReset();
         break;
+    }
+
+    if (!success) {
+      setLoading(false);
+      return;
     }
 
     setForm(defaultForm);
@@ -139,13 +143,14 @@ const Auth = () => {
   // FUNCTION 7: signIn - function that signs up user
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes)
-  // if sign up is successful, user is informed that they can find an email to proceed
-  // if unsuccessful, error message is rendered to user 
+  // if sign up is successful, user is informed that they can find an email to proceed, &
+  // true is returned
+  // if unsuccessful, error message is rendered to user, and false is returned 
   const signUp = async () => {
     const { email, password, confirmPassword } = form;
     if (password !== confirmPassword) {
       setError({ password: true, confirmPassword: true, message: "Passwords don't match." });
-      return;
+      return false;
     }
 
     const options = { emailRedirectTo: window.location.origin };
@@ -157,30 +162,36 @@ const Auth = () => {
     });
 
     if (error) {
-      setError({ email: true, password: true, message: error.message });
-      return;
+      setError({ email: true, password: true, confirmPassword: true, message: error.message });
+      return false;
     }
 
     if (user && !session) {
       addMessage("Success! Check your email for the confirmation link.");
     }
+
+    return true;
   }
 
   // FUNCTION 8: passwordReset - function that resets user password
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes)
-  // if password reset is successful, user is informed that they can find an email to proceed
-  // if unsuccessful, error message is rendered to user 
+  // if password reset is successful, user is informed that they can find an email to proceed,
+  // and true is returned
+  // if unsuccessful, error message is rendered to user, and false is returned 
   const passwordReset = async () => {
     const { email } = form;
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    const options = { redirectTo: `${window.location.origin}/profile` };
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, options);
 
     if (error) {
       setError({ email: true, message: error.message });
-      return
+      return false;
     }
 
     addMessage("Success! Check your email for the password reset link.");
+    return true;
   }
 
   return {

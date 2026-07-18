@@ -1,59 +1,17 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, UserContext } from "../../utils/Contexts";
-import { supabase } from "../../database/SupabaseClient";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./SignIn.module.css";
-import Auth from "./Forms/Auth.jsx";
+import Auth from "./Auth/Auth.jsx";
 import Logo from "../../assets/svg/Logo.jsx";
 import LoginImage from "../../assets/png/login.png";
-import MemoizedAuth from "./MemoizedAuth.jsx";
 
 function SignIn() {
   /* ===== VARIABLES ===== */
   const navigateTo = useNavigate();
-  const theme = {
-    theme: {
-      ...ThemeSupa,
-      dark: {
-        ...ThemeSupa.dark,
-        colors: {
-          ...ThemeSupa.dark.colors,
-          brand: "rgb(var(--color-button))",
-          brandAccent: "rgb(var(--color-button-hover))",
-          brandButtonText: "black",
-        }
-      },
-      default: {
-        ...ThemeSupa.default,
-        colors: {
-          ...ThemeSupa.default.colors,
-          brand: "rgb(var(--color-button))",
-          brandAccent: "rgb(var(--color-button-hover))",
-          brandButtonText: "black",
-          inputText: "white"
-        },
-        fonts: {
-          bodyFontFamily: "var(--font)",
-          buttonFontFamily: "var(--font)",
-          inputFontFamily: "var(--font)",
-          labelFontFamily: "var(--font)"
-        },
-        fontSizes: {
-          baseBodySize: "15px",
-          baseInputSize: "16px",
-          baseLabelSize: "16px",
-          baseButtonSize: "16px"
-        }
-      }
-    }
-  };
 
   /* ===== CONTEXTS ===== */
-
-  // add message function from message context
-  const { addMessage } = useContext(MessageContext);
 
   // user state from user context
   const { user } = useContext(UserContext);
@@ -79,13 +37,6 @@ function SignIn() {
           <Logo />
         </div>
         <Auth />
-        {/* <MemoizedAuth */ }
-        {/*   supabaseClient={ supabase } */ }
-        {/*   theme="dark" */ }
-        {/*   appearance={ theme } */ }
-        {/*   providers={ [] } */ }
-        {/*   redirectTo={ `${window.location.origin}` } */ }
-        {/* /> */ }
       </div>
 
       { /* Right: render a fancy image (1000px) */ }
