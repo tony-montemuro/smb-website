@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import styles from "./Levelboard.module.css";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import DetailedRecord from "../../components/DetailedRecord/DetailedRecord";

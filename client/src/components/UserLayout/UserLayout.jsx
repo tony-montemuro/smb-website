@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router";
 import { AppDataContext, ProfileContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react"; 
 import styles from "./UserLayout.module.css";

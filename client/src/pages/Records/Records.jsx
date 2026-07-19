@@ -1,6 +1,6 @@
 /* ===== IMPORTS ====== */
 import { AppDataContext, GameContext, MessageContext } from "../../utils/Contexts";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import styles from "./Records.module.css";
 import Container from "../../components/Container/Container.jsx";

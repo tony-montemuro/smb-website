@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MuiTheme } from "./utils/Themes";
 import { ThemeProvider } from "@mui/material";

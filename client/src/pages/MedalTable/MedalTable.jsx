@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext, GameContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import styles from "./MedalTable.module.css";
 import BronzeIcon from "../../assets/svg/Icons/BronzeIcon.jsx";
 import CachedPageControls from "../../components/CachedPageControls/CachedPageControls.jsx";

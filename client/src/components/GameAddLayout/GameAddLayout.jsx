@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext, GameAddContext } from "../../utils/Contexts";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import AddGamePages from "./AddGamePages.jsx";
 import GameAddLayoutLogic from "./GameAddLayout.js";

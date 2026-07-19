@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { Fragment } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 import styles from "./RecordTable.module.css";
 import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper.js";

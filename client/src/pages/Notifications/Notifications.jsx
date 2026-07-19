@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext, MessageContext, UserContext } from "../../utils/Contexts";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import styles from "./Notifications.module.css";
 import Container from "../../components/Container/Container.jsx";

@@ -2,7 +2,7 @@
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { GameContext, PopupContext } from "../../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import dayjs from "dayjs";
 import styles from "./Update.module.css";
 import CachedPageControls from "../../../components/CachedPageControls/CachedPageControls.jsx";

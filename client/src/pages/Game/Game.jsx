@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext, GameContext } from "../../utils/Contexts";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./Game.module.css";
 import ButtonList from "../../components/ButtonList/ButtonList.jsx";

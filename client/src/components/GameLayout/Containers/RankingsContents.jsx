@@ -1,7 +1,7 @@
 /* ===== IMPORTS ====== */
 import { AppDataContext, GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import styles from "./RankingsContainer.module.css";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import GameHelper from "../../../helper/GameHelper";

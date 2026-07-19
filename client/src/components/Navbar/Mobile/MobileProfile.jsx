@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useContext } from "react";
 import { UserContext } from "../../../utils/Contexts";
 import styles from "./Mobile.module.css";

@@ -2,7 +2,7 @@
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AppDataContext, GameContext, UserContext } from "../../../utils/Contexts";
 import { useContext } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import dayjs from "dayjs";
 import styles from "./Insert.module.css";
 import Checkbox from "@mui/material/Checkbox";

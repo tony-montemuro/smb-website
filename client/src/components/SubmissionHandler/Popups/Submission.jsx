@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { renderPosition, PositionDisclaimer } from "../../Positions/Positions.jsx";
 import { PopupContext } from "../../../utils/Contexts";
 import { useContext, useEffect } from "react";

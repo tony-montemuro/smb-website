@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext, GameContext, MessageContext, UserContext } from "../../utils/Contexts";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Levelboard.module.css";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";

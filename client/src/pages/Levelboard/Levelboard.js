@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { isBefore } from "date-fns";
 import { useContext, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { GameContext, MessageContext, UserContext } from "../../utils/Contexts";
 import DateHelper from "../../helper/DateHelper";
 import FrontendHelper from "../../helper/FrontendHelper";

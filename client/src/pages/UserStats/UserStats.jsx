@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext, ProfileContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import styles from "./UserStats.module.css";
 import Container from "../../components/Container/Container.jsx";
 import FrontendHelper from "../../helper/FrontendHelper";

@@ -2,7 +2,7 @@
 import { LivePosition, Position, PositionDisclaimer } from "../Positions/Positions.jsx";
 import { PopupContext, UserContext } from "../../utils/Contexts";
 import { useContext } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import styles from "./SubmissionDetails.module.css";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";

@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext } from "../../utils/Contexts.js";
 import { useContext, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import styles from "./RecentSubmissions.module.css";
 import GameFilter from "./ListFilters/GameFilter.jsx";
 import OtherFilter from "./OtherFilter/OtherFilter.jsx";

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import styles from "./Stats.module.css";
 import FrontendHelper from "../../../helper/FrontendHelper";
 

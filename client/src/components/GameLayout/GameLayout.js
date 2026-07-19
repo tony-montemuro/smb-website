@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { useState } from "react";
 import GameHelper from "../../helper/GameHelper";
 import GameRead from "../../database/read/GameRead.js";

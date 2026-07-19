@@ -1,8 +1,8 @@
 /* ===== IMPORTS ====== */
 import { AppDataContext, GameContext, MessageContext } from "../../utils/Contexts";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import styles from "./GameLayout.module.css";
 import Container from "../Container/Container.jsx";
 import GameHeader from "./Containers/GameHeader.jsx";

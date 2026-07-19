@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import styles from "./GameRow.module.css";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import BoxArt from "../BoxArt/BoxArt.jsx";
 import StylesHelper from "../../helper/StylesHelper.js";
 

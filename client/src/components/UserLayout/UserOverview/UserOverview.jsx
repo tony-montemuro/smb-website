@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { ProfileContext } from "../../../utils/Contexts";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useContext } from "react";
 import styles from "./UserOverview.module.css";
 import Avatar from "../../Avatar/Avatar.jsx";

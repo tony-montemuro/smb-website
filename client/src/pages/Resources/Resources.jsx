@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { CaptureCards, OBS } from "./Contents/GettingStarted.jsx";
 import { Emulators, General, PausingRule, ProofRequirements, Regions, ReplayErrors, ScoreCalculation, Types } from "./Contents/Overview.jsx";
 import styles from "./Resources.module.css";

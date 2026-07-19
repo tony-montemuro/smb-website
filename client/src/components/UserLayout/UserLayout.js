@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import RPCRead from "../../database/read/RPCRead";
 import ScrollHelper from "../../helper/ScrollHelper";
 

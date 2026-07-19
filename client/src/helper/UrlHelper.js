@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 
 const UrlHelper = () => {
     /* ===== VARIABLES ===== */

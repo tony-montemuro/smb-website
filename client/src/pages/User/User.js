@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { ProfileContext } from "../../utils/Contexts";
 import { useContext, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const User = () => {
     /* ===== VARIABLES ===== */

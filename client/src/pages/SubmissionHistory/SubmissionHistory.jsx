@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import { GameContext, MessageContext } from "../../utils/Contexts";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import styles from "./SubmissionHistory.module.css";
 import Container from "../../components/Container/Container.jsx";
 import FancyLevel from "../../components/FancyLevel/FancyLevel.jsx";
