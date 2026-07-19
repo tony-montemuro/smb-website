@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext } from "../../../utils/Contexts.js";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useContext } from "react";
 import FancyLevel from "../../../components/FancyLevel/FancyLevel.jsx";
 import FrontendHelper from "../../../helper/FrontendHelper";

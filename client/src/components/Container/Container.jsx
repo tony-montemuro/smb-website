@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import styles from "./Container.module.css";
 
 function Container({ title, largeTitle, href, children }) {

@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import RPCRead from "../../database/read/RPCRead";
 import SubmissionRead from "../../database/read/SubmissionRead";
 import UrlHelper from "../../helper/UrlHelper";

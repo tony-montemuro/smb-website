@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 import { red } from "@mui/material/colors";
 import styles from "./DetailedRecord.module.css";
 import CheckIcon from "@mui/icons-material/Check";

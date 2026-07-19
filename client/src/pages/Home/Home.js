@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import { MessageContext } from "../../utils/Contexts";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useContext, useState } from "react";
 import PostRead from "../../database/read/PostRead";
 

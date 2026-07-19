@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import "./App.css";
 import { AppDataContext, MessageContext, UserContext } from "./utils/Contexts";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import { useEffect } from "react";
 import Administrator from "./pages/Administrator/Administrator.jsx";
 import AdministratorLayout from "./components/AdministratorLayout/AdministratorLayout.jsx";

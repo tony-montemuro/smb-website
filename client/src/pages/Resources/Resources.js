@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 import ScrollHelper from "../../helper/ScrollHelper";
 

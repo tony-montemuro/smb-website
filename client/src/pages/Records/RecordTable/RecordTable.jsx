@@ -1,6 +1,6 @@
 /* ===== IMPORTS ===== */
 import styles from "./RecordTable.module.css";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import LevelHelper from "../../../helper/LevelHelper.js";
 import RecordTableRow from "./RecordTableRow";

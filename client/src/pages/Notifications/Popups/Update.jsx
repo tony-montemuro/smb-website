@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { AppDataContext, PopupContext } from "../../../utils/Contexts";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import styles from "./Popups.module.css";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckmarkOrX from "./CheckmarkOrX";

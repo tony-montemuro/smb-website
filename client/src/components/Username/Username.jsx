@@ -1,5 +1,5 @@
 /* ===== IMPORTS ====== */
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import styles from "./Username.module.css";
 import CountryFlag from "../CountryFlag/CountryFlag";
 

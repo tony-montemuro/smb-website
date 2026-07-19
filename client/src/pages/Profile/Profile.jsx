@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { MessageContext, UserContext } from "../../utils/Contexts";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import styles from "./Profile.module.css";
 import AvatarInfoForm from "./Forms/AvatarInfoForm.jsx";
 import Container from "../../components/Container/Container.jsx";

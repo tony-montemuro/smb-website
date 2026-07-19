@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import styles from "./Totalizer.module.css";
 import DetailedUsername from "../../components/DetailedUsername/DetailedUsername.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";

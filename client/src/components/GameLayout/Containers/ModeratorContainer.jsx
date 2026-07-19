@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { GameContext } from "../../../utils/Contexts";
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import styles from "./ModeratorContainer.module.css";
 import Items from "../../Items/Items.jsx";
 import UserRow from "../../UserRow/UserRow.jsx";

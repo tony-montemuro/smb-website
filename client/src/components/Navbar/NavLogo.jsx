@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import styles from "./Navbar.module.css";
 import Logo from "../../assets/svg/Logo.jsx";
 import MobileLogo from "./Mobile/MobileLogo.jsx";

@@ -1,8 +1,8 @@
 /* ===== IMPORTS ===== */
 import { MessageContext, ModeratorLayoutContext, UserContext } from "../../utils/Contexts";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import Loading from "../Loading/Loading.jsx";
 import ModeratorLogic from "./ModeratorLayout.js";
 import ModeratorTabs from "../ModeratorTabs/ModeratorTabs.jsx";

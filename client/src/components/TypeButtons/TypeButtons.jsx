@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import styles from "./TypeButtons.module.css";
 import UrlHelper from "../../helper/UrlHelper";
 

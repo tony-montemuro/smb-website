@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { GameContext, MessageContext, PopupContext, UserContext } from "../../../utils/Contexts";
 import { useContext, useReducer } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import DateHelper from "../../../helper/DateHelper";
 import FrontendHelper from "../../../helper/FrontendHelper";
 import SubmissionUpdate from "../../../database/update/SubmissionUpdate";

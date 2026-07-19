@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import styles from "./ModeratorTabs.module.css";
 import ModeratorTabLogic from "./ModeratorTab.js";
 

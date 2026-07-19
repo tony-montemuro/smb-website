@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import styles from "./Mobile.module.css";
 import CloseButton from "../../CloseButton/CloseButton.jsx";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";

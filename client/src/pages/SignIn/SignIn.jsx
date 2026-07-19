@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { UserContext } from "../../utils/Contexts";
 import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import styles from "./SignIn.module.css";
 import Auth from "./Auth/Auth.jsx";
 import Logo from "../../assets/svg/Logo.jsx";
