@@ -10,7 +10,10 @@ import App from "./App.jsx";
 // create root, and render
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
+  <BrowserRouter future={ {
+    v7_relativeSplatPath: true,
+    v7_startTransition: true
+  } }>
     <ThemeProvider theme={ MuiTheme }>
       <LocalizationProvider dateAdapter={ AdapterDayjs }>
         <App />
