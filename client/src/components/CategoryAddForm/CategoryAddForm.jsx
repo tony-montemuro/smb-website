@@ -24,26 +24,30 @@ function CategoryAddForm({ submitting, setSubmitting }) {
         <TextField
           helperText={ `${ form.values.name.length }/${ NAME_LENGTH_MAX }` }
           id="name"
-          inputProps={ { maxLength: NAME_LENGTH_MAX } }
           label="Category Name"
           onChange={ handleChange }
           placeholder={ `Must be ${ NAME_LENGTH_MAX } characters or less` }
           required
           value={ form.values.name }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: NAME_LENGTH_MAX }
+          }}
         />
         <TextField
           color={ form.error.abb ? "error" : "primary" }
           error={ form.error.abb ? true : false }
           helperText={ form.error.abb ? form.error.abb : `${ form.values.abb.length }/${ ABB_LENGTH_MAX }` }
           id="abb"
-          inputProps={ { maxLength: ABB_LENGTH_MAX } }
           label="Category Abbreviation"
           onChange={ handleChange }
           placeholder={ `Must be ${ ABB_LENGTH_MAX } characters or less` }
           required
           value={ form.values.abb }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: ABB_LENGTH_MAX }
+          }}
         />
         <FormGroup>
           <FormControlLabel 

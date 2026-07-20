@@ -29,13 +29,15 @@ function PasswordForm() {
               fullWidth
               helperText={ form.error.password ? form.error.password : null }
               id="password"
-              inputProps={ { minLength: PASSWORD_MIN_LENGTH, maxLength: PASSWORD_MAX_LENGTH } }
               label="New Password"
               placeholder={ limitMessage }
               onChange={ handleChange }
               type="password"
               value={ form.values.password }
               variant="filled"
+              slotProps={{
+                htmlInput: { minLength: PASSWORD_MIN_LENGTH, maxLength: PASSWORD_MAX_LENGTH }
+              }}
             />
             <TextField
               autoComplete="new-password" 
@@ -43,13 +45,15 @@ function PasswordForm() {
               fullWidth
               helperText={ form.error.confirmation ? form.error.confirmation : null }
               id="confirmation"
-              inputProps={ { minLength: PASSWORD_MIN_LENGTH, maxLength: PASSWORD_MAX_LENGTH } }
               label="Confirm Password"
               placeholder={ limitMessage }
               onChange={ handleChange }
               type="password"
               value={ form.values.confirmation }
               variant="filled"
+              slotProps={{
+                htmlInput: { minLength: PASSWORD_MIN_LENGTH, maxLength: PASSWORD_MAX_LENGTH }
+              }}
             />
 
             { /* Button that submits the form */ }

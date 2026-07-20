@@ -69,7 +69,6 @@ function ReportForm({ updateBoards }) {
                 fullWidth
                 helperText={ `${ message.length }/${ MESSAGE_MAX_LENGTH }` }
                 id="message"
-                inputProps={ { maxLength: MESSAGE_MAX_LENGTH } }
                 label="Message"
                 multiline
                 placeholder="Must be under 100 characters"
@@ -78,6 +77,9 @@ function ReportForm({ updateBoards }) {
                 onChange={ handleChange }
                 value={ message }
                 variant="filled"
+                slotProps={{
+                  htmlInput: { maxLength: MESSAGE_MAX_LENGTH }
+                }}
               />
       
               { /* Button that, when pressed, reports the submission */ }

@@ -120,10 +120,12 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             fullWidth
             helperText="This field cannot be updated."
             id="record"
-            inputProps={ { readOnly: true } }
             label={ capitalize(type) }
             value={ form.values.record }
             variant="filled"
+            slotProps={{
+              htmlInput: { readOnly: true }
+            }}
           />
           <DatePicker 
             color={ form.error.submitted_at ? "error" : "primary" }
@@ -151,10 +153,12 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
               id="version"
               label="Game Version"
               select
-              SelectProps={{ native: true }}
               onChange={ handleChange }
               value={ form.values.version }
               variant="filled"
+              slotProps={{
+                select: { native: true }
+              }}
             >
               { game.version.map(version => (
                 <option value={ version.id } key={ version.id }>{ version.version }</option>
@@ -168,10 +172,12 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             id="monkey_id"
             label="Monkey"
             select
-            SelectProps={{ native: true }}
             onChange={ handleChange }
             value={ form.values.monkey_id }
             variant="filled"
+            slotProps={{
+              select: { native: true }
+            }}
           >
             { game.monkey.map(monkey => (
               <option value={ monkey.id } key={ monkey.id } >{ monkey.monkey_name }</option>
@@ -184,10 +190,12 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             id="platform_id"
             label="Platform"
             select
-            SelectProps={{ native: true }}
             onChange={ handleChange }
             value={ form.values.platform_id }
             variant="filled"
+            slotProps={{
+              select: { native: true }
+            }}
           >
             { game.platform.map(platform => (
               <option value={ platform.id } key={ platform.id } >{ platform.platform_name }</option>
@@ -200,10 +208,12 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             id="region_id"
             label="Region"
             select
-            SelectProps={{ native: true }}
             onChange={ handleChange }
             value={ form.values.region_id }
             variant="filled"
+            slotProps={{
+              select: { native: true }
+            }}
           >
             { game.region.map(region => (
               <option value={ region.id } key={ region.id } >{ region.region_name }</option>
@@ -259,7 +269,6 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             fullWidth
             helperText={ form.values.comment !== form.submission.comment ? updateFieldText : null }
             id="comment"
-            inputProps={ { maxLength: COMMENT_MAX_LENGTH } }
             label="Comment"
             multiline
             placeholder="Must be under 100 characters"
@@ -267,6 +276,9 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             onChange={ handleChange }
             value={ form.values.comment }
             variant="filled"
+            slotProps={{
+              htmlInput: { maxLength: COMMENT_MAX_LENGTH }
+            }}
           />
 
           { /* Form submission btns: reset or submit the form. */ }
@@ -286,7 +298,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
 
       </form>
   
-    </div>
+    </div>;
 };
 
 /* ===== EXPORTS ===== */

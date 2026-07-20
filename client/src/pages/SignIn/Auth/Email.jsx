@@ -10,12 +10,6 @@ function Email({ email, handleEmailChange, isError }) {
       error={ isError }
       fullWidth
       id="email"
-      inputProps={ {
-        inputMode: 'email',
-        autoCapitalize: 'off',
-        autoCorrect: 'off',
-        spellCheck: false
-      } }
       label="Email"
       name="email"
       placeholder="Your email address"
@@ -24,6 +18,14 @@ function Email({ email, handleEmailChange, isError }) {
       type="email"
       value={ email }
       variant="filled"
+      slotProps={{
+        htmlInput: {
+          inputMode: 'email',
+          autoCapitalize: 'off',
+          autoCorrect: 'off',
+          spellCheck: false
+        }
+      }}
     />
   );
 }

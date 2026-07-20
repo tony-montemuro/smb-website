@@ -33,7 +33,6 @@ function Post() {
   return (
     <div className={ styles.post }>
       <h1>Create Post</h1>
-
       { /* Post form: this is where the user can create their post - title, body, link, & link description */ }
       <form className={ styles.form } onSubmit={ onPostSubmit }>
         <TextField 
@@ -41,20 +40,21 @@ function Post() {
           fullWidth
           helperText={ `${ form.values.title.length }/${ TITLE_MAX_LENGTH }` }
           id="title"
-          inputProps={ { maxLength: TITLE_MAX_LENGTH } }
           label="Title"
-          placeholder={ `Must be under ${ TITLE_MAX_LENGTH } characters` } 
-          onChange={ handleChange }
+          placeholder={ `Must be under ${ TITLE_MAX_LENGTH } characters` }
+          onChange={ handleChange } 
           required
           value={ form.values.title }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: TITLE_MAX_LENGTH }
+          }}
         />
         <TextField
           color="primary"
           fullWidth
           helperText={ `${ form.values.body.length }/${ BODY_MAX_LENGTH }` }
           id="body"
-          inputProps={ { maxLength: BODY_MAX_LENGTH } }
           label="Body"
           multiline
           placeholder={ `Must be under ${ BODY_MAX_LENGTH } characters` }
@@ -63,19 +63,24 @@ function Post() {
           required
           value={ form.values.body }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: BODY_MAX_LENGTH }
+          }}
         />
         <TextField 
           color="primary"
           fullWidth
           helperText={ `${ form.values.link.length }/${ LINK_MAX_LENGTH }` }
           id="link"
-          inputProps={ { maxLength: LINK_MAX_LENGTH } }
           label="Link"
           placeholder={ `Must be under ${ LINK_MAX_LENGTH } characters` }
           onChange={ handleChange }
           type="url"
           value={ form.values.link }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: LINK_MAX_LENGTH }
+          }}
         />
         <TextField 
           color={ form.error ? "error" : "primary" }
@@ -83,12 +88,14 @@ function Post() {
           fullWidth
           helperText={ form.error ? form.error : `${ form.values.link_description.length }/${ LINK_DESCRIPTION_MAX_LENGTH }` }
           id="link_description"
-          inputProps={ { maxLength: LINK_DESCRIPTION_MAX_LENGTH } }
           label="Link Description"
           placeholder={ `Must be under ${ LINK_DESCRIPTION_MAX_LENGTH } characters` }
           onChange={ handleChange }
           value={ form.values.link_description }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: LINK_DESCRIPTION_MAX_LENGTH }
+          }}
         />
 
         { /* Post form submit - when pressed, the post will be uploaded */ }

@@ -16,7 +16,6 @@ function Password({ form, handleChange, mode, error }) {
         error={ error.password }
         fullWidth
         id="password"
-        inputProps={ { minLength: MIN_PASSWORD_LENGTH } }
         label="Password"
         name="password"
         placeholder="Your password"
@@ -25,6 +24,9 @@ function Password({ form, handleChange, mode, error }) {
         type="password"
         value={ form.password }
         variant="filled"
+        slotProps={{
+          htmlInput: { minLength: MIN_PASSWORD_LENGTH }
+        }}
       />
       {
         mode === MODE_SIGNUP && <TextField
@@ -33,7 +35,6 @@ function Password({ form, handleChange, mode, error }) {
           error={ error.confirmPassword }
           fullWidth
           id="confirm-passowrd"
-          inputProps={ { minLength: MIN_PASSWORD_LENGTH } }
           label="Confirm Password"
           name="confirmPassword"
           placeholder="Your password"
@@ -42,10 +43,13 @@ function Password({ form, handleChange, mode, error }) {
           type="password"
           value={ form.confirmPassword }
           variant="filled"
+          slotProps={{
+            htmlInput: { minLength: MIN_PASSWORD_LENGTH }
+          }}
         />
       }
     </>
-  )
+  );
 }
 
 /* ===== PASSWORD ====== */

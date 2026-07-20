@@ -73,12 +73,10 @@ function MetadataForm() {
           adminMode={ adminModeProp }
         />
 			</Popup>
-
       <form onSubmit={ validateAndUpdate } className={ styles.metadataForm }>
         <span><em>On this screen, you will fill out information directly related to the game.</em></span>
         <TextField 
           id="name"
-          inputProps={{ maxLength: NAME_LENGTH_MAX }}
           helperText={ `${ form.values.name.length }/${ NAME_LENGTH_MAX }` }
           label="Name"
           placeholder={ `Must be ${ NAME_LENGTH_MAX } characters or less` }
@@ -87,13 +85,15 @@ function MetadataForm() {
           required
           value={ form.values.name }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: NAME_LENGTH_MAX }
+          }}
         />
 
         <TextField 
           color={ form.error.abb ? "error" : "primary" }
           error={ form.error.abb ? true : false }
           id="abb"
-          inputProps={{ maxLength: ABB_LENGTH_MAX }}
           helperText={ form.error.abb ? form.error.abb : `${ form.values.abb.length }/${ ABB_LENGTH_MAX }` }
           label="Abbreviation"
           placeholder={ `Must be ${ ABB_LENGTH_MAX } characters or less` }
@@ -102,6 +102,9 @@ function MetadataForm() {
           required
           value={ form.values.abb }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: ABB_LENGTH_MAX }
+          }}
         />
 
         <DatePicker 

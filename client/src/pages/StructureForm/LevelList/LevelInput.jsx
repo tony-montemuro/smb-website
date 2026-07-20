@@ -59,7 +59,6 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
         <TextField
           className={ styles.nameInput }
           id={ `${ id }-name` }
-          inputProps={{ maxLength: LEVEL_LENGTH_MAX }}
           helperText={ `${ localState.name.length }/${ LEVEL_LENGTH_MAX }` }
           label="Name"
           onBlur={ () => handleBlur(localState) }
@@ -67,6 +66,9 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
           placeholder={ `Must be ${ LEVEL_LENGTH_MAX } characters or less` }
           value={ levelB2F(localState.name) }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: LEVEL_LENGTH_MAX }
+          }}
         />
 
         <TextField
@@ -76,9 +78,11 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
           onBlur={ () => handleBlur(localState) }
           onChange={ e => updateLocalState(e) }
           select
-          SelectProps={ { native: true } }
           value={ localState.goal }
           variant="filled"
+          slotProps={{
+            select: { native: true }
+          }}
         >
           <option key="" value=""></option>
           { appData.goals.map(goal => (
@@ -98,9 +102,11 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
           onBlur={ () => handleBlur(localState) }
           onChange={ e => updateLocalState(e) }
           select
-          SelectProps={ { native: true } }
           value={ localState.chart_type }
           variant="filled"
+          slotProps={{
+            select: { native: true }
+          }}
         >
           { formData.chartTypes.map(chartType => (
             <option 
@@ -120,10 +126,12 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
           onBlur={ () => handleBlur(localState) }
           onChange={ e => updateLocalState(e) }
           select
-          SelectProps={ { native: true } }
           title={ chartType === "score" ? "Score charts cannot have a timer type." : null }
           value={ localState.timer_type }
           variant="filled"
+          slotProps={{
+            select: { native: true }
+          }}
         >
           <option key="" value=""></option>
           { formData.timerTypes.map(timerType => (
@@ -205,11 +213,9 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
           </button>
         </div>
       </div>
-
       { error &&
         <FormHelperText error>{ error }</FormHelperText>
       }
-      
     </div>
   );
 };

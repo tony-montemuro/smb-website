@@ -12,16 +12,18 @@ function RecordInput({ form, handleChange, timerType, type }) {
         fullWidth
         helperText={ form.error.record ? form.error.record : null }
         id="record"
-        inputProps={ { 
-          inputMode: "numeric",
-          pattern: "[0-9]*",
-        } }
         label="Score"
         onChange={ handleChange }
         placeholder="Do not include commas"
         required
         value={ form.values.record }
         variant="filled"
+        slotProps={{
+          htmlInput: { 
+            inputMode: "numeric",
+            pattern: "[0-9]*",
+          }
+        }}
       />
     );
   }
@@ -36,14 +38,16 @@ function RecordInput({ form, handleChange, timerType, type }) {
           fullWidth
           helperText={ form.error.hour ? form.error.hour : null }
           id="hour"
-          inputProps={ { 
-            inputMode: "numeric",
-            pattern: "[0-9]*",
-          } }
           label="Hours"
           onChange={ handleChange }
           value={ form.values.hour }
           variant="filled"
+          slotProps={{
+            htmlInput: { 
+              inputMode: "numeric",
+              pattern: "[0-9]*",
+            }
+          }}
         />
       }
       { timerType.includes("min") &&
@@ -53,14 +57,16 @@ function RecordInput({ form, handleChange, timerType, type }) {
           fullWidth
           helperText={ form.error.minute ? form.error.minute : null }
           id="minute"
-          inputProps={ { 
-            inputMode: "numeric",
-            pattern: "[0-9]*",
-          } }
           label="Minutes"
           onChange={ handleChange }
           value={ form.values.minute }
           variant="filled"
+          slotProps={{
+            htmlInput: { 
+              inputMode: "numeric",
+              pattern: "[0-9]*",
+            }
+          }}
         />
       }
       { timerType.includes("sec") &&
@@ -70,14 +76,16 @@ function RecordInput({ form, handleChange, timerType, type }) {
           fullWidth
           helperText={ form.error.second ? form.error.second : null }
           id="second"
-          inputProps={ { 
-            inputMode: "numeric",
-            pattern: "[0-9]*",
-          } }
           label="Seconds"
           onChange={ handleChange }
           value={ form.values.second }
           variant="filled"
+          slotProps={{
+            htmlInput: { 
+              inputMode: "numeric",
+              pattern: "[0-9]*",
+            }
+          }}
         />
       }
       { timerType.includes("csec") &&
@@ -87,14 +95,16 @@ function RecordInput({ form, handleChange, timerType, type }) {
           fullWidth
           helperText={ form.error.centisecond ? form.error.centisecond : null }
           id="centisecond"
-          inputProps={ { 
-            inputMode: "numeric",
-            pattern: "[0-9]*",
-          } }
           label="Decimals"
           onChange={ handleChange }
           value={ form.values.centisecond }
           variant="filled"
+          slotProps={{
+            htmlInput: { 
+              inputMode: "numeric",
+              pattern: "[0-9]*",
+            }
+          }}
         />
       }
       { timerType.includes("msec") &&
@@ -104,14 +114,16 @@ function RecordInput({ form, handleChange, timerType, type }) {
           fullWidth
           helperText={ form.error.millisecond ? form.error.millisecond : null }
           id="millisecond"
-          inputProps={ { 
-            inputMode: "numeric",
-            pattern: "[0-9]*",
-          } }
           label="Decimals"
           onChange={ handleChange }
           value={ form.values.millisecond }
           variant="filled"
+          slotProps={{
+            htmlInput: { 
+              inputMode: "numeric",
+              pattern: "[0-9]*",
+            }
+          }}
         />
       }
     </>

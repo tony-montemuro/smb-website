@@ -55,9 +55,11 @@ function ChartDefaultsForm({ chartDefaults, handleChange }) {
                 label="Goal"
                 onChange={ handleChange }
                 select
-                SelectProps={ { native: true } }
                 value={ chartDefaults.goal }
                 variant="filled"
+                slotProps={{
+                  select: { native: true }
+                }}
               >
                 <option key="" value=""></option>
                 { appData.goals.map(goal => (
@@ -76,9 +78,11 @@ function ChartDefaultsForm({ chartDefaults, handleChange }) {
                 label="Chart Type"
                 onChange={ handleChange }
                 select
-                SelectProps={ { native: true } }
                 value={ chartDefaults.chart_type }
                 variant="filled"
+                slotProps={{
+                  select: { native: true }
+                }}
               >
                 { structureData.chartTypes.map(chartType => (
                   <option 
@@ -97,9 +101,11 @@ function ChartDefaultsForm({ chartDefaults, handleChange }) {
                 label="Timer Type"
                 onChange={ handleChange }
                 select
-                SelectProps={ { native: true } }
                 value={ chartDefaults.timer_type }
                 variant="filled"
+                slotProps={{
+                  select: { native: true }
+                }}
               >
                 <option key="" value=""></option>
                 { structureData.timerTypes.map(timerType => (
@@ -158,7 +164,6 @@ function ChartDefaultsForm({ chartDefaults, handleChange }) {
           <Loading />
         }
       </div>
-
     </ExpansionPanel>
   );
 };
