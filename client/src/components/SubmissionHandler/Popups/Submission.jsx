@@ -36,22 +36,22 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
   const COMMENT_ROWS = 2;
   const updateFieldText = "This field has been updated.";
   const immutableText = "This field cannot be updated.";
-  let chartUrl = `/games/${ game.abb }/${ category }/${ type }/${ submission.level.name }`;
+  let chartUrl = `/games/${game.abb}/${category}/${type}/${submission.level.name}`;
   if (game.version.length > 0) {
-    chartUrl += `?version=${ submission.version.version }`;
+    chartUrl += `?version=${submission.version.version}`;
   }
 
   /* ===== FUNCTIONS ===== */
 
   // states & functions from the js file
-  const { 
-    form, 
-    showReject, 
+  const {
+    form,
+    showReject,
     setShowReject,
-    fillForm, 
-    handleChange, 
+    fillForm,
+    handleChange,
     handleSubmittedAtChange,
-    handleToggle, 
+    handleToggle,
     clearMessage,
     isFormUnchanged,
     onApproveClick,
@@ -69,7 +69,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* ===== SUBMISSION COMPONENT ===== */ 
+  /* ===== SUBMISSION COMPONENT ===== */
   return form.values &&
     <div className={ styles.submission }>
 
@@ -81,7 +81,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
           </Link>
         </h1>
         <h2>
-          { recordB2F(submission.record, type, submission.level.timer_type) } by <Username profile={ submission.profile } /> 
+          { recordB2F(submission.record, type, submission.level.timer_type) } by <Username profile={ submission.profile } />
         </h2>
 
         { /* If submission is reported, render the reasoning left by the creator of the report. */ }
@@ -117,45 +117,45 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
             <div className={ styles.formWrapper }>
 
               { /* The various fields of the form, which describe the submission */ }
-              <TextField 
+              <TextField
                 fullWidth
                 helperText={ immutableText }
                 id="all_position"
                 label="Position"
                 value={ renderPosition(submission.id, submission.submitted_at) ? submission.all_position : "-" }
                 variant="filled"
-                slotProps={{
+                slotProps={ {
                   htmlInput: { readOnly: true }
-                }}
+                } }
               />
-              { submission.position && 
-                <TextField 
+              { submission.position &&
+                <TextField
                   fullWidth
                   helperText={ immutableText }
                   id="position"
                   label="Live Position"
                   value={ renderPosition(submission.id, submission.submitted_at) ? submission.position : "-" }
                   variant="filled"
-                  slotProps={{
+                  slotProps={ {
                     htmlInput: { readOnly: true }
-                  }}
+                  } }
                 />
               }
-              <DatePicker 
-                color={ form.error.submitted_at ? "error" : (form.values.submitted_at !== dateB2F(submission.submitted_at) ? "success" : "primary") }
+              <DatePicker
                 disableFuture
                 label="Date"
                 format="YYYY-MM-DD"
                 minDate={ dayjs(game.min_date) }
                 value={ form.values.submitted_at ? dayjs(form.values.submitted_at) : form.values.submitted_at }
                 onChange={ handleSubmittedAtChange }
-                slotProps={{
-                  textField: { 
+                slotProps={ {
+                  textField: {
+                    color: form.error.submitted_at ? "error" : (form.values.submitted_at !== dateB2F(submission.submitted_at) ? "success" : "primary"),
                     fullWidth: true,
                     helperText: form.error.submitted_at ? form.error.submitted_at : (form.values.submitted_at !== dateB2F(submission.submitted_at) ? updateFieldText : null),
                     variant: "filled"
                   }
-                }}
+                } }
               />
               { game.version.length > 0 &&
                 <TextField
@@ -168,13 +168,13 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                   onChange={ handleChange }
                   value={ form.values.version }
                   variant="filled"
-                  slotProps={{
+                  slotProps={ {
                     select: { native: true }
-                  }}
+                  } }
                 >
                   { game.version.map(version => (
                     <option value={ version.id } key={ version.id } >{ version.version }</option>
-                  ))}
+                  )) }
                 </TextField>
               }
               <TextField
@@ -187,13 +187,13 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 onChange={ handleChange }
                 value={ form.values.monkey_id }
                 variant="filled"
-                slotProps={{
+                slotProps={ {
                   select: { native: true }
-                }}
+                } }
               >
                 { game.monkey.map(monkey => (
                   <option value={ monkey.id } key={ monkey.id } >{ monkey.monkey_name }</option>
-                ))}
+                )) }
               </TextField>
               <TextField
                 color={ parseInt(form.values.platform_id) !== submission.platform.id ? "success" : "primary" }
@@ -205,13 +205,13 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 onChange={ handleChange }
                 value={ form.values.platform_id }
                 variant="filled"
-                slotProps={{
+                slotProps={ {
                   select: { native: true }
-                }}
+                } }
               >
                 { game.platform.map(platform => (
                   <option value={ platform.id } key={ platform.id } >{ platform.platform_name }</option>
-                ))}
+                )) }
               </TextField>
               <TextField
                 color={ parseInt(form.values.region_id) !== submission.region.id ? "success" : "primary" }
@@ -223,15 +223,15 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 onChange={ handleChange }
                 value={ form.values.region_id }
                 variant="filled"
-                slotProps={{
+                slotProps={ {
                   select: { native: true }
-                }}
+                } }
               >
                 { game.region.map(region => (
                   <option value={ region.id } key={ region.id } >{ region.region_name }</option>
-                ))}
+                )) }
               </TextField>
-              <TextField 
+              <TextField
                 autoComplete="off"
                 color={ form.error.proof ? "error" : (form.values.proof !== submission.proof ? "success" : "primary") }
                 fullWidth
@@ -244,34 +244,34 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 variant="filled"
               />
               <FormGroup>
-                <FormControlLabel 
-                  control={ 
-                    <Checkbox 
-                      checked={ form.values.live } 
-                      id="live" 
-                      onChange={ handleChange } 
-                      inputProps={{ "aria-label": "controlled" }} 
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={ form.values.live }
+                      id="live"
+                      onChange={ handleChange }
+                      inputProps={ { "aria-label": "controlled" } }
                     />
-                  } 
-                  label="Live Proof" 
+                  }
+                  label="Live Proof"
                 />
                 { form.error.live ?
                   <FormHelperText error>{ form.error.live }</FormHelperText>
-                :
+                  :
                   submission.live !== form.values.live && <FormHelperText>{ updateFieldText }</FormHelperText>
                 }
               </FormGroup>
               <FormGroup>
-                <FormControlLabel 
-                  control={ 
-                    <Checkbox 
-                      checked={ form.values.tas } 
-                      id="tas" 
-                      onChange={ handleChange } 
-                      inputProps={{ "aria-label": "controlled" }} 
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={ form.values.tas }
+                      id="tas"
+                      onChange={ handleChange }
+                      inputProps={ { "aria-label": "controlled" } }
                     />
-                  } 
-                  label="TAS" 
+                  }
+                  label="TAS"
                 />
                 { submission.tas !== form.values.tas && <FormHelperText>{ updateFieldText }</FormHelperText> }
               </FormGroup>
@@ -286,8 +286,8 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 onChange={ handleChange }
                 value={ form.values.comment }
                 variant="filled"
-                slotProps={{
-                  input: { 
+                slotProps={ {
+                  input: {
                     endAdornment: submission.comment ? (
                       <IconButton size="small" onClick={ handleToggle }>
                         { form.values.comment ? <ClearRoundedIcon /> : <AddIcon /> }
@@ -296,7 +296,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                   },
 
                   htmlInput: { maxLength: COMMENT_MAX_LENGTH, readOnly: true }
-                }} />
+                } } />
               <TextField
                 color={ form.values.mod_note !== submission.mod_note ? "success" : "primary" }
                 fullWidth
@@ -308,9 +308,9 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 onChange={ handleChange }
                 value={ form.values.mod_note }
                 variant="filled"
-                slotProps={{
+                slotProps={ {
                   htmlInput: { maxLength: COMMENT_MAX_LENGTH }
-                }}
+                } }
               />
 
               { /* Button used to reset the form back to it's original values */ }
@@ -329,14 +329,14 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
       </div>
 
       { /* If show reject is set to true, render rejection prompt. */ }
-      { showReject && 
-        <Rejection 
-          form={ form } 
+      { showReject &&
+        <Rejection
+          form={ form }
           clearMessage={ clearMessage }
           handleChange={ handleChange }
-          setShowReject={ setShowReject } 
-          onReject={ onRejectClick } 
-        /> 
+          setShowReject={ setShowReject }
+          onReject={ onRejectClick }
+        />
       }
 
     </div>;
