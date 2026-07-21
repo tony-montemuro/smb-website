@@ -22,7 +22,6 @@ function VersionInput({ versions, currentVersion = undefined, updateVersions = u
         helperText={ version.error ?? `${ version.value.length }/${ VERSION_LENGTH_MAX }` }
         id={ key }
         key={ key }
-        inputProps={ { maxLength: VERSION_LENGTH_MAX } }
         label="Version"
         onBlur={ onBlur }
         onChange={ onChange }
@@ -30,8 +29,10 @@ function VersionInput({ versions, currentVersion = undefined, updateVersions = u
         required
         value={ version.value }
         variant="filled"
+        slotProps={{
+          htmlInput: { maxLength: VERSION_LENGTH_MAX }
+        }}
       />
-
       { addBtnSubmit &&
         <button type="button" onClick={ onSubmit }>Add Version</button>
       }

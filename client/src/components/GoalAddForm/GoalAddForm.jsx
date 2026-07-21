@@ -23,13 +23,15 @@ function GoalAddForm({ submitting, setSubmitting }) {
           error={ form.error ? true : false }
           id="name"
           helperText={ form.error ? form.error : `${ form.values.name.length }/${ NAME_LENGTH_MAX }` }
-          inputProps={{ maxLength: NAME_LENGTH_MAX }}
           label="Goal Color Name"
           onChange={ handleChange }
           placeholder="Please only use lowercase letters"
           required
           value={ form.values.name }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: NAME_LENGTH_MAX }
+          }}
         />
         
         <div className={ styles.color }>
@@ -44,7 +46,7 @@ function GoalAddForm({ submitting, setSubmitting }) {
         </div>
 
         <button type="submit" disabled={ submitting }>Submit</button>
-      </form> 
+      </form>
     </div>
   );
 };

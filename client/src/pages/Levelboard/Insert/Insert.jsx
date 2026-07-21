@@ -65,7 +65,6 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
           <span>1st: { recordB2F(board.filtered[0].record, type, level.timer_type) }</span>
         }
       </div>
-
       <div className={ styles.body }>
         
         { /* If current user is a moderator of the current game, render the option to submit on another user's behalf */ }
@@ -126,10 +125,12 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                   id="version"
                   label="Game Version"
                   select
-                  SelectProps={{ native: true }}
                   onChange={ handleChange }
                   value={ form.values.version }
                   variant="filled"
+                  slotProps={{
+                    select: { native: true }
+                  }}
                 >
                   { game.version.map(version => (
                     <option value={ version.id } key={ version.id }>{ version.version }</option>
@@ -141,10 +142,12 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 id="monkey_id"
                 label="Monkey"
                 select
-                SelectProps={{ native: true }}
                 onChange={ handleChange }
                 value={ form.values.monkey_id }
                 variant="filled"
+                slotProps={{
+                  select: { native: true }
+                }}
               >
                 { game.monkey.map(monkey => (
                   <option value={ monkey.id } key={ monkey.id } >{ monkey.monkey_name }</option>
@@ -155,10 +158,12 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 id="platform_id"
                 label="Platform"
                 select
-                SelectProps={{ native: true }}
                 onChange={ handleChange }
                 value={ form.values.platform_id }
                 variant="filled"
+                slotProps={{
+                  select: { native: true }
+                }}
               >
                 { game.platform.map(platform => (
                   <option value={ platform.id } key={ platform.id } >{ platform.platform_name }</option>
@@ -169,10 +174,12 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 id="region_id"
                 label="Region"
                 select
-                SelectProps={{ native: true }}
                 onChange={ handleChange }
                 value={ form.values.region_id }
                 variant="filled"
+                slotProps={{
+                  select: { native: true }
+                }}
               >
                 { game.region.map(region => (
                   <option value={ region.id } key={ region.id } >{ region.region_name }</option>
@@ -184,13 +191,15 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 fullWidth
                 helperText={ form.error.proof ? form.error.proof : "A proof is highly recommended!" }
                 id="proof"
-                inputProps={ { maxLength: PROOF_MAX_LENGTH } }
                 label="Proof"
                 placeholder="YouTube, Twitch, X (Twitter), Google Drive, or Imgur URL"
                 onChange={ handleChange }
                 type="url"
                 value={ form.values.proof }
                 variant="filled"
+                slotProps={{
+                  htmlInput: { maxLength: PROOF_MAX_LENGTH }
+                }}
               />
               <FormGroup>
                 <FormControlLabel 
@@ -224,7 +233,6 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 fullWidth
                 helperText={ user.profile.id === form.values.profile.id ? `${ form.values.comment.length }/${ COMMENT_MAX_LENGTH }` : "This field cannot be updated." }
                 id="comment"
-                inputProps={{ maxLength: COMMENT_MAX_LENGTH }}
                 label="Comment"
                 multiline
                 placeholder="Must be under 100 characters"
@@ -232,13 +240,15 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 onChange={ handleChange }
                 value={ form.values.comment }
                 variant="filled"
+                slotProps={{
+                  htmlInput: { maxLength: COMMENT_MAX_LENGTH }
+                }}
               />
               { user.profile.id !== form.values.profile.id &&
                 <TextField
                   fullWidth
                   helperText={ `${ form.values.mod_note.length }/${ COMMENT_MAX_LENGTH }` }
                   id="mod_note"
-                  inputProps={{ maxLength: COMMENT_MAX_LENGTH }}
                   label="Moderator Note"
                   multiline
                   placeholder="Must be under 100 characters"
@@ -246,6 +256,9 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                   onChange={ handleChange }
                   value={ form.values.mod_note }
                   variant="filled"
+                  slotProps={{
+                    htmlInput: { maxLength: COMMENT_MAX_LENGTH }
+                  }}
                 />
               }
               { level.chart_type === "both" && isPracticeMode &&
@@ -284,7 +297,6 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
           </form>
         </div>
       </div>
-    
     </div>
   );
 };

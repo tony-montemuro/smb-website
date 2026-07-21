@@ -39,9 +39,7 @@ function Rejection({ form, clearMessage, handleChange, setShowReject, onReject }
   /* ===== REJECTION COMPONENT ===== */
   return (
     <div ref={ rejectionRef } className={ styles.rejection }>
-
       <hr />
-
       { /* Render information about rejections */ }
       <div className={ styles.rejectionHeader }>
         <h2>
@@ -53,7 +51,6 @@ function Rejection({ form, clearMessage, handleChange, setShowReject, onReject }
         </h2>
         <span><em>Note:</em> Rejecting a submission means deleting it!</span>
       </div>
-
       <form>
         <div className={ styles.formWrapper }>
 
@@ -62,14 +59,6 @@ function Rejection({ form, clearMessage, handleChange, setShowReject, onReject }
             <TextField
               fullWidth
               id="message"
-              inputProps={ { maxLength: MESSAGE_MAX_LENGTH } }
-              InputProps={ { 
-                endAdornment: form.values.message.length > 0 ? (
-                  <IconButton size="small" onClick={ clearMessage }>
-                    <ClearRoundedIcon />
-                  </IconButton>
-                ) : undefined
-              } }
               label="Message"
               multiline
               placeholder="Must be under 100 characters"
@@ -77,7 +66,17 @@ function Rejection({ form, clearMessage, handleChange, setShowReject, onReject }
               onChange={ handleChange }
               value={ form.values.message }
               variant="filled"
-            />
+              slotProps={{
+                input: { 
+                  endAdornment: form.values.message.length > 0 ? (
+                    <IconButton size="small" onClick={ clearMessage }>
+                      <ClearRoundedIcon />
+                    </IconButton>
+                  ) : undefined
+                },
+
+                htmlInput: { maxLength: MESSAGE_MAX_LENGTH }
+              }} />
           }
 
           { /* Two buttons: one for cancellation, and one for rejection. */ }

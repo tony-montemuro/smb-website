@@ -28,10 +28,12 @@ function Selector({ inputData, selectData, entity, handleChange, colorBackground
           id={ `${ inputData.entityName }${ inputValue }` }
           onChange={ e => handleChange(e.target.value, id, inputData.entityName, e.target) }
           select
-          SelectProps={ { native: true } }
           sx={ { width: "fit-content" } }
           value={ inputValue }
           variant="filled"
+          slotProps={{
+            select: { native: true }
+          }}
         >
           <option key="null" value=""></option>
           <Options
@@ -50,7 +52,6 @@ function Selector({ inputData, selectData, entity, handleChange, colorBackground
           <DeleteIcon />
         </button>
       </div>
-
       { inputValue && children && cloneElement(children, { [inputData.entityName]: entity }) }
     </div>
   );

@@ -20,7 +20,6 @@ function EntityAddForm({ submitting, setSubmitting, refreshSelectDataFunc }) {
   return (
     <div className={ styles.entityAddForm }>
       <h1>Add New Entities</h1>
-
       { /* Monkey form */ }
       <SingleFieldForm 
         entityName="monkey"
@@ -30,35 +29,37 @@ function EntityAddForm({ submitting, setSubmitting, refreshSelectDataFunc }) {
         disabled={ submitting }
         maxLength={ MONKEY_MAX_LENGTH }
       />
-
       { /* Platform form */ }
       <form id="platform" className={ styles.form } onSubmit={ handleSubmit }>
         <span><strong>Platform</strong></span>
         <TextField
           id="platform_name"
           helperText={ `${ form.platform.platform_name.length }/${ PLATFORM_NAME_MAX_LENGTH }` }
-          inputProps={ { maxLength: PLATFORM_NAME_MAX_LENGTH } }
           label="Platform"
           onChange={ handleChange }
           placeholder={ `Must be under ${ PLATFORM_NAME_MAX_LENGTH } characters` }
           required
           value={ form.platform.platform_name }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: PLATFORM_NAME_MAX_LENGTH }
+          }}
         />
         <TextField
           id="platform_abb"
           helperText={ `${ form.platform.platform_abb.length }/${ PLATFORM_ABB_MAX_LENGTH }` }
-          inputProps={ { maxLength: PLATFORM_ABB_MAX_LENGTH } }
           label="Platform Abbreviation"
           onChange={ handleChange }
           placeholder={ `Must be under ${ PLATFORM_ABB_MAX_LENGTH } characters` }
           required
           value={ form.platform.platform_abb }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: PLATFORM_ABB_MAX_LENGTH }
+          }}
         />
         <button type="submit" disabled={ submitting }>Add</button>
       </form>
-
       <SingleFieldForm 
         entityName="region" 
         form={ form }
@@ -73,7 +74,6 @@ function EntityAddForm({ submitting, setSubmitting, refreshSelectDataFunc }) {
           fullWidth
           helperText={ `${ form.rule.rule_name.length }/${ RULE_MAX_LENGTH }` }
           id="rule_name"
-          inputProps={ { maxLength: RULE_MAX_LENGTH } }
           label="Rule"
           multiline
           placeholder={ `Must be under ${ RULE_MAX_LENGTH } characters` }
@@ -82,10 +82,12 @@ function EntityAddForm({ submitting, setSubmitting, refreshSelectDataFunc }) {
           required
           value={ form.rule.rule_name }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: RULE_MAX_LENGTH }
+          }}
         />
         <button type="submit" disabled={ submitting }>Add</button>
       </form>
-
     </div>
   );
 };
@@ -105,13 +107,15 @@ function SingleFieldForm({ entityName, form, handleChange, handleSubmit, disable
       <TextField 
         id={ `${ entityName }_name` }
         helperText={ `${ value.length }/${ maxLength }` }
-        inputProps={ { maxLength } }
         label={ capitalizedEntityName }
         onChange={ handleChange }
         placeholder={ `Must be under ${ maxLength } characters` }
         required
         value={ value }
         variant="filled"
+        slotProps={{
+          htmlInput: { maxLength }
+        }}
       />
       <button type="submit" disabled={ disabled }>Add</button>
     </form>

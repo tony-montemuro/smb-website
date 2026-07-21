@@ -121,20 +121,24 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 fullWidth
                 helperText={ immutableText }
                 id="all_position"
-                inputProps={ { readOnly: true } }
                 label="Position"
                 value={ renderPosition(submission.id, submission.submitted_at) ? submission.all_position : "-" }
                 variant="filled"
+                slotProps={{
+                  htmlInput: { readOnly: true }
+                }}
               />
               { submission.position && 
                 <TextField 
                   fullWidth
                   helperText={ immutableText }
                   id="position"
-                  inputProps={ { readOnly: true } }
                   label="Live Position"
                   value={ renderPosition(submission.id, submission.submitted_at) ? submission.position : "-" }
                   variant="filled"
+                  slotProps={{
+                    htmlInput: { readOnly: true }
+                  }}
                 />
               }
               <DatePicker 
@@ -161,10 +165,12 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                   id="version"
                   label="Game Version"
                   select
-                  SelectProps={{ native: true }}
                   onChange={ handleChange }
                   value={ form.values.version }
                   variant="filled"
+                  slotProps={{
+                    select: { native: true }
+                  }}
                 >
                   { game.version.map(version => (
                     <option value={ version.id } key={ version.id } >{ version.version }</option>
@@ -178,10 +184,12 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 id="monkey_id"
                 label="Monkey"
                 select
-                SelectProps={{ native: true }}
                 onChange={ handleChange }
                 value={ form.values.monkey_id }
                 variant="filled"
+                slotProps={{
+                  select: { native: true }
+                }}
               >
                 { game.monkey.map(monkey => (
                   <option value={ monkey.id } key={ monkey.id } >{ monkey.monkey_name }</option>
@@ -194,10 +202,12 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 id="platform_id"
                 label="Platform"
                 select
-                SelectProps={{ native: true }}
                 onChange={ handleChange }
                 value={ form.values.platform_id }
                 variant="filled"
+                slotProps={{
+                  select: { native: true }
+                }}
               >
                 { game.platform.map(platform => (
                   <option value={ platform.id } key={ platform.id } >{ platform.platform_name }</option>
@@ -210,10 +220,12 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 id="region_id"
                 label="Region"
                 select
-                SelectProps={{ native: true }}
                 onChange={ handleChange }
                 value={ form.values.region_id }
                 variant="filled"
+                slotProps={{
+                  select: { native: true }
+                }}
               >
                 { game.region.map(region => (
                   <option value={ region.id } key={ region.id } >{ region.region_name }</option>
@@ -268,33 +280,37 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                 fullWidth
                 helperText={ form.values.comment !== submission.comment ? updateFieldText : null }
                 id="comment"
-                inputProps={ { maxLength: COMMENT_MAX_LENGTH, readOnly: true } }
-                InputProps={ { 
-                  endAdornment: submission.comment ? (
-                    <IconButton size="small" onClick={ handleToggle }>
-                      { form.values.comment ? <ClearRoundedIcon /> : <AddIcon /> }
-                    </IconButton>
-                  ) : undefined
-                } }
                 label="Comment"
                 multiline
                 rows={ COMMENT_ROWS }
                 onChange={ handleChange }
                 value={ form.values.comment }
                 variant="filled"
-              />
+                slotProps={{
+                  input: { 
+                    endAdornment: submission.comment ? (
+                      <IconButton size="small" onClick={ handleToggle }>
+                        { form.values.comment ? <ClearRoundedIcon /> : <AddIcon /> }
+                      </IconButton>
+                    ) : undefined
+                  },
+
+                  htmlInput: { maxLength: COMMENT_MAX_LENGTH, readOnly: true }
+                }} />
               <TextField
                 color={ form.values.mod_note !== submission.mod_note ? "success" : "primary" }
                 fullWidth
                 helperText={ form.values.mod_note !== submission.mod_note ? updateFieldText : null }
                 id="mod_note"
-                inputProps={ { maxLength: COMMENT_MAX_LENGTH } }
                 label="Moderator Note"
                 multiline
                 rows={ COMMENT_ROWS }
                 onChange={ handleChange }
                 value={ form.values.mod_note }
                 variant="filled"
+                slotProps={{
+                  htmlInput: { maxLength: COMMENT_MAX_LENGTH }
+                }}
               />
 
               { /* Button used to reset the form back to it's original values */ }

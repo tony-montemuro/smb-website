@@ -47,7 +47,6 @@ function ModeInput({
         <TextField
           className={ styles.name }
           id={ id }
-          inputProps={{ maxLength: MODE_LENGTH_MAX }}
           helperText={ `${ modeName.length }/${ MODE_LENGTH_MAX }` }
           label="Mode"
           onBlur={ () => handleBlur() }
@@ -56,6 +55,9 @@ function ModeInput({
           placeholder={ `Must be ${ MODE_LENGTH_MAX } characters or less` }
           value={ levelB2F(modeName) }
           variant="filled"
+          slotProps={{
+            htmlInput: { maxLength: MODE_LENGTH_MAX }
+          }}
         />
 
         <div className={ styles.btns }>
@@ -87,11 +89,9 @@ function ModeInput({
         </div>
 
       </div>
-
       { error &&
         <FormHelperText error>{ error }</FormHelperText>
       }
-      
       { isVisibleCharts && cloneElement(children, { mode, category }) }
     </div>
   );
