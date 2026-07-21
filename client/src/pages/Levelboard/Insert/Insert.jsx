@@ -27,14 +27,14 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
   // game state from game context
   const { game } = useContext(GameContext);
 
-	// user state & is moderator function from user context
+  // user state & is moderator function from user context
   const { user, isModerator } = useContext(UserContext);
 
   /* ===== STATES & FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { form, handleChange, handleSubmittedAtChange, onUserRowClick, handleSubmit } = InsertLogic(level, setSubmitting); 
-  
+  const { form, handleChange, handleSubmittedAtChange, onUserRowClick, handleSubmit } = InsertLogic(level, setSubmitting);
+
   // helper functions
   const { capitalize, recordB2F } = FrontendHelper();
 
@@ -56,7 +56,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
   const COMMENT_ROWS = 2;
   const USERS_PER_PAGE = 5;
 
-  /* ===== INSERT COMPONENT ===== */ 
+  /* ===== INSERT COMPONENT ===== */
   return (
     <div className={ styles.insert }>
       <div className={ styles.header }>
@@ -66,7 +66,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
         }
       </div>
       <div className={ styles.body }>
-        
+
         { /* If current user is a moderator of the current game, render the option to submit on another user's behalf */ }
         { isModerator(abb) &&
           <div className={ styles.profile }>
@@ -96,28 +96,28 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
               }
 
               { /* Render all necessary inputs for a submission */ }
-              <RecordInput 
-                form={ form } 
-                handleChange={ handleChange } 
+              <RecordInput
+                form={ form }
+                handleChange={ handleChange }
                 timerType={ level.timer_type }
                 type={ type }
               />
-              <DatePicker 
-                color={ form.error.submitted_at ? "error" : "primary" }
+              <DatePicker
                 disableFuture
                 label="Date"
                 format="YYYY-MM-DD"
                 minDate={ dayjs(game.min_date) }
                 value={ form.values.submitted_at ? dayjs(form.values.submitted_at) : form.values.submitted_at }
                 onChange={ handleSubmittedAtChange }
-                slotProps={{
+                slotProps={ {
                   textField: {
-                    helperText: form.error.submitted_at ? form.error.submitted_at : null, 
+                    color: form.error.submitted_at ? "error" : "primary",
+                    helperText: form.error.submitted_at ? form.error.submitted_at : null,
                     fullWidth: true,
                     required: true,
                     variant: "filled"
                   }
-                }}
+                } }
               />
               { game.version.length > 0 &&
                 <TextField
@@ -128,13 +128,13 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                   onChange={ handleChange }
                   value={ form.values.version }
                   variant="filled"
-                  slotProps={{
+                  slotProps={ {
                     select: { native: true }
-                  }}
+                  } }
                 >
                   { game.version.map(version => (
                     <option value={ version.id } key={ version.id }>{ version.version }</option>
-                  ))}
+                  )) }
                 </TextField>
               }
               <TextField
@@ -145,13 +145,13 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 onChange={ handleChange }
                 value={ form.values.monkey_id }
                 variant="filled"
-                slotProps={{
+                slotProps={ {
                   select: { native: true }
-                }}
+                } }
               >
                 { game.monkey.map(monkey => (
                   <option value={ monkey.id } key={ monkey.id } >{ monkey.monkey_name }</option>
-                ))}
+                )) }
               </TextField>
               <TextField
                 fullWidth
@@ -161,13 +161,13 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 onChange={ handleChange }
                 value={ form.values.platform_id }
                 variant="filled"
-                slotProps={{
+                slotProps={ {
                   select: { native: true }
-                }}
+                } }
               >
                 { game.platform.map(platform => (
                   <option value={ platform.id } key={ platform.id } >{ platform.platform_name }</option>
-                ))}
+                )) }
               </TextField>
               <TextField
                 fullWidth
@@ -177,13 +177,13 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 onChange={ handleChange }
                 value={ form.values.region_id }
                 variant="filled"
-                slotProps={{
+                slotProps={ {
                   select: { native: true }
-                }}
+                } }
               >
                 { game.region.map(region => (
                   <option value={ region.id } key={ region.id } >{ region.region_name }</option>
-                ))}
+                )) }
               </TextField>
               <TextField
                 autoComplete="off"
@@ -197,41 +197,41 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 type="url"
                 value={ form.values.proof }
                 variant="filled"
-                slotProps={{
+                slotProps={ {
                   htmlInput: { maxLength: PROOF_MAX_LENGTH }
-                }}
+                } }
               />
               <FormGroup>
-                <FormControlLabel 
-                  control={ 
-                    <Checkbox 
-                      checked={ form.values.live } 
-                      id="live" 
-                      onChange={ handleChange } 
-                      inputProps={{ "aria-label": "controlled" }} 
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={ form.values.live }
+                      id="live"
+                      onChange={ handleChange }
+                      inputProps={ { "aria-label": "controlled" } }
                     />
-                  } 
-                  label="Live Proof" 
+                  }
+                  label="Live Proof"
                 />
                 { form.error.live && <FormHelperText error>{ form.error.live }</FormHelperText> }
               </FormGroup>
               <FormGroup>
-                <FormControlLabel 
-                  control={ 
-                    <Checkbox 
-                      checked={ form.values.tas } 
-                      id="tas" 
-                      onChange={ handleChange } 
-                      inputProps={{ "aria-label": "controlled" }} 
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={ form.values.tas }
+                      id="tas"
+                      onChange={ handleChange }
+                      inputProps={ { "aria-label": "controlled" } }
                     />
-                  } 
-                  label="TAS" 
+                  }
+                  label="TAS"
                 />
               </FormGroup>
               <TextField
                 disabled={ user.profile.id !== form.values.profile.id }
                 fullWidth
-                helperText={ user.profile.id === form.values.profile.id ? `${ form.values.comment.length }/${ COMMENT_MAX_LENGTH }` : "This field cannot be updated." }
+                helperText={ user.profile.id === form.values.profile.id ? `${form.values.comment.length}/${COMMENT_MAX_LENGTH}` : "This field cannot be updated." }
                 id="comment"
                 label="Comment"
                 multiline
@@ -240,14 +240,14 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                 onChange={ handleChange }
                 value={ form.values.comment }
                 variant="filled"
-                slotProps={{
+                slotProps={ {
                   htmlInput: { maxLength: COMMENT_MAX_LENGTH }
-                }}
+                } }
               />
               { user.profile.id !== form.values.profile.id &&
                 <TextField
                   fullWidth
-                  helperText={ `${ form.values.mod_note.length }/${ COMMENT_MAX_LENGTH }` }
+                  helperText={ `${form.values.mod_note.length}/${COMMENT_MAX_LENGTH}` }
                   id="mod_note"
                   label="Moderator Note"
                   multiline
@@ -256,32 +256,32 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                   onChange={ handleChange }
                   value={ form.values.mod_note }
                   variant="filled"
-                  slotProps={{
+                  slotProps={ {
                     htmlInput: { maxLength: COMMENT_MAX_LENGTH }
-                  }}
+                  } }
                 />
               }
               { level.chart_type === "both" && isPracticeMode &&
                 <FormGroup>
-                  <FormControlLabel 
-                    control={ 
-                      <Checkbox 
-                        checked={ form.values.both } 
-                        id="both" 
-                        onChange={ handleChange } 
-                        inputProps={{ "aria-label": "controlled" }} 
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={ form.values.both }
+                        id="both"
+                        onChange={ handleChange }
+                        inputProps={ { "aria-label": "controlled" } }
                       />
-                    } 
-                    label={ `Submit ${ capitalize(otherType) }` } 
+                    }
+                    label={ `Submit ${capitalize(otherType)}` }
                   />
                 </FormGroup>
               }
               { form.values.both &&
                 <>
                   <span><strong>IMPORTANT: </strong>This field should only be filled if the { otherType } also matches the proof submitted.</span>
-                  <RecordInput 
-                    form={ form } 
-                    handleChange={ handleChange } 
+                  <RecordInput
+                    form={ form }
+                    handleChange={ handleChange }
                     timerType={ level.timer_type }
                     type={ otherType }
                   />
@@ -292,7 +292,7 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
               <div className="center">
                 <button type="submit" disabled={ submitting }>Submit</button>
               </div>
-              
+
             </div>
           </form>
         </div>

@@ -46,10 +46,10 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
 
   // code that is executed when the component mounts
   useEffect(() => {
-    handleSubmissionChange(submissions[0]); 
+    handleSubmissionChange(submissions[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
-  
+  }, []);
+
   /* ===== UPDATE COMPONENT ===== */
   return form.values && form.submission &&
     <div className={ styles.update }>
@@ -57,7 +57,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
         <h1>Update Submission</h1>
 
         <hr />
-        
+
         <h2>Select Submission:</h2>
       </div>
 
@@ -76,11 +76,11 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
 
           { /* Table body - render a unique, selectable row for each submission */ }
           <tbody>
-            { submissions.slice((pageNum-1)*SUBMISSIONS_PER_TABLE, pageNum*SUBMISSIONS_PER_TABLE).map(submission => {
+            { submissions.slice((pageNum - 1) * SUBMISSIONS_PER_TABLE, pageNum * SUBMISSIONS_PER_TABLE).map(submission => {
               return (
-                <tr 
+                <tr
                   className={ submission.id === form.values.id ? styles.selected : styles.row }
-                  key={ submission.id } 
+                  key={ submission.id }
                   onClick={ () => handleSubmissionChange(submission) }
                 >
                   <td>{ dateB2F(submission.submitted_at) }</td>
@@ -88,7 +88,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
                   <td>{ submission.tas && "TAS" }</td>
                 </tr>
               );
-            })}
+            }) }
           </tbody>
 
         </table>
@@ -101,7 +101,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
           setPageNum={ setPageNum }
           itemsName="Submissions"
         />
-        
+
       </div>
 
       <hr />
@@ -116,34 +116,33 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
           }
 
           { /* Render the various fields to update the submission */ }
-          <TextField 
+          <TextField
             fullWidth
             helperText="This field cannot be updated."
             id="record"
             label={ capitalize(type) }
             value={ form.values.record }
             variant="filled"
-            slotProps={{
+            slotProps={ {
               htmlInput: { readOnly: true }
-            }}
+            } }
           />
-          <DatePicker 
-            color={ form.error.submitted_at ? "error" : "primary" }
+          <DatePicker
             disableFuture
             label="Date"
             format="YYYY-MM-DD"
             minDate={ dayjs(game.min_date) }
             value={ form.values.submitted_at ? dayjs(form.values.submitted_at) : form.values.submitted_at }
             onChange={ handleSubmittedAtChange }
-            slotProps={{
-              textField: { 
-                color: form.values.submitted_at !== dateB2F(form.submission.submitted_at) ? "success" : "primary",
+            slotProps={ {
+              textField: {
+                color: form.error.submitted_at ? "error" : form.values.submitted_at !== dateB2F(form.submission.submitted_at) ? "success" : "primary",
                 fullWidth: true,
                 helperText: form.error.submitted_at ? form.error.submitted_at : (form.values.submitted_at !== dateB2F(form.submission.submitted_at) ? updateFieldText : null),
                 required: true,
                 variant: "filled"
               }
-            }}
+            } }
           />
           { game.version.length > 0 &&
             <TextField
@@ -156,13 +155,13 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
               onChange={ handleChange }
               value={ form.values.version }
               variant="filled"
-              slotProps={{
+              slotProps={ {
                 select: { native: true }
-              }}
+              } }
             >
               { game.version.map(version => (
                 <option value={ version.id } key={ version.id }>{ version.version }</option>
-              ))}
+              )) }
             </TextField>
           }
           <TextField
@@ -175,13 +174,13 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             onChange={ handleChange }
             value={ form.values.monkey_id }
             variant="filled"
-            slotProps={{
+            slotProps={ {
               select: { native: true }
-            }}
+            } }
           >
             { game.monkey.map(monkey => (
               <option value={ monkey.id } key={ monkey.id } >{ monkey.monkey_name }</option>
-            ))}
+            )) }
           </TextField>
           <TextField
             color={ parseInt(form.values.platform_id) !== form.submission.platform.id ? "success" : "primary" }
@@ -193,13 +192,13 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             onChange={ handleChange }
             value={ form.values.platform_id }
             variant="filled"
-            slotProps={{
+            slotProps={ {
               select: { native: true }
-            }}
+            } }
           >
             { game.platform.map(platform => (
               <option value={ platform.id } key={ platform.id } >{ platform.platform_name }</option>
-            ))}
+            )) }
           </TextField>
           <TextField
             color={ parseInt(form.values.region_id) !== form.submission.region.id ? "success" : "primary" }
@@ -211,15 +210,15 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             onChange={ handleChange }
             value={ form.values.region_id }
             variant="filled"
-            slotProps={{
+            slotProps={ {
               select: { native: true }
-            }}
+            } }
           >
             { game.region.map(region => (
               <option value={ region.id } key={ region.id } >{ region.region_name }</option>
-            ))}
+            )) }
           </TextField>
-          <TextField 
+          <TextField
             autoComplete="off"
             color={ form.error.proof ? "error" : (form.values.proof !== form.submission.proof ? "success" : "primary") }
             fullWidth
@@ -233,36 +232,36 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             variant="filled"
           />
           <FormGroup>
-            <FormControlLabel 
-              control={ 
-                <Checkbox 
-                  checked={ form.values.live } 
-                  id="live" 
-                  onChange={ handleChange } 
-                  inputProps={{ "aria-label": "controlled" }} 
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={ form.values.live }
+                  id="live"
+                  onChange={ handleChange }
+                  inputProps={ { "aria-label": "controlled" } }
                 />
-              } 
-              label="Live Proof" 
+              }
+              label="Live Proof"
             />
             { form.error.live ?
               <FormHelperText error>{ form.error.live }</FormHelperText>
-            :
+              :
               form.values.live !== form.submission.live && <FormHelperText>{ updateFieldText }</FormHelperText>
             }
           </FormGroup>
           <FormGroup>
-            <FormControlLabel 
-              control={ 
-                <Checkbox 
-                  checked={ form.values.tas } 
-                  id="tas" 
-                  onChange={ handleChange } 
-                  inputProps={{ "aria-label": "controlled" }} 
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={ form.values.tas }
+                  id="tas"
+                  onChange={ handleChange }
+                  inputProps={ { "aria-label": "controlled" } }
                 />
-              } 
-              label="TAS" 
+              }
+              label="TAS"
             />
-            { form.values.tas !== form.submission.tas  && <FormHelperText>{ updateFieldText }</FormHelperText> }
+            { form.values.tas !== form.submission.tas && <FormHelperText>{ updateFieldText }</FormHelperText> }
           </FormGroup>
           <TextField
             color={ form.values.comment !== form.submission.comment ? "success" : "primary" }
@@ -276,16 +275,16 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
             onChange={ handleChange }
             value={ form.values.comment }
             variant="filled"
-            slotProps={{
+            slotProps={ {
               htmlInput: { maxLength: COMMENT_MAX_LENGTH }
-            }}
+            } }
           />
 
           { /* Form submission btns: reset or submit the form. */ }
           <div className={ styles.submitBtns }>
-            <button 
-              className="cancel" 
-              type="button" 
+            <button
+              className="cancel"
+              type="button"
               onClick={ () => handleSubmissionChange(form.submission) }
               disabled={ submitting || isFormUnchanged() }
             >
@@ -297,7 +296,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
         </div>
 
       </form>
-  
+
     </div>;
 };
 
