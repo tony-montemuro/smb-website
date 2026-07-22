@@ -5,9 +5,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^7.3.11",
-    "@mui/material": "^7.3.11",
-    "@mui/x-date-pickers": "^8.29.2",
+    "@mui/icons-material": "^9.2.0",
+    "@mui/material": "^9.2.0",
+    "@mui/x-date-pickers": "^9.10.0",
     "@supabase/supabase-js": "^2.10.0",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
