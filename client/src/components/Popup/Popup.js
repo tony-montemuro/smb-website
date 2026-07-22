@@ -15,7 +15,6 @@ const Popup = (setRenderPopup, innerRef) => {
   // if we are clicking within the popup, this function does nothing
   // if we are clicking outside the popup, this function closes the popup
   const handleClick = e => {
-    console.log("tflol")
     if (!innerRef.current.contains(e.target)) {
       // handle exception for date picker calendar, which renders outside popup
       const desktopDatePicker = document.querySelector(".MuiPickerPopper-root");
