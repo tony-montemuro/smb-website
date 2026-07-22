@@ -136,7 +136,9 @@ function MetadataForm() {
                 id="live_preference"
                 onBlur={ () => updateLocal() }
                 onChange={ handleChange } 
-                inputProps={{ "aria-label": "controlled" }} 
+                slotProps={{
+                  input: { "aria-label": "controlled" }
+                }} 
               />
             } 
             label="Should this game prefer live submissions?" 
@@ -151,7 +153,9 @@ function MetadataForm() {
                 id="custom"
                 onBlur={ () => updateLocal() }
                 onChange={ handleChange }
-                inputProps={{ "aria-label": "controlled" }} 
+                slotProps={{
+                  input: { "aria-label": "controlled" }
+                }} 
               />
             } 
             label="Is this a custom game?" 

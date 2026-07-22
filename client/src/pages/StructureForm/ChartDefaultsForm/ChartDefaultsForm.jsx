@@ -137,7 +137,9 @@ function ChartDefaultsForm({ chartDefaults, handleChange }) {
                       disabled={ chartDefaults.chart_type === "time" }
                       id="ascending_score" 
                       onChange={ handleChange } 
-                      inputProps={{ "aria-label": "controlled" }} 
+                      slotProps={{
+                        input: { "aria-label": "controlled" }
+                      }} 
                     />
                   }
                   label="Ascend Score" 
@@ -152,7 +154,9 @@ function ChartDefaultsForm({ chartDefaults, handleChange }) {
                       disabled={ chartDefaults.chart_type === "score" }
                       id="ascending_time" 
                       onChange={ handleChange } 
-                      inputProps={{ "aria-label": "controlled" }} 
+                      slotProps={{
+                        input: { "aria-label": "controlled" }
+                      }} 
                     />
                   } 
                   label="Ascend Time"
