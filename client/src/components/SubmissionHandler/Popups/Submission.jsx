@@ -250,7 +250,9 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                       checked={ form.values.live }
                       id="live"
                       onChange={ handleChange }
-                      inputProps={ { "aria-label": "controlled" } }
+                      slotProps={{
+                        input: { "aria-label": "controlled" }
+                      }}
                     />
                   }
                   label="Live Proof"
@@ -268,7 +270,9 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
                       checked={ form.values.tas }
                       id="tas"
                       onChange={ handleChange }
-                      inputProps={ { "aria-label": "controlled" } }
+                      slotProps={{
+                        input: { "aria-label": "controlled" }
+                      }}
                     />
                   }
                   label="TAS"

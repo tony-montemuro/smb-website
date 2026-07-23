@@ -235,8 +235,10 @@ function Levelboard({ imageReducer }) {
 											checked={ !board.filters.live.includes(false) } 
 											id="replays" 
 											onChange={ e => handleReplayCheck(e) } 
-											inputProps={{ "aria-label": "controlled" }} 
-											style={{ paddingLeft: "5px", paddingRight: "0" }}
+											style={{ paddingLeft: "5px", paddingRight: "0" }} 
+											slotProps={{
+                                                input: { "aria-label": "controlled" }
+                                            }}
 										/>
 									}
 									label="Live-only"
@@ -345,7 +347,7 @@ function Levelboard({ imageReducer }) {
 
 		</div>
 	:
-		<Loading />
+		<Loading />;
 };
 
 /* ===== EXPORTS ===== */

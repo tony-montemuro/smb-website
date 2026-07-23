@@ -56,7 +56,9 @@ function CategoryAddForm({ submitting, setSubmitting }) {
                 checked={ form.values.practice } 
                 id="practice" 
                 onChange={ handleChange } 
-                inputProps={{ "aria-label": "controlled" }} 
+                slotProps={{
+                  input: { "aria-label": "controlled" }
+                }} 
               />
             } 
             label="Practice Mode Style" 

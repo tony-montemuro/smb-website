@@ -166,9 +166,11 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
                     checked={ scoreChartTypes.includes(localState.ascending) } 
                     disabled={ chartType === "time" }
                     id={ `${ id }-ascending.score` }
-                    inputProps={{ "aria-label": "controlled" }} 
-                    onBlur={ () => handleBlur(localState) }
+                    onBlur={ () => handleBlur(localState) } 
                     onChange={ e => updateLocalState(e) }
+                    slotProps={{
+                      input: { "aria-label": "controlled" }
+                    }}
                   />
                 } 
                 label="Ascend Score" 
@@ -182,9 +184,11 @@ function LevelInput({ level, formData, category, mode, handleBlur, handleInsert,
                     checked={ timeChartTypes.includes(localState.ascending) }
                     disabled={ chartType === "score" }
                     id={ `${ id }-ascending.time` }
-                    inputProps={{ "aria-label": "controlled" }}
                     onBlur={ () => handleBlur(localState) }
                     onChange={ e => updateLocalState(e) }
+                    slotProps={{
+                      input: { "aria-label": "controlled" }
+                    }}
                   />
                 } 
                 label="Ascend Time"

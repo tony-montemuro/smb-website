@@ -238,7 +238,9 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
                   checked={ form.values.live }
                   id="live"
                   onChange={ handleChange }
-                  inputProps={ { "aria-label": "controlled" } }
+                  slotProps={{
+                    input: { "aria-label": "controlled" }
+                  }}
                 />
               }
               label="Live Proof"
@@ -256,7 +258,9 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
                   checked={ form.values.tas }
                   id="tas"
                   onChange={ handleChange }
-                  inputProps={ { "aria-label": "controlled" } }
+                  slotProps={{
+                    input: { "aria-label": "controlled" }
+                  }}
                 />
               }
               label="TAS"

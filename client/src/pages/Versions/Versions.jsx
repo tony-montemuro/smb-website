@@ -209,37 +209,38 @@ const StructureBody = memo(function({
   /* ===== STRUCTURE BODY COMPONENT ===== */
   return (
     <>
-     <div className={ `${ styles.structureHeader } ${ styles.all }` }>
-        <div className={ styles.boxPadding }>
-          <h2>Versions</h2>
-        </div>
-        <div className={ styles.structureVersions }>
-          { versions.map(version => {
-            checks[version.version] = {};
-            structure.forEach(category => {
-              checks[version.version][category.name] = {};
-              category.mode.forEach(mode => {
-                checks[version.version][category.name][mode.name] = mode.level.every(level => level.version === version.version); 
-              });
-            });
+      <div className={ `${ styles.structureHeader } ${ styles.all }` }>
+         <div className={ styles.boxPadding }>
+           <h2>Versions</h2>
+         </div>
+         <div className={ styles.structureVersions }>
+           { versions.map(version => {
+             checks[version.version] = {};
+             structure.forEach(category => {
+               checks[version.version][category.name] = {};
+               category.mode.forEach(mode => {
+                 checks[version.version][category.name][mode.name] = mode.level.every(level => level.version === version.version); 
+               });
+             });
 
-            return (
-              <div className={ styles.toggleAll } key={ version.version }>
-                <span>{ version.version }</span>
-                <Checkbox
-                  checked={ Object.values(checks[version.version]).every(category => Object.values(category).every(val => val)) }
-                  name={ version.version }
-                  onChange={ toggleAll }
-                  inputProps={{ "aria-label": "controlled" }}
-                  sx={{ padding: "1px" }}
-                  key={ version.version }
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      
+             return (
+               <div className={ styles.toggleAll } key={ version.version }>
+                 <span>{ version.version }</span>
+                 <Checkbox
+                   checked={ Object.values(checks[version.version]).every(category => Object.values(category).every(val => val)) }
+                   name={ version.version }
+                   onChange={ toggleAll }
+                   sx={{ padding: "1px" }}
+                   key={ version.version }
+                   slotProps={{
+                     input: { "aria-label": "controlled" }
+                   }}
+                 />
+               </div>
+             );
+           })}
+         </div>
+       </div>
       <div className={ styles.structureInner }>
         { structure.map(category => {
           return (
@@ -252,15 +253,16 @@ const StructureBody = memo(function({
                       <Checkbox
                         checked={ Object.values(checks[version.version][category.name]).every(val => val) } 
                         onChange={ (e) => toggleAllPerCategory(e.target.checked, version.version, category) } 
-                        inputProps={{ "aria-label": "controlled" }}
                         sx={{ padding: "1px" }}
                         key={ version.version }
+                        slotProps={{
+                          input: { "aria-label": "controlled" }
+                        }}
                       />
                     );
                   })}
                 </div>
               </div>
-      
               <div className={ styles.modes }>
                 { category.mode.map(mode => {
                   return (
@@ -275,15 +277,16 @@ const StructureBody = memo(function({
                               <Checkbox
                                 checked={ checks[version.version][category.name][mode.name] } 
                                 onChange={ (e) => toggleAllPerMode(e.target.checked, version.version, mode) } 
-                                inputProps={{ "aria-label": "controlled" }}
                                 sx={{ padding: "1px" }}
                                 key={ version.version }
+                                slotProps={{
+                                  input: { "aria-label": "controlled" }
+                                }}
                               />
                             );
                           })}
                         </div>
                       </div>
-
                       <Levels 
                         levels={ mode.level }
                         versions={ versions }
@@ -370,8 +373,10 @@ function LevelRow({ level, versions, category, onVersionCheck }) {
             <Checkbox 
               checked={ value === version } 
               onChange={ (e) => handleChange(e.target.checked, value) } 
-              inputProps={{ "aria-label": "controlled" }}
               sx={{ padding: 0 }}
+              slotProps={{
+                input: { "aria-label": "controlled" }
+              }}
             />
           </td>
         );

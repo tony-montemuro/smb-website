@@ -208,7 +208,9 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                       checked={ form.values.live }
                       id="live"
                       onChange={ handleChange }
-                      inputProps={ { "aria-label": "controlled" } }
+                      slotProps={{
+                        input: { "aria-label": "controlled" }
+                      }}
                     />
                   }
                   label="Live Proof"
@@ -222,7 +224,9 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                       checked={ form.values.tas }
                       id="tas"
                       onChange={ handleChange }
-                      inputProps={ { "aria-label": "controlled" } }
+                      slotProps={{
+                        input: { "aria-label": "controlled" }
+                      }}
                     />
                   }
                   label="TAS"
@@ -269,7 +273,9 @@ function Insert({ level, updateBoard, submitting, setSubmitting, board }) {
                         checked={ form.values.both }
                         id="both"
                         onChange={ handleChange }
-                        inputProps={ { "aria-label": "controlled" } }
+                        slotProps={{
+                          input: { "aria-label": "controlled" }
+                        }}
                       />
                     }
                     label={ `Submit ${capitalize(otherType)}` }
