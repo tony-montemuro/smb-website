@@ -12,19 +12,13 @@ const Update = () => {
     // if the query is successful, this function will simply return
     // if the query is unsuccessful, this function will throw an error, which should be handled by the caller function
     const updateBoxartName = async (oldAbb, newAbb) => {
-        try {
-            const { error } = await supabase
-                .storage
-                .from("games")
-                .move(`${ oldAbb }.png`, `${ newAbb }.png`);
+        const { error } = await supabase
+            .storage
+            .from("games")
+            .move(`${ oldAbb }.png`, `${ newAbb }.png`);
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-        } catch (error) {
-            // error should be handled by the caller function
+        // error handling
+        if (error) {
             throw error;
         }
     };

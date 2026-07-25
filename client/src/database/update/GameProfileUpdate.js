@@ -12,18 +12,12 @@ const GameProfileUpdate = () => {
     // if the query is a success, the user is given moderation privileges, and the function simply returns
     // if the query fails, this function throws an error to the caller function, where it is handled
     const insertModerator = async (abb, profileId) => {
-        try {
-            const { error } = await supabase
-                .from("game_profile")
-                .insert({ game: abb, profile: profileId });
+        const { error } = await supabase
+            .from("game_profile")
+            .insert({ game: abb, profile: profileId });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-        } catch (error) {
-            // error to be handled by caller function
+        // error handling
+        if (error) {
             throw error;
         }
     };

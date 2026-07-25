@@ -10,24 +10,18 @@ const CountriesRead = () => {
     // if the query is successful, the list of countries is simply returned
     // otherwise, this function throws an error, which should be handled by caller function
     const queryCountries = async () => {
-        try {
-            const { data: countries, error, status } = await supabase
-                .from("countries")
-                .select("*")
-                .order("name");
+        const { data: countries, error, status } = await supabase
+            .from("countries")
+            .select("*")
+            .order("name");
 
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            // return data
-            return countries;
-
-        } catch(error) {
-            // throw error to be handled by caller
+        // error handling
+        if (error && status !== 406) {
             throw error;
         }
+
+        // return data
+        return countries;
     };
 
     return { queryCountries };

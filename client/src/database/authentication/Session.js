@@ -10,22 +10,16 @@ const Session = () => {
     // if successful, we the session object for the current user
     // if failure, error is handled by caller function
     const getSession = async () => {
-        try {
-            // grab the session object from the database
-            const { data: session, error } = await supabase.auth.getSession();
+        // grab the session object from the database
+        const { data: session, error } = await supabase.auth.getSession();
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            // return the session object
-            return session.session;
-
-        } catch (error) {
-            // error is handled by caller function
-           throw error;
+        // error handling
+        if (error) {
+            throw error;
         }
+
+        // return the session object
+        return session.session;
     };
 
     return { getSession };

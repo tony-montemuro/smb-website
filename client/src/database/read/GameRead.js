@@ -11,93 +11,87 @@ const GameRead = () => {
     // if the query is successful, a object containing game data is returned
     // otherwise, this function will throw an error, which should be handled by the caller function
     const queryGame = async abb => {
-        try {
-            const { data: game, error } = await supabase
-                .from("game")
-                .select(`
-                    abb,
-                    creator (
-                        country,
+        const { data: game, error } = await supabase
+            .from("game")
+            .select(`
+                abb,
+                creator (
+                    country,
+                    id,
+                    username
+                ),
+                custom, 
+                download,
+                game_monkey (
+                    monkey (
                         id,
-                        username
-                    ),
-                    custom, 
-                    download,
-                    game_monkey (
-                        monkey (
-                            id,
-                            monkey_name
-                        )
-                    ),
-                    game_platform (
-                        platform (
-                            id,
-                            platform_abb,
-                            platform_name
-                        )
-                    ),
-                    game_region (
-                        region (
-                            id,
-                            region_name
-                        )
-                    ),
-                    game_rule (
-                        id,
-                        rule (
-                            id,
-                            rule_name
-                        )
-                    ),
-                    live_preference,
-                    min_date,
-                    mode (
-                        level (
-                            category,
-                            chart_type,
-                            name,
-                            time,
-                            timer_type
-                        ),
-                        category,
-                        name
-                    ),
-                    name,
-                    profile!game_profile (id, username, country),
-                    release_date,
-                    version (
-                        id,
-                        version,
-                        sequence
+                        monkey_name
                     )
-                `)
-                .order("custom")
-                .order("release_date")
-                .order("id", { foreignTable: "mode", ascending: true })
-                .order("id", { foreignTable: "mode.level", ascending: true })
-                .order("id", { foreignTable: "game_monkey", ascending: true })
-                .order("id", { foreignTable: "game_platform", ascending: true })
-                .order("id", { foreignTable: "game_region", ascending: true })
-                .order("id", { foreignTable: "game_rule", ascending: true })
-                .eq("abb", abb)
-                .maybeSingle();
+                ),
+                game_platform (
+                    platform (
+                        id,
+                        platform_abb,
+                        platform_name
+                    )
+                ),
+                game_region (
+                    region (
+                        id,
+                        region_name
+                    )
+                ),
+                game_rule (
+                    id,
+                    rule (
+                        id,
+                        rule_name
+                    )
+                ),
+                live_preference,
+                min_date,
+                mode (
+                    level (
+                        category,
+                        chart_type,
+                        name,
+                        time,
+                        timer_type
+                    ),
+                    category,
+                    name
+                ),
+                name,
+                profile!game_profile (id, username, country),
+                release_date,
+                version (
+                    id,
+                    version,
+                    sequence
+                )
+            `)
+            .order("custom")
+            .order("release_date")
+            .order("id", { foreignTable: "mode", ascending: true })
+            .order("id", { foreignTable: "mode.level", ascending: true })
+            .order("id", { foreignTable: "game_monkey", ascending: true })
+            .order("id", { foreignTable: "game_platform", ascending: true })
+            .order("id", { foreignTable: "game_region", ascending: true })
+            .order("id", { foreignTable: "game_rule", ascending: true })
+            .eq("abb", abb)
+            .maybeSingle();
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            // next, let's sort any unsorted lists
-            game.profile.sort((a, b) => a.username.localeCompare(b.username));
-            game.version.sort((a, b) => a.sequence - b.sequence);
-
-            // return the game object
-            return game;
-
-        } catch (error) {
-            // throw error to be handled by caller
+        // error handling
+        if (error) {
             throw error;
         }
+
+        // next, let's sort any unsorted lists
+        game.profile.sort((a, b) => a.username.localeCompare(b.username));
+        game.version.sort((a, b) => a.sequence - b.sequence);
+
+        // return the game object
+        return game;
     };
 
     // FUNCTION 2: queryGamesForModerators - async function that makes a call to supabase to get an array of all the games, but only
@@ -107,69 +101,63 @@ const GameRead = () => {
     // if the query is successful, the list of games, with the list of it's moderators, is simply returned
     // otherwise, this function throws an error, which should be handled by the caller function
     const queryGamesForModerators = async () => {
-        try {
-            const { data: games, error } = await supabase
-                .from("game")
-                .select(`
-                    abb,
-                    custom,
-                    game_monkey (
-                        monkey (
-                            id,
-                            monkey_name
-                        )
-                    ),
-                    game_platform (
-                        platform (
-                            id,
-                            platform_abb,
-                            platform_name
-                        )
-                    ),
-                    game_region (
-                        region (
-                            id,
-                            region_name
-                        )
-                    ),
-                    game_rule (
-                        rule (
-                            id,
-                            rule_name
-                        )
-                    ),
-                    mode (
-                        category
-                    ),
-                    name,
-                    moderators:profile!game_profile (id, username, country),
-                    release_date,
-                    version (
+        const { data: games, error } = await supabase
+            .from("game")
+            .select(`
+                abb,
+                custom,
+                game_monkey (
+                    monkey (
                         id,
-                        version,
-                        sequence
+                        monkey_name
                     )
-                `)
-                .order("custom")
-                .order("release_date")
-                .order("name")
-                .order("id", { foreignTable: "game_monkey", ascending: true })
-                .order("id", { foreignTable: "game_platform", ascending: true })
-                .order("id", { foreignTable: "game_region", ascending: true })
-                .order("id", { foreignTable: "game_rule", ascending: true });
+                ),
+                game_platform (
+                    platform (
+                        id,
+                        platform_abb,
+                        platform_name
+                    )
+                ),
+                game_region (
+                    region (
+                        id,
+                        region_name
+                    )
+                ),
+                game_rule (
+                    rule (
+                        id,
+                        rule_name
+                    )
+                ),
+                mode (
+                    category
+                ),
+                name,
+                moderators:profile!game_profile (id, username, country),
+                release_date,
+                version (
+                    id,
+                    version,
+                    sequence
+                )
+            `)
+            .order("custom")
+            .order("release_date")
+            .order("name")
+            .order("id", { foreignTable: "game_monkey", ascending: true })
+            .order("id", { foreignTable: "game_platform", ascending: true })
+            .order("id", { foreignTable: "game_region", ascending: true })
+            .order("id", { foreignTable: "game_rule", ascending: true });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            // return the games
-            return games;
-
-        } catch (error) {
-            // throw error to be handled by caller
+        // error handling
+        if (error) {
             throw error;
         }
+
+        // return the games
+        return games;
     };
 
     // FUNCTION 3: searchForGames - function that grabs a subset of games, according to the users input
@@ -195,37 +183,32 @@ const GameRead = () => {
             customFilter.push(false)
         }
 
-        try {
-            const { data: games, count, error } = await supabase
-                .from("game")
-                .select(`
-                    abb,
-                    custom,
-                    name,
-                    version (
-                        id,
-                        sequence,
-                        version
-                    )
-                `, { count: "exact" }
+        const { data: games, count, error } = await supabase
+            .from("game")
+            .select(`
+                abb,
+                custom,
+                name,
+                version (
+                    id,
+                    sequence,
+                    version
                 )
-                .in("custom", customFilter)
-                .or(`name.ilike.%${userInput}%,abb.ilike.%${userInput}%`)
-                .order("custom")
-                .order("release_date")
-                .order("name")
-                .range(start, end);
+            `, { count: "exact" }
+            )
+            .in("custom", customFilter)
+            .or(`name.ilike.%${userInput}%,abb.ilike.%${userInput}%`)
+            .order("custom")
+            .order("release_date")
+            .order("name")
+            .range(start, end);
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return { games, count };
-
-        } catch (error) {
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return { games, count };
     };
 
     // FUNCTION 4: queryGameByList - code that takes an array of strings representing game primary keys, and returns the matching games
@@ -235,35 +218,29 @@ const GameRead = () => {
     // if the query is successful, then this function will simply return the game data
     // if the query is unsuccessful, then this function will throw an error, which should be handled by the caller function
     const queryGameByList = async abbs => {
-        try {
-            const { data: games, error } = await supabase
-                .from("game")
-                .select(`
-                    abb,
-                    custom,
-                    name,
-                    versions:version (
-                        id,
-                        sequence,
-                        version
-                    )
-                `)
-                .in("abb", abbs)
-                .order("custom")
-                .order("release_date")
-                .order("name");
+        const { data: games, error } = await supabase
+            .from("game")
+            .select(`
+                abb,
+                custom,
+                name,
+                versions:version (
+                    id,
+                    sequence,
+                    version
+                )
+            `)
+            .in("abb", abbs)
+            .order("custom")
+            .order("release_date")
+            .order("name");
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return games;
-
-        } catch (error) {
-            // error should be handled by caller function
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return games;
     };
 
     return { queryGame, queryGamesForModerators, searchForGames, queryGameByList };

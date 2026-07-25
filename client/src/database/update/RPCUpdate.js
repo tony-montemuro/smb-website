@@ -16,25 +16,19 @@ const RPCUpdate = () => {
         const { mode, level } = structure;
         const { game_monkey, game_platform, game_profile, game_region, game_rule } = entities;
 
-        try {
-            const { error } = await supabase.rpc("add_game", { 
-                game: metadata,
-                modes: mode,
-                levels: level,
-                game_monkeys: game_monkey,
-                game_platforms: game_platform,
-                game_profiles: game_profile,
-                game_regions: game_region,
-                game_rules: game_rule
-            });
+        const { error } = await supabase.rpc("add_game", { 
+            game: metadata,
+            modes: mode,
+            levels: level,
+            game_monkeys: game_monkey,
+            game_platforms: game_platform,
+            game_profiles: game_profile,
+            game_regions: game_region,
+            game_rules: game_rule
+        });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-            
-        } catch (error) {
-            // error should be handled by the caller function
+        // error handling
+        if (error) {
             throw error;
         }
     };
@@ -46,16 +40,10 @@ const RPCUpdate = () => {
     // if the query is successful, this function simply returns
     // if the query is unsuccessful, this function will throw an error, which should be handled by the caller function
     const addVersions = async versions => {
-        try {
-            const { error } = await supabase.rpc("add_versions", { versions });
+        const { error } = await supabase.rpc("add_versions", { versions });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-        } catch (error) {
-            // error should be handled by the caller function
+        // error handling
+        if (error) {
             throw error;
         }
     };

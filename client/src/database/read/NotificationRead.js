@@ -11,22 +11,16 @@ const NotificationRead = () => {
     // if the query is successful, an integer will be returned that has the count of all notifications for the current user
     // otherwise, this function will throw an error, which is expected to be handled by the caller function
     const queryNotificationCount = async () => {
-        try {
-            const { count, error, status } = await supabase
-                .from("notification")
-                .select("*", { count: "exact", head: true });
+        const { count, error, status } = await supabase
+            .from("notification")
+            .select("*", { count: "exact", head: true });
 
-            // error handling
-            if (error && status !== 406) {
-                throw error;
-            }
-
-            return count;
-
-        } catch (error) {
-            // error is expected to be handled by caller function
+        // error handling
+        if (error && status !== 406) {
             throw error;
-        };
+        }
+
+        return count;
     };
 
     // FUNCTION 2: queryNotifications - async function that makes a call to supabase to get a range of notifications for
@@ -38,71 +32,65 @@ const NotificationRead = () => {
     // if the query is successful, the list of notifications is simply returned
     // otherwise, an error is thrown to be handled by the caller function
     const queryNotifications = async (start, end) => {
-        try {
-            const { data: notificationsList, count, error } = await supabase
-                .from("notification")
-                .select(`
-                    notif_date,
-                    notif_type,
-                    creator:profile!notification_creator_id_fkey (country, id, username),
-                    message,
-                    submission (
-                        profile (id, username),
-                        record,
-                        region (id, region_name),
-                        submitted_at,
-                        monkey (id, monkey_name),
-                        platform (id, platform_name),
-                        proof,
-                        comment,
-                        live,
-                        position,
-                        all_position,
-                        tas,
-                        mod_note,
-                        version (id, version)
-                    ),
-                    level (
-                        category, 
-                        mode (
-                            game (
-                                abb, 
-                                name,
-                                version (id)
-                            )
-                        ), 
-                        name,
-                        timer_type
-                    ),
-                    mod_note,
-                    score,
+        const { data: notificationsList, count, error } = await supabase
+            .from("notification")
+            .select(`
+                notif_date,
+                notif_type,
+                creator:profile!notification_creator_id_fkey (country, id, username),
+                message,
+                submission (
+                    profile (id, username),
                     record,
-                    submitted_at,
                     region (id, region_name),
+                    submitted_at,
                     monkey (id, monkey_name),
                     platform (id, platform_name),
                     proof,
-                    live,
                     comment,
+                    live,
+                    position,
+                    all_position,
                     tas,
+                    mod_note,
                     version (id, version)
-                `,
-                { count: "exact" })
-                .order("notif_date", { ascending: false })
-                .range(start, end);
+                ),
+                level (
+                    category, 
+                    mode (
+                        game (
+                            abb, 
+                            name,
+                            version (id)
+                        )
+                    ), 
+                    name,
+                    timer_type
+                ),
+                mod_note,
+                score,
+                record,
+                submitted_at,
+                region (id, region_name),
+                monkey (id, monkey_name),
+                platform (id, platform_name),
+                proof,
+                live,
+                comment,
+                tas,
+                version (id, version)
+            `,
+            { count: "exact" })
+            .order("notif_date", { ascending: false })
+            .range(start, end);
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            // if we made it this far, return notifications, as well as count
-            return { notificationsList, count };
-
-        } catch (error) {
-            // handle error in caller function
+        // error handling
+        if (error) {
             throw error;
         }
+
+        // if we made it this far, return notifications, as well as count
+        return { notificationsList, count };
     };
 
     return { queryNotificationCount, queryNotifications };

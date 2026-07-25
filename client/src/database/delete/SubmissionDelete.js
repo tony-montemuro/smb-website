@@ -11,19 +11,14 @@ const SubmissionDelete = () => {
     // if the delete query is successful, this function simply returns
     // if the delete query is unsuccessful, this function throws an error, which will be handled in the caller function
     const deleteSubmission = async id => {
-        try {
-            const { error } = await supabase
-                .from("submission")
-                .delete()
-                .match({ id: id });
+        const { error } = await supabase
+            .from("submission")
+            .delete()
+            .match({ id: id });
 
-            // error handling
-            if (error) {
-                throw new Error("delete", { error });
-            }
-            
-        } catch (error) {
-            throw error;
+        // error handling
+        if (error) {
+            throw new Error("delete", { error });
         }
     };
 

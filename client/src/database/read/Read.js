@@ -16,27 +16,21 @@ const Read = () => {
     // if the query is successful, the list of monkeys is simply returned
     // otherwise, this function throws an error, which should be handled by caller function
     const queryAll = async (tableName, orderBy = null, isAscending = true) => {
-        try {
-            // construct query according to parameters
-            const query = supabase.from(tableName).select("*");
-            if (orderBy) {
-                query.order(orderBy, { ascending: isAscending });
-            }
+        // construct query according to parameters
+        const query = supabase.from(tableName).select("*");
+        if (orderBy) {
+            query.order(orderBy, { ascending: isAscending });
+        }
 
-            const { data: rows, error } = await query;
+        const { data: rows, error } = await query;
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            // return data
-            return rows;
-
-        } catch(error) {
-            // throw error to be handled by caller
+        // error handling
+        if (error) {
             throw error;
         }
+
+        // return data
+        return rows;
     };
 
     return { queryAll };

@@ -69,24 +69,19 @@ const ProfileRead = () => {
         // than `profiles.length`
     // if the query fails, this function throws an error, which should be handled by the caller function
     const searchForProfiles = async(userInput, start, end) => {
-        try {
-            const { data: profiles, count, error } = await supabase
-                .from("profile")
-                .select("country, discord, id, username, twitch_username, twitter_handle, youtube_handle", { count: "exact" })
-                .ilike("username", `%${ userInput }%`)
-                .order("username")
-                .range(start, end);
+        const { data: profiles, count, error } = await supabase
+            .from("profile")
+            .select("country, discord, id, username, twitch_username, twitter_handle, youtube_handle", { count: "exact" })
+            .ilike("username", `%${ userInput }%`)
+            .order("username")
+            .range(start, end);
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return { profiles, count };
-
-        } catch (error) {
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return { profiles, count };
     };
 
     // FUNCTION 3: queryProfileByList - code that takes an array of strings representing profile primary keys, and returns the matching
@@ -97,24 +92,18 @@ const ProfileRead = () => {
     // if the query is successful, then this function will simply return the profile data
     // if the query is unsuccessful, then this function will throw an error, which should be handled by the caller function
     const queryProfileByList = async ids => {
-        try {
-            const { data: profiles, error } = await supabase
-                .from("profile")
-                .select("country, id, username")
-                .in("id", ids)
-                .order("username");
+        const { data: profiles, error } = await supabase
+            .from("profile")
+            .select("country, id, username")
+            .in("id", ids)
+            .order("username");
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return profiles;
-
-        } catch (error) {
-            // error should be handled by caller function
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return profiles;
     };
 
     return { queryUserProfile, searchForProfiles, queryProfileByList };
