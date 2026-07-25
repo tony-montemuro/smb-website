@@ -113,7 +113,7 @@ export function ReplayErrors() {
 export function Emulators() {
   return (
     <div className={ styles.content }>
-      Runs performed on Dolphin emulator are allowed to be submitted to SMB1 and SMB2 charts, but with additional restrictions. First, you must be playing on a stable, up-to-date beta version of Dolphin emulator. You must additionally provide live proof with input display, using an analog joystick. Finally, you must have the following 4 options enabled in the "Movie" tab: 
+      Runs performed on Dolphin emulator are allowed to be submitted to SMB1 and SMB2 charts, but with additional restrictions. First, you must be playing on a stable, up-to-date beta version of Dolphin emulator. You must additionally provide live proof with input display, using an analog joystick. Finally, you must have the following 4 options enabled in the &quot;Movie&quot; tab: 
       <ul>
         <li>Show Lag Counter</li>
         <li>Show Frame Counter</li>

@@ -93,7 +93,7 @@ function GameAddLayout() {
           <InfoOutlinedIcon />
           <h3>Important: Your progress is saved locally.</h3>
         </div>
-        <span>To ensure you don't lose your progress, please avoid:</span>
+        <span>To ensure you don&apos;t lose your progress, please avoid:</span>
         <ul>
           <li>Clearing your browser cache or data</li>
           <li>Using private/incognito mode</li>

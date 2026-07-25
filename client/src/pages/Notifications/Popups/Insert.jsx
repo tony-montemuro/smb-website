@@ -48,7 +48,7 @@ function Insert() {
           <li><NotificationProof proof={ submission.proof } /></li>
           <li>Live Proof: <CheckmarkOrX isChecked={ submission.live } /></li>
           <li>TAS: <CheckmarkOrX isChecked={ submission.tas } /></li>
-          <li>Moderator Note: "{ submission.mod_note }"</li>
+          <li>Moderator Note: &quot;{ submission.mod_note }&quot;</li>
         </ul>
       </div>
 

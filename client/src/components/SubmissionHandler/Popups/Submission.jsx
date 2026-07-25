@@ -91,7 +91,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
               <strong>The following submission was reported by&nbsp;</strong>
               <Username profile={ creator } />.
             </h3>
-            <p>They left the following message with the report: "{ submission.report.message }"</p>
+            <p>They left the following message with the report: &quot;{ submission.report.message }&quot;</p>
           </>
         }
 

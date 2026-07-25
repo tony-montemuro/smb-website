@@ -45,10 +45,10 @@ function Moderator() {
               <li>New submissions</li>
               <li>Reported submission</li>
             </ol>
-            Thus, if a submission has been approved, a moderator is unable to <strong>update details</strong> or <strong>delete</strong> the submission. You can think of an approval as a way to "protect" a submission from being easily tampered with by other moderators.
+            Thus, if a submission has been approved, a moderator is unable to <strong>update details</strong> or <strong>delete</strong> the submission. You can think of an approval as a way to &quot;protect&quot; a submission from being easily tampered with by other moderators.
           </li>
           <li>
-            A clever moderator might think: <em>Why can't I just report a submission to get access to the actions I want?</em> This will not work as they plan, because <strong>moderators are unable to perform actions on reported submissions that:</strong>
+            A clever moderator might think: <em>Why can&apos;t I just report a submission to get access to the actions I want?</em> This will not work as they plan, because <strong>moderators are unable to perform actions on reported submissions that:</strong>
             <ol>
               <li>Belong to the moderator</li>
               <li>Were reported by the moderator</li>
