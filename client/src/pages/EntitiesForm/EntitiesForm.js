@@ -98,7 +98,7 @@ const EntitiesForm = () => {
         let updatedValues;
 
 		switch (type) {
-            case "insertValues":
+            case "insertValues": {
                 const extended = [...state.values[name], getDataWithName(data, name)];
                 if (name === "moderator") {
                     extended.sort((a, b) => userSort(a, b));
@@ -107,7 +107,8 @@ const EntitiesForm = () => {
 
                 updateLocal(updatedValues);
                 return { ...state, values: updatedValues };
-            case "updateValues":
+            }
+            case "updateValues": {
                 const updated = state.values[name].filter(v => v.id !== data.id);
 
                 // only re-introduce data if value is defined. otherwise, this function behaves as a "delete"
@@ -119,6 +120,7 @@ const EntitiesForm = () => {
                 updatedValues = { ...state.values, [name]: updated };
                 updateLocal(updatedValues);
                 return { ...state, values: updatedValues };
+            }
             case "values":
                 return { ...state, values: { ...state.values, ...data } };
 			case "error":

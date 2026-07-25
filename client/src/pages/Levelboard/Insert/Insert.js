@@ -95,7 +95,7 @@ const Insert = (level, setSubmitting) => {
     const reducer = (state, action) => {
         const field = action.field, value = action.value;
 		switch(field) {
-			case "values":
+			case "values": {
                 // generate error object using `state.error`, and `value`
                 const error = {};
                 Object.keys(value).forEach(key => {
@@ -113,6 +113,7 @@ const Insert = (level, setSubmitting) => {
 						...value
 					}
 				};
+			}
 			case "all":
 				return formInit;
 			default:
