@@ -190,7 +190,7 @@ function Structure({
   );
 };
 
-const StructureBody = memo(function({
+const StructureBody = memo(function StructureBody({
   structure,
   versions,
   onVersionCheck,
@@ -357,7 +357,6 @@ function LevelRow({ level, versions, category, onVersionCheck }) {
   // code that executes each time the level parameter changes
   useEffect(() => {
     setVersion(level.version);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
 
   /* ===== LEVEL ROW COMPONENT ===== */
