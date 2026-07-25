@@ -9,7 +9,7 @@ function NotificationMessage({ message, notification }) {
         <Username profile={ notification.creator } />
         &nbsp;also left a message:
       </h2>
-      <p>"{ notification.message }"</p>
+      <p>&quot;{ notification.message }&quot;</p>
     </>
 };
 

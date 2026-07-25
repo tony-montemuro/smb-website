@@ -112,7 +112,7 @@ function Update({ level, updateBoard, submitting, setSubmitting }) {
 
           { /* If the submission has been approved, render a disclaimer */ }
           { form.values.approved &&
-            <p><b>Note:</b> Since this submission has been approved by a moderator, any updates will revoke it's approval.</p>
+            <p><b>Note:</b> Since this submission has been approved by a moderator, any updates will revoke it&apos;s approval.</p>
           }
 
           { /* Render the various fields to update the submission */ }

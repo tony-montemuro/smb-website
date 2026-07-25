@@ -13,7 +13,7 @@ function Links({ mode, setMode }) {
           Forgot your password?
         </span>
         <span onClick={ () => setMode(MODE_SIGNUP) }>
-          Don't have an account? Sign up
+          Don&apos;t have an account? Sign up
         </span>
       </div>
     );

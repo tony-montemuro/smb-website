@@ -11,17 +11,12 @@ const ReportUpdate = () => {
     // if the query is successful, simply return
     // otherwise, throw the error to be handled in the caller function
     const insertReport = async report => {
-        try {
-            const { error } = await supabase
-                .from("report")
-                .insert(report);
-    
-            // error handling
-            if (error) {
-                throw error;
-            }
-    
-        } catch (error) {
+        const { error } = await supabase
+            .from("report")
+            .insert(report);
+
+        // error handling
+        if (error) {
             throw error;
         }
     };

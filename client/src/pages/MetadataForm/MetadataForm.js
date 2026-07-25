@@ -70,10 +70,10 @@ const MetadataForm = () => {
     const reducer = (state, action) => {
         const field = action.field, value = action.value;
 		switch (field) {
-            case "values":
+            case "values": {
                 const updatedValues = { ...state.values, ...value };
 
-                // special case: if we are updating the creator id, release date, or min date, we update local storage with 
+                // special case: if we are updating the creator id, release date, or min date, we update local storage with
                 // updated data
                 const needsUpdates = ["creator", "release_date", "min_date"];
                 if (Object.keys(value).some(key => needsUpdates.includes(key))) {
@@ -81,6 +81,7 @@ const MetadataForm = () => {
                 }
 
                 return { ...state, values: updatedValues };
+            }
 			case "error":
                 return { ...state, error: { ...state.error, ...value } };
 			default:

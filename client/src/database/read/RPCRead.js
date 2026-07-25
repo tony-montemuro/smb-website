@@ -15,26 +15,20 @@ const RPCRead = () => {
     // if the query is successful, the array of modes containing the record objects is simply returned
     // otherwise, this function throws an error, which should be handled by the caller function
     const getRecords = async (abb, category, type, live, version) => {
-        try {
-            const { data: records, error } = await supabase.rpc("get_records", {
-                abb, 
-                category,
-                score: type === "score",
-                live_only: live,
-                version: version ?? null
-            });
+        const { data: records, error } = await supabase.rpc("get_records", {
+            abb, 
+            category,
+            score: type === "score",
+            live_only: live,
+            version: version ?? null
+        });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return records;
-
-        } catch (error) {
-            // if we get an error, throw for caller function to handle
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return records;
     };
 
     // FUNCTION 2: getTotals - function that calls on a procedure to generate a totalizer array depending on the parameters
@@ -48,26 +42,20 @@ const RPCRead = () => {
     // if the query is successful, an array of totals objects, sorted by position field, is returned
     // otherwise, this function throws an error, which should be handled by the caller function
     const getTotals = async (abb, category, type, live, version) => {
-        try {
-            const { data: totals, error } = await supabase.rpc("get_totals", { 
-                abb, 
-                category,
-                score: type === "score",
-                live_only: live,
-                version: version ?? null
-            });
+        const { data: totals, error } = await supabase.rpc("get_totals", { 
+            abb, 
+            category,
+            score: type === "score",
+            live_only: live,
+            version: version ?? null
+        });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return totals;
-
-        } catch (error) {
-            // if we get an error, throw for caller function to handle
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return totals;
     };
 
     // FUNCTION 3: getMedals - function that calls on a procedure to generate a medals array depending on the parameters
@@ -80,25 +68,19 @@ const RPCRead = () => {
     // if the query is successful, an array of medals objects, sorted by position field, is returned
     // otherwise, this function throws an error, which should be handled by the caller function
     const getMedals = async (abb, category, type, version) => {
-        try {
-            const { data: medals, error } = await supabase.rpc("get_medals", { 
-                abb, 
-                category,
-                score: type === "score",
-                version: version ?? null
-            });
+        const { data: medals, error } = await supabase.rpc("get_medals", { 
+            abb, 
+            category,
+            score: type === "score",
+            version: version ?? null
+        });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return medals;
-
-        } catch (error) {
-            // if we get an error, throw for caller function to handle
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return medals;
     };
 
     // FUNCTION 4: getUserRankings - function that calls on a procedure to generate user ranking object depending on the parameters
@@ -113,27 +95,21 @@ const RPCRead = () => {
     // if the query is successful, a user ranking object is is returned
     // otherwise, this function throws an error, which should be handled by the caller function
     const getUserRankings = async (abb, category, type, live, profileId, version) => {
-        try {
-            const { data: rankings, error } = await supabase.rpc("get_user_rankings", { 
-                abb, 
-                category,
-                score: type === "score",
-                live_only: live,
-                profile_id: profileId,
-                version_key: version ?? null
-            });
+        const { data: rankings, error } = await supabase.rpc("get_user_rankings", { 
+            abb, 
+            category,
+            score: type === "score",
+            live_only: live,
+            profile_id: profileId,
+            version_key: version ?? null
+        });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return rankings;
-
-        } catch (error) {
-            // if we get an error, throw for caller function to handle
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return rankings;
     };
 
     // FUNCTION 5: getChartSubmissions - function that calls on a procedure to generate the list of submissions for a particular chart
@@ -148,26 +124,20 @@ const RPCRead = () => {
     // order, is returned
     // otherwise, this function throws an error, which should be handled by the caller function
     const getChartSubmissions = async (abb, category, level, type, version) => {
-        try {
-            const { data: submissions, error } = await supabase.rpc("get_chart_submissions", { 
-                game: abb,
-                category_name: category,
-                level,
-                is_score: type === "score",
-                version_key: version ?? null
-            });
+        const { data: submissions, error } = await supabase.rpc("get_chart_submissions", { 
+            game: abb,
+            category_name: category,
+            level,
+            is_score: type === "score",
+            version_key: version ?? null
+        });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return submissions;
-
-        } catch (error) {
-            // if we get an error, throw for caller function to handle
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return submissions;
     };
 
     // FUNCTION 6: getUnapprovedCounts - function that grabs the count of unapproved submissions, either for a list of games, or all
@@ -180,20 +150,14 @@ const RPCRead = () => {
     // submissions per game
     // if the query is unsuccessful, an error is thrown, which is to be handled by the caller function
     const getUnapprovedCounts = async games => {
-        try {
-            const { data: gameCounts, error } = await supabase.rpc("get_unapproved_counts", { abbs: games });
+        const { data: gameCounts, error } = await supabase.rpc("get_unapproved_counts", { abbs: games });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return gameCounts;
-
-        } catch (error) {
-            // error should be handled by the caller function
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return gameCounts;
     };
 
     // FUNCTION 7: getUnapprovedByGame - function that grabs all the unapproved submissions for a particular game
@@ -203,20 +167,14 @@ const RPCRead = () => {
     // if the query is successful, an array of submissions is simply returned, sorted by the submission id in descending order
     // if the query is not successful, an error is thrown, which is expected to be handled by the caller function
     const getUnapprovedByGame = async abb => {
-        try {
-            const { data: submissions, error } = await supabase.rpc("get_unapproved", { abb: abb });
+        const { data: submissions, error } = await supabase.rpc("get_unapproved", { abb: abb });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return submissions;
-
-        } catch (error) {
-            // error should be handled by the caller function
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return submissions;
     };
 
     // FUNCTION 8: getReportedByGame - function that grabs all the reported submissions for a particular game
@@ -226,20 +184,14 @@ const RPCRead = () => {
     // if the query is successful, an array of submissions is simply returned, sorted by the submission id in descending order
     // if the query is not successful, an error is thrown, which is expected to be handled by the caller function
     const getReportedByGame = async abb => {
-        try {
-            const { data: submissions, error } = await supabase.rpc("get_reported", { abb: abb });
+        const { data: submissions, error } = await supabase.rpc("get_reported", { abb: abb });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return submissions;
-
-        } catch (error) {
-            // error should be handled by the caller function
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return submissions;
     };
 
     // FUNCTION 9: getProfile - function that can grab a single profile using a profile id
@@ -249,22 +201,16 @@ const RPCRead = () => {
     // if the query is successful, a profile object is simply returned
     // if the query is unsuccessful, this function will throw an error, which should be handled by the caller function
     const getProfile = async profileId => {
-        try {
-            const { data: profile, error } = await supabase.rpc("get_profile", {
-                p_id: profileId
-            });
+        const { data: profile, error } = await supabase.rpc("get_profile", {
+            p_id: profileId
+        });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return profile;
-
-        } catch (error) {
-            // error should be handled by the caller function
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return profile;
     };
 
     // FUNCTION 10: getChartTypes - function that grabs all chart types from the database
@@ -273,20 +219,14 @@ const RPCRead = () => {
     // if the query is successful, the array of chart types is returned
     // if the query is unsuccessful, this function will throw an error, which should be handled by the caller function
     const getChartTypes = async () => {
-        try {
-            const { data: chartTypes, error } = await supabase.rpc("get_chart_types");
+        const { data: chartTypes, error } = await supabase.rpc("get_chart_types");
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return chartTypes;
-
-        } catch (error) {
-            // error should be handled by the caller function
+        // error handling
+        if (error) {
             throw error;
         }
+
+        return chartTypes;
     };
 
     // FUNCTION 11: getTimerTypes - funcion that grabs all timer types from the database
@@ -295,20 +235,14 @@ const RPCRead = () => {
     // if the query is successful, the array of timer types is returned
     // if the query is unsuccessful, this function will throw an error, which should be handled by the caller function
     const getTimerTypes = async () => {
-        try {
-            const { data: timerTypes, error } = await supabase.rpc("get_timer_types");
+        const { data: timerTypes, error } = await supabase.rpc("get_timer_types");
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return timerTypes;
-
-        } catch (error) {
-            // error should be handled by the caller function
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        return timerTypes;
     };
 
     return { 

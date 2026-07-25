@@ -152,16 +152,16 @@ function StructureForm() {
             styles:
             <ol>
               <li>
-                <strong>"Practice Mode" Style</strong> - This is a traditional grouping of charts, that the average user is most familiar with.
+                <strong>&quot;Practice Mode&quot; Style</strong> - This is a traditional grouping of charts, that the average user is most familiar with.
                 Submissions to charts within categories of this style are <strong>ranked by all 3 types:</strong> world records, totalizer, 
                 and medal table. High scores / fast time charts are <strong>restricted to descending order</strong>, meaning the higher the high 
-                score / fast time, the better. Some example "Practice Mode" style categories include Practice Mode, Miscellaneous
+                score / fast time, the better. Some example &quot;Practice Mode&quot; style categories include Practice Mode, Miscellaneous
                 Practice Mode, Practice Mode (Jumps), & Supernova. <strong>Traditional IL charts should be within this style of category.</strong>
               </li>
               <li>
-                <strong>"Non-Practice Mode" Style</strong> - This is a less common grouping of charts, that some users of the website may be familiar
+                <strong>&quot;Non-Practice Mode&quot; Style</strong> - This is a less common grouping of charts, that some users of the website may be familiar
                 with. Submissions to charts within categories of this style are <strong>only ranked by world records.</strong> However, high score /
-                fast time charts can have <strong>either ascending or descending order.</strong> Some example "Non-Practice Mode" style categories
+                fast time charts can have <strong>either ascending or descending order.</strong> Some example &quot;Non-Practice Mode&quot; style categories
                 include Challenge Mode, Party Games, & Time Attack. <strong>Non-traditional IL charts will typically be within this style
                 of category.</strong>
               </li>
@@ -178,12 +178,12 @@ function StructureForm() {
         <span>You should also be familiar with each chart field:</span>
         <ul>
           <li>
-            <strong>Name:</strong> The name of the chart. This is a "smart" input, meaning it will take your text input, and perform two conversions:
+            <strong>Name:</strong> The name of the chart. This is a &quot;smart&quot; input, meaning it will take your text input, and perform two conversions:
             <ol>
               <li><strong>Backend Conversion:</strong> A version of the name that is friendly with the database.</li>
               <li><strong>Frontend Conversion:</strong> A version of the name that is friendly to the user. This includes auto-capitalization.</li>
             </ol>
-            When entering a name, be sure to include <strong>everything.</strong> Take Simple from Super Monkey Ball 2 for example: the chart's name is <strong>Beginner 1 - Simple.</strong>
+            When entering a name, be sure to include <strong>everything.</strong> Take Simple from Super Monkey Ball 2 for example: the chart&apos;s name is <strong>Beginner 1 - Simple.</strong>
             &nbsp;As you can see, the mode and level number are included. Use other games as a reference, if necessary. <br/>
             Feel free to type in all lowercase; the input should handle capitalization! <br/>
             A couple things to note: occasionally, modifying this input

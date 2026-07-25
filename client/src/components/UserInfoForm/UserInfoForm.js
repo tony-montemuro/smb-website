@@ -349,13 +349,9 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // a success message
   // otherwise, this function throws an error, which should be handled by the caller function 
   const standardUpload = async userInfo => {
-    try {
-      await upsertUserInfo(userInfo);
-      await updateUser(user.id);
-      addMessage("Profile information has successfully updated!", "success", 5000);
-    } catch (error) {
-      throw error;
-    }
+    await upsertUserInfo(userInfo);
+    await updateUser(user.id);
+    addMessage("Profile information has successfully updated!", "success", 5000);
   };
 
   // FUNCTION 15: adminUpload - function that exclusively uploads NEW profiles, accessible by admins in admin mode ONLY
@@ -364,14 +360,10 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // if the data successfully uploads, render a success message, rerender the search results, and close the popup
   // otherwise, this function throws an error, which should be handled by the caller function
   const adminModeUpload = async userInfo => {
-    try {
-      await insertUserInfo(userInfo);
-      addMessage(`Profile successfully created! Try searching for ${userInfo.username} in the user searchbar!`);
-      adminMode.refreshUserSearchFunc();
-      closePopup();
-    } catch (error) {
-      throw error;
-    }
+    await insertUserInfo(userInfo);
+    addMessage(`Profile successfully created! Try searching for ${userInfo.username} in the user searchbar!`);
+    adminMode.refreshUserSearchFunc();
+    closePopup();
   };
 
   // FUNCTION 16: uploadUserInfo - function that validates, processes, & uploads the form containing the user info (upsert)

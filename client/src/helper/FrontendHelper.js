@@ -172,9 +172,10 @@ const FrontendHelper = () => {
                     return secondsToMinutes(fixedRecord, type, 3);
                 case "hour":
                     return secondsToHours(fixedRecord, type).split(":")[0];
-                case "hour_min":
+                case "hour_min": {
                     const splitTime = secondsToHours(fixedRecord, type).split(":");
                     return `${splitTime[0]}:${splitTime[1]}`;
+                }
                 case "hour_min_sec":
                     return secondsToHours(fixedRecord, type).split(".")[0];
                 case "hour_min_sec_csec":

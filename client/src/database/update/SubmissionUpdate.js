@@ -11,18 +11,12 @@ const SubmissionUpdate = () => {
     // if the query is successful, the function will return
     // if the query is unsuccessful, the function will throw an error, which will be handled by the caller function
     const insertSubmission = async submission => {
-        try {
-            const { error } = await supabase
-                .from("submission")
-                .insert(submission);
+        const { error } = await supabase
+            .from("submission")
+            .insert(submission);
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-            
-        } catch (error) {
-            // handle error in caller function
+        // error handling
+        if (error) {
             throw error;
         }
     };
@@ -36,21 +30,15 @@ const SubmissionUpdate = () => {
     // if the query is successful, the function will simply return
     // if the query is unsuccessful, the function will throw an error, which will be handled by the caller function
     const updateSubmission = async (submission, id) => {
-        try {
-            const { error } = await supabase
-                .from("submission")
-                .update(submission)
-                .eq("id", id);
-            
-            // error handling
-            if (error) {
-                throw error;
-            }
+        const { error } = await supabase
+            .from("submission")
+            .update(submission)
+            .eq("id", id);
 
-        } catch (error) {
-            // error will be handled by the caller function
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
     };
 
     return { insertSubmission, updateSubmission };

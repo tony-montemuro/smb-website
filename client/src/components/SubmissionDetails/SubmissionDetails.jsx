@@ -94,10 +94,10 @@ function SubmissionDetails({ level, updateBoards }) {
           </div>
         </li>
         { submission.comment && 
-          <li><span className={ styles.label }>Comment:</span>&nbsp;"{ submission.comment }"</li> 
+          <li><span className={ styles.label }>Comment:</span>&nbsp;&quot;{ submission.comment }&quot;</li> 
         }
         { submission.mod_note &&
-          <li><span className={ styles.label }>Moderator Note:</span>&nbsp;"{ submission.mod_note }"</li>
+          <li><span className={ styles.label }>Moderator Note:</span>&nbsp;&quot;{ submission.mod_note }&quot;</li>
         }
 
       </ul>

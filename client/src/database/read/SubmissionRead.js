@@ -99,21 +99,16 @@ const SubmissionRead = () => {
             // finally, add our pagenation limits, and ordering
             query = query.range(start, end).order("id", { ascending: false });
 
-        try {
-            // now, perform the query
-            const { data: submissions, count, error } = await query;
+        // now, perform the query
+        const { data: submissions, count, error } = await query;
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            // if we made it here, let's just return the submissions, as well as the count
-            return { submissions, count };
-
-        } catch (error) {
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
+
+        // if we made it here, let's just return the submissions, as well as the count
+        return { submissions, count };
     };
 
     // FUNCTION 2: getChartSubmissionsByProfile - function that fetches all submissions by a particular user on a particular chart
@@ -186,20 +181,14 @@ const SubmissionRead = () => {
             .order("submitted_at", { ascending: false })
             .order("id", { ascending: false });
         
-        try {
-            const { data: submissions, error } = await query;
+        const { data: submissions, error } = await query;
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-            return submissions;
-
-        } catch (error) {
-            // error is expected to be handled by caller function
+        // error handling
+        if (error) {
             throw error;
         }
+
+        return submissions;
     };
 
     return { queryRecentSubmissions, getChartSubmissionsByProfile };

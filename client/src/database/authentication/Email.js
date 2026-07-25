@@ -11,21 +11,15 @@ const Email = () => {
     // to complete the email updating process.
     // if a failure, an error will be thrown by this function
     const updateEmail = async email => {
-        try {
-            // attempt to change email
-            const { error } = await supabase
-                .auth
-                .updateUser({ email: email });
+        // attempt to change email
+        const { error } = await supabase
+            .auth
+            .updateUser({ email: email });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-        } catch (error) {
-            // error will be handled in a higher-up function
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
     };
 
     return { updateEmail };

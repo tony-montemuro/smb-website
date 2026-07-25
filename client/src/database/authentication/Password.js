@@ -10,20 +10,15 @@ const Password = () => {
     // if successful, the user's password should successfully reset, and the user can now sign in with their new password
     // if a failure, an error will be thrown by this function, which should be handled by the caller function
     const updatePassword = async newPassword => {
-        try {
-            // attempt to change email
-            const { error } = await supabase
-                .auth
-                .updateUser({ password: newPassword });
+        // attempt to change email
+        const { error } = await supabase
+            .auth
+            .updateUser({ password: newPassword });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-        } catch (error) {
+        // error handling
+        if (error) {
             throw error;
-        };
+        }
     };
 
     return { updatePassword };

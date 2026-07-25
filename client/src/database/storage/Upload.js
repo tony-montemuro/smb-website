@@ -13,21 +13,15 @@ const Upload = () => {
     // if successful, this function will simply return
     // if failure, this function will throw an error, which will be handled in the caller function
     const uploadAvatar = async (file, filePath) => {
-        try {
-            // first, upload avatar to storage bucket
-            let { error } = await supabase.storage
-                .from("avatars")
-                .upload(filePath.toString(), file, {
-                    upsert: true
-                });
+        // first, upload avatar to storage bucket
+        let { error } = await supabase.storage
+            .from("avatars")
+            .upload(filePath.toString(), file, {
+                upsert: true
+            });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-        } catch (error) {
-            // error will be handled in a higher-up function
+        // error handling
+        if (error) {
             throw error;
         }
     };
@@ -41,21 +35,15 @@ const Upload = () => {
     // if successful, this function will simply return
     // if failure, this function will throw an error, which will be handled in the caller function
     const uploadBoxArt = async (file, filePath) => {
-        try {
-            // first, upload box art to games bucket
-            const { error } = await supabase.storage
-                .from("games")
-                .upload(filePath.toString(), file, {
-                    upsert: true
-                });
+        // first, upload box art to games bucket
+        const { error } = await supabase.storage
+            .from("games")
+            .upload(filePath.toString(), file, {
+                upsert: true
+            });
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-        } catch (error) {
-            // error will be handled in a higher-up function
+        // error handling
+        if (error) {
             throw error;
         }
     };

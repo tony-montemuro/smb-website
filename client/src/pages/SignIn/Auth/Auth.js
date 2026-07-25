@@ -109,6 +109,7 @@ const Auth = () => {
       case MODE_FORGOT_PASSWORD:
         success = await passwordReset();
         break;
+      // no default
     }
 
     if (!success) {

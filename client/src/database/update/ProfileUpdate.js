@@ -10,20 +10,14 @@ const ProfileUpdate = () => {
     // if successful, this function will simply return
     // if failure, this function will throw an error, which will be handled in the caller function
     const upsertUserInfo = async userInfo => {
-        try {
-            let { error } = await supabase
-                .from("profile")
-                .upsert(userInfo,
-                    { onConflict: "user_id" }
-                );
+        let { error } = await supabase
+            .from("profile")
+            .upsert(userInfo,
+                { onConflict: "user_id" }
+            );
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-        } catch (error) {
-            // error will be handled in a higher-up function
+        // error handling
+        if (error) {
             throw error;
         }
     };
@@ -37,17 +31,12 @@ const ProfileUpdate = () => {
     // if successful, this function will simply return
     // if failure, this function will throw an error, which will be handled in the caller function
     const insertUserInfo = async userInfo => {
-        try {
-            let { error } = await supabase
-                .from("profile")
-                .insert(userInfo);
+        let { error } = await supabase
+            .from("profile")
+            .insert(userInfo);
 
-            // error handling
-            if (error) {
-                throw error;
-            }
-
-        } catch (error) {
+        // error handling
+        if (error) {
             throw error;
         }
     }

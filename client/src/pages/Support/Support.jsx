@@ -28,7 +28,7 @@ function Support() {
       <hr />
       <h2>Report Issues, or Fix Them Yourself</h2>
       <p>If you are not a developer, feel free to report any issues you find on the website to <strong>TonySMB</strong>. The best way to contact him is through discord (<code>tonysmb</code>). Alternatively, you can send him an email (<code>tonyamontemuro@gmail.com</code>). <em>Please be as specific as possible when describing an issue on the website.</em></p>
-      <p>If you are a developer, SMBElite is an open-source application. You can access the website's repository <a href="https://github.com/tony-montemuro/smb-website" target="_blank" rel="noopener noreferrer">here</a>. Feel free to contribute to the repository; any help is greatly appreciated!</p>
+      <p>If you are a developer, SMBElite is an open-source application. You can access the website&apos;s repository <a href="https://github.com/tony-montemuro/smb-website" target="_blank" rel="noopener noreferrer">here</a>. Feel free to contribute to the repository; any help is greatly appreciated!</p>
       <hr />
       <h2>Make a Donation</h2>
       <p>Any donations to help cover operational costs are greatly appreciated. Please only donate what you can!</p>
