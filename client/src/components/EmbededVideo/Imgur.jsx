@@ -44,8 +44,8 @@ function Imgur({ id, isAlbum }) {
   /* ===== IMGUR COMPONENT ===== */
 
   // React owns just the div wrapper, Imgur safely maintains contents within `containerRef`
-  return <div ref={ containerRef } />;
-};
+  return <div ref={containerRef} />;
+}
 
 /* ===== EXPORTS ===== */
 export default Imgur;

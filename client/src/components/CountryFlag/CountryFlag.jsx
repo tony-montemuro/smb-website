@@ -9,8 +9,8 @@ function CountryFlag({ country }) {
   }
 
   /* ===== COUNTRY FLAG COMPONENT ===== */
-  return iso2 && <span className={ `fi fi-${ iso2.toLowerCase() }` }></span>;
-};
+  return iso2 && <span className={`fi fi-${iso2.toLowerCase()}`}></span>;
+}
 
 /* ===== EXPORTS ===== */
 export default CountryFlag;

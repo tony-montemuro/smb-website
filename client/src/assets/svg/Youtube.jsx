@@ -1,4 +1,4 @@
-function Youtube () {
+function Youtube() {
   /* ===== YOUTUBE COMPONENT ===== */
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="159" height="110" viewBox="0 0 159 110">
@@ -9,7 +9,7 @@ function Youtube () {
       <path fill="#fff" d="M105 55L64.2 31.6v46.8z"></path>
     </svg>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Youtube;

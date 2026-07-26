@@ -14,16 +14,64 @@ import reactHooksPlugin from "eslint-plugin-react-hooks";
  * dependency: https://github.com/facebook/create-react-app/tree/main/packages/confusing-browser-globals
  */
 const confusingBrowserGlobals = [
-  "addEventListener", "blur", "close", "closed", "confirm", "defaultStatus",
-  "defaultstatus", "event", "external", "find", "focus", "frameElement",
-  "frames", "history", "innerHeight", "innerWidth", "length", "location",
-  "locationbar", "menubar", "moveBy", "moveTo", "name", "onblur", "onerror",
-  "onfocus", "onload", "onresize", "onunload", "open", "opener", "opera",
-  "outerHeight", "outerWidth", "pageXOffset", "pageYOffset", "parent", "print",
-  "removeEventListener", "resizeBy", "resizeTo", "screen", "screenLeft",
-  "screenTop", "screenX", "screenY", "scroll", "scrollbars", "scrollBy",
-  "scrollTo", "scrollX", "scrollY", "self", "status", "statusbar", "stop",
-  "toolbar", "top"
+  "addEventListener",
+  "blur",
+  "close",
+  "closed",
+  "confirm",
+  "defaultStatus",
+  "defaultstatus",
+  "event",
+  "external",
+  "find",
+  "focus",
+  "frameElement",
+  "frames",
+  "history",
+  "innerHeight",
+  "innerWidth",
+  "length",
+  "location",
+  "locationbar",
+  "menubar",
+  "moveBy",
+  "moveTo",
+  "name",
+  "onblur",
+  "onerror",
+  "onfocus",
+  "onload",
+  "onresize",
+  "onunload",
+  "open",
+  "opener",
+  "opera",
+  "outerHeight",
+  "outerWidth",
+  "pageXOffset",
+  "pageYOffset",
+  "parent",
+  "print",
+  "removeEventListener",
+  "resizeBy",
+  "resizeTo",
+  "screen",
+  "screenLeft",
+  "screenTop",
+  "screenX",
+  "screenY",
+  "scroll",
+  "scrollbars",
+  "scrollBy",
+  "scrollTo",
+  "scrollX",
+  "scrollY",
+  "self",
+  "status",
+  "statusbar",
+  "stop",
+  "toolbar",
+  "top",
 ];
 
 export default defineConfig([
@@ -39,11 +87,11 @@ export default defineConfig([
       sourceType: "module",
       globals: {
         ...globals.browser,
-        ...globals.node
+        ...globals.node,
       },
       parserOptions: {
-        ecmaFeatures: { jsx: true }
-      }
+        ecmaFeatures: { jsx: true },
+      },
     },
     rules: {
       /* ===== POSSIBLE PROBLEMS ===== */
@@ -60,11 +108,11 @@ export default defineConfig([
        */
       "no-unused-vars": [
         "error",
-        { args: "none", caughtErrors: "none", ignoreRestSiblings: true }
+        { args: "none", caughtErrors: "none", ignoreRestSiblings: true },
       ],
       "no-use-before-define": [
         "error",
-        { functions: false, classes: false, variables: false }
+        { functions: false, classes: false, variables: false },
       ],
 
       /* ===== SUGGESTIONS ===== */
@@ -92,13 +140,13 @@ export default defineConfig([
         {
           object: "require",
           property: "ensure",
-          message: "Use a dynamic import() instead."
+          message: "Use a dynamic import() instead.",
         },
         {
           object: "System",
           property: "import",
-          message: "Use a dynamic import() instead."
-        }
+          message: "Use a dynamic import() instead.",
+        },
       ],
       "no-restricted-syntax": ["error", "WithStatement"],
       "no-script-url": "error",
@@ -106,15 +154,19 @@ export default defineConfig([
       "no-throw-literal": "error",
       "no-unused-expressions": [
         "error",
-        { allowShortCircuit: true, allowTernary: true, allowTaggedTemplates: true }
+        {
+          allowShortCircuit: true,
+          allowTernary: true,
+          allowTaggedTemplates: true,
+        },
       ],
       "no-useless-computed-key": "error",
       "no-useless-concat": "error",
       "no-useless-constructor": "error",
       "no-useless-rename": "error",
       strict: ["error", "never"],
-      "unicode-bom": ["error", "never"]
-    }
+      "unicode-bom": ["error", "never"],
+    },
   },
 
   {
@@ -123,7 +175,7 @@ export default defineConfig([
     extends: [reactPlugin.configs.flat.recommended],
     plugins: { "react-hooks": reactHooksPlugin },
     settings: {
-      react: { version: "detect" }
+      react: { version: "detect" },
     },
     rules: {
       /* The new JSX transform makes these obsolete. */
@@ -145,9 +197,9 @@ export default defineConfig([
        * CRA parity. Worth revisiting deliberately later.
        */
       "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "error"
-    }
+      "react-hooks/exhaustive-deps": "error",
+    },
   },
 
-  prettierConfig
+  prettierConfig,
 ]);

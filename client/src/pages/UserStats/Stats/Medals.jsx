@@ -13,15 +13,18 @@ function Medals({ medals, filter }) {
 
   /* ===== MEDALS COMPONENT ===== */
   return (
-    <div className={ styles.stats }>
-      <h2>{ capitalize(type) } Medals</h2>
-      <span><em><strong>Note:</strong> Medal counts are computed using live-{ type }s only!</em></span>
+    <div className={styles.stats}>
+      <h2>{capitalize(type)} Medals</h2>
+      <span>
+        <em>
+          <strong>Note:</strong> Medal counts are computed using live-{type}s only!
+        </em>
+      </span>
 
-      { medals ?
+      {medals ? (
         <div className="table">
-          <table className={ styles.slim }>
-
-            { /* Table header - shows what information is rendered in each cell */ }
+          <table className={styles.slim}>
+            {/* Table header - shows what information is rendered in each cell */}
             <thead>
               <tr>
                 <th>Position</th>
@@ -32,30 +35,32 @@ function Medals({ medals, filter }) {
               </tr>
             </thead>
 
-            { /* Table body - Render the information itself */ }
+            {/* Table body - Render the information itself */}
             <tbody>
               <tr>
-                <td>{ medals.position }</td>
-                <td>{ medals.platinum }</td>
-                <td>{ medals.gold }</td>
-                <td>{ medals.silver }</td>
-                <td>{ medals.bronze }</td>
-              </tr> 
+                <td>{medals.position}</td>
+                <td>{medals.platinum}</td>
+                <td>{medals.gold}</td>
+                <td>{medals.silver}</td>
+                <td>{medals.bronze}</td>
+              </tr>
             </tbody>
-
           </table>
         </div>
-      :
-        filter === "live" ?
-          // If the filter is set to live, render this message.
-          <span><i>This user has not submitted any live records to this category and version.</i></span>
-        :
-          // Otherwise, render this message.
-          <span><i>This user has not submitted to this category and version.</i></span>
-      }
+      ) : filter === "live" ? (
+        // If the filter is set to live, render this message.
+        <span>
+          <i>This user has not submitted any live records to this category and version.</i>
+        </span>
+      ) : (
+        // Otherwise, render this message.
+        <span>
+          <i>This user has not submitted to this category and version.</i>
+        </span>
+      )}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Medals;

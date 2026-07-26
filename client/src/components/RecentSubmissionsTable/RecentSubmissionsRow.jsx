@@ -11,7 +11,7 @@ function RecentSubmissionsRow({ submission, renderGame, renderLevelContext }) {
 
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
-  
+
   /* ===== VARIABLES ===== */
   const level = submission.level;
   const category = level.category;
@@ -20,14 +20,14 @@ function RecentSubmissionsRow({ submission, renderGame, renderLevelContext }) {
   const profile = submission.profile;
   const version = submission.version?.version;
   const { name: categoryName } = appData.categories[category];
-  let gameUrl = `/games/${ game.abb }`;
-  let levelUrl = `/games/${ game.abb }/${ category }/${ type }/${ level.name }`;
+  let gameUrl = `/games/${game.abb}`;
+  let levelUrl = `/games/${game.abb}/${category}/${type}/${level.name}`;
   let gameName = game.name;
   if (version) {
-    const versionSearchParam = `?version=${ version }`
+    const versionSearchParam = `?version=${version}`;
     gameUrl += versionSearchParam;
     levelUrl += versionSearchParam;
-    gameName += ` (${ version })`;
+    gameName += ` (${version})`;
   }
 
   /* ===== FUNCTIONS ===== */
@@ -38,31 +38,30 @@ function RecentSubmissionsRow({ submission, renderGame, renderLevelContext }) {
   /* ===== RECENT SUBMISSION ROW COMPONENT ===== */
   return (
     <tr>
-      <td>{ getTimeAgo(submission.id) }</td>
-      <td><Username profile={ profile } /></td>
-      { renderGame && 
+      <td>{getTimeAgo(submission.id)}</td>
+      <td>
+        <Username profile={profile} />
+      </td>
+      {renderGame && (
         <td>
-          <Link to={ gameUrl }>
-            { gameName }
-          </Link>
-        </td> 
-      }
-      { renderLevelContext &&
+          <Link to={gameUrl}>{gameName}</Link>
+        </td>
+      )}
+      {renderLevelContext && (
         <>
-          <td>{ categoryName }</td>
+          <td>{categoryName}</td>
           <td>
-            <Link to={ levelUrl }>
-              <FancyLevel level={ level.name } /> ({ capitalize(type) })
+            <Link to={levelUrl}>
+              <FancyLevel level={level.name} /> ({capitalize(type)})
             </Link>
           </td>
         </>
-        
-      }
-      <td>{ recordB2F(submission.record, type, level.timer_type) }</td>
-      <td>{ submission.tas && "TAS" }</td>
+      )}
+      <td>{recordB2F(submission.record, type, level.timer_type)}</td>
+      <td>{submission.tas && "TAS"}</td>
     </tr>
   );
-};
+}
 
 /* ===== EXPORTS ====== */
 export default RecentSubmissionsRow;

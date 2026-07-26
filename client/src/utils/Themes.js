@@ -5,17 +5,17 @@ import { createTheme } from "@mui/material/styles";
 export const MuiTheme = createTheme({
   palette: {
     background: {
-      paper: "#333"
+      paper: "#333",
     },
     mode: "dark",
     primary: {
-      main: "rgb(var(--color-link))"
+      main: "rgb(var(--color-link))",
     },
     secondary: {
-      main: "#039be5"
-    }
+      main: "#039be5",
+    },
   },
   typography: {
     fontFamily: "var(--font)",
-  }
+  },
 });

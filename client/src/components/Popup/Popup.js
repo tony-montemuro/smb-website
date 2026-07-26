@@ -14,18 +14,20 @@ const Popup = (setRenderPopup, innerRef) => {
   // POSTCONDITIONS (2 possible outcomes):
   // if we are clicking within the popup, this function does nothing
   // if we are clicking outside the popup, this function closes the popup
-  const handleClick = e => {
+  const handleClick = (e) => {
     if (!innerRef.current.contains(e.target)) {
       // handle exception for date picker calendar, which renders outside popup
       const desktopDatePicker = document.querySelector(".MuiPickerPopper-root");
       const mobileDatePicker = document.querySelector(".MuiModal-root");
-      const clickWithinDesktopDatePicker = desktopDatePicker && desktopDatePicker.contains(e.target);
-      const clickWithinMobileDatePicker = mobileDatePicker && mobileDatePicker.contains(e.target);
+      const clickWithinDesktopDatePicker =
+        desktopDatePicker && desktopDatePicker.contains(e.target);
+      const clickWithinMobileDatePicker =
+        mobileDatePicker && mobileDatePicker.contains(e.target);
       if (!(clickWithinDesktopDatePicker || clickWithinMobileDatePicker)) {
         closePopup();
       }
     }
-  }
+  };
 
   // FUNCTION 3: handleTouch - code that executes each time a mobile user performs the "touchend" action when the popup is open
   // PRECONDITIONS (1 parameter):
@@ -33,11 +35,12 @@ const Popup = (setRenderPopup, innerRef) => {
   // POSTCONDITIONS (2 possible outcomes):
   // if we are touching within the popup, this function does nothing
   // if we are touching outside the popup, this function closes the popup
-  const handleTouch = e => {
+  const handleTouch = (e) => {
     if (!innerRef.current.contains(e.changedTouches[0].target)) {
       // handle exception for date picker calendar, which renders outside popup
       const datepicker = document.querySelector(".MuiModal-root");
-      const clickWithinDatePicker = datepicker && datepicker.contains(e.changedTouches[0].target);
+      const clickWithinDatePicker =
+        datepicker && datepicker.contains(e.changedTouches[0].target);
       if (!clickWithinDatePicker) {
         closePopup();
       }

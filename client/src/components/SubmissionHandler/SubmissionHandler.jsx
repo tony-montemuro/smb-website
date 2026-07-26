@@ -26,26 +26,20 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
   const [submitting, setSubmitting] = useState(false);
 
   // states & functions from the js file
-  const { 
-    game,
-    submissions,
-    setGame,
-    setSubmissions,
-    fetchSubmissions,
-    setGameAndScroll
-  } = SubmissionHandlerLogic(isUnapproved);
+  const { game, submissions, setGame, setSubmissions, fetchSubmissions, setGameAndScroll } =
+    SubmissionHandlerLogic(isUnapproved);
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts, when the games state changes, OR when isUnapproved changes
   useEffect(() => {
     if (games) {
-      const sorted = isUnapproved ? 
-        [...games].sort((a, b) => b.unapproved - a.unapproved) : 
-        [...games].sort((a, b) => b.reported - a.reported);
+      const sorted = isUnapproved
+        ? [...games].sort((a, b) => b.unapproved - a.unapproved)
+        : [...games].sort((a, b) => b.reported - a.reported);
       setSortedGames(sorted);
       setGame(game ? game : sorted[0]);
-    };
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [games, isUnapproved]);
 
@@ -62,7 +56,7 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
   // update this value based on game state
   const NUM_COLS = useMemo(() => {
     let n = 6;
-    
+
     // if we are looking at reported submissions, add an extra column
     if (!isUnapproved) {
       n++;
@@ -72,89 +66,94 @@ function SubmissionHandler({ imageReducer, isUnapproved }) {
     if (game?.version.length > 0) {
       n++;
     }
-    
+
     return n;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game]);
 
   /* ===== SUBMISSION HANDLER COMPONENT ===== */
   return (
-    <div className={ styles.submissionHandler }>
-
-      { /* Popup elements */ }
-      <Popup renderPopup={ submission } setRenderPopup={ setSubmission } width="1200px" disableClose={ submitting }>
-        <Submission 
-          game={ game } 
-          isUnapproved={ isUnapproved } 
-          setSubmissions={ setSubmissions } 
-          submitting={ submitting }
-          setSubmitting={ setSubmitting }
+    <div className={styles.submissionHandler}>
+      {/* Popup elements */}
+      <Popup
+        renderPopup={submission}
+        setRenderPopup={setSubmission}
+        width="1200px"
+        disableClose={submitting}
+      >
+        <Submission
+          game={game}
+          isUnapproved={isUnapproved}
+          setSubmissions={setSubmissions}
+          submitting={submitting}
+          setSubmitting={setSubmitting}
         />
       </Popup>
 
-      { /* Simple game select - Render a column of games to choose from */ }
-      <div className={ styles.left }>
+      {/* Simple game select - Render a column of games to choose from */}
+      <div className={styles.left}>
         <SimpleGameSelect
-          games={ sortedGames } 
-          game={ game } 
-          setGame={ setGameAndScroll } 
-          imageReducer={ imageReducer } 
-          countType={ isUnapproved ? "unapproved" : "reported" }
+          games={sortedGames}
+          game={game}
+          setGame={setGameAndScroll}
+          imageReducer={imageReducer}
+          countType={isUnapproved ? "unapproved" : "reported"}
         />
       </div>
-      
-      { /* Submission handler content - the bulk of this page */ }
-      <div id="content" className={ styles.content }>
 
-        <Container title={ isUnapproved ? "New Submissions" : "Reported Submissions" } largeTitle>
-          <p>Please go through and approve or reject each { isUnapproved ? "new" : "reported" } submission.</p>
+      {/* Submission handler content - the bulk of this page */}
+      <div id="content" className={styles.content}>
+        <Container title={isUnapproved ? "New Submissions" : "Reported Submissions"} largeTitle>
+          <p>
+            Please go through and approve or reject each {isUnapproved ? "new" : "reported"}{" "}
+            submission.
+          </p>
           <div className="table">
             <table>
-
-              { /* Submission table header - Render the description of what's contained in each row. If the isUnapproved parameter 
-              is false, an additional column will be rendered. */ }
+              {/* Submission table header - Render the description of what's contained in each row. If the isUnapproved parameter 
+              is false, an additional column will be rendered. */}
               <thead>
                 <tr>
-                  <th>{ isUnapproved ? "Submitted" : "Reported" }</th>
-                  { !isUnapproved && <th>Reported By</th> }
+                  <th>{isUnapproved ? "Submitted" : "Reported"}</th>
+                  {!isUnapproved && <th>Reported By</th>}
                   <th>User</th>
                   <th>Category</th>
                   <th>Level</th>
                   <th>Record</th>
-                  { game && game.version.length > 0 && <th>Version</th> }
+                  {game && game.version.length > 0 && <th>Version</th>}
                 </tr>
               </thead>
 
-              { /* Submission table body - Render information about each submission in submissions array */ }
+              {/* Submission table body - Render information about each submission in submissions array */}
               <tbody>
-                { submissions && appData ?
-                  <TableContent 
-                    items={ submissions } 
-                    emptyMessage={ `This game has no ${ isUnapproved ? "new" : "reported" } submissions.` } 
-                    numCols={ NUM_COLS }
+                {submissions && appData ? (
+                  <TableContent
+                    items={submissions}
+                    emptyMessage={`This game has no ${isUnapproved ? "new" : "reported"} submissions.`}
+                    numCols={NUM_COLS}
                   >
-                    { submissions.map(submission => {
-                      return <SubmissionRow 
-                        submission={ submission } 
-                        onClick={ setSubmission }
-                        isUnapproved={ isUnapproved }
-                        key={ submission.id } 
-                      />
+                    {submissions.map((submission) => {
+                      return (
+                        <SubmissionRow
+                          submission={submission}
+                          onClick={setSubmission}
+                          isUnapproved={isUnapproved}
+                          key={submission.id}
+                        />
+                      );
                     })}
                   </TableContent>
-                :
-                  <LoadingTable numCols={ NUM_COLS } />  
-                }
+                ) : (
+                  <LoadingTable numCols={NUM_COLS} />
+                )}
               </tbody>
-
             </table>
           </div>
         </Container>
-
       </div>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default SubmissionHandler;

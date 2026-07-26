@@ -32,12 +32,8 @@ function GameLayout({ imageReducer }) {
   const [version, setVersion] = useState(undefined);
 
   // states & functions from the js file
-  const { 
-    disableVersionDropdown,
-    fetchGame,
-    handleVersionChange,
-    setDisableVersionDropdown
-  } = GameLayoutLogic(game, setVersion);
+  const { disableVersionDropdown, fetchGame, handleVersionChange, setDisableVersionDropdown } =
+    GameLayoutLogic(game, setVersion);
 
   // helper functions
   const { getGameCategories } = GameHelper();
@@ -50,7 +46,7 @@ function GameLayout({ imageReducer }) {
     async function initGame() {
       // fetch game from database
       const game = await fetchGame(abb);
-      
+
       // if game does not exist, render error message and navigate back home
       if (!game) {
         addMessage("Game does not exist.", "error", 6000);
@@ -61,45 +57,45 @@ function GameLayout({ imageReducer }) {
       // update game & version state hooks
       setGame(game);
       setVersion(getInitialVersion(game));
-    };
-   
+    }
+
     initGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* ===== GAME LAYOUT COMPONENT ===== */
   return (
-    <div className={ styles.gameLayout }>
-      { game && appData ?
-        <GameContext.Provider value={ { game, version, handleVersionChange, setDisableVersionDropdown } }>
-          <GameHeader disableVersionDropdown={ disableVersionDropdown } imageReducer={ imageReducer } />
-          <div className={ styles.body }>
-
-            { /* Left - render the content of the game layout */ }
-            <div className={ styles.bodyLeft }>
+    <div className={styles.gameLayout}>
+      {game && appData ? (
+        <GameContext.Provider
+          value={{ game, version, handleVersionChange, setDisableVersionDropdown }}
+        >
+          <GameHeader disableVersionDropdown={disableVersionDropdown} imageReducer={imageReducer} />
+          <div className={styles.body}>
+            {/* Left - render the content of the game layout */}
+            <div className={styles.bodyLeft}>
               <Outlet />
             </div>
 
-            { /* Right - render the sidebar, which includes things such as the rankings, game moderators, etc. */ }
-            <div className={ styles.bodyRight }>
+            {/* Right - render the sidebar, which includes things such as the rankings, game moderators, etc. */}
+            <div className={styles.bodyRight}>
               <Container title="Rankings" largeTitle>
-                { getGameCategories(game).map(category => {
-                  return <RankingsContents category={ category } key={ category } />
+                {getGameCategories(game).map((category) => {
+                  return <RankingsContents category={category} key={category} />;
                 })}
               </Container>
               <Container title="Moderators" largeTitle>
-                <ModeratorContainer imageReducer={ imageReducer } />
+                <ModeratorContainer imageReducer={imageReducer} />
               </Container>
             </div>
-
           </div>
         </GameContext.Provider>
-      :
+      ) : (
         <Loading />
-      }
+      )}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default GameLayout;

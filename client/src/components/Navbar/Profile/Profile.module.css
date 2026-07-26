@@ -62,7 +62,7 @@
 
 .profileLink button {
     display: flex;
-    color: rgb(var(--color-link))
+    color: rgb(var(--color-link));
 }
 
 .profileLink button:hover {

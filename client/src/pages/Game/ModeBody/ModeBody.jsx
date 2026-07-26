@@ -16,10 +16,10 @@ function ModeBody({ category, modeName, selectedMode, setSelectedMode }) {
   const { game } = useContext(GameContext);
 
   /* ===== VARIABLES ===== */
-  const mode = game.mode.find(row => row.category === category && row.name === modeName);
+  const mode = game.mode.find((row) => row.category === category && row.name === modeName);
 
   /* ===== FUNCTIONS ===== */
-    
+
   // helper functions
   const { levelB2F } = LevelHelper();
   const { indexToParity } = StylesHelper();
@@ -27,26 +27,30 @@ function ModeBody({ category, modeName, selectedMode, setSelectedMode }) {
   /* ===== MODE BODY COMPONENT ===== */
   return (
     <>
-      { /* Game mody body: name - Always will render, and is clickable. If a user clicks on it, toggle between expanded and unexpanded. */ }
-      <div className={ styles.name } onClick={ () => selectedMode !== modeName ? setSelectedMode(modeName) : setSelectedMode(null) }>
-        <h3>{ levelB2F(mode.name) }</h3>
-        { modeName === selectedMode ? <ExpandLessRoundedIcon /> : <ExpandMoreRoundedIcon /> }
+      {/* Game mody body: name - Always will render, and is clickable. If a user clicks on it, toggle between expanded and unexpanded. */}
+      <div
+        className={styles.name}
+        onClick={() =>
+          selectedMode !== modeName ? setSelectedMode(modeName) : setSelectedMode(null)
+        }
+      >
+        <h3>{levelB2F(mode.name)}</h3>
+        {modeName === selectedMode ? <ExpandLessRoundedIcon /> : <ExpandMoreRoundedIcon />}
       </div>
 
-      { /* Additional rows will only be rendered if the show state is set to true. */ }
-      { modeName === selectedMode &&
+      {/* Additional rows will only be rendered if the show state is set to true. */}
+      {modeName === selectedMode &&
         mode.level.map((level, index) => {
           return (
-            <div className={ `${ styles.levels } ${ indexToParity(index)}` } key={ level.name }>
-              <FancyLevel level={ level.name } />
-              <TypeButtons abb={ game.abb } category={ category } level={ level } />
+            <div className={`${styles.levels} ${indexToParity(index)}`} key={level.name}>
+              <FancyLevel level={level.name} />
+              <TypeButtons abb={game.abb} category={category} level={level} />
             </div>
           );
-        })
-      }
+        })}
     </>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default ModeBody;

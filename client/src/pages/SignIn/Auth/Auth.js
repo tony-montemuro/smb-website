@@ -12,14 +12,14 @@ const Auth = () => {
     email: false,
     password: false,
     confirmPassword: false,
-    message: ""
+    message: "",
   };
   const defaultForm = {
     email: "",
     password: "",
     confirmPassword: "",
     mode: MODE_SIGNIN,
-    loading: false
+    loading: false,
   };
 
   /* ===== CONTEXTS ===== */
@@ -30,9 +30,9 @@ const Auth = () => {
   const [error, setError] = useState(defaultError);
 
   /* ===== FUNCTIONS ===== */
-  // FUNCTION 1: handleChange - handle changes to form inputs 
+  // FUNCTION 1: handleChange - handle changes to form inputs
   // PRECONDITIONS (1 parameter):
-  // 1.) e: an event object generated when the user makes a change to the email input 
+  // 1.) e: an event object generated when the user makes a change to the email input
   // POSTCONDITIONS (1 possible outcome):
   // the relevant part of the form state hook is updated based on e.target.value,
   // as well as e.target.name. the error state hook is also updated accordingly
@@ -45,7 +45,7 @@ const Auth = () => {
       err = { ...error, password: false, confirmPassword: false };
     }
     setError(err);
-  }
+  };
 
   // FUNCTION 2: getButtonText - get text for form button
   // PRECONDITIONS: NONE
@@ -62,8 +62,7 @@ const Auth = () => {
       default:
         return "";
     }
-  }
-
+  };
 
   // FUNCTION 3: setMode - set mode field of form state hook
   // PRECONDITIONS (1 parameter):
@@ -71,19 +70,19 @@ const Auth = () => {
   // POSTCONDITIONS (1 possible outcome):
   // the mode field of the form state hook is update to be `mode`, &
   // the error state hook is reset
-  const setMode = mode => {
+  const setMode = (mode) => {
     setForm({ ...form, mode: mode });
     setError(defaultError);
-  }
+  };
 
   // FUNCTION 4: setLoading - set loading field of form state hook
   // PRECONDITIONS (1 parameter):
   // 1.) isLoading: a bool, determines whether form is in loading state or not
   // POSTCONDITIONS (1 possible outcome):
   // the loading field of the form state hook is update to be `loading`
-  const setLoading = isLoading => {
+  const setLoading = (isLoading) => {
     setForm({ ...form, loading: isLoading });
-  }
+  };
 
   // FUNCTION 5: handleSubmit - function that executes when user submits form
   // PRECONDITIONS (1 parameter):
@@ -118,7 +117,7 @@ const Auth = () => {
     }
 
     setForm(defaultForm);
-  }
+  };
 
   // FUNCTION 6: signIn - function that signs in user
   // PRECONDITIONS: NONE
@@ -130,40 +129,52 @@ const Auth = () => {
     const { email, password } = form;
     const { error } = await supabase.auth.signInWithPassword({
       email,
-      password
+      password,
     });
 
     if (error) {
       setError({ email: true, password: true, message: error.message });
-      return
+      return;
     }
 
     addMessage("Login successful!", "success", 5000);
-  }
+  };
 
   // FUNCTION 7: signIn - function that signs up user
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes)
   // if sign up is successful, user is informed that they can find an email to proceed, &
   // true is returned
-  // if unsuccessful, error message is rendered to user, and false is returned 
+  // if unsuccessful, error message is rendered to user, and false is returned
   const signUp = async () => {
     const { email, password, confirmPassword } = form;
     if (password !== confirmPassword) {
-      setError({ password: true, confirmPassword: true, message: "Passwords don't match." });
+      setError({
+        password: true,
+        confirmPassword: true,
+        message: "Passwords don't match.",
+      });
       return false;
     }
 
     const options = { emailRedirectTo: window.location.origin };
 
-    const { data: { user, session }, error } = await supabase.auth.signUp({
+    const {
+      data: { user, session },
+      error,
+    } = await supabase.auth.signUp({
       email,
       password,
-      options
+      options,
     });
 
     if (error) {
-      setError({ email: true, password: true, confirmPassword: true, message: error.message });
+      setError({
+        email: true,
+        password: true,
+        confirmPassword: true,
+        message: error.message,
+      });
       return false;
     }
 
@@ -172,14 +183,14 @@ const Auth = () => {
     }
 
     return true;
-  }
+  };
 
   // FUNCTION 8: passwordReset - function that resets user password
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes)
   // if password reset is successful, user is informed that they can find an email to proceed,
   // and true is returned
-  // if unsuccessful, error message is rendered to user, and false is returned 
+  // if unsuccessful, error message is rendered to user, and false is returned
   const passwordReset = async () => {
     const { email } = form;
     const options = { redirectTo: `${window.location.origin}/profile` };
@@ -193,7 +204,7 @@ const Auth = () => {
 
     addMessage("Success! Check your email for the password reset link.");
     return true;
-  }
+  };
 
   return {
     MODE_SIGNIN,
@@ -204,9 +215,9 @@ const Auth = () => {
     handleChange,
     getButtonText,
     setMode,
-    handleSubmit
+    handleSubmit,
   };
-}
+};
 
 /* ===== EXPORTS ===== */
 export default Auth;

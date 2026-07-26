@@ -38,14 +38,14 @@ function UserInfoForm({ submitting, setSubmitting, adminMode = { status: false }
   /* ===== STATES & FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { 
-    form, 
-    initForm, 
-    handleChange, 
+  const {
+    form,
+    initForm,
+    handleChange,
     handleBirthdayChange,
-    hasChanged, 
+    hasChanged,
     handleReset,
-    uploadUserInfo 
+    uploadUserInfo,
   } = UserInfoFormLogic(setSubmitting, adminMode);
 
   /* ===== EFFECTS ===== */
@@ -57,26 +57,29 @@ function UserInfoForm({ submitting, setSubmitting, adminMode = { status: false }
   }, [user]);
 
   /* ===== USER INFO FORM COMPONENT ===== */
-  return form.user && form.countries ?
-    <form className={ styles.form } onSubmit={ uploadUserInfo }>
-
-      { /* Profile section - the general information describing a profile */ }
-      <SectionTitle title="profile" hasChanged={ hasChanged } onClick={ handleReset } />
-      <TextField 
+  return form.user && form.countries ? (
+    <form className={styles.form} onSubmit={uploadUserInfo}>
+      {/* Profile section - the general information describing a profile */}
+      <SectionTitle title="profile" hasChanged={hasChanged} onClick={handleReset} />
+      <TextField
         autoComplete="username"
-        color={ form.error.username ? "error" : "primary" }
-        error={ form.error.username ? true : false }
+        color={form.error.username ? "error" : "primary"}
+        error={form.error.username ? true : false}
         fullWidth
         id="username"
-        helperText={ form.error.username ? form.error.username : `${ form.user.username.length }/${ USERNAME_LENGTH_MAX }` }
+        helperText={
+          form.error.username
+            ? form.error.username
+            : `${form.user.username.length}/${USERNAME_LENGTH_MAX}`
+        }
         label="Username"
-        placeholder={ `Between ${ USERNAME_LENGTH_MIN } and ${ USERNAME_LENGTH_MAX } characters...` }
-        onChange={ handleChange }
+        placeholder={`Between ${USERNAME_LENGTH_MIN} and ${USERNAME_LENGTH_MAX} characters...`}
+        onChange={handleChange}
         required
-        value={ form.user.username }
+        value={form.user.username}
         variant="filled"
         slotProps={{
-          htmlInput: { minLength: USERNAME_LENGTH_MIN, maxLength: USERNAME_LENGTH_MAX }
+          htmlInput: { minLength: USERNAME_LENGTH_MIN, maxLength: USERNAME_LENGTH_MAX },
         }}
       />
       <TextField
@@ -84,161 +87,178 @@ function UserInfoForm({ submitting, setSubmitting, adminMode = { status: false }
         id="country"
         label="Country"
         select
-        onChange={ handleChange }
-        value={ form.user.country }
+        onChange={handleChange}
+        value={form.user.country}
         variant="filled"
         slotProps={{
-          select: { native: true }
+          select: { native: true },
         }}
       >
         <option key="null" value=""></option>
-        { form.countries.map(country => {
+        {form.countries.map((country) => {
           return (
-            <option value={ country.iso2 } key={ country.iso2 }>{ country.name }</option>
+            <option value={country.iso2} key={country.iso2}>
+              {country.name}
+            </option>
           );
         })}
       </TextField>
       <TextField
         fullWidth
-        helperText={ `${ form.user.bio.length }/${ TEXT_AREA_LENGTH_MAX }` }
+        helperText={`${form.user.bio.length}/${TEXT_AREA_LENGTH_MAX}`}
         id="bio"
         label="About Me"
         multiline
         placeholder="Share a bit about yourself..."
-        rows={ TEXT_AREA_HEIGHT }
-        onChange={ handleChange }
-        value={ form.user.bio }
+        rows={TEXT_AREA_HEIGHT}
+        onChange={handleChange}
+        value={form.user.bio}
         variant="filled"
         slotProps={{
-          htmlInput: { maxLength: TEXT_AREA_LENGTH_MAX }
+          htmlInput: { maxLength: TEXT_AREA_LENGTH_MAX },
         }}
       />
-      <DatePicker 
+      <DatePicker
         disableHighlightToday
         disableFuture
         label="Birthday"
         format="YYYY-MM-DD"
-        minDate={ dayjs(BIRTHDAY_MIN_DATE) }
-        value={ form.user.birthday ? dayjs(form.user.birthday) : form.user.birthday }
-        onChange={ handleBirthdayChange }
+        minDate={dayjs(BIRTHDAY_MIN_DATE)}
+        value={form.user.birthday ? dayjs(form.user.birthday) : form.user.birthday}
+        onChange={handleBirthdayChange}
         slotProps={{
           field: { clearable: true },
-          textField: { variant: "filled" }
+          textField: { variant: "filled" },
         }}
       />
 
       <hr />
 
-      { /* Socials section - any social media platforms the user might want to link to */ }
-      <SectionTitle title="socials" hasChanged={ hasChanged } onClick={ handleReset } />
-      <TextField 
-        color={ form.error.youtube_handle ? "error" : "primary" }
-        error={ form.error.youtube_handle ? true : false }
+      {/* Socials section - any social media platforms the user might want to link to */}
+      <SectionTitle title="socials" hasChanged={hasChanged} onClick={handleReset} />
+      <TextField
+        color={form.error.youtube_handle ? "error" : "primary"}
+        error={form.error.youtube_handle ? true : false}
         fullWidth
         id="youtube_handle"
-        helperText={ form.error.youtube_handle }
+        helperText={form.error.youtube_handle}
         label="YouTube Handle"
         placeholder="@username"
-        onChange={ handleChange }
-        value={ form.user.youtube_handle }
+        onChange={handleChange}
+        value={form.user.youtube_handle}
         variant="filled"
         slotProps={{
-          htmlInput: { minLength: YOUTUBE_LENGTH_MIN, maxLength: YOUTUBE_LENGTH_MAX }
-        }}
-      />
-      <TextField 
-        color={ form.error.twitch_username ? "error" : "primary" }
-        error={ form.error.twitch_username ? true : false }
-        fullWidth
-        id="twitch_username"
-        helperText={ form.error.twitch_username }
-        label="Twitch Username"
-        placeholder="username"
-        onChange={ handleChange }
-        value={ form.user.twitch_username }
-        variant="filled"
-        slotProps={{
-          htmlInput: { maxLength: TWITCH_LENGTH_MAX }
-        }}
-      />
-      <TextField 
-        color={ form.error.twitter_handle ? "error" : "primary" }
-        error={ form.error.twitter_handle ? true : false }
-        fullWidth
-        id="twitter_handle"
-        helperText={ form.error.twitter_handle }
-        label="X (Twitter) Handle"
-        placeholder="@username"
-        onChange={ handleChange }
-        value={ form.user.twitter_handle }
-        variant="filled"
-        slotProps={{
-          htmlInput: { minLength: TWITTER_LENGTH_MIN, maxLength: TWITTER_LENGTH_MAX }
-        }}
-      />
-      <TextField 
-        color={ form.error.discord ? "error" : "primary" }
-        error={ form.error.discord ? true : false }
-        fullWidth
-        id="discord"
-        helperText={ form.error.discord }
-        label="Discord Username"
-        placeholder="username"
-        onChange={ handleChange }
-        value={ form.user.discord }
-        variant="filled"
-        slotProps={{
-          htmlInput: { minLength: DISCORD_LENGTH_MIN, maxLength: DISCORD_LENGTH_MAX }
-        }}
-      />
-
-      <hr />
-
-      { /* Featured video section - allows user to enter a featured video to include on their profile */ }
-      <SectionTitle title="featured_video" hasChanged={ hasChanged } onClick={ handleReset } />
-      <TextField 
-        color={ form.error.featured_video ? "error" : "primary" }
-        error={ form.error.featured_video ? true : false }
-        fullWidth
-        id="featured_video"
-        helperText={ form.error.featured_video }
-        label="Featured Video"
-        placeholder="Any video you like"
-        onChange={ handleChange }
-        value={ form.user.featured_video }
-        variant="filled"
-        slotProps={{
-          htmlInput: { maxLength: FEATURED_VIDEO_LENGTH_MAX }
+          htmlInput: { minLength: YOUTUBE_LENGTH_MIN, maxLength: YOUTUBE_LENGTH_MAX },
         }}
       />
       <TextField
-        color={ form.error.video_description ? "error" : "primary" }
-        error={ form.error.video_description ? true : false }
+        color={form.error.twitch_username ? "error" : "primary"}
+        error={form.error.twitch_username ? true : false}
         fullWidth
-        id="video_description"
-        helperText={ form.error.video_description ? form.error.video_description : `${ form.user.video_description.length }/${ TEXT_AREA_LENGTH_MAX }` }
-        label="Video Description"
-        multiline
-        placeholder="Include a description of the video"
-        rows={ TEXT_AREA_HEIGHT }
-        onChange={ handleChange }
-        value={ form.user.video_description }
+        id="twitch_username"
+        helperText={form.error.twitch_username}
+        label="Twitch Username"
+        placeholder="username"
+        onChange={handleChange}
+        value={form.user.twitch_username}
         variant="filled"
         slotProps={{
-          htmlInput: { maxLength: TEXT_AREA_LENGTH_MAX }
+          htmlInput: { maxLength: TWITCH_LENGTH_MAX },
+        }}
+      />
+      <TextField
+        color={form.error.twitter_handle ? "error" : "primary"}
+        error={form.error.twitter_handle ? true : false}
+        fullWidth
+        id="twitter_handle"
+        helperText={form.error.twitter_handle}
+        label="X (Twitter) Handle"
+        placeholder="@username"
+        onChange={handleChange}
+        value={form.user.twitter_handle}
+        variant="filled"
+        slotProps={{
+          htmlInput: { minLength: TWITTER_LENGTH_MIN, maxLength: TWITTER_LENGTH_MAX },
+        }}
+      />
+      <TextField
+        color={form.error.discord ? "error" : "primary"}
+        error={form.error.discord ? true : false}
+        fullWidth
+        id="discord"
+        helperText={form.error.discord}
+        label="Discord Username"
+        placeholder="username"
+        onChange={handleChange}
+        value={form.user.discord}
+        variant="filled"
+        slotProps={{
+          htmlInput: { minLength: DISCORD_LENGTH_MIN, maxLength: DISCORD_LENGTH_MAX },
         }}
       />
 
-      { /* Form button: button user uses to complete the form. Will disable while application processes form. */ }
-      <div className={ styles.btns }>
-        { hasProfile && <button type="button" className="cancel" disabled={ !hasChanged() || submitting } onClick={ handleReset }>Reset All</button> }
-        <button type="submit" disabled={ submitting }>{ hasProfile ? "Update " : "Create " }Profile</button>
-      </div>
+      <hr />
 
+      {/* Featured video section - allows user to enter a featured video to include on their profile */}
+      <SectionTitle title="featured_video" hasChanged={hasChanged} onClick={handleReset} />
+      <TextField
+        color={form.error.featured_video ? "error" : "primary"}
+        error={form.error.featured_video ? true : false}
+        fullWidth
+        id="featured_video"
+        helperText={form.error.featured_video}
+        label="Featured Video"
+        placeholder="Any video you like"
+        onChange={handleChange}
+        value={form.user.featured_video}
+        variant="filled"
+        slotProps={{
+          htmlInput: { maxLength: FEATURED_VIDEO_LENGTH_MAX },
+        }}
+      />
+      <TextField
+        color={form.error.video_description ? "error" : "primary"}
+        error={form.error.video_description ? true : false}
+        fullWidth
+        id="video_description"
+        helperText={
+          form.error.video_description
+            ? form.error.video_description
+            : `${form.user.video_description.length}/${TEXT_AREA_LENGTH_MAX}`
+        }
+        label="Video Description"
+        multiline
+        placeholder="Include a description of the video"
+        rows={TEXT_AREA_HEIGHT}
+        onChange={handleChange}
+        value={form.user.video_description}
+        variant="filled"
+        slotProps={{
+          htmlInput: { maxLength: TEXT_AREA_LENGTH_MAX },
+        }}
+      />
+
+      {/* Form button: button user uses to complete the form. Will disable while application processes form. */}
+      <div className={styles.btns}>
+        {hasProfile && (
+          <button
+            type="button"
+            className="cancel"
+            disabled={!hasChanged() || submitting}
+            onClick={handleReset}
+          >
+            Reset All
+          </button>
+        )}
+        <button type="submit" disabled={submitting}>
+          {hasProfile ? "Update " : "Create "}Profile
+        </button>
+      </div>
     </form>
-  :
-    <Loading />;
-};
+  ) : (
+    <Loading />
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default UserInfoForm;

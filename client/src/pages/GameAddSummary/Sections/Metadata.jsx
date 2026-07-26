@@ -12,40 +12,46 @@ function Metadata({ metadata, error }) {
 
   /* ===== METADATA COMPONENT ===== */
   return (
-    <div className={ styles.section }>
+    <div className={styles.section}>
       <h2>Main Information</h2>
       <hr />
 
-      <div className={ styles.sectionContent }>
-        <span>Name: { metadata.name }</span>
-        <Errorable error={ error?.abb } renderMessage>
-          <span>Abbreviation: { metadata.abb }</span>
+      <div className={styles.sectionContent}>
+        <span>Name: {metadata.name}</span>
+        <Errorable error={error?.abb} renderMessage>
+          <span>Abbreviation: {metadata.abb}</span>
         </Errorable>
-        <Errorable error={ error?.release_date } renderMessage>
-          <span>Release Date: { metadata.release_date }</span>
+        <Errorable error={error?.release_date} renderMessage>
+          <span>Release Date: {metadata.release_date}</span>
         </Errorable>
 
-        { metadata.custom &&
-          <Errorable error={ error?.min_date } renderMessage>
-            <span>Minimum Date: { metadata.min_date }</span>
+        {metadata.custom && (
+          <Errorable error={error?.min_date} renderMessage>
+            <span>Minimum Date: {metadata.min_date}</span>
           </Errorable>
-        }
+        )}
 
-        <span>Live Preference: { renderBoolean(metadata.live_preference) }</span>
-        <span>Custom Game: { renderBoolean(metadata.custom) }</span>
+        <span>Live Preference: {renderBoolean(metadata.live_preference)}</span>
+        <span>Custom Game: {renderBoolean(metadata.custom)}</span>
 
-        { metadata.custom &&
+        {metadata.custom && (
           <>
-            <span id={ styles.download }>
-              Download URL: <a href={ metadata.download } target="_blank" rel="noreferrer">{ metadata.download }</a>
+            <span id={styles.download}>
+              Download URL:{" "}
+              <a href={metadata.download} target="_blank" rel="noreferrer">
+                {metadata.download}
+              </a>
             </span>
-            <span>Creator:&nbsp;&nbsp;<Username profile={ metadata.creator } disableLink /></span>
+            <span>
+              Creator:&nbsp;&nbsp;
+              <Username profile={metadata.creator} disableLink />
+            </span>
           </>
-        }
+        )}
       </div>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Metadata;

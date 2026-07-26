@@ -4,27 +4,25 @@
 import { supabase } from "../SupabaseClient";
 
 const Update = () => {
-    /* ===== FUNCTIONS ===== */
+  /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: insert - function that, given an table name and object, inserts that object to the database
-    // PRECONDITIONS (2 parameters):
-    // 1.) tableName: the name of the table we want to insert item into 
-    // 2.) obj: the object, which contains all the necessary elements of the table, we wish to insert
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, the object is added to the database, and the function simply returns
-    // if the query is unsuccessful, the function throws an error, which should be handled by the caller function
-    const insert = async (tableName, obj) => {
-        const { error } = await supabase
-            .from(tableName)
-            .insert(obj);
+  // FUNCTION 1: insert - function that, given an table name and object, inserts that object to the database
+  // PRECONDITIONS (2 parameters):
+  // 1.) tableName: the name of the table we want to insert item into
+  // 2.) obj: the object, which contains all the necessary elements of the table, we wish to insert
+  // POSTCONDITIONS (2 possible outcomes):
+  // if the query is successful, the object is added to the database, and the function simply returns
+  // if the query is unsuccessful, the function throws an error, which should be handled by the caller function
+  const insert = async (tableName, obj) => {
+    const { error } = await supabase.from(tableName).insert(obj);
 
-        // error handling
-        if (error) {
-            throw error;
-        }
-    };
+    // error handling
+    if (error) {
+      throw error;
+    }
+  };
 
-    return { insert };
+  return { insert };
 };
 
 /* ===== EXPORTS ===== */

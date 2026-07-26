@@ -5,7 +5,8 @@
     padding: var(--app-padding);
 }
 
-.gameAdd h1, .gameAdd h3 {
+.gameAdd h1,
+.gameAdd h3 {
     margin: 0;
 }
 

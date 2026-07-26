@@ -3,7 +3,7 @@
     flex-direction: column;
     position: -webkit-sticky;
     position: sticky;
-    top: calc(var(--navbar-height) + var(--navbar-height)/2 + 21px);
+    top: calc(var(--navbar-height) + var(--navbar-height) / 2 + 21px);
     width: 100%;
     overflow-y: auto;
 }
@@ -12,7 +12,13 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    max-height: calc(100vh - (var(--navbar-height) + (var(--navbar-height)/2) + 40px + 78px + 21px));
+    max-height: calc(
+        100vh -
+            (
+                var(--navbar-height) + (var(--navbar-height) / 2) + 40px +
+                    78px + 21px
+            )
+    );
     scrollbar-width: thin;
     scrollbar-color: rgba(var(--color-container-selected), 0.5) transparent;
 }

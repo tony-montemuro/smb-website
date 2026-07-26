@@ -18,57 +18,61 @@ function CategoryAddForm({ submitting, setSubmitting }) {
 
   /* ===== CATEGORY ADD FORM COMPONENT ===== */
   return (
-    <div className={ style.categoryAddForm }>
+    <div className={style.categoryAddForm}>
       <h1>Add New Category</h1>
-      <form className={ style.form } onSubmit={ handleSubmit }>
+      <form className={style.form} onSubmit={handleSubmit}>
         <TextField
-          helperText={ `${ form.values.name.length }/${ NAME_LENGTH_MAX }` }
+          helperText={`${form.values.name.length}/${NAME_LENGTH_MAX}`}
           id="name"
           label="Category Name"
-          onChange={ handleChange }
-          placeholder={ `Must be ${ NAME_LENGTH_MAX } characters or less` }
+          onChange={handleChange}
+          placeholder={`Must be ${NAME_LENGTH_MAX} characters or less`}
           required
-          value={ form.values.name }
+          value={form.values.name}
           variant="filled"
           slotProps={{
-            htmlInput: { maxLength: NAME_LENGTH_MAX }
+            htmlInput: { maxLength: NAME_LENGTH_MAX },
           }}
         />
         <TextField
-          color={ form.error.abb ? "error" : "primary" }
-          error={ form.error.abb ? true : false }
-          helperText={ form.error.abb ? form.error.abb : `${ form.values.abb.length }/${ ABB_LENGTH_MAX }` }
+          color={form.error.abb ? "error" : "primary"}
+          error={form.error.abb ? true : false}
+          helperText={
+            form.error.abb ? form.error.abb : `${form.values.abb.length}/${ABB_LENGTH_MAX}`
+          }
           id="abb"
           label="Category Abbreviation"
-          onChange={ handleChange }
-          placeholder={ `Must be ${ ABB_LENGTH_MAX } characters or less` }
+          onChange={handleChange}
+          placeholder={`Must be ${ABB_LENGTH_MAX} characters or less`}
           required
-          value={ form.values.abb }
+          value={form.values.abb}
           variant="filled"
           slotProps={{
-            htmlInput: { maxLength: ABB_LENGTH_MAX }
+            htmlInput: { maxLength: ABB_LENGTH_MAX },
           }}
         />
         <FormGroup>
-          <FormControlLabel 
-            control={ 
-              <Checkbox 
-                checked={ form.values.practice } 
-                id="practice" 
-                onChange={ handleChange } 
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={form.values.practice}
+                id="practice"
+                onChange={handleChange}
                 slotProps={{
-                  input: { "aria-label": "controlled" }
-                }} 
+                  input: { "aria-label": "controlled" },
+                }}
               />
-            } 
-            label="Practice Mode Style" 
+            }
+            label="Practice Mode Style"
           />
         </FormGroup>
-        <button type="submit" disabled={ submitting }>Submit</button>
+        <button type="submit" disabled={submitting}>
+          Submit
+        </button>
       </form>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default CategoryAddForm;

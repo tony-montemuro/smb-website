@@ -20,32 +20,33 @@ function Approve() {
   /* ===== FUNCTIONS ===== */
 
   // helper functions
-  const { capitalize, recordB2F } = FrontendHelper()
+  const { capitalize, recordB2F } = FrontendHelper();
 
   /* ===== APPROVE COMPONENT ===== */
   return (
-    <div className={ styles.popup }>
-    
-      { /* Popup header - includes a link to the moderator's user page */ }
+    <div className={styles.popup}>
+      {/* Popup header - includes a link to the moderator's user page */}
       <h2>
-        <Username profile={ notification.creator } />
-        &nbsp;has approved the following submission: 
+        <Username profile={notification.creator} />
+        &nbsp;has approved the following submission:
       </h2>
 
-      { /* Notification details - render the basic info, record, and tas status */ }
-      <div className={ styles.details }>
+      {/* Notification details - render the basic info, record, and tas status */}
+      <div className={styles.details}>
         <ul>
-          <NotificationBasicInfo notification={ notification } />
+          <NotificationBasicInfo notification={notification} />
           <li>
-            { capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }
+            {capitalize(type)}:{" "}
+            {recordB2F(notification.record, type, notification.level.timer_type)}
           </li>
-          <li>TAS: <CheckmarkOrX isChecked={ notification.tas } /></li>
+          <li>
+            TAS: <CheckmarkOrX isChecked={notification.tas} />
+          </li>
         </ul>
       </div>
-      
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Approve;

@@ -15,7 +15,7 @@ function GameHeader({ disableVersionDropdown, imageReducer }) {
   const BOX_WIDTH = 146;
 
   /* ===== CONTEXTS ===== */
-  
+
   // game state, version state, and handle version change function from game context
   const { game, version, handleVersionChange } = useContext(GameContext);
 
@@ -23,63 +23,68 @@ function GameHeader({ disableVersionDropdown, imageReducer }) {
 
   // helper functions
   const { addAllExistingSearchParams } = UrlHelper();
-  const gameUrl = addAllExistingSearchParams(`/games/${ game.abb }`);
-  
+  const gameUrl = addAllExistingSearchParams(`/games/${game.abb}`);
+
   /* ===== GAME HEADER COMPONENT ===== */
   return (
     <Container>
-      <div className={ styles.gameHeader }>
-        <div className={ styles.left }>
-
-          { /* Render the box art */ }
-          <div id={ styles.boxart }>
-            <Link to={ gameUrl }>
-              <BoxArt game={ game } imageReducer={ imageReducer } width={ BOX_WIDTH } />
+      <div className={styles.gameHeader}>
+        <div className={styles.left}>
+          {/* Render the box art */}
+          <div id={styles.boxart}>
+            <Link to={gameUrl}>
+              <BoxArt game={game} imageReducer={imageReducer} width={BOX_WIDTH} />
             </Link>
           </div>
 
-          { /* Render the name of the game, and it's information */ }
-          <div className={ styles.info }>
-            <Link to={ gameUrl }>
-              <h1>{ game.name }</h1>
+          {/* Render the name of the game, and it's information */}
+          <div className={styles.info}>
+            <Link to={gameUrl}>
+              <h1>{game.name}</h1>
             </Link>
-            { game.custom && game.creator && <span>Custom Game by:&nbsp;&nbsp;<Username profile={ game.creator } /></span> }
-            <span>Release Date: { game.release_date }</span>
-            { game.custom &&
-              <span>Game Download:
-                <a href={ game.download } target="_blank" rel="noopener noreferrer">
+            {game.custom && game.creator && (
+              <span>
+                Custom Game by:&nbsp;&nbsp;
+                <Username profile={game.creator} />
+              </span>
+            )}
+            <span>Release Date: {game.release_date}</span>
+            {game.custom && (
+              <span>
+                Game Download:
+                <a href={game.download} target="_blank" rel="noopener noreferrer">
                   <DownloadIcon className="inline-icon" />
                 </a>
               </span>
-            }
+            )}
 
-            { /* If game has any versions, let's allow user to update version here */ }
-            { game.version.length > 0 &&
-              <div className={ styles.version }>
+            {/* If game has any versions, let's allow user to update version here */}
+            {game.version.length > 0 && (
+              <div className={styles.version}>
                 <label htmlFor="version">Version: </label>
-                <select 
-                  id="version" 
-                  onChange={ (e) => handleVersionChange(e.target.value) } 
-                  value={ version.id } 
-                  disabled={ disableVersionDropdown }
+                <select
+                  id="version"
+                  onChange={(e) => handleVersionChange(e.target.value)}
+                  value={version.id}
+                  disabled={disableVersionDropdown}
                 >
-                  { game.version.map(version => (
-                    <option value={ version.id } key={ version.id }>{ version.version }</option>
+                  {game.version.map((version) => (
+                    <option value={version.id} key={version.id}>
+                      {version.version}
+                    </option>
                   ))}
                 </select>
               </div>
-            }
+            )}
           </div>
-
         </div>
 
-        { /* Render level search bar */ }
+        {/* Render level search bar */}
         <LevelSearchBar />
-        
       </div>
     </Container>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default GameHeader;

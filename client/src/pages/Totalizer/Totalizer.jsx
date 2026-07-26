@@ -72,7 +72,7 @@ function Totalizer({ imageReducer }) {
   // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
     // special case #1: we are attempting to access a totalizer page with a non-valid category or non-practice mode category
-    const gameUrl = addAllExistingSearchParams(`/games/${ abb }`);
+    const gameUrl = addAllExistingSearchParams(`/games/${abb}`);
     if (!(gameCategories.includes(category) && isPracticeMode)) {
       addMessage("Ranking does not exist.", "error", 5000);
       navigateTo(gameUrl);
@@ -80,7 +80,7 @@ function Totalizer({ imageReducer }) {
     }
 
     // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
-    if (!(types.includes(type))) {
+    if (!types.includes(type)) {
       addMessage("Ranking does not exist.", "error", 5000);
       navigateTo(gameUrl);
       return;
@@ -103,77 +103,76 @@ function Totalizer({ imageReducer }) {
 
   /* ===== TOTALIZER COMPONENT ===== */
   return (
-    <Container title={ `${ capitalize(type) } Totalizer` } largeTitle>
-      <div className={ styles.totalizer }>
-
-        { /* Totalizer header - render the category, as well as an input for user to swap between live-only and all */ }
-        <div className={ styles.header }>
-          <h2>{ categoryName }</h2>
-          <div className={ styles.filter }>
-            <label htmlFor={ styles.live }>Live-{ type }s only: </label>
+    <Container title={`${capitalize(type)} Totalizer`} largeTitle>
+      <div className={styles.totalizer}>
+        {/* Totalizer header - render the category, as well as an input for user to swap between live-only and all */}
+        <div className={styles.header}>
+          <h2>{categoryName}</h2>
+          <div className={styles.filter}>
+            <label htmlFor={styles.live}>Live-{type}s only: </label>
             <input
-              id={ styles.live }
+              id={styles.live}
               type="checkbox"
-              checked={ tableState === "live" }
-              onChange={ handleTableStateChange }
+              checked={tableState === "live"}
+              onChange={handleTableStateChange}
             />
           </div>
         </div>
 
-        <div className={ `table ${ styles.totalizerTable }` }>
+        <div className={`table ${styles.totalizerTable}`}>
           <table>
-          
-            { /* Table header - specifies the information displayed in each cell of the board */ }
+            {/* Table header - specifies the information displayed in each cell of the board */}
             <thead>
               <tr>
                 <th>Position</th>
                 <th>Name</th>
-                <th>Total { capitalize(type) }</th>
+                <th>Total {capitalize(type)}</th>
               </tr>
             </thead>
 
-            { /* Table body - render a row for each totals object in the array. */ }
+            {/* Table body - render a row for each totals object in the array. */}
             <tbody>
-              { totals ? 
-                <TableContent 
-                  items={ totals[tableState] } 
-                  emptyMessage={ `There have been no ${ tableState === "live" ? "live" : "" } submissions to this game's category!` }
-                  numCols={ TABLE_LENGTH }
+              {totals ? (
+                <TableContent
+                  items={totals[tableState]}
+                  emptyMessage={`There have been no ${tableState === "live" ? "live" : ""} submissions to this game's category!`}
+                  numCols={TABLE_LENGTH}
                 >
-                  { totals[tableState].slice((pageNum-1)*USERS_PER_PAGE, pageNum*USERS_PER_PAGE).map(row => {
-                    return (
-                      <TotalizerRow 
-                        row={ row } 
-                        topTotal={ totals[tableState][0].total } 
-                        imageReducer={ imageReducer } key={ row.profile.id }
-                        decimalPlaces={ decimalPlaces }
-                      />
-                    );
-                  })}
+                  {totals[tableState]
+                    .slice((pageNum - 1) * USERS_PER_PAGE, pageNum * USERS_PER_PAGE)
+                    .map((row) => {
+                      return (
+                        <TotalizerRow
+                          row={row}
+                          topTotal={totals[tableState][0].total}
+                          imageReducer={imageReducer}
+                          key={row.profile.id}
+                          decimalPlaces={decimalPlaces}
+                        />
+                      );
+                    })}
                 </TableContent>
-              :
-                <LoadingTable numCols={ TABLE_LENGTH } />
-              }
+              ) : (
+                <LoadingTable numCols={TABLE_LENGTH} />
+              )}
             </tbody>
-
           </table>
         </div>
-        
-        { /* Render pagination controls at the bottom of this container */ }
-        { totals &&
-          <CachedPageControls 
-            items={ totals[tableState] }
-            itemsPerPage={ USERS_PER_PAGE }
-            pageNum={ pageNum }
-            setPageNum={ setPageNum }
+
+        {/* Render pagination controls at the bottom of this container */}
+        {totals && (
+          <CachedPageControls
+            items={totals[tableState]}
+            itemsPerPage={USERS_PER_PAGE}
+            pageNum={pageNum}
+            setPageNum={setPageNum}
             itemsName="Users"
           />
-        }
-        
+        )}
       </div>
     </Container>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Totalizer;

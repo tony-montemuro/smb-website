@@ -10,7 +10,7 @@ import Username from "../../../components/Username/Username.jsx";
 
 function Insert() {
   /* ===== CONTEXTS ===== */
-  
+
   // popup data state from popup context
   const { popupData } = useContext(PopupContext);
 
@@ -26,35 +26,40 @@ function Insert() {
 
   /* ===== INSERT COMPONENT ===== */
   return (
-    <div className={ styles.popup }>
-
-      { /* Popup header - includes a link to the moderator's user page */ }
+    <div className={styles.popup}>
+      {/* Popup header - includes a link to the moderator's user page */}
       <h2>
-        <Username profile={ notification.creator } />
-        &nbsp;has submitted the following submission on your behalf: 
+        <Username profile={notification.creator} />
+        &nbsp;has submitted the following submission on your behalf:
       </h2>
 
-      { /* Notification details - render the basic info, as well as more specific information that the moderator inserted */ }
-      <div className={ styles.details }>
+      {/* Notification details - render the basic info, as well as more specific information that the moderator inserted */}
+      <div className={styles.details}>
         <ul>
-          <NotificationBasicInfo notification={ notification } />
+          <NotificationBasicInfo notification={notification} />
           <li>
-            { capitalize(type) }: { recordB2F(notification.record, type, notification.level.timer_type) }
+            {capitalize(type)}:{" "}
+            {recordB2F(notification.record, type, notification.level.timer_type)}
           </li>
-          <li>Date: { dateB2F(submission.submitted_at) }</li>
-          <li>Monkey: { submission.monkey.monkey_name }</li>
-          <li>Platform: { submission.platform.platform_name }</li>
-          <li>Region: { submission.region.region_name }</li>
-          <li><NotificationProof proof={ submission.proof } /></li>
-          <li>Live Proof: <CheckmarkOrX isChecked={ submission.live } /></li>
-          <li>TAS: <CheckmarkOrX isChecked={ submission.tas } /></li>
-          <li>Moderator Note: &quot;{ submission.mod_note }&quot;</li>
+          <li>Date: {dateB2F(submission.submitted_at)}</li>
+          <li>Monkey: {submission.monkey.monkey_name}</li>
+          <li>Platform: {submission.platform.platform_name}</li>
+          <li>Region: {submission.region.region_name}</li>
+          <li>
+            <NotificationProof proof={submission.proof} />
+          </li>
+          <li>
+            Live Proof: <CheckmarkOrX isChecked={submission.live} />
+          </li>
+          <li>
+            TAS: <CheckmarkOrX isChecked={submission.tas} />
+          </li>
+          <li>Moderator Note: &quot;{submission.mod_note}&quot;</li>
         </ul>
       </div>
-
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Insert;

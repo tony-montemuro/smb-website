@@ -11,7 +11,7 @@ function NotificationTableRow({ row, notifications, pageNum, handleRowClick, tog
 
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
-  
+
   /* ===== VARIABLES ===== */
   const type = row.score ? "score" : "time";
   const { name: categoryName } = appData.categories[row.level.category];
@@ -23,37 +23,33 @@ function NotificationTableRow({ row, notifications, pageNum, handleRowClick, tog
 
   /* ===== NOTIFICATION TABLE ROW COMPONENT ===== */
   return (
-    <tr className={ styles.tableRow } key={ row.notif_date }>
-
-      { /* Notification selector - render a checkbox that allows the user to select a notification for deletion */ }
-      <td className={ styles.checkbox }>
+    <tr className={styles.tableRow} key={row.notif_date}>
+      {/* Notification selector - render a checkbox that allows the user to select a notification for deletion */}
+      <td className={styles.checkbox}>
         <input
           type="checkbox"
-          checked={ notifications.selected[pageNum].includes(row.notif_date) }
-          onChange={() => toggleSelection(row.notif_date, pageNum) }
+          checked={notifications.selected[pageNum].includes(row.notif_date)}
+          onChange={() => toggleSelection(row.notif_date, pageNum)}
         />
       </td>
-      
-      <td onClick={ () => handleRowClick(row) }>
-        <div className={ styles.type }>
-          <TypeSymbol type={ row.notif_type } />
+
+      <td onClick={() => handleRowClick(row)}>
+        <div className={styles.type}>
+          <TypeSymbol type={row.notif_type} />
         </div>
       </td>
-      <td onClick={ () => handleRowClick(row) }>{ getTimeAgo(row.notif_date) }</td>
-      <td onClick={ () => handleRowClick(row) }>
-        { row.level.mode.game.name }
+      <td onClick={() => handleRowClick(row)}>{getTimeAgo(row.notif_date)}</td>
+      <td onClick={() => handleRowClick(row)}>{row.level.mode.game.name}</td>
+      <td onClick={() => handleRowClick(row)}>{categoryName}</td>
+      <td onClick={() => handleRowClick(row)}>
+        <FancyLevel level={row.level.name} /> ({capitalize(type)})
       </td>
-      <td onClick={ () => handleRowClick(row) }>
-        { categoryName }
+      <td onClick={() => handleRowClick(row)}>
+        {recordB2F(row.record, type, row.level.timer_type)}
       </td>
-      <td onClick={ () => handleRowClick(row) }>
-        <FancyLevel level={ row.level.name } /> ({ capitalize(type) })
-      </td>
-      <td onClick={ () => handleRowClick(row) }>{ recordB2F(row.record, type, row.level.timer_type) }</td>
-
     </tr>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default NotificationTableRow;

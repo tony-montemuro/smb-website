@@ -11,7 +11,8 @@
     width: 100%;
 }
 
-.sectionContent, .asset {
+.sectionContent,
+.asset {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -43,7 +44,8 @@
     width: fit-content;
 }
 
-.errorable span, .errorable h3 {
+.errorable span,
+.errorable h3 {
     background-color: rgb(var(--color-error));
     border-radius: 3px;
     width: fit-content;

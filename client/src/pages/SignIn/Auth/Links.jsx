@@ -8,20 +8,16 @@ function Links({ mode, setMode }) {
 
   if (mode === MODE_SIGNIN) {
     return (
-      <div className={ `${styles.container} ${styles.links} center` }>
-        <span onClick={ () => setMode(MODE_FORGOT_PASSWORD) }>
-          Forgot your password?
-        </span>
-        <span onClick={ () => setMode(MODE_SIGNUP) }>
-          Don&apos;t have an account? Sign up
-        </span>
+      <div className={`${styles.container} ${styles.links} center`}>
+        <span onClick={() => setMode(MODE_FORGOT_PASSWORD)}>Forgot your password?</span>
+        <span onClick={() => setMode(MODE_SIGNUP)}>Don&apos;t have an account? Sign up</span>
       </div>
     );
   }
 
   return (
-    <div className={ `${styles.container} ${styles.links} center` }>
-      <span onClick={ () => setMode(MODE_SIGNIN) }>Already have an account? Sign in</span>
+    <div className={`${styles.container} ${styles.links} center`}>
+      <span onClick={() => setMode(MODE_SIGNIN)}>Already have an account? Sign in</span>
     </div>
   );
 }

@@ -26,35 +26,53 @@ export { renderPosition };
 export function PositionDisclaimer() {
   return (
     <ExpansionPanel title="About Position">
-      <div className={ styles.details }>
-        <span><strong>Position</strong> and <strong>Live Position</strong> are both recorded the moment the submission is first created, meaning these values may become inaccurate as time passes.</span>
+      <div className={styles.details}>
+        <span>
+          <strong>Position</strong> and <strong>Live Position</strong> are both recorded the moment
+          the submission is first created, meaning these values may become inaccurate as time
+          passes.
+        </span>
         <ul>
-          <li><strong>Position</strong> compares the submission against all other active submissions of the chart.</li>
-          <li><strong>Live Position</strong> is only calculated if the submission has a live proof, and compares the submission against all other active live submissions of the chart.</li>
+          <li>
+            <strong>Position</strong> compares the submission against all other active submissions
+            of the chart.
+          </li>
+          <li>
+            <strong>Live Position</strong> is only calculated if the submission has a live proof,
+            and compares the submission against all other active live submissions of the chart.
+          </li>
         </ul>
-        <span>Neither of these values are recorded if the date of the submission does not match the date it was submitted.</span>
+        <span>
+          Neither of these values are recorded if the date of the submission does not match the date
+          it was submitted.
+        </span>
       </div>
     </ExpansionPanel>
   );
-};
+}
 
 // EXPORT 3: Live position component - render the live position field, based on the `id` and `submittedAt` parameters
 export function LivePosition({ position, id, submittedAt }) {
-  return position ?
-    renderPosition(id, submittedAt) ? position : (
-        <span title="Date does not match the timestamp it was submitted at, so live position could not be calculated.">
-          -
-        </span>
-      )
-    : 
-      <span title="Not a live submission.">-</span>;
-};
+  return position ? (
+    renderPosition(id, submittedAt) ? (
+      position
+    ) : (
+      <span title="Date does not match the timestamp it was submitted at, so live position could not be calculated.">
+        -
+      </span>
+    )
+  ) : (
+    <span title="Not a live submission.">-</span>
+  );
+}
 
 // EXPORT 4: Position component - render the position field, based on the `id` and `submittedAt` parameters
 export function Position({ position, id, submittedAt }) {
-  return renderPosition(id, submittedAt) ? position : (
+  return renderPosition(id, submittedAt) ? (
+    position
+  ) : (
     <span title="Date does not match the timestamp it was submitted at, so position could not be calculated.">
       -
     </span>
   );
-};
+}

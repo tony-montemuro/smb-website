@@ -47,7 +47,7 @@ function App() {
 
   // states and functions from the app js file
   const {
-    user, 
+    user,
     messageContent,
     images,
     appData,
@@ -59,7 +59,7 @@ function App() {
     callSessionListener,
     getAppData,
     updateCategories,
-    updateGoals
+    updateGoals,
   } = AppLogic();
 
   /* ===== VARIABLES ===== */
@@ -76,109 +76,112 @@ function App() {
 
   /* ===== APP COMPONENT ===== */
   return (
-    <AppDataContext.Provider value={ { appData, updateCategories, updateGoals  } } >
-      <MessageContext.Provider value={ { addMessage } }>
-        <UserContext.Provider value={ { user, updateUser, isModerator } }>
-          <Navbar imageReducer={ imageReducer } />
+    <AppDataContext.Provider value={{ appData, updateCategories, updateGoals }}>
+      <MessageContext.Provider value={{ addMessage }}>
+        <UserContext.Provider value={{ user, updateUser, isModerator }}>
+          <Navbar imageReducer={imageReducer} />
           <div className="app">
+            {/* Render the message component (will only render if open field in `messageContent` is true) */}
+            <Message messageContent={messageContent} handleClose={handleMessageClose} />
 
-            { /* Render the message component (will only render if open field in `messageContent` is true) */ }
-            <Message messageContent={ messageContent } handleClose={ handleMessageClose } />
-
-            { /* App routes */ }
+            {/* App routes */}
             <Routes>
-              <Route path="/" element={ <Home imageReducer={ imageReducer } /> }/>
-              <Route path="/games" element={<GameSelect imageReducer={ imageReducer } />}/>
-              <Route path="/users" element={ <Users imageReducer={ imageReducer } /> } />
-              <Route path="/news" element={ <News /> } />
-              <Route path="/support" element={ <Support /> }/>
-              <Route path="/notifications" element={ <Notifications /> } />
-              <Route path="/profile" element={ <Profile imageReducer={ imageReducer } /> }/>
-              <Route path="/signin" element={ <SignIn /> } />
-              <Route path="/games/:abb" element={ <GameLayout imageReducer={ imageReducer } /> } >
-                <Route index element={ <Game /> } />
-                <Route path=":category" element={ <Game /> }/>
-                <Route path=":category/medals/score" element={
-                  <MedalTable imageReducer={ imageReducer } />
-                }/>
-                <Route path=":category/medals/time" element={
-                  <MedalTable imageReducer={ imageReducer } />
-                }/>
-                <Route path=":category/totalizer/score" element={
-                  <Totalizer imageReducer={ imageReducer } />
-                }/>
-                <Route path=":category/totalizer/time" element={
-                  <Totalizer imageReducer={ imageReducer } />
-                }/>
-                <Route path=":category/score" element={
-                  <Records />
-                }/>
-                <Route path=":category/time" element={
-                  <Records />
-                }/>
-                <Route path=":category/score/:levelid" element={
-                  <Levelboard imageReducer={ imageReducer } />
-                }/>
-                <Route path=":category/time/:levelid" element={
-                  <Levelboard imageReducer={ imageReducer } />
-                }/>
-                <Route path=":category/score/:levelid/:profileId/normal" element={
-                  <SubmissionHistory />
-                }/>
-                <Route path=":category/score/:levelid/:profileId/tas" element={
-                  <SubmissionHistory />
-                }/>
-                <Route path=":category/time/:levelid/:profileId/normal" element={
-                  <SubmissionHistory />
-                }/>
-                <Route path=":category/time/:levelid/:profileId/tas" element={
-                  <SubmissionHistory />
-                }/>
+              <Route path="/" element={<Home imageReducer={imageReducer} />} />
+              <Route path="/games" element={<GameSelect imageReducer={imageReducer} />} />
+              <Route path="/users" element={<Users imageReducer={imageReducer} />} />
+              <Route path="/news" element={<News />} />
+              <Route path="/support" element={<Support />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/profile" element={<Profile imageReducer={imageReducer} />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/games/:abb" element={<GameLayout imageReducer={imageReducer} />}>
+                <Route index element={<Game />} />
+                <Route path=":category" element={<Game />} />
+                <Route
+                  path=":category/medals/score"
+                  element={<MedalTable imageReducer={imageReducer} />}
+                />
+                <Route
+                  path=":category/medals/time"
+                  element={<MedalTable imageReducer={imageReducer} />}
+                />
+                <Route
+                  path=":category/totalizer/score"
+                  element={<Totalizer imageReducer={imageReducer} />}
+                />
+                <Route
+                  path=":category/totalizer/time"
+                  element={<Totalizer imageReducer={imageReducer} />}
+                />
+                <Route path=":category/score" element={<Records />} />
+                <Route path=":category/time" element={<Records />} />
+                <Route
+                  path=":category/score/:levelid"
+                  element={<Levelboard imageReducer={imageReducer} />}
+                />
+                <Route
+                  path=":category/time/:levelid"
+                  element={<Levelboard imageReducer={imageReducer} />}
+                />
+                <Route
+                  path=":category/score/:levelid/:profileId/normal"
+                  element={<SubmissionHistory />}
+                />
+                <Route
+                  path=":category/score/:levelid/:profileId/tas"
+                  element={<SubmissionHistory />}
+                />
+                <Route
+                  path=":category/time/:levelid/:profileId/normal"
+                  element={<SubmissionHistory />}
+                />
+                <Route
+                  path=":category/time/:levelid/:profileId/tas"
+                  element={<SubmissionHistory />}
+                />
               </Route>
-              <Route path="/user/:profileId" element={ <UserLayout imageReducer={ imageReducer } /> } >
-                <Route index element={ <User imageReducer={ imageReducer } />} />
-                <Route path=":game/:category/score" element={
-                  <UserStats />
-                }/>
-                <Route path=":game/:category/time" element={
-                  <UserStats />
-                }/>
+              <Route path="/user/:profileId" element={<UserLayout imageReducer={imageReducer} />}>
+                <Route index element={<User imageReducer={imageReducer} />} />
+                <Route path=":game/:category/score" element={<UserStats />} />
+                <Route path=":game/:category/time" element={<UserStats />} />
               </Route>
-              <Route path="/resources" element={ <Resources imageReducer={ imageReducer } /> } />
-              <Route path="/resources/:section" element={ <Resources imageReducer={ imageReducer } /> } />
-              <Route path="administrator" element={ <AdministratorLayout /> } >
-                <Route index element={ <Administrator /> } />
-                <Route path="game-moderators" element={
-                  <GameModerators imageReducer={ imageReducer } />
-                }/>
-                <Route path="post" element={ <Post /> }/>
-                <Route path="game-add" element={ <GameAddLayout /> } >
-                  <Route index element={ <MetadataForm /> } />
-                  <Route path="game-entities" element={ <EntitiesForm /> } />
-                  <Route path="game-structure" element={ <StructureForm /> } />
-                  <Route path="game-assets" element={ <AssetsForm imageReducer={ imageReducer } /> } />
-                  <Route path="summary" element={ <GameAddSummary imageReducer={ imageReducer } /> } />
+              <Route path="/resources" element={<Resources imageReducer={imageReducer} />} />
+              <Route
+                path="/resources/:section"
+                element={<Resources imageReducer={imageReducer} />}
+              />
+              <Route path="administrator" element={<AdministratorLayout />}>
+                <Route index element={<Administrator />} />
+                <Route
+                  path="game-moderators"
+                  element={<GameModerators imageReducer={imageReducer} />}
+                />
+                <Route path="post" element={<Post />} />
+                <Route path="game-add" element={<GameAddLayout />}>
+                  <Route index element={<MetadataForm />} />
+                  <Route path="game-entities" element={<EntitiesForm />} />
+                  <Route path="game-structure" element={<StructureForm />} />
+                  <Route path="game-assets" element={<AssetsForm imageReducer={imageReducer} />} />
+                  <Route path="summary" element={<GameAddSummary imageReducer={imageReducer} />} />
                 </Route>
-                <Route path="versions" element={ <Versions imageReducer={ imageReducer } /> } />
+                <Route path="versions" element={<Versions imageReducer={imageReducer} />} />
               </Route>
-              <Route path="moderator" element={ <ModeratorLayout /> } >
-                <Route index element={ <Moderator /> } />
-                <Route path="approvals" element={
-                  <Approvals imageReducer={ imageReducer } />
-                }/>
-                <Route path="reports" element={
-                  <Reports imageReducer={ imageReducer } />
-                }/>
+              <Route path="moderator" element={<ModeratorLayout />}>
+                <Route index element={<Moderator />} />
+                <Route path="approvals" element={<Approvals imageReducer={imageReducer} />} />
+                <Route path="reports" element={<Reports imageReducer={imageReducer} />} />
               </Route>
-              <Route path="recent-submissions" element={ <RecentSubmissions imageReducer={ imageReducer } /> } />
+              <Route
+                path="recent-submissions"
+                element={<RecentSubmissions imageReducer={imageReducer} />}
+              />
             </Routes>
-
           </div>
         </UserContext.Provider>
       </MessageContext.Provider>
     </AppDataContext.Provider>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default App;

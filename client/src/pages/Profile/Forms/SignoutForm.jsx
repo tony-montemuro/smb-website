@@ -20,18 +20,24 @@ function SignoutForm() {
   /* ===== SIGNOUT FORM COMPONENT ====== */
   return (
     <Container title="Sign Out">
-      <div className={ styles.form }>
-        { user.profile && 
+      <div className={styles.form}>
+        {user.profile && (
           <span>
             <strong>Note: </strong>
-            You can also sign out by clicking the <div className="inline-icon"><LogoutIcon /></div> icon in the navigation bar.
+            You can also sign out by clicking the{" "}
+            <div className="inline-icon">
+              <LogoutIcon />
+            </div>{" "}
+            icon in the navigation bar.
           </span>
-        }
-        <button type="button" onClick={ signOut }>Sign Out</button>
+        )}
+        <button type="button" onClick={signOut}>
+          Sign Out
+        </button>
       </div>
     </Container>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default SignoutForm;

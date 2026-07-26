@@ -25,17 +25,17 @@ function EntitiesForm() {
   /* ===== FUNCTIONS ===== */
 
   // states & functions from the js file
-  const { 
-    form, 
-    addEntity, 
-    populateForm, 
-    handleInsert, 
+  const {
+    form,
+    addEntity,
+    populateForm,
+    handleInsert,
     handleUpdate,
     handleModeratorInsert,
     handleModeratorDelete,
     openPopup,
     closePopup,
-    validateAndUpdate
+    validateAndUpdate,
   } = EntitiesFormLogic();
 
   /* ===== VARIABLES ===== */
@@ -43,7 +43,7 @@ function EntitiesForm() {
   const userRowOptions = {
     isDetailed: false,
     disableLink: true,
-    onUserRowClick: handleModeratorInsert
+    onUserRowClick: handleModeratorInsert,
   };
 
   /* ===== EFFECTS ===== */
@@ -57,130 +57,142 @@ function EntitiesForm() {
   /* ===== ENTITIES FORM COMPONENT ===== */
   return (
     <Container title="Game Entities">
-
-      { /* Popup for adding entities */ }
-      <Popup 
-				renderPopup={ addEntity } 
-				setRenderPopup={ closePopup } 
-				width="1000px"
-				disableClose={ submittingEntity }
-			>
-				<EntityAddForm 
-          submitting={ submittingEntity } 
-          setSubmitting={ setSubmittingEntity }
-          refreshSelectDataFunc={ fetchEntitiesData }
+      {/* Popup for adding entities */}
+      <Popup
+        renderPopup={addEntity}
+        setRenderPopup={closePopup}
+        width="1000px"
+        disableClose={submittingEntity}
+      >
+        <EntityAddForm
+          submitting={submittingEntity}
+          setSubmitting={setSubmittingEntity}
+          refreshSelectDataFunc={fetchEntitiesData}
         />
-			</Popup>
+      </Popup>
 
-      <div className={ styles.entitiesForm }>
+      <div className={styles.entitiesForm}>
         <span>
           <em>
-            On this screen, you will select and define the <strong>entities</strong> for each game.&nbsp;
-            <strong>Entities</strong> are items that have a <a href="https://en.wikipedia.org/wiki/Many-to-many_%28data_model%29" target="_blank" rel="noopener noreferrer">many-to-many relationship</a>
-            &nbsp;with games, unrelated to game structure. <strong>The order you select each entity determines the order they will
-            appear on the website!</strong>
+            On this screen, you will select and define the <strong>entities</strong> for each
+            game.&nbsp;
+            <strong>Entities</strong> are items that have a{" "}
+            <a
+              href="https://en.wikipedia.org/wiki/Many-to-many_%28data_model%29"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              many-to-many relationship
+            </a>
+            &nbsp;with games, unrelated to game structure.{" "}
+            <strong>
+              The order you select each entity determines the order they will appear on the website!
+            </strong>
           </em>
         </span>
         <span>
           <em>
-            <strong>Note:</strong> For adding <strong>versions</strong>, please use the <strong>Game Versions</strong> administration 
-            portal <strong>after</strong> you
-            have finished creating this game.
+            <strong>Note:</strong> For adding <strong>versions</strong>, please use the{" "}
+            <strong>Game Versions</strong> administration portal <strong>after</strong> you have
+            finished creating this game.
           </em>
         </span>
 
-        { /* Entities form */ }
-        { entitiesData ?
-          <form className={ styles.entitiesForm } onSubmit={ validateAndUpdate }>
-            <div className={ styles.input }>
+        {/* Entities form */}
+        {entitiesData ? (
+          <form className={styles.entitiesForm} onSubmit={validateAndUpdate}>
+            <div className={styles.input}>
               <SelectList
-                entities={ form.values.monkey }
+                entities={form.values.monkey}
                 inputData={{
                   entityName: "monkey",
                   label: "Monkeys",
                   handleChange: handleUpdate,
                   handleInsert: handleInsert,
-                  error: form.error.monkey
+                  error: form.error.monkey,
                 }}
-                selectData={{ 
+                selectData={{
                   entities: entitiesData.monkey,
                   valueAttribute: "id",
-                  entityName: "monkey_name"
+                  entityName: "monkey_name",
                 }}
               />
-              <EntityAddLink entityName="monkey" openPopup={ openPopup } />
+              <EntityAddLink entityName="monkey" openPopup={openPopup} />
             </div>
 
-            <div className={ styles.input }>
+            <div className={styles.input}>
               <SelectList
-                entities={ form.values.platform }
+                entities={form.values.platform}
                 inputData={{
                   entityName: "platform",
                   label: "Platforms",
                   handleChange: handleUpdate,
                   handleInsert: handleInsert,
-                  error: form.error.platform
+                  error: form.error.platform,
                 }}
-                selectData={{ 
+                selectData={{
                   entities: entitiesData.platform,
                   valueAttribute: "id",
-                  entityName: "platform_name"
+                  entityName: "platform_name",
                 }}
               />
-              <EntityAddLink entityName="platform" openPopup={ openPopup } />
+              <EntityAddLink entityName="platform" openPopup={openPopup} />
             </div>
 
-            <div className={ styles.input }>
+            <div className={styles.input}>
               <SelectList
-                entities={ form.values.region }
+                entities={form.values.region}
                 inputData={{
                   entityName: "region",
                   label: "Regions",
                   handleChange: handleUpdate,
                   handleInsert: handleInsert,
-                  error: form.error.region
+                  error: form.error.region,
                 }}
-                selectData={{ 
+                selectData={{
                   entities: entitiesData.region,
                   valueAttribute: "id",
-                  entityName: "region_name"
+                  entityName: "region_name",
                 }}
               />
-              <EntityAddLink entityName="region" openPopup={ openPopup } />
+              <EntityAddLink entityName="region" openPopup={openPopup} />
             </div>
 
-            <div className={ styles.input }>
+            <div className={styles.input}>
               <SelectList
-                entities={ form.values.rule }
+                entities={form.values.rule}
                 inputData={{
                   entityName: "rule",
                   label: "Rules",
                   handleChange: handleUpdate,
                   handleInsert: handleInsert,
-                  error: form.error.rule
+                  error: form.error.rule,
                 }}
-                selectData={{ 
+                selectData={{
                   entities: entitiesData.rule,
                   valueAttribute: "id",
-                  entityName: "rule_name"
+                  entityName: "rule_name",
                 }}
               />
-              <EntityAddLink entityName="rule" openPopup={ openPopup } />
+              <EntityAddLink entityName="rule" openPopup={openPopup} />
             </div>
 
-            <div className={ styles.input }>
+            <div className={styles.input}>
               <h3>Moderators</h3>
               <span>Select moderators via user search.</span>
-              <div className={ styles.moderatorList }>
-                { form.values.moderator.map((moderator, index) => {
+              <div className={styles.moderatorList}>
+                {form.values.moderator.map((moderator, index) => {
                   return (
-                    <div className={ `${ styles.moderator } ${ (index+1) % 2 ? "even" : "odd" }` } key={ moderator.id }>
-                      <Username profile={ moderator } disableLink />
+                    <div
+                      className={`${styles.moderator} ${(index + 1) % 2 ? "even" : "odd"}`}
+                      key={moderator.id}
+                    >
+                      <Username profile={moderator} disableLink />
                       <button
                         type="button"
                         title="Delete moderator"
                         className="center"
-                        onClick={ () => handleModeratorDelete(moderator.id) }
+                        onClick={() => handleModeratorDelete(moderator.id)}
                       >
                         <DeleteIcon />
                       </button>
@@ -188,18 +200,18 @@ function EntitiesForm() {
                   );
                 })}
               </div>
-              <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ userRowOptions } />
+              <UserSearch usersPerPage={USERS_PER_PAGE} userRowOptions={userRowOptions} />
             </div>
 
             <button type="submit">Validate</button>
           </form>
-        :
+        ) : (
           <Loading />
-        }
+        )}
       </div>
     </Container>
   );
-};
+}
 
 function EntityAddLink({ entityName, openPopup }) {
   /* ===== FUNCTIONS ===== */
@@ -209,11 +221,11 @@ function EntityAddLink({ entityName, openPopup }) {
 
   /* ===== ENTITY ADD LINK COMPONENT ===== */
   return (
-    <span onClick={ openPopup } className="hyperlink">
-      { capitalize(entityName) } missing from list? Click here to upload a new { entityName }!
+    <span onClick={openPopup} className="hyperlink">
+      {capitalize(entityName)} missing from list? Click here to upload a new {entityName}!
     </span>
-  )
-};
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default EntitiesForm;

@@ -4,7 +4,9 @@
     gap: 10px;
 }
 
-.summary h2, .summary h3, .summary ol {
+.summary h2,
+.summary h3,
+.summary ol {
     margin: 0;
 }
 
@@ -17,7 +19,7 @@
 }
 
 .summary button:hover {
-    background-color: rgb(var(--color-nav-hover))
+    background-color: rgb(var(--color-nav-hover));
 }
 
 .summary button svg {

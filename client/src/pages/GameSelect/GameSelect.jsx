@@ -9,16 +9,16 @@ function GameSelect({ imageReducer }) {
 
   /* ===== GAME SELECT COMPONENT ===== */
   return (
-    <div className={ styles.gameSelect }>
+    <div className={styles.gameSelect}>
       <h1>Games</h1>
-      <GameSearch 
-        gamesPerPage={ GAMES_PER_PAGE }
-        imageReducer={ imageReducer }
-        gameRowOptions={ gameRowOptions }
+      <GameSearch
+        gamesPerPage={GAMES_PER_PAGE}
+        imageReducer={imageReducer}
+        gameRowOptions={gameRowOptions}
       />
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default GameSelect;

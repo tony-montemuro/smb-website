@@ -17,13 +17,13 @@ function BoxArt({ game, imageReducer, width }) {
 
   /* ===== BOX ART COMPONENT ===== */
   return (
-    <img 
-      style={ { width: width, height: "auto" } } 
-      src={ box !== null ? box : Default } alt={ `${ game.name } Box Art` }>
-    </img>
+    <img
+      style={{ width: width, height: "auto" }}
+      src={box !== null ? box : Default}
+      alt={`${game.name} Box Art`}
+    ></img>
   );
-  
-};
+}
 
 /* ===== EXPORTS ===== */
 export default BoxArt;

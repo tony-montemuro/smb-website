@@ -13,12 +13,12 @@ const App = () => {
   const defaultUser = {
     id: undefined,
     notificationCount: 0,
-    profile: undefined
+    profile: undefined,
   };
   const defaultImages = {
     games: {},
-    users: {}
-  }
+    users: {},
+  };
   const defaultMessage = { open: false };
 
   /* ===== REFS ===== */
@@ -28,7 +28,9 @@ const App = () => {
   const [user, setUser] = useState(defaultUser);
   const [messageContent, setMessageContent] = useState(defaultMessage);
   const [images, dispatchImages] = useReducer((state, action) => {
-    const set = action.set, field = action.field, data = action.data;
+    const set = action.set,
+      field = action.field,
+      data = action.data;
     if (set === "games" || set === "users") {
       return { ...state, [set]: { ...state[set], [field]: data } };
     } else {
@@ -62,7 +64,7 @@ const App = () => {
       message,
       open: true,
       severity,
-      timer
+      timer,
     });
   };
 
@@ -86,7 +88,7 @@ const App = () => {
   // if the session object is defined (meaning user is logged in), we use userId field to load the user's
   // notification count & profile, and update the user state by calling the setUser() function
   // if the session object is null, we call the setUser() function with the default user object
-  const updateUser = async userId => {
+  const updateUser = async (userId) => {
     // first, clear timeout, if one exists
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -103,22 +105,25 @@ const App = () => {
         }, timeToMidnight);
 
         // concurrently make all necessary database calls
-        const [count, profile] = await Promise.all(
-          [queryNotificationCount(), queryUserProfile(userId, addMessage)]
-        );
+        const [count, profile] = await Promise.all([
+          queryNotificationCount(),
+          queryUserProfile(userId, addMessage),
+        ]);
 
         // update the user state
         setUser({
           id: userId,
           notificationCount: count,
-          profile
+          profile,
         });
-
       } catch (error) {
         // if there is an error, we want to render a message to the user
-        addMessage("User information failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 15000);
+        addMessage(
+          "User information failed to load. If refreshing the page does not work, the system may be experiencing an outage.",
+          "error",
+          15000,
+        );
       }
-      
     } else {
       // if we have a null user id, there is no current user. simply set the state to default value
       setUser({ ...defaultUser, id: null });
@@ -133,11 +138,20 @@ const App = () => {
   // if the user is defined, and they either are an administrator, or moderate [at least 1 game OR the game specified by abb, if it's
   // defined], return true
   // otherwise, return false
-  const isModerator = abb => {
+  const isModerator = (abb) => {
     if (abb) {
-      return user.id !== undefined && user.profile && (user.profile.administrator || user.profile.game.some(game => game.abb === abb));
+      return (
+        user.id !== undefined &&
+        user.profile &&
+        (user.profile.administrator ||
+          user.profile.game.some((game) => game.abb === abb))
+      );
     }
-    return user.id !== undefined && user.profile && (user.profile.administrator || user.profile.game.length > 0);
+    return (
+      user.id !== undefined &&
+      user.profile &&
+      (user.profile.administrator || user.profile.game.length > 0)
+    );
   };
 
   // FUNCTION 5: callSessionListener - this function is called once just to run the supabase session listener function, which will be called
@@ -158,16 +172,24 @@ const App = () => {
 
       // if query is successful, let's update user data accordingly
       updateUser(session ? session.user.id : null);
-
     } catch (error) {
       // otherwise, render an error message
-      addMessage("Session data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 15000);
+      addMessage(
+        "Session data failed to load. If refreshing the page does not work, the system may be experiencing an outage.",
+        "error",
+        15000,
+      );
     }
 
     // listener for changes to the auth state
     supabase.auth.onAuthStateChange((event, newSession) => {
       // special case: the current session's user id is the same as the previous session's user id. function should just return
-      if (event === "SIGNED_IN" && session && newSession && newSession.user.id === session.user.id) {
+      if (
+        event === "SIGNED_IN" &&
+        session &&
+        newSession &&
+        newSession.user.id === session.user.id
+      ) {
         return;
       }
 
@@ -182,9 +204,9 @@ const App = () => {
   // 1.) categories: an array of category objects from the database
   // POSTCONDITIONS (1 possible outcome):
   // a new object is generated using the array data, mapping abb to category object
-  const mapCategories = categories => {
+  const mapCategories = (categories) => {
     const categoryMap = {};
-    categories.forEach(category => categoryMap[category.abb] = category);
+    categories.forEach((category) => (categoryMap[category.abb] = category));
     return categoryMap;
   };
 
@@ -193,16 +215,23 @@ const App = () => {
   // this code runs on application mount
   // POSTCONDITIONS (2 possible outcomes):
   // if all queries are successful, perform any necessary data manipulations, and update the `appData` state
-  // otherwise, this function should render an error message to the user. IF THIS HAPPENS, many parts of the application 
+  // otherwise, this function should render an error message to the user. IF THIS HAPPENS, many parts of the application
   // WILL NOT LOAD!
   const getAppData = async () => {
     try {
-      const [categories, goals] = await Promise.all([queryCategories(), queryAll("goal", "id")]);
+      const [categories, goals] = await Promise.all([
+        queryCategories(),
+        queryAll("goal", "id"),
+      ]);
 
       setAppData({ categories: mapCategories(categories), goals });
     } catch (error) {
-      addMessage("Important application data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 13000);
-    };
+      addMessage(
+        "Important application data failed to load. If refreshing the page does not work, the system may be experiencing an outage.",
+        "error",
+        13000,
+      );
+    }
   };
 
   // FUNCTION 8: updateCategories - function that updates the `appData.categories` state with information from db
@@ -217,8 +246,12 @@ const App = () => {
       const categories = await queryCategories();
       setAppData({ ...appData, categories: mapCategories(categories) });
     } catch (error) {
-      addMessage("Category data failed to update. If refreshing the page does not work, the system may be experiencing an outage.", "error", 10000);
-    };
+      addMessage(
+        "Category data failed to update. If refreshing the page does not work, the system may be experiencing an outage.",
+        "error",
+        10000,
+      );
+    }
   };
 
   // FUNCTION 9: updateGoals - function that updates the `appData.goal` state with information from db
@@ -232,12 +265,16 @@ const App = () => {
       const goals = await queryAll("goal");
       setAppData({ ...appData, goals: goals });
     } catch (error) {
-      addMessage("Category data failed to load. If refreshing the page does not work, the system may be experiencing an outage.", "error", 12000);
-    };
+      addMessage(
+        "Category data failed to load. If refreshing the page does not work, the system may be experiencing an outage.",
+        "error",
+        12000,
+      );
+    }
   };
 
-  return { 
-    user, 
+  return {
+    user,
     messageContent,
     images,
     appData,
@@ -249,7 +286,7 @@ const App = () => {
     callSessionListener,
     getAppData,
     updateCategories,
-    updateGoals
+    updateGoals,
   };
 };
 

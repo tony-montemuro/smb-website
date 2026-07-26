@@ -20,7 +20,7 @@ function Notifications() {
 
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
-  
+
   // user state from user context
   const { user } = useContext(UserContext);
 
@@ -32,7 +32,7 @@ function Notifications() {
     report: "A user has reported one of your submissions.",
     insert: "A moderator has inserted a new submission on your behalf.",
     update: "A moderator has updated one of your submissions.",
-    delete: "A moderator has deleted one of your submissions."
+    delete: "A moderator has deleted one of your submissions.",
   };
   const navigateTo = useNavigate();
 
@@ -40,16 +40,16 @@ function Notifications() {
   const [notification, setNotification] = useState(undefined);
 
   // states and functions from init file
-  const { 
-    notifications, 
+  const {
+    notifications,
     pageNum,
     updateNotifications,
     areAllNotifsSelected,
     getSelectedCount,
     toggleSelection,
-    toggleSelectionAll, 
+    toggleSelectionAll,
     removeSelected,
-    changePage
+    changePage,
   } = NotificationsLogic();
 
   /* ===== EFFECTS ===== */
@@ -73,59 +73,62 @@ function Notifications() {
 
   /* ===== NOTIFICATION COMPONENT ===== */
   return (
-    <div className={ styles.notifications }>
-      { /* Notification popup element */ }
-      <NotificationPopup notification={ notification } setNotification={ setNotification } />
+    <div className={styles.notifications}>
+      {/* Notification popup element */}
+      <NotificationPopup notification={notification} setNotification={setNotification} />
 
-      { /* Notifications header - render the name of the page, as well as information for each notification type */ }
-      <div className={ styles.header }>
+      {/* Notifications header - render the name of the page, as well as information for each notification type */}
+      <div className={styles.header}>
         <h1>Notifications</h1>
         <Container>
           <ul>
-            { Object.keys(messages).map(type => {
+            {Object.keys(messages).map((type) => {
               return (
-                <li key={ type }>
-                  <div className={ styles.message }>
-                    <TypeSymbol type={ type } />&emsp;
-                    <span>{ messages[type] }</span>
+                <li key={type}>
+                  <div className={styles.message}>
+                    <TypeSymbol type={type} />
+                    &emsp;
+                    <span>{messages[type]}</span>
                   </div>
                 </li>
               );
             })}
           </ul>
-        </Container>        
+        </Container>
       </div>
 
-      { /* Notifications body - render the list of notifications */ }
-      <div className={ styles.body }>
-        <div className={ styles.delete }>
-          <button 
-            type="button" 
-            onClick={ removeSelected } 
-            disabled={ !notifications.all || getSelectedCount() === 0 || notifications.submitting }
+      {/* Notifications body - render the list of notifications */}
+      <div className={styles.body}>
+        <div className={styles.delete}>
+          <button
+            type="button"
+            onClick={removeSelected}
+            disabled={!notifications.all || getSelectedCount() === 0 || notifications.submitting}
           >
             Delete
           </button>
 
-          { /* Render message displaying how many notifications have been selected, if any */ }
-          { getSelectedCount() > 0 && <span>{ getSelectedCount() } Selected</span> }
+          {/* Render message displaying how many notifications have been selected, if any */}
+          {getSelectedCount() > 0 && <span>{getSelectedCount()} Selected</span>}
         </div>
 
         {/* Notification table - render a row for each notification the user has */}
         <div className="table">
           <table>
-
-            { /* Table header - render information about what is contained in each row */ }
+            {/* Table header - render information about what is contained in each row */}
             <thead>
               <tr>
-
-                { /* Select all toggle - a checkbox the user can select to either select/unselect all notifications */ }
+                {/* Select all toggle - a checkbox the user can select to either select/unselect all notifications */}
                 <th>
                   <input
                     type="checkbox"
-                    checked={ notifications.all !== undefined && notifications.all.length > 0 && areAllNotifsSelected(pageNum) }
-                    disabled={ !notifications.all || notifications.all.length === 0 }
-                    onChange={ () => toggleSelectionAll(pageNum) }
+                    checked={
+                      notifications.all !== undefined &&
+                      notifications.all.length > 0 &&
+                      areAllNotifsSelected(pageNum)
+                    }
+                    disabled={!notifications.all || notifications.all.length === 0}
+                    onChange={() => toggleSelectionAll(pageNum)}
                   />
                 </th>
 
@@ -138,45 +141,49 @@ function Notifications() {
               </tr>
             </thead>
 
-            { /* Table body - render a row for each notification */ }
+            {/* Table body - render a row for each notification */}
             <tbody>
-              { notifications.all && appData ? 
-                <TableContent items={ notifications.all } emptyMessage="You have no notifications!" numCols={ TABLE_WIDTH }>
-                  { notifications.all.map(row => {
-                    return <NotificationTableRow 
-                      row={ row } 
-                      notifications= { notifications } 
-                      pageNum={ pageNum }
-                      handleRowClick={ setNotification } 
-                      toggleSelection={ toggleSelection } 
-                      key={ row.notif_date }
-                    />;
+              {notifications.all && appData ? (
+                <TableContent
+                  items={notifications.all}
+                  emptyMessage="You have no notifications!"
+                  numCols={TABLE_WIDTH}
+                >
+                  {notifications.all.map((row) => {
+                    return (
+                      <NotificationTableRow
+                        row={row}
+                        notifications={notifications}
+                        pageNum={pageNum}
+                        handleRowClick={setNotification}
+                        toggleSelection={toggleSelection}
+                        key={row.notif_date}
+                      />
+                    );
                   })}
                 </TableContent>
-              :
-                <LoadingTable numCols={ TABLE_WIDTH } />
-              }
+              ) : (
+                <LoadingTable numCols={TABLE_WIDTH} />
+              )}
             </tbody>
-
           </table>
         </div>
 
-        { /* Render pagination controls at the bottom of this container */ }
-        <div className={ styles.controls }>
-          <PageControls 
-            totalItems={ notifications.total }
-            itemsPerPage={ NOTIFS_PER_PAGE }
-            pageNum={ pageNum }
-            setPageNum={ changePage }
+        {/* Render pagination controls at the bottom of this container */}
+        <div className={styles.controls}>
+          <PageControls
+            totalItems={notifications.total}
+            itemsPerPage={NOTIFS_PER_PAGE}
+            pageNum={pageNum}
+            setPageNum={changePage}
             itemName="Notifications"
             useDropdown
           />
         </div>
-
       </div>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Notifications;

@@ -8,13 +8,13 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 
 // create root, and render
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <ThemeProvider theme={ MuiTheme }>
-      <LocalizationProvider dateAdapter={ AdapterDayjs }>
+    <ThemeProvider theme={MuiTheme}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
         <App />
       </LocalizationProvider>
     </ThemeProvider>
-  </BrowserRouter>
+  </BrowserRouter>,
 );

@@ -22,14 +22,14 @@ function CountdownTimer() {
   /* ===== COUNTDOWN TIMER COMPONENT ===== */
   return (
     <span>
-      <span>{ remainingTime.hours }</span>
+      <span>{remainingTime.hours}</span>
       <span>:</span>
-      <span>{ remainingTime.minutes }</span>
+      <span>{remainingTime.minutes}</span>
       <span>:</span>
-      <span>{ remainingTime.seconds }</span>
+      <span>{remainingTime.seconds}</span>
     </span>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default CountdownTimer;

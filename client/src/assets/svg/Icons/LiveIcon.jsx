@@ -6,7 +6,7 @@ function LiveIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={ styles.icon }
+      className={styles.icon}
       data-testid="VideocamIcon"
       version="1.1"
       viewBox="0 0 24 24"

@@ -14,9 +14,9 @@ import VersionsLogic from "./Versions.js";
 /* ===== COMPONENTS ===== */
 
 function Versions({ imageReducer }) {
-  /* ===== STATES & FUNCTIONS ===== */  
+  /* ===== STATES & FUNCTIONS ===== */
   const componentData = VersionsLogic();
-  const { 
+  const {
     game,
     games,
     versions,
@@ -26,7 +26,7 @@ function Versions({ imageReducer }) {
     toggleAll,
     toggleAllPerCategory,
     toggleAllPerMode,
-    handleStructureSubmit
+    handleStructureSubmit,
   } = componentData;
 
   /* ===== VARIABLES ===== */
@@ -34,7 +34,7 @@ function Versions({ imageReducer }) {
 
   /* ===== MEMOS ===== */
   const newVersions = useMemo(() => {
-    return versions.filter(version => !version.id && version.sequence > 1);
+    return versions.filter((version) => !version.id && version.sequence > 1);
   }, [versions]);
 
   /* ===== EFFECTS ===== */
@@ -47,51 +47,52 @@ function Versions({ imageReducer }) {
 
   /* ===== VERSIONS COMPONENT ===== */
   return (
-    <div id="content" className={ styles.versions }>
-      <div className={ styles.left }>
+    <div id="content" className={styles.versions}>
+      <div className={styles.left}>
         <SimpleGameSelect
-          games={ games }
-          game={ game }
-          setGame={ switchGame } 
-          imageReducer={ imageReducer }
+          games={games}
+          game={game}
+          setGame={switchGame}
+          imageReducer={imageReducer}
         />
       </div>
 
-      <div className={ styles.right }>
+      <div className={styles.right}>
         <Container title="Game Versions" largeTitle>
-          { game ?
-            <div className={ styles.header }>
+          {game ? (
+            <div className={styles.header}>
               <h3>On this screen, you are able to add new versions to a game.</h3>
-              <span>{ game.name } currently has { versionCount } version(s).</span>
+              <span>
+                {game.name} currently has {versionCount} version(s).
+              </span>
               <hr />
-              <VersionsForm formData={ componentData } />
+              <VersionsForm formData={componentData} />
 
-              { /* Load game structure when loaded */ }
-              { newVersions.length > 0 ? 
-                game.structure ?
+              {/* Load game structure when loaded */}
+              {newVersions.length > 0 ? (
+                game.structure ? (
                   <Structure
-                    structure={ game.structure }
-                    versions={ newVersions }
-                    onVersionCheck={ onVersionCheck }
-                    toggleAll={ toggleAll }
-                    toggleAllPerCategory={ toggleAllPerCategory }
-                    toggleAllPerMode={ toggleAllPerMode }
-                    onSubmit={ handleStructureSubmit }
+                    structure={game.structure}
+                    versions={newVersions}
+                    onVersionCheck={onVersionCheck}
+                    toggleAll={toggleAll}
+                    toggleAllPerCategory={toggleAllPerCategory}
+                    toggleAllPerMode={toggleAllPerMode}
+                    onSubmit={handleStructureSubmit}
                   />
-                :
-                  <Loading /> 
-              : 
-                null 
-              }
+                ) : (
+                  <Loading />
+                )
+              ) : null}
             </div>
-          :
+          ) : (
             <Loading />
-          }
+          )}
         </Container>
       </div>
     </div>
   );
-};
+}
 
 function VersionsForm({ formData }) {
   /* ===== STATES & FUNCTIONS ===== */
@@ -99,17 +100,17 @@ function VersionsForm({ formData }) {
 
   /* ===== VERSIONS FORM COMPONENT ===== */
   return (
-    <form className={ styles.versionForm }>
+    <form className={styles.versionForm}>
       <h2>Versions</h2>
-      { versions.map(version => {
-        return <VersionItem version={ version } formData={ formData } key={ version.sequence } />;
+      {versions.map((version) => {
+        return <VersionItem version={version} formData={formData} key={version.sequence} />;
       })}
 
       <h3>Add Version</h3>
-      <VersionInput versions={ versions } addBtnSubmit={ handleNewVersionSubmit } />
+      <VersionInput versions={versions} addBtnSubmit={handleNewVersionSubmit} />
     </form>
   );
-};
+}
 
 function VersionItem({ version, formData }) {
   /* ===== VARIABLES, STATES, & FUNCTIONS ===== */
@@ -121,18 +122,16 @@ function VersionItem({ version, formData }) {
 
   // build out children components
   if (id) {
-    children.push(
-      <span key={ `version_${ version.sequence }` }>{ version }</span>
-    );
+    children.push(<span key={`version_${version.sequence}`}>{version}</span>);
   } else {
     children.push(
-      <VersionInput 
-        versions={ versions }
-        currentVersion={ version } 
-        updateVersions={ handleVersionsChange } 
-        sequence={ sequence } 
-        key={ sequence } 
-      />
+      <VersionInput
+        versions={versions}
+        currentVersion={version}
+        updateVersions={handleVersionsChange}
+        sequence={sequence}
+        key={sequence}
+      />,
     );
   }
 
@@ -141,54 +140,51 @@ function VersionItem({ version, formData }) {
   }
 
   /* ===== VERSIONS COMPONENT ===== */
-  return (
-    <div className={ styles.item }>
-      { children }
-    </div>
-  );
-};
+  return <div className={styles.item}>{children}</div>;
+}
 
-function Structure({ 
+function Structure({
   structure,
   versions,
   onVersionCheck,
   toggleAllPerCategory,
   toggleAllPerMode,
   toggleAll,
-  onSubmit
+  onSubmit,
 }) {
   /* ===== STATES ===== */
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   /* ===== STRUCTURE COMPONENT ===== */
   return (
-    <form id={ styles.structure } onSubmit={ (e) => onSubmit(e, setIsSubmitting) }>
+    <form id={styles.structure} onSubmit={(e) => onSubmit(e, setIsSubmitting)}>
       <hr />
-      <div className={ styles.header }>
+      <div className={styles.header}>
         <h2>Chart Update Submissions Tool</h2>
         <span>
-          Using this tool, if there exist charts that are unchanged between the <strong>current latest version</strong> and
-          any new versions added, you can specify which charts should update all submissions on the&nbsp;
+          Using this tool, if there exist charts that are unchanged between the{" "}
+          <strong>current latest version</strong> and any new versions added, you can specify which
+          charts should update all submissions on the&nbsp;
           <strong>current latest version</strong> to the version specified.
         </span>
       </div>
-      
+
       <StructureBody
-        structure={ structure }
-        versions={ versions }
-        onVersionCheck={ onVersionCheck }
-        toggleAll={ toggleAll }
-        toggleAllPerCategory={ toggleAllPerCategory }
-        toggleAllPerMode={ toggleAllPerMode }
+        structure={structure}
+        versions={versions}
+        onVersionCheck={onVersionCheck}
+        toggleAll={toggleAll}
+        toggleAllPerCategory={toggleAllPerCategory}
+        toggleAllPerMode={toggleAllPerMode}
       />
 
-      <button type="submit" id={ styles.submit } className="center" disabled={ isSubmitting }>
+      <button type="submit" id={styles.submit} className="center" disabled={isSubmitting}>
         <AddIcon />
         <span>Add New Version(s)</span>
       </button>
     </form>
   );
-};
+}
 
 const StructureBody = memo(function StructureBody({
   structure,
@@ -196,102 +192,112 @@ const StructureBody = memo(function StructureBody({
   onVersionCheck,
   toggleAllPerCategory,
   toggleAllPerMode,
-  toggleAll
+  toggleAll,
 }) {
   /* ===== VARIABLES ===== */
   const checks = {};
 
-  /* ===== FUNCTIONS ===== */ 
-  
+  /* ===== FUNCTIONS ===== */
+
   // helper functions
   const { levelB2F } = LevelHelper();
 
   /* ===== STRUCTURE BODY COMPONENT ===== */
   return (
     <>
-      <div className={ `${ styles.structureHeader } ${ styles.all }` }>
-         <div className={ styles.boxPadding }>
-           <h2>Versions</h2>
-         </div>
-         <div className={ styles.structureVersions }>
-           { versions.map(version => {
-             checks[version.version] = {};
-             structure.forEach(category => {
-               checks[version.version][category.name] = {};
-               category.mode.forEach(mode => {
-                 checks[version.version][category.name][mode.name] = mode.level.every(level => level.version === version.version); 
-               });
-             });
+      <div className={`${styles.structureHeader} ${styles.all}`}>
+        <div className={styles.boxPadding}>
+          <h2>Versions</h2>
+        </div>
+        <div className={styles.structureVersions}>
+          {versions.map((version) => {
+            checks[version.version] = {};
+            structure.forEach((category) => {
+              checks[version.version][category.name] = {};
+              category.mode.forEach((mode) => {
+                checks[version.version][category.name][mode.name] = mode.level.every(
+                  (level) => level.version === version.version,
+                );
+              });
+            });
 
-             return (
-               <div className={ styles.toggleAll } key={ version.version }>
-                 <span>{ version.version }</span>
-                 <Checkbox
-                   checked={ Object.values(checks[version.version]).every(category => Object.values(category).every(val => val)) }
-                   name={ version.version }
-                   onChange={ toggleAll }
-                   sx={{ padding: "1px" }}
-                   key={ version.version }
-                   slotProps={{
-                     input: { "aria-label": "controlled" }
-                   }}
-                 />
-               </div>
-             );
-           })}
-         </div>
-       </div>
-      <div className={ styles.structureInner }>
-        { structure.map(category => {
+            return (
+              <div className={styles.toggleAll} key={version.version}>
+                <span>{version.version}</span>
+                <Checkbox
+                  checked={Object.values(checks[version.version]).every((category) =>
+                    Object.values(category).every((val) => val),
+                  )}
+                  name={version.version}
+                  onChange={toggleAll}
+                  sx={{ padding: "1px" }}
+                  key={version.version}
+                  slotProps={{
+                    input: { "aria-label": "controlled" },
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div className={styles.structureInner}>
+        {structure.map((category) => {
           return (
-            <div className={ styles.category } key={ category.name }>
-              <div className={ `${ styles.structureHeader } ${ styles.categoryHeader }` }>
-                <h3 className={ styles.boxPadding }>{ category.name }</h3>
-                <div className={ styles.structureVersions }>
-                  { versions.map(version => {
+            <div className={styles.category} key={category.name}>
+              <div className={`${styles.structureHeader} ${styles.categoryHeader}`}>
+                <h3 className={styles.boxPadding}>{category.name}</h3>
+                <div className={styles.structureVersions}>
+                  {versions.map((version) => {
                     return (
                       <Checkbox
-                        checked={ Object.values(checks[version.version][category.name]).every(val => val) } 
-                        onChange={ (e) => toggleAllPerCategory(e.target.checked, version.version, category) } 
+                        checked={Object.values(checks[version.version][category.name]).every(
+                          (val) => val,
+                        )}
+                        onChange={(e) =>
+                          toggleAllPerCategory(e.target.checked, version.version, category)
+                        }
                         sx={{ padding: "1px" }}
-                        key={ version.version }
+                        key={version.version}
                         slotProps={{
-                          input: { "aria-label": "controlled" }
+                          input: { "aria-label": "controlled" },
                         }}
                       />
                     );
                   })}
                 </div>
               </div>
-              <div className={ styles.modes }>
-                { category.mode.map(mode => {
+              <div className={styles.modes}>
+                {category.mode.map((mode) => {
                   return (
-                    <div className={ styles.mode } key={ mode.name }>
-                      <div className={ `${ styles.structureHeader } ${ styles.modeHeader }` }>
-                        <div className={ styles.boxPadding }>
-                          <h3 className={ styles.modeTitle }>{ levelB2F(mode.name) }</h3>
+                    <div className={styles.mode} key={mode.name}>
+                      <div className={`${styles.structureHeader} ${styles.modeHeader}`}>
+                        <div className={styles.boxPadding}>
+                          <h3 className={styles.modeTitle}>{levelB2F(mode.name)}</h3>
                         </div>
-                        <div className={ styles.structureVersions }>
-                          { versions.map(version => {
+                        <div className={styles.structureVersions}>
+                          {versions.map((version) => {
                             return (
                               <Checkbox
-                                checked={ checks[version.version][category.name][mode.name] } 
-                                onChange={ (e) => toggleAllPerMode(e.target.checked, version.version, mode) } 
+                                checked={checks[version.version][category.name][mode.name]}
+                                onChange={(e) =>
+                                  toggleAllPerMode(e.target.checked, version.version, mode)
+                                }
                                 sx={{ padding: "1px" }}
-                                key={ version.version }
+                                key={version.version}
                                 slotProps={{
-                                  input: { "aria-label": "controlled" }
+                                  input: { "aria-label": "controlled" },
                                 }}
                               />
                             );
                           })}
                         </div>
                       </div>
-                      <Levels 
-                        levels={ mode.level }
-                        versions={ versions }
-                        category={ category }
-                        onVersionCheck={ onVersionCheck }
+                      <Levels
+                        levels={mode.level}
+                        versions={versions}
+                        category={category}
+                        onVersionCheck={onVersionCheck}
                       />
                     </div>
                   );
@@ -308,7 +314,7 @@ const StructureBody = memo(function StructureBody({
 function Levels({ levels, versions, category, onVersionCheck }) {
   /* ===== LEVELS COMPONENT ===== */
   return (
-    <table className={ styles.levels }>
+    <table className={styles.levels}>
       <thead>
         <tr>
           <th>Chart</th>
@@ -317,21 +323,21 @@ function Levels({ levels, versions, category, onVersionCheck }) {
       </thead>
 
       <tbody>
-        { levels.map(level => {
+        {levels.map((level) => {
           return (
-            <LevelRow 
-              level={ level }
-              versions={ versions }
-              category={ category }
-              onVersionCheck={ onVersionCheck }
-              key={ level.name } 
+            <LevelRow
+              level={level}
+              versions={versions}
+              category={category}
+              onVersionCheck={onVersionCheck}
+              key={level.name}
             />
           );
         })}
       </tbody>
     </table>
-  )
-};
+  );
+}
 
 function LevelRow({ level, versions, category, onVersionCheck }) {
   /* ===== STATES ===== */
@@ -362,19 +368,19 @@ function LevelRow({ level, versions, category, onVersionCheck }) {
   /* ===== LEVEL ROW COMPONENT ===== */
   return (
     <tr>
-      <td className={ styles.levelColumn }>
-        <FancyLevel level={ levelName } />
+      <td className={styles.levelColumn}>
+        <FancyLevel level={levelName} />
       </td>
-      { versions.map(v => {
+      {versions.map((v) => {
         const value = v.version;
         return (
-          <td key={ value }>
-            <Checkbox 
-              checked={ value === version } 
-              onChange={ (e) => handleChange(e.target.checked, value) } 
+          <td key={value}>
+            <Checkbox
+              checked={value === version}
+              onChange={(e) => handleChange(e.target.checked, value)}
               sx={{ padding: 0 }}
               slotProps={{
-                input: { "aria-label": "controlled" }
+                input: { "aria-label": "controlled" },
               }}
             />
           </td>
@@ -382,7 +388,7 @@ function LevelRow({ level, versions, category, onVersionCheck }) {
       })}
     </tr>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Versions;

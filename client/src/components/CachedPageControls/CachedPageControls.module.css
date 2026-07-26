@@ -28,7 +28,8 @@
         gap: 10px;
     }
 
-    .controller button, .controller select {
+    .controller button,
+    .controller select {
         flex: 1;
     }
 }

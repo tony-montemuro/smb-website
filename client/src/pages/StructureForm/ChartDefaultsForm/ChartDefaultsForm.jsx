@@ -33,144 +33,141 @@ function ChartDefaultsForm({ chartDefaults, handleChange }) {
   /* ===== CHART DEFAULTS COMPONENT ===== */
   return (
     <ExpansionPanel title="Chart Default Values">
-      <div className={ styles.formWrapper }>
-        { structureData ?
+      <div className={styles.formWrapper}>
+        {structureData ? (
           <>
             <span>
-              <em>To save time, you can modify the default values that appear each time you create a new chart.</em>
+              <em>
+                To save time, you can modify the default values that appear each time you create a
+                new chart.
+              </em>
             </span>
-            <div className={ styles.form }>
+            <div className={styles.form}>
               <TextField
-                className={ styles.nameInput }
+                className={styles.nameInput}
                 id="name"
                 label="Name"
-                onChange={ handleChange }
-                value={ levelB2F(chartDefaults.name) }
+                onChange={handleChange}
+                value={levelB2F(chartDefaults.name)}
                 variant="filled"
               />
 
               <TextField
-                className={ styles.dropdown }
+                className={styles.dropdown}
                 id="goal"
                 label="Goal"
-                onChange={ handleChange }
+                onChange={handleChange}
                 select
-                value={ chartDefaults.goal }
+                value={chartDefaults.goal}
                 variant="filled"
                 slotProps={{
-                  select: { native: true }
+                  select: { native: true },
                 }}
               >
                 <option key="" value=""></option>
-                { appData.goals.map(goal => (
-                  <option
-                    key={ goal.name }
-                    value={ goal.name }
-                  >
-                    { capitalize(goal.name) }
+                {appData.goals.map((goal) => (
+                  <option key={goal.name} value={goal.name}>
+                    {capitalize(goal.name)}
                   </option>
                 ))}
               </TextField>
 
               <TextField
-                className={ styles.dropdown }
+                className={styles.dropdown}
                 id="chart_type"
                 label="Chart Type"
-                onChange={ handleChange }
+                onChange={handleChange}
                 select
-                value={ chartDefaults.chart_type }
+                value={chartDefaults.chart_type}
                 variant="filled"
                 slotProps={{
-                  select: { native: true }
+                  select: { native: true },
                 }}
               >
-                { structureData.chartTypes.map(chartType => (
-                  <option 
-                    key={ chartType } 
-                    value={ chartType } 
-                  >
-                    { capitalize(chartType) }
+                {structureData.chartTypes.map((chartType) => (
+                  <option key={chartType} value={chartType}>
+                    {capitalize(chartType)}
                   </option>
                 ))}
               </TextField>
 
               <TextField
-                className={ styles.wideDropdown }
-                disabled={ chartDefaults.chart_type === "score" }
+                className={styles.wideDropdown}
+                disabled={chartDefaults.chart_type === "score"}
                 id="timer_type"
                 label="Timer Type"
-                onChange={ handleChange }
+                onChange={handleChange}
                 select
-                value={ chartDefaults.timer_type }
+                value={chartDefaults.timer_type}
                 variant="filled"
                 slotProps={{
-                  select: { native: true }
+                  select: { native: true },
                 }}
               >
                 <option key="" value=""></option>
-                { structureData.timerTypes.map(timerType => (
-                  <option
-                    key={ timerType }
-                    value={ timerType }
-                  >
-                    { timerTypeB2F(timerType) }
+                {structureData.timerTypes.map((timerType) => (
+                  <option key={timerType} value={timerType}>
+                    {timerTypeB2F(timerType)}
                   </option>
                 ))}
               </TextField>
 
               <TextField
-                className={ styles.dropdown }
-                disabled={ chartDefaults.chart_type === "score" || timeChartTypes.includes(chartDefaults.ascending) }
+                className={styles.dropdown}
+                disabled={
+                  chartDefaults.chart_type === "score" ||
+                  timeChartTypes.includes(chartDefaults.ascending)
+                }
                 id="time"
                 label="Time (sec.)"
-                onChange={ handleChange }
+                onChange={handleChange}
                 type="number"
-                value={ chartDefaults.time }
+                value={chartDefaults.time}
                 variant="filled"
               />
 
               <FormGroup>
-                <FormControlLabel 
-                  control={ 
-                    <Checkbox 
-                      checked={ scoreChartTypes.includes(chartDefaults.ascending) } 
-                      disabled={ chartDefaults.chart_type === "time" }
-                      id="ascending_score" 
-                      onChange={ handleChange } 
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={scoreChartTypes.includes(chartDefaults.ascending)}
+                      disabled={chartDefaults.chart_type === "time"}
+                      id="ascending_score"
+                      onChange={handleChange}
                       slotProps={{
-                        input: { "aria-label": "controlled" }
-                      }} 
+                        input: { "aria-label": "controlled" },
+                      }}
                     />
                   }
-                  label="Ascend Score" 
+                  label="Ascend Score"
                 />
               </FormGroup>
 
               <FormGroup>
-                <FormControlLabel 
-                  control={ 
-                    <Checkbox 
-                      checked={ timeChartTypes.includes(chartDefaults.ascending) } 
-                      disabled={ chartDefaults.chart_type === "score" }
-                      id="ascending_time" 
-                      onChange={ handleChange } 
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={timeChartTypes.includes(chartDefaults.ascending)}
+                      disabled={chartDefaults.chart_type === "score"}
+                      id="ascending_time"
+                      onChange={handleChange}
                       slotProps={{
-                        input: { "aria-label": "controlled" }
-                      }} 
+                        input: { "aria-label": "controlled" },
+                      }}
                     />
-                  } 
+                  }
                   label="Ascend Time"
                 />
               </FormGroup>
             </div>
           </>
-        :
+        ) : (
           <Loading />
-        }
+        )}
       </div>
     </ExpansionPanel>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default ChartDefaultsForm;

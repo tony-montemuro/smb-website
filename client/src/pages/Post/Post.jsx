@@ -14,7 +14,7 @@ function Post() {
   const LINK_DESCRIPTION_MAX_LENGTH = 100;
 
   /* ===== STATES & FUNCTIONS ===== */
-  
+
   // states and functions from the js file
   const { form, handleChange, onPostSubmit } = PostLogic();
 
@@ -31,80 +31,85 @@ function Post() {
 
   /* ===== POST COMPONENT ===== */
   return (
-    <div className={ styles.post }>
+    <div className={styles.post}>
       <h1>Create Post</h1>
-      { /* Post form: this is where the user can create their post - title, body, link, & link description */ }
-      <form className={ styles.form } onSubmit={ onPostSubmit }>
-        <TextField 
+      {/* Post form: this is where the user can create their post - title, body, link, & link description */}
+      <form className={styles.form} onSubmit={onPostSubmit}>
+        <TextField
           color="primary"
           fullWidth
-          helperText={ `${ form.values.title.length }/${ TITLE_MAX_LENGTH }` }
+          helperText={`${form.values.title.length}/${TITLE_MAX_LENGTH}`}
           id="title"
           label="Title"
-          placeholder={ `Must be under ${ TITLE_MAX_LENGTH } characters` }
-          onChange={ handleChange } 
+          placeholder={`Must be under ${TITLE_MAX_LENGTH} characters`}
+          onChange={handleChange}
           required
-          value={ form.values.title }
+          value={form.values.title}
           variant="filled"
           slotProps={{
-            htmlInput: { maxLength: TITLE_MAX_LENGTH }
+            htmlInput: { maxLength: TITLE_MAX_LENGTH },
           }}
         />
         <TextField
           color="primary"
           fullWidth
-          helperText={ `${ form.values.body.length }/${ BODY_MAX_LENGTH }` }
+          helperText={`${form.values.body.length}/${BODY_MAX_LENGTH}`}
           id="body"
           label="Body"
           multiline
-          placeholder={ `Must be under ${ BODY_MAX_LENGTH } characters` }
-          rows={ BODY_HEIGHT }
-          onChange={ handleChange }
+          placeholder={`Must be under ${BODY_MAX_LENGTH} characters`}
+          rows={BODY_HEIGHT}
+          onChange={handleChange}
           required
-          value={ form.values.body }
+          value={form.values.body}
           variant="filled"
           slotProps={{
-            htmlInput: { maxLength: BODY_MAX_LENGTH }
+            htmlInput: { maxLength: BODY_MAX_LENGTH },
           }}
         />
-        <TextField 
+        <TextField
           color="primary"
           fullWidth
-          helperText={ `${ form.values.link.length }/${ LINK_MAX_LENGTH }` }
+          helperText={`${form.values.link.length}/${LINK_MAX_LENGTH}`}
           id="link"
           label="Link"
-          placeholder={ `Must be under ${ LINK_MAX_LENGTH } characters` }
-          onChange={ handleChange }
+          placeholder={`Must be under ${LINK_MAX_LENGTH} characters`}
+          onChange={handleChange}
           type="url"
-          value={ form.values.link }
+          value={form.values.link}
           variant="filled"
           slotProps={{
-            htmlInput: { maxLength: LINK_MAX_LENGTH }
+            htmlInput: { maxLength: LINK_MAX_LENGTH },
           }}
         />
-        <TextField 
-          color={ form.error ? "error" : "primary" }
-          error={ form.error !== undefined }
+        <TextField
+          color={form.error ? "error" : "primary"}
+          error={form.error !== undefined}
           fullWidth
-          helperText={ form.error ? form.error : `${ form.values.link_description.length }/${ LINK_DESCRIPTION_MAX_LENGTH }` }
+          helperText={
+            form.error
+              ? form.error
+              : `${form.values.link_description.length}/${LINK_DESCRIPTION_MAX_LENGTH}`
+          }
           id="link_description"
           label="Link Description"
-          placeholder={ `Must be under ${ LINK_DESCRIPTION_MAX_LENGTH } characters` }
-          onChange={ handleChange }
-          value={ form.values.link_description }
+          placeholder={`Must be under ${LINK_DESCRIPTION_MAX_LENGTH} characters`}
+          onChange={handleChange}
+          value={form.values.link_description}
           variant="filled"
           slotProps={{
-            htmlInput: { maxLength: LINK_DESCRIPTION_MAX_LENGTH }
+            htmlInput: { maxLength: LINK_DESCRIPTION_MAX_LENGTH },
           }}
         />
 
-        { /* Post form submit - when pressed, the post will be uploaded */ }
-        <button type="submit" disabled={ form.submitting }>Upload Post</button>
-
+        {/* Post form submit - when pressed, the post will be uploaded */}
+        <button type="submit" disabled={form.submitting}>
+          Upload Post
+        </button>
       </form>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Post;

@@ -6,7 +6,7 @@ const SocialLink = () => {
   // 1.) e: an event object that is generated when the user clicks the component
   // POSTCONDITIONS (1 possible outcome):
   // the `stopPropagation` method is executed to prevent `onClick` code from parent components from running
-  const handleClick = e => {
+  const handleClick = (e) => {
     e.stopPropagation();
   };
 
@@ -27,7 +27,7 @@ const SocialLink = () => {
         return `https://twitter.com/${username}`;
       default:
         return undefined;
-    };
+    }
   };
 
   return { handleClick, getLink };

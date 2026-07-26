@@ -2,39 +2,44 @@
 import { supabase } from "../SupabaseClient";
 
 const NotificationRead = () => {
-    /* ===== FUNCTIONS ===== */
-    
-    // FUNCTION 1: queryNotificationCount - async function that makes a call to supabase to get the total number of notifications
-    // for the given user
-    // PRECONDITIONS: NONE
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, an integer will be returned that has the count of all notifications for the current user
-    // otherwise, this function will throw an error, which is expected to be handled by the caller function
-    const queryNotificationCount = async () => {
-        const { count, error, status } = await supabase
-            .from("notification")
-            .select("*", { count: "exact", head: true });
+  /* ===== FUNCTIONS ===== */
 
-        // error handling
-        if (error && status !== 406) {
-            throw error;
-        }
+  // FUNCTION 1: queryNotificationCount - async function that makes a call to supabase to get the total number of notifications
+  // for the given user
+  // PRECONDITIONS: NONE
+  // POSTCONDITIONS (2 possible outcomes):
+  // if the query is successful, an integer will be returned that has the count of all notifications for the current user
+  // otherwise, this function will throw an error, which is expected to be handled by the caller function
+  const queryNotificationCount = async () => {
+    const { count, error, status } = await supabase
+      .from("notification")
+      .select("*", { count: "exact", head: true });
 
-        return count;
-    };
+    // error handling
+    if (error && status !== 406) {
+      throw error;
+    }
 
-    // FUNCTION 2: queryNotifications - async function that makes a call to supabase to get a range of notifications for
-    // a given user
-    // PRECONDITIONS (2 parameters):
-    // 1.) start: an integer, representing the first notification to be selected
-    // 2.) end: an integer, representing last notification to be selected
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, the list of notifications is simply returned
-    // otherwise, an error is thrown to be handled by the caller function
-    const queryNotifications = async (start, end) => {
-        const { data: notificationsList, count, error } = await supabase
-            .from("notification")
-            .select(`
+    return count;
+  };
+
+  // FUNCTION 2: queryNotifications - async function that makes a call to supabase to get a range of notifications for
+  // a given user
+  // PRECONDITIONS (2 parameters):
+  // 1.) start: an integer, representing the first notification to be selected
+  // 2.) end: an integer, representing last notification to be selected
+  // POSTCONDITIONS (2 possible outcomes):
+  // if the query is successful, the list of notifications is simply returned
+  // otherwise, an error is thrown to be handled by the caller function
+  const queryNotifications = async (start, end) => {
+    const {
+      data: notificationsList,
+      count,
+      error,
+    } = await supabase
+      .from("notification")
+      .select(
+        `
                 notif_date,
                 notif_type,
                 creator:profile!notification_creator_id_fkey (country, id, username),
@@ -80,20 +85,21 @@ const NotificationRead = () => {
                 tas,
                 version (id, version)
             `,
-            { count: "exact" })
-            .order("notif_date", { ascending: false })
-            .range(start, end);
+        { count: "exact" },
+      )
+      .order("notif_date", { ascending: false })
+      .range(start, end);
 
-        // error handling
-        if (error) {
-            throw error;
-        }
+    // error handling
+    if (error) {
+      throw error;
+    }
 
-        // if we made it this far, return notifications, as well as count
-        return { notificationsList, count };
-    };
+    // if we made it this far, return notifications, as well as count
+    return { notificationsList, count };
+  };
 
-    return { queryNotificationCount, queryNotifications };
+  return { queryNotificationCount, queryNotifications };
 };
 
 /* ===== EXPORTS ===== */

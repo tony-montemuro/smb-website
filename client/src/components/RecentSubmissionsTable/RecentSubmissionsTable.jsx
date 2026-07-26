@@ -7,7 +7,12 @@ import RecentSubmissionsRow from "./RecentSubmissionsRow.jsx";
 import RecentSubmissionsTableLogic from "./RecentSubmissionsTable.js";
 import TableContent from "../TableContent/TableContent.jsx";
 
-function RecentSubmissionsTable({ numSubmissions = 5, searchParams, renderGame, renderLevelContext }) {
+function RecentSubmissionsTable({
+  numSubmissions = 5,
+  searchParams,
+  renderGame,
+  renderLevelContext,
+}) {
   /* ===== VARIABLES ===== */
   let NUM_COLS = 4;
   if (renderGame) NUM_COLS += 1;
@@ -28,7 +33,11 @@ function RecentSubmissionsTable({ numSubmissions = 5, searchParams, renderGame, 
 
   // code that is executed when the component mounts OR when the pageNum is updated OR when the searchParams are updated
   useEffect(() => {
-    fetchRecentSubmissions(numSubmissions, searchParams ? searchParams : new URLSearchParams(), pageNum);
+    fetchRecentSubmissions(
+      numSubmissions,
+      searchParams ? searchParams : new URLSearchParams(),
+      pageNum,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNum, searchParams]);
 
@@ -37,59 +46,60 @@ function RecentSubmissionsTable({ numSubmissions = 5, searchParams, renderGame, 
     <>
       <div className="table">
         <table>
-
-          { /* Table header - render information about what is present in each column */ }
+          {/* Table header - render information about what is present in each column */}
           <thead>
             <tr>
               <th>Submitted</th>
               <th>User</th>
-              { renderGame && <th>Game</th> }
-              { renderLevelContext && 
+              {renderGame && <th>Game</th>}
+              {renderLevelContext && (
                 <>
                   <th>Category</th>
-                  <th>Chart</th> 
+                  <th>Chart</th>
                 </>
-              }
+              )}
               <th>Record</th>
               <th>TAS</th>
             </tr>
           </thead>
 
-          { /* Table body - for each submission, render a row in the table */ }
+          {/* Table body - for each submission, render a row in the table */}
           <tbody>
-            { submissions.data && appData ?
-              <TableContent items={ submissions.data } emptyMessage="No recent submissions!" numCols={ NUM_COLS }>
-                { submissions.data.map(submission => {
+            {submissions.data && appData ? (
+              <TableContent
+                items={submissions.data}
+                emptyMessage="No recent submissions!"
+                numCols={NUM_COLS}
+              >
+                {submissions.data.map((submission) => {
                   return (
-                    <RecentSubmissionsRow 
-                      submission={ submission } 
-                      renderGame={ renderGame } 
-                      renderLevelContext={ renderLevelContext } 
-                      key={ submission.id } 
+                    <RecentSubmissionsRow
+                      submission={submission}
+                      renderGame={renderGame}
+                      renderLevelContext={renderLevelContext}
+                      key={submission.id}
                     />
                   );
                 })}
               </TableContent>
-            :
-              <LoadingTable numCols={ NUM_COLS } />
-            }
+            ) : (
+              <LoadingTable numCols={NUM_COLS} />
+            )}
           </tbody>
-
         </table>
-
       </div>
 
       {/* Finally, render the page controls at the bottom of the page */}
-      <PageControls 
-        totalItems={ submissions.total }
-        itemsPerPage={ numSubmissions }
-        pageNum={ pageNum }
-        setPageNum={ setPageNum }
-        itemName="Submissions" 
+      <PageControls
+        totalItems={submissions.total}
+        itemsPerPage={numSubmissions}
+        pageNum={pageNum}
+        setPageNum={setPageNum}
+        itemName="Submissions"
       />
     </>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default RecentSubmissionsTable;

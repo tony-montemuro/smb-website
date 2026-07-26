@@ -18,50 +18,38 @@ function DetailedRecord({ submission, iconSize, timerType }) {
   const type = path[4];
   const levelName = path[5];
   const profileId = path[6];
-  const historyPath = `/games/${ abb }/${ category }/${ type }/${ levelName }/${ submission.profile ? submission.profile.id : profileId }/${ submission.tas ? "tas" : "normal" }`;
+  const historyPath = `/games/${abb}/${category}/${type}/${levelName}/${submission.profile ? submission.profile.id : profileId}/${submission.tas ? "tas" : "normal"}`;
   const record = recordB2F(submission.record, type, timerType);
 
   /* ===== LEVELBOARD RECORD COMPONENT ===== */
   return (
-    <span className={ styles.detailedRecord }>
-
-      { /* If submission is approved, render a checkbox next to the record */ }
-      { submission.approve ? 
+    <span className={styles.detailedRecord}>
+      {/* If submission is approved, render a checkbox next to the record */}
+      {submission.approve ? (
         <div className="inline-icon">
-          <CheckIcon 
+          <CheckIcon
             color="success"
-            fontSize={ iconSize }
+            fontSize={iconSize}
             titleAccess="This submission has been approved by a moderator."
           />
         </div>
-      :
+      ) : // If submission has a report, render a warning icon next to the record
+      submission.report ? (
+        <div className="inline-icon">
+          <WarningRoundedIcon
+            fontSize={iconSize}
+            titleAccess="This submission has been reported."
+            sx={{ color: red[500] }}
+          />
+        </div>
+      ) : // Otherwise, render no icon
+      null}
 
-        // If submission has a report, render a warning icon next to the record 
-        submission.report ?
-          <div className="inline-icon">
-            <WarningRoundedIcon 
-              fontSize={ iconSize }
-              titleAccess="This submission has been reported." 
-              sx={{ color: red[500] }} 
-            />
-          </div>
-        :
-
-          // Otherwise, render no icon
-          null
-      }
-
-      { /* Render the record, and render the link, depending on whether or not `profileId` is defined. */ }
-      { profileId ?
-        record
-      :
-        <Link to={ historyPath }>{ record }</Link>
-      }
-      
+      {/* Render the record, and render the link, depending on whether or not `profileId` is defined. */}
+      {profileId ? record : <Link to={historyPath}>{record}</Link>}
     </span>
   );
-
-};
+}
 
 /* ===== EXPORTS ===== */
 export default DetailedRecord;

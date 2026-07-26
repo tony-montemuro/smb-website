@@ -17,26 +17,25 @@ function ModeratorContainer({ imageReducer }) {
 
   /* ===== MODERATOR CONTAINER COMPONENT ===== */
   return (
-    <Items items={ game.profile } emptyMessage="This game has no moderators.">
-      <div className={ styles.moderators }>
-        { game.profile.map((profile, index) => {
+    <Items items={game.profile} emptyMessage="This game has no moderators.">
+      <div className={styles.moderators}>
+        {game.profile.map((profile, index) => {
           return (
-            <UserRow 
-              user={ profile } 
-              imageReducer={ imageReducer } 
-              onClick={ () => navigateTo(`/user/${ profile.id }`) }
-              index={ index }
+            <UserRow
+              user={profile}
+              imageReducer={imageReducer}
+              onClick={() => navigateTo(`/user/${profile.id}`)}
+              index={index}
               isDetailed
               disableLink
-              key={ profile.id }
+              key={profile.id}
             />
           );
         })}
       </div>
     </Items>
   );
-
-};
+}
 
 /* ===== EXPORTS ===== */
 export default ModeratorContainer;

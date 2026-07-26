@@ -9,7 +9,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import LevelHelper from "../../../helper/LevelHelper.js";
 import TextField from "@mui/material/TextField";
 
-function ModeInput({ 
+function ModeInput({
   id,
   firstModeId,
   mode,
@@ -21,7 +21,7 @@ function ModeInput({
   handleInsert,
   handleDelete,
   error = null,
-  children
+  children,
 }) {
   /* ===== FUNCTIONS ===== */
 
@@ -34,68 +34,69 @@ function ModeInput({
   const backgroundColors = [
     "rgba(192, 192, 192, 0.1)",
     "rgba(192, 192, 192, 0.2)",
-    "rgba(192, 192, 192, 0.3)"
+    "rgba(192, 192, 192, 0.3)",
   ];
-  const weight = (modeId-firstModeId) % backgroundColors.length;
+  const weight = (modeId - firstModeId) % backgroundColors.length;
   const MODE_LENGTH_MAX = 50;
   const modeName = levelB2F(mode.name);
 
   /* ===== MODE INPUT COMPONENT ===== */
   return (
-    <div className={ styles.modeInputWrapper } style={ { backgroundColor: backgroundColors[weight] } }>
-      <div className={ styles.modeInput }>
+    <div className={styles.modeInputWrapper} style={{ backgroundColor: backgroundColors[weight] }}>
+      <div className={styles.modeInput}>
         <TextField
-          className={ styles.name }
-          id={ id }
-          helperText={ `${ modeName.length }/${ MODE_LENGTH_MAX }` }
+          className={styles.name}
+          id={id}
+          helperText={`${modeName.length}/${MODE_LENGTH_MAX}`}
           label="Mode"
-          onBlur={ () => handleBlur() }
-          onFocus={ () => setVisibleCharts(modeId) }
-          onChange={ e => handleChange(e.target.value, categoryName, modeId) }
-          placeholder={ `Must be ${ MODE_LENGTH_MAX } characters or less` }
-          value={ levelB2F(modeName) }
+          onBlur={() => handleBlur()}
+          onFocus={() => setVisibleCharts(modeId)}
+          onChange={(e) => handleChange(e.target.value, categoryName, modeId)}
+          placeholder={`Must be ${MODE_LENGTH_MAX} characters or less`}
+          value={levelB2F(modeName)}
           variant="filled"
           slotProps={{
-            htmlInput: { maxLength: MODE_LENGTH_MAX }
+            htmlInput: { maxLength: MODE_LENGTH_MAX },
           }}
         />
 
-        <div className={ styles.btns }>
+        <div className={styles.btns}>
           <button
             type="button"
             title="Add mode"
-            onClick={ () => handleInsert(category, modeId+1) }
+            onClick={() => handleInsert(category, modeId + 1)}
             className="center"
           >
             <AddIcon />
           </button>
-          <button 
+          <button
             type="button"
             title="Delete mode"
-            onClick={ () => handleDelete(modeId) }
+            onClick={() => handleDelete(modeId)}
             className="center"
           >
             <DeleteIcon />
           </button>
           <button
             type="button"
-            title={ isVisibleCharts ? "Hide charts" : "Show charts" }
-            onClick={ () => isVisibleCharts ? setVisibleCharts(null) : setVisibleCharts(modeId) }
+            title={isVisibleCharts ? "Hide charts" : "Show charts"}
+            onClick={() => (isVisibleCharts ? setVisibleCharts(null) : setVisibleCharts(modeId))}
             className="center"
-            id={ styles.toggleCharts }
+            id={styles.toggleCharts}
           >
-            { isVisibleCharts ? <ExpandMoreRoundedIcon sx={{ color: "white" }} /> : <ExpandLessRoundedIcon sx={{ color: "white" }} /> }
+            {isVisibleCharts ? (
+              <ExpandMoreRoundedIcon sx={{ color: "white" }} />
+            ) : (
+              <ExpandLessRoundedIcon sx={{ color: "white" }} />
+            )}
           </button>
         </div>
-
       </div>
-      { error &&
-        <FormHelperText error>{ error }</FormHelperText>
-      }
-      { isVisibleCharts && cloneElement(children, { mode, category }) }
+      {error && <FormHelperText error>{error}</FormHelperText>}
+      {isVisibleCharts && cloneElement(children, { mode, category })}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default ModeInput;

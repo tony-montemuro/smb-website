@@ -4,10 +4,10 @@ import styles from "./Icon.module.css";
 function PlatinumIcon({ isPlural }) {
   /* ===== PLATINUM ICON COMPONENT ===== */
   return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      className={ styles.icon }
-      width="540" 
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={styles.icon}
+      width="540"
       height="540"
       viewBox="0 0 540 540"
     >
@@ -67,7 +67,7 @@ function PlatinumIcon({ isPlural }) {
         fill="#D4D3D2"
         d="M137 183l-3 11-5-5-1.813-1.688C126 186 126 186 126 184c7.625-1 7.625-1 11-1z"
       ></path>
-      <title>Platinum Medal{ isPlural && "s" }</title>
+      <title>Platinum Medal{isPlural && "s"}</title>
     </svg>
   );
 }

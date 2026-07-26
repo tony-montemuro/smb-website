@@ -10,13 +10,13 @@ function Rule({ rule }) {
   /* ===== RULE COMPONENT ===== */
   return (
     <li>
-      { splitRule(rule).map((line, index) => {
-        const key = `${ index }-${ line.trim() || "empty" }`;
-        return <p key={ key }>{ line }</p>;
+      {splitRule(rule).map((line, index) => {
+        const key = `${index}-${line.trim() || "empty"}`;
+        return <p key={key}>{line}</p>;
       })}
     </li>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Rule;

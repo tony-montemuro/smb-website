@@ -22,7 +22,7 @@
     gap: 7px;
 }
 
-.filter input[type=checkbox] {
+.filter input[type="checkbox"] {
     margin: 0;
 }
 
@@ -38,7 +38,7 @@
 
 #live {
     width: var(--vanilla-checkbox-length);
-    height: var(--vanilla-checkbox-length);;
+    height: var(--vanilla-checkbox-length);
 }
 
 /* ===== MEDIA QUERY FOR SMALLER DEVICE ===== */
@@ -56,5 +56,5 @@
 @media (max-width: 402px) {
     .totalizerTable img {
         display: none;
-    };
+    }
 }

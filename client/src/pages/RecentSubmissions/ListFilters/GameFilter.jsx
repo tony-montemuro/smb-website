@@ -7,25 +7,24 @@ import GameRow from "../../../components/GameRow/GameRow.jsx";
 import Items from "../../../components/Items/Items.jsx";
 import Loading from "../../../components/Loading/Loading.jsx";
 
-function GameFilter({ searchParams, setSearchParams, imageReducer, globalGames, updateGlobalGames }) {
+function GameFilter({
+  searchParams,
+  setSearchParams,
+  imageReducer,
+  globalGames,
+  updateGlobalGames,
+}) {
   /* ===== FUNCTIONS ===== */
-  
+
   // functions from the js file
-  const { 
-    games,
-    syncGames,
-    addGame,
-    removeGame,
-    resetFilter,
-    updateVersion,
-    closePopupAndUpdate
-  } = GameFilterLogic(updateGlobalGames);
+  const { games, syncGames, addGame, removeGame, resetFilter, updateVersion, closePopupAndUpdate } =
+    GameFilterLogic(updateGlobalGames);
 
   /* ===== VARIABLES ===== */
   const GAMES_PER_PAGE = 20;
   const gameRowOptions = {
     useCard: false,
-    onGameRowClick: addGame
+    onGameRowClick: addGame,
   };
 
   /* ===== EFFECTS ===== */
@@ -38,68 +37,70 @@ function GameFilter({ searchParams, setSearchParams, imageReducer, globalGames, 
 
   /* ===== GAME FILTER COMPONENT ===== */
   return (
-    <div className={ styles.filter }>
-
-      { /* Render name of the popup */ }
-      <div className={ styles.section }>
+    <div className={styles.filter}>
+      {/* Render name of the popup */}
+      <div className={styles.section}>
         <h1>Filter By Game</h1>
       </div>
 
       <hr />
 
-      { games ?
+      {games ? (
         <>
-
           {/* Next, render the set of all games that the user wants / has already has filtered */}
-          <div className={ styles.section }>
+          <div className={styles.section}>
             <h2>Filtered Games</h2>
             <p>Click a game to remove it as a filter.</p>
-            <Items items={ games } emptyMessage="You are not currently filtering by any games.">
-              { games.map((game, index) => {
-                  return (
-                    <GameRow
-                      game={ game }
-                      imageReducer={ imageReducer }
-                      onClick={ removeGame }
-                      index={ index }
-                      key={ game.abb }
-                      versionsData={{
-                        version: game.version,
-                        versions: game.versions,
-                        onChange: updateVersion
-                      }}
-                    />
-                  );
-                })}
+            <Items items={games} emptyMessage="You are not currently filtering by any games.">
+              {games.map((game, index) => {
+                return (
+                  <GameRow
+                    game={game}
+                    imageReducer={imageReducer}
+                    onClick={removeGame}
+                    index={index}
+                    key={game.abb}
+                    versionsData={{
+                      version: game.version,
+                      versions: game.versions,
+                      onChange: updateVersion,
+                    }}
+                  />
+                );
+              })}
             </Items>
-            <div className={ styles.btns }>
-              <button type="button" className="cancel" onClick={ resetFilter }>Reset Filter</button>
-              <button type="button" onClick={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
+            <div className={styles.btns}>
+              <button type="button" className="cancel" onClick={resetFilter}>
+                Reset Filter
+              </button>
+              <button
+                type="button"
+                onClick={() => closePopupAndUpdate(searchParams, setSearchParams)}
+              >
                 Apply Filters
               </button>
             </div>
           </div>
-    
+
           <hr />
-    
-          { /* Render a game search component to select a game to filter by */ }
-          <div className={ styles.section }>
+
+          {/* Render a game search component to select a game to filter by */}
+          <div className={styles.section}>
             <h2>Add Games</h2>
             <p>Click a game to add it as a filter.</p>
           </div>
-          <GameSearch 
-            gamesPerPage={ GAMES_PER_PAGE }
-            imageReducer={ imageReducer }
-            gameRowOptions={ gameRowOptions }
+          <GameSearch
+            gamesPerPage={GAMES_PER_PAGE}
+            imageReducer={imageReducer}
+            gameRowOptions={gameRowOptions}
           />
-
         </>
-      :
+      ) : (
         <Loading />
-      }
+      )}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default GameFilter;

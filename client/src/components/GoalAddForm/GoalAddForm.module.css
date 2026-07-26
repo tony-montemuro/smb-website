@@ -19,7 +19,7 @@
     gap: 8px;
 }
 
-.form input[type=color] {
+.form input[type="color"] {
     --length: 50px;
     width: var(--length);
     height: var(--length);

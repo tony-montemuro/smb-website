@@ -8,16 +8,16 @@ function CloseButton({ onClose, disableClose }) {
   return (
     <button
       type="button"
-      id={ disableClose ? styles.disabled : null }
-      className={ styles.close }
-      onClick={ onClose }
-      disabled={ disableClose }
+      id={disableClose ? styles.disabled : null}
+      className={styles.close}
+      onClick={onClose}
+      disabled={disableClose}
       title="Close"
     >
-      <CloseRoundedIcon fontSize="large" sx={ { color: red[500] } } />
+      <CloseRoundedIcon fontSize="large" sx={{ color: red[500] }} />
     </button>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default CloseButton;

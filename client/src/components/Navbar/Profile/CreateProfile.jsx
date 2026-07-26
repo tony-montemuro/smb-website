@@ -8,16 +8,16 @@ function CreateProfile() {
 
   /* ===== CREATE PROFILE COMPONENT ===== */
   return (
-    <button 
-      type="button" 
-      className={ styles.btn }
+    <button
+      type="button"
+      className={styles.btn}
       title="Create Profile"
-      onClick={ () => navigateTo("/profile") }
+      onClick={() => navigateTo("/profile")}
     >
       Create Profile
     </button>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default CreateProfile;

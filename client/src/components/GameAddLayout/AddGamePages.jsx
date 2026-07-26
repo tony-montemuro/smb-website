@@ -16,38 +16,32 @@ function AddGamePage({ name, index, page, setPage }) {
     2: <LooksTwoOutlinedIcon />,
     3: <Looks3OutlinedIcon />,
     4: <Looks4OutlinedIcon />,
-    5: <Looks5OutlinedIcon />
-  }
+    5: <Looks5OutlinedIcon />,
+  };
 
   /* ===== ADD GAME PAGE COMPONENT ===== */
   return (
-    <div 
-      className={ `${ styles.pageBtn } center${ pageNumber === index ? ` ${ styles.selected }` : "" }${ !isPageUnlocked ? ` ${ styles.disabled }` : "" }` }
-      onClick={ isPageUnlocked ? () => setPage({ ...page, number: index }) : null } 
+    <div
+      className={`${styles.pageBtn} center${pageNumber === index ? ` ${styles.selected}` : ""}${!isPageUnlocked ? ` ${styles.disabled}` : ""}`}
+      onClick={isPageUnlocked ? () => setPage({ ...page, number: index }) : null}
     >
-      { numberComponents[index] }&nbsp;{ name }
+      {numberComponents[index]}&nbsp;{name}
     </div>
   );
-};
+}
 
 function AddGamePages({ page, setPage, pageNames }) {
   /* ===== ADD GAME PAGES COMPONENT ===== */
   return (
-    <div className={ styles.addGamePages }>
-      { pageNames.map((name, index) => {
+    <div className={styles.addGamePages}>
+      {pageNames.map((name, index) => {
         return (
-          <AddGamePage 
-            name={ name } 
-            index={ index+1 }
-            page={ page }
-            setPage={ setPage }
-            key={ name }
-          />
+          <AddGamePage name={name} index={index + 1} page={page} setPage={setPage} key={name} />
         );
       })}
     </div>
-  )
-};
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default AddGamePages;

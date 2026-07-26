@@ -35,14 +35,13 @@
     cursor: default;
 }
 
-
 /* ===== MEDIA QUERIES FOR SMALLER DEVICES ===== */
 
 @media (max-width: 800px) {
     .addGamePages {
         flex-direction: column;
     }
-    
+
     .pageBtn {
         width: auto;
     }

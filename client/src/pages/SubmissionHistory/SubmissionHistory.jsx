@@ -27,16 +27,19 @@ function SubmissionHistory() {
 
   /* ===== VARIABLES ===== */
   const navigateTo = useNavigate();
-	const location = useLocation();
-	const path = location.pathname.split("/");
-	const abb = path[2];
-	const category = path[3];
-	const type = path[4];
-	const levelName = path[5];
+  const location = useLocation();
+  const path = location.pathname.split("/");
+  const abb = path[2];
+  const category = path[3];
+  const type = path[4];
+  const levelName = path[5];
   const profileId = path[6];
   const runTypeParam = path[7];
   const TABLE_WIDTH = 11;
-  const tableTabElements = [{ data: "normal", renderedData: runTypeB2F("normal")}, { data: "tas", renderedData: runTypeB2F("tas") }];
+  const tableTabElements = [
+    { data: "normal", renderedData: runTypeB2F("normal") },
+    { data: "tas", renderedData: runTypeB2F("tas") },
+  ];
 
   /* ===== CONTEXTS ===== */
 
@@ -52,7 +55,8 @@ function SubmissionHistory() {
   const [detailSubmission, setDetailSubmission] = useState(undefined);
 
   // states and functions from the js file
-  const { submissions, runType, setRunType, fetchProfile, fetchSubmissions, handleTabClick } = SubmissionHistoryLogic();
+  const { submissions, runType, setRunType, fetchProfile, fetchSubmissions, handleTabClick } =
+    SubmissionHistoryLogic();
 
   /* ===== EFFECTS ====== */
 
@@ -60,23 +64,24 @@ function SubmissionHistory() {
   useEffect(() => {
     async function validatePath() {
       // first, let's fetch data based on path
-      const [level, profile] = await Promise.all(
-        [fetchLevelFromGame(game, levelName, category, type), fetchProfile(profileId)]
-      );
-			
-			// if no level or profile exists, we will print an error message, and navigate to the home screen
-			if (!level || profile === null) {
-				addMessage("Submission History does not exist.", "error", 5000);
-				navigateTo(level ? `/games/${ abb }/${ category }/${ type }/${ levelName }` : `/games/${ abb }`);
-				return;
-			}
+      const [level, profile] = await Promise.all([
+        fetchLevelFromGame(game, levelName, category, type),
+        fetchProfile(profileId),
+      ]);
+
+      // if no level or profile exists, we will print an error message, and navigate to the home screen
+      if (!level || profile === null) {
+        addMessage("Submission History does not exist.", "error", 5000);
+        navigateTo(level ? `/games/${abb}/${category}/${type}/${levelName}` : `/games/${abb}`);
+        return;
+      }
 
       // update the state hook for level and profile
       setLevel(level);
       setProfile(profile);
-			
+
       // finally, given information about the path, fetch submissions for this page
-			fetchSubmissions();
+      fetchSubmissions();
     }
 
     validatePath();
@@ -98,47 +103,51 @@ function SubmissionHistory() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version]);
- 
+
   /* ===== RECORD HISTORY COMPONENT ===== */
   return (
     <>
-      { /* Popups */ }
-      <Popup renderPopup={ detailSubmission } setRenderPopup={ setDetailSubmission } width="800px" >
-				<SubmissionDetails level={ level } updateBoards={ fetchSubmissions } />
-			</Popup>
+      {/* Popups */}
+      <Popup renderPopup={detailSubmission} setRenderPopup={setDetailSubmission} width="800px">
+        <SubmissionDetails level={level} updateBoards={fetchSubmissions} />
+      </Popup>
 
       <Container title="Submission History" largeTitle>
-        <div className={ styles.containerBody }>
-        { profile ?
-
-          // Header - render message describing the page
-          <h2>
-            The following is the list of all submissions by&nbsp;
-            <>
-              <Username profile={ profile } />
-              &nbsp;to&nbsp;
-              <Link to={ `/games/${ abb }/${ category }/${ type }/${ levelName }` }>
-                <FancyLevel level={ levelName } /> ({ capitalize(type) })
-              </Link>:
-            </>
-          </h2>
-
-          :
+        <div className={styles.containerBody}>
+          {profile ? (
+            // Header - render message describing the page
+            <h2>
+              The following is the list of all submissions by&nbsp;
+              <>
+                <Username profile={profile} />
+                &nbsp;to&nbsp;
+                <Link to={`/games/${abb}/${category}/${type}/${levelName}`}>
+                  <FancyLevel level={levelName} /> ({capitalize(type)})
+                </Link>
+                :
+              </>
+            </h2>
+          ) : (
             <Loading />
-          }
+          )}
 
           {/* Body - The actual content of the page: tabs to swap between normal & TAS, & a table of submissions */}
           <div>
-            { submissions[runType] && <TableTabs elements={ tableTabElements } current={ runType } handleClick={ handleTabClick } /> }
+            {submissions[runType] && (
+              <TableTabs
+                elements={tableTabElements}
+                current={runType}
+                handleClick={handleTabClick}
+              />
+            )}
             <div className="table">
               <table>
-
-                { /* Table header: specifies the information displayed in each cell of the table */ }
+                {/* Table header: specifies the information displayed in each cell of the table */}
                 <thead>
                   <tr>
                     <th>Date</th>
                     <th>Submitted</th>
-                    <th>{ capitalize(type) }</th>
+                    <th>{capitalize(type)}</th>
                     <th>Monkey</th>
                     <th>Platform</th>
                     <th>Region</th>
@@ -150,34 +159,37 @@ function SubmissionHistory() {
                   </tr>
                 </thead>
 
-                { /* Table body - the actual content itself, rendered row by row given submission data */ }
+                {/* Table body - the actual content itself, rendered row by row given submission data */}
                 <tbody>
-                  { submissions[runType] ?
-                    <TableContent items={ submissions[runType] } emptyMessage={ `This user has never submitted ${ runTypeB2F(runType) } runs to this chart.` } numCols={ TABLE_WIDTH }>
-                      { submissions[runType].map(submission => {
-                        return <FilteredSubmissionRow 
-                          submission={ submission }
-                          level={ level }
-                          onClickFunc={ setDetailSubmission }
-                          key={ submission.id }
-                        />;
+                  {submissions[runType] ? (
+                    <TableContent
+                      items={submissions[runType]}
+                      emptyMessage={`This user has never submitted ${runTypeB2F(runType)} runs to this chart.`}
+                      numCols={TABLE_WIDTH}
+                    >
+                      {submissions[runType].map((submission) => {
+                        return (
+                          <FilteredSubmissionRow
+                            submission={submission}
+                            level={level}
+                            onClickFunc={setDetailSubmission}
+                            key={submission.id}
+                          />
+                        );
                       })}
                     </TableContent>
-                  :
-                    <LoadingTable numCols={ TABLE_WIDTH } />
-                  }
+                  ) : (
+                    <LoadingTable numCols={TABLE_WIDTH} />
+                  )}
                 </tbody>
-
               </table>
             </div>
           </div>
-
         </div>
       </Container>
-
     </>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default SubmissionHistory;

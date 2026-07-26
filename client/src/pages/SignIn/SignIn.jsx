@@ -26,27 +26,24 @@ function SignIn() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-
   /* ===== SIGN IN COMPONENT ===== */
   return (
-    <div className={ styles.signIn }>
-
-      { /* Left: render the sign in form */ }
-      <div className={ styles.left }>
-        <div className={ styles.logo }>
+    <div className={styles.signIn}>
+      {/* Left: render the sign in form */}
+      <div className={styles.left}>
+        <div className={styles.logo}>
           <Logo />
         </div>
         <Auth />
       </div>
 
-      { /* Right: render a fancy image (1000px) */ }
-      <div className={ styles.right }>
-        <img src={ LoginImage } alt="Login decorative feature"></img>
+      {/* Right: render a fancy image (1000px) */}
+      <div className={styles.right}>
+        <img src={LoginImage} alt="Login decorative feature"></img>
       </div>
-
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default SignIn;

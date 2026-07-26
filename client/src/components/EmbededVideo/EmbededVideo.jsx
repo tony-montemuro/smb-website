@@ -14,15 +14,15 @@ function EmbededVideo({ url }) {
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file
-  const { 
-    getUrlType, 
-    getYoutubeVideoId, 
-    getYoutubeVideoOpts, 
-    getTwitchVodSource, 
-    getTwitchClipSource, 
+  const {
+    getUrlType,
+    getYoutubeVideoId,
+    getYoutubeVideoOpts,
+    getTwitchVodSource,
+    getTwitchClipSource,
     getTweetId,
     getImgurId,
-    getGoogleDriveSource
+    getGoogleDriveSource,
   } = EmbededVideoLogic();
 
   // FUNCTION 1: getStandardPlayer - code that returns the JSX for a video player depending on the urlType
@@ -30,54 +30,52 @@ function EmbededVideo({ url }) {
   // 1.) urlType: a string corresponding to one of the standard players
   // POSTCONDITIONS (1 possible outcome):
   // the player that matches the `urlType` parameter is returned
-  const getStandardPlayer = urlType => {
+  const getStandardPlayer = (urlType) => {
     switch (urlType) {
       case "youtube":
         return (
-          <YouTube 
-            videoId={ getYoutubeVideoId(url) } 
-            opts={ getYoutubeVideoOpts(url) }
-            className={ styles.player }
+          <YouTube
+            videoId={getYoutubeVideoId(url)}
+            opts={getYoutubeVideoOpts(url)}
+            className={styles.player}
           />
         );
       case "twitch-vod":
         return (
           <iframe
-            title={ urlType }
-            src={ getTwitchVodSource(url) }
+            title={urlType}
+            src={getTwitchVodSource(url)}
             width="100%"
             height="100%"
             allowFullScreen
-            className={ styles.player }
-          >
-          </iframe>
+            className={styles.player}
+          ></iframe>
         );
       case "twitch-clip":
         return (
           <iframe
-            title={ urlType }
-            src={ getTwitchClipSource(url) }
+            title={urlType}
+            src={getTwitchClipSource(url)}
             width="100%"
             height="100%"
             allowFullScreen
-            className={ styles.player }
-          >
-          </iframe>
+            className={styles.player}
+          ></iframe>
         );
       case "google-drive":
         return (
           <iframe
-            title={ urlType }
-            src={ getGoogleDriveSource(url) }
+            title={urlType}
+            src={getGoogleDriveSource(url)}
             width="100%"
             height="100%"
             allowFullScreen
-            className={ styles.player }
-          >
-          </iframe>
+            className={styles.player}
+          ></iframe>
         );
-      default: return null;
-    };
+      default:
+        return null;
+    }
   };
 
   /* ===== VARIABLES ===== */
@@ -88,47 +86,41 @@ function EmbededVideo({ url }) {
   // CASE 1: url is not defined. this case should only ever apply in the case where a *proof* is missing, so return
   // a message regarding that
   if (!url) {
-    return (
-      <h3>This submission has no proof.</h3>
-    );
+    return <h3>This submission has no proof.</h3>;
   }
 
   // CASE 2: URL type creates a standard player - return the player wrapped in an embeded video container
   if (standardPlayers.includes(urlType)) {
-    return (
-      <div className={ styles.embededVideo }>
-        { getStandardPlayer(urlType) }
-      </div>
-    );
+    return <div className={styles.embededVideo}>{getStandardPlayer(urlType)}</div>;
   }
 
   // CASE 3: URL is a twitter type - return the player wrapped in a embeded tweet container
   if (urlType === "twitter") {
     return (
-      <div className={ styles.embededTweet }>
-        <Tweet id={ getTweetId(url) } />
+      <div className={styles.embededTweet}>
+        <Tweet id={getTweetId(url)} />
       </div>
     );
   }
 
-  // CASE 4: URL is a Imgur type - return an imgur component, 
+  // CASE 4: URL is a Imgur type - return an imgur component,
   if (urlType === "imgur") {
-    return <Imgur id={ getImgurId(url) } isAlbum={ url.includes("/a/") } />;
+    return <Imgur id={getImgurId(url)} isAlbum={url.includes("/a/")} />;
   }
 
   // CASE 5: render an error message if an embed is not supported (urlType is not supported)
   return (
-    <div className={ styles.missing }>
+    <div className={styles.missing}>
       <h3>Embeded video is not supported for this link:&nbsp;</h3>
-      <a href={ url } target="_blank" rel="noopener noreferrer">
-        <div className={ styles.url }>
-          <OpenInNewIcon className={ styles.test } fontSize="small" />
-          { url }
+      <a href={url} target="_blank" rel="noopener noreferrer">
+        <div className={styles.url}>
+          <OpenInNewIcon className={styles.test} fontSize="small" />
+          {url}
         </div>
       </a>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default EmbededVideo;

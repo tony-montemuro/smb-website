@@ -3,8 +3,8 @@ import SubmissionHandler from "../../components/SubmissionHandler/SubmissionHand
 
 function Reports({ imageReducer }) {
   /* ===== REPORTS COMPONENT ===== */
-  return <SubmissionHandler imageReducer={ imageReducer } />;
-};
+  return <SubmissionHandler imageReducer={imageReducer} />;
+}
 
 /* ===== EXPORTS ===== */
 export default Reports;

@@ -8,7 +8,12 @@ import SearchBarInput from "../SearchBarInput/SearchBarInput";
 import UserSearchLogic from "./UserSearch.js";
 import UserRow from "../UserRow/UserRow.jsx";
 
-function UserSearch({ usersPerPage, userRowOptions, imageReducer = null, parentRefreshTrigger = null }) {
+function UserSearch({
+  usersPerPage,
+  userRowOptions,
+  imageReducer = null,
+  parentRefreshTrigger = null,
+}) {
   /* ===== STATES & FUNCTIONS ===== */
   const [pageNum, setPageNum] = useState(1);
   const [searchInput, setSearchInput] = useState("");
@@ -45,45 +50,43 @@ function UserSearch({ usersPerPage, userRowOptions, imageReducer = null, parentR
   /* ===== USER SEARCH BAR COMPONENT ===== */
   return (
     <>
-
-      { /* Search bar input for searching for users */ }
-      <SearchBarInput itemType="user" input={ searchInput } setInput={ setSearchInput } />
+      {/* Search bar input for searching for users */}
+      <SearchBarInput itemType="user" input={searchInput} setInput={setSearchInput} />
 
       {/* Search results - render the user search results here */}
-      { users.data ?
-        <Items items={ users.data } emptyMessage="No users match your search.">
-          <div className={ styles.results }>
-            { users.data.map((user, index) => {
-                return (
-                  <UserRow 
-                    user={ user }
-                    imageReducer={ imageReducer } 
-                    onClick={ userRowOptions.onUserRowClick }
-                    index={ index }
-                    disableLink={ userRowOptions.disableLink }
-                    isDetailed={ userRowOptions.isDetailed } 
-                    key={ user.id } 
-                  />
-                );
-              })}
+      {users.data ? (
+        <Items items={users.data} emptyMessage="No users match your search.">
+          <div className={styles.results}>
+            {users.data.map((user, index) => {
+              return (
+                <UserRow
+                  user={user}
+                  imageReducer={imageReducer}
+                  onClick={userRowOptions.onUserRowClick}
+                  index={index}
+                  disableLink={userRowOptions.disableLink}
+                  isDetailed={userRowOptions.isDetailed}
+                  key={user.id}
+                />
+              );
+            })}
           </div>
         </Items>
-      :
+      ) : (
         <Loading />
-      }
+      )}
 
-      { /* Pagination controls - Render controls for search results */ }
+      {/* Pagination controls - Render controls for search results */}
       <PageControls
-        totalItems={ users.total }
-        itemsPerPage={ usersPerPage }
-        pageNum={ pageNum }
-        setPageNum={ setPageNum }
-        itemName="Users" 
+        totalItems={users.total}
+        itemsPerPage={usersPerPage}
+        pageNum={pageNum}
+        setPageNum={setPageNum}
+        itemName="Users"
       />
-
     </>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default UserSearch;

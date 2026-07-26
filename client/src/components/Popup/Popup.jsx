@@ -27,7 +27,7 @@ function Popup({ renderPopup, setRenderPopup, width, disableClose, children }) {
       document.removeEventListener("mousedown", handleClick);
       document.removeEventListener("touchstart", handleTouch);
     }
-    
+
     // Cleanup function
     return () => {
       document.body.style.overflow = "visible";
@@ -38,23 +38,24 @@ function Popup({ renderPopup, setRenderPopup, width, disableClose, children }) {
   }, [renderPopup]);
 
   /* ===== POPUP COMPONENT ===== */
-  return renderPopup &&
-    <div className={ styles.popup }>
-      <div className={ styles.inner } ref={ innerRef } style={ { maxWidth: width } }>
+  return (
+    renderPopup && (
+      <div className={styles.popup}>
+        <div className={styles.inner} ref={innerRef} style={{ maxWidth: width }}>
+          {/* Render button to close the popup */}
+          <div className={styles.close}>
+            <CloseButton onClose={closePopup} disableClose={disableClose} />
+          </div>
 
-        { /* Render button to close the popup */ }
-        <div className={ styles.close }>
-          <CloseButton onClose={ closePopup } disableClose={ disableClose } />
+          {/* Render component children, and give children access to the `closePopup` function */}
+          <PopupContext.Provider value={{ popupData: renderPopup, closePopup }}>
+            {children}
+          </PopupContext.Provider>
         </div>
-
-        { /* Render component children, and give children access to the `closePopup` function */ }
-        <PopupContext.Provider value={ { popupData: renderPopup, closePopup } }>
-          { children }
-        </PopupContext.Provider>
-
       </div>
-    </div>;
-};
+    )
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default Popup;

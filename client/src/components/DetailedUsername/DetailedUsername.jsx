@@ -9,12 +9,12 @@ function DetailedUsername({ imageReducer, profile, disableLink }) {
 
   /* ===== DETAILED USERNAME COMPONENT ===== */
   return (
-    <div className={ styles.detailedUsername }>
-      <Avatar profileId={ profile.id } size={ IMG_LENGTH } imageReducer={ imageReducer } />
-      <Username profile={ profile } disableLink={ disableLink } />
+    <div className={styles.detailedUsername}>
+      <Avatar profileId={profile.id} size={IMG_LENGTH} imageReducer={imageReducer} />
+      <Username profile={profile} disableLink={disableLink} />
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default DetailedUsername;

@@ -16,14 +16,14 @@ function ModeratorTab({ tab }) {
 
   /* ===== MODERATOR TAB COMPONENT ===== */
   return (
-    <div 
-      className={ `${ styles.tab }${ currentPageType === pageType ? ` ${ styles.active }` : "" }` }
-      onClick={ () => handleTabClick(pageType) }
+    <div
+      className={`${styles.tab}${currentPageType === pageType ? ` ${styles.active}` : ""}`}
+      onClick={() => handleTabClick(pageType)}
     >
-      { content }
+      {content}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default ModeratorTab;
