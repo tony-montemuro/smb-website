@@ -1,0 +1,16 @@
+{
+  "overrides": [
+    {
+      "files": "*.jsx",
+      "options": {
+        "printWidth": 100
+      }
+    },
+    {
+      "files": "*.css",
+      "options": {
+        "tabWidth": 4
+      }
+    }
+  ]
+}
