@@ -25,7 +25,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "browserslist": {
     "production": [
@@ -43,9 +45,11 @@
     "@eslint/js": "^9.39.5",
     "@vitejs/plugin-react": "^6.0.3",
     "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.7.0",
+    "prettier": "3.9.6",
     "vite": "^8.1.4"
   },
   "overrides": {
