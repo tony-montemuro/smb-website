@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 import js from "@eslint/js";
+import prettierConfig from "eslint-config-prettier/flat";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 
@@ -146,5 +147,7 @@ export default defineConfig([
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "error"
     }
-  }
+  },
+
+  prettierConfig
 ]);
