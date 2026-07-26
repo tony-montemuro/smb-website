@@ -23,9 +23,9 @@
 }
 
 .info span {
-   display: inline-flex;
-   align-items: center;
-   height: 30px;
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
 }
 
 .version {

@@ -28,28 +28,34 @@ function StatsDirectory({ imageReducer }) {
   }, [profile]);
 
   /* ===== USER OVERVIEW COMPONENT ===== */
-  return userGames &&
-    <div className={ styles.statsDirectory }>
-      <Container title="Submissions" largeTitle>
-        <div className={ styles.body }>
-          <Items items={ userGames.main.concat(userGames.custom) } emptyMessage="This user has no submissions to any game.">
-            { Object.keys(userGames).map(type => {
-              return (
-                <CategoryMenu
-                  type={ type }
-                  games={ userGames[type] }
-                  selectedGame={ selectedGame }
-                  setSelectedGame={ setSelectedGame }
-                  imageReducer={ imageReducer }
-                  key={ type }
-                />
-              );
-            })}
-          </Items>
-        </div>
-      </Container>
-    </div>
-};
+  return (
+    userGames && (
+      <div className={styles.statsDirectory}>
+        <Container title="Submissions" largeTitle>
+          <div className={styles.body}>
+            <Items
+              items={userGames.main.concat(userGames.custom)}
+              emptyMessage="This user has no submissions to any game."
+            >
+              {Object.keys(userGames).map((type) => {
+                return (
+                  <CategoryMenu
+                    type={type}
+                    games={userGames[type]}
+                    selectedGame={selectedGame}
+                    setSelectedGame={setSelectedGame}
+                    imageReducer={imageReducer}
+                    key={type}
+                  />
+                );
+              })}
+            </Items>
+          </div>
+        </Container>
+      </div>
+    )
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default StatsDirectory;

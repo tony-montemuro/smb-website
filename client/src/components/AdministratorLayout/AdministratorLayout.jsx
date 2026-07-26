@@ -9,26 +9,26 @@ import ModeratorTabs from "../ModeratorTabs/ModeratorTabs.jsx";
 function AdministratorLayout() {
   /* ===== VARIABLES ===== */
   const tabs = [
-    { 
-      pageType: undefined, 
-      content: "About Administrating"
+    {
+      pageType: undefined,
+      content: "About Administrating",
     },
     {
       pageType: "game-add",
-      content: "Add Game"
+      content: "Add Game",
     },
-    { 
-      pageType: "game-moderators", 
-      content: "Game Moderators"
+    {
+      pageType: "game-moderators",
+      content: "Game Moderators",
     },
     {
       pageType: "versions",
-      content: "Game Versions"
+      content: "Game Versions",
     },
     {
       pageType: "post",
-      content: "Create Post"
-    }
+      content: "Create Post",
+    },
   ];
   const navigateTo = useNavigate();
 
@@ -57,14 +57,15 @@ function AdministratorLayout() {
   }, [user]);
 
   /* ===== ADMINISTRATOR LAYOUT COMPONENT ===== */
-  return user.id !== undefined && user.profile && user.profile.administrator ?
+  return user.id !== undefined && user.profile && user.profile.administrator ? (
     <>
-      <ModeratorTabs tabs={ tabs } />
+      <ModeratorTabs tabs={tabs} />
       <Outlet />
     </>
-  :
+  ) : (
     <Loading />
-};
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default AdministratorLayout;

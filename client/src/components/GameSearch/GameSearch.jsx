@@ -11,8 +11,8 @@ import SearchBarInput from "../SearchBarInput/SearchBarInput";
 
 function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
   /* ===== STATES & FUNCTIONS ===== */
-  
-  const [gameTypeFilter, setGameTypeFilter] = useState(undefined)
+
+  const [gameTypeFilter, setGameTypeFilter] = useState(undefined);
   const [pageNum, setPageNum] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [isComponentMounted, setIsComponentMounted] = useState(false);
@@ -24,14 +24,14 @@ function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
   const buttons = [
     { name: "Both", value: undefined },
     { name: "Main Games", value: "main" },
-    { name: "Custom Games", value: "custom" }
+    { name: "Custom Games", value: "custom" },
   ];
   let gameTypes = undefined;
   if (games.data) {
     gameTypes = [];
-    games.data.forEach(game => {
+    games.data.forEach((game) => {
       const gameType = game.custom ? "Custom" : "Main";
-      if (!(gameTypes.includes(gameType))) {
+      if (!gameTypes.includes(gameType)) {
         gameTypes.push(gameType);
       }
     });
@@ -64,55 +64,61 @@ function GameSearch({ gamesPerPage, imageReducer, gameRowOptions }) {
 
   /* ===== GAMES SEARCH BAR COMPONENT ===== */
   return (
-    <div className={ styles.gameSearch }>
-
-      { /* Filters - render the various filters to game search, including the search bar, and buttons to filter by type */ }
-      <div className={ styles.filters }>
-        <SearchBarInput itemType="game" input={ searchInput } setInput={ setSearchInput } />
-        <ButtonList buttons={ buttons } current={ gameTypeFilter } setCurrent={ setGameTypeFilter } hasPadding />
+    <div className={styles.gameSearch}>
+      {/* Filters - render the various filters to game search, including the search bar, and buttons to filter by type */}
+      <div className={styles.filters}>
+        <SearchBarInput itemType="game" input={searchInput} setInput={setSearchInput} />
+        <ButtonList
+          buttons={buttons}
+          current={gameTypeFilter}
+          setCurrent={setGameTypeFilter}
+          hasPadding
+        />
       </div>
 
-      { /* Search results - render the game search results here for main and/or custom games */ }
-      { gameTypes ?
-        <Items items={ gameTypes } emptyMessage="No games exist that match your filters.">
-          { gameTypes.map(type => {
+      {/* Search results - render the game search results here for main and/or custom games */}
+      {gameTypes ? (
+        <Items items={gameTypes} emptyMessage="No games exist that match your filters.">
+          {gameTypes.map((type) => {
             return (
-              <div key={ type } className={ styles.body }>
-                <h2>{ type } Games</h2>
-                <div className={ gameRowOptions.useCard ? styles.cards : "" }>
-                  { games.data.filter(game => type === "Custom" ? game.custom : !game.custom).map((game, index) => {
-                    return (
-                      <GameRow
-                        game={ game }
-                        imageReducer={ imageReducer } 
-                        useCard={ gameRowOptions.useCard } 
-                        onClick={ gameRowOptions.onGameRowClick }
-                        index={ index }
-                        key={ game.abb }
-                      />
-                    );
-                  })}
+              <div key={type} className={styles.body}>
+                <h2>{type} Games</h2>
+                <div className={gameRowOptions.useCard ? styles.cards : ""}>
+                  {games.data
+                    .filter((game) => (type === "Custom" ? game.custom : !game.custom))
+                    .map((game, index) => {
+                      return (
+                        <GameRow
+                          game={game}
+                          imageReducer={imageReducer}
+                          useCard={gameRowOptions.useCard}
+                          onClick={gameRowOptions.onGameRowClick}
+                          index={index}
+                          key={game.abb}
+                        />
+                      );
+                    })}
                 </div>
               </div>
-          )})}
+            );
+          })}
         </Items>
-      :
+      ) : (
         <Loading />
-      }
+      )}
 
-      { /* Pagination controls - Render controls for search results */ }
+      {/* Pagination controls - Render controls for search results */}
       <PageControls
-        totalItems={ games.total }
-        itemsPerPage={ gamesPerPage }
-        pageNum={ pageNum }
-        setPageNum={ setPageNum }
+        totalItems={games.total}
+        itemsPerPage={gamesPerPage}
+        pageNum={pageNum}
+        setPageNum={setPageNum}
         itemName="Games"
         useDropdown
       />
-
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default GameSearch;

@@ -12,25 +12,20 @@ function Message({ messageContent, handleClose }) {
 
   /* ===== MESSAGE COMPONENT ===== */
   return (
-    <Snackbar 
-      action={ <Action handleClose={ handleClose } /> }
+    <Snackbar
+      action={<Action handleClose={handleClose} />}
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      autoHideDuration={ timer }
-      message={ message }
-      onClose={ handleClose }
-      open={ open }
+      autoHideDuration={timer}
+      message={message}
+      onClose={handleClose}
+      open={open}
     >
-      <Alert
-        onClose={ handleClose }
-        severity={ severity }
-        sx={{ width: "100%" }}
-        variant="filled"
-      >
-        { message }
+      <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }} variant="filled">
+        {message}
       </Alert>
     </Snackbar>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Message;

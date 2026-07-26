@@ -29,7 +29,10 @@
     padding: 3px 0;
 }
 
-.input input, .input textarea, .input select, .input button {
+.input input,
+.input textarea,
+.input select,
+.input button {
     margin: 0;
     width: 400px;
 }

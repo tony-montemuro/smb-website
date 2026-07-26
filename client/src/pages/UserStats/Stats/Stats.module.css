@@ -5,7 +5,10 @@
     padding: 5px 0;
 }
 
-.stats h2, .stats h3, .records h2, .records h3 {
+.stats h2,
+.stats h3,
+.records h2,
+.records h3 {
     margin: 0;
 }
 

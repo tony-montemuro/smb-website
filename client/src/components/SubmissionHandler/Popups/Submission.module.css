@@ -13,7 +13,10 @@
     margin: 0;
 }
 
-.header h1, .header h2, .header h3, .header p {
+.header h1,
+.header h2,
+.header h3,
+.header p {
     margin: 0;
     padding: 5px 0;
 }
@@ -61,7 +64,8 @@
     gap: 10px;
 }
 
-.rejectionHeader h2, .rejectionHeader p {
+.rejectionHeader h2,
+.rejectionHeader p {
     margin: 0;
 }
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import NavLogo from "./NavLogo.jsx";
 import NavProfile from "./NavProfile.jsx";
 
-function Navbar({ imageReducer }) {  
+function Navbar({ imageReducer }) {
   /* ===== VARIABLES ===== */
   const dropdownCutoff = 940; // measured in pixels
 
@@ -34,7 +34,7 @@ function Navbar({ imageReducer }) {
     } else {
       document.body.style.overflow = "visible";
     }
-    
+
     // Cleanup function
     return () => {
       document.body.style.overflow = "visible";
@@ -52,30 +52,28 @@ function Navbar({ imageReducer }) {
 
   /* ===== NAVBAR COMPONENT ===== */
   return (
-    <div className={ styles.navWrapper }>
-      <nav className={ styles.nav }>
-
-        { /* Render the dynamic `NavLogo` component on the left-side of the navbar */ }
-        <NavLogo 
-          windowWidth={ windowWidth }
-          dropdownCutoff={ dropdownCutoff }
-          isOpen={ isLogoOpen }
-          setIsOpen={ setIsLogoOpen }
+    <div className={styles.navWrapper}>
+      <nav className={styles.nav}>
+        {/* Render the dynamic `NavLogo` component on the left-side of the navbar */}
+        <NavLogo
+          windowWidth={windowWidth}
+          dropdownCutoff={dropdownCutoff}
+          isOpen={isLogoOpen}
+          setIsOpen={setIsLogoOpen}
         />
 
-        { /* Render the dynamic `NavProfile` component on the right-side of the navbar */ }
+        {/* Render the dynamic `NavProfile` component on the right-side of the navbar */}
         <NavProfile
-          windowWidth={ windowWidth }
-          dropdownCutoff={ dropdownCutoff }
-          isOpen={ isProfileOpen }
-          setIsOpen={ setIsProfileOpen }
-          imageReducer={ imageReducer }  
+          windowWidth={windowWidth}
+          dropdownCutoff={dropdownCutoff}
+          isOpen={isProfileOpen}
+          setIsOpen={setIsProfileOpen}
+          imageReducer={imageReducer}
         />
-
       </nav>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Navbar;

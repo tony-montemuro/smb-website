@@ -8,7 +8,7 @@
     z-index: var(--z-top);
 }
 
-.nav { 
+.nav {
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -26,8 +26,8 @@
     text-decoration: none;
     display: flex;
     align-items: center;
-    padding-left: .25rem;
-    padding-right: .25rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
     height: 100%;
 }
 
@@ -50,8 +50,8 @@
     text-decoration: none;
     display: flex;
     align-items: center;
-    padding-left: .25rem;
-    padding-right: .25rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
     height: 100%;
 }
 

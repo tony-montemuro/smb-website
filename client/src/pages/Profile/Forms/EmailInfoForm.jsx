@@ -6,34 +6,39 @@ import TextField from "@mui/material/TextField";
 
 function EmailInfoForm() {
   /* ===== STATES & FUNCTIONS ===== */
-  
+
   // states and functions from the js file
   const { email, handleChange, handleEmailUpdate } = EmailInfoFormLogic();
 
   /* ===== EMAIL INFO FORM COMPONENT ===== */
   return (
     <Container title="Update Email">
-      <form className={ styles.form } onSubmit={ handleEmailUpdate }>
-        <span><b>Note: </b>For security reasons, you will be required to validate an email from both your current address, as well as the new address you provide.</span>
-        <TextField 
+      <form className={styles.form} onSubmit={handleEmailUpdate}>
+        <span>
+          <b>Note: </b>For security reasons, you will be required to validate an email from both
+          your current address, as well as the new address you provide.
+        </span>
+        <TextField
           autoComplete="email"
-          color={ email.error ? "error" : "primary" }
-          error={ email.error ? true : false }
+          color={email.error ? "error" : "primary"}
+          error={email.error ? true : false}
           fullWidth
           id="email"
-          helperText={ email.error }
+          helperText={email.error}
           label="Email"
           placeholder="Your new email"
-          onChange={ handleChange }
+          onChange={handleChange}
           type="email"
-          value={ email.name }
+          value={email.name}
           variant="filled"
         />
-        <button type="submit" disabled={ email.submitting }>Update Email</button>
+        <button type="submit" disabled={email.submitting}>
+          Update Email
+        </button>
       </form>
     </Container>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default EmailInfoForm;

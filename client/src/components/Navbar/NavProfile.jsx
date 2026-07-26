@@ -12,16 +12,17 @@ function NavProfile({ windowWidth, dropdownCutoff, isOpen, setIsOpen, imageReduc
 
   /* ===== NAV PROFILE COMPONENT ===== */
   if (user.id && user.profile) {
-    return windowWidth > dropdownCutoff ? 
-      <ProfileExplorer imageReducer={ imageReducer } />
-    :
-      <MobileProfile isOpen={ isOpen } setIsOpen={ setIsOpen } imageReducer={ imageReducer } />;
+    return windowWidth > dropdownCutoff ? (
+      <ProfileExplorer imageReducer={imageReducer} />
+    ) : (
+      <MobileProfile isOpen={isOpen} setIsOpen={setIsOpen} imageReducer={imageReducer} />
+    );
   }
   if (user.id) {
     return <CreateProfile />;
   }
   return <SignIn />;
-};
+}
 
 /* ===== EXPORTS ===== */
 export default NavProfile;

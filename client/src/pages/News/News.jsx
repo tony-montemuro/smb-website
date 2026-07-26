@@ -27,34 +27,35 @@ function News() {
 
   /* ===== NEWS COMPONENT ===== */
   return (
-    <div className={ styles.news }>
-
+    <div className={styles.news}>
       {/* News header - Render information about this page */}
       <h1>News</h1>
-      <p>Below is the list of all news posts created by SMB Elite administrators, ordered from most recent to least recent.</p>
+      <p>
+        Below is the list of all news posts created by SMB Elite administrators, ordered from most
+        recent to least recent.
+      </p>
 
-      { /* News body - Render each post */ }
-      { posts.data ?
-        <Items items={ posts.data } emptyMessage="No posts exist!">
-          { posts.data.map(post => {
-            return <NewsPost post={ post } key={ post.id } />;
+      {/* News body - Render each post */}
+      {posts.data ? (
+        <Items items={posts.data} emptyMessage="No posts exist!">
+          {posts.data.map((post) => {
+            return <NewsPost post={post} key={post.id} />;
           })}
-          <PageControls 
-            totalItems={ posts.total }
-            itemsPerPage={ POSTS_PER_PAGE }
-            pageNum={ pageNum }
-            setPageNum={ setPageNum }
+          <PageControls
+            totalItems={posts.total}
+            itemsPerPage={POSTS_PER_PAGE}
+            pageNum={pageNum}
+            setPageNum={setPageNum}
             itemName="Posts"
             useDropdown
           />
         </Items>
-      :
+      ) : (
         <Loading />
-      }
-
+      )}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default News;

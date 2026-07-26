@@ -55,7 +55,7 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
     clearMessage,
     isFormUnchanged,
     onApproveClick,
-    onRejectClick
+    onRejectClick,
   } = SubmissionLogic(submission, game, isUnapproved, setSubmissions, setSubmitting);
 
   // helper functions
@@ -70,281 +70,377 @@ function Submission({ game, isUnapproved, setSubmissions, submitting, setSubmitt
   }, []);
 
   /* ===== SUBMISSION COMPONENT ===== */
-  return form.values &&
-    <div className={ styles.submission }>
+  return (
+    form.values && (
+      <div className={styles.submission}>
+        {/* Header - render the basic submission information, and any report data, if the submission was reporeted */}
+        <div className={styles.header}>
+          <h1>
+            <Link to={chartUrl}>
+              <FancyLevel level={submission.level.name} />
+            </Link>
+          </h1>
+          <h2>
+            {recordB2F(submission.record, type, submission.level.timer_type)} by{" "}
+            <Username profile={submission.profile} />
+          </h2>
 
-      { /* Header - render the basic submission information, and any report data, if the submission was reporeted */ }
-      <div className={ styles.header }>
-        <h1>
-          <Link to={ chartUrl }>
-            <FancyLevel level={ submission.level.name } />
-          </Link>
-        </h1>
-        <h2>
-          { recordB2F(submission.record, type, submission.level.timer_type) } by <Username profile={ submission.profile } />
-        </h2>
-
-        { /* If submission is reported, render the reasoning left by the creator of the report. */ }
-        { !isUnapproved &&
-          <>
-            <h3>
-              <strong>The following submission was reported by&nbsp;</strong>
-              <Username profile={ creator } />.
-            </h3>
-            <p>They left the following message with the report: &quot;{ submission.report.message }&quot;</p>
-          </>
-        }
-
-      </div>
-
-      <hr />
-
-      { /* Render position disclaimer component, which details the complicated position fields */ }
-      <PositionDisclaimer />
-
-      { /* Body - render the submission, as well as a form to update certain fields */ }
-      <div className={ styles.body }>
-
-        { /* Left side - contains the embeded video player */ }
-        <div className={ styles.left }>
-          <EmbededVideo url={ submission.proof } />
-          { !submission.proof && <h3><em>Please keep this in mind as you make your decision!</em></h3> }
+          {/* If submission is reported, render the reasoning left by the creator of the report. */}
+          {!isUnapproved && (
+            <>
+              <h3>
+                <strong>The following submission was reported by&nbsp;</strong>
+                <Username profile={creator} />.
+              </h3>
+              <p>
+                They left the following message with the report: &quot;{submission.report.message}
+                &quot;
+              </p>
+            </>
+          )}
         </div>
 
-        { /* Right side - contains the submission form */ }
-        <div className={ styles.right }>
-          <form>
-            <div className={ styles.formWrapper }>
+        <hr />
 
-              { /* The various fields of the form, which describe the submission */ }
-              <TextField
-                fullWidth
-                helperText={ immutableText }
-                id="all_position"
-                label="Position"
-                value={ renderPosition(submission.id, submission.submitted_at) ? submission.all_position : "-" }
-                variant="filled"
-                slotProps={ {
-                  htmlInput: { readOnly: true }
-                } }
-              />
-              { submission.position &&
+        {/* Render position disclaimer component, which details the complicated position fields */}
+        <PositionDisclaimer />
+
+        {/* Body - render the submission, as well as a form to update certain fields */}
+        <div className={styles.body}>
+          {/* Left side - contains the embeded video player */}
+          <div className={styles.left}>
+            <EmbededVideo url={submission.proof} />
+            {!submission.proof && (
+              <h3>
+                <em>Please keep this in mind as you make your decision!</em>
+              </h3>
+            )}
+          </div>
+
+          {/* Right side - contains the submission form */}
+          <div className={styles.right}>
+            <form>
+              <div className={styles.formWrapper}>
+                {/* The various fields of the form, which describe the submission */}
                 <TextField
                   fullWidth
-                  helperText={ immutableText }
-                  id="position"
-                  label="Live Position"
-                  value={ renderPosition(submission.id, submission.submitted_at) ? submission.position : "-" }
-                  variant="filled"
-                  slotProps={ {
-                    htmlInput: { readOnly: true }
-                  } }
-                />
-              }
-              <DatePicker
-                disableFuture
-                label="Date"
-                format="YYYY-MM-DD"
-                minDate={ dayjs(game.min_date) }
-                value={ form.values.submitted_at ? dayjs(form.values.submitted_at) : form.values.submitted_at }
-                onChange={ handleSubmittedAtChange }
-                slotProps={ {
-                  textField: {
-                    color: form.error.submitted_at ? "error" : (form.values.submitted_at !== dateB2F(submission.submitted_at) ? "success" : "primary"),
-                    fullWidth: true,
-                    helperText: form.error.submitted_at ? form.error.submitted_at : (form.values.submitted_at !== dateB2F(submission.submitted_at) ? updateFieldText : null),
-                    variant: "filled"
+                  helperText={immutableText}
+                  id="all_position"
+                  label="Position"
+                  value={
+                    renderPosition(submission.id, submission.submitted_at)
+                      ? submission.all_position
+                      : "-"
                   }
-                } }
-              />
-              { game.version.length > 0 &&
+                  variant="filled"
+                  slotProps={{
+                    htmlInput: { readOnly: true },
+                  }}
+                />
+                {submission.position && (
+                  <TextField
+                    fullWidth
+                    helperText={immutableText}
+                    id="position"
+                    label="Live Position"
+                    value={
+                      renderPosition(submission.id, submission.submitted_at)
+                        ? submission.position
+                        : "-"
+                    }
+                    variant="filled"
+                    slotProps={{
+                      htmlInput: { readOnly: true },
+                    }}
+                  />
+                )}
+                <DatePicker
+                  disableFuture
+                  label="Date"
+                  format="YYYY-MM-DD"
+                  minDate={dayjs(game.min_date)}
+                  value={
+                    form.values.submitted_at
+                      ? dayjs(form.values.submitted_at)
+                      : form.values.submitted_at
+                  }
+                  onChange={handleSubmittedAtChange}
+                  slotProps={{
+                    textField: {
+                      color: form.error.submitted_at
+                        ? "error"
+                        : form.values.submitted_at !== dateB2F(submission.submitted_at)
+                          ? "success"
+                          : "primary",
+                      fullWidth: true,
+                      helperText: form.error.submitted_at
+                        ? form.error.submitted_at
+                        : form.values.submitted_at !== dateB2F(submission.submitted_at)
+                          ? updateFieldText
+                          : null,
+                      variant: "filled",
+                    },
+                  }}
+                />
+                {game.version.length > 0 && (
+                  <TextField
+                    color={
+                      parseInt(form.values.version) !== submission.version.id
+                        ? "success"
+                        : "primary"
+                    }
+                    fullWidth
+                    helperText={
+                      parseInt(form.values.version) !== submission.version.id
+                        ? updateFieldText
+                        : null
+                    }
+                    id="version"
+                    label="Game Version"
+                    select
+                    onChange={handleChange}
+                    value={form.values.version}
+                    variant="filled"
+                    slotProps={{
+                      select: { native: true },
+                    }}
+                  >
+                    {game.version.map((version) => (
+                      <option value={version.id} key={version.id}>
+                        {version.version}
+                      </option>
+                    ))}
+                  </TextField>
+                )}
                 <TextField
-                  color={ parseInt(form.values.version) !== submission.version.id ? "success" : "primary" }
+                  color={
+                    parseInt(form.values.monkey_id) !== submission.monkey.id ? "success" : "primary"
+                  }
                   fullWidth
-                  helperText={ parseInt(form.values.version) !== submission.version.id ? updateFieldText : null }
-                  id="version"
-                  label="Game Version"
+                  helperText={
+                    parseInt(form.values.monkey_id) !== submission.monkey.id
+                      ? updateFieldText
+                      : null
+                  }
+                  id="monkey_id"
+                  label="Monkey"
                   select
-                  onChange={ handleChange }
-                  value={ form.values.version }
+                  onChange={handleChange}
+                  value={form.values.monkey_id}
                   variant="filled"
-                  slotProps={ {
-                    select: { native: true }
-                  } }
+                  slotProps={{
+                    select: { native: true },
+                  }}
                 >
-                  { game.version.map(version => (
-                    <option value={ version.id } key={ version.id } >{ version.version }</option>
-                  )) }
+                  {game.monkey.map((monkey) => (
+                    <option value={monkey.id} key={monkey.id}>
+                      {monkey.monkey_name}
+                    </option>
+                  ))}
                 </TextField>
-              }
-              <TextField
-                color={ parseInt(form.values.monkey_id) !== submission.monkey.id ? "success" : "primary" }
-                fullWidth
-                helperText={ parseInt(form.values.monkey_id) !== submission.monkey.id ? updateFieldText : null }
-                id="monkey_id"
-                label="Monkey"
-                select
-                onChange={ handleChange }
-                value={ form.values.monkey_id }
-                variant="filled"
-                slotProps={ {
-                  select: { native: true }
-                } }
-              >
-                { game.monkey.map(monkey => (
-                  <option value={ monkey.id } key={ monkey.id } >{ monkey.monkey_name }</option>
-                )) }
-              </TextField>
-              <TextField
-                color={ parseInt(form.values.platform_id) !== submission.platform.id ? "success" : "primary" }
-                fullWidth
-                helperText={ parseInt(form.values.platform_id) !== submission.platform.id ? updateFieldText : null }
-                id="platform_id"
-                label="Platform"
-                select
-                onChange={ handleChange }
-                value={ form.values.platform_id }
-                variant="filled"
-                slotProps={ {
-                  select: { native: true }
-                } }
-              >
-                { game.platform.map(platform => (
-                  <option value={ platform.id } key={ platform.id } >{ platform.platform_name }</option>
-                )) }
-              </TextField>
-              <TextField
-                color={ parseInt(form.values.region_id) !== submission.region.id ? "success" : "primary" }
-                fullWidth
-                helperText={ parseInt(form.values.region_id) !== submission.region.id ? updateFieldText : null }
-                id="region_id"
-                label="Region"
-                select
-                onChange={ handleChange }
-                value={ form.values.region_id }
-                variant="filled"
-                slotProps={ {
-                  select: { native: true }
-                } }
-              >
-                { game.region.map(region => (
-                  <option value={ region.id } key={ region.id } >{ region.region_name }</option>
-                )) }
-              </TextField>
-              <TextField
-                autoComplete="off"
-                color={ form.error.proof ? "error" : (form.values.proof !== submission.proof ? "success" : "primary") }
-                fullWidth
-                helperText={ form.error.proof ? form.error.proof : (form.values.proof !== submission.proof ? updateFieldText : null) }
-                id="proof"
-                label="Proof"
-                placeholder="Must be a valid URL"
-                onChange={ handleChange }
-                value={ form.values.proof }
-                variant="filled"
-              />
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={ form.values.live }
-                      id="live"
-                      onChange={ handleChange }
-                      slotProps={{
-                        input: { "aria-label": "controlled" }
-                      }}
-                    />
+                <TextField
+                  color={
+                    parseInt(form.values.platform_id) !== submission.platform.id
+                      ? "success"
+                      : "primary"
                   }
-                  label="Live Proof"
-                />
-                { form.error.live ?
-                  <FormHelperText error>{ form.error.live }</FormHelperText>
-                  :
-                  submission.live !== form.values.live && <FormHelperText>{ updateFieldText }</FormHelperText>
-                }
-              </FormGroup>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={ form.values.tas }
-                      id="tas"
-                      onChange={ handleChange }
-                      slotProps={{
-                        input: { "aria-label": "controlled" }
-                      }}
-                    />
+                  fullWidth
+                  helperText={
+                    parseInt(form.values.platform_id) !== submission.platform.id
+                      ? updateFieldText
+                      : null
                   }
-                  label="TAS"
+                  id="platform_id"
+                  label="Platform"
+                  select
+                  onChange={handleChange}
+                  value={form.values.platform_id}
+                  variant="filled"
+                  slotProps={{
+                    select: { native: true },
+                  }}
+                >
+                  {game.platform.map((platform) => (
+                    <option value={platform.id} key={platform.id}>
+                      {platform.platform_name}
+                    </option>
+                  ))}
+                </TextField>
+                <TextField
+                  color={
+                    parseInt(form.values.region_id) !== submission.region.id ? "success" : "primary"
+                  }
+                  fullWidth
+                  helperText={
+                    parseInt(form.values.region_id) !== submission.region.id
+                      ? updateFieldText
+                      : null
+                  }
+                  id="region_id"
+                  label="Region"
+                  select
+                  onChange={handleChange}
+                  value={form.values.region_id}
+                  variant="filled"
+                  slotProps={{
+                    select: { native: true },
+                  }}
+                >
+                  {game.region.map((region) => (
+                    <option value={region.id} key={region.id}>
+                      {region.region_name}
+                    </option>
+                  ))}
+                </TextField>
+                <TextField
+                  autoComplete="off"
+                  color={
+                    form.error.proof
+                      ? "error"
+                      : form.values.proof !== submission.proof
+                        ? "success"
+                        : "primary"
+                  }
+                  fullWidth
+                  helperText={
+                    form.error.proof
+                      ? form.error.proof
+                      : form.values.proof !== submission.proof
+                        ? updateFieldText
+                        : null
+                  }
+                  id="proof"
+                  label="Proof"
+                  placeholder="Must be a valid URL"
+                  onChange={handleChange}
+                  value={form.values.proof}
+                  variant="filled"
                 />
-                { submission.tas !== form.values.tas && <FormHelperText>{ updateFieldText }</FormHelperText> }
-              </FormGroup>
-              <TextField
-                color={ form.values.comment !== submission.comment ? "success" : "primary" }
-                fullWidth
-                helperText={ form.values.comment !== submission.comment ? updateFieldText : null }
-                id="comment"
-                label="Comment"
-                multiline
-                rows={ COMMENT_ROWS }
-                onChange={ handleChange }
-                value={ form.values.comment }
-                variant="filled"
-                slotProps={ {
-                  input: {
-                    endAdornment: submission.comment ? (
-                      <IconButton size="small" onClick={ handleToggle }>
-                        { form.values.comment ? <ClearRoundedIcon /> : <AddIcon /> }
-                      </IconButton>
-                    ) : undefined
-                  },
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={form.values.live}
+                        id="live"
+                        onChange={handleChange}
+                        slotProps={{
+                          input: { "aria-label": "controlled" },
+                        }}
+                      />
+                    }
+                    label="Live Proof"
+                  />
+                  {form.error.live ? (
+                    <FormHelperText error>{form.error.live}</FormHelperText>
+                  ) : (
+                    submission.live !== form.values.live && (
+                      <FormHelperText>{updateFieldText}</FormHelperText>
+                    )
+                  )}
+                </FormGroup>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={form.values.tas}
+                        id="tas"
+                        onChange={handleChange}
+                        slotProps={{
+                          input: { "aria-label": "controlled" },
+                        }}
+                      />
+                    }
+                    label="TAS"
+                  />
+                  {submission.tas !== form.values.tas && (
+                    <FormHelperText>{updateFieldText}</FormHelperText>
+                  )}
+                </FormGroup>
+                <TextField
+                  color={form.values.comment !== submission.comment ? "success" : "primary"}
+                  fullWidth
+                  helperText={form.values.comment !== submission.comment ? updateFieldText : null}
+                  id="comment"
+                  label="Comment"
+                  multiline
+                  rows={COMMENT_ROWS}
+                  onChange={handleChange}
+                  value={form.values.comment}
+                  variant="filled"
+                  slotProps={{
+                    input: {
+                      endAdornment: submission.comment ? (
+                        <IconButton size="small" onClick={handleToggle}>
+                          {form.values.comment ? <ClearRoundedIcon /> : <AddIcon />}
+                        </IconButton>
+                      ) : undefined,
+                    },
 
-                  htmlInput: { maxLength: COMMENT_MAX_LENGTH, readOnly: true }
-                } } />
-              <TextField
-                color={ form.values.mod_note !== submission.mod_note ? "success" : "primary" }
-                fullWidth
-                helperText={ form.values.mod_note !== submission.mod_note ? updateFieldText : null }
-                id="mod_note"
-                label="Moderator Note"
-                multiline
-                rows={ COMMENT_ROWS }
-                onChange={ handleChange }
-                value={ form.values.mod_note }
-                variant="filled"
-                slotProps={ {
-                  htmlInput: { maxLength: COMMENT_MAX_LENGTH }
-                } }
-              />
+                    htmlInput: { maxLength: COMMENT_MAX_LENGTH, readOnly: true },
+                  }}
+                />
+                <TextField
+                  color={form.values.mod_note !== submission.mod_note ? "success" : "primary"}
+                  fullWidth
+                  helperText={form.values.mod_note !== submission.mod_note ? updateFieldText : null}
+                  id="mod_note"
+                  label="Moderator Note"
+                  multiline
+                  rows={COMMENT_ROWS}
+                  onChange={handleChange}
+                  value={form.values.mod_note}
+                  variant="filled"
+                  slotProps={{
+                    htmlInput: { maxLength: COMMENT_MAX_LENGTH },
+                  }}
+                />
 
-              { /* Button used to reset the form back to it's original values */ }
-              <button className="cancel" type="button" onClick={ () => fillForm() } disabled={ submitting || isFormUnchanged() }>Reset Values</button>
+                {/* Button used to reset the form back to it's original values */}
+                <button
+                  className="cancel"
+                  type="button"
+                  onClick={() => fillForm()}
+                  disabled={submitting || isFormUnchanged()}
+                >
+                  Reset Values
+                </button>
 
-              { /* Two buttons: one for approving the submission, and one for deleting. */ }
-              <div className={ styles.btns }>
-                <button type="submit" disabled={ showReject || submitting } onClick={ (e) => onApproveClick(e) }>Approve</button>
-                <button type="button" disabled={ showReject || submitting } onClick={ () => setShowReject(true) }>Reject</button>
+                {/* Two buttons: one for approving the submission, and one for deleting. */}
+                <div className={styles.btns}>
+                  <button
+                    type="submit"
+                    disabled={showReject || submitting}
+                    onClick={(e) => onApproveClick(e)}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    type="button"
+                    disabled={showReject || submitting}
+                    onClick={() => setShowReject(true)}
+                  >
+                    Reject
+                  </button>
+                </div>
               </div>
-
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
 
+        {/* If show reject is set to true, render rejection prompt. */}
+        {showReject && (
+          <Rejection
+            form={form}
+            clearMessage={clearMessage}
+            handleChange={handleChange}
+            setShowReject={setShowReject}
+            onReject={onRejectClick}
+          />
+        )}
       </div>
-
-      { /* If show reject is set to true, render rejection prompt. */ }
-      { showReject &&
-        <Rejection
-          form={ form }
-          clearMessage={ clearMessage }
-          handleChange={ handleChange }
-          setShowReject={ setShowReject }
-          onReject={ onRejectClick }
-        />
-      }
-
-    </div>;
-};
+    )
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default Submission;

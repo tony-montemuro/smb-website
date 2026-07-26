@@ -1,7 +1,7 @@
 .buttonList {
     gap: 5px;
 }
-  
+
 .selected {
     background-color: rgb(var(--color-nav));
     color: rgb(var(--color-text));

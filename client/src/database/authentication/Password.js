@@ -2,26 +2,24 @@
 import { supabase } from "../SupabaseClient";
 
 const Password = () => {
-    /* ===== FUNCTIONS ===== */
+  /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: updatePassword - attempt to update the password of current user
-    // 1.) newPassword: a string that represents the new password of the user attempting to update their email
-    // POSTCONDITIONS (2 possible outcomes):
-    // if successful, the user's password should successfully reset, and the user can now sign in with their new password
-    // if a failure, an error will be thrown by this function, which should be handled by the caller function
-    const updatePassword = async newPassword => {
-        // attempt to change email
-        const { error } = await supabase
-            .auth
-            .updateUser({ password: newPassword });
+  // FUNCTION 1: updatePassword - attempt to update the password of current user
+  // 1.) newPassword: a string that represents the new password of the user attempting to update their email
+  // POSTCONDITIONS (2 possible outcomes):
+  // if successful, the user's password should successfully reset, and the user can now sign in with their new password
+  // if a failure, an error will be thrown by this function, which should be handled by the caller function
+  const updatePassword = async (newPassword) => {
+    // attempt to change email
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
 
-        // error handling
-        if (error) {
-            throw error;
-        }
-    };
+    // error handling
+    if (error) {
+      throw error;
+    }
+  };
 
-    return { updatePassword };
+  return { updatePassword };
 };
 
 /* ===== EXPORTS ===== */

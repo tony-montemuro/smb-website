@@ -2,21 +2,21 @@
 import { useNavigate } from "react-router";
 
 const Users = () => {
-    /* ===== VARIABLES ===== */
-    const navigateTo = useNavigate();
+  /* ===== VARIABLES ===== */
+  const navigateTo = useNavigate();
 
-    /* ===== FUNCTIONS ===== */
+  /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: navigateToUser - function that navigates the user to a user's page given a user object
-    // PRECONDITIONS (1 parameter):
-    // 1.) user: a user object corresponding to a valid user
-    // POSTCONDITIONS (1 possible outcome):
-    // the application navigates to the user's page
-    const navigateToUser = user => {
-        navigateTo(`/user/${ user.id }`);
-    };
+  // FUNCTION 1: navigateToUser - function that navigates the user to a user's page given a user object
+  // PRECONDITIONS (1 parameter):
+  // 1.) user: a user object corresponding to a valid user
+  // POSTCONDITIONS (1 possible outcome):
+  // the application navigates to the user's page
+  const navigateToUser = (user) => {
+    navigateTo(`/user/${user.id}`);
+  };
 
-    return { navigateToUser };
+  return { navigateToUser };
 };
 
 /* ===== EXPORTS ===== */

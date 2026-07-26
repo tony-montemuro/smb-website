@@ -22,7 +22,8 @@ function LevelSearchBar() {
   /* ===== FUNCTIONS ===== */
 
   // states and functions from the js file
-  const { filtered, searchInput, setSearchInput, handleFilter, hasElements } = LevelSearchBarLogic();
+  const { filtered, searchInput, setSearchInput, handleFilter, hasElements } =
+    LevelSearchBarLogic();
 
   /* ===== EFFECTS ===== */
 
@@ -34,23 +35,23 @@ function LevelSearchBar() {
 
   /* ===== LEVEL SEARCH BAR COMPONENT ===== */
   return (
-    <div className={ styles.searchbar }>
+    <div className={styles.searchbar}>
+      {/* Render the search bar input */}
+      <SearchBarInput itemType="chart" input={searchInput} setInput={setSearchInput} />
 
-      { /* Render the search bar input */ }
-      <SearchBarInput itemType="chart" input={ searchInput } setInput={ setSearchInput } />
-
-      { /* Only render search results if the filtered state has any elements. */ }
-      { filtered && hasElements() &&
-        <div className={ styles.results }>
-          { categories.map(category => {
-            return <LevelSearchBarCategory category={ category } filtered={ filtered } key={ category } />;
+      {/* Only render search results if the filtered state has any elements. */}
+      {filtered && hasElements() && (
+        <div className={styles.results}>
+          {categories.map((category) => {
+            return (
+              <LevelSearchBarCategory category={category} filtered={filtered} key={category} />
+            );
           })}
         </div>
-      }
-
+      )}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default LevelSearchBar;

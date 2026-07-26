@@ -24,7 +24,7 @@ const Resources = () => {
   // POSTCONDITIONS (2 possible outcomes):
   // if the current page is different from `name`, this function navigates the user to the page defined by name
   // otherwise, this function will scroll the user to the top of `name` page
-  const handlePageClick = name => {
+  const handlePageClick = (name) => {
     if (currentPage !== name) {
       setCurrentPage(name);
       navigateTo(`/resources/${name}`);

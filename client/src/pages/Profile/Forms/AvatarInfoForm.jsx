@@ -15,7 +15,7 @@ function AvatarInfoForm({ imageReducer }) {
 
   // user state from user context
   const { user } = useContext(UserContext);
-  
+
   /* ===== STATES & VARIABLES ===== */
   const { form, submitAvatar } = AvatarInfoFormLogic(MAX_IMG_LENGTH);
 
@@ -25,13 +25,20 @@ function AvatarInfoForm({ imageReducer }) {
   /* ===== AVATAR INFO FORM COMPONENT ===== */
   return (
     <Container title="Upload Avatar">
-      <form className={ styles.form } onSubmit={ (e) => submitAvatar(e, avatarRef, imageReducer) }>
+      <form className={styles.form} onSubmit={(e) => submitAvatar(e, avatarRef, imageReducer)}>
         <span>
           <strong>Note: </strong>
-          Must be JPEG or PNG, and cannot exceed the dimensions <strong>{ MAX_IMG_LENGTH }x{ MAX_IMG_LENGTH }</strong>.
-          If your avatar does not update immediately, give it some time.
+          Must be JPEG or PNG, and cannot exceed the dimensions{" "}
+          <strong>
+            {MAX_IMG_LENGTH}x{MAX_IMG_LENGTH}
+          </strong>
+          . If your avatar does not update immediately, give it some time.
         </span>
-        <Avatar profileId={ user.profile ? user.profile.id : null } size={ IMG_LENGTH } imageReducer={ imageReducer } />
+        <Avatar
+          profileId={user.profile ? user.profile.id : null}
+          size={IMG_LENGTH}
+          imageReducer={imageReducer}
+        />
         <div>
           <label htmlFor="avatar-update"></label>
           <input
@@ -39,15 +46,17 @@ function AvatarInfoForm({ imageReducer }) {
             id="avatar-update"
             accept=".jpg,.jpeg,.png"
             title="Upload Avatar"
-            ref={ avatarRef }
+            ref={avatarRef}
           />
         </div>
-        { form.error && <b id={ styles.error }>{ form.error }</b> }
-        <button type="submit" disabled={ form.uploading }>Upload</button>
+        {form.error && <b id={styles.error}>{form.error}</b>}
+        <button type="submit" disabled={form.uploading}>
+          Upload
+        </button>
       </form>
     </Container>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default AvatarInfoForm;

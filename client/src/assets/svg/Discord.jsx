@@ -1,11 +1,7 @@
 function Discord(props) {
   /* ===== DISCORD COMPONENT ===== */
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 127.14 96.36"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36" {...props}>
       <g data-name="\u56FE\u5C42 2">
         <g data-name="Discord Logos">
           <path
@@ -17,7 +13,7 @@ function Discord(props) {
       </g>
     </svg>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Discord;

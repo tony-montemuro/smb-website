@@ -30,34 +30,34 @@ function Game() {
   const category = path[3];
   const gameCategories = getGameCategories(game);
   const firstCategory = gameCategories[0];
-  
+
   /* ===== MEMOS ===== */
   const searchParams = useMemo(() => {
     const params = new URLSearchParams();
-    params.append("game_id", version ? `${ abb }_${ version.id }` : abb);
+    params.append("game_id", version ? `${abb}_${version.id}` : abb);
     return params;
   }, [abb, version]);
 
   /* ===== STATES ===== */
   const [selectedCategory, setSelectedCategory] = useState(category ? category : firstCategory);
   const [selectedMode, setSelectedMode] = useState(null);
-  const modes = game.mode.filter(mode => mode.category === selectedCategory);
+  const modes = game.mode.filter((mode) => mode.category === selectedCategory);
 
   /* ===== FUNCTIONS ===== */
-  
+
   // simple function that handles the radio button change
-  const handleChange = category => {
+  const handleChange = (category) => {
     setSelectedCategory(category);
     setSelectedMode(null);
-    navigateTo(`/games/${ abb }/${ category }`);
+    navigateTo(`/games/${abb}/${category}`);
   };
 
   /* ===== EFFECTS ====== */
   useEffect(() => {
     // special case: we are attempting to access a game page with a non-valid category
-    if (category && !(gameCategories.includes(category))) {
+    if (category && !gameCategories.includes(category)) {
       setSelectedCategory(firstCategory);
-      navigateTo(`/games/${ abb }`);
+      navigateTo(`/games/${abb}`);
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,60 +65,65 @@ function Game() {
 
   /* ===== GAME COMPONENT ===== */
   return (
-    <div className={ styles.game }>
-
-      { /* Game Info - Render the game rules, and recent submissions */ }
-      <div className={ styles.half }>
-        <div className={ styles.info }>
+    <div className={styles.game}>
+      {/* Game Info - Render the game rules, and recent submissions */}
+      <div className={styles.half}>
+        <div className={styles.info}>
           <Container title="Rules" largeTitle>
-            <div className={ styles.rules }>
+            <div className={styles.rules}>
               <ol>
-                { game.rule.map(row => {
-                  return <Rule rule={ row.rule_name } key={ row.id } />;
+                {game.rule.map((row) => {
+                  return <Rule rule={row.rule_name} key={row.id} />;
                 })}
               </ol>
             </div>
           </Container>
-          <div className={ styles.recent }>
-            <Container title="Recent Submissions" href={ `/recent-submissions?game_id=${ searchParams.get("game_id") }` } largeTitle>
-              <RecentSubmissionsTable searchParams={ searchParams } renderLevelContext />
+          <div className={styles.recent}>
+            <Container
+              title="Recent Submissions"
+              href={`/recent-submissions?game_id=${searchParams.get("game_id")}`}
+              largeTitle
+            >
+              <RecentSubmissionsTable searchParams={searchParams} renderLevelContext />
             </Container>
           </div>
         </div>
       </div>
 
-      { /* Game charts - Specifies the category of levels, and renders a list of charts to select. */ }
-      <div className={ styles.charts }>
+      {/* Game charts - Specifies the category of levels, and renders a list of charts to select. */}
+      <div className={styles.charts}>
         <Container title="Charts" largeTitle>
-          <div className={ styles.chartsBody }>
-            { gameCategories.length > 1 &&
+          <div className={styles.chartsBody}>
+            {gameCategories.length > 1 && (
               <ButtonList
-                buttons={ gameCategories.map(category => ({ name: appData.categories[category].name, value: category })) }
-                current={ selectedCategory }
-                setCurrent={ handleChange }
+                buttons={gameCategories.map((category) => ({
+                  name: appData.categories[category].name,
+                  value: category,
+                }))}
+                current={selectedCategory}
+                setCurrent={handleChange}
                 wrap
               />
-            }
-            <div className={ styles.modes }>
-              { modes.map(mode => {
+            )}
+            <div className={styles.modes}>
+              {modes.map((mode) => {
                 return (
-                  <ModeBody 
-                    category={ selectedCategory } 
-                    modeName={ mode.name }
-                    selectedMode={ selectedMode }
-                    setSelectedMode={ setSelectedMode }
-                    key={ `${ selectedCategory }_${ mode.name }` } 
+                  <ModeBody
+                    category={selectedCategory}
+                    modeName={mode.name}
+                    selectedMode={selectedMode}
+                    setSelectedMode={setSelectedMode}
+                    key={`${selectedCategory}_${mode.name}`}
                   />
                 );
               })}
             </div>
           </div>
         </Container>
-
       </div>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Game;

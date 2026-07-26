@@ -25,28 +25,26 @@ function UserOverview({ imageReducer }) {
   /* ===== USER OVERVIEW COMPONENT ===== */
   return (
     <Container>
-      <div className={ styles.userOverview }>
-
-        { /* User avatar and name - link back to the main user page. */ }
-        <Link to={ `/user/${ profile.id }` } onClick={ scrollToRight }>
-          <Avatar profileId={ profile.id } size={ IMG_WIDTH } imageReducer={ imageReducer }  />
+      <div className={styles.userOverview}>
+        {/* User avatar and name - link back to the main user page. */}
+        <Link to={`/user/${profile.id}`} onClick={scrollToRight}>
+          <Avatar profileId={profile.id} size={IMG_WIDTH} imageReducer={imageReducer} />
         </Link>
-        <Link to={ `/user/${ profile.id }` } onClick={ scrollToRight }>
-          <h2>{ profile.username }</h2>
+        <Link to={`/user/${profile.id}`} onClick={scrollToRight}>
+          <h2>{profile.username}</h2>
         </Link>
 
-        { /* User country - render the user's country flag and name, if they exist. */ }
-        { profile.country &&
+        {/* User country - render the user's country flag and name, if they exist. */}
+        {profile.country && (
           <div className="center">
-            <CountryFlag country={ profile.country.iso2 } />
-            <p>&nbsp;{ profile.country.name }</p>
+            <CountryFlag country={profile.country.iso2} />
+            <p>&nbsp;{profile.country.name}</p>
           </div>
-        }
-
+        )}
       </div>
     </Container>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default UserOverview;

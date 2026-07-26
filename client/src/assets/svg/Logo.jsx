@@ -38,7 +38,7 @@ function Logo() {
       </g>
     </svg>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Logo;

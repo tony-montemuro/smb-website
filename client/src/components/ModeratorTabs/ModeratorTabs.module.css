@@ -14,7 +14,7 @@
     border: 1px solid rgba(var(--color-text), 0.5);
     border-top: none;
     width: 100%;
-    line-height: calc(var(--navbar-height)/2);
+    line-height: calc(var(--navbar-height) / 2);
 }
 
 .tab:first-child {

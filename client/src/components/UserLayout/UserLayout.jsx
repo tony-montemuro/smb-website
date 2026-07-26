@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { Outlet, useLocation, useNavigate, useParams } from "react-router";
 import { AppDataContext, ProfileContext, MessageContext } from "../../utils/Contexts";
-import { useContext, useEffect, useState } from "react"; 
+import { useContext, useEffect, useState } from "react";
 import styles from "./UserLayout.module.css";
 import Loading from "../Loading/Loading.jsx";
 import StatsDirectory from "./StatsDirectory/StatsDirectory.jsx";
@@ -21,8 +21,8 @@ function UserLayout({ imageReducer }) {
   const { appData } = useContext(AppDataContext);
 
   // add message function from message context
-  const { addMessage } = useContext(MessageContext)
-  
+  const { addMessage } = useContext(MessageContext);
+
   /* ===== STATES ===== */
   const [profile, setProfile] = useState(undefined);
 
@@ -48,33 +48,32 @@ function UserLayout({ imageReducer }) {
         // if we made it this far, update the profile state hook
         setProfile(profile);
       }
-    };
+    }
 
     initProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  /* ===== USER LAYOUT COMPONENT ===== */ 
-  return profile && appData ?
-    <ProfileContext.Provider value={ { profile } } >
-      <div className={ styles.userLayout }>
-
-        { /* User Layout Left - Sidebar user can use to navigate the user pages.  */ }
-        <div className={ styles.left }>
-          <UserOverview imageReducer={ imageReducer } />
-          <StatsDirectory imageReducer={ imageReducer } />
+  /* ===== USER LAYOUT COMPONENT ===== */
+  return profile && appData ? (
+    <ProfileContext.Provider value={{ profile }}>
+      <div className={styles.userLayout}>
+        {/* User Layout Left - Sidebar user can use to navigate the user pages.  */}
+        <div className={styles.left}>
+          <UserOverview imageReducer={imageReducer} />
+          <StatsDirectory imageReducer={imageReducer} />
         </div>
 
-        { /* User layout content -  The actual page itself. */ }
-        <div className={ styles.right } id="user-layout-right">
+        {/* User layout content -  The actual page itself. */}
+        <div className={styles.right} id="user-layout-right">
           <Outlet />
         </div>
-
       </div>
     </ProfileContext.Provider>
-  :
+  ) : (
     <Loading />
-};  
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default UserLayout;

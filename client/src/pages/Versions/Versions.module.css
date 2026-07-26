@@ -6,7 +6,9 @@
     gap: var(--app-padding);
 }
 
-.versions h3, .versions h2, .versions hr {
+.versions h3,
+.versions h2,
+.versions hr {
     margin: 0;
 }
 
@@ -81,7 +83,10 @@
 }
 
 .boxPadding {
-    width: calc(var(--chart-name-width) + var(--step-padding) + var(--step-padding) + 6px);
+    width: calc(
+        var(--chart-name-width) + var(--step-padding) + var(--step-padding) +
+            6px
+    );
 }
 
 .structureInner {
@@ -108,7 +113,10 @@
 }
 
 .modeHeader {
-    top: calc(var(--screen-top) + var(--toggle-all-height) + var(--toggle-category-height));
+    top: calc(
+        var(--screen-top) + var(--toggle-all-height) +
+            var(--toggle-category-height)
+    );
     position: sticky;
     background-color: rgb(var(--color-container-selected));
     z-index: var(--z-medium);

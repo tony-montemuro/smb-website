@@ -14,25 +14,33 @@ function TypeButtons({ abb, category, level }) {
 
   /* ===== TYPE BUTTONS COMPONENT ===== */
   return (
-    <div className={ styles.typeBtns }>
-
+    <div className={styles.typeBtns}>
       {/* Score button */}
-      { (level.chart_type === "both" || level.chart_type === "score") &&
-        <button type="button" onClick={ () => navigateTo(addAllExistingSearchParams(`/games/${ abb }/${ category }/score/${ level.name }`)) }>
+      {(level.chart_type === "both" || level.chart_type === "score") && (
+        <button
+          type="button"
+          onClick={() =>
+            navigateTo(addAllExistingSearchParams(`/games/${abb}/${category}/score/${level.name}`))
+          }
+        >
           Score
         </button>
-      }
+      )}
 
       {/* Time button */}
-      { (level.chart_type === "time" || level.chart_type === "both") &&
-        <button type="button" onClick={ () => navigateTo(addAllExistingSearchParams(`/games/${ abb }/${ category }/time/${ level.name }`)) }>
+      {(level.chart_type === "time" || level.chart_type === "both") && (
+        <button
+          type="button"
+          onClick={() =>
+            navigateTo(addAllExistingSearchParams(`/games/${abb}/${category}/time/${level.name}`))
+          }
+        >
           Time
         </button>
-      }
-
+      )}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default TypeButtons;

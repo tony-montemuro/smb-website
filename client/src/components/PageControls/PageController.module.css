@@ -37,7 +37,8 @@
         width: 100%;
     }
 
-    .dropdown button, .dropdown select {
+    .dropdown button,
+    .dropdown select {
         flex: 1;
     }
 }

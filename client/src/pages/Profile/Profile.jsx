@@ -41,34 +41,30 @@ function Profile({ imageReducer }) {
   }, [user]);
 
   /* ===== PROFILE COMPONENT ===== */
-  return user.id ?
-    <div className={ styles.profile }>
+  return user.id ? (
+    <div className={styles.profile}>
       <h1>Profile Settings</h1>
-      <div className={ styles.body }> 
-
-        { /* Profile left - render the user info form */ }
-        <div className={ styles.left }>
-          <Container title={ `${ user.profile ? "Update " : "" }Profile Information` }>
-            <UserInfoForm 
-              submitting={ submitting }
-              setSubmitting={ setSubmitting }
-            />
+      <div className={styles.body}>
+        {/* Profile left - render the user info form */}
+        <div className={styles.left}>
+          <Container title={`${user.profile ? "Update " : ""}Profile Information`}>
+            <UserInfoForm submitting={submitting} setSubmitting={setSubmitting} />
           </Container>
         </div>
 
-        { /* Profile right - render the avatar info form, and email info form */ }
-        <div className={ styles.right }>
-          { user.profile && <AvatarInfoForm imageReducer={ imageReducer } /> }
+        {/* Profile right - render the avatar info form, and email info form */}
+        <div className={styles.right}>
+          {user.profile && <AvatarInfoForm imageReducer={imageReducer} />}
           <EmailInfoForm />
           <PasswordForm />
           <SignoutForm />
         </div>
-          
       </div>
     </div>
-  :
-    <Loading />;
-};
+  ) : (
+    <Loading />
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default Profile;

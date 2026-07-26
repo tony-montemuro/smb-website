@@ -33,63 +33,67 @@ function Rejection({ form, clearMessage, handleChange, setShowReject, onReject }
       rejectionRef.current.scrollIntoView({ behavior: "smooth" });
     }, 0);
 
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer);
   }, []);
 
   /* ===== REJECTION COMPONENT ===== */
   return (
-    <div ref={ rejectionRef } className={ styles.rejection }>
+    <div ref={rejectionRef} className={styles.rejection}>
       <hr />
-      { /* Render information about rejections */ }
-      <div className={ styles.rejectionHeader }>
+      {/* Render information about rejections */}
+      <div className={styles.rejectionHeader}>
         <h2>
-          { isOwn ?
-            `Are you sure you want to reject your own submission?`
-          :
-            `Are you sure you want to reject this submission?`
-          }
+          {isOwn
+            ? `Are you sure you want to reject your own submission?`
+            : `Are you sure you want to reject this submission?`}
         </h2>
-        <span><em>Note:</em> Rejecting a submission means deleting it!</span>
+        <span>
+          <em>Note:</em> Rejecting a submission means deleting it!
+        </span>
       </div>
       <form>
-        <div className={ styles.formWrapper }>
-
-          { /* Message: Render a textbox allowing the user to add a message, if the submission does not belong to current user. */ }
-          { !isOwn &&
+        <div className={styles.formWrapper}>
+          {/* Message: Render a textbox allowing the user to add a message, if the submission does not belong to current user. */}
+          {!isOwn && (
             <TextField
               fullWidth
               id="message"
               label="Message"
               multiline
               placeholder="Must be under 100 characters"
-              rows={ MESSAGE_ROWS }
-              onChange={ handleChange }
-              value={ form.values.message }
+              rows={MESSAGE_ROWS}
+              onChange={handleChange}
+              value={form.values.message}
               variant="filled"
               slotProps={{
-                input: { 
-                  endAdornment: form.values.message.length > 0 ? (
-                    <IconButton size="small" onClick={ clearMessage }>
-                      <ClearRoundedIcon />
-                    </IconButton>
-                  ) : undefined
+                input: {
+                  endAdornment:
+                    form.values.message.length > 0 ? (
+                      <IconButton size="small" onClick={clearMessage}>
+                        <ClearRoundedIcon />
+                      </IconButton>
+                    ) : undefined,
                 },
 
-                htmlInput: { maxLength: MESSAGE_MAX_LENGTH }
-              }} />
-          }
+                htmlInput: { maxLength: MESSAGE_MAX_LENGTH },
+              }}
+            />
+          )}
 
-          { /* Two buttons: one for cancellation, and one for rejection. */ }
-          <div className={ styles.btns }>
-            <button type="button" className="cancel" onClick={ () => setShowReject(false) }>Cancel</button>
-            <button type="submit" onClick={ (e) => onReject(e) }>Reject</button>
+          {/* Two buttons: one for cancellation, and one for rejection. */}
+          <div className={styles.btns}>
+            <button type="button" className="cancel" onClick={() => setShowReject(false)}>
+              Cancel
+            </button>
+            <button type="submit" onClick={(e) => onReject(e)}>
+              Reject
+            </button>
           </div>
-
         </div>
       </form>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Rejection;

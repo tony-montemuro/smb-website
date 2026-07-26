@@ -8,16 +8,16 @@ function SignIn() {
 
   /* ===== SIGN IN COMPONENT ===== */
   return (
-    <button 
-      type="button" 
-      className={ styles.btn }
+    <button
+      type="button"
+      className={styles.btn}
       title="Sign In"
-      onClick={ () => navigateTo("/signin")}
+      onClick={() => navigateTo("/signin")}
     >
       Sign In
     </button>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default SignIn;

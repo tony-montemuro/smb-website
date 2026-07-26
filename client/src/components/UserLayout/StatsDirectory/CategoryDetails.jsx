@@ -12,7 +12,7 @@ function CategoryDetails({ game, category, index }) {
 
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
-  
+
   /* ===== FUNCTIONS ===== */
 
   // functions from the js file
@@ -29,29 +29,23 @@ function CategoryDetails({ game, category, index }) {
 
   /* ===== CATEGORY DETAILS COMPONENT ===== */
   return (
-    <div className={ `${ styles.category } ${ indexToParity(index) }` }>
+    <div className={`${styles.category} ${indexToParity(index)}`}>
+      {/* First, render the name of the category */}
+      <h3>{categoryName}</h3>
 
-      { /* First, render the name of the category */ }
-      <h3>{ categoryName }</h3>
-
-      { /* Then, for each type in the category, render a button to navigate to the user's stats for { game.abb }, category, type */ }
-      <div className={ styles.links }>
-        { types.map(type => {
-          return ( 
-            <button 
-              type="button"
-              onClick={ () => onStatsClick(game.abb, category, type) }
-              key={ type }
-            >
-              { capitalize(type) }
+      {/* Then, for each type in the category, render a button to navigate to the user's stats for { game.abb }, category, type */}
+      <div className={styles.links}>
+        {types.map((type) => {
+          return (
+            <button type="button" onClick={() => onStatsClick(game.abb, category, type)} key={type}>
+              {capitalize(type)}
             </button>
           );
         })}
       </div>
-
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default CategoryDetails;

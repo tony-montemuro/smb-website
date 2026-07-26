@@ -48,7 +48,7 @@
 /* ===== MOBILE LAYOUT FOR SMALLER DEVICES ===== */
 @media (max-width: 820px) {
     #categoryBtns {
-        flex-wrap: wrap;    
+        flex-wrap: wrap;
     }
 
     .boolean {
@@ -63,5 +63,4 @@
         padding-top: 10px;
         justify-content: center;
     }
-
 }

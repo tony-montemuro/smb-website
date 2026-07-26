@@ -11,23 +11,21 @@ function Container({ title, largeTitle, href, children }) {
   // if href is defined, return name wrapped in a `Link` tag that navitgtes the user to the page defined by `href`
   // if href is null, simply return the name
   const getTitle = () => {
-    return href ? <Link to={ href }>{ title }</Link> : title;
+    return href ? <Link to={href}>{title}</Link> : title;
   };
 
   /* ===== CONTAINER COMPONENT ===== */
   return (
-    <div className={ styles.container }>
-      { title && 
-        <div className={ styles.header }>
-          { largeTitle ? <h1>{ getTitle() }</h1> : <h2>{ getTitle() }</h2> }
+    <div className={styles.container}>
+      {title && (
+        <div className={styles.header}>
+          {largeTitle ? <h1>{getTitle()}</h1> : <h2>{getTitle()}</h2>}
         </div>
-      }
-      <div className={ styles.body }>
-        { children }
-      </div>
+      )}
+      <div className={styles.body}>{children}</div>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Container;

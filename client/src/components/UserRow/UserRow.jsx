@@ -21,32 +21,32 @@ function UserRow({ user, imageReducer = null, onClick, index = 0, isDetailed, di
   if (!isDetailed) {
     return (
       <div
-        className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" } ${ indexToParity(index) }` } 
-        onClick={ () => onClick(user) }
+        className={`${styles.userRow}${onClick ? ` ${styles.hoverable}` : ""} ${indexToParity(index)}`}
+        onClick={() => onClick(user)}
       >
-        <Username profile={ user } disableLink={ disableLink } />
+        <Username profile={user} disableLink={disableLink} />
       </div>
     );
-  } 
-  
+  }
+
   // Otherwise, render the user's full `DetailedUsername`, as well as their social media accounts on the right of the container
   else {
     return (
-      <div 
-        className={ `${ styles.userRow }${ onClick ? ` ${ styles.hoverable }` : "" } ${ indexToParity(index) }` } 
-        onClick={ () => onClick(user) }
+      <div
+        className={`${styles.userRow}${onClick ? ` ${styles.hoverable}` : ""} ${indexToParity(index)}`}
+        onClick={() => onClick(user)}
       >
-        <DetailedUsername imageReducer={ imageReducer } profile={ user } disableLink />
-        <div className={ styles.socials }>
-          <SocialLink name="youtube" username={ user.youtube_handle } size={ SOCIAL_SIZE } />
-          <SocialLink name="twitch" username={ user.twitch_username } size={ SOCIAL_SIZE } />
-          <SocialLink name="twitter" username={ user.twitter_handle } size={ SOCIAL_SIZE } />
-          <DiscordLogo discord={ user.discord } size={ SOCIAL_SIZE } />
+        <DetailedUsername imageReducer={imageReducer} profile={user} disableLink />
+        <div className={styles.socials}>
+          <SocialLink name="youtube" username={user.youtube_handle} size={SOCIAL_SIZE} />
+          <SocialLink name="twitch" username={user.twitch_username} size={SOCIAL_SIZE} />
+          <SocialLink name="twitter" username={user.twitter_handle} size={SOCIAL_SIZE} />
+          <DiscordLogo discord={user.discord} size={SOCIAL_SIZE} />
         </div>
       </div>
     );
   }
-};
+}
 
 /* ===== EXPORTS ===== */
 export default UserRow;

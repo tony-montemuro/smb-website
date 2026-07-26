@@ -9,24 +9,24 @@ import ModeratorTabs from "../ModeratorTabs/ModeratorTabs.jsx";
 
 function ModeratorLayout() {
   /* ===== STATES & FUNCTIONS ===== */
-  
+
   // states & functions from the js file
   const { games, dispatchGames, updateLayout, getNumberOfSubmissions } = ModeratorLogic();
 
   /* ===== VARIABLES ===== */
   const tabs = [
-    { 
-      pageType: undefined, 
-      content: "About Moderation" 
+    {
+      pageType: undefined,
+      content: "About Moderation",
     },
-    { 
-      pageType: "approvals", 
-      content: `${ getNumberOfSubmissions(true) > 0 ? `(${ getNumberOfSubmissions(true) }) ` : "" }New Submissions`
+    {
+      pageType: "approvals",
+      content: `${getNumberOfSubmissions(true) > 0 ? `(${getNumberOfSubmissions(true)}) ` : ""}New Submissions`,
     },
     {
       pageType: "reports",
-      content: `${ getNumberOfSubmissions(false) > 0 ? `(${ getNumberOfSubmissions(false) }) ` : "" }Reported Submissions`
-    }
+      content: `${getNumberOfSubmissions(false) > 0 ? `(${getNumberOfSubmissions(false)}) ` : ""}Reported Submissions`,
+    },
   ];
   const navigateTo = useNavigate();
 
@@ -45,7 +45,7 @@ function ModeratorLayout() {
     // only initialize component once the user state has initialized
     if (user.id !== undefined) {
       // if user is not logged in or a moderator of at least 1 game, render error, navigate to homepage, and render early
-      if (!(isModerator())) {
+      if (!isModerator()) {
         addMessage("Forbidden access.", "error", 5000);
         navigateTo("/");
         return;
@@ -58,14 +58,15 @@ function ModeratorLayout() {
   }, [user]);
 
   /* ===== MODERATOR LAYOUT COMPONENT ===== */
-  return isModerator() && games ?
-    <ModeratorLayoutContext.Provider value={ { games, dispatchGames } }>
-      <ModeratorTabs tabs={ tabs } />
+  return isModerator() && games ? (
+    <ModeratorLayoutContext.Provider value={{ games, dispatchGames }}>
+      <ModeratorTabs tabs={tabs} />
       <Outlet />
     </ModeratorLayoutContext.Provider>
-  :
+  ) : (
     <Loading />
-};
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default ModeratorLayout;

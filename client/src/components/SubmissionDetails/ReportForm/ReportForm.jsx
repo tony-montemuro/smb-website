@@ -34,66 +34,74 @@ function ReportForm({ updateBoards }) {
   /* ===== REPORT FORM COMPONENT ===== */
   return (
     <>
-      { submission.report ?
-
+      {submission.report ? (
         // If the submission is already reported, render a message letting the user know they are unable to report it again
-        <h2>This submission has already been reported, so it cannot be reported again.
-        Please wait for a moderator to handle this submission.</h2>
-
-      :
+        <h2>
+          This submission has already been reported, so it cannot be reported again. Please wait for
+          a moderator to handle this submission.
+        </h2>
+      ) : (
         <>
-          { /* Report form information - tell the user about reporting this submission */ }
-          { submission.profile.id === user.profile.id ?
+          {/* Report form information - tell the user about reporting this submission */}
+          {submission.profile.id === user.profile.id ? (
             <>
-              <h2>If your submission has a { type } typo...</h2>
-              <p>Report it here to alert a moderator, and resubmit with the corrected { type }. Any other typos can be corrected by selecting the <strong>Update Submissions</strong> button.</p>
+              <h2>If your submission has a {type} typo...</h2>
+              <p>
+                Report it here to alert a moderator, and resubmit with the corrected {type}. Any
+                other typos can be corrected by selecting the <strong>Update Submissions</strong>{" "}
+                button.
+              </p>
             </>
-          :
+          ) : (
             <>
               <h2>If this submission has issues, report it here.</h2>
-              <p>In your message, please explain your reasoning for reporting the submission. Be specific! Also, remember to consider the Moderator Note, if there is one.</p>
-              
-              {/* Only render report token's if current user is "normal" (non-admin & non-moderator) */}
-              { !isModerator(abb) &&
-                <p>You have <b>{ user.profile.report_token }</b> reports left. Report count resets in <CountdownTimer />.</p>  
-              }
-            </>
-          }
-          
-          { /* Report form - allow user to leave a message with the report */ }
-          <form onSubmit={ (e) => handleReport(e, submission, setSubmitting, updateBoards) }>
-            <div className={ styles.formWrapper }>
+              <p>
+                In your message, please explain your reasoning for reporting the submission. Be
+                specific! Also, remember to consider the Moderator Note, if there is one.
+              </p>
 
-              { /* Render a text field for the user to enter a message with their report */ }
+              {/* Only render report token's if current user is "normal" (non-admin & non-moderator) */}
+              {!isModerator(abb) && (
+                <p>
+                  You have <b>{user.profile.report_token}</b> reports left. Report count resets in{" "}
+                  <CountdownTimer />.
+                </p>
+              )}
+            </>
+          )}
+
+          {/* Report form - allow user to leave a message with the report */}
+          <form onSubmit={(e) => handleReport(e, submission, setSubmitting, updateBoards)}>
+            <div className={styles.formWrapper}>
+              {/* Render a text field for the user to enter a message with their report */}
               <TextField
                 fullWidth
-                helperText={ `${ message.length }/${ MESSAGE_MAX_LENGTH }` }
+                helperText={`${message.length}/${MESSAGE_MAX_LENGTH}`}
                 id="message"
                 label="Message"
                 multiline
                 placeholder="Must be under 100 characters"
                 required
-                rows={ TEXT_AREA_ROWS }
-                onChange={ handleChange }
-                value={ message }
+                rows={TEXT_AREA_ROWS}
+                onChange={handleChange}
+                value={message}
                 variant="filled"
                 slotProps={{
-                  htmlInput: { maxLength: MESSAGE_MAX_LENGTH }
+                  htmlInput: { maxLength: MESSAGE_MAX_LENGTH },
                 }}
               />
-      
-              { /* Button that, when pressed, reports the submission */ }
-              <button type="submit" disabled={ submitting }>
+
+              {/* Button that, when pressed, reports the submission */}
+              <button type="submit" disabled={submitting}>
                 Submit Report
               </button>
-
             </div>
           </form>
         </>
-      }
+      )}
     </>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default ReportForm;

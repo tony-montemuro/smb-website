@@ -15,7 +15,7 @@ import UserStatsLogic from "./UserStats.js";
 
 function UserStats() {
   /* ===== CONTEXTS ===== */
-  
+
   // appData state from app data context
   const { appData } = useContext(AppDataContext);
 
@@ -66,33 +66,33 @@ function UserStats() {
   useEffect(() => {
     // see if abb corresponds to a game the current user has submitted to
     const games = profile.submitted_games;
-    const game = games.find(row => row.abb === abb);
+    const game = games.find((row) => row.abb === abb);
 
     // if either do not match, handle the error, and navigate to the home screen
     if (!game) {
       addMessage(errorMessage, "error", 5000);
-      navigateTo(`/user/${ profileId }`);
+      navigateTo(`/user/${profileId}`);
       return;
     }
 
     // special case #1: we are attempting to access a user stats page with a non-valid category
     const gameCategories = getGameCategories(game);
-    if (!(gameCategories.includes(category))) {
+    if (!gameCategories.includes(category)) {
       addMessage(errorMessage, "error", 5000);
-      navigateTo(`/user/${ profileId }`);
+      navigateTo(`/user/${profileId}`);
       return;
     }
 
     // special case #2: we are attempting to access a totalizer page with a valid category, but an invalid type
     const types = getCategoryTypes(game, category);
-    if (!(types.includes(type))) {
+    if (!types.includes(type)) {
       addMessage(errorMessage, "error", 5000);
-      navigateTo(`/user/${ profileId }`);
+      navigateTo(`/user/${profileId}`);
       return;
     }
 
     // otherwise, update the game, filter, & user state hooks, and fetch user stats
-    const version = getInitialVersion(game); 
+    const version = getInitialVersion(game);
     setGame(game);
     setVersion(version);
     setAllLiveFilter(game.live_preference ? "live" : "all");
@@ -110,68 +110,73 @@ function UserStats() {
   }, [version]);
 
   /* ===== USER STATS COMPONENT ===== */
-  return game && stats ?
-    <Container title={ game.name } largeTitle>
+  return game && stats ? (
+    <Container title={game.name} largeTitle>
       <div>
+        {/* Header - render the category + type, as well as a live filter */}
+        <div className={`${styles.header} ${styles.verticalPadding}`}>
+          <div className={styles.header}>
+            <h2>
+              {categoryName} ({capitalize(type)})
+            </h2>
 
-        { /* Header - render the category + type, as well as a live filter */ }
-        <div className={ `${ styles.header } ${ styles.verticalPadding }` }>
-          <div className={ styles.header }>
-            <h2>{ categoryName } ({ capitalize(type) })</h2>
-
-            { game.versions?.length > 0 &&
-              <div className={ styles.version }>
+            {game.versions?.length > 0 && (
+              <div className={styles.version}>
                 <label htmlFor="version">Version: </label>
-                <select 
-                  id="version" 
-                  onChange={ (e) => handleVersionChange(e, game) } 
-                  value={ version.id }
+                <select
+                  id="version"
+                  onChange={(e) => handleVersionChange(e, game)}
+                  value={version.id}
                 >
-                  { game.versions.map(version => (
-                    <option value={ version.id } key={ version.id } >{ version.version }</option>
+                  {game.versions.map((version) => (
+                    <option value={version.id} key={version.id}>
+                      {version.version}
+                    </option>
                   ))}
                 </select>
               </div>
-            }
+            )}
           </div>
 
-          { /* Live filter: Toggle records page between rendering all records and just live records */ }
-          <div className={ styles.filter }>
-            <label htmlFor={ styles.live }>Live-{ type }s only: </label>
+          {/* Live filter: Toggle records page between rendering all records and just live records */}
+          <div className={styles.filter}>
+            <label htmlFor={styles.live}>Live-{type}s only: </label>
             <input
-              id={ styles.live }
+              id={styles.live}
               type="checkbox"
-              checked={ allLiveFilter === "live" }
-              onChange={ () => setAllLiveFilter(allLiveFilter === "live" ? "all" : "live") }
+              checked={allLiveFilter === "live"}
+              onChange={() => setAllLiveFilter(allLiveFilter === "live" ? "all" : "live")}
             />
           </div>
-
         </div>
 
         <hr />
 
-        { /* Body - render each stats section */ }
+        {/* Body - render each stats section */}
         <>
-
-          { /* Stats tables - render these only if it's a practice mode category */ }
-          { isPracticeMode &&
+          {/* Stats tables - render these only if it's a practice mode category */}
+          {isPracticeMode && (
             <>
-              <Total total={ stats[allLiveFilter].total } filter={ allLiveFilter } decimalPlaces={ decimalPlaces.current } />
+              <Total
+                total={stats[allLiveFilter].total}
+                filter={allLiveFilter}
+                decimalPlaces={decimalPlaces.current}
+              />
               <hr />
-              <Medals medals={ stats[allLiveFilter].medals } filter={ allLiveFilter } />
+              <Medals medals={stats[allLiveFilter].medals} filter={allLiveFilter} />
               <hr />
             </>
-          }
+          )}
 
-          { /* Stats records */ }
-          <Records rankings={ stats[allLiveFilter].rankings } game={ game } version={ version } />
-
+          {/* Stats records */}
+          <Records rankings={stats[allLiveFilter].rankings} game={game} version={version} />
         </>
       </div>
     </Container>
-  :
+  ) : (
     <Loading />
-};
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default UserStats;

@@ -2,7 +2,16 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { CaptureCards, OBS } from "./Contents/GettingStarted.jsx";
-import { Emulators, General, PausingRule, ProofRequirements, Regions, ReplayErrors, ScoreCalculation, Types } from "./Contents/Overview.jsx";
+import {
+  Emulators,
+  General,
+  PausingRule,
+  ProofRequirements,
+  Regions,
+  ReplayErrors,
+  ScoreCalculation,
+  Types,
+} from "./Contents/Overview.jsx";
 import styles from "./Resources.module.css";
 import Container from "../../components/Container/Container.jsx";
 import FrontendHelper from "../../helper/FrontendHelper.js";
@@ -29,20 +38,20 @@ function Resources({ imageReducer }) {
         score_calculation: <ScoreCalculation />,
         pausing_rule: <PausingRule />,
         proof_requirements: <ProofRequirements />,
-        regions: <Regions imageReducer={ imageReducer } />,
+        regions: <Regions imageReducer={imageReducer} />,
         replay_errors: <ReplayErrors />,
-        emulators: <Emulators />
-      }
+        emulators: <Emulators />,
+      },
     },
     {
       name: "getting_started",
       headers: {
         capture_cards: <CaptureCards />,
-        OBS: <OBS />
-      }
-    }
+        OBS: <OBS />,
+      },
+    },
   ];
-  const pageInfo = pages.find(page => page.name === currentPage);
+  const pageInfo = pages.find((page) => page.name === currentPage);
 
   /* ===== EFFECTS ===== */
 
@@ -56,44 +65,43 @@ function Resources({ imageReducer }) {
   }, []);
 
   /* ===== RESOURCES COMPONENT ===== */
-  return pageInfo &&
-    <div className={ styles.resources }>
+  return (
+    pageInfo && (
+      <div className={styles.resources}>
+        {/* Resources sidebar - render the page controls here.  */}
+        <div className={styles.sidebar}>
+          <ul className={styles.sidebarList}>
+            {pages.map((page) => {
+              return (
+                <PageItem
+                  page={page}
+                  currentPage={currentPage}
+                  headerClickFunc={scrollToId}
+                  pageClickFunc={handlePageClick}
+                  key={page.name}
+                />
+              );
+            })}
+          </ul>
+        </div>
 
-      { /* Resources sidebar - render the page controls here.  */ }
-      <div className={ styles.sidebar }>
-        <ul className={ styles.sidebarList }>
-          { pages.map(page => {
+        {/* Resources content - render the contents of the resource page */}
+        <div id={pageInfo.name} className={styles.content}>
+          <h1>{snakeToTitle(pageInfo.name)}</h1>
+
+          {/* Render each page section */}
+          {Object.keys(pageInfo.headers).map((name) => {
             return (
-              <PageItem
-                page={ page }
-                currentPage={ currentPage }
-                headerClickFunc={ scrollToId }
-                pageClickFunc={ handlePageClick }
-                key={ page.name }
-              />
+              <div id={name} key={name}>
+                <Container title={snakeToTitle(name)}>{pageInfo.headers[name]}</Container>
+              </div>
             );
-          }) }
-        </ul>
+          })}
+        </div>
       </div>
-
-      { /* Resources content - render the contents of the resource page */ }
-      <div id={ pageInfo.name } className={ styles.content }>
-        <h1>{ snakeToTitle(pageInfo.name) }</h1>
-
-        { /* Render each page section */ }
-        { Object.keys(pageInfo.headers).map(name => {
-          return (
-            <div id={ name } key={ name }>
-              <Container title={ snakeToTitle(name) }>
-                { pageInfo.headers[name] }
-              </Container>
-            </div>
-          );
-        }) }
-      </div>
-
-    </div>;
-};
+    )
+  );
+}
 
 /* ===== EXPORTS ===== */
 export default Resources;

@@ -2,27 +2,27 @@
 import styles from "./ButtonList.module.css";
 
 function ButtonList({ buttons, current, setCurrent, hasPadding, wrap }) {
-  /* ===== VARIABLES ===== */ 
+  /* ===== VARIABLES ===== */
   const style = { padding: hasPadding ? "5px" : "0", flexWrap: wrap ? "wrap" : "nowrap" };
 
   /* ===== BUTTON LIST COMPONENT ===== */
   return (
-    <div className={ `${ styles.buttonList } center` } style={ style }>
-      { buttons.map(button => {
+    <div className={`${styles.buttonList} center`} style={style}>
+      {buttons.map((button) => {
         return (
-          <button 
+          <button
             type="button"
-            onClick={ () => setCurrent(button.value) }
-            className={ `${ current === button.value ? ` ${ styles.selected }` : "" }` }
-            key={ button.name }
+            onClick={() => setCurrent(button.value)}
+            className={`${current === button.value ? ` ${styles.selected}` : ""}`}
+            key={button.name}
           >
-            { button.name }
+            {button.name}
           </button>
         );
       })}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default ButtonList;

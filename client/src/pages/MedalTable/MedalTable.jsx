@@ -26,7 +26,7 @@ function MedalTable({ imageReducer }) {
 
   // game state, version state, & set disable version dropdown function from game context
   const { game, version, setDisableVersionDropdown } = useContext(GameContext);
-  
+
   // add message function from message context
   const { addMessage } = useContext(MessageContext);
 
@@ -58,17 +58,14 @@ function MedalTable({ imageReducer }) {
   const [pageNum, setPageNum] = useState(1);
 
   // states and functions from the js file
-  const { 
-    medalTable,
-    fetchMedals
-  } = MedalTableLogic();
+  const { medalTable, fetchMedals } = MedalTableLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts, or when the user switches categories
   useEffect(() => {
     // special case #1: we are attempting to access a medals page with a non-valid or non-practice mode category
-    const gameUrl = addAllExistingSearchParams(`/games/${ abb }`);
+    const gameUrl = addAllExistingSearchParams(`/games/${abb}`);
     if (!(gameCategories.includes(category) && isPracticeMode)) {
       addMessage("Ranking does not exist.", "error", 5000);
       navigateTo(gameUrl);
@@ -76,7 +73,7 @@ function MedalTable({ imageReducer }) {
     }
 
     // special case #2: we are attempting to access a medals page with a valid category, but an invalid type
-    if (!(types.includes(type))) {
+    if (!types.includes(type)) {
       addMessage("Ranking does not exist.", "error", 5000);
       navigateTo(gameUrl);
       return;
@@ -96,70 +93,80 @@ function MedalTable({ imageReducer }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version]);
-      
+
   /* ===== MEDALS COMPONENT ===== */
   return (
-    <Container title={ `${ capitalize(type) } Medal Table` } largeTitle>
-      <div className={ styles.header }>
-        <h2>{ categoryName }</h2>
+    <Container title={`${capitalize(type)} Medal Table`} largeTitle>
+      <div className={styles.header}>
+        <h2>{categoryName}</h2>
         <em>Remember that medals are only awarded to submissions with live proof.</em>
       </div>
-      <div className={ `table ${ styles.medalTable }` }>
+      <div className={`table ${styles.medalTable}`}>
         <table>
-          
-          { /* Table header - specifies the information displayed in each cell of the medal table */ }
+          {/* Table header - specifies the information displayed in each cell of the medal table */}
           <thead>
             <tr>
               <th>Position</th>
               <th>Name</th>
               <th>
-                <div className={ styles.medalsIcon }><PlatinumIcon isPlural /></div>
+                <div className={styles.medalsIcon}>
+                  <PlatinumIcon isPlural />
+                </div>
               </th>
               <th>
-                <div className={ styles.medalsIcon }><GoldIcon isPlural /></div>
+                <div className={styles.medalsIcon}>
+                  <GoldIcon isPlural />
+                </div>
               </th>
               <th>
-                <div className={ styles.medalsIcon }><SilverIcon isPlural /></div>
+                <div className={styles.medalsIcon}>
+                  <SilverIcon isPlural />
+                </div>
               </th>
               <th>
-                <div className={ styles.medalsIcon }><BronzeIcon isPlural /></div>
+                <div className={styles.medalsIcon}>
+                  <BronzeIcon isPlural />
+                </div>
               </th>
             </tr>
           </thead>
 
-          { /* Table body - render a row for each medals table object in the table array. */ }
+          {/* Table body - render a row for each medals table object in the table array. */}
           <tbody>
-            { medalTable ?
-              <TableContent 
-                items={ medalTable } 
+            {medalTable ? (
+              <TableContent
+                items={medalTable}
                 emptyMessage="There have been no live submissions to this game's category or version!"
-                numCols={ TABLE_LENGTH }
+                numCols={TABLE_LENGTH}
               >
-                { medalTable.slice((pageNum-1)*USERS_PER_PAGE, pageNum*USERS_PER_PAGE).map(row => {
-                  return <MedalTableRow row={ row } imageReducer={ imageReducer } key={ row.profile.id } />;
-                })}
+                {medalTable
+                  .slice((pageNum - 1) * USERS_PER_PAGE, pageNum * USERS_PER_PAGE)
+                  .map((row) => {
+                    return (
+                      <MedalTableRow row={row} imageReducer={imageReducer} key={row.profile.id} />
+                    );
+                  })}
               </TableContent>
-            :
-              <LoadingTable numCols={ TABLE_LENGTH } />
-            }
+            ) : (
+              <LoadingTable numCols={TABLE_LENGTH} />
+            )}
           </tbody>
-          
         </table>
       </div>
 
-      { /* Render pagination controls at the bottom of this container */ }
-      { medalTable &&
-        <CachedPageControls 
-          items={ medalTable }
-          itemsPerPage={ USERS_PER_PAGE }
-          pageNum={ pageNum }
-          setPageNum={ setPageNum }
+      {/* Render pagination controls at the bottom of this container */}
+      {medalTable && (
+        <CachedPageControls
+          items={medalTable}
+          itemsPerPage={USERS_PER_PAGE}
+          pageNum={pageNum}
+          setPageNum={setPageNum}
           itemsName="Users"
         />
-      }
+      )}
     </Container>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default MedalTable;

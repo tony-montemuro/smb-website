@@ -2,27 +2,27 @@
 import { supabase } from "../SupabaseClient";
 
 const SubmissionDelete = () => {
-    /* ===== FUNCTIONS ===== */
+  /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: deleteSubmission - removes a submission from the database, given the submission id as an argument
-    // PRECONDITIONS (1 parameter):
-    // 1.) id: a string representing the id of the submission being deleted
-    // POSTCONDITIONS (1 possible outcomes):
-    // if the delete query is successful, this function simply returns
-    // if the delete query is unsuccessful, this function throws an error, which will be handled in the caller function
-    const deleteSubmission = async id => {
-        const { error } = await supabase
-            .from("submission")
-            .delete()
-            .match({ id: id });
+  // FUNCTION 1: deleteSubmission - removes a submission from the database, given the submission id as an argument
+  // PRECONDITIONS (1 parameter):
+  // 1.) id: a string representing the id of the submission being deleted
+  // POSTCONDITIONS (1 possible outcomes):
+  // if the delete query is successful, this function simply returns
+  // if the delete query is unsuccessful, this function throws an error, which will be handled in the caller function
+  const deleteSubmission = async (id) => {
+    const { error } = await supabase
+      .from("submission")
+      .delete()
+      .match({ id: id });
 
-        // error handling
-        if (error) {
-            throw new Error("delete", { error });
-        }
-    };
+    // error handling
+    if (error) {
+      throw new Error("delete", { error });
+    }
+  };
 
-    return { deleteSubmission };
+  return { deleteSubmission };
 };
 
 /* ===== EXPORTS ===== */

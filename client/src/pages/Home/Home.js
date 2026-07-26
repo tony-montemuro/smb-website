@@ -5,51 +5,51 @@ import { useContext, useState } from "react";
 import PostRead from "../../database/read/PostRead";
 
 const Home = () => {
-    /* ===== CONTEXTS ===== */
+  /* ===== CONTEXTS ===== */
 
-    // add message function from message context
-    const { addMessage } = useContext(MessageContext);
+  // add message function from message context
+  const { addMessage } = useContext(MessageContext);
 
-    /* ===== VARIABLES ===== */
-    const navigateTo = useNavigate();
+  /* ===== VARIABLES ===== */
+  const navigateTo = useNavigate();
 
-    /* ===== STATES ===== */
-    const [posts, setPosts] = useState(undefined);
- 
-    /* ===== FUNCTIONS ===== */
+  /* ===== STATES ===== */
+  const [posts, setPosts] = useState(undefined);
 
-    // database functions
-    const { queryRecentPosts } = PostRead();
+  /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: getPosts - retrieve 3 most recent submissions from database, and update the posts state
-    // PRECONDITIONS (1 condition):
-    // this function should be called when the Home component is first mounted
-    // POSTCONDITIONS (1 possible outcome):
-    // the most recent posts are retrieved, and the posts state is updated by calling setPosts() function
-    const getPosts = async () => {
-        try {
-            const posts = await queryRecentPosts();
-            
-            // split each post body into "lines", so that formatting can be preserved according to new line characters
-            for (let post of posts) {
-                post.body = post.body.split("\n");
-            }
-            setPosts(posts);
-        } catch (error) {
-            addMessage("News posts failed to load.", "error", 7000);
-        }
-    };
+  // database functions
+  const { queryRecentPosts } = PostRead();
 
-    // FUNCTION 2: navigateToGame - code that navigates a user to a game page given a game object
-    // PRECONDITIONS (1 parameter):
-    // 1.) game: an object which contains information about a game
-    // POSTCONDITIONS (1 possible outcome):
-    // navigate the user to the page associated with `game`
-    const navigateToGame = game => {
-        navigateTo(`/games/${ game.abb }`);
-    };
+  // FUNCTION 1: getPosts - retrieve 3 most recent submissions from database, and update the posts state
+  // PRECONDITIONS (1 condition):
+  // this function should be called when the Home component is first mounted
+  // POSTCONDITIONS (1 possible outcome):
+  // the most recent posts are retrieved, and the posts state is updated by calling setPosts() function
+  const getPosts = async () => {
+    try {
+      const posts = await queryRecentPosts();
 
-    return { posts, getPosts, navigateToGame };
+      // split each post body into "lines", so that formatting can be preserved according to new line characters
+      for (let post of posts) {
+        post.body = post.body.split("\n");
+      }
+      setPosts(posts);
+    } catch (error) {
+      addMessage("News posts failed to load.", "error", 7000);
+    }
+  };
+
+  // FUNCTION 2: navigateToGame - code that navigates a user to a game page given a game object
+  // PRECONDITIONS (1 parameter):
+  // 1.) game: an object which contains information about a game
+  // POSTCONDITIONS (1 possible outcome):
+  // navigate the user to the page associated with `game`
+  const navigateToGame = (game) => {
+    navigateTo(`/games/${game.abb}`);
+  };
+
+  return { posts, getPosts, navigateToGame };
 };
 
 /* ===== EXPORTS ===== */

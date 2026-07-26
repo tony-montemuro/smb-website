@@ -24,105 +24,115 @@ function User({ imageReducer }) {
   const SOCIAL_SIZE = 50;
 
   /* ===== MEMOS & FUNCTIONS ===== */
-  
+
   // memos & functions from the js file
-  const { searchParams, socials, details, onGameRowClick } = UserLogic(); 
+  const { searchParams, socials, details, onGameRowClick } = UserLogic();
 
   /* ===== USER COMPONENT ===== */
   return (
-    <div className={ styles.user }>
-
-      { /* User information: render general information about the user */ }
+    <div className={styles.user}>
+      {/* User information: render general information about the user */}
       <Container title="User Information" largeTitle>
-
-        { /* Contact - Render the user's social media information. */ }
+        {/* Contact - Render the user's social media information. */}
         <h2>Socials</h2>
-        <Items items={ socials } emptyMessage="This user has no socials.">
-          <div className={ styles.socials }>
-            <SocialLink name="youtube" username={ profile.youtube_handle } size={ SOCIAL_SIZE } />
-            <SocialLink name="twitch" username={ profile.twitch_username } size={ SOCIAL_SIZE } />
-            <SocialLink name="twitter" username={ profile.twitter_handle } size={ SOCIAL_SIZE } />
-            <DiscordLogo discord={ profile.discord } size={ SOCIAL_SIZE } />
+        <Items items={socials} emptyMessage="This user has no socials.">
+          <div className={styles.socials}>
+            <SocialLink name="youtube" username={profile.youtube_handle} size={SOCIAL_SIZE} />
+            <SocialLink name="twitch" username={profile.twitch_username} size={SOCIAL_SIZE} />
+            <SocialLink name="twitter" username={profile.twitter_handle} size={SOCIAL_SIZE} />
+            <DiscordLogo discord={profile.discord} size={SOCIAL_SIZE} />
           </div>
         </Items>
 
         <hr />
 
-        { /* Details - Render the user's details. */ }
+        {/* Details - Render the user's details. */}
         <h2>Details</h2>
-        <Items items={ details } emptyMessage="This user has no details.">
-          { profile.bio &&
-            <p><b>About Me:</b> { profile.bio }</p>
-          }
-          { profile.birthday &&
-            <p><b>Birthday:</b> { profile.birthday }</p>
-          }
+        <Items items={details} emptyMessage="This user has no details.">
+          {profile.bio && (
+            <p>
+              <b>About Me:</b> {profile.bio}
+            </p>
+          )}
+          {profile.birthday && (
+            <p>
+              <b>Birthday:</b> {profile.birthday}
+            </p>
+          )}
         </Items>
-
       </Container>
 
-      { /* Roles - Render all the user's roles */ }
+      {/* Roles - Render all the user's roles */}
       <Container title="Roles" largeTitle>
-        { profile.administrator &&
+        {profile.administrator && (
           <>
-            <span className={ styles.roleHeader }>
+            <span className={styles.roleHeader}>
               <AdminIcon />
               <h2>Site Administrator</h2>
             </span>
             <p>This user is responsible for maintaining SMBElite.</p>
           </>
-        }
-        { profile.moderated_games.length > 0 &&
+        )}
+        {profile.moderated_games.length > 0 && (
           <>
-            <span className={ styles.roleHeader }>
+            <span className={styles.roleHeader}>
               <ModIcon />
               <h2>Game Moderator</h2>
             </span>
-            <p>This user is responsible for moderating the charts of at least <strong>1</strong> game. To see the specific list of games, go to the <strong>Games Moderated</strong> section.</p>
+            <p>
+              This user is responsible for moderating the charts of at least <strong>1</strong>{" "}
+              game. To see the specific list of games, go to the <strong>Games Moderated</strong>{" "}
+              section.
+            </p>
           </>
-        }
-        <span className={ styles.roleHeader }>
+        )}
+        <span className={styles.roleHeader}>
           <BananaIcon />
           <h2>Normal User</h2>
         </span>
-        <p>This user has all of the privileges granted to newly registered users: submitting scores/times, updating submissions, reporting submissions, & updating their personal profile.</p>
+        <p>
+          This user has all of the privileges granted to newly registered users: submitting
+          scores/times, updating submissions, reporting submissions, & updating their personal
+          profile.
+        </p>
       </Container>
 
-      { /* Games moderated - Render each game the user moderators, if at least one exists */ }
-      { profile.moderated_games.length > 0 &&
+      {/* Games moderated - Render each game the user moderators, if at least one exists */}
+      {profile.moderated_games.length > 0 && (
         <Container title="Games Moderated" largeTitle>
-          { profile.moderated_games.map((game, index) => {
+          {profile.moderated_games.map((game, index) => {
             return (
-              <GameRow 
-                game={ game } 
-                imageReducer={ imageReducer } 
-                index={ index }
-                onClick={ onGameRowClick } 
-                key={ game.abb } 
+              <GameRow
+                game={game}
+                imageReducer={imageReducer}
+                index={index}
+                onClick={onGameRowClick}
+                key={game.abb}
               />
             );
           })}
         </Container>
-      }
+      )}
 
       {/* Featured video - Render the user's featured video, if there is one */}
-      { profile.featured_video &&
+      {profile.featured_video && (
         <Container title="Featured Video" largeTitle>
-          <EmbededVideo url={ profile.featured_video } />
-          { profile.video_description &&
-            <p>{ profile.video_description }</p>
-          }
+          <EmbededVideo url={profile.featured_video} />
+          {profile.video_description && <p>{profile.video_description}</p>}
         </Container>
-      }
+      )}
 
-      { /* Recent submissions - Render the user's recent submissions */ }
-      <Container title="Recent Submissions" href={ `/recent-submissions?profile_id=${ profile.id }` } largeTitle>
-        <RecentSubmissionsTable searchParams={ searchParams } renderGame renderLevelContext />
+      {/* Recent submissions - Render the user's recent submissions */}
+      <Container
+        title="Recent Submissions"
+        href={`/recent-submissions?profile_id=${profile.id}`}
+        largeTitle
+      >
+        <RecentSubmissionsTable searchParams={searchParams} renderGame renderLevelContext />
       </Container>
-
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default User;

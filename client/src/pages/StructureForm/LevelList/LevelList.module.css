@@ -39,7 +39,8 @@
     min-width: var(--dropdown-wide-min-width);
 }
 
-.ascend, .btns {
+.ascend,
+.btns {
     display: flex;
     height: var(--mui-input-height);
     gap: 8px;

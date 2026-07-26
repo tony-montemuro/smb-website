@@ -15,41 +15,43 @@ function GoalAddForm({ submitting, setSubmitting }) {
 
   /* ===== GOAL ADD FORM COMPONENT ===== */
   return (
-    <div className={ styles.goalAddForm }>
+    <div className={styles.goalAddForm}>
       <h1>Add New Goal</h1>
-      <form className={ styles.form } onSubmit={ handleSubmit }>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <TextField
-          color={ form.error ? "error" : "primary" }
-          error={ form.error ? true : false }
+          color={form.error ? "error" : "primary"}
+          error={form.error ? true : false}
           id="name"
-          helperText={ form.error ? form.error : `${ form.values.name.length }/${ NAME_LENGTH_MAX }` }
+          helperText={form.error ? form.error : `${form.values.name.length}/${NAME_LENGTH_MAX}`}
           label="Goal Color Name"
-          onChange={ handleChange }
+          onChange={handleChange}
           placeholder="Please only use lowercase letters"
           required
-          value={ form.values.name }
+          value={form.values.name}
           variant="filled"
           slotProps={{
-            htmlInput: { maxLength: NAME_LENGTH_MAX }
+            htmlInput: { maxLength: NAME_LENGTH_MAX },
           }}
         />
-        
-        <div className={ styles.color }>
-          <input 
+
+        <div className={styles.color}>
+          <input
             id="color"
-            onChange={ handleChange }
+            onChange={handleChange}
             required
             type="color"
-            value={ form.values.color }
+            value={form.values.color}
           />
-          <Goal goal={ form.values } />
+          <Goal goal={form.values} />
         </div>
 
-        <button type="submit" disabled={ submitting }>Submit</button>
+        <button type="submit" disabled={submitting}>
+          Submit
+        </button>
       </form>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default GoalAddForm;

@@ -6,38 +6,42 @@ import Selector from "./Selector.jsx";
 function SelectList({ entities, inputData, selectData, children, colorBackgrounds = false }) {
   /* ===== VARIABLES ===== */
   const emptyEntity = {
-    id: entities.length > 0 ? entities.at(-1).id+1 : 1,
-    [inputData.entityName]: ""
-  }; 
+    id: entities.length > 0 ? entities.at(-1).id + 1 : 1,
+    [inputData.entityName]: "",
+  };
 
   /* ===== SELECT LIST COMPONENT ===== */
   return (
-    <div className={ styles.container }>
-      <h3>{ inputData.label }</h3>
-      { entities.map(entity => {
+    <div className={styles.container}>
+      <h3>{inputData.label}</h3>
+      {entities.map((entity) => {
         return (
           <Selector
-            inputData={ inputData } 
-            selectData={ selectData }
-            entity={ entity }
-            handleChange={ inputData.handleChange }
-            colorBackgrounds={ colorBackgrounds }
-            key={ JSON.stringify(entity) } 
+            inputData={inputData}
+            selectData={selectData}
+            entity={entity}
+            handleChange={inputData.handleChange}
+            colorBackgrounds={colorBackgrounds}
+            key={JSON.stringify(entity)}
           >
-            { children }
+            {children}
           </Selector>
         );
       })}
       <Selector
-        inputData={ inputData }
-        selectData={ selectData }
-        entity={ emptyEntity }
-        handleChange={ inputData.handleInsert }
+        inputData={inputData}
+        selectData={selectData}
+        entity={emptyEntity}
+        handleChange={inputData.handleInsert}
       />
-      { inputData.error && <FormHelperText className={ styles.error } error>{ inputData.error }</FormHelperText> }
+      {inputData.error && (
+        <FormHelperText className={styles.error} error>
+          {inputData.error}
+        </FormHelperText>
+      )}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default SelectList;

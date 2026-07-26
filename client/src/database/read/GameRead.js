@@ -2,18 +2,19 @@
 import { supabase } from "../SupabaseClient";
 
 const GameRead = () => {
-    /* ===== FUNCTIONS ===== */
+  /* ===== FUNCTIONS ===== */
 
-    // FUNCTION 1: queryGame - async function that makes a call to supabase to get data about a game given an abb
-    // PRECONDITIONS (1 parameter):
-    // 1.) abb: a string representing the unique identifier for a game
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, a object containing game data is returned
-    // otherwise, this function will throw an error, which should be handled by the caller function
-    const queryGame = async abb => {
-        const { data: game, error } = await supabase
-            .from("game")
-            .select(`
+  // FUNCTION 1: queryGame - async function that makes a call to supabase to get data about a game given an abb
+  // PRECONDITIONS (1 parameter):
+  // 1.) abb: a string representing the unique identifier for a game
+  // POSTCONDITIONS (2 possible outcomes):
+  // if the query is successful, a object containing game data is returned
+  // otherwise, this function will throw an error, which should be handled by the caller function
+  const queryGame = async (abb) => {
+    const { data: game, error } = await supabase
+      .from("game")
+      .select(
+        `
                 abb,
                 creator (
                     country,
@@ -69,41 +70,43 @@ const GameRead = () => {
                     version,
                     sequence
                 )
-            `)
-            .order("custom")
-            .order("release_date")
-            .order("id", { foreignTable: "mode", ascending: true })
-            .order("id", { foreignTable: "mode.level", ascending: true })
-            .order("id", { foreignTable: "game_monkey", ascending: true })
-            .order("id", { foreignTable: "game_platform", ascending: true })
-            .order("id", { foreignTable: "game_region", ascending: true })
-            .order("id", { foreignTable: "game_rule", ascending: true })
-            .eq("abb", abb)
-            .maybeSingle();
+            `,
+      )
+      .order("custom")
+      .order("release_date")
+      .order("id", { foreignTable: "mode", ascending: true })
+      .order("id", { foreignTable: "mode.level", ascending: true })
+      .order("id", { foreignTable: "game_monkey", ascending: true })
+      .order("id", { foreignTable: "game_platform", ascending: true })
+      .order("id", { foreignTable: "game_region", ascending: true })
+      .order("id", { foreignTable: "game_rule", ascending: true })
+      .eq("abb", abb)
+      .maybeSingle();
 
-        // error handling
-        if (error) {
-            throw error;
-        }
+    // error handling
+    if (error) {
+      throw error;
+    }
 
-        // next, let's sort any unsorted lists
-        game.profile.sort((a, b) => a.username.localeCompare(b.username));
-        game.version.sort((a, b) => a.sequence - b.sequence);
+    // next, let's sort any unsorted lists
+    game.profile.sort((a, b) => a.username.localeCompare(b.username));
+    game.version.sort((a, b) => a.sequence - b.sequence);
 
-        // return the game object
-        return game;
-    };
+    // return the game object
+    return game;
+  };
 
-    // FUNCTION 2: queryGamesForModerators - async function that makes a call to supabase to get an array of all the games, but only
-    // a small subset of their data
-    // PRECONDITIONS: NONE
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, the list of games, with the list of it's moderators, is simply returned
-    // otherwise, this function throws an error, which should be handled by the caller function
-    const queryGamesForModerators = async () => {
-        const { data: games, error } = await supabase
-            .from("game")
-            .select(`
+  // FUNCTION 2: queryGamesForModerators - async function that makes a call to supabase to get an array of all the games, but only
+  // a small subset of their data
+  // PRECONDITIONS: NONE
+  // POSTCONDITIONS (2 possible outcomes):
+  // if the query is successful, the list of games, with the list of it's moderators, is simply returned
+  // otherwise, this function throws an error, which should be handled by the caller function
+  const queryGamesForModerators = async () => {
+    const { data: games, error } = await supabase
+      .from("game")
+      .select(
+        `
                 abb,
                 custom,
                 game_monkey (
@@ -142,50 +145,56 @@ const GameRead = () => {
                     version,
                     sequence
                 )
-            `)
-            .order("custom")
-            .order("release_date")
-            .order("name")
-            .order("id", { foreignTable: "game_monkey", ascending: true })
-            .order("id", { foreignTable: "game_platform", ascending: true })
-            .order("id", { foreignTable: "game_region", ascending: true })
-            .order("id", { foreignTable: "game_rule", ascending: true });
+            `,
+      )
+      .order("custom")
+      .order("release_date")
+      .order("name")
+      .order("id", { foreignTable: "game_monkey", ascending: true })
+      .order("id", { foreignTable: "game_platform", ascending: true })
+      .order("id", { foreignTable: "game_region", ascending: true })
+      .order("id", { foreignTable: "game_rule", ascending: true });
 
-        // error handling
-        if (error) {
-            throw error;
-        }
+    // error handling
+    if (error) {
+      throw error;
+    }
 
-        // return the games
-        return games;
-    };
+    // return the games
+    return games;
+  };
 
-    // FUNCTION 3: searchForGames - function that grabs a subset of games, according to the users input
-    // PRECONDITIONS (4 parameters):
-    // 1.) userInput: a string, which a user has entered in an attempt to find a user profile. we use this value to attempt
-    // to match 0 or more games to this value
-    // 2.) start: an integer, representing the first game to be selected
-    // 3.) end: an integer, representing last game to be selected
-    // 4.) gameTypeFilter: a value which determines how the games should be filtered. can be 3 values: "main", "custom", or undefined
-    // POSTCONDITIONS (2 returns, 2 possible outcomes):
-    // if the query is successful, an object with two fields is returned:
-    // 1.) games: an array of gane objects, which have a substring matching the user input (case-insensitive)
-    // 2.) count: the total number of games that match the user input. in some cases, this number will be larger 
-    // than `games.length`
-    // if the query fails, this function throws an error, which should be handled by the caller function
-    const searchForGames = async (userInput, start, end, gameTypeFilter) => {
-        // first, let's generate our `custom` field filter
-        let customFilter = [];
-        if (!gameTypeFilter || gameTypeFilter === "custom") {
-            customFilter.push(true);
-        }
-        if (!gameTypeFilter || gameTypeFilter === "main") {
-            customFilter.push(false)
-        }
+  // FUNCTION 3: searchForGames - function that grabs a subset of games, according to the users input
+  // PRECONDITIONS (4 parameters):
+  // 1.) userInput: a string, which a user has entered in an attempt to find a user profile. we use this value to attempt
+  // to match 0 or more games to this value
+  // 2.) start: an integer, representing the first game to be selected
+  // 3.) end: an integer, representing last game to be selected
+  // 4.) gameTypeFilter: a value which determines how the games should be filtered. can be 3 values: "main", "custom", or undefined
+  // POSTCONDITIONS (2 returns, 2 possible outcomes):
+  // if the query is successful, an object with two fields is returned:
+  // 1.) games: an array of gane objects, which have a substring matching the user input (case-insensitive)
+  // 2.) count: the total number of games that match the user input. in some cases, this number will be larger
+  // than `games.length`
+  // if the query fails, this function throws an error, which should be handled by the caller function
+  const searchForGames = async (userInput, start, end, gameTypeFilter) => {
+    // first, let's generate our `custom` field filter
+    let customFilter = [];
+    if (!gameTypeFilter || gameTypeFilter === "custom") {
+      customFilter.push(true);
+    }
+    if (!gameTypeFilter || gameTypeFilter === "main") {
+      customFilter.push(false);
+    }
 
-        const { data: games, count, error } = await supabase
-            .from("game")
-            .select(`
+    const {
+      data: games,
+      count,
+      error,
+    } = await supabase
+      .from("game")
+      .select(
+        `
                 abb,
                 custom,
                 name,
@@ -194,33 +203,35 @@ const GameRead = () => {
                     sequence,
                     version
                 )
-            `, { count: "exact" }
-            )
-            .in("custom", customFilter)
-            .or(`name.ilike.%${userInput}%,abb.ilike.%${userInput}%`)
-            .order("custom")
-            .order("release_date")
-            .order("name")
-            .range(start, end);
+            `,
+        { count: "exact" },
+      )
+      .in("custom", customFilter)
+      .or(`name.ilike.%${userInput}%,abb.ilike.%${userInput}%`)
+      .order("custom")
+      .order("release_date")
+      .order("name")
+      .range(start, end);
 
-        // error handling
-        if (error) {
-            throw error;
-        }
+    // error handling
+    if (error) {
+      throw error;
+    }
 
-        return { games, count };
-    };
+    return { games, count };
+  };
 
-    // FUNCTION 4: queryGameByList - code that takes an array of strings representing game primary keys, and returns the matching games
-    // PRECONDITIONS (1 parameter):
-    // 1.) abbs: an array of `abb` strings, each should correspond to a game in the db
-    // POSTCONDITIONS (2 possible outcomes):
-    // if the query is successful, then this function will simply return the game data
-    // if the query is unsuccessful, then this function will throw an error, which should be handled by the caller function
-    const queryGameByList = async abbs => {
-        const { data: games, error } = await supabase
-            .from("game")
-            .select(`
+  // FUNCTION 4: queryGameByList - code that takes an array of strings representing game primary keys, and returns the matching games
+  // PRECONDITIONS (1 parameter):
+  // 1.) abbs: an array of `abb` strings, each should correspond to a game in the db
+  // POSTCONDITIONS (2 possible outcomes):
+  // if the query is successful, then this function will simply return the game data
+  // if the query is unsuccessful, then this function will throw an error, which should be handled by the caller function
+  const queryGameByList = async (abbs) => {
+    const { data: games, error } = await supabase
+      .from("game")
+      .select(
+        `
                 abb,
                 custom,
                 name,
@@ -229,21 +240,27 @@ const GameRead = () => {
                     sequence,
                     version
                 )
-            `)
-            .in("abb", abbs)
-            .order("custom")
-            .order("release_date")
-            .order("name");
+            `,
+      )
+      .in("abb", abbs)
+      .order("custom")
+      .order("release_date")
+      .order("name");
 
-        // error handling
-        if (error) {
-            throw error;
-        }
+    // error handling
+    if (error) {
+      throw error;
+    }
 
-        return games;
-    };
+    return games;
+  };
 
-    return { queryGame, queryGamesForModerators, searchForGames, queryGameByList };
+  return {
+    queryGame,
+    queryGamesForModerators,
+    searchForGames,
+    queryGameByList,
+  };
 };
 
 /* ===== EXPORTS ===== */

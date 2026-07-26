@@ -9,15 +9,16 @@ import UserRow from "../../../components/UserRow/UserRow.jsx";
 
 function UserFilter({ searchParams, setSearchParams, globalUsers, updateGlobalUsers }) {
   /* ===== FUNCTIONS ===== */
-  
+
   // functions from the js file
-  const { syncUsers, users, addUser, removeUser, resetFilter, closePopupAndUpdate } = UserFilterLogic(updateGlobalUsers);
+  const { syncUsers, users, addUser, removeUser, resetFilter, closePopupAndUpdate } =
+    UserFilterLogic(updateGlobalUsers);
 
   /* ===== VARIABLES ===== */
   const USERS_PER_PAGE = 20;
   const userRowOptions = {
     disableLink: true,
-    onUserRowClick: addUser
+    onUserRowClick: addUser,
   };
 
   /* ===== EFFECTS ===== */
@@ -27,71 +28,70 @@ function UserFilter({ searchParams, setSearchParams, globalUsers, updateGlobalUs
     syncUsers(globalUsers);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   /* ===== USER FILTER COMPONENT ===== */
   return (
-    <div className={ styles.filter }>
-
-      { /* Render name of the popup */ }
-      <div className={ styles.section }>
+    <div className={styles.filter}>
+      {/* Render name of the popup */}
+      <div className={styles.section}>
         <h1>Filter by User</h1>
       </div>
 
       <hr />
 
-      { users ?
+      {users ? (
         <>
-
-          { /* Next, render the set of all users that the user wants / has already filtered by */ }
-          <div className={ styles.section }>
+          {/* Next, render the set of all users that the user wants / has already filtered by */}
+          <div className={styles.section}>
             <h2>Filtered Users</h2>
             <p>Click a user to remove it as a filter.</p>
-            { users ?
+            {users ? (
               <>
-                <Items items={ users } emptyMessage="You are not currently filtering by any users.">
-                  { users.map((user, index) => {
+                <Items items={users} emptyMessage="You are not currently filtering by any users.">
+                  {users.map((user, index) => {
                     return (
                       <UserRow
-                        user={ user }
-                        onClick={ removeUser }
-                        index={ index }
+                        user={user}
+                        onClick={removeUser}
+                        index={index}
                         disableLink
-                        key={ user.id }
+                        key={user.id}
                       />
                     );
                   })}
                 </Items>
-                <div className={ styles.btns }>
-                  <button type="button" className="cancel" onClick={ resetFilter }>Reset Filter</button>
-                  <button type="button" onClick={ () => closePopupAndUpdate(searchParams, setSearchParams) }>
+                <div className={styles.btns}>
+                  <button type="button" className="cancel" onClick={resetFilter}>
+                    Reset Filter
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => closePopupAndUpdate(searchParams, setSearchParams)}
+                  >
                     Apply Filters
                   </button>
                 </div>
               </>
-            :
+            ) : (
               <Loading />
-            }
+            )}
           </div>
 
           <hr />
-          
-          { /* Render a user search component to select a user to filter by */ }
-          <div className={ styles.section }>
+
+          {/* Render a user search component to select a user to filter by */}
+          <div className={styles.section}>
             <h2>Add Users</h2>
             <p>Click a user to add it as a filter.</p>
           </div>
-          <UserSearch 
-            usersPerPage={ USERS_PER_PAGE }
-            userRowOptions={ userRowOptions }
-          />
-
+          <UserSearch usersPerPage={USERS_PER_PAGE} userRowOptions={userRowOptions} />
         </>
-      :
+      ) : (
         <Loading />
-      }
+      )}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default UserFilter;

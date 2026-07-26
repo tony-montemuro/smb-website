@@ -18,13 +18,14 @@ function GameModerators({ imageReducer }) {
   const [moderatorToAdd, setModeratorToAdd] = useState(undefined);
 
   // states and functions from the js file
-  const { game, games, submitting, queryGames, setGameAndScroll, removeModerator, addModerator } = GameModeratorsLogic();
+  const { game, games, submitting, queryGames, setGameAndScroll, removeModerator, addModerator } =
+    GameModeratorsLogic();
 
   /* ===== VARIABLES ===== */
   const options = {
     disableLink: true,
     isDetailed: false,
-    onUserRowClick: setModeratorToAdd
+    onUserRowClick: setModeratorToAdd,
   };
   const USERS_PER_PAGE = 20;
   const WIDTH = "600px";
@@ -36,46 +37,56 @@ function GameModerators({ imageReducer }) {
     queryGames();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   /* ===== GAME MODERATOR COMPONENT ===== */
   return (
-    <div className={ styles.gameModerators }>
-
-      { /* Popups */ }
-      <Popup renderPopup={ moderatorToRemove } setRenderPopup={ setModeratorToRemove } width={ WIDTH } disableClose={ submitting }>
-        <Delete submitting={ submitting } onDelete={ removeModerator } />
+    <div className={styles.gameModerators}>
+      {/* Popups */}
+      <Popup
+        renderPopup={moderatorToRemove}
+        setRenderPopup={setModeratorToRemove}
+        width={WIDTH}
+        disableClose={submitting}
+      >
+        <Delete submitting={submitting} onDelete={removeModerator} />
       </Popup>
-      <Popup renderPopup={ moderatorToAdd } setRenderPopup={ setModeratorToAdd } width={ WIDTH } disableClose={ submitting }>
-        <Insert submitting={ submitting } onInsert={ addModerator } />
+      <Popup
+        renderPopup={moderatorToAdd}
+        setRenderPopup={setModeratorToAdd}
+        width={WIDTH}
+        disableClose={submitting}
+      >
+        <Insert submitting={submitting} onInsert={addModerator} />
       </Popup>
 
-      { /* Simple game select - render a column of games to select from */ }
-      <div className={ styles.left }>
+      {/* Simple game select - render a column of games to select from */}
+      <div className={styles.left}>
         <SimpleGameSelect
-          games={ games }
-          game={ game }
-          setGame={ setGameAndScroll }
-          imageReducer={ imageReducer }
+          games={games}
+          game={game}
+          setGame={setGameAndScroll}
+          imageReducer={imageReducer}
         />
       </div>
 
-      { /* Game moderators current - render both the list of current moderators, and a user search to add new moderators */ }
-      <div id="content" className={ styles.content }>
-
-        { game && games ?  
-          <Container title={ game.name } largeTitle>
-
-            { /* Section #1: render the current moderators for the particular game, and allow administrator to remove if needed */ }
+      {/* Game moderators current - render both the list of current moderators, and a user search to add new moderators */}
+      <div id="content" className={styles.content}>
+        {game && games ? (
+          <Container title={game.name} largeTitle>
+            {/* Section #1: render the current moderators for the particular game, and allow administrator to remove if needed */}
             <h2>Current Moderators</h2>
-            <Items items={ game.moderators } emptyMessage="This game has no moderators! You should add at least one.">
+            <Items
+              items={game.moderators}
+              emptyMessage="This game has no moderators! You should add at least one."
+            >
               <p>Select a moderator to remove them.</p>
-              { game.moderators.map(moderator => {
+              {game.moderators.map((moderator) => {
                 return (
-                  <UserRow  
-                    user={ moderator }
-                    onClick={ setModeratorToRemove }
+                  <UserRow
+                    user={moderator}
+                    onClick={setModeratorToRemove}
                     disableLink
-                    key={ moderator.id }
+                    key={moderator.id}
                   />
                 );
               })}
@@ -83,21 +94,18 @@ function GameModerators({ imageReducer }) {
 
             <hr />
 
-            { /* Section #2: render the list of users to search through, and allow administrator to add if needed */ }
+            {/* Section #2: render the list of users to search through, and allow administrator to add if needed */}
             <h2>Add New Moderator</h2>
             <p>Select a user to add them as a moderator.</p>
-            <UserSearch usersPerPage={ USERS_PER_PAGE } userRowOptions={ options } />
-
+            <UserSearch usersPerPage={USERS_PER_PAGE} userRowOptions={options} />
           </Container>
-        :
+        ) : (
           <Loading />
-        }
-        
+        )}
       </div>
-
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default GameModerators;

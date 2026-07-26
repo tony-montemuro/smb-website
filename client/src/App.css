@@ -21,7 +21,7 @@
     --color-text: 249, 249, 249;
     --color-text-hover: 220, 220, 220;
     --container-border-radius: 15px;
-    --font: 'Gabarito', cursive;
+    --font: "Gabarito", cursive;
     --mui-input-height: 56px;
     --mui-helper-height: 19.91px;
     --navbar-height: 76px;
@@ -86,12 +86,13 @@ hr {
     border: none;
 }
 
-input[type=checkbox] {
+input[type="checkbox"] {
     cursor: pointer;
 }
 
-input[type=file], input[type=file]::-webkit-file-upload-button {
-    cursor: pointer; 
+input[type="file"],
+input[type="file"]::-webkit-file-upload-button {
+    cursor: pointer;
 }
 
 /* ===== GLOBAL CLASSES ===== */

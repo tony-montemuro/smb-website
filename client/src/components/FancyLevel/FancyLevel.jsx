@@ -14,12 +14,12 @@ function FancyLevel({ level }) {
 
   /* ===== FANCY LEVEL COMPONENT ===== */
   return (
-    <div className={ styles.fancyLevel }>
-      <span>{ levelName }</span>
-      <Goal goal={ goal } />
+    <div className={styles.fancyLevel}>
+      <span>{levelName}</span>
+      <Goal goal={goal} />
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default FancyLevel;

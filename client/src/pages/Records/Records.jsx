@@ -45,27 +45,22 @@ function Records() {
   const [filter, setFilter] = useState(game.live_preference ? "live" : "all");
 
   // states and functions from js file
-  const {
-    recordTable,
-    fetchRecords,
-    allGreater,
-    numNotLive
-  } = RecordsLogic();
+  const { recordTable, fetchRecords, allGreater, numNotLive } = RecordsLogic();
 
   /* ===== EFFECTS ===== */
 
   // code that is executed when the component mounts, or when the user switches between score and time
   useEffect(() => {
     // special case #1: we are attempting to access a records page with a non-valid category
-    const gameUrl = addAllExistingSearchParams(`/games/${ abb }`);
-    if (!(gameCategories.includes(category))) {
+    const gameUrl = addAllExistingSearchParams(`/games/${abb}`);
+    if (!gameCategories.includes(category)) {
       addMessage("Ranking does not exist.", "error", 5000);
       navigateTo(gameUrl);
       return;
     }
 
     // special case #2: we are attempting to access a records page with a valid category, but an invalid type
-    if (!(types.includes(type))) {
+    if (!types.includes(type)) {
       addMessage("Ranking does not exist.", "error", 5000);
       navigateTo(gameUrl);
       return;
@@ -88,46 +83,48 @@ function Records() {
 
   /* ===== RECORDS COMPONENT ===== */
   return (
-    <Container title={ `${ capitalize(type) } World Records` } largeTitle>
-
-      { /* Records header - render the category & an input for user to swap between live-only and all */ }
-      <div className={ styles.header }>
-        <h2>{ categoryName }</h2>
-        <div className={ styles.filter }>
-          <label htmlFor={ styles.live }>Live-records only: </label>
+    <Container title={`${capitalize(type)} World Records`} largeTitle>
+      {/* Records header - render the category & an input for user to swap between live-only and all */}
+      <div className={styles.header}>
+        <h2>{categoryName}</h2>
+        <div className={styles.filter}>
+          <label htmlFor={styles.live}>Live-records only: </label>
           <input
-            id={ styles.live }
+            id={styles.live}
             type="checkbox"
-            checked={ filter === "live" }
-            onChange={ () => setFilter(filter === "live" ? "all" : "live") }
-            disabled={ !recordTable }
+            checked={filter === "live"}
+            onChange={() => setFilter(filter === "live" ? "all" : "live")}
+            disabled={!recordTable}
           />
         </div>
       </div>
 
-      { /* Render a record table for each mode, if the `recordTable` state is defined */ }
-      { recordTable ?
+      {/* Render a record table for each mode, if the `recordTable` state is defined */}
+      {recordTable ? (
         <>
-          <p id={ styles.message }>
-            <em>There are </em><strong>{ numNotLive() }</strong><em> levels(s) where the live record is worse than the overall record.</em>
+          <p id={styles.message}>
+            <em>There are </em>
+            <strong>{numNotLive()}</strong>
+            <em> levels(s) where the live record is worse than the overall record.</em>
           </p>
-          { Object.keys(recordTable[filter]).map(mode => {
-            return <RecordTable 
-              recordTable={ recordTable }
-              filter={ filter }
-              mode={ mode } 
-              allGreater={ allGreater } 
-              key={ mode } 
-            />
+          {Object.keys(recordTable[filter]).map((mode) => {
+            return (
+              <RecordTable
+                recordTable={recordTable}
+                filter={filter}
+                mode={mode}
+                allGreater={allGreater}
+                key={mode}
+              />
+            );
           })}
         </>
-      :
+      ) : (
         <Loading />
-      }
-      
+      )}
     </Container>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Records;

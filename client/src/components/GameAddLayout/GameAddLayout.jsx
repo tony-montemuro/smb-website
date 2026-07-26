@@ -12,41 +12,41 @@ function GameAddLayout() {
   /* ===== VARIABLES ===== */
   const pageInit = {
     number: 1,
-    unlocked: [1]
+    unlocked: [1],
   };
   const assetsData = {
     boxArt: {
       dimensions: {
         MAX_WIDTH: 256,
-        MAX_HEIGHT: 363
+        MAX_HEIGHT: 363,
       },
       fileTypes: ["png"],
-      key: "BOX_ART"
-    }
+      key: "BOX_ART",
+    },
   };
-  
+
   /* ===== CONTEXTS ===== */
 
   // app data state from app data context
   const { appData } = useContext(AppDataContext);
 
   /* ===== STATES ===== */
-  const [page, setPage] = useState(pageInit); 
+  const [page, setPage] = useState(pageInit);
   const [isComponentMounted, setIsComponentMounted] = useState(false);
   const [entitiesData, setEntitiesData] = useState(undefined);
   const [structureData, setStructureData] = useState(undefined);
 
   /* ===== FUNCTIONS ===== */
-  const { 
-    pageNames, 
-    keys, 
-    switchPages, 
-    restoreUnlockedPagesState, 
+  const {
+    pageNames,
+    keys,
+    switchPages,
+    restoreUnlockedPagesState,
     unlockNextPage,
     fetchEntitiesData,
     fetchStructureData,
     updateStructureCategories,
-    resetForm
+    resetForm,
   } = GameAddLayoutLogic(page, setPage, pageInit, setEntitiesData, setStructureData);
 
   /* ===== CONTEXT DATA ===== */
@@ -58,8 +58,8 @@ function GameAddLayout() {
     fetchEntitiesData,
     structureData,
     updateStructureCategories,
-    resetForm
-  }
+    resetForm,
+  };
 
   /* ===== EFFECTS ===== */
 
@@ -86,10 +86,10 @@ function GameAddLayout() {
 
   /* ===== GAME ADD LAYOUT ===== */
   return (
-    <div className={ styles.gameAdd }>
+    <div className={styles.gameAdd}>
       <h1>Add Game</h1>
-      <div className={ styles.disclaimer }>
-        <div className={ styles.disclaimerMsg }>
+      <div className={styles.disclaimer}>
+        <div className={styles.disclaimerMsg}>
           <InfoOutlinedIcon />
           <h3>Important: Your progress is saved locally.</h3>
         </div>
@@ -100,22 +100,18 @@ function GameAddLayout() {
           <li>If you have clearing browser data on exit enabled, do not close the browser</li>
         </ul>
       </div>
-      
-      { appData ? 
-        <GameAddContext.Provider value={ contextData }>
+
+      {appData ? (
+        <GameAddContext.Provider value={contextData}>
           <Outlet />
-          <AddGamePages 
-            page={ page }
-            setPage={ setPage }
-            pageNames={ pageNames }  
-          />
+          <AddGamePages page={page} setPage={setPage} pageNames={pageNames} />
         </GameAddContext.Provider>
-      :
+      ) : (
         <Loading />
-      }
+      )}
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default GameAddLayout;

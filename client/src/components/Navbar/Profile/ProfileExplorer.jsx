@@ -28,80 +28,75 @@ function ProfileExplorer({ imageReducer }) {
   const { signOut } = Signout();
 
   /* ===== PROFILE EXPLORER COMPONENT ===== */
-  return ( 
-    <div className={ styles.profile }>
-
-      { /* Avatar - simply render the current user's avatar, which should link to the page to view their profile */ }
-      <div className={ styles.avatarLinkWrapper }>
-        <Link to={ `/user/${ user.profile.id }` } title="View Profile">
-          <div className={ styles.avatarWrapper }>
-            <Avatar profileId={ user.profile.id } size={ AVATAR_LENGTH } imageReducer={ imageReducer } />
+  return (
+    <div className={styles.profile}>
+      {/* Avatar - simply render the current user's avatar, which should link to the page to view their profile */}
+      <div className={styles.avatarLinkWrapper}>
+        <Link to={`/user/${user.profile.id}`} title="View Profile">
+          <div className={styles.avatarWrapper}>
+            <Avatar profileId={user.profile.id} size={AVATAR_LENGTH} imageReducer={imageReducer} />
           </div>
         </Link>
       </div>
 
-      <div className={ styles.details }>
-
-        { /* Username: render the user's username */ }
-        <div className={ styles.usernameWrapper }>
-          <Username profile={ user.profile } />
+      <div className={styles.details}>
+        {/* Username: render the user's username */}
+        <div className={styles.usernameWrapper}>
+          <Username profile={user.profile} />
         </div>
 
-        { /* Links: all the user's different links */ }
-        <div className={ styles.profileLinks }>
-
-          { /* Profile settings link - profile icon that links to the profile page */ }
-          <div className={ styles.profileLink }>
+        {/* Links: all the user's different links */}
+        <div className={styles.profileLinks}>
+          {/* Profile settings link - profile icon that links to the profile page */}
+          <div className={styles.profileLink}>
             <Link to="/profile" className="center">
               <ManageAccountsIcon titleAccess="Profile Settings" />
             </Link>
           </div>
 
-          { /* Notifications link - bell icon that links to the notifications page */ }
-          <div className={ styles.profileLink }>
-            { user.notificationCount > 0 ?
+          {/* Notifications link - bell icon that links to the notifications page */}
+          <div className={styles.profileLink}>
+            {user.notificationCount > 0 ? (
               <Link to="/notifications" className="center">
-                <span>{ user.notificationCount }</span>
+                <span>{user.notificationCount}</span>
                 <NotificationsIcon titleAccess="Notifications" />
               </Link>
-            :
+            ) : (
               <Link to="/notifications" className="center">
                 <NotificationsNoneOutlinedIcon titleAccess="Notifications" />
               </Link>
-            }
+            )}
           </div>
 
-          { /* Administrator hub link - icon that links to the administrator hub page (for admins only) */ }
-          { user.profile.administrator &&
-            <div className={ styles.profileLink }>
+          {/* Administrator hub link - icon that links to the administrator hub page (for admins only) */}
+          {user.profile.administrator && (
+            <div className={styles.profileLink}>
               <Link to="/administrator" className="center">
                 <AdminIcon title="Administrator Hub" />
               </Link>
             </div>
-          }
+          )}
 
-          { /* Moderator hub link - icon that links to the moderation hub page (for admins + moderators only) */ }
-          { isModerator() &&
-            <div className={ styles.profileLink }>
+          {/* Moderator hub link - icon that links to the moderation hub page (for admins + moderators only) */}
+          {isModerator() && (
+            <div className={styles.profileLink}>
               <Link to="/moderator" className="center">
                 <ModIcon title="Moderator Hub" />
               </Link>
             </div>
-          }
+          )}
 
-          { /* Logout button - button that allows the user to log out of their account */ }
-          <div className={ styles.profileLink }>
-            <button type="button" className={ styles.btn } onClick={ signOut }>
+          {/* Logout button - button that allows the user to log out of their account */}
+          <div className={styles.profileLink}>
+            <button type="button" className={styles.btn} onClick={signOut}>
               <LogoutIcon titleAccess="Sign Out" fontSize="small" />
             </button>
           </div>
-
         </div>
-        
       </div>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default ProfileExplorer;

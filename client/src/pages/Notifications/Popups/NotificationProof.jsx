@@ -7,16 +7,16 @@ function NotificationProof({ proof }) {
   return (
     <>
       Proof:&nbsp;
-      { proof ?
-        <a href={ proof } target="_blank" rel="noopener noreferrer">
-          <VideocamIcon sx={{ color: "white" }} titleAccess={ proof } />
+      {proof ? (
+        <a href={proof} target="_blank" rel="noopener noreferrer">
+          <VideocamIcon sx={{ color: "white" }} titleAccess={proof} />
         </a>
-      :
+      ) : (
         <ClearIcon />
-      }
+      )}
     </>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default NotificationProof;

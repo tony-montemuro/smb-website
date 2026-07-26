@@ -1,6 +1,16 @@
 /* ===== IMPORTS ===== */
-import { MessageContext, PopupContext, UserContext } from "../../utils/Contexts.js";
-import { discordPattern, usernamePattern, twitchUsernamePattern, twitterHandlePattern, youtubeHandlePattern } from "../../utils/RegexPatterns";
+import {
+  MessageContext,
+  PopupContext,
+  UserContext,
+} from "../../utils/Contexts.js";
+import {
+  discordPattern,
+  usernamePattern,
+  twitchUsernamePattern,
+  twitterHandlePattern,
+  youtubeHandlePattern,
+} from "../../utils/RegexPatterns";
 import { useContext, useReducer } from "react";
 import CountriesRead from "../../database/read/CountriesRead.js";
 import ProfileUpdate from "../../database/update/ProfileUpdate.js";
@@ -17,9 +27,9 @@ const UserInfoForm = (setSubmitting, adminMode) => {
       twitter_handle: undefined,
       discord: undefined,
       featured_video: undefined,
-      video_description: undefined
+      video_description: undefined,
     },
-    user: null
+    user: null,
   };
 
   /* ===== CONTEXTS ===== */
@@ -31,7 +41,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // however, if we are in admin mode, we are accessing this component within a popup, so we can
   // define `closePopup` as the closePopup function from the popup context
   const popupContext = useContext(PopupContext);
-  let closePopup = adminMode.status ? popupContext.closePopup : () => { };
+  let closePopup = adminMode.status ? popupContext.closePopup : () => {};
 
   // generally, we will assign user to user state from user context
   // however, if we are in admin mode, we want to ignore the current user's context
@@ -54,7 +64,8 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // 2.) if the field is `countries`, we update the entire countries state
   // 3.) otherwise, this function does nothing (return state)
   const reducer = (state, action) => {
-    const field = action.field, value = action.value;
+    const field = action.field,
+      value = action.value;
     if (field === "user" || field === "error") {
       return { ...state, [field]: { ...state[field], ...value } };
     }
@@ -97,7 +108,9 @@ const UserInfoForm = (setSubmitting, adminMode) => {
         twitter_handle: profile.twitter_handle ? profile.twitter_handle : "",
         discord: profile.discord ? profile.discord : "",
         featured_video: profile.featured_video ? profile.featured_video : "",
-        video_description: profile.video_description ? profile.video_description : ""
+        video_description: profile.video_description
+          ? profile.video_description
+          : "",
       };
     } else {
       return {
@@ -112,7 +125,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
         twitter_handle: "",
         discord: "",
         featured_video: "",
-        video_description: ""
+        video_description: "",
       };
     }
   };
@@ -131,18 +144,21 @@ const UserInfoForm = (setSubmitting, adminMode) => {
 
       // finally, let's update user form with countries data
       dispatchForm({ field: "countries", value: countries });
-
     } catch (error) {
-      addMessage("There was an issue fetching country data, so you are unable to select a country. Refresh the page to try again.", "error", 9000);
+      addMessage(
+        "There was an issue fetching country data, so you are unable to select a country. Refresh the page to try again.",
+        "error",
+        9000,
+      );
     }
   };
 
   // FUNCTION 3: handleChange - handle a change to the form
   // PRECONDITIONS (1 parameter):
   // 1.) e: an event object that is generated when the user makes a change to any of the user form fields
-  // POSTCONDITIONS (1 possible outcome): 
+  // POSTCONDITIONS (1 possible outcome):
   // the form fields corresponding field in the form state will be updated
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { id, value } = e.target;
     dispatchForm({ field: "user", value: { [id]: value } });
     if (Object.keys(form.error).includes(id)) {
@@ -155,7 +171,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // 1.) e: an event object that is generated when the user makes a change to the birthday field of the user form fields
   // POSTCONDITIONS (1 possible outcome):
   // the birthday field is updated using the date the user selected by the date picker
-  const handleBirthdayChange = e => {
+  const handleBirthdayChange = (e) => {
     let birthday = null;
     if (e) {
       let { $d: date } = e;
@@ -174,45 +190,56 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // POSTCONDITIONS (2 possible outcomes):
   // if any of the relevant sections have changed according to the section parameter, this function returns true
   // otherwise, this function returns false
-  const hasChanged = section => {
+  const hasChanged = (section) => {
     // nested function that checks if the profile section has changed
     const hasProfileSectionChanged = () => {
       const profile = user?.profile;
-      return profile && (
-        form.user.username !== profile.username ||
-        form.user.country !== (profile.country ? profile.country.iso2 : "") ||
-        form.user.bio !== profile.bio ||
-        form.user.birthday !== profile.birthday
+      return (
+        profile &&
+        (form.user.username !== profile.username ||
+          form.user.country !== (profile.country ? profile.country.iso2 : "") ||
+          form.user.bio !== profile.bio ||
+          form.user.birthday !== profile.birthday)
       );
     };
 
     // nested function that checks if the socials section has changed
     const hasSocialsSectionChanged = () => {
       const profile = user?.profile;
-      return profile && (
-        form.user.youtube_handle !== profile.youtube_handle ||
-        form.user.twitch_username !== profile.twitch_username ||
-        form.user.twitter_handle !== profile.twitter_handle ||
-        form.user.discord !== profile.discord
+      return (
+        profile &&
+        (form.user.youtube_handle !== profile.youtube_handle ||
+          form.user.twitch_username !== profile.twitch_username ||
+          form.user.twitter_handle !== profile.twitter_handle ||
+          form.user.discord !== profile.discord)
       );
     };
 
     // nested function that checks if the featured video section has changed
     const hasFeaturedVideoSectionChanged = () => {
       const profile = user?.profile;
-      return profile && (
-        form.user.featured_video !== profile.featured_video ||
-        form.user.video_description !== profile.video_description
+      return (
+        profile &&
+        (form.user.featured_video !== profile.featured_video ||
+          form.user.video_description !== profile.video_description)
       );
     };
 
     // now, depending on the section parameter, either check if one particular section has changed, or all sections
     switch (section) {
-      case "profile": return hasProfileSectionChanged();
-      case "socials": return hasSocialsSectionChanged();
-      case "featured_video": return hasFeaturedVideoSectionChanged();
-      default: return hasProfileSectionChanged() || hasSocialsSectionChanged() || hasFeaturedVideoSectionChanged();
-    };
+      case "profile":
+        return hasProfileSectionChanged();
+      case "socials":
+        return hasSocialsSectionChanged();
+      case "featured_video":
+        return hasFeaturedVideoSectionChanged();
+      default:
+        return (
+          hasProfileSectionChanged() ||
+          hasSocialsSectionChanged() ||
+          hasFeaturedVideoSectionChanged()
+        );
+    }
   };
 
   // FUNCTION 6: handleReset - code that allows user to upload either a single section of the user form, or the entire thing
@@ -222,7 +249,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // NOTE: this function should ONLY be run if the user's profile is defined
   // POSTCONDITIONS (1 possible outcome):
   // the relevant fields are reset to their original values, and the form is updated
-  const handleReset = section => {
+  const handleReset = (section) => {
     let old = generateFormVals();
     switch (section) {
       case "profile":
@@ -230,7 +257,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
           username: old.username,
           country: old.country,
           bio: old.bio,
-          birthday: old.birthday
+          birthday: old.birthday,
         };
         break;
       case "socials":
@@ -238,17 +265,18 @@ const UserInfoForm = (setSubmitting, adminMode) => {
           youtube_handle: old.youtube_handle,
           twitch_username: old.twitch_username,
           twitter_handle: old.twitter_handle,
-          discord: old.discord
+          discord: old.discord,
         };
         break;
       case "featured_video":
         old = {
           featured_video: old.featured_video,
-          video_description: old.video_description
+          video_description: old.video_description,
         };
         break;
-      default: break;
-    };
+      default:
+        break;
+    }
     dispatchForm({ field: "user", value: { ...old } });
   };
 
@@ -258,7 +286,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // POSTCONDITIONS (1 returns):
   // 1.) error: a string that gives information as to why their username is problematic, if there is any problems.
   // if this string returns undefined, it means no errors were detected
-  const validateUsername = username => {
+  const validateUsername = (username) => {
     if (!usernamePattern.test(username)) {
       return "Username must begin with an alphanumeric character, and then consist of only letters, numbers, and/or underscores.";
     }
@@ -271,7 +299,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // POSTCONDITIONS (1 returns):
   // 1.) error: a string that gives information as to why their youtube handle is problematic, if there is any problems.
   // if this value returns undefined, it means no errors were detected
-  const validateYoutubeHandle = handle => {
+  const validateYoutubeHandle = (handle) => {
     if (handle && !youtubeHandlePattern.test(handle)) {
       return "YouTube Handle is not properly formatted. Remember to begin handle with '@' sign.";
     }
@@ -284,7 +312,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // POSTCONDITIONS (1 returns):
   // 1.) error: a string that gives information as to why their twitch username is problematic, if there is any problems.
   // if this value returns undefined, it means no errors were detected
-  const validateTwitchUsername = username => {
+  const validateTwitchUsername = (username) => {
     if (username && !twitchUsernamePattern.test(username)) {
       return "Twitch username is not properly formatted.";
     }
@@ -297,7 +325,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // POSTCONDITIONS (1 returns):
   // 1.) error: a string that gives information as to why their twitter handle is problematic, if there is any problems.
   // if this value returns undefined, it means no errors were detected
-  const validateTwitterHandle = handle => {
+  const validateTwitterHandle = (handle) => {
     if (handle && !twitterHandlePattern.test(handle)) {
       return "X (Twitter) Handle is not properly formatted. Remember to begin handle with '@' sign.";
     }
@@ -310,7 +338,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // POSTCONDITIONS (1 returns):
   // 1.) error: a string that gives information as to why their discord username is problematic, if there is any problems.
   // if this string returns undefined, it means no errors were detected
-  const validateDiscord = discord => {
+  const validateDiscord = (discord) => {
     if (discord && !discordPattern.test(discord)) {
       return "Discord username is not properly formatted.";
     }
@@ -323,7 +351,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // POSTCONDITIONS (1 returns):
   // 1.) error: a string that gives information as to why their video URL is problematic, if there is any problems.
   // if this string returns undefined, it means no errors were detected
-  const validateFeaturedVideo = featuredVideo => {
+  const validateFeaturedVideo = (featuredVideo) => {
     return featuredVideo ? validateVideoUrl(featuredVideo) : undefined;
   };
 
@@ -347,11 +375,15 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // POSTCONDITIONS (2 possible outcomes):
   // if the data is successfully upserted, and the user is updated successfully with new data on client, render
   // a success message
-  // otherwise, this function throws an error, which should be handled by the caller function 
-  const standardUpload = async userInfo => {
+  // otherwise, this function throws an error, which should be handled by the caller function
+  const standardUpload = async (userInfo) => {
     await upsertUserInfo(userInfo);
     await updateUser(user.id);
-    addMessage("Profile information has successfully updated!", "success", 5000);
+    addMessage(
+      "Profile information has successfully updated!",
+      "success",
+      5000,
+    );
   };
 
   // FUNCTION 15: adminUpload - function that exclusively uploads NEW profiles, accessible by admins in admin mode ONLY
@@ -359,9 +391,11 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // 1.) userInfo: an object containing user information defined in form (see `generateFormVals` function for more details)
   // if the data successfully uploads, render a success message, rerender the search results, and close the popup
   // otherwise, this function throws an error, which should be handled by the caller function
-  const adminModeUpload = async userInfo => {
+  const adminModeUpload = async (userInfo) => {
     await insertUserInfo(userInfo);
-    addMessage(`Profile successfully created! Try searching for ${userInfo.username} in the user searchbar!`);
+    addMessage(
+      `Profile successfully created! Try searching for ${userInfo.username} in the user searchbar!`,
+    );
     adminMode.refreshUserSearchFunc();
     closePopup();
   };
@@ -369,16 +403,16 @@ const UserInfoForm = (setSubmitting, adminMode) => {
   // FUNCTION 16: uploadUserInfo - function that validates, processes, & uploads the form containing the user info (upsert)
   // PRECONDITIONS (1 parameter):
   // 1.) e: an event object that is generated when the user submits the form
-  // POSTCONDITIONS (3 possible outcomes): 
+  // POSTCONDITIONS (3 possible outcomes):
   // if the form fails to validate, we update the error field of the user form with any validation errors,
   // and return from the function early
   // if the user form is validated, we update the user's profile in the database
   // if the user form is validated, but the database update fails, we render an error to the user, and return
-  const uploadUserInfo = async e => {
+  const uploadUserInfo = async (e) => {
     // create error object to track form errors
     e.preventDefault();
     const error = {};
-    Object.keys(form.error).forEach(field => error[field] = undefined);
+    Object.keys(form.error).forEach((field) => (error[field] = undefined));
 
     // validate form fields
     error.username = validateUsername(form.user.username);
@@ -387,11 +421,14 @@ const UserInfoForm = (setSubmitting, adminMode) => {
     error.twitter_handle = validateTwitterHandle(form.user.twitter_handle);
     error.discord = validateDiscord(form.user.discord);
     error.featured_video = validateFeaturedVideo(form.user.featured_video);
-    error.video_description = validateVideoDescription(form.user.video_description, form.user.featured_video);
+    error.video_description = validateVideoDescription(
+      form.user.video_description,
+      form.user.featured_video,
+    );
 
     // if any errors are determined, let's return
     dispatchForm({ field: "error", value: error });
-    if (Object.values(error).some(e => e !== undefined)) {
+    if (Object.values(error).some((e) => e !== undefined)) {
       addMessage("One or more form fields had errors.", "error", 7000);
       return;
     }
@@ -412,7 +449,6 @@ const UserInfoForm = (setSubmitting, adminMode) => {
       } else {
         await adminModeUpload(userInfo);
       }
-
     } catch (error) {
       // special case: user attempted to update their username to a non-unique name
       if (error.code === "23505") {
@@ -423,12 +459,15 @@ const UserInfoForm = (setSubmitting, adminMode) => {
 
       // general case: render an error message
       else {
-        addMessage("There was an error updating your profile. Try refreshing the page.", "error", 10000);
+        addMessage(
+          "There was an error updating your profile. Try refreshing the page.",
+          "error",
+          10000,
+        );
       }
-
     } finally {
       setSubmitting(false);
-    };
+    }
   };
 
   return {
@@ -438,7 +477,7 @@ const UserInfoForm = (setSubmitting, adminMode) => {
     handleBirthdayChange,
     hasChanged,
     handleReset,
-    uploadUserInfo
+    uploadUserInfo,
   };
 };
 

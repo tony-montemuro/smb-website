@@ -19,7 +19,7 @@ function Home({ imageReducer }) {
   const GAMES_PER_PAGE = 5;
   const gameRowOptions = {
     useCard: false,
-    onGameRowClick: navigateToGame
+    onGameRowClick: navigateToGame,
   };
 
   /* ===== EFFECTS ===== */
@@ -32,12 +32,15 @@ function Home({ imageReducer }) {
 
   /* ===== HOME COMPONENT ===== */
   return (
-    <div className={ styles.home }>
-
-      { /* Left - render a game search component, as well as a recent submissions table */ }
-      <div className={ styles.left }>
+    <div className={styles.home}>
+      {/* Left - render a game search component, as well as a recent submissions table */}
+      <div className={styles.left}>
         <Container title="Games" href="/games" largeTitle>
-          <GameSearch gamesPerPage={ GAMES_PER_PAGE } imageReducer={ imageReducer } gameRowOptions={ gameRowOptions } />
+          <GameSearch
+            gamesPerPage={GAMES_PER_PAGE}
+            imageReducer={imageReducer}
+            gameRowOptions={gameRowOptions}
+          />
         </Container>
         <Container title="Recent Submissions" href="/recent-submissions" largeTitle>
           <RecentSubmissionsTable renderGame renderLevelContext />
@@ -45,25 +48,24 @@ function Home({ imageReducer }) {
       </div>
 
       {/* Right - render the 3 most recent news posts */}
-      <div className={ styles.right }>
+      <div className={styles.right}>
         <Container title="News" href="/news" largeTitle>
-          { posts ?
-            <Items items={ posts } emptyMessage="No posts have been created yet!">
-              <div className={ styles.posts }>
-                { posts.map(post => {
-                  return <NewsPost post={ post } key={ post.id } />;
+          {posts ? (
+            <Items items={posts} emptyMessage="No posts have been created yet!">
+              <div className={styles.posts}>
+                {posts.map((post) => {
+                  return <NewsPost post={post} key={post.id} />;
                 })}
               </div>
             </Items>
-          :
+          ) : (
             <Loading />
-          }
+          )}
         </Container>
       </div>
-
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default Home;

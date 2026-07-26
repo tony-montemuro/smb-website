@@ -12,7 +12,8 @@
     padding: 20px 10px;
 }
 
-.header h1, .header h2 {
+.header h1,
+.header h2 {
     margin: 0;
 }
 

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import styles from"./SimpleForms.module.css";
+import styles from "./SimpleForms.module.css";
 import Container from "../../../components/Container/Container.jsx";
 import PasswordFormLogic from "./PasswordForm.js";
 import TextField from "@mui/material/TextField";
@@ -19,52 +19,55 @@ function PasswordForm() {
   return (
     <div id="password-reset">
       <Container title="Password Reset">
-        <form onSubmit={ handleSubmit }>
-          <div className={ styles.form }>
-
-            { /* Render a text field for both form fields */ }
+        <form onSubmit={handleSubmit}>
+          <div className={styles.form}>
+            {/* Render a text field for both form fields */}
             <TextField
-              autoComplete="new-password" 
-              color={ form.error.password ? "error" : "primary" }
+              autoComplete="new-password"
+              color={form.error.password ? "error" : "primary"}
               fullWidth
-              helperText={ form.error.password ? form.error.password : null }
+              helperText={form.error.password ? form.error.password : null}
               id="password"
               label="New Password"
-              placeholder={ limitMessage }
-              onChange={ handleChange }
+              placeholder={limitMessage}
+              onChange={handleChange}
               type="password"
-              value={ form.values.password }
+              value={form.values.password}
               variant="filled"
               slotProps={{
-                htmlInput: { minLength: PASSWORD_MIN_LENGTH, maxLength: PASSWORD_MAX_LENGTH }
+                htmlInput: { minLength: PASSWORD_MIN_LENGTH, maxLength: PASSWORD_MAX_LENGTH },
               }}
             />
             <TextField
-              autoComplete="new-password" 
-              color={ form.error.confirmation ? "error" : "primary" }
+              autoComplete="new-password"
+              color={form.error.confirmation ? "error" : "primary"}
               fullWidth
-              helperText={ form.error.confirmation ? form.error.confirmation : null }
+              helperText={form.error.confirmation ? form.error.confirmation : null}
               id="confirmation"
               label="Confirm Password"
-              placeholder={ limitMessage }
-              onChange={ handleChange }
+              placeholder={limitMessage}
+              onChange={handleChange}
               type="password"
-              value={ form.values.confirmation }
+              value={form.values.confirmation}
               variant="filled"
               slotProps={{
-                htmlInput: { minLength: PASSWORD_MIN_LENGTH, maxLength: PASSWORD_MAX_LENGTH }
+                htmlInput: { minLength: PASSWORD_MIN_LENGTH, maxLength: PASSWORD_MAX_LENGTH },
               }}
             />
 
-            { /* Button that submits the form */ }
-            <button type="submit" disabled={ !form.values.password || !form.values.confirmation || form.submitting }>Reset Password</button>
-
+            {/* Button that submits the form */}
+            <button
+              type="submit"
+              disabled={!form.values.password || !form.values.confirmation || form.submitting}
+            >
+              Reset Password
+            </button>
           </div>
         </form>
       </Container>
     </div>
   );
-};
+}
 
 /* ===== EXPORTS ===== */
 export default PasswordForm;
