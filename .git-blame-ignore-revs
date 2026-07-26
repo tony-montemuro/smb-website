@@ -1,0 +1,5 @@
+# FIX: automatically re-format all frontend code according to prettier rules (#56)
+#
+# First run of Prettier across `client/` after the formatter was configured in
+# #55. Reformatted 393 files with no hand edits.
+2f7f9d4b46516254dd212b7db52ba0ff477f9ec2

@@ -47,6 +47,14 @@ Once this has finished, run:
 cd smb-website
 ```
 
+Optionally, run the following command, so that `git blame` skips the commit that reformatted the entire codebase with Prettier:
+
+```bash
+git config blame.ignoreRevsFile .git-blame-ignore-revs
+```
+
+GitHub's blame view already ignores this commit, so the command only affects `git blame` run locally.
+
 From here, there are two ways to proceed:
 
 1. **Automatic setup**: Run a bash script, which should get you up and running in a few minutes!
