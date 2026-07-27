@@ -23,7 +23,7 @@ the `init.sh` script needs to be updated.
 - Before a task is deemed as complete, always verify the codebase is linted
 and formatted by running these commands from the `client/` directory:
 
-```
+```bash
 npm run lint
 npm run format:check
 ```
