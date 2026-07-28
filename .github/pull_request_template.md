@@ -1,3 +1,7 @@
+## Linear issue
+
+<!-- Link the Linear issue this work implements, ex: [SMB-5](https://linear.app/smbelite/issue/SMB-5). Delete this section if not applicable. -->
+
 ## What changed?
 
 <!-- Summarize the changes introduced by this PR. -->
@@ -21,3 +25,7 @@
 ## How was this tested?
 
 <!-- Describe how you verified the change works (manual testing steps, automated tests, etc.). Delete this section if not applicable. -->
+
+## Required follow up work
+
+<!-- If this PR leads to required follow up work, briefly mention it here, with a summary of why each referenced work is necessary. Delete this section if not applicable. -->

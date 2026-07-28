@@ -193,3 +193,17 @@ Once you have the local server setup, running the application is relatively stra
     ```
     http://localhost:3000
     ```
+
+### Claude Code
+
+This codebase is configured to work with [Claude Code](https://claude.com/claude-code).
+
+The repository checks in a `.mcp.json` that registers the [Supabase MCP server](https://supabase.com/docs/guides/ai-tools/mcp), which lets Claude Code inspect the database schema, migrations, and logs directly. It holds no credentials, so there is nothing to configure after cloning.
+
+The server is reached over HTTP at the local API port (`8081`, set by `[api]` in `supabase/config.toml`), so it only resolves while the local Supabase stack is running. If Claude Code reports the `supabase` server as failed, the stack is almost certainly stopped. Start it with:
+
+```bash
+supabase start
+```
+
+Then restart Claude Code, or reconnect the server with `/mcp`.
