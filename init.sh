@@ -22,9 +22,9 @@ git update-index --skip-worktree $initial_migration
 echo "b.) Extract relevant environment variables from supabase..."
 supabase start
 status=$(supabase status -o env)
-api_url=$(echo "$status" | grep "API_URL" | cut -d "=" -f2 | tr -d '"')
-service_role=$(echo "$status" | grep "SERVICE_ROLE_KEY" | cut -d "=" -f2 | tr -d '"')
-anon_key=$(echo "$status" | grep "ANON_KEY" | cut -d "=" -f2 | tr -d '"')
+api_url=$(echo "$status" | grep "^API_URL=" | cut -d "=" -f2 | tr -d '"')
+secret_key=$(echo "$status" | grep "^SECRET_KEY=" | cut -d "=" -f2 | tr -d '"')
+publishable_key=$(echo "$status" | grep "^PUBLISHABLE_KEY=" | cut -d "=" -f2 | tr -d '"')
 
 ## Create development environment variables
 env_file="./client/.env.development.local"
@@ -35,14 +35,14 @@ else
     touch $env_file
     exec 3<> $env_file
     echo "VITE_APP_SUPABASE_URL=$api_url" >&3
-    echo "VITE_APP_SUPABASE_ANON_KEY=$anon_key" >&3
+    echo "VITE_APP_SUPABASE_PUBLISHABLE_KEY=$publishable_key" >&3
     exec 3>&-
 fi
 
 ## Upload images to local storage
 echo "d.) Uploading images to supabase storage..."
 cd ./supabase
-./upload_images.sh "$api_url" "$service_role"
+./upload_images.sh "$api_url" "$secret_key"
 cd ..
 
 # CLIENT SETUP
