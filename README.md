@@ -114,7 +114,7 @@ Before you can run the app, a local database server must be running for the clie
     ```bash
     supabase status
     ```
-    This command will display information about your local development server instance. Make note of the `API URL` and `anon key` parameters.
+    This command will display information about your local development server instance. Make note of the `Project URL` and `Publishable` parameters.
 6. Run these commands:
     ```bash
     cd client
@@ -123,10 +123,10 @@ Before you can run the app, a local database server must be running for the clie
     This will create a file in the `client` directory for storing environment variables, which are necessary to connect to the server.
 7. Open `.env.development.local` into a text editor, add the following, and save:
     ```env
-    VITE_APP_SUPABASE_URL=<YOUR_API_URL>
-    VITE_APP_SUPABASE_ANON_KEY=<YOUR_ANON_KEY>
+    VITE_APP_SUPABASE_URL=<YOUR_PROJECT_URL>
+    VITE_APP_SUPABASE_PUBLISHABLE_KEY=<YOUR_PUBLISHABLE_KEY>
     ```
-    Replacing `<YOUR_API_URL>` and `<YOUR_ANON_KEY>` with `API URL` and `anon key` respectively from the `supabase status` command in step 3.
+    Replacing `<YOUR_PROJECT_URL>` and `<YOUR_PUBLISHABLE_KEY>` with `Project URL` and `Publishable` respectively from the `supabase status` command in step 5.
 
 This is what is *required* for setting up the server. The following information is nice to have, but not a necessity. If you just want to set up the client application, skip to the [client](#client-setup) section.
 
@@ -158,13 +158,13 @@ This is a totally optional thing, but included in the repository are box art for
     ```bash
     supabase status
     ```
-    Make note of the `API URL` and `service_role key` parameters.
+    Make note of the `Project URL` and `Secret` parameters.
 
 4. Finally, run:
     ```bash
-    node upload_images.js <YOUR_API_KEY> <YOUR_SERVICE_ROLE_KEY>
+    node upload_images.js <YOUR_PROJECT_URL> <YOUR_SECRET_KEY>
     ```
-    Replacing `<YOUR_API_URL>` and `<YOUR_ANON_KEY>` with `API URL` and `service_role key` respectively.
+    Replacing `<YOUR_PROJECT_URL>` and `<YOUR_SECRET_KEY>` with `Project URL` and `Secret` respectively.
 
 Note that this process can sometimes not work properly; the local supabase storage system can be finicky. If this does not work, it is safe to ignore this section.
 
