@@ -1,11 +1,32 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@std/assert@1": "1.0.19",
+    "jsr:@std/assert@^1.0.19": "1.0.19",
+    "jsr:@std/internal@^1.0.12": "1.0.14",
+    "jsr:@std/internal@^1.0.14": "1.0.14",
+    "jsr:@std/testing@1": "1.0.19",
     "jsr:@supabase/functions-js@2": "2.111.0",
     "npm:@supabase/server@1": "1.4.1_@supabase+supabase-js@2.111.0",
     "npm:openai@^4.52.5": "4.104.0"
   },
   "jsr": {
+    "@std/assert@1.0.19": {
+      "integrity": "eaada96ee120cb980bc47e040f82814d786fe8162ecc53c91d8df60b8755991e",
+      "dependencies": [
+        "jsr:@std/internal@^1.0.12"
+      ]
+    },
+    "@std/internal@1.0.14": {
+      "integrity": "291516b3d4c35024d6ffbc0a9df5bf4c64116e05b50012cf846710152d2ffdf7"
+    },
+    "@std/testing@1.0.19": {
+      "integrity": "f4236172365b216728dc3cc8b5e80a9f4c33083d1e4ede7613d5b25b4014898e",
+      "dependencies": [
+        "jsr:@std/assert@^1.0.19",
+        "jsr:@std/internal@^1.0.14"
+      ]
+    },
     "@supabase/functions-js@2.111.0": {
       "integrity": "6714657239e73db50c4d6a65cb7e99e36301289b9d180062755e5c081e3b62b5",
       "dependencies": [
@@ -280,6 +301,8 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@std/assert@1",
+      "jsr:@std/testing@1",
       "jsr:@supabase/functions-js@2",
       "npm:@supabase/server@1"
     ]
