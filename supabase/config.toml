@@ -132,3 +132,12 @@ port = 54327
 vector_port = 54328
 # Configure one of the supported backends: `postgres`, `bigquery`.
 backend = "postgres"
+
+[functions.leaderboards]
+enabled = true
+# The function authenticates callers with the publishable key instead. The platform check rejects any `Authorization` header it
+# cannot verify, which would turn a stale token held by a signed in visitor into a 401 before the function runs.
+verify_jwt = false
+# The import map is shared by every function, and also defines the `deno task` commands.
+import_map = "./functions/deno.json"
+entrypoint = "./functions/leaderboards/index.ts"
