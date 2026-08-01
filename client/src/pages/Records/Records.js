@@ -1,7 +1,7 @@
 /* ===== IMPORTS ===== */
 import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
-import RPCRead from "../../database/read/RPCRead";
+import FunctionsRead from "../../database/read/FunctionsRead";
 
 const Records = () => {
   /* ===== CONTEXTS ===== */
@@ -18,7 +18,7 @@ const Records = () => {
   /* ===== FUNCTIONS ===== */
 
   // database functions
-  const { getRecords } = RPCRead();
+  const { getRecords } = FunctionsRead();
 
   // FUNCTION 1: fetchRecords - given a game, category, type, fetch submissions and create the record table
   // PRECONDITIONS (3 parameters):

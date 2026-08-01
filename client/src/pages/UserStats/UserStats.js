@@ -3,6 +3,7 @@ import { MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import { useSearchParams } from "react-router";
 import GameHelper from "../../helper/GameHelper";
+import FunctionsRead from "../../database/read/FunctionsRead";
 import RPCRead from "../../database/read/RPCRead";
 
 const UserStats = (decimalPlaces, setVersion) => {
@@ -18,7 +19,8 @@ const UserStats = (decimalPlaces, setVersion) => {
   /* ===== FUNCTIONS ===== */
 
   // database functions
-  const { getTotals, getMedals, getUserRankings } = RPCRead();
+  const { getTotals, getUserRankings } = FunctionsRead();
+  const { getMedals } = RPCRead();
 
   // helper functions
   const { getDecimals } = GameHelper();

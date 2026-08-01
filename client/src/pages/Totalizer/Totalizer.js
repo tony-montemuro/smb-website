@@ -2,7 +2,7 @@
 import { GameContext, MessageContext } from "../../utils/Contexts";
 import { useContext, useState } from "react";
 import GameHelper from "../../helper/GameHelper";
-import RPCRead from "../../database/read/RPCRead";
+import FunctionsRead from "../../database/read/FunctionsRead";
 
 const Totalizer = () => {
   /* ===== CONTEXTS ===== */
@@ -19,7 +19,7 @@ const Totalizer = () => {
   /* ===== FUNCTIONS ===== */
 
   // database functions
-  const { getTotals } = RPCRead();
+  const { getTotals } = FunctionsRead();
 
   // helper functions
   const { getDecimals } = GameHelper();

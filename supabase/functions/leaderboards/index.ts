@@ -168,11 +168,11 @@ const handleUserRankings: RouteHandler = async (body, client) => {
 
 // the description of an invalid request body, shared by each route which takes the leaderboard parameters
 const PARAMETERS_MESSAGE =
-  "Request body must define `abb`, `category`, `score`, `liveOnly`, and `version` (optional).";
+  "Request body must define `abb`, `category`, `score`, `liveOnly`, and `version`.";
 
 // the description of an invalid request body for the user rankings route, which takes the profile as well
 const USER_RANKINGS_PARAMETERS_MESSAGE =
-  "Request body must define `abb`, `category`, `score`, `liveOnly`, `profileId`, and `version` (optional).";
+  "Request body must define `abb`, `category`, `score`, `liveOnly`, `profileId`, and `version`.";
 
 // the routes served by the function. NOTE: the platform strips the `/functions/v1` prefix before a request arrives
 const ROUTES: { pattern: URLPattern; handle: RouteHandler }[] = [
