@@ -6,6 +6,6 @@
     "@supabase/server": "npm:@supabase/server@^1"
   },
   "tasks": {
-    "test": "deno test --allow-all"
+    "test": "deno test --allow-env --allow-net"
   }
 }

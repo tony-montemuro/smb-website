@@ -60,5 +60,6 @@ cd ..
 printf "\n=========================\n"
 echo "DEVELOPMENT SETUP COMPLETE!"
 printf "\tImages do not persist permanently -- run \`cd supabase | ./upload_images.sh\` to re-upload images.\n"
-printf "\tRun \`cd client | npm start\` to start client server...\n"
+printf "\tRun \`cd client | npm start\` to start client server.\n"
 printf "\tDatabase already running\n"
+printf "\tEdge functions already served; run \`supabase functions serve\` for hot reload and streamed logs.\n"

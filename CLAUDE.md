@@ -34,6 +34,23 @@ Fix any issues that arise before completion.
 the relevant page (`client/src/pages/{page}/`). Otherwise, define in
 `client/src/components/` directory.
 
+## Edge Function Workflows
+
+- Before a task is deemed as complete, always verify the edge function code is
+linted, formatted, and tested by running these commands from the
+`supabase/functions/` directory:
+
+```bash
+deno fmt --check
+deno lint
+deno task test
+```
+
+Fix any issues that arise before completion.
+- Pay special care to **never** execute `deno fmt` from the repository root!
+- Restrict all database access to each function's `queries.ts`, keeping every
+transform pure; this is what makes the transforms testable without a database.
+
 ## Backend Workflows
 
 - Information about the Supabase backend is primarily represented via migration
