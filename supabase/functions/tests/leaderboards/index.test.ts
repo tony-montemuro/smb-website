@@ -120,6 +120,15 @@ describe("leaderboards", () => {
     assertEquals((await response.json()).code, "INVALID_PARAMETERS");
   });
 
+  it("rejects a user rankings body with no profile", async () => {
+    const response = await leaderboards.fetch(
+      request("/leaderboards/user_rankings", { body: JSON.stringify(PARAMS) }),
+    );
+
+    assertEquals(response.status, 400);
+    assertEquals((await response.json()).code, "INVALID_PARAMETERS");
+  });
+
   it("rejects a body whose parameter has the wrong type", async () => {
     const response = await leaderboards.fetch(
       request("/leaderboards/records", {
@@ -132,7 +141,7 @@ describe("leaderboards", () => {
   });
 
   it("serves each leaderboard route", async () => {
-    for (const route of ["records", "totals"]) {
+    for (const route of ["records", "totals", "user_rankings"]) {
       const response = await leaderboards.fetch(
         request(`/leaderboards/${route}`, { body: "not json" }),
       );

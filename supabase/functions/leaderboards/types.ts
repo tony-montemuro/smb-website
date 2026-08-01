@@ -56,6 +56,11 @@ export type LeaderboardParams = {
   version: number | null;
 };
 
+// the parameters of the user rankings route, which needs the profile whose rankings are wanted
+export type UserRankingsParams = LeaderboardParams & {
+  profileId: number;
+};
+
 /* ===== RESPONSES ===== */
 
 // a profile which holds the record of a level. NOTE: `submission_id` is an ISO timestamp, with millisecond precision
@@ -91,6 +96,18 @@ export type Total = {
   total: number;
   position: number;
 };
+
+// the ranking of a profile on a single level. NOTE: every field is null for a level the profile has no submission for, and `date`
+// is an ISO timestamp, with millisecond precision
+export type UserRankingEntry = {
+  level: Level;
+  record: number | null;
+  date: string | null;
+  position: number | null;
+};
+
+// the rankings of a profile, keyed by the name of each mode
+export type UserRankings = Record<string, UserRankingEntry[]>;
 
 /* ===== DATABASE ===== */
 

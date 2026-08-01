@@ -10,7 +10,13 @@ import {
 } from "./queries.ts";
 import { buildRecordTable } from "./records.ts";
 import { buildTotals } from "./totals.ts";
-import type { Client, Database, LeaderboardParams } from "./types.ts";
+import { buildUserRankings } from "./user_rankings.ts";
+import type {
+  Client,
+  Database,
+  LeaderboardParams,
+  UserRankingsParams,
+} from "./types.ts";
 
 /* ===== TYPES ===== */
 
@@ -61,7 +67,24 @@ const parseLeaderboardParams = (body: unknown): LeaderboardParams | null => {
   return { abb, category, score, liveOnly, version };
 };
 
-// FUNCTION 3: handleRecords - function that generates the response of the records route
+// FUNCTION 3: parseUserRankingsParams - function that validates the request body of the user rankings route
+// PRECONDITIONS (1 parameter):
+// 1.) body: the json body of the request
+// POSTCONDITIONS (2 possible outcomes):
+// if the body defines each parameter with the expected type, the parameters are returned
+// otherwise, null is returned
+const parseUserRankingsParams = (body: unknown): UserRankingsParams | null => {
+  const params = parseLeaderboardParams(body);
+  const { profileId } = (body ?? {}) as Record<string, unknown>;
+
+  if (!params || typeof profileId !== "number") {
+    return null;
+  }
+
+  return { ...params, profileId };
+};
+
+// FUNCTION 4: handleRecords - function that generates the response of the records route
 // PRECONDITIONS (2 parameters):
 // 1.) body: the json body of the request
 // 2.) client: the supabase client which each query runs through
@@ -83,7 +106,7 @@ const handleRecords: RouteHandler = async (body, client) => {
   return Response.json(buildRecordTable(submissions, modes));
 };
 
-// FUNCTION 4: handleTotals - function that generates the response of the totals route
+// FUNCTION 5: handleTotals - function that generates the response of the totals route
 // PRECONDITIONS (2 parameters):
 // 1.) body: the json body of the request
 // 2.) client: the supabase client which each query runs through
@@ -113,11 +136,43 @@ const handleTotals: RouteHandler = async (body, client) => {
   return Response.json(buildTotals(submissions, params.score, totalTime));
 };
 
+// FUNCTION 6: handleUserRankings - function that generates the response of the user rankings route
+// PRECONDITIONS (2 parameters):
+// 1.) body: the json body of the request
+// 2.) client: the supabase client which each query runs through
+// POSTCONDITIONS (3 possible outcomes):
+// if the body is invalid, a 400 response is returned
+// if each query is successful, the rankings of the profile are returned
+// otherwise, this function throws an error, which should be handled by the caller function
+const handleUserRankings: RouteHandler = async (body, client) => {
+  const params = parseUserRankingsParams(body);
+  if (!params) {
+    return errorResponse(
+      400,
+      "INVALID_PARAMETERS",
+      USER_RANKINGS_PARAMETERS_MESSAGE,
+    );
+  }
+
+  const [submissions, modes] = await Promise.all([
+    getRankedSubmissions(client, params),
+    getCategoryLevelsByMode(client, params),
+  ]);
+
+  return Response.json(
+    buildUserRankings(submissions, modes, params.profileId),
+  );
+};
+
 /* ===== CONSTANTS ===== */
 
 // the description of an invalid request body, shared by each route which takes the leaderboard parameters
 const PARAMETERS_MESSAGE =
-  "Request body must define `abb`, `category`, `score`, `liveOnly`, and `version`.";
+  "Request body must define `abb`, `category`, `score`, `liveOnly`, and `version` (optional).";
+
+// the description of an invalid request body for the user rankings route, which takes the profile as well
+const USER_RANKINGS_PARAMETERS_MESSAGE =
+  "Request body must define `abb`, `category`, `score`, `liveOnly`, `profileId`, and `version` (optional).";
 
 // the routes served by the function. NOTE: the platform strips the `/functions/v1` prefix before a request arrives
 const ROUTES: { pattern: URLPattern; handle: RouteHandler }[] = [
@@ -128,6 +183,10 @@ const ROUTES: { pattern: URLPattern; handle: RouteHandler }[] = [
   {
     pattern: new URLPattern({ pathname: "/leaderboards/totals" }),
     handle: handleTotals,
+  },
+  {
+    pattern: new URLPattern({ pathname: "/leaderboards/user_rankings" }),
+    handle: handleUserRankings,
   },
 ];
 
