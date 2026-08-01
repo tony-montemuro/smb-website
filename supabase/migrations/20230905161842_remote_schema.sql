@@ -12,7 +12,9 @@ SET row_security = off;
 
 CREATE EXTENSION IF NOT EXISTS "pg_cron" WITH SCHEMA "extensions";
 
-CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";
+-- `pgsodium` was removed from the Supabase PostgreSQL 17 bundle. It was installed automatically when the project was
+-- created, and was never used. It remains commented out so a fresh `supabase db reset` succeeds.
+-- CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";
 
 ALTER SCHEMA "public" OWNER TO "postgres";
 
@@ -26,7 +28,9 @@ CREATE EXTENSION IF NOT EXISTS "pg_stat_statements" WITH SCHEMA "extensions";
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA "extensions";
 
-CREATE EXTENSION IF NOT EXISTS "pgjwt" WITH SCHEMA "extensions";
+-- `pgjwt` was removed from the Supabase PostgreSQL 17 bundle. It was installed automatically when the project was
+-- created, and was never used. It remains commented out so a fresh `supabase db reset` succeeds.
+-- CREATE EXTENSION IF NOT EXISTS "pgjwt" WITH SCHEMA "extensions";
 
 CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
 
