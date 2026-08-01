@@ -17,6 +17,7 @@ import GameModerators from "./pages/GameModerators/GameModerators.jsx";
 import GameSelect from "./pages/GameSelect/GameSelect.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Levelboard from "./pages/Levelboard/Levelboard.jsx";
+import MaintenanceBanner from "./components/MaintenanceBanner/MaintenanceBanner.jsx";
 import MedalTable from "./pages/MedalTable/MedalTable.jsx";
 import Message from "./components/Message/Message.jsx";
 import MetadataForm from "./pages/MetadataForm/MetadataForm.jsx";
@@ -81,6 +82,8 @@ function App() {
         <UserContext.Provider value={{ user, updateUser, isModerator }}>
           <Navbar imageReducer={imageReducer} />
           <div className="app">
+            <MaintenanceBanner />
+
             {/* Render the message component (will only render if open field in `messageContent` is true) */}
             <Message messageContent={messageContent} handleClose={handleMessageClose} />
 
