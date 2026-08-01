@@ -29,6 +29,9 @@ jobs:
       - name: Push new migrations
         run: supabase db push
 
+      - name: Deploy edge functions
+        run: supabase functions deploy
+
   build-app:
     runs-on: ubuntu-latest
     name: Build and Push

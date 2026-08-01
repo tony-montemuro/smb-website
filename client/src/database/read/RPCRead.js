@@ -4,61 +4,7 @@ import { supabase } from "../SupabaseClient";
 const RPCRead = () => {
   /* ===== FUNCTIONS ===== */
 
-  // FUNCTION 1: getRecords - function that calls on a procedure to generate the world records depending on the parameters
-  // PRECONDITIONS (5 parameters):
-  // 1.) abb: a string representing the unique identifier for a game
-  // 2.) category: a string representing a valid category
-  // 3.) type: a string, either "score" or "time"
-  // 4.) live: a boolean value representing whether or not to filter by live submissions
-  // 5.) version: an int OR undefined: an int if game has versions, otherwise undefined
-  // POSTCONDITIONS (2 possible outcomes):
-  // if the query is successful, the array of modes containing the record objects is simply returned
-  // otherwise, this function throws an error, which should be handled by the caller function
-  const getRecords = async (abb, category, type, live, version) => {
-    const { data: records, error } = await supabase.rpc("get_records", {
-      abb,
-      category,
-      score: type === "score",
-      live_only: live,
-      version: version ?? null,
-    });
-
-    // error handling
-    if (error) {
-      throw error;
-    }
-
-    return records;
-  };
-
-  // FUNCTION 2: getTotals - function that calls on a procedure to generate a totalizer array depending on the parameters
-  // PRECONDITIONS (5 parameters):
-  // 1.) abb: a string representing the unique identifier for a game
-  // 2.) category: a string representing a valid category
-  // 3.) type: a string, either "score" or "time"
-  // 4.) live: a boolean value representing whether or not to filter by live submissions
-  // 5.) version: an int OR undefined: an int if game has versions, otherwise undefined
-  // POSTCONDITIONS (2 possible outcomes):
-  // if the query is successful, an array of totals objects, sorted by position field, is returned
-  // otherwise, this function throws an error, which should be handled by the caller function
-  const getTotals = async (abb, category, type, live, version) => {
-    const { data: totals, error } = await supabase.rpc("get_totals", {
-      abb,
-      category,
-      score: type === "score",
-      live_only: live,
-      version: version ?? null,
-    });
-
-    // error handling
-    if (error) {
-      throw error;
-    }
-
-    return totals;
-  };
-
-  // FUNCTION 3: getMedals - function that calls on a procedure to generate a medals array depending on the parameters
+  // FUNCTION 1: getMedals - function that calls on a procedure to generate a medals array depending on the parameters
   // PRECONDITIONS (4 parameters):
   // 1.) abb: a string representing the unique identifier for a game
   // 2.) category: a string representing a valid category
@@ -83,43 +29,7 @@ const RPCRead = () => {
     return medals;
   };
 
-  // FUNCTION 4: getUserRankings - function that calls on a procedure to generate user ranking object depending on the parameters
-  // PRECONDITIONS (6 parameters):
-  // 1.) abb: a string representing the unique identifier for a game
-  // 2.) category: a string representing a valid category
-  // 3.) type: a string, either "score" or "time"
-  // 4.) live: a boolean value representing whether or not to filter by live submissions
-  // 5.) profileId: the id of the user whose rankings we want to grab
-  // 6.) version: an int OR undefined: an int if game has versions, otherwise undefined
-  // POSTCONDITIONS (2 possible outcomes):
-  // if the query is successful, a user ranking object is is returned
-  // otherwise, this function throws an error, which should be handled by the caller function
-  const getUserRankings = async (
-    abb,
-    category,
-    type,
-    live,
-    profileId,
-    version,
-  ) => {
-    const { data: rankings, error } = await supabase.rpc("get_user_rankings", {
-      abb,
-      category,
-      score: type === "score",
-      live_only: live,
-      profile_id: profileId,
-      version_key: version ?? null,
-    });
-
-    // error handling
-    if (error) {
-      throw error;
-    }
-
-    return rankings;
-  };
-
-  // FUNCTION 5: getChartSubmissions - function that calls on a procedure to generate the list of submissions for a particular chart
+  // FUNCTION 2: getChartSubmissions - function that calls on a procedure to generate the list of submissions for a particular chart
   // PRECONDITIONS (5 parameters):
   // 1.) abb: a string representing the unique identifier for a game
   // 2.) category: a string representing a valid category
@@ -150,7 +60,7 @@ const RPCRead = () => {
     return submissions;
   };
 
-  // FUNCTION 6: getUnapprovedCounts - function that grabs the count of unapproved submissions, either for a list of games, or all
+  // FUNCTION 3: getUnapprovedCounts - function that grabs the count of unapproved submissions, either for a list of games, or all
   // games
   // PRECONDITIONS (1 parameter):
   // 1.) games: an array of game strings (abbs), which is set if the current user is a moderator. otherwise, an empty array is supplied,
@@ -173,7 +83,7 @@ const RPCRead = () => {
     return gameCounts;
   };
 
-  // FUNCTION 7: getUnapprovedByGame - function that grabs all the unapproved submissions for a particular game
+  // FUNCTION 4: getUnapprovedByGame - function that grabs all the unapproved submissions for a particular game
   // PRECONDITIONS (1 parameter):
   // 1.) abb: a string corresponding to the primary key of a game
   // POSTCONDITIONS (2 possible outcomes):
@@ -192,7 +102,7 @@ const RPCRead = () => {
     return submissions;
   };
 
-  // FUNCTION 8: getReportedByGame - function that grabs all the reported submissions for a particular game
+  // FUNCTION 5: getReportedByGame - function that grabs all the reported submissions for a particular game
   // PRECONDITIONS (1 parameter):
   // 1.) abb: a string corresponding to the primary key of a game
   // POSTCONDITIONS (2 possible outcomes):
@@ -211,7 +121,7 @@ const RPCRead = () => {
     return submissions;
   };
 
-  // FUNCTION 9: getProfile - function that can grab a single profile using a profile id
+  // FUNCTION 6: getProfile - function that can grab a single profile using a profile id
   // PRECONDITIONS (1 parameter):
   // 1.) profileId: an integer corresponding to the primary key of a profile in the database
   // POSTCONDITIONS (2 possible outcomes):
@@ -230,7 +140,7 @@ const RPCRead = () => {
     return profile;
   };
 
-  // FUNCTION 10: getChartTypes - function that grabs all chart types from the database
+  // FUNCTION 7: getChartTypes - function that grabs all chart types from the database
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes):
   // if the query is successful, the array of chart types is returned
@@ -246,7 +156,7 @@ const RPCRead = () => {
     return chartTypes;
   };
 
-  // FUNCTION 11: getTimerTypes - funcion that grabs all timer types from the database
+  // FUNCTION 8: getTimerTypes - funcion that grabs all timer types from the database
   // PRECONDITIONS: NONE
   // POSTCONDITIONS (2 possible outcomes):
   // if the query is successful, the array of timer types is returned
@@ -263,10 +173,7 @@ const RPCRead = () => {
   };
 
   return {
-    getRecords,
-    getTotals,
     getMedals,
-    getUserRankings,
     getChartSubmissions,
     getUnapprovedCounts,
     getUnapprovedByGame,

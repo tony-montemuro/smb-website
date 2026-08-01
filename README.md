@@ -74,7 +74,7 @@ Then, run the following command:
 ./init.sh
 ```
 
-And you are done!
+And you are done! Note that the local stack serves the [edge functions](#edge-functions) as well, so there is nothing extra to start.
 
 ### Manual setup
 
@@ -84,6 +84,7 @@ And you are done!
 
 - [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started)
 - [Docker](https://docs.docker.com/get-docker/)
+- [Deno](https://docs.deno.com/runtime/getting_started/installation/) (optional): only needed for [edge functions](#edge-functions) development
 
 Before you can run the app, a local database server must be running for the client to connect to. Here are the steps you must follow:
 
@@ -139,6 +140,26 @@ supabase status
 Copy the `Studio URL` parameter, and paste it into your browser. It should open to a page that looks like this:
 ![Supabase Studio](https://i.imgur.com/VLLSejw.png)
 This is an easy way to interface with the database.
+
+##### [Edge Functions](#edge-functions)
+
+`supabase start` serves edge functions at `<YOUR_PROJECT_URL>/functions/v1/<function-name>`; no separate step is necessary to run them.
+
+While iterating on a function, this command is worth running in a second terminal, as it adds hot reload and streams the logs of each request:
+
+```bash
+supabase functions serve
+```
+
+Edge functions are written in TypeScript, and run on Deno rather than Node.js. With Deno installed, run these from the `supabase/functions` directory:
+
+```bash
+deno fmt --check
+deno lint
+deno task test
+```
+
+**Important:** Take care to run them from `supabase/functions`, and not from the root directory: `deno fmt` would otherwise reformat the frontend code, which Prettier owns.
 
 ##### Adding Game Box Art
 
