@@ -120,7 +120,7 @@ describe("buildTotals", () => {
     assertEquals(totals.map((total) => total.position), [1, 1, 3, 4]);
   });
 
-  it("orders tied profiles by profile id", () => {
+  it("orders tied profiles by profile id in a score totalizer", () => {
     const totals = buildTotals(
       [
         submission({ id: 9, record: 10 }),
@@ -131,5 +131,20 @@ describe("buildTotals", () => {
     );
 
     assertEquals(totals.map((total) => total.profile.id), [2, 9]);
+  });
+
+  it("orders tied profiles by descending profile id in a time totalizer", () => {
+    const totals = buildTotals(
+      [
+        submission({ id: 9, record: 10 }),
+        submission({ id: 2, record: 10 }),
+      ],
+      false,
+      100,
+    );
+
+    // the time comparator returns -1 for a tie, which reverses the ascending id order the mapping iterates in. this is what the
+    // procedure this function replaces did, so the leaderboards are unchanged
+    assertEquals(totals.map((total) => total.profile.id), [9, 2]);
   });
 });

@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import type { Mode, RankedSubmission } from "../../leaderboards/types.ts";
 import { buildUserRankings } from "../../leaderboards/user_rankings.ts";
@@ -128,6 +128,20 @@ describe("buildUserRankings", () => {
 
     assertEquals(rankings.beginner.map((entry) => entry.record), [1, 2]);
     assertEquals(rankings.advanced.map((entry) => entry.record), [3]);
+  });
+
+  it("throws when a submission belongs to no level of any mode", () => {
+    // the rankings would otherwise be returned with that level silently left empty
+    assertThrows(
+      () =>
+        buildUserRankings(
+          [submission({ level_id: "expert_1" })],
+          MODES,
+          PROFILE_ID,
+        ),
+      Error,
+      "1 ranked submissions were not assigned to a level",
+    );
   });
 
   it("returns nothing but empty rankings for a profile with no submissions", () => {

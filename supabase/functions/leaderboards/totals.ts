@@ -17,7 +17,8 @@ export const buildTotals = (
   totalTime: number,
 ): Total[] => {
   // first, we want to create our mapping of users to totals. NOTE: the keys are profile ids, so the mapping iterates in ascending
-  // id order, which is what settles the order of two profiles with the same total
+  // id order. neither comparator below returns 0 for a tie, so that order survives in a score totalizer, and reverses in a time
+  // totalizer. both are ported as they were, since the order two tied profiles appear in is what the leaderboards already show
   const userToTotal: Record<number, Total> = {};
   submissions.forEach((submission) => {
     // first, extract information from submission object

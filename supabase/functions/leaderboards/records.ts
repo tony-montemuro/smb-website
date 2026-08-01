@@ -61,6 +61,16 @@ export const buildRecordTable = (
     recordTable[mode.name] = modeRecords;
   });
 
+  // every submission belongs to a level of some mode, so a leftover means the submissions did not arrive in the order the cursor
+  // walks them in. failing loudly is deliberate: the alternative is a record table which silently omits records
+  if (index !== submissions.length) {
+    throw new Error(
+      `${
+        submissions.length - index
+      } record submissions were not assigned to a level`,
+    );
+  }
+
   // finally, return record table
   return recordTable;
 };

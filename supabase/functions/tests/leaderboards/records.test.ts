@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { buildRecordTable } from "../../leaderboards/records.ts";
 import type { Mode, RecordSubmission } from "../../leaderboards/types.ts";
@@ -155,17 +155,28 @@ describe("buildRecordTable", () => {
     assertEquals(recordTable.advanced.map((entry) => entry.record), [3]);
   });
 
-  it("passes over a submission which arrives out of level order", () => {
-    const recordTable = buildRecordTable(
-      [
-        submission({ level_id: "beginner_2", record: 2 }),
-        submission({ level_id: "beginner_1", record: 1 }),
-      ],
-      MODES,
+  it("throws when a submission arrives out of level order", () => {
+    // the cursor only moves forwards, so it never reaches the `beginner_1` submission. the record table would otherwise be
+    // returned with that record silently missing
+    assertThrows(
+      () =>
+        buildRecordTable(
+          [
+            submission({ level_id: "beginner_2", record: 2 }),
+            submission({ level_id: "beginner_1", record: 1 }),
+          ],
+          MODES,
+        ),
+      Error,
+      "1 record submissions were not assigned to a level",
     );
+  });
 
-    // the cursor only moves forwards, so it never reaches the `beginner_1` submission
-    assertEquals(recordTable.beginner.map((entry) => entry.record), [null, 2]);
-    assertEquals(recordTable.advanced[0].record, null);
+  it("throws when a submission belongs to no level of any mode", () => {
+    assertThrows(
+      () => buildRecordTable([submission({ level_id: "expert_1" })], MODES),
+      Error,
+      "were not assigned to a level",
+    );
   });
 });

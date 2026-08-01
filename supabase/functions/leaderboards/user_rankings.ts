@@ -58,6 +58,16 @@ export const buildUserRankings = (
     rankings[mode.name] = modeRecords;
   });
 
+  // every submission belongs to a level of some mode, so a leftover means the submissions did not arrive in the order the cursor
+  // walks them in. failing loudly is deliberate: the alternative is a set of rankings which silently omits levels
+  if (index !== submissions.length) {
+    throw new Error(
+      `${
+        submissions.length - index
+      } ranked submissions were not assigned to a level`,
+    );
+  }
+
   // finally, return rankings
   return rankings;
 };
