@@ -131,6 +131,16 @@ describe("leaderboards", () => {
     assertEquals((await response.json()).code, "INVALID_PARAMETERS");
   });
 
+  it("serves each leaderboard route", async () => {
+    for (const route of ["records", "totals"]) {
+      const response = await leaderboards.fetch(
+        request(`/leaderboards/${route}`, { body: "not json" }),
+      );
+
+      assertEquals(response.status, 400);
+    }
+  });
+
   it("hides the detail of a failed query", async () => {
     const response = await leaderboards.fetch(
       request("/leaderboards/records", { body: JSON.stringify(PARAMS) }),

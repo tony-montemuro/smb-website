@@ -1,8 +1,15 @@
 /* ===== IMPORTS ===== */
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "@supabase/server";
-import { getCategoryLevelsByMode, getRecordSubmissions } from "./queries.ts";
+import {
+  getCategoryLevelsByMode,
+  getCategoryTime,
+  getPracticeCategories,
+  getRankedSubmissions,
+  getRecordSubmissions,
+} from "./queries.ts";
 import { buildRecordTable } from "./records.ts";
+import { buildTotals } from "./totals.ts";
 import type { Client, Database, LeaderboardParams } from "./types.ts";
 
 /* ===== TYPES ===== */
@@ -65,11 +72,7 @@ const parseLeaderboardParams = (body: unknown): LeaderboardParams | null => {
 const handleRecords: RouteHandler = async (body, client) => {
   const params = parseLeaderboardParams(body);
   if (!params) {
-    return errorResponse(
-      400,
-      "INVALID_PARAMETERS",
-      "Request body must define `abb`, `category`, `score`, `liveOnly`, and `version`.",
-    );
+    return errorResponse(400, "INVALID_PARAMETERS", PARAMETERS_MESSAGE);
   }
 
   const [submissions, modes] = await Promise.all([
@@ -80,13 +83,51 @@ const handleRecords: RouteHandler = async (body, client) => {
   return Response.json(buildRecordTable(submissions, modes));
 };
 
+// FUNCTION 4: handleTotals - function that generates the response of the totals route
+// PRECONDITIONS (2 parameters):
+// 1.) body: the json body of the request
+// 2.) client: the supabase client which each query runs through
+// POSTCONDITIONS (4 possible outcomes):
+// if the body is invalid, a 400 response is returned
+// if the category is not a practice mode category, an empty totalizer is returned
+// if each query is successful, the totalizer of the game is returned
+// otherwise, this function throws an error, which should be handled by the caller function
+const handleTotals: RouteHandler = async (body, client) => {
+  const params = parseLeaderboardParams(body);
+  if (!params) {
+    return errorResponse(400, "INVALID_PARAMETERS", PARAMETERS_MESSAGE);
+  }
+
+  // a totalizer only exists for practice mode categories
+  const practiceCategories = await getPracticeCategories(client);
+  if (!practiceCategories.includes(params.category)) {
+    return Response.json([]);
+  }
+
+  // the total time is only needed by a time totalizer
+  const [submissions, totalTime] = await Promise.all([
+    getRankedSubmissions(client, params),
+    params.score ? 0 : getCategoryTime(client, params),
+  ]);
+
+  return Response.json(buildTotals(submissions, params.score, totalTime));
+};
+
 /* ===== CONSTANTS ===== */
+
+// the description of an invalid request body, shared by each route which takes the leaderboard parameters
+const PARAMETERS_MESSAGE =
+  "Request body must define `abb`, `category`, `score`, `liveOnly`, and `version`.";
 
 // the routes served by the function. NOTE: the platform strips the `/functions/v1` prefix before a request arrives
 const ROUTES: { pattern: URLPattern; handle: RouteHandler }[] = [
   {
     pattern: new URLPattern({ pathname: "/leaderboards/records" }),
     handle: handleRecords,
+  },
+  {
+    pattern: new URLPattern({ pathname: "/leaderboards/totals" }),
+    handle: handleTotals,
   },
 ];
 
