@@ -9,7 +9,7 @@ function MaintenanceBanner() {
   }
 
   return (
-    <Alert severity="warning" variant="filled">
+    <Alert severity="warning" sx={{ borderRadius: 0 }} variant="filled">
       {MAINTENANCE_MESSAGE}
     </Alert>
   );
