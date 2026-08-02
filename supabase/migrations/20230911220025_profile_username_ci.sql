@@ -1,1 +1,0 @@
-ALTER TABLE profile ALTER COLUMN username TYPE citext;
