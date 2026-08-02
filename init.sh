@@ -12,14 +12,8 @@ printf "=========================\n\n"
 echo "SETTING UP BACKEND (supabase) 1/2..."
 printf "=========================\n\n"
 
-## Comment out deprecated SQL statement from initial migration
-echo "a.) Fix initial migration -- remove deprecated extension..."
-initial_migration="./supabase/migrations/20230905161842_remote_schema.sql"
-sed -i 's/CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";/-- &/g' $initial_migration
-git update-index --skip-worktree $initial_migration
-
 ## Extract keys for environment variables & images
-echo "b.) Extract relevant environment variables from supabase..."
+echo "a.) Extract relevant environment variables from supabase..."
 supabase start
 status=$(supabase status -o env)
 api_url=$(echo "$status" | grep "^API_URL=" | cut -d "=" -f2 | tr -d '"')
@@ -28,7 +22,7 @@ publishable_key=$(echo "$status" | grep "^PUBLISHABLE_KEY=" | cut -d "=" -f2 | t
 
 ## Create development environment variables
 env_file="./client/.env.development.local"
-echo "c.) Creating $env_file..."
+echo "b.) Creating $env_file..."
 if [[ -s "$env_file" ]]; then
     echo "$env_file already exists. Continuing..."
 else
@@ -40,7 +34,7 @@ else
 fi
 
 ## Upload images to local storage
-echo "d.) Uploading images to supabase storage..."
+echo "c.) Uploading images to supabase storage..."
 cd ./supabase
 ./upload_images.sh "$api_url" "$secret_key"
 cd ..

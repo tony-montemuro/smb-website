@@ -154,124 +154,124 @@ AS $$
 $$;
 
 DROP FUNCTION IF EXISTS get_user_rankings(text, category_t, boolean, boolean, integer);
-CREATE FUNCTION get_user_rankings( abb text, category text, score boolean, live_only boolean, profile_id integer )
-RETURNS json
-LANGUAGE plv8
-AS $$
-  // -- first, get the ranked submissions according to the function parameters
-  let query = 'SELECT * FROM get_ranked_submissions($1, $2, $3, $4)';
-  let paramTypes = ['text', 'text', 'boolean', 'boolean'];
-  let plan = plv8.prepare(query, paramTypes);
-  const submissions = plan.execute( [abb, category, score, live_only] );
-  plan.free();
-
-  // -- next, get the list of modes for the abb, category, score combination
-  query = 'SELECT get_category_levels_by_mode($1, $2, $3)';
-  paramTypes = ['text', 'text', 'boolean'];
-  plan = plv8.prepare(query, paramTypes);
-  const result = plan.execute( [abb, category, score] );
-  const modes = JSON.parse(result[0].get_category_levels_by_mode);
-  plan.free();
-
-  // -- initialize variables used to generate the rankings
-  const rankings = {};
-  let index = 0;
-
-  // -- now, let's populate the rankings object
-  modes.forEach(mode => {
-    const modeRecords = []; // -- store the array of record objects for each level in the mode
-    mode.levels.forEach(level => {
-
-      // -- create default record object
-      const recordObj = {
-        level: level,
-        record: null,
-        date: null,
-        position: null
-      };
-
-      // -- loop through all submissions for the current level
-      while (index < submissions.length && submissions[index].level_id === level.name) {
-
-        // -- if current submission has id of `profile_id`, it is the user's submission. thus, we need to update record object
-        const submission = submissions[index];
-        if (submission.id === profile_id) {
-          recordObj.record = submission.record;
-          recordObj.date = submission.submitted_at;
-          recordObj.position = submission.position;
-        }
-        index++;
-      }
-      modeRecords.push(recordObj);
-    });
-    
-    // -- once we have gone through each level in the current mode, update the rankings object
-    rankings[mode.name] = modeRecords;
-  });
-
-  // -- finally, return rankings
-  return rankings;
-$$;
+-- CREATE FUNCTION get_user_rankings( abb text, category text, score boolean, live_only boolean, profile_id integer )
+-- RETURNS json
+-- LANGUAGE plv8
+-- AS $$
+--   // -- first, get the ranked submissions according to the function parameters
+--   let query = 'SELECT * FROM get_ranked_submissions($1, $2, $3, $4)';
+--   let paramTypes = ['text', 'text', 'boolean', 'boolean'];
+--   let plan = plv8.prepare(query, paramTypes);
+--   const submissions = plan.execute( [abb, category, score, live_only] );
+--   plan.free();
+--
+--   // -- next, get the list of modes for the abb, category, score combination
+--   query = 'SELECT get_category_levels_by_mode($1, $2, $3)';
+--   paramTypes = ['text', 'text', 'boolean'];
+--   plan = plv8.prepare(query, paramTypes);
+--   const result = plan.execute( [abb, category, score] );
+--   const modes = JSON.parse(result[0].get_category_levels_by_mode);
+--   plan.free();
+--
+--   // -- initialize variables used to generate the rankings
+--   const rankings = {};
+--   let index = 0;
+--
+--   // -- now, let's populate the rankings object
+--   modes.forEach(mode => {
+--     const modeRecords = []; // -- store the array of record objects for each level in the mode
+--     mode.levels.forEach(level => {
+--
+--       // -- create default record object
+--       const recordObj = {
+--         level: level,
+--         record: null,
+--         date: null,
+--         position: null
+--       };
+--
+--       // -- loop through all submissions for the current level
+--       while (index < submissions.length && submissions[index].level_id === level.name) {
+--
+--         // -- if current submission has id of `profile_id`, it is the user's submission. thus, we need to update record object
+--         const submission = submissions[index];
+--         if (submission.id === profile_id) {
+--           recordObj.record = submission.record;
+--           recordObj.date = submission.submitted_at;
+--           recordObj.position = submission.position;
+--         }
+--         index++;
+--       }
+--       modeRecords.push(recordObj);
+--     });
+--
+--     // -- once we have gone through each level in the current mode, update the rankings object
+--     rankings[mode.name] = modeRecords;
+--   });
+--
+--   // -- finally, return rankings
+--   return rankings;
+-- $$;
 
 
 DROP FUNCTION IF EXISTS get_records(text, category_t, boolean, boolean);
-CREATE FUNCTION get_records(abb text, category text, score boolean, live_only boolean)
-RETURNS json
-LANGUAGE plv8
-AS $$
-  // -- first, get the ranked submissions according to the function parameters
-  let query = 'SELECT * FROM get_ranked_submissions($1, $2, $3, $4)';
-  let paramTypes = ['text', 'text', 'boolean', 'boolean'];
-  let plan = plv8.prepare(query, paramTypes);
-  const submissions = plan.execute( [abb, category, score, live_only] );
-  plan.free();
-
-  // -- next, get the list of modes for the (abb, category, score) combination
-  query = 'SELECT get_category_levels_by_mode($1, $2, $3)';
-  paramTypes = ['text', 'text', 'boolean'];
-  plan = plv8.prepare(query, paramTypes);
-  const result = plan.execute( [abb, category, score] );
-  const modes = JSON.parse(result[0].get_category_levels_by_mode);
-  plan.free();
-
-  // -- initialize variables used to generate record table
-  const recordTable = {};
-  let index = 0;
-
-  // -- now, let's populate the record table
-  modes.forEach(mode => {
-    const modeRecords = []; // -- store the array of record objects for each level in the mode
-    mode.levels.forEach(level => {
-
-      // -- create default record object
-      const recordObj = {
-        level: level,
-        profiles: [],
-        record: null
-      };
-
-      // -- loop through all submissions for the current level
-      while (index < submissions.length && submissions[index].level_id === level.name) {
-
-        // -- if current submission has position of 1, it is record. thus, we need to update record object
-        const submission = submissions[index];
-        if (submission.position === 1) {
-          const profile = { country: submission.country, id: submission.id, username: submission.username };
-          recordObj.record = submission.record;
-          recordObj.profiles.push(profile);
-        }
-        index++;
-      }
-      modeRecords.push(recordObj);
-    });
-    
-    // -- once we have gone through each level in the current mode, update the record table
-    recordTable[mode.name] = modeRecords;
-  });
-
-  // -- finally, return record table
-  return recordTable;
-$$;
+-- CREATE FUNCTION get_records(abb text, category text, score boolean, live_only boolean)
+-- RETURNS json
+-- LANGUAGE plv8
+-- AS $$
+--   // -- first, get the ranked submissions according to the function parameters
+--   let query = 'SELECT * FROM get_ranked_submissions($1, $2, $3, $4)';
+--   let paramTypes = ['text', 'text', 'boolean', 'boolean'];
+--   let plan = plv8.prepare(query, paramTypes);
+--   const submissions = plan.execute( [abb, category, score, live_only] );
+--   plan.free();
+--
+--   // -- next, get the list of modes for the (abb, category, score) combination
+--   query = 'SELECT get_category_levels_by_mode($1, $2, $3)';
+--   paramTypes = ['text', 'text', 'boolean'];
+--   plan = plv8.prepare(query, paramTypes);
+--   const result = plan.execute( [abb, category, score] );
+--   const modes = JSON.parse(result[0].get_category_levels_by_mode);
+--   plan.free();
+--
+--   // -- initialize variables used to generate record table
+--   const recordTable = {};
+--   let index = 0;
+--
+--   // -- now, let's populate the record table
+--   modes.forEach(mode => {
+--     const modeRecords = []; // -- store the array of record objects for each level in the mode
+--     mode.levels.forEach(level => {
+--
+--       // -- create default record object
+--       const recordObj = {
+--         level: level,
+--         profiles: [],
+--         record: null
+--       };
+--
+--       // -- loop through all submissions for the current level
+--       while (index < submissions.length && submissions[index].level_id === level.name) {
+--
+--         // -- if current submission has position of 1, it is record. thus, we need to update record object
+--         const submission = submissions[index];
+--         if (submission.position === 1) {
+--           const profile = { country: submission.country, id: submission.id, username: submission.username };
+--           recordObj.record = submission.record;
+--           recordObj.profiles.push(profile);
+--         }
+--         index++;
+--       }
+--       modeRecords.push(recordObj);
+--     });
+--
+--     // -- once we have gone through each level in the current mode, update the record table
+--     recordTable[mode.name] = modeRecords;
+--   });
+--
+--   // -- finally, return record table
+--   return recordTable;
+-- $$;
 
 DROP FUNCTION IF EXISTS get_categories(); -- this function will be obsoleted by this migration
 
@@ -383,81 +383,81 @@ FROM (
 $$;
 
 DROP FUNCTION IF EXISTS get_totals(text, category_t, boolean, boolean);
-CREATE FUNCTION get_totals(abb text, category text, score boolean, live_only boolean)
-RETURNS json
-LANGUAGE plv8
-AS $$
-  // -- first, this code should only really execute for "practice mode" categories, a.k.a., when the `category` param is "main" or "misc". return an empty array otherwise
-  if (category !== "main" && category !== "misc") {
-    return [];
-  }
-
-  // -- next, get the ranked submissions according to the function parameters
-  let query = 'SELECT * FROM get_ranked_submissions($1, $2, $3, $4)';
-  let paramTypes = ['text', 'text', 'boolean', 'boolean'];
-  let plan = plv8.prepare(query, paramTypes);
-  const submissions = plan.execute( [abb, category, score, live_only] );
-  plan.free();
-
-  // -- next, get the total time. note: this is only necessary to define if `score` is FALSE
-  let totalTime;
-  if (!score) {
-    query = 'SELECT get_category_time($1, $2)';
-    paramTypes = ['text', 'text'];
-    plan = plv8.prepare(query, paramTypes);
-    result = plan.execute( [abb, category] );
-    totalTime = result[0].get_category_time;
-    plan.free();
-  }
-
-  // -- next, we want to create our mapping of users to totals
-  const userToTotal = {};
-  submissions.forEach(submission => {
-
-    // -- first, extract information from submission object
-    const profile = { 
-      id: submission.id,
-      username: submission.username,
-      country: submission.country
-    };
-    const record = score ? submission.record : -Math.abs(submission.record);
-
-    // -- then, we can update the mapping object
-    // -- default case: user has already been added to mapping. simple increment the total field
-    if (profile.id in userToTotal) {
-      userToTotal[profile.id].total += record
-    } 
-    
-    // -- edge case: user has not yet been added to the mapping. add them, as well as the record (or sum of `totalTime` and `record`) as total
-    else {
-      userToTotal[profile.id] = { profile: profile, total: score ? record : totalTime + record };
-    }
-
-  });
-
-  // -- now, let's convert our mapping into an array of objects, sorted by `total`. NOTE: order of sort depends on the `score` parameter
-  let totals;
-  if (score) {
-    totals = Object.values(userToTotal).sort((a, b) => a.total > b.total ? -1 : 1);
-  } else {
-    totals = Object.values(userToTotal).sort((a, b) => a.total > b.total ? 1 : -1);
-  }
-
-  // -- now, let's add the position attribute
-  let trueCount = 1, posCount = trueCount;
-  totals.forEach((row, index) => {
-    row.position = posCount;
-    trueCount++;
-    
-    // -- if next element exists, and has a different total than the current total, update posCount
-    if (index < totals.length-1 && totals[index+1].total !== row.total) {
-      posCount = trueCount;
-    }
-  });
-
-  // -- finally, return our totals array of objects
-  return totals;
-$$;
+-- CREATE FUNCTION get_totals(abb text, category text, score boolean, live_only boolean)
+-- RETURNS json
+-- LANGUAGE plv8
+-- AS $$
+--   // -- first, this code should only really execute for "practice mode" categories, a.k.a., when the `category` param is "main" or "misc". return an empty array otherwise
+--   if (category !== "main" && category !== "misc") {
+--     return [];
+--   }
+--
+--   // -- next, get the ranked submissions according to the function parameters
+--   let query = 'SELECT * FROM get_ranked_submissions($1, $2, $3, $4)';
+--   let paramTypes = ['text', 'text', 'boolean', 'boolean'];
+--   let plan = plv8.prepare(query, paramTypes);
+--   const submissions = plan.execute( [abb, category, score, live_only] );
+--   plan.free();
+--
+--   // -- next, get the total time. note: this is only necessary to define if `score` is FALSE
+--   let totalTime;
+--   if (!score) {
+--     query = 'SELECT get_category_time($1, $2)';
+--     paramTypes = ['text', 'text'];
+--     plan = plv8.prepare(query, paramTypes);
+--     result = plan.execute( [abb, category] );
+--     totalTime = result[0].get_category_time;
+--     plan.free();
+--   }
+--
+--   // -- next, we want to create our mapping of users to totals
+--   const userToTotal = {};
+--   submissions.forEach(submission => {
+--
+--     // -- first, extract information from submission object
+--     const profile = { 
+--       id: submission.id,
+--       username: submission.username,
+--       country: submission.country
+--     };
+--     const record = score ? submission.record : -Math.abs(submission.record);
+--
+--     // -- then, we can update the mapping object
+--     // -- default case: user has already been added to mapping. simple increment the total field
+--     if (profile.id in userToTotal) {
+--       userToTotal[profile.id].total += record
+--     } 
+--
+--     // -- edge case: user has not yet been added to the mapping. add them, as well as the record (or sum of `totalTime` and `record`) as total
+--     else {
+--       userToTotal[profile.id] = { profile: profile, total: score ? record : totalTime + record };
+--     }
+--
+--   });
+--
+--   // -- now, let's convert our mapping into an array of objects, sorted by `total`. NOTE: order of sort depends on the `score` parameter
+--   let totals;
+--   if (score) {
+--     totals = Object.values(userToTotal).sort((a, b) => a.total > b.total ? -1 : 1);
+--   } else {
+--     totals = Object.values(userToTotal).sort((a, b) => a.total > b.total ? 1 : -1);
+--   }
+--
+--   // -- now, let's add the position attribute
+--   let trueCount = 1, posCount = trueCount;
+--   totals.forEach((row, index) => {
+--     row.position = posCount;
+--     trueCount++;
+--
+--     // -- if next element exists, and has a different total than the current total, update posCount
+--     if (index < totals.length-1 && totals[index+1].total !== row.total) {
+--       posCount = trueCount;
+--     }
+--   });
+--
+--   // -- finally, return our totals array of objects
+--   return totals;
+-- $$;
 
 DROP FUNCTION IF EXISTS get_category_time(text, category_t);
 CREATE FUNCTION get_category_time(game_name text, category_name text)

@@ -92,42 +92,26 @@ Before you can run the app, a local database server must be running for the clie
 2. Run the following command:
 
     ```bash
-    sed -i 's/CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";/-- &/g' ./supabase/migrations/20230905161842_remote_schema.sql
-    ```
-
-    This comments out a line that tries to create a PostgreSQL extension that no longer exists (without doing this, database cannot start after supabase upgraded to PostgreSQL `15.8.1.060`).
-
-3. Run the following command:
-
-    ```bash
-    git update-index --skip-worktree ./supabase/migrations/20230905161842_remote_schema.sql
-    ```
-
-    This tells git to ignore changes to this file, as we do not want to make changes to old migration files.
-
-4. Run the following command:
-
-    ```bash
     supabase start
     ```
     Please do keep in mind that this command may take several minutes to complete. Once this command does complete, the server should be up and running!
-5. Run the following command:
+3. Run the following command:
     ```bash
     supabase status
     ```
     This command will display information about your local development server instance. Make note of the `Project URL` and `Publishable` parameters.
-6. Run these commands:
+4. Run these commands:
     ```bash
     cd client
     touch .env.development.local
     ```
     This will create a file in the `client` directory for storing environment variables, which are necessary to connect to the server.
-7. Open `.env.development.local` into a text editor, add the following, and save:
+5. Open `.env.development.local` into a text editor, add the following, and save:
     ```env
     VITE_APP_SUPABASE_URL=<YOUR_PROJECT_URL>
     VITE_APP_SUPABASE_PUBLISHABLE_KEY=<YOUR_PUBLISHABLE_KEY>
     ```
-    Replacing `<YOUR_PROJECT_URL>` and `<YOUR_PUBLISHABLE_KEY>` with `Project URL` and `Publishable` respectively from the `supabase status` command in step 5.
+    Replacing `<YOUR_PROJECT_URL>` and `<YOUR_PUBLISHABLE_KEY>` with `Project URL` and `Publishable` respectively from the `supabase status` command in step 3.
 
 This is what is *required* for setting up the server. The following information is nice to have, but not a necessity. If you just want to set up the client application, skip to the [client](#client-setup) section.
 
