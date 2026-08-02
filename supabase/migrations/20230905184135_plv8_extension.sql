@@ -1,3 +1,0 @@
--- `plv8` was removed from the Supabase PostgreSQL 17 bundle, and the RPCs that used it were replaced by the leaderboards edge
--- function. It remains commented out so a fresh `supabase db reset` succeeds.
--- CREATE EXTENSION IF NOT EXISTS "plv8" WITH SCHEMA "pg_catalog";

@@ -546,6 +546,31 @@ INSERT INTO "public"."game" (abb, name, custom, release_date, creator, download,
 
 
 --
+-- Data for Name: category; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."category" (abb, name, practice, id) VALUES
+	('main', 'Practice Mode', true, 1),
+	('main_sweep', 'Practice Mode (Sweep)', true, 2),
+	('misc', 'Miscellaneous Practice Mode', true, 3),
+	('normal', 'Normal Mode', false, 4),
+	('story', 'Story Mode', false, 5),
+	('challenge', 'Challenge Mode', false, 6),
+	('main_jump', 'Practice Mode (Jumps)', true, 7),
+	('special', 'Special Mode', true, 8),
+	('special_jump', 'Special Mode (Jumps)', true, 9),
+	('ranking', 'Ranking Challenge', false, 10),
+	('party', 'Party Games', false, 11),
+	('interstellar', 'Interstellar Mode', false, 12),
+	('mini', 'Mini Games', false, 13),
+	('supernova', 'Supernova', true, 14),
+	('time_attack', 'Time Attack', false, 15),
+	('battle', 'Battle Mode', false, 16);
+
+SELECT SETVAL(pg_get_serial_sequence('"public"."category"', 'id'), (SELECT MAX("id") FROM "public"."category"), true);
+
+
+--
 -- Data for Name: mode; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -5184,6 +5209,17 @@ INSERT INTO "public"."region" (id, region_name) VALUES
 	(6, 'PAL');
 
 SELECT SETVAL(pg_get_serial_sequence('"public"."region"', 'id'), (SELECT MAX("id") FROM "public"."region"), true);
+
+
+--
+-- Data for Name: goal; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."goal" ("name", "color") VALUES
+	('blue', '#3a69a4'),
+	('green', '#37ad58'),
+	('red', '#ae3c43'),
+	('stunt', '#bb00ff');
 
 
 --
@@ -18206,14 +18242,6 @@ INSERT INTO "public"."game_rule" ("abb", "rule", "id") VALUES
 	('smb2', 45, 11),
 	('smb2pal', 45, 12),
 	('smbdx', 46, 11);
-
-INSERT INTO "public"."category" (abb, name, practice, id) VALUES
-	('mini', 'Mini Games', false, 13),
-	('supernova', 'Supernova', true, 14),
-	('time_attack', 'Time Attack', false, 15),
-	('battle', 'Battle Mode', false, 16);
-
-SELECT SETVAL(pg_get_serial_sequence('"public"."category"', 'id'), (SELECT MAX("id") FROM "public"."category"), true);
 
 INSERT INTO "storage"."buckets" ("id", "name", "owner", "created_at", "updated_at", "public", "avif_autodetection", "file_size_limit", "allowed_mime_types", "owner_id") VALUES
 	('avatars', 'avatars', NULL, '2022-06-22 18:59:36.937336+00', '2022-06-22 18:59:36.937336+00', false, false, NULL, NULL, NULL),
