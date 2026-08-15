@@ -34,11 +34,24 @@ export type IssueCreateInput = {
   labelIds: string[];
 };
 
+// the issue a request was filed as. only what a caller needs to point at that issue is declared
+export type FiledIssue = {
+  identifier: string;
+  url: string;
+};
+
 // the response of the `issueCreate` mutation. NOTE: linear answers a failed mutation with a 200, and reports the failure in
 // `errors`, so a response with no `errors` can still carry an unsuccessful `issueCreate`
 export type IssueCreateResponse = {
-  data?: { issueCreate?: { success: boolean } };
+  data?: { issueCreate?: { success: boolean; issue?: FiledIssue } };
   errors?: { message: string }[];
+};
+
+// the outcome of filing an issue. `filed` is what the caller was promised, and `issue` is null whenever the mutation failed, and
+// also on the rare success which answers without an issue
+export type IssueCreateResult = {
+  filed: boolean;
+  issue: FiledIssue | null;
 };
 
 /* ===== DATABASE ===== */

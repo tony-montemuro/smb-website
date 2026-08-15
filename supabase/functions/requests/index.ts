@@ -8,6 +8,7 @@ import type {
   Database,
   IssueCreateInput,
   IssueCreateResponse,
+  IssueCreateResult,
   LinearConfig,
   RequestParams,
 } from "./types.ts";
@@ -91,12 +92,12 @@ const readLinearConfig = (): LinearConfig | null => {
 // 1.) input: the input of the `issueCreate` mutation
 // 2.) config: the workspace coordinates of the tracker
 // POSTCONDITIONS (2 possible outcomes):
-// if the issue was created, true is returned
-// otherwise, the failure is logged, and false is returned
+// if the issue was created, the outcome is returned as filed, carrying the issue whenever linear answered with one
+// otherwise, the failure is logged, and the outcome is returned as unfiled
 export const createLinearIssue = async (
   input: IssueCreateInput,
   config: LinearConfig,
-): Promise<boolean> => {
+): Promise<IssueCreateResult> => {
   try {
     const response = await fetch(LINEAR_API_URL, {
       method: "POST",
@@ -114,20 +115,26 @@ export const createLinearIssue = async (
 
     if (!response.ok) {
       console.error("linear rejected the mutation:", response.status);
-      return false;
+      return UNFILED;
     }
 
     // NOTE: linear answers a failed mutation with a 200 and an `errors` array, so the status of the response settles nothing
     const result = await response.json() as IssueCreateResponse;
     if (result.errors?.length) {
       console.error("linear rejected the mutation:", result.errors);
-      return false;
+      return UNFILED;
     }
 
-    return result.data?.issueCreate?.success === true;
+    const issueCreate = result.data?.issueCreate;
+    if (issueCreate?.success !== true) {
+      return UNFILED;
+    }
+
+    // a success which carries no issue is still a success: the request of the user was filed, and only what points at it is missing
+    return { filed: true, issue: issueCreate.issue ?? null };
   } catch (error) {
     console.error("linear is unreachable:", error);
-    return false;
+    return UNFILED;
   }
 };
 
@@ -179,7 +186,7 @@ const handleSubmit: RouteHandler = async (body, ctx) => {
     );
   }
 
-  const filed = await createLinearIssue(
+  const { filed } = await createLinearIssue(
     buildIssueInput(params, requester, config),
     config,
   );
@@ -204,6 +211,9 @@ const DESCRIPTION_MAX_LENGTH = 1000;
 const PARAMETERS_MESSAGE =
   `Request body must define \`type\` as either "feature" or "bug", \`title\` with 1 to ${TITLE_MAX_LENGTH} characters, and \`description\` with 1 to ${DESCRIPTION_MAX_LENGTH} characters.`;
 
+// the outcome of every attempt which did not file an issue
+const UNFILED: IssueCreateResult = { filed: false, issue: null };
+
 // the tracker, how long it gets to answer, and the mutation which files an issue in it
 const LINEAR_API_URL = "https://api.linear.app/graphql";
 const REQUEST_TIMEOUT = 10000;
@@ -211,6 +221,10 @@ const ISSUE_CREATE_MUTATION = `
   mutation CreateIssue($input: IssueCreateInput!) {
     issueCreate(input: $input) {
       success
+      issue {
+        identifier
+        url
+      }
     }
   }
 `;

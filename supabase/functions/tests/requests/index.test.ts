@@ -5,7 +5,12 @@ import requests, {
   createLinearIssue,
   parseRequestParams,
 } from "../../requests/index.ts";
-import type { IssueCreateInput, LinearConfig } from "../../requests/types.ts";
+import type {
+  FiledIssue,
+  IssueCreateInput,
+  IssueCreateResult,
+  LinearConfig,
+} from "../../requests/types.ts";
 
 /* ===== CONSTANTS ===== */
 
@@ -43,6 +48,12 @@ const CONFIG: LinearConfig = {
   projectId: LINEAR_ENV.LINEAR_REQUEST_PROJECT_ID,
   bugLabelId: LINEAR_ENV.LINEAR_BUG_LABEL_ID,
   featureLabelId: LINEAR_ENV.LINEAR_FEATURE_LABEL_ID,
+};
+
+// the issue linear answers a successful mutation with
+const ISSUE: FiledIssue = {
+  identifier: "SMB-42",
+  url: "https://linear.app/smbelite/issue/SMB-42/the-timer-is-wrong",
 };
 
 const INPUT: IssueCreateInput = {
@@ -130,7 +141,7 @@ const request = (
 // the result of `createLinearIssue` is returned, along with the request it sent, and the global fetch is restored
 const fileIssue = async (
   respond: (request: Request) => Response,
-): Promise<{ filed: boolean; sent: Request | null }> => {
+): Promise<IssueCreateResult & { sent: Request | null }> => {
   const original = globalThis.fetch;
   let sent: Request | null = null;
 
@@ -140,7 +151,7 @@ const fileIssue = async (
   };
 
   try {
-    return { filed: await createLinearIssue(INPUT, CONFIG), sent };
+    return { ...await createLinearIssue(INPUT, CONFIG), sent };
   } finally {
     globalThis.fetch = original;
   }
@@ -339,11 +350,12 @@ describe("parseRequestParams", () => {
 
 describe("createLinearIssue", () => {
   it("files the issue, and authenticates with the api key alone", async () => {
-    const { filed, sent } = await fileIssue(() =>
-      Response.json({ data: { issueCreate: { success: true } } })
+    const { filed, issue, sent } = await fileIssue(() =>
+      Response.json({ data: { issueCreate: { success: true, issue: ISSUE } } })
     );
 
     assertEquals(filed, true);
+    assertEquals(issue, ISSUE);
     // NOTE: a linear api key carries no `Bearer` prefix, which is silently wrong until it reaches the real api
     assertEquals(sent?.headers.get("Authorization"), CONFIG.apiKey);
     assertEquals(sent?.headers.get("Content-Type"), "application/json");
@@ -351,12 +363,22 @@ describe("createLinearIssue", () => {
     assertEquals((await sent?.json())?.variables?.input, INPUT);
   });
 
+  it("treats a success which carries no issue as filed", async () => {
+    const { filed, issue } = await fileIssue(() =>
+      Response.json({ data: { issueCreate: { success: true } } })
+    );
+
+    assertEquals(filed, true);
+    assertEquals(issue, null);
+  });
+
   it("reports a mutation which linear rejected with an error status", async () => {
-    const { filed } = await fileIssue(() =>
+    const { filed, issue } = await fileIssue(() =>
       Response.json({ message: "unauthorized" }, { status: 401 })
     );
 
     assertEquals(filed, false);
+    assertEquals(issue, null);
   });
 
   it("reports a mutation which failed behind a 200", async () => {
