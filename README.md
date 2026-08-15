@@ -145,6 +145,20 @@ deno task test
 
 **Important:** Take care to run them from `supabase/functions`, and not from the root directory: `deno fmt` would otherwise reformat the frontend code, which Prettier owns.
 
+One function, `requests`, needs configuration beyond this, and it is entirely optional: skip it unless you plan to work on the submission of feature and bug requests. Nothing else depends on it, and the rest of the site runs without it.
+
+That function files requests in Linear, so it needs the coordinates of that workspace. Create `supabase/functions/.env`, which `supabase start` loads automatically, and which is ignored by git:
+
+```env
+LINEAR_API_KEY=<YOUR_LINEAR_API_KEY>
+LINEAR_TEAM_ID=<YOUR_TEAM_ID>
+LINEAR_REQUEST_PROJECT_ID=<YOUR_TRIAGE_PROJECT_ID>
+LINEAR_BUG_LABEL_ID=<YOUR_BUG_LABEL_ID>
+LINEAR_FEATURE_LABEL_ID=<YOUR_FEATURE_LABEL_ID>
+```
+
+Every value comes from your own Linear workspace: the key from the personal API keys of your account settings, and each id from the [GraphQL API](https://linear.app/developers/graphql). Leave the file out, and the function simply answers a submission with a `500`, which is the only thing that breaks.
+
 ##### Adding Game Box Art
 
 This is a totally optional thing, but included in the repository are box art for some of the games within the `seed` data. To upload the box art to your local server:
