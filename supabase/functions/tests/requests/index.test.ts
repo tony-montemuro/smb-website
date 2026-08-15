@@ -1,7 +1,11 @@
 /* ===== IMPORTS ===== */
 import { assertEquals } from "@std/assert";
 import { afterAll, beforeAll, describe, it } from "@std/testing/bdd";
-import requests, { parseRequestParams } from "../../requests/index.ts";
+import requests, {
+  createLinearIssue,
+  parseRequestParams,
+} from "../../requests/index.ts";
+import type { IssueCreateInput, LinearConfig } from "../../requests/types.ts";
 
 /* ===== CONSTANTS ===== */
 
@@ -30,6 +34,23 @@ const PARAMS = {
   type: "bug",
   title: "The timer is wrong",
   description: "The timer rounds up on every level of world 3.",
+};
+
+// the tracker, as `createLinearIssue` is given it. the mutation is stubbed, so no value here reaches linear
+const CONFIG: LinearConfig = {
+  apiKey: LINEAR_ENV.LINEAR_API_KEY,
+  teamId: LINEAR_ENV.LINEAR_TEAM_ID,
+  projectId: LINEAR_ENV.LINEAR_REQUEST_PROJECT_ID,
+  bugLabelId: LINEAR_ENV.LINEAR_BUG_LABEL_ID,
+  featureLabelId: LINEAR_ENV.LINEAR_FEATURE_LABEL_ID,
+};
+
+const INPUT: IssueCreateInput = {
+  title: PARAMS.title,
+  description: PARAMS.description,
+  teamId: CONFIG.teamId,
+  projectId: CONFIG.projectId,
+  labelIds: [CONFIG.bugLabelId],
 };
 
 /* ===== VARIABLES ===== */
@@ -100,6 +121,29 @@ const request = (
     ...init,
     headers,
   });
+};
+
+// FUNCTION 4: fileIssue - function that runs `createLinearIssue` against a stubbed tracker
+// PRECONDITIONS (1 parameter):
+// 1.) respond: a function which answers the mutation, either with a response, or by throwing to simulate an unreachable tracker
+// POSTCONDITIONS (1 possible outcome):
+// the result of `createLinearIssue` is returned, along with the request it sent, and the global fetch is restored
+const fileIssue = async (
+  respond: (request: Request) => Response,
+): Promise<{ filed: boolean; sent: Request | null }> => {
+  const original = globalThis.fetch;
+  let sent: Request | null = null;
+
+  globalThis.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
+    sent = new Request(input, init);
+    return Promise.resolve(respond(sent));
+  };
+
+  try {
+    return { filed: await createLinearIssue(INPUT, CONFIG), sent };
+  } finally {
+    globalThis.fetch = original;
+  }
 };
 
 /* ===== TESTS ===== */
@@ -290,5 +334,52 @@ describe("parseRequestParams", () => {
       parseRequestParams({ ...PARAMS, description: "d".repeat(1001) }),
       null,
     );
+  });
+});
+
+describe("createLinearIssue", () => {
+  it("files the issue, and authenticates with the api key alone", async () => {
+    const { filed, sent } = await fileIssue(() =>
+      Response.json({ data: { issueCreate: { success: true } } })
+    );
+
+    assertEquals(filed, true);
+    // NOTE: a linear api key carries no `Bearer` prefix, which is silently wrong until it reaches the real api
+    assertEquals(sent?.headers.get("Authorization"), CONFIG.apiKey);
+    assertEquals(sent?.headers.get("Content-Type"), "application/json");
+    assertEquals(sent?.method, "POST");
+    assertEquals((await sent?.json())?.variables?.input, INPUT);
+  });
+
+  it("reports a mutation which linear rejected with an error status", async () => {
+    const { filed } = await fileIssue(() =>
+      Response.json({ message: "unauthorized" }, { status: 401 })
+    );
+
+    assertEquals(filed, false);
+  });
+
+  it("reports a mutation which failed behind a 200", async () => {
+    const { filed } = await fileIssue(() =>
+      Response.json({ errors: [{ message: "Entity not found: Project" }] })
+    );
+
+    assertEquals(filed, false);
+  });
+
+  it("reports a mutation which answered without success", async () => {
+    const { filed } = await fileIssue(() =>
+      Response.json({ data: { issueCreate: { success: false } } })
+    );
+
+    assertEquals(filed, false);
+  });
+
+  it("reports a tracker which could not be reached", async () => {
+    const { filed } = await fileIssue(() => {
+      throw new DOMException("Signal timed out.", "TimeoutError");
+    });
+
+    assertEquals(filed, false);
   });
 });

@@ -93,7 +93,7 @@ const readLinearConfig = (): LinearConfig | null => {
 // POSTCONDITIONS (2 possible outcomes):
 // if the issue was created, true is returned
 // otherwise, the failure is logged, and false is returned
-const createLinearIssue = async (
+export const createLinearIssue = async (
   input: IssueCreateInput,
   config: LinearConfig,
 ): Promise<boolean> => {
@@ -109,6 +109,7 @@ const createLinearIssue = async (
         query: ISSUE_CREATE_MUTATION,
         variables: { input },
       }),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT),
     });
 
     if (!response.ok) {
@@ -118,7 +119,7 @@ const createLinearIssue = async (
 
     // NOTE: linear answers a failed mutation with a 200 and an `errors` array, so the status of the response settles nothing
     const result = await response.json() as IssueCreateResponse;
-    if (result.errors) {
+    if (result.errors?.length) {
       console.error("linear rejected the mutation:", result.errors);
       return false;
     }
@@ -174,7 +175,7 @@ const handleSubmit: RouteHandler = async (body, ctx) => {
     return errorResponse(
       403,
       "NO_REQUESTS_REMAINING",
-      "You have ran out of requests for the day. Try again tomorrow.",
+      "You have run out of requests for the day. Try again tomorrow.",
     );
   }
 
@@ -203,8 +204,9 @@ const DESCRIPTION_MAX_LENGTH = 1000;
 const PARAMETERS_MESSAGE =
   `Request body must define \`type\` as either "feature" or "bug", \`title\` with 1 to ${TITLE_MAX_LENGTH} characters, and \`description\` with 1 to ${DESCRIPTION_MAX_LENGTH} characters.`;
 
-// the tracker, and the mutation which files an issue in it
+// the tracker, how long it gets to answer, and the mutation which files an issue in it
 const LINEAR_API_URL = "https://api.linear.app/graphql";
+const REQUEST_TIMEOUT = 10000;
 const ISSUE_CREATE_MUTATION = `
   mutation CreateIssue($input: IssueCreateInput!) {
     issueCreate(input: $input) {
