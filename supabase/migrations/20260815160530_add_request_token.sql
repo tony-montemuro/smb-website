@@ -32,7 +32,7 @@ AS $$
 DECLARE
   remaining integer;
 BEGIN
-  -- Administrators are exempt, and moderators are not: filing a request is not a game-specific moderation duty, 
+  -- Administrators are exempt, and moderators are not: filing a request is not a game-specific moderation duty,
   -- which is a deliberate departure from `decrement_report_token`
   IF (is_admin()) THEN
     SELECT request_token INTO remaining
