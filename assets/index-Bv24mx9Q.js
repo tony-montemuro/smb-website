@@ -243,6 +243,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
                     game!game_profile (abb, name),
                     id,
                     report_token,
+                    request_token,
                     twitch_username,
                     twitter_handle,
                     username,
