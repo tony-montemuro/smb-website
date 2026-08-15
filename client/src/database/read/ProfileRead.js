@@ -26,6 +26,7 @@ const ProfileRead = () => {
                     game!game_profile (abb, name),
                     id,
                     report_token,
+                    request_token,
                     twitch_username,
                     twitter_handle,
                     username,

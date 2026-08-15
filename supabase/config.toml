@@ -141,3 +141,10 @@ verify_jwt = false
 # The import map is shared by every function, and also defines the `deno task` commands.
 import_map = "./functions/deno.json"
 entrypoint = "./functions/leaderboards/index.ts"
+
+[functions.requests]
+enabled = true
+# The function writes on behalf of a specific user, so it requires a user JWT. The platform check and the `user` auth mode of the
+# function want the same credential, so the check is left at its default of enabled, unlike the function above.
+import_map = "./functions/deno.json"
+entrypoint = "./functions/requests/index.ts"
