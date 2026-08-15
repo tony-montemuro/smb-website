@@ -3,6 +3,9 @@
 .temp
 snippets
 
+# Secrets of the edge functions, which `supabase start` loads locally
+functions/.env
+
 # Used in scripts
 node_modules
 
