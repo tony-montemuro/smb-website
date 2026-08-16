@@ -9,7 +9,6 @@ import type { FiledIssue, Requester } from "../../requests/types.ts";
 const REQUESTER: Requester = { id: 5, username: "TonySMB" };
 
 const ISSUE: FiledIssue = {
-  identifier: "SMB-42",
   url: "https://linear.app/smbelite/issue/SMB-42/the-timer-is-wrong",
 };
 
@@ -61,7 +60,8 @@ describe("buildDiscordMessage", () => {
     );
   });
 
-  it("disarms every mention of a request written to abuse one", () => {
+  // NOTE: discord resolves a mention in `content` alone, so this asserts the guard rather than an observable ping
+  it("permits no mention, whatever a request carries", () => {
     const message = buildDiscordMessage(
       { ...BUG, title: "@everyone", description: "@here, and <@&1234>" },
       { ...REQUESTER, username: "@everyone" },

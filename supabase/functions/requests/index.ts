@@ -212,8 +212,8 @@ const notifyDiscord = (
 // if the caller has no profile, a 403 response is returned
 // if the caller has no request tokens left, a 403 response is returned
 // if the issue could not be filed, a 502 response is returned
-// otherwise, the issue is filed, it is announced on discord in the background, and the number of tokens the caller has left is
-// returned
+// otherwise, the issue is filed, it is announced on discord in the background when linear named it, and the number of tokens the
+// caller has left is returned
 const handleSubmit: RouteHandler = async (body, ctx) => {
   const params = parseRequestParams(body);
   if (!params) {
@@ -292,7 +292,6 @@ const ISSUE_CREATE_MUTATION = `
     issueCreate(input: $input) {
       success
       issue {
-        identifier
         url
       }
     }

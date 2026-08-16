@@ -1,5 +1,5 @@
 /* ===== IMPORTS ===== */
-import { SITE_URL } from "./linear.ts";
+import { SITE_URL } from "./constants.ts";
 import type {
   DiscordMessage,
   FiledIssue,
@@ -34,12 +34,15 @@ export const buildDiscordMessage = (
   const { label, color } = PRESENTATION[params.type];
 
   return {
-    // the embed carries text a user wrote, posted verbatim, so without this an `@everyone` inside a request would ping the server
+    // discord resolves a mention in `content` alone, and a notification is an embed and nothing else, so this changes nothing
+    // today. it is set because the text of an embed is written by a user, and a `content` line added later would make it live
     allowed_mentions: { parse: [] },
     embeds: [{
       // NOTE: no length handling is necessary here: a request is capped well under the limits discord places on an embed
       title: params.title,
       url: issue.url,
+      // NOTE: discord renders this as markdown, so a request can carry a link. that is accepted: the same text already renders in
+      // the issue this links to, and the channel is ours
       description: params.description,
       color,
       fields: [

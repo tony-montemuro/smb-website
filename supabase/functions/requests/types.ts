@@ -36,7 +36,6 @@ export type IssueCreateInput = {
 
 // the issue a request was filed as. only what a caller needs to point at that issue is declared
 export type FiledIssue = {
-  identifier: string;
   url: string;
 };
 

@@ -54,7 +54,6 @@ const CONFIG: LinearConfig = {
 
 // the issue linear answers a successful mutation with
 const ISSUE: FiledIssue = {
-  identifier: "SMB-42",
   url: "https://linear.app/smbelite/issue/SMB-42/the-timer-is-wrong",
 };
 
