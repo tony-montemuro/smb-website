@@ -1,15 +1,11 @@
 /* ===== IMPORTS ===== */
+import { SITE_URL } from "./constants.ts";
 import type {
   IssueCreateInput,
   LinearConfig,
   Requester,
   RequestParams,
 } from "./types.ts";
-
-/* ===== CONSTANTS ===== */
-
-// the base url of the site, which the attribution of each issue links back to
-const SITE_URL = "https://smbelite.net";
 
 /* ===== FUNCTIONS ===== */
 

@@ -4,8 +4,15 @@ import { afterAll, beforeAll, describe, it } from "@std/testing/bdd";
 import requests, {
   createLinearIssue,
   parseRequestParams,
+  postDiscordNotification,
 } from "../../requests/index.ts";
-import type { IssueCreateInput, LinearConfig } from "../../requests/types.ts";
+import type {
+  DiscordMessage,
+  FiledIssue,
+  IssueCreateInput,
+  IssueCreateResult,
+  LinearConfig,
+} from "../../requests/types.ts";
 
 /* ===== CONSTANTS ===== */
 
@@ -43,6 +50,24 @@ const CONFIG: LinearConfig = {
   projectId: LINEAR_ENV.LINEAR_REQUEST_PROJECT_ID,
   bugLabelId: LINEAR_ENV.LINEAR_BUG_LABEL_ID,
   featureLabelId: LINEAR_ENV.LINEAR_FEATURE_LABEL_ID,
+};
+
+// the issue linear answers a successful mutation with
+const ISSUE: FiledIssue = {
+  url: "https://linear.app/smbelite/issue/SMB-42/the-timer-is-wrong",
+};
+
+// the destination of a notification, and the message posted to it. the builder has its own tests, so the message is a stand in
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1234/test-token";
+const MESSAGE: DiscordMessage = {
+  allowed_mentions: { parse: [] },
+  embeds: [{
+    title: PARAMS.title,
+    url: ISSUE.url,
+    description: PARAMS.description,
+    color: 0xed4245,
+    fields: [{ name: "Type", value: "Bug", inline: true }],
+  }],
 };
 
 const INPUT: IssueCreateInput = {
@@ -130,7 +155,7 @@ const request = (
 // the result of `createLinearIssue` is returned, along with the request it sent, and the global fetch is restored
 const fileIssue = async (
   respond: (request: Request) => Response,
-): Promise<{ filed: boolean; sent: Request | null }> => {
+): Promise<IssueCreateResult & { sent: Request | null }> => {
   const original = globalThis.fetch;
   let sent: Request | null = null;
 
@@ -140,7 +165,31 @@ const fileIssue = async (
   };
 
   try {
-    return { filed: await createLinearIssue(INPUT, CONFIG), sent };
+    return { ...await createLinearIssue(INPUT, CONFIG), sent };
+  } finally {
+    globalThis.fetch = original;
+  }
+};
+
+// FUNCTION 5: notify - function that runs `postDiscordNotification` against a stubbed webhook
+// PRECONDITIONS (1 parameter):
+// 1.) respond: a function which answers the post, either with a response, or by throwing to simulate an unreachable discord
+// POSTCONDITIONS (1 possible outcome):
+// the request the notification sent is returned, and the global fetch is restored
+const notify = async (
+  respond: (request: Request) => Response,
+): Promise<Request | null> => {
+  const original = globalThis.fetch;
+  let sent: Request | null = null;
+
+  globalThis.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
+    sent = new Request(input, init);
+    return Promise.resolve(respond(sent));
+  };
+
+  try {
+    await postDiscordNotification(MESSAGE, WEBHOOK_URL);
+    return sent;
   } finally {
     globalThis.fetch = original;
   }
@@ -339,11 +388,12 @@ describe("parseRequestParams", () => {
 
 describe("createLinearIssue", () => {
   it("files the issue, and authenticates with the api key alone", async () => {
-    const { filed, sent } = await fileIssue(() =>
-      Response.json({ data: { issueCreate: { success: true } } })
+    const { filed, issue, sent } = await fileIssue(() =>
+      Response.json({ data: { issueCreate: { success: true, issue: ISSUE } } })
     );
 
     assertEquals(filed, true);
+    assertEquals(issue, ISSUE);
     // NOTE: a linear api key carries no `Bearer` prefix, which is silently wrong until it reaches the real api
     assertEquals(sent?.headers.get("Authorization"), CONFIG.apiKey);
     assertEquals(sent?.headers.get("Content-Type"), "application/json");
@@ -351,12 +401,22 @@ describe("createLinearIssue", () => {
     assertEquals((await sent?.json())?.variables?.input, INPUT);
   });
 
+  it("treats a success which carries no issue as filed", async () => {
+    const { filed, issue } = await fileIssue(() =>
+      Response.json({ data: { issueCreate: { success: true } } })
+    );
+
+    assertEquals(filed, true);
+    assertEquals(issue, null);
+  });
+
   it("reports a mutation which linear rejected with an error status", async () => {
-    const { filed } = await fileIssue(() =>
+    const { filed, issue } = await fileIssue(() =>
       Response.json({ message: "unauthorized" }, { status: 401 })
     );
 
     assertEquals(filed, false);
+    assertEquals(issue, null);
   });
 
   it("reports a mutation which failed behind a 200", async () => {
@@ -381,5 +441,34 @@ describe("createLinearIssue", () => {
     });
 
     assertEquals(filed, false);
+  });
+});
+
+describe("postDiscordNotification", () => {
+  it("posts the message to the configured webhook", async () => {
+    const sent = await notify(() => new Response(null, { status: 204 }));
+
+    assertEquals(sent?.url, WEBHOOK_URL);
+    assertEquals(sent?.method, "POST");
+    assertEquals(sent?.headers.get("Content-Type"), "application/json");
+    assertEquals(await sent?.json(), MESSAGE);
+  });
+
+  // NOTE: each case below asserts that the post was attempted, and that awaiting it resolved. a notification runs after the caller
+  // has been answered, so a failure it lets escape becomes an unhandled rejection with nobody left to catch it
+  it("swallows a message which discord rejected", async () => {
+    const sent = await notify(() =>
+      Response.json({ message: "Unknown Webhook" }, { status: 404 })
+    );
+
+    assertEquals(sent?.url, WEBHOOK_URL);
+  });
+
+  it("swallows a discord which could not be reached", async () => {
+    const sent = await notify(() => {
+      throw new DOMException("Signal timed out.", "TimeoutError");
+    });
+
+    assertEquals(sent?.url, WEBHOOK_URL);
   });
 });
