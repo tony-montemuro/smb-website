@@ -159,6 +159,14 @@ LINEAR_FEATURE_LABEL_ID=<YOUR_FEATURE_LABEL_ID>
 
 Every value comes from your own Linear workspace: the key from the personal API keys of your account settings, and each id from the [GraphQL API](https://linear.app/developers/graphql). Leave the file out, and the function simply answers a submission with a `500`, which is the only thing that breaks.
 
+The same file takes one more variable, which is optional even here:
+
+```env
+DISCORD_REQUEST_WEBHOOK_URL=<YOUR_DISCORD_WEBHOOK_URL>
+```
+
+It announces each filed request in a Discord channel, and its value is the url of an incoming webhook created on that channel. Leave it out, and a submission behaves exactly as it does with it: the request is filed, the caller is answered the same way, and nobody is notified.
+
 ##### Adding Game Box Art
 
 This is a totally optional thing, but included in the repository are box art for some of the games within the `seed` data. To upload the box art to your local server:
