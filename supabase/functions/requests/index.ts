@@ -1,15 +1,20 @@
 /* ===== IMPORTS ===== */
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "@supabase/server";
+import { buildDiscordMessage } from "./discord.ts";
 import { buildIssueInput } from "./linear.ts";
 import { consumeRequestToken, getRequesterProfile } from "./queries.ts";
 import type {
   Context,
   Database,
+  DiscordMessage,
+  EdgeRuntimeGlobal,
+  FiledIssue,
   IssueCreateInput,
   IssueCreateResponse,
   IssueCreateResult,
   LinearConfig,
+  Requester,
   RequestParams,
 } from "./types.ts";
 
@@ -138,7 +143,66 @@ export const createLinearIssue = async (
   }
 };
 
-// FUNCTION 5: handleSubmit - function that generates the response of the submit route
+// FUNCTION 5: postDiscordNotification - function that announces a filed request through an incoming webhook
+// PRECONDITIONS (2 parameters):
+// 1.) message: the body of the `Execute Webhook` call
+// 2.) webhookUrl: the incoming webhook the message is posted to
+// POSTCONDITIONS (2 possible outcomes):
+// if the message was accepted, nothing happens
+// otherwise, the failure is logged
+// NOTE: this never rejects. it runs after the caller has been answered, so a rejection would have nobody left to catch it
+export const postDiscordNotification = async (
+  message: DiscordMessage,
+  webhookUrl: string,
+): Promise<void> => {
+  try {
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(message),
+      signal: AbortSignal.timeout(NOTIFICATION_TIMEOUT),
+    });
+
+    if (!response.ok) {
+      console.error("discord rejected the notification:", response.status);
+    }
+  } catch (error) {
+    console.error("discord is unreachable:", error);
+  }
+};
+
+// FUNCTION 6: notifyDiscord - function that announces a filed request in the background
+// PRECONDITIONS (3 parameters):
+// 1.) params: the parameters of the request, already validated
+// 2.) requester: the profile the request is attributed to
+// 3.) issue: the issue the request was filed as
+// POSTCONDITIONS (2 possible outcomes):
+// if no webhook is configured, nothing happens, since a destination is what makes notifications wanted at all
+// otherwise, the notification is posted, without the caller waiting on it
+const notifyDiscord = (
+  params: RequestParams,
+  requester: Requester,
+  issue: FiledIssue,
+): void => {
+  const webhookUrl = Deno.env.get("DISCORD_REQUEST_WEBHOOK_URL");
+  if (!webhookUrl) {
+    return;
+  }
+
+  const notification = postDiscordNotification(
+    buildDiscordMessage(params, requester, issue),
+    webhookUrl,
+  );
+
+  // the platform keeps the isolate alive for a background task, which is what lets the response leave before the post finishes.
+  // NOTE: the global is absent under `deno test`, where the promise is simply left to settle on its own
+  const { EdgeRuntime } = globalThis as typeof globalThis & EdgeRuntimeGlobal;
+  if (EdgeRuntime) {
+    EdgeRuntime.waitUntil(notification);
+  }
+};
+
+// FUNCTION 7: handleSubmit - function that generates the response of the submit route
 // PRECONDITIONS (2 parameters):
 // 1.) body: the json body of the request
 // 2.) ctx: the context of the request, which carries the client each query runs through, and the claims of the caller
@@ -148,7 +212,8 @@ export const createLinearIssue = async (
 // if the caller has no profile, a 403 response is returned
 // if the caller has no request tokens left, a 403 response is returned
 // if the issue could not be filed, a 502 response is returned
-// otherwise, the issue is filed, and the number of tokens the caller has left is returned
+// otherwise, the issue is filed, it is announced on discord in the background, and the number of tokens the caller has left is
+// returned
 const handleSubmit: RouteHandler = async (body, ctx) => {
   const params = parseRequestParams(body);
   if (!params) {
@@ -186,7 +251,7 @@ const handleSubmit: RouteHandler = async (body, ctx) => {
     );
   }
 
-  const { filed } = await createLinearIssue(
+  const { filed, issue } = await createLinearIssue(
     buildIssueInput(params, requester, config),
     config,
   );
@@ -196,6 +261,11 @@ const handleSubmit: RouteHandler = async (body, ctx) => {
       "LINEAR_UNAVAILABLE",
       "Unable to reach the issue tracker. This attempt still counted against today's requests.",
     );
+  }
+
+  // the request is filed and the token is spent by this point, so the notification can neither delay nor change the answer
+  if (issue) {
+    notifyDiscord(params, requester, issue);
   }
 
   return Response.json({ requestToken });
@@ -228,6 +298,9 @@ const ISSUE_CREATE_MUTATION = `
     }
   }
 `;
+
+// how long discord gets to accept a notification. it is shorter than the tracker gets, since nothing waits on the answer
+const NOTIFICATION_TIMEOUT = 5000;
 
 // the routes served by the function. NOTE: the platform strips the `/functions/v1` prefix before a request arrives
 const ROUTES: { pattern: URLPattern; handle: RouteHandler }[] = [

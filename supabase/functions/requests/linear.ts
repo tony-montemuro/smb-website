@@ -8,8 +8,9 @@ import type {
 
 /* ===== CONSTANTS ===== */
 
-// the base url of the site, which the attribution of each issue links back to
-const SITE_URL = "https://smbelite.net";
+// the base url of the site, which the attribution of each issue links back to. the discord notification links back to the same
+// profile, so it reads this rather than keeping a second copy
+export const SITE_URL = "https://smbelite.net";
 
 /* ===== FUNCTIONS ===== */
 

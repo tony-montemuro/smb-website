@@ -54,6 +54,32 @@ export type IssueCreateResult = {
   issue: FiledIssue | null;
 };
 
+/* ===== DISCORD ===== */
+
+// an embed of a discord message, which is how a notification carries the request. only the fields a notification sets are declared
+export type DiscordEmbed = {
+  title: string;
+  url: string;
+  description: string;
+  color: number;
+  fields: { name: string; value: string; inline: boolean }[];
+};
+
+// the body of an `Execute Webhook` call. `allowed_mentions` is what disarms the mentions of the arbitrary text an embed carries
+export type DiscordMessage = {
+  allowed_mentions: { parse: string[] };
+  embeds: DiscordEmbed[];
+};
+
+/* ===== PLATFORM ===== */
+
+// the background task api of the platform, which keeps an isolate alive until a task started during a request finishes. it is
+// declared here because the ambient declaration of `@supabase/functions-js/edge-runtime.d.ts` does not survive a type check, and
+// it is optional because the global is absent outside the platform, which includes `deno test`
+export type EdgeRuntimeGlobal = {
+  EdgeRuntime?: { waitUntil: (task: Promise<unknown>) => void };
+};
+
 /* ===== DATABASE ===== */
 
 // the profile which a request is attributed to
