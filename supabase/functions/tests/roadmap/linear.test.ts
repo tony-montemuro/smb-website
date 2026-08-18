@@ -309,10 +309,85 @@ describe("buildRoadmapIssue", () => {
     assertEquals(issue?.p_state_type, "completed");
   });
 
+  // NOTE: linear accepts a title well past 255 characters, and postgres refuses one, so this is the case which would otherwise
+  // throw, answer a 500, and lose the issue once the retries ran out
+  it("clips a title past the width of its column", () => {
+    const issue = buildRoadmapIssue(
+      payloadOf({
+        ...DELIVERY,
+        data: { ...DELIVERY.data, title: "t".repeat(260) },
+      }).data,
+    );
+
+    assertEquals(issue?.p_title.length, 255);
+  });
+
+  it("leaves a title within the width of its column alone", () => {
+    const title = "t".repeat(255);
+    const issue = buildRoadmapIssue(
+      payloadOf({
+        ...DELIVERY,
+        data: { ...DELIVERY.data, title },
+      }).data,
+    );
+
+    assertEquals(issue?.p_title, title);
+  });
+
+  it("clips every other value to the column which holds it", () => {
+    const issue = buildRoadmapIssue(
+      payloadOf({
+        ...DELIVERY,
+        data: {
+          ...DELIVERY.data,
+          identifier: "S".repeat(30),
+          project: { name: "p".repeat(300) },
+          state: { name: "s".repeat(300), type: "u".repeat(30) },
+        },
+      }).data,
+    );
+
+    assertEquals(issue?.p_identifier.length, 20);
+    assertEquals(issue?.p_state_name.length, 255);
+    assertEquals(issue?.p_state_type.length, 20);
+    assertEquals(issue?.p_project_name?.length, 255);
+  });
+
+  // NOTE: postgres counts a character as a code point, and `slice` counts utf-16 code units, so cutting the other way would both
+  // over-clip and split the pair, leaving a lone surrogate which cannot be encoded as utf-8
+  it("clips by code point, without splitting a surrogate pair", () => {
+    const title = "🐵".repeat(300);
+    const issue = buildRoadmapIssue(
+      payloadOf({
+        ...DELIVERY,
+        data: { ...DELIVERY.data, title },
+      }).data,
+    );
+
+    assertEquals(Array.from(issue!.p_title).length, 255);
+    assertEquals(issue?.p_title, "🐵".repeat(255));
+  });
+
+  it("leaves a nullable value which the payload did not carry as null", () => {
+    const { project: _project, ...unassigned } = DELIVERY.data;
+    const issue = buildRoadmapIssue(
+      payloadOf({ ...DELIVERY, data: unassigned }).data,
+    );
+
+    assertEquals(issue?.p_project_name, null);
+  });
+
   // NOTE: the table requires each of these, so a payload missing one cannot be written at all
   it("refuses an issue which is missing a field the row requires", () => {
     for (
-      const field of ["id", "identifier", "title", "createdAt", "updatedAt"]
+      const field of [
+        "id",
+        "identifier",
+        "title",
+        "createdAt",
+        "updatedAt",
+        "state",
+      ]
     ) {
       const { [field]: _missing, ...incomplete } = DELIVERY.data as Record<
         string,
@@ -326,12 +401,16 @@ describe("buildRoadmapIssue", () => {
     }
   });
 
-  it("refuses an issue which carries no state", () => {
-    const { state: _state, ...stateless } = DELIVERY.data;
-
-    assertEquals(
-      buildRoadmapIssue(payloadOf({ ...DELIVERY, data: stateless }).data),
-      null,
-    );
+  // NOTE: the state is the one nested field, so dropping it takes out both halves of the guard at once. each half is covered on
+  // its own here, or a guard which stopped checking one of them would leave every test above green
+  it("refuses an issue whose state is missing a half", () => {
+    for (const state of [{ name: "In Progress" }, { type: "started" }]) {
+      assertEquals(
+        buildRoadmapIssue(
+          payloadOf({ ...DELIVERY, data: { ...DELIVERY.data, state } }).data,
+        ),
+        null,
+      );
+    }
   });
 });

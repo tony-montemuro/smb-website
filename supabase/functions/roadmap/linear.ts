@@ -161,12 +161,32 @@ export const isRemoval = (
     !payload.data.labelIds.includes(publicLabelId);
 };
 
-// FUNCTION 7: buildRoadmapIssue - function that generates the arguments of `sync_roadmap_issue` from a delivery
+// FUNCTION 7: clip - function that cuts a value down to the width of the column which holds it
+// PRECONDITIONS (2 parameters):
+// 1.) value: the value to clip, or null when the column is nullable and the payload carried nothing
+// 2.) width: the width of the column, in characters
+// POSTCONDITIONS (2 possible outcomes):
+// if the value is null, null is returned
+// otherwise, the value is returned, no longer than the column which holds it
+// NOTE: the value is cut by code point rather than by `slice`, which cuts by utf-16 code unit. postgres counts a character the
+// way this does, and cutting the other way can split an emoji in half, leaving a lone surrogate which is not valid utf-8
+const clip = <T extends string | null>(value: T, width: number): T => {
+  if (value === null) {
+    return value;
+  }
+
+  return Array.from(value).slice(0, width).join("") as T;
+};
+
+// FUNCTION 8: buildRoadmapIssue - function that generates the arguments of `sync_roadmap_issue` from a delivery
 // PRECONDITIONS (1 parameter):
 // 1.) data: the issue the delivery carries, already normalized
 // POSTCONDITIONS (2 possible outcomes):
-// if every field the table requires is present, the arguments are returned
+// if every field the table requires is present, the arguments are returned, each clipped to the column which holds it
 // otherwise, null is returned, since a row which is missing one of them cannot be written at all
+// NOTE: a value past the width of its column is refused by postgres, which throws, answers a 500, and burns the three retries of
+// a delivery that could never have succeeded, losing the issue for good. a clipped title is wrong; a missing issue is worse. this
+// is not hypothetical: linear accepts an issue title well past 255 characters
 export const buildRoadmapIssue = (data: IssueData): RoadmapIssue | null => {
   const { id, identifier, title, stateName, stateType, createdAt, updatedAt } =
     data;
@@ -180,11 +200,11 @@ export const buildRoadmapIssue = (data: IssueData): RoadmapIssue | null => {
 
   return {
     p_linear_id: id,
-    p_identifier: identifier,
-    p_title: title,
-    p_state_name: stateName,
-    p_state_type: stateType,
-    p_project_name: data.projectName,
+    p_identifier: clip(identifier, IDENTIFIER_WIDTH),
+    p_title: clip(title, TITLE_WIDTH),
+    p_state_name: clip(stateName, STATE_NAME_WIDTH),
+    p_state_type: clip(stateType, STATE_TYPE_WIDTH),
+    p_project_name: clip(data.projectName, PROJECT_NAME_WIDTH),
     p_created_at: createdAt,
     p_updated_at: updatedAt,
     p_completed_at: data.completedAt,
@@ -195,3 +215,12 @@ export const buildRoadmapIssue = (data: IssueData): RoadmapIssue | null => {
 
 // how old a delivery may be before it is refused, in milliseconds
 const REPLAY_WINDOW = 12 * 60 * 60 * 1000;
+
+// the width of each `varchar` column of `roadmap_issue`, which every value written to it is clipped to. only the title, the state
+// name, and the project name can realistically reach one; the other two are clipped for consistency, and because the widths of a
+// vocabulary linear owns are not ours to promise
+const IDENTIFIER_WIDTH = 20;
+const TITLE_WIDTH = 255;
+const STATE_NAME_WIDTH = 255;
+const STATE_TYPE_WIDTH = 20;
+const PROJECT_NAME_WIDTH = 255;

@@ -72,9 +72,11 @@ AND (p_updated_at IS NULL OR updated_at <= p_updated_at);
 $$;
 
 -- The baseline grants execute on every new function to `anon` through `ALTER DEFAULT PRIVILEGES`, so both procedures above are
--- callable by anyone through PostgREST the moment they exist. Left alone, `sync_roadmap_issue` would be a public write endpoint
--- into a table whose whole point is that only explicitly public issues reach it. This is the opposite of `consume_request_token`,
--- which is meant to be called by the authenticated user whose allowance it spends.
+-- callable by anyone through PostgREST the moment they exist. Neither would actually write: both are SECURITY INVOKER, so their
+-- bodies run as the caller, and no policy lets `anon` insert or delete. Revoking access is what moves that guarantee off the
+-- absence of a write policy, so that adding one later, or marking either procedure SECURITY DEFINER, cannot quietly turn it into
+-- a public write endpoint. `service_role` is the Postgres role a secret key resolves to, and is unrelated to the legacy key of
+-- the same name.
 REVOKE ALL ON FUNCTION sync_roadmap_issue(uuid, varchar, varchar, varchar, varchar, varchar, timestamptz, timestamptz, timestamptz)
 FROM PUBLIC, anon, authenticated;
 REVOKE ALL ON FUNCTION remove_roadmap_issue(uuid, timestamptz) FROM PUBLIC, anon, authenticated;
