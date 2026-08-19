@@ -16,7 +16,8 @@ import type { WebhookPayload } from "../../roadmap/types.ts";
 const SECRET = "lin_wh_test_secret";
 const PUBLIC_LABEL_ID = "1a91c7a8-4a37-4d61-9c1e-2f5a6b7c8d90";
 
-// the delivery each test starts from, as linear sends it. only the fields the function reads are declared
+// the delivery each test starts from, as linear sends it. only the fields the function reads are declared, and the shape was
+// checked against a real delivery
 const DELIVERY = {
   action: "update",
   type: "Issue",
@@ -27,10 +28,9 @@ const DELIVERY = {
     title: "Linear Webhook Ingestion",
     createdAt: "2026-08-14T23:18:25.601Z",
     updatedAt: "2026-08-16T21:57:25.366Z",
-    completedAt: null,
-    archivedAt: null,
     state: { name: "In Progress", type: "started" },
     project: { name: "Streamline User Requests" },
+    labelIds: [PUBLIC_LABEL_ID],
     labels: [{ id: PUBLIC_LABEL_ID, name: "Public" }],
   },
 };
