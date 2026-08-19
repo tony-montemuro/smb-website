@@ -1,2 +1,5 @@
 # Local Claude Settings
 .claude/settings.local.json
+
+# Temporary files
+tmp/

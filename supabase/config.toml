@@ -148,3 +148,11 @@ enabled = true
 # function want the same credential, so the check is left at its default of enabled, unlike the function above.
 import_map = "./functions/deno.json"
 entrypoint = "./functions/requests/index.ts"
+
+[functions.roadmap]
+enabled = true
+# The caller is Linear, which authenticates each delivery with a signature over the raw body, and sends no Supabase credential at
+# all. The platform check would therefore reject every webhook before the function runs.
+verify_jwt = false
+import_map = "./functions/deno.json"
+entrypoint = "./functions/roadmap/index.ts"
